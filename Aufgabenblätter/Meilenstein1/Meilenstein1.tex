@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{book}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -7,31 +7,69 @@
 \title{Pflichtenheft}
 \begin{document}
 \maketitle
-
+\newpage
 \tableofcontents
-
-\chapter{Überblick}
-\section{Einleitung}
+\newpage
+\section{Überblick}
+\subsection{Einleitung}
 Dieses Software-Projekt hat sich als Ziel gesetzt eine webbasierte, zentrale E-Learning Plattform für die Studenten der Universität Ulm bereitzustellen. Das System soll die Lerninhalte individuell für jeden Benutzer in geeigneter Form strukturieren. Des Weiteren soll jeder Anwender den Lernstoff erweitern und mit anderen darüber diskutieren können. Die Lerninhalte sollen in einer hierarchischen Struktur mit verschiedenen Detailebenen dargestellt werden, um unterschiedliche Einblicke in ein Themengebiet zu ermöglichen. Das Skript soll durch verschiedene digitale Inhalte wie Bilder, Texte oder Videos unterstützt werden. Dozenten können initiale Lehrinhalte bereitstellen, die sich im Laufe des Semesters verändern oder erweitern werden können. 
 Jeder Student soll die Möglichkeit haben, mit andern über Probleme zu diskutieren und Lösungen zu finden.
 
-\section{Motivation}
+\subsection{Motivation}
 Zurzeit verfügt die Universität Ulm über viele Plattformen (Moodle, ILIAS, Rubikon und slc) um Vorlesungsmaterialien den Studenten bereitzustellen. Diese Plattformen sind keine echten E-Learning Systeme, da man sie nur nutzt um Dokumente wie Skripte oder Übungsblätter herunterzuladen. Außerdem gibt es als einzige Informationsquelle zum Lernen nur das Skript und keine anderen Medien wie z.B. Videos. Das Skript kann dabei nur in einer festen linearen Struktur durchgearbeitet werden. Lernen ist allerdings kein linearer Prozess, sondern ein Prozess, bei dem Informationen zu einem Netzwerk zusammengebaut werden. Dieses Netzwerk zu erweitern und immer wieder umzustrukturieren stellt den eigentlichen Lernprozess da. Bei einem linearen Skript fehlen dabei Querverweise zu anderen Quellen, falls man einen Begriff beispielsweise nicht versteht. Zu diesem Lernprozess gehört auch, dass man sich mit anderen Studenten austauscht. In den bereits vorhandenen Vorlesungsplattformen lädt jedoch jeder das Skript runter und lernt für sich allein. Es gibt keine Möglichkeit persönliche Notizen im Skript mit anderen zu teilen. Dadurch bekommt auch der Dozent keine Vorstellung davon was man im Skript besser machen könnte, sodass sich das Skript über die Jahre kaum ändert.
 Mit unserem E-Learning System wollen wir diese Probleme anpacken! 
 
-
-\section{Vision und Leitbild}
+\subsection{Vision und Leitbild}
 Das Ziel des Projekts ist es den Studenten für jede Vorlesung eine zentrale webbasierte Lernumgebung anzubieten. Der Dozent einer Vorlesung hat die Möglichkeit eine Veranstaltung anzulegen, auf der er dann ein initiales Skript bereitstellen kann. Durch die während des Semesters aufkommenden Diskussionen ist er in der Lage das Skript mit Hilfe der Studenten zu erweitern. Die Vorlesungsinhalte sollen dabei nicht mehr linear aufgebaut sein, sondern einzelne Teile (z.B. eine Definition oder ein Satz in der Mathematik) sollen auf Karteikarten gespeichert werden. Die Karteikarten sind hierarchisch angeordnet und zusätzlich durch Querverweise miteinander verknüpft werden, sodass ein Netzwerk entsteht. Dadurch ist es für die Anzeige beispielsweise möglich auf Vorlesungsfolien weniger Information zu packen, als ins Skript, sodass die Anzeige flexibel wird. Durch die Struktur als Netzwerk ist es für einen Student, der beispielsweise ein Matheskript liest und über den Begriff der Differenzialgleichung stößt, möglich zuerst eine kurze Definition zu dem Begriff zu erhalten. Falls dies nicht ausreichend ist, hat er die Wahl sich zwischen verschiedenen Quellen zu diesem Thema zu entscheiden. Beispielsweise könnte er auf ein YouTube-Video oder eine andere Website verlinkt werden. In dem Netzwerk ist es aber trotzdem noch wichtig dass es einen linearen Pfad gibt, der das Skript repräsentiert. Des weiteren soll ein Student zu jeder Karteikarte Notizen machen oder eine Diskussion anstoßen können. Der Student kann entscheiden, ob andere seine Notizen sehen dürfen. Um die Qualität der Diskussion beurteilen zu können, gibt es die Möglichkeit, einzelne Beiträge durch positive Bewertungen hervorzuheben. Außerdem existieren Moderatoren, die die Aufgabe haben, schlechte Beiträge zu entfernen und besonders gute Beiträge ins Skript einzuarbeiten. Die Rolle des Moderators kann z.B. der Dozent oder der Übungsleiter übernehmen.
 
 
 
 \section{Projektkontext}
-Das Software-System wird im Rahmen des Softwaregrundprojekts Wintersemester 2014/2015 2011/2012 im Bereich Informatik entstehen. Dies kann eventuell in den Bestehenden Lehrbetrieb der Universität Ulm eingebettet werden, so dass allen Studenten an der Universität die Möglichkeit zu diesem System angeboten werden kann.
+Das Software-System wird im Rahmen des Softwaregrundprojekts Wintersemester 2014/2015 im Bereich Informatik entstehen. Dies kann eventuell in den Bestehenden Lehrbetrieb der Universität Ulm eingebettet werden, so dass allen Studenten an der Universität die Möglichkeit zu diesem System angeboten werden kann.
 
-\chapter{Fachwissen (Glossar)}
-\section{Begriffsdefinition aus dem Anwendungsbreich}
-\section{Eigenschaften des Systems}
-\section{Beziehungen zwischen Begriffen}
+\section{Anforderungsanalyse}
+\subsection{Fachwissen (Glossar)}
+\begin{tabular}{l l} 
+BEGRIFF & Student \\ 
+BESCHREIBUNG & Immatrikulierte Person an einer Universität \\ 
+ISTEIN & Benutzer \\
+KANNSEIN & Anwender, Administrator \\ 
+ASPEKT & erweitert die Inhalte des Systems und stellt diese anderen Benutzern zur Verfügung \\
+BEISPIEL & Fabian Schilha\\
+
+&\\ 
+
+BEGRIFF & Administrator \\ 
+BESCHREIBUNG & verwaltet die Benutzer des Systems und administriert die Zugänge zu dem System \\ 
+ISTEIN & Benutzer \\
+KANNSEIN & Anwender, Administrator \\ 
+ASPEKT & erweitert die Inhalte des Systems und stellt diese anderen Benutzern zur Verfügung \\
+BEISPIEL & Fabian Schilha\\
+\end{tabular}
+
+
+\subsection{Systemkontext}
+\subsubsection{Akteure und Anwendungsfälle}
+In diesem Abschnitt wird behandelt, welche Akteure existieren und welche Anwendungsfälle auftreten werden. 
+hier eine Liste der beteiligten Akteure.
+
+\begin{itemize}
+\item Dozent
+\item Student
+\item Moderator
+\item Tutor
+\item Administrator
+\end{itemize}
+
+Folgenden Anwendungsfälle existieren:
+\begin{itemize}
+\item Ein Nutzer meldet sich im System an.
+\item Der Dozent erstellt ein initiales Skript.
+\item 
+\end{itemize}
+\subsubsection{Szenarien}
+\subsubsection{Systemaufgabe}
+
 
 
 \end{document}
