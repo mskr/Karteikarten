@@ -3,6 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\parindent0pt
 \author{Matthias Englert, Fabian Schilha, Andreas Rottach}
 \title{Pflichtenheft}
 \begin{document}
@@ -50,23 +51,48 @@ BEISPIEL & Fabian Schilha\\
 
 \subsection{Systemkontext}
 \subsubsection{Akteure und Anwendungsfälle}
-In diesem Abschnitt wird behandelt, welche Akteure existieren und welche Anwendungsfälle auftreten werden. 
-hier eine Liste der beteiligten Akteure.
-
-\begin{itemize}
-\item Dozent
-\item Student
-\item Moderator
-\item Tutor
-\item Administrator
-\end{itemize}
+In diesem Abschnitt werden die beteiligten Akteure identifiziert. Danach werden alle auftretenden Anwendungsfälle durch Anwendungsfalldiagrame dargestellt.
+Folgende Akteue sind am System beteiligt.\\\\
+\begin{tabular}{l p{10cm}}
+\hline \textbf{Akteuer} & Benutzer \\ 
+\hline \textbf{Beschreibung} & Ein Benutzer kann sich am System anmelden und für Kurse registrieren. \\ 
+\hline 
+\end{tabular}\\
+\begin{tabular}{l p{10cm}}
+\hline \textbf{Akteuer} & Dozent \\ 
+\hline \textbf{Beschreibung} & Ein Dozent leitet eine Veranstaltung und überwacht diese. Er erstellt ein initiales Skript und steuert, wie sich dieses weiterentwickelt. Außerdem kann er Kommentare zu Diskussionen hinterlassen. Er hat die vollständige Kontrolle über eine Veranstaltung.\\ 
+\hline 
+\end{tabular}\\
+\begin{tabular}{l p{10cm}}
+\hline \textbf{Akteuer} & Student \\ 
+\hline \textbf{Beschreibung} & Ein Student kann sich zu Veranstaltungen anmelden. Er kann an Diskussionen teilnehmen und den Lernstoff erweitern.\\ 
+\hline 
+\end{tabular}\\
+\begin{tabular}{l p{10cm}}
+\hline \textbf{Akteuer} & Moderator \\ 
+\hline \textbf{Beschreibung} & Ein Moderator überwacht Diskussionen. Er überträgt gute Kommentare in den Lernstoff und verbirgt nutzlose Aussagen.\\ 
+\hline 
+\end{tabular}\\
+\begin{tabular}{l p{10cm}}
+\hline \textbf{Akteuer} & Administrator \\ 
+\hline \textbf{Beschreibung} & Ein Administrator hat vollständigen Zugriff auf alle Veranstaltungen und ist dafür verantwortlich, auftretende Probleme zu lösen. \\ 
+\hline 
+\end{tabular}\\
 
 Folgenden Anwendungsfälle existieren:
 \begin{itemize}
+
+\item Ein Benutzer Registriert sich.
 \item Ein Nutzer meldet sich im System an.
 \item Der Dozent erstellt ein initiales Skript.
-\item 
+\item Ein Benutzer erweitert das Skript.
+\item Ein Benutzer erstellt einen Kommentar zu einer Diskussion.
+\item Ein Benutzer erstellt eine Diskussion.
+\item Die Diskussion wird ins Skript übernommen.
+\item Import von Dokumenten.
+\item Export von Dokumenten.
 \end{itemize}
+
 \subsubsection{Szenarien}
 \subsubsection{Systemaufgabe}
 
