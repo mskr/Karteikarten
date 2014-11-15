@@ -53,49 +53,213 @@ BEISPIEL & Fabian Schilha\\
 \subsubsection{Akteure und Anwendungsfälle}
 In diesem Abschnitt werden die beteiligten Akteure identifiziert. Danach werden alle auftretenden Anwendungsfälle durch Anwendungsfalldiagrame dargestellt.
 Folgende Akteue sind am System beteiligt.\\\\
+
 \begin{tabular}{l p{10cm}}
 \hline \textbf{Akteuer} & Benutzer \\ 
 \hline \textbf{Beschreibung} & Ein Benutzer kann sich am System anmelden und für Kurse registrieren. \\ 
 \hline 
-\end{tabular}\\
+\end{tabular}\\\\
+
 \begin{tabular}{l p{10cm}}
 \hline \textbf{Akteuer} & Dozent \\ 
 \hline \textbf{Beschreibung} & Ein Dozent leitet eine Veranstaltung und überwacht diese. Er erstellt ein initiales Skript und steuert, wie sich dieses weiterentwickelt. Außerdem kann er Kommentare zu Diskussionen hinterlassen. Er hat die vollständige Kontrolle über eine Veranstaltung.\\ 
 \hline 
-\end{tabular}\\
+\end{tabular}\\\\
+
 \begin{tabular}{l p{10cm}}
 \hline \textbf{Akteuer} & Student \\ 
 \hline \textbf{Beschreibung} & Ein Student kann sich zu Veranstaltungen anmelden. Er kann an Diskussionen teilnehmen und den Lernstoff erweitern.\\ 
 \hline 
-\end{tabular}\\
+\end{tabular}\\\\
+
 \begin{tabular}{l p{10cm}}
 \hline \textbf{Akteuer} & Moderator \\ 
 \hline \textbf{Beschreibung} & Ein Moderator überwacht Diskussionen. Er überträgt gute Kommentare in den Lernstoff und verbirgt nutzlose Aussagen.\\ 
 \hline 
-\end{tabular}\\
+\end{tabular}\\\\
+
 \begin{tabular}{l p{10cm}}
 \hline \textbf{Akteuer} & Administrator \\ 
 \hline \textbf{Beschreibung} & Ein Administrator hat vollständigen Zugriff auf alle Veranstaltungen und ist dafür verantwortlich, auftretende Probleme zu lösen. \\ 
 \hline 
-\end{tabular}\\
+\end{tabular}\\\\
 
-Folgenden Anwendungsfälle existieren:
-\begin{itemize}
-
-\item Ein Benutzer Registriert sich.
-\item Ein Nutzer meldet sich im System an.
-\item Der Dozent erstellt ein initiales Skript.
-\item Ein Benutzer erweitert das Skript.
-\item Ein Benutzer erstellt einen Kommentar zu einer Diskussion.
-\item Ein Benutzer erstellt eine Diskussion.
-\item Die Diskussion wird ins Skript übernommen.
-\item Import von Dokumenten.
-\item Export von Dokumenten.
-\end{itemize}
+\begin{tabular}{l p{10cm}}
+\hline \textbf{Akteuer} & eMail-Server \\ 
+\hline \textbf{Beschreibung} & Ein eMail-Server ist für die externe Kommunikation mit den Nutzern zuständig. Er versendet Bestätigungs-Mails oder weißt auf bestimmte Änderungen hin. \\ 
+\hline 
+\end{tabular}\\\\
 
 \subsubsection{Szenarien}
 \subsubsection{Systemaufgabe}
+Hier werden alle Systemaufgaben, die dazugehörigen Teilnehmer und jeweils eine kurze Beschreibung aufgelistet.
+\paragraph{Funktionale Anforderungen}\mbox{}\\
 
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Anmelden}} \\ \hline
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Benutzer gibt seine Anmeldeinformationen ein. Falls diese richtig sind, wird eine Session eröffnet und er ist eingeloggt. Andernfalls erhält er eine Fehlermeldung. \\ 
+\hline 
+\end{tabular}\\\\
 
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Abmelden}} \\ \hline
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Benutzer wird von System abgemeldet. Die Session wird beendet und er landet wieder auf der Startseite. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Zu Veranstaltung anmelden}} \\ \hline
+\textbf{Beteiligt} & Benutzer, eMail-Server \\ \hline 
+\textbf{Beschreibung} & Der Benutzer begibt sich auch die Veranstaltungsseite und will sich zu dieser Veranstaltung anmelden. Dazu muss er optional einen Zugangscode eingeben. Falls dieser Code korrekt ist, wird die Zugangsberechtigung vom System gespeichert und die Anmeldung war erfolgreich. Andernfalls wird der Benutzer über das Fehlschlagen der Anmeldung informiert. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Veranstaltung anzeigen}} \\ \hline
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Ein Benutzer wählt eine Veranstaltungsseite aus. Das System prüft ob dieser Nutzer Zugang zu dieser Seite hat und zeigt die Seite gegebenenfalls an. Sonst wird nur eine kleine Veranstaltungsinformation angezeigt. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Von Veranstaltung abmelden}} \\ \hline
+\textbf{Beteiligt} & Benutzer, eMail-Server \\ \hline 
+\textbf{Beschreibung} & Der Benutzer kann seine Teilnahme an einer Veranstaltung beenden. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Fehlermeldung anzeigen}} \\ \hline
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Wenn ein Fehler auftritt wird er dem Benutzer angezeigt. Außerdem wird eine Lösung des Problems dargelegt, falls dies möglich ist. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Notizen machen}} \\ \hline
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Ein Benutzer kann sich zu einer bestimmten Karteikarte Notizen machen. Das System verknüpft diese Notiz dann mit der entsprechenden Karteikarte. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Initiales Skript importieren}} \\ \hline
+\textbf{Beteiligt} & Dozent \\ \hline 
+\textbf{Beschreibung} & Der Dozent hat die Möglichkeit, ein initiales Skript zu importieren. Das System konvertiert dieses Skript in eine Sammlung von Karteikarten. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Skript exportieren}} \\ \hline
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Das System wandelt die Karteikarten-Repräsentation der Lerninhalte in ein vom Benutzer gewähltes Format (z.b. PDF) mit einem bestimmten Detail-Grad um und bietet es ihm zum Download an. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Diskussion erstellen}} \\ \hline
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Benutzer möchte eine Diskussion zu einer bestimmten Karteikarte starten. Das System legt diese Diskussion an und bietet dem Benutzer die Möglichkeit Kommentare zu verfassen. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Lerninhalte einsehen}} \\ \hline
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Benutzer wählt den Lerninhalt einer Veranstaltung aus. Das System fragt ihn dann nach der Darstellungsform und zeigt die Inhalte dementsprechend an. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Veranstaltung anlegen}} \\ \hline
+\textbf{Beteiligt} & Dozent \\ \hline 
+\textbf{Beschreibung} & Ein Dozent kann eine neue Veranstaltung anlegen. Dazu gibt er die Veranstaltungsdaten ein. Daraus erzeugt das System dann eine neue Veranstaltung.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Moderator ernennen}} \\ \hline
+\textbf{Beteiligt} & Dozent, Moderator \\ \hline 
+\textbf{Beschreibung} & Ein Dozent kann einen Moderator ernennen, indem er die Veranstaltungseinstellungen ändert.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Veranstaltung bearbeiten}} \\ \hline
+\textbf{Beteiligt} & Dozent \\ \hline 
+\textbf{Beschreibung} & Ein Dozent kann eine bestehende Veranstaltung editieren. Er kann auch einstellen, ob das Skript editierbar sein soll oder nicht, usw..\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Karteikarte ändern}} \\ \hline
+\textbf{Beteiligt} & Dozent, Moderator \\ \hline 
+\textbf{Beschreibung} & Ein Dozent oder Moderator kann eine bestehene Karteikarte ändern. Er kann Name, Inhalt oder Verlinkungen editieren.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Karteikarte hinzufügen}} \\ \hline
+\textbf{Beteiligt} & Dozent, Moderator \\ \hline 
+\textbf{Beschreibung} & Ein Dozent oder Moderator kann eine neue Karteikarte hinzufügen.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Kommentare entfernen}} \\ \hline
+\textbf{Beteiligt} & Dozent, Moderator \\ \hline 
+\textbf{Beschreibung} & Ein Dozent oder Moderator kann einen bestehenden Kommentar entfernen.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Kommentare bewerten}} \\ \hline
+\textbf{Beteiligt} & Dozent, Moderator, Benutzer \\ \hline 
+\textbf{Beschreibung} & Alle Teilnehmer einer Veranstaltung können Kommentare mit positiven Bewertungen versehen. Diese werden dann hervorgehoben.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Veranstaltung löschen}} \\ \hline
+\textbf{Beteiligt} & Dozent \\ \hline 
+\textbf{Beschreibung} & Der Dozent kann seine selbst erstellten Veranstaltungen löschen.\\ 
+\hline 
+\end{tabular}\\\\
+
+\paragraph{Nicht funktionale Anforderungen}\mbox{}\\
+Hier werden alle nicht funktionalen Anforderungen aufgelistet, denen das System gerecht werden muss.
+\subparagraph{Benutzerfreundlichkeit}
+\begin{itemize}
+\item Ein noch so gut funktionierendes System ist wertlos, wenn die Handhabung des Systems so schlecht ist, dass sich kein Anwender lange damit auseinandersetzen will. 
+\item Es muss intuitiv und einfach zu bedienen sein.
+\end{itemize}
+\subparagraph{Robustheit}
+\begin{itemize}
+\item Das System muss robust gegenüber Abstürzen sein. 
+\item Es sollten keine unerwarteten Zustände auftreffen. Und falls doch, sollte sich das System so verhalten, dass keine Daten verlohren gehen.
+\end{itemize}
+\subparagraph{Performance}
+\begin{itemize}
+\item Das System sollte effizient sein.
+\item Viele Datenbankzugriffe erfordern eine effiziente Strukturierung der Daten.
+\item Es sollte auf langsame Web-Plugins verzichtet werden. Diese beeinträchtigen nur die Geschwindigkeit des System auf den unterschiedlichen Browsern.
+\end{itemize}
+\subparagraph{Sicherheit}
+\begin{itemize}
+\item Die Rechteregelung sollte einwandfrei funktionieren.
+\item Die privaten Daten wie z.b. Notizen sollten nur vom Erzeuger eingesehn werden können.
+\item Verbindungen sollten immer verschlüsselt sein.
+\end{itemize}
+\subparagraph{Verfügbarkeit}
+\begin{itemize}
+\item Das System sollte nicht nur aus dem Uni-Netz sondern auch Weltweit über das Web genutzt werden können.
+\item Es sollte zu Wartungszwecken nicht abgeschaltet werden müssen.
+\end{itemize}
+\subparagraph{Wartbarkeit}
+\begin{itemize}
+\item Es sollte eine eigene Schnittstelle für Administratoren geben. Dies erleichtert die Wartung des Systems enorm.
+\end{itemize}
 
 \end{document}
