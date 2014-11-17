@@ -93,8 +93,16 @@ Folgende Akteue sind am System beteiligt.\\\\
 
 \subsubsection{Szenarien}
 \subsubsection{Systemaufgabe}
-Hier werden alle Systemaufgaben, die dazugehörigen Teilnehmer und jeweils eine kurze Beschreibung aufgelistet. Außerdem wird jede Anforderung mit einer Markierung(-2 bis 2) versehen, die darlegt, wie wichtig diese Anforderung ist.
+Hier werden alle Systemaufgaben, die dazugehörigen Teilnehmer und jeweils eine kurze Beschreibung aufgelistet. Außerdem wird jede Anforderung mit einer Markierung (-2 bis 2) versehen, die darlegt, wie wichtig diese Anforderung ist.
 \paragraph{Funktionale Anforderungen}\mbox{}\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Registrieren}} \\ \hline
+\textbf{Bedeutung} & 2 \\ \hline 
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Benutzer gibt seine Daten wie eMail-Addresse (zum Login) und Passwort ein. Daraufhin wird vom System ein neuer Benutzer angelegt und der Benutzer wird automatisch angemeldet. Initial ist jeder Nutzer als Student registriert.\\ 
+\hline 
+\end{tabular}\\\\
 
 \begin{tabular}{l p{10cm}}
 \multicolumn{2}{l}{\textbf{Anmelden}} \\ \hline
@@ -156,7 +164,7 @@ Hier werden alle Systemaufgaben, die dazugehörigen Teilnehmer und jeweils eine 
 \multicolumn{2}{l}{\textbf{Initiales Skript importieren}} \\ \hline
 \textbf{Bedeutung} & -2 \\ \hline 
 \textbf{Beteiligt} & Dozent \\ \hline 
-\textbf{Beschreibung} & Der Dozent hat die Möglichkeit, ein initiales Skript zu importieren. Das System konvertiert dieses Skript in eine Sammlung von Karteikarten. \\ 
+\textbf{Beschreibung} & Der Dozent hat die Möglichkeit, ein initiales Skript zu importieren. Das System konvertiert dieses Skript in eine Sammlung von Karteikarten. Der Aufbau des Skripts stellt einen initialen roten Faden dar. \\ 
 \hline 
 \end{tabular}\\\\
 
@@ -220,7 +228,15 @@ Hier werden alle Systemaufgaben, die dazugehörigen Teilnehmer und jeweils eine 
 \multicolumn{2}{l}{\textbf{Karteikarte hinzufügen}} \\ \hline
 \textbf{Bedeutung} & 2 \\ \hline 
 \textbf{Beteiligt} & Dozent, Moderator \\ \hline 
-\textbf{Beschreibung} & Ein Dozent oder Moderator kann eine neue Karteikarte hinzufügen.\\ 
+\textbf{Beschreibung} & Ein Dozent oder Moderator kann eine neue Karteikarte hinzufügen. Dabei muss auf andere Karteikarten verlinkt werden. Z.b. Eltern, Kinder, Querverweise. Außerdem muss der Typ (Bild, Text) gewählt werden. Zusätzliche Attribute wie Wichtigkeit oder Themengebiet können gesetzt werden.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Kommentare hinzufügen}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Jeder Benutzer kann zu einer Karteikarte Kommentare hinzufügen und den Kommentar-Typ (Fragen, Infos, Antwort,..) wählen.\\ 
 \hline 
 \end{tabular}\\\\
 
@@ -245,6 +261,78 @@ Hier werden alle Systemaufgaben, die dazugehörigen Teilnehmer und jeweils eine 
 \textbf{Bedeutung} & -1 \\ \hline 
 \textbf{Beteiligt} & Dozent \\ \hline 
 \textbf{Beschreibung} & Der Dozent kann seine selbst erstellten Veranstaltungen löschen.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Kommentar-Sichtbarkeit einstellen}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Jeder Nutzer kann die Sichtbarkeit seines Kommentars/seiner Diskussion einstellen.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Verlinken von Begriffen zu Karteikarten}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Dozent, Moderator \\ \hline 
+\textbf{Beschreibung} & Es ist möglich, ein bestimmtes Wort in einer Karteikarte mit einer anderen Karte zu verlinken. \\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Gruppen erstellen}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Benutzer gibt einen Gruppennamen sowie die Mitglieder an.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Gruppen editieren}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Gruppenersteller kann nachträglich Nutzer hinzufügen.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Gruppen löschen}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Ersteller kann seine eigenen Gruppen löschen.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Benachrichtigungen anzeigen}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Benutzer wird über Beitrittsanfragen zu Gruppen und neuen Kommentare zu Diskussionen benachrichtigt.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Beitrittsanfrage zu Gruppe beantworten}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Benutzer \\ \hline 
+\textbf{Beschreibung} & Der Benutzer kann Beitrittsanfragen annehmen oder ablehnen.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Nutzerstatus}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Dozent, Administrator \\ \hline 
+\textbf{Beschreibung} & Der Dozent kann Nutzer zu Moderatoren ernennen. Der Administrator kann Nutzer zu Dozenten ernennen.\\ 
+\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+\multicolumn{2}{l}{\textbf{Roter Faden anpassen}} \\ \hline
+\textbf{Bedeutung} & 0 \\ \hline 
+\textbf{Beteiligt} & Dozent \\ \hline 
+\textbf{Beschreibung} & Der Dozent kann den roten Lernfaden manuell anpassen und erweitern.\\ 
 \hline 
 \end{tabular}\\\\
 
@@ -280,6 +368,14 @@ Hier werden alle nicht funktionalen Anforderungen aufgelistet, denen das System 
 \subparagraph{Wartbarkeit (-1)}
 \begin{itemize}
 \item Es sollte eine eigene Schnittstelle für Administratoren geben. Dies erleichtert die Wartung des Systems enorm.
+\end{itemize}
+\subparagraph{Darstellungsunabhängigkeit (2)}
+\begin{itemize}
+\item Die Lehrinhalte müssen Darstellungsunabhängig gespeichert sein.
+\end{itemize}
+\subparagraph{Plattformunabhängigkeit (2)}
+\begin{itemize}
+\item Das System sollte als unabhängige Webanwendung implementiert werden.
 \end{itemize}
 
 \end{document}
