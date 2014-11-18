@@ -3,6 +3,8 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
 \usepackage[ngerman]{babel}
 \parindent0pt
 \author{Matthias Englert, Fabian Schilha, Andreas Rottach}
@@ -87,7 +89,8 @@ BEISPIEL 	 & Prof. Dr. Helmuth Partsch\\
 \subsubsection{Akteure und Anwendungsfälle}
 In diesem Abschnitt werden die beteiligten Akteure identifiziert. Danach werden alle auftretenden Anwendungsfälle durch Anwendungsfalldiagrame dargestellt.
 Folgende Akteue sind am System beteiligt.\\\\
-
+\paragraph{Akteure}
+\mbox{}\\
 \begin{tabular}{l p{10cm}}
 \textbf{Akteuer} & Benutzer \\ 
 \hline \textbf{Beschreibung} & Ein Benutzer kann sich am System anmelden und für Kurse registrieren. \\ 
@@ -118,10 +121,180 @@ Folgende Akteue sind am System beteiligt.\\\\
 \hline 
 \end{tabular}\\\\
 
+\paragraph{Anwendungsfälle}\mbox{}\\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/Benutzer.jpg}
+	\caption{Dies sind alle Aktionen die von einem Benutzer getätigt werden können.}
+	\label{AwfBenutzer}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/Moderator.jpg}
+	\caption{Der Moderator erbt alle Anwendungsfälle vom Benutzer. Er kann zusätzlich die Karteikarten und Diskussionen verwalten.}
+	\label{AwfModerator}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/Dozent.jpg}
+	\caption{Der Dozent erbt alle Anwendungsfälle vom Benutzer und vom Moderator. Zusätzlich kann er Veranstaltungen verwalten.}
+	\label{AwfDozent}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/Admin.jpg}
+	\caption{Der Administrator erbt von allen Akteuren und hat somit alle Rechte. Er kann Nutzer in den Dozenten-Status erheben.}
+	\label{AwfAdmin}
+\end{figure}
 \subsubsection{Szenarien}
+Alle Anwendungsfälle werden durch Sequenzdiagramme beschrieben. Diese Diagramme beschreiben einen beispielhaften Ablauf einer Aktion und schließen Alternativen oder Optionales mit ein.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/Registrierung.jpg}
+	\caption{Der Benutzer registriert sich initial im System.}
+	\label{SzRegistrieren}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/AmSystemAnmelden.jpg}
+	\caption{Der Benutzer meldet am System an.}
+	\label{SzAmSystemAnmelden}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VomSystemAbmelden.jpg}
+	\caption{Der Benutzer meldet vom System ab.}
+	\label{SzVomSystemAbmelden}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/ZuVeranstaltungAnmelden.jpg}
+	\caption{Der Benutzer meldet zu einer Veranstaltung an.}
+	\label{SzZuVeranstaltungAnmelden}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungenAnzeigen.jpg}
+	\caption{Der Benutzer zeigt alle bestehenden Veranstaltungen an.}
+	\label{SzVeranstaltungenAnzeigen}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/NotizenMachen.jpg}
+	\caption{Der Benutzer legt eine Notiz zu einer Karteikarte an.}
+	\label{SzNotizenMachen}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/SkriptExportieren.jpg}
+	\caption{Der Benutzer kann ein Skript exportieren.}
+	\label{SzSkriptExportieren}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/DiskussionAnstossen.jpg}
+	\caption{Der Benutzer kann eine Diskussion zu einer Karteikarte beginnen.}
+	\label{SzDiskussionAnstossen}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/DiskussionEinsehen.jpg}
+	\caption{Der Benutzer kann eine Diskussion zu einer Karteikarte einsehen.}
+	\label{SzDiskussionEinsehen}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/LerninhalteEinsehen.jpg}
+	\caption{Der Benutzer kann eine Diskussion zu einer Karteikarte einsehen.}
+	\label{SzLerninhaltEinsehen}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungAnlegen.jpg}
+	\caption{Der Dozent kann eine neue Veranstaltung anlegen.}
+	\label{SzVeranstaltungAnlegen}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungLoeschen.jpg}
+	\caption{Der Dozent kann selbst erstellte Veranstaltungen löschen.}
+	\label{SzVeranstaltungLoeschen}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KarteikarteAendern.jpg}
+	\caption{Der Moderator kann eine Karteikarte ändern.}
+	\label{SzKarteikarteAendern}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KarteikarteHinzufuegen.jpg}
+	\caption{Der Moderator kann eine Karteikarte hinzufügen.}
+	\label{SzKarteikarteHinzufuegen}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/MailVersenden.jpg}
+	\caption{Das System kann eine Mail an den Benutzer versenden.}
+	\label{SzMailVersenden}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/GruppenVerwalten.jpg}
+	\caption{Der Nutzer kann Gruppen anlegen, löschen und bearbeiten.}
+	\label{SzGruppenVerwalten}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/BenachrichtigungenAnzeigen.jpg}
+	\caption{Der Nutzer kann seine Benachrichtigungen anzeigen.}
+	\label{SzBenachrichtigungen}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KommentarSchreiben.jpg}
+	\caption{Der Nutzer kann Kommentare zu Diskussionen hinterlassen.}
+	\label{SzKommentarSchreiben}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/BeitrittsanfrageZuGruppe.jpg}
+	\caption{Der Nutzer kann Beitrittsanfragen zu Gruppen beantworten.}
+	\label{SzBeitrittsanfrageZuGruppe}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/ProfilBearbeiten.jpg}
+	\caption{Der Nutzer kann sein sein Profil bearbeiten.}
+	\label{SzProfilBearbeiten}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KommentareBewerten.jpg}
+	\caption{Der Nutzer kann Kommentare zu Diskussionen mit positiven Bewertungen versehen.}
+	\label{SzKommentareBearbeiten}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VonVeranstaltungAbmelden.jpg}
+	\caption{Der Nutzer sich von Veranstaltungen wieder abmelden.}
+	\label{SzVonVeranstaltungAbmelden}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungBearbeiten.jpg}
+	\caption{Der Dozent kann seine eigenen Veranstaltungen bearbeiten.}
+	\label{SzVeranstaltungBearbeiten}
+\end{figure}
+
 \subsubsection{Systemaufgabe}
 Hier werden alle Systemaufgaben, die dazugehörigen Teilnehmer und jeweils eine kurze Beschreibung aufgelistet. Außerdem wird jede Anforderung mit einer Markierung (-2 bis 2) versehen, die darlegt, wie wichtig diese Anforderung ist.
-\newpage
+
 \paragraph{Funktionale Anforderungen}
 \subparagraph{Benutzer - Anwendungsfall "Registrieren" (2)}\mbox{}\\
 
