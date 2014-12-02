@@ -1147,4 +1147,61 @@ Hier werden alle nicht funktionalen Anforderungen aufgelistet, denen das System 
 \item Das System soll als unabhängige Webanwendung implementiert werden.
 \end{itemize}
 
+
+
+
+
+\begin{tabular}{l p{10cm}}
+Dialog 	 & \textbf{Profil anzeigen} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Der Dialog zeigt die persönlichen Daten des Benutzers.\\\\
+
+Interaktion 	 & Profil bearbeiten / Kennwort ändern\\ 
+Beschreibung   	 & Das System wechselt zum Dialog Profil bearbeiten.\\\\
+
+\end{tabular}\\\\  
+
+\begin{tabular}{l p{10cm}}
+Dialog 	 & \textbf{Profil bearbeiten} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Der Dialog zeigt die persönlichen Daten des Benutzers. Manche Daten wie z.B Vor- und Nachname sind editierbar. Das Feld eMail-Adresse ist nicht editierbar, da es zur Identifikation des Benutzers dient.\\\\
+
+Interaktion 	 & neue Profildaten speichern\\ 
+Beschreibung   	 & Der Benutzer gibt in die Textfelder seine Änderungen ein. Nachdem er den Button klickt, wechselt das System zum Dialog Profil anzeigen.\\
+Vorbedingung   	 & Alle Felder sind ausgefüllt\\
+Nachbedingung 	 & Profildaten sind gespeichert\\\\
+
+Interaktion 	 & Kennwort ändern\\ 
+Beschreibung   	 & Der Benutzer gibt sein aktuelles und sein neues Passwort ein. Das neue Passwort wird gespeichert und der Benutzer kommt zum Dialog Profil anzeigen. Macht der Benutzer einen Fehler, bleibt er auf dem aktuellen Dialog und es werden die entsprechenden Textfelder rot markiert. \\
+Vorbedingung   	 & Aktuelles Passwort ist korrekt. Neues Passwort ist lang genug. Die Textfelder neues Passwort und neues Passwort bestätigen stimmen überein\\
+Nachbedingung 	 & neues Kennwort wird gespeichert\\\\
+
+Interaktion 	 & Abbrechen\\ 
+Beschreibung   	 & Das System wechselt zum Dialog Profil anzeigen und behält die alten Einstellungen bei. \\
+Vorbedingung   	 & keine\\
+Nachbedingung 	 & Die Änderungen des Benutzers werden nicht gespeichert\\\\
+\hline
+\end{tabular}\\\\  
+
+\begin{tabular}{l p{10cm}}
+Dialog 	 & \textbf{Veranstaltung anlegen} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Mit diesem Dialog kann ein Dozent eine neue Veranstaltung anlegen. Der Dialog besteht aus Textfeldern, mit denen der Dozent die Daten der Veranstaltung eingibt. Der Inhalt des Textfelds Beschreibung steht später dann auf der Anfangsseite der Veranstaltung, damit ein Benutzer weiß, um was es in der Veranstaltung geht.\\\\
+
+Interaktion 	 & Skript anlegen\\ 
+Beschreibung   	 & Wenn der Benutzer diesen Button klickt, öffnet das System den Dialog Karteikarte erstellen, wo der Dozent das initiale Skript für die Veranstaltung erstellen kann.\\
+Vorbedingung   	 & keine\\
+Nachbedingung 	 & Die Veranstaltungsdaten, die der Dozent schon eingegeben hat, bleiben erhalten nachdem er das initiale Skript erstellt hat.\\\\
+
+Interaktion 	 & neue Veranstaltung erstellen\\ 
+Beschreibung   	 & Das System wechselt in den Dialog Veranstaltung, in dem die gerade erstellte Veranstaltung angezeigt wird. \\
+Vorbedingung   	 & Alle Pflichtfelder sind ausgefüllt.\\\\
+
+Interaktion 	 & Abbrechen\\ 
+Beschreibung   	 & Das System wechselt in den Dialog Veranstaltung auflisten und erstellt keine neue Veranstaltung \\\\
+\hline
+\end{tabular}\\\\  
+
 \end{document}
+
+
