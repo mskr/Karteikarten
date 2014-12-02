@@ -1156,51 +1156,166 @@ Dialog 	 & \textbf{Profil anzeigen} \\
 Modus & nicht modal\\ 
 Beschreibung   	 & Der Dialog zeigt die persönlichen Daten des Benutzers.\\\\
 
-Interaktion 	 & Profil bearbeiten / Kennwort ändern\\ 
-Beschreibung   	 & Das System wechselt zum Dialog Profil bearbeiten.\\\\
+\underline{Interaktion} 	 & Profil bearbeiten / Kennwort ändern\\ 
+Beschreibung   	 & Mit dieser Interaktion kann das Profil bearbeitet werden.\\
+Vorbedingung	& Es handelt sich um das eigene Profil \\
+Nachbedingung	& keine \\
+Öffnet			& \glqq Profil bearbeiten\grqq \\\\
 
-\end{tabular}\\\\  
+\underline{Interaktion} 	 & Profil suchen\\ 
+Beschreibung   	 & Ein Benutzer kann ein anderes Profil.\\
+Vorbedingung	& keine \\
+Nachbedingung	& keine \\
+Öffnet			& \glqq Profil suchen\grqq \\\\
+			
+\hline
+\end{tabular}\\\\
 
 \begin{tabular}{l p{10cm}}
 Dialog 	 & \textbf{Profil bearbeiten} \\ 
 Modus & nicht modal\\ 
-Beschreibung   	 & Der Dialog zeigt die persönlichen Daten des Benutzers. Manche Daten wie z.B Vor- und Nachname sind editierbar. Das Feld eMail-Adresse ist nicht editierbar, da es zur Identifikation des Benutzers dient.\\\\
+Beschreibung   	 & Der Dialog zeigt die persönlichen Daten des Benutzers. Manche Daten wie z.B Vor- und Nachname sind editierbar. Das Feld Email-Adresse ist nicht editierbar, da es zur Identifikation des Benutzers dient.\\\\
 
-Interaktion 	 & neue Profildaten speichern\\ 
-Beschreibung   	 & Der Benutzer gibt in die Textfelder seine Änderungen ein. Nachdem er den Button klickt, wechselt das System zum Dialog Profil anzeigen.\\
+\underline{Interaktion}  	 & neue Profildaten speichern\\ 
+Beschreibung   	 & Der Benutzer gibt in die Textfelder seine Änderungen ein, die dann vom System gespeichert werden. Bei Fehleingaben werden die entsprechenden Textfelder markiert.\\
 Vorbedingung   	 & Alle Felder sind ausgefüllt\\
-Nachbedingung 	 & Profildaten sind gespeichert\\\\
+Nachbedingung 	 & Profildaten sind gespeichert\\
+Öffnet			 & \glqq Profil anzeigen\grqq\\\\
 
-Interaktion 	 & Kennwort ändern\\ 
-Beschreibung   	 & Der Benutzer gibt sein aktuelles und sein neues Passwort ein. Das neue Passwort wird gespeichert und der Benutzer kommt zum Dialog Profil anzeigen. Macht der Benutzer einen Fehler, bleibt er auf dem aktuellen Dialog und es werden die entsprechenden Textfelder rot markiert. \\
+\underline{Interaktion}  	 & Kennwort ändern\\ 
+Beschreibung   	 & Der Benutzer gibt sein aktuelles und sein neues Passwort ein. Das neue Passwort wird gespeichert. Macht der Benutzer einen Fehler, bleibt er auf dem aktuellen Dialog und es werden die entsprechenden Textfelder rot markiert. \\
 Vorbedingung   	 & Aktuelles Passwort ist korrekt. Neues Passwort ist lang genug. Die Textfelder neues Passwort und neues Passwort bestätigen stimmen überein\\
-Nachbedingung 	 & neues Kennwort wird gespeichert\\\\
+Nachbedingung 	 & neues Kennwort wird gespeichert\\
+Öffnet			 & \glqq Profil anzeigen\grqq\\\\
 
-Interaktion 	 & Abbrechen\\ 
-Beschreibung   	 & Das System wechselt zum Dialog Profil anzeigen und behält die alten Einstellungen bei. \\
+\underline{Interaktion} 	 & Abbrechen\\ 
+Beschreibung   	 & Die Bearbeitung des Profils wird abgebrochen. \\
 Vorbedingung   	 & keine\\
-Nachbedingung 	 & Die Änderungen des Benutzers werden nicht gespeichert\\\\
+Nachbedingung 	 & Die Änderungen des Benutzers werden nicht gespeichert\\
+Öffnet			 & \glqq Profil anzeigen\grqq\\\\
 \hline
 \end{tabular}\\\\  
 
 \begin{tabular}{l p{10cm}}
+Dialog 	 & \textbf{Veranstaltungen auflisten} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Auf dieser Oberfläche werden alle Veranstaltungen geordnet nach Semester und Studienfach aufgelistet. Ein Dozent hat zusätzlich noch die Möglichkeit neue Veranstaltungen zu erstellen\\\\
+
+\underline{Interaktion} 	 & Auswahl des Semesters\\ 
+Beschreibung   	 & Der Benutzer wählt beispielsweise den Punkt Wintersemester 2014/2015. Dann werden alle Studiengänge in diesem Semester als Unterpunkte angezeigt\\
+Vorbedingung	& keine \\
+Nachbedingung	& keine \\
+Öffnet			& kein neuer Dialog wird geöffnet\\\\
+
+\underline{Interaktion} 	 & Auswahl eines Studiengangs\\ 
+Beschreibung   	 & Nachdem der Benutzer das Semester gewählt hat, kann er einen Studiengang anklicken. Dann werden alle Veranstaltungen dieses Studiengangs als Unterpunkte angezeigt\\
+Vorbedingung	& keine \\
+Nachbedingung	& keine \\
+Öffnet			& kein neuer Dialog wird geöffnet\\\\
+
+\underline{Interaktion} 	 & Auswahl einer Veranstaltung\\ 
+Beschreibung   	 & Nachdem der Benutzer den Studiengang gewählt hat, kann er sich eine Veranstaltung aussuchen.\\
+Vorbedingung	& keine \\
+Nachbedingung	& keine \\
+Öffnet			& \glqq Veranstaltung\grqq, wenn der Benutzer für die Veranstaltung eingetragen ist. Falls nicht wird der Dialog \glqq Veranstaltung eintragen\grqq geöffnet \\\\
+			
+\underline{Interaktion} 	 & Veranstaltung erstellen\\ 
+Beschreibung   	 & Ein Dozent kann für seine Vorlesung eine neue Veranstaltung anlegen.\\
+Vorbedingung	& als Dozent angemeldet \\
+Nachbedingung	& keine \\
+Öffnet 			& \glqq Veranstaltung anlegen\grqq \\
+\hline
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
 Dialog 	 & \textbf{Veranstaltung anlegen} \\ 
 Modus & nicht modal\\ 
-Beschreibung   	 & Mit diesem Dialog kann ein Dozent eine neue Veranstaltung anlegen. Der Dialog besteht aus Textfeldern, mit denen der Dozent die Daten der Veranstaltung eingibt. Der Inhalt des Textfelds Beschreibung steht später dann auf der Anfangsseite der Veranstaltung, damit ein Benutzer weiß, um was es in der Veranstaltung geht.\\\\
+Beschreibung   	 & Mit diesem Dialog kann ein Dozent eine neue Veranstaltung anlegen. Der Dialog besteht aus Textfeldern, mit denen der Dozent die Daten der Veranstaltung eingibt. Der Inhalt des Textfelds Beschreibung steht später dann auf der Anfangsseite der Veranstaltung, damit ein Benutzer weiß, um was es in der Veranstaltung geht. Der Dozent kann mehrere Moderatoren (auch sich selbst und mindestens einen) festlegen. \\\\
 
-Interaktion 	 & Skript anlegen\\ 
-Beschreibung   	 & Wenn der Benutzer diesen Button klickt, öffnet das System den Dialog Karteikarte erstellen, wo der Dozent das initiale Skript für die Veranstaltung erstellen kann.\\
+\underline{Interaktion}  	 & Skript anlegen\\ 
+Beschreibung   	 & Mit dieser Option kann der Dozent ein initiales Skript erstellen.\\
 Vorbedingung   	 & keine\\
-Nachbedingung 	 & Die Veranstaltungsdaten, die der Dozent schon eingegeben hat, bleiben erhalten nachdem er das initiale Skript erstellt hat.\\\\
+Nachbedingung 	 & Die Veranstaltungsdaten, die der Dozent schon eingegeben hat, bleiben erhalten nachdem er das initiale Skript erstellt hat.\\
+Öffnet			 & \glqq Karteikarte erstellen\grqq \\\\
 
-Interaktion 	 & neue Veranstaltung erstellen\\ 
-Beschreibung   	 & Das System wechselt in den Dialog Veranstaltung, in dem die gerade erstellte Veranstaltung angezeigt wird. \\
-Vorbedingung   	 & Alle Pflichtfelder sind ausgefüllt.\\\\
+\underline{Interaktion}  	 & neue Veranstaltung erstellen\\ 
+Beschreibung   	 & Der Dozent bestätigt die Daten, die er für die Veranstaltung eingetragen hat und eine neue Veranstaltung wird erstellt. Wurden falsche Eingaben gemacht werden die entsprechenden Textfelder rot markiert. \\
+Vorbedingung   	 & Alle Pflichtfelder sind ausgefüllt.\\
+Nachbedingung	 & keine\\
+Öffnet			 & \glqq Veranstaltung \grqq, in dem die gerade erstellte Veranstaltung angezeigt wird. \\\\
 
-Interaktion 	 & Abbrechen\\ 
-Beschreibung   	 & Das System wechselt in den Dialog Veranstaltung auflisten und erstellt keine neue Veranstaltung \\\\
+\underline{Interaktion}  	 & Abbrechen\\ 
+Beschreibung   	 & Es wird keine neue Veranstaltung erstellt und die eingegebenen Daten verworfen.  \\
+Vorbedingung	 & keine \\
+Nachbedingung	 & keine \\
+Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\\\
 \hline
-\end{tabular}\\\\  
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+Dialog 	 & \textbf{Veranstaltung bearbeiten} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Hier kann ein Dozent die Daten seiner Veranstaltung bearbeiten. \\\\
+
+\underline{Interaktion}  	 & Änderungen speichern\\ 
+Beschreibung   	 & Der Dozent bestätigt seine Änderungen. Wurden falsche Eingaben gemacht werden die entsprechenden Textfelder rot markiert. \\
+Vorbedingung   	 & Alle Pflichtfelder sind ausgefüllt.\\
+Nachbedingung	 & keine\\
+Öffnet			 & \glqq Veranstaltung \grqq, in dem die gerade bearbeitete Veranstaltung angezeigt wird. \\\\
+
+\underline{Interaktion}  	 & Abbrechen\\ 
+Beschreibung   	 & Es werden keine Änderungen an der Veranstaltung vorgenommen.  \\
+Vorbedingung	 & keine \\
+Nachbedingung	 & keine \\
+Öffnet			 & \glqq Veranstaltung\grqq \\\\
+\hline
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+Dialog 	 & \textbf{Veranstaltung eintragen} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Wenn der Benutzer noch nicht für diese Veranstaltung eingetragen ist, bekommt er nur eine Beschreibung dieser Veranstaltung und die Möglichkeit sich einzutragen. Dabei kann ein Passwort notwendig sein, das der verantwortliche Dozent beim Erstellen der Veranstaltung festlegen kann.\\\\ 
+
+\underline{Interaktion}  	 & eintragen\\ 
+Beschreibung   	 & Der Benutzer gibt evtl. ein Passwort ein und bestätigt, dass er sich für diese Veranstaltung eintragen möchte.  \\
+Vorbedingung	 & Passwort korrekt \\
+Nachbedingung	 & Der Benutzer ist nun dauerhaft für diese Veranstaltung eingetragen \\
+Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\\\
+
+\underline{Interaktion}  	 & Abbrechen\\ 
+Beschreibung   	 & Der Benutzer wird nicht eingetragen.  \\
+Vorbedingung	 & keine \\
+Nachbedingung	 & keine \\
+Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\\\
+
+\hline
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
+Dialog 	 & \textbf{Veranstaltung} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Auf diesem Dialog wird eine konkrete Veranstaltung angezeigt. Es wird eine kurze Beschreibung gegeben, um dem Benutzer allgemeine Informationen zu dieser Veranstaltung bereit zu stellen. Da das System eine E-Learning Plattform ist, gibt es zu jeder Veranstaltung eine Lernumgebung.\\\\ 
+
+\underline{Interaktion}  	 & Lernumgebung anzeigen\\ 
+Beschreibung   	 & Der Benutzer möchte zur Lernumgebung wechseln.  \\
+Vorbedingung	 & keine \\
+Nachbedingung	 & keine \\
+Öffnet			 & \glqq Lernumgebung anzeigen\grqq \\\\
+
+\underline{Interaktion}  	 & Veranstaltung bearbeiten\\ 
+Beschreibung   	 & Der Dozent dieser Veranstaltung möchte bestimmte Daten der Veranstaltung ändern.  \\
+Vorbedingung	 & als Dozent angemeldet, der die Veranstaltung erstellt hat \\
+Nachbedingung	 & keine \\
+Öffnet			 & \glqq Veranstaltung bearbeiten\grqq \\\\
+
+\underline{Interaktion}  	 & Veranstaltung löschen\\ 
+Beschreibung   	 & Der Dozent möchte seine Veranstaltung löschen.  \\
+Vorbedingung	 & als Dozent angemeldet, der die Veranstaltung erstellt hat \\
+Nachbedingung	 & keine \\
+Öffnet			 & \glqq Ja/Nein Dialog\grqq \\\\
+
+\hline
+\end{tabular}\\\\
 
 \end{document}
 
