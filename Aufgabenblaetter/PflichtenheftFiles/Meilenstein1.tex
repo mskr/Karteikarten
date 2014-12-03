@@ -531,7 +531,7 @@ Akteur & \textbf{eMail-Server} \\
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/Benutzer.png}
+	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/Benutzer.jpg}
 	\caption{Dies sind alle Aktionen die von einem Benutzer getätigt werden können.}
 	\label{AwfBenutzer}
 \end{figure}
@@ -1182,7 +1182,7 @@ Nachbedingung	& keine \\
 \begin{tabular}{l p{10cm}}
 Dialog 	 & \textbf{Profil bearbeiten} \\ 
 Modus & nicht modal\\ 
-Beschreibung   	 & Der Dialog zeigt die persönlichen Daten des Benutzers. Manche Daten wie z.B Vor- und Nachname sind editierbar. Das Feld Email-Adresse ist nicht editierbar, da es zur Identifikation des Benutzers dient.\\\\
+Beschreibung   	 & Der Dialog zeigt die persönlichen Daten des Benutzers und Einstellungen zu Gruppen und Diskussionen an. Manche Daten wie z.B Vor- und Nachname sind editierbar. Das Feld Email-Adresse ist nicht editierbar, da es zur Identifikation des Benutzers dient.\\\\
 
 \underline{Interaktion}  	 & neue Profildaten speichern\\ 
 Beschreibung   	 & Der Benutzer gibt in die Textfelder seine Änderungen ein, die dann vom System gespeichert werden. Bei Fehleingaben werden die entsprechenden Textfelder markiert.\\
@@ -1238,7 +1238,7 @@ Nachbedingung	& keine \\
 \begin{tabular}{l p{10cm}}
 Dialog 	 & \textbf{Veranstaltung anlegen} \\ 
 Modus & nicht modal\\ 
-Beschreibung   	 & Mit diesem Dialog kann ein Dozent eine neue Veranstaltung anlegen. Der Dialog besteht aus Textfeldern, mit denen der Dozent die Daten der Veranstaltung eingibt. Der Inhalt des Textfelds Beschreibung steht später dann auf der Anfangsseite der Veranstaltung, damit ein Benutzer weiß, um was es in der Veranstaltung geht. Der Dozent kann mehrere Moderatoren festlegen. Er selbst ist immer auch ein Moderator \\\\
+Beschreibung   	 & Mit diesem Dialog kann ein Dozent eine neue Veranstaltung anlegen. Der Dialog besteht aus Textfeldern, mit denen der Dozent die Daten der Veranstaltung eingibt. Der Inhalt des Textfelds \glqq Beschreibung\grqq steht später dann auf der Anfangsseite der Veranstaltung, damit ein Benutzer weiß, um was es in der Veranstaltung geht. Der Dozent kann mehrere Moderatoren festlegen. Er selbst ist immer auch ein Moderator. Der Dozent kann einstellen, ob es zu seiner Veranstaltung Diskussionen geben soll und ob man die Qualität der Diskussionen bewerten darf. Außerdem kann er festlegen, ob die Moderatoren nur für die Verwaltung von Diskussionen zuständig sind oder ob sie auch Karteikarten bearbeiten dürfen. Wenn der Dozent nicht möchte, dass Diskussionen nur in einzelnen Gruppen stattfinden, dann kann er die Gruppenbildung für seine Veranstaltung verbieten. \\\\
 
 \underline{Interaktion}  	 & Skript anlegen\\ 
 Beschreibung   	 & Mit dieser Option kann der Dozent ein initiales Skript erstellen.\\
@@ -1309,6 +1309,12 @@ Beschreibung   	 & Der Benutzer möchte zur Lernumgebung wechseln.  \\
 Vorbedingung	 & keine \\
 Nachbedingung	 & keine \\
 Öffnet			 & \glqq Lernumgebung anzeigen\grqq \\\\
+
+\underline{Interaktion}  	 & Von Veranstaltung abmelden\\ 
+Beschreibung   	 & Der Benutzer wird aus der Veranstaltung gelöscht.  \\
+Vorbedingung	 & keine \\
+Nachbedingung	 & Der Benutzer hat nun keinen Zugriff und bekommt keine Benachrichtigungen mehr zu dieser Veranstaltung. \\
+Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\\\
 
 \underline{Interaktion}  	 & Veranstaltung bearbeiten\\ 
 Beschreibung   	 & Der Dozent dieser Veranstaltung möchte bestimmte Daten der Veranstaltung ändern.  \\
