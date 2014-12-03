@@ -1152,21 +1152,29 @@ Hier werden alle nicht funktionalen Anforderungen aufgelistet, denen das System 
 
 
 \begin{tabular}{l p{10cm}}
+Dialog 	 & \textbf{Profil suchen} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Der Benutzer kann in dem Textfeld nach anderen Benutzern suchen.\\\\
+
+\underline{Interaktion} 	 & Benutzerprofil auswählen / Kennwort ändern\\ 
+Beschreibung   	 & Der Benutzer gibt einen Namen ein und wählt ein vom System vorgeschlagenes Profil aus.\\
+Vorbedingung	& keine \\
+Nachbedingung	& keine \\
+Öffnet			& \glqq Profil anzeigen\grqq \\\\
+			
+\hline
+\end{tabular}\\\\
+
+\begin{tabular}{l p{10cm}}
 Dialog 	 & \textbf{Profil anzeigen} \\ 
 Modus & nicht modal\\ 
-Beschreibung   	 & Der Dialog zeigt die persönlichen Daten des Benutzers.\\\\
+Beschreibung   	 & Der Dialog zeigt die persönlichen Daten eines Benutzers an.\\\\
 
 \underline{Interaktion} 	 & Profil bearbeiten / Kennwort ändern\\ 
 Beschreibung   	 & Mit dieser Interaktion kann das Profil bearbeitet werden.\\
 Vorbedingung	& Es handelt sich um das eigene Profil \\
 Nachbedingung	& keine \\
 Öffnet			& \glqq Profil bearbeiten\grqq \\\\
-
-\underline{Interaktion} 	 & Profil suchen\\ 
-Beschreibung   	 & Ein Benutzer kann ein anderes Profil.\\
-Vorbedingung	& keine \\
-Nachbedingung	& keine \\
-Öffnet			& \glqq Profil suchen\grqq \\\\
 			
 \hline
 \end{tabular}\\\\
@@ -1230,7 +1238,7 @@ Nachbedingung	& keine \\
 \begin{tabular}{l p{10cm}}
 Dialog 	 & \textbf{Veranstaltung anlegen} \\ 
 Modus & nicht modal\\ 
-Beschreibung   	 & Mit diesem Dialog kann ein Dozent eine neue Veranstaltung anlegen. Der Dialog besteht aus Textfeldern, mit denen der Dozent die Daten der Veranstaltung eingibt. Der Inhalt des Textfelds Beschreibung steht später dann auf der Anfangsseite der Veranstaltung, damit ein Benutzer weiß, um was es in der Veranstaltung geht. Der Dozent kann mehrere Moderatoren (auch sich selbst und mindestens einen) festlegen. \\\\
+Beschreibung   	 & Mit diesem Dialog kann ein Dozent eine neue Veranstaltung anlegen. Der Dialog besteht aus Textfeldern, mit denen der Dozent die Daten der Veranstaltung eingibt. Der Inhalt des Textfelds Beschreibung steht später dann auf der Anfangsseite der Veranstaltung, damit ein Benutzer weiß, um was es in der Veranstaltung geht. Der Dozent kann mehrere Moderatoren festlegen. Er selbst ist immer auch ein Moderator \\\\
 
 \underline{Interaktion}  	 & Skript anlegen\\ 
 Beschreibung   	 & Mit dieser Option kann der Dozent ein initiales Skript erstellen.\\
