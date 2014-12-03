@@ -1768,6 +1768,427 @@ Nachbedingung	 & keine \\
 	Öffnet			& keinen\\\\
 \end{tabular}
 
+\begin{tabular}{l p{12cm}}
+Dialog 	 			& \textbf{Lernumgebung anzeigen} \\ 
+Modus 				& nicht modal\\ 
+Beschreibung   	 	& In diesem Dialog werden dem Benutzer sämtliche Lehrinhalte angezeigt. In dem Bereich in der Mitte sind alle Registerkarten aufgelistet und können einzeln angewählt werden.\\\\ 
+
+\underline{Interaktion}  	 & Listenansicht\\ 
+Beschreibung   	 			 & Die Ansicht der Lernumgebung kann auf  Listenansicht eingestellt werden\\
+Vorbedingung				 & angemeldeter Benutzer, eine angemeldete Veranstaltung \\
+Nachbedingung				 & \\
+Öffnet						 & \glqq Listenansicht der Registerkarten\grqq \\\\
+\end{tabular}
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion}  	 & Graphansicht\\ 
+Beschreibung   				 & Die Ansicht der Lernumgebung kann auf  Graphansicht eingestellt werden  \\
+Vorbedingung				 & angemeldeter Benutzer, eine angemeldete Veranstaltung \\
+Nachbedingung				 & \\
+Öffnet			 			 & \glqq Dialog Netzansicht der Karteikarten\grqq \\\\\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion}  	 & Profil anzeigen\\ 
+Beschreibung   	 & Der Benutzer kann auf seine Profilinformationen mit einem Mausklick zugreifen. \\
+Vorbedingung	 & angemeldeter Benutzer\\
+Nachbedingung	 & keine \\
+Öffnet			 & \glqq Dialog Profil anzeigen\grqq \\\\
+\end{tabular}\\\\
+
+
+
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 & \textbf{Notizen einsehen} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & In diesem Dialog kann sich der Benutzer auf der Lernumgebung seine persönlichen Notizen zu einer Karteikarte anzeigen lassen. \\\\
+
+\underline{Interaktion}  	 & (1) Anwahl einer Registerkarte\\ 
+Beschreibung   	 			 & Mit einem einfachen Klick auf eine Registerkarte wird diese angewählt und die auf die Registerkarte bezogenen Daten werden in dem Infobereich im oberen rechten Bildschirmrand angezeigt.\\
+Vorbedingung	 			 & angemeldeter Benutzer, eine angemeldete Veranstaltung \\
+Nachbedingung	 			 & Registerkarte muss farblich hinterlegt sein.\\
+Öffnet			 			 &  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (2) Tabulatorreiter \glqq Notizen\grqq \\ 
+Beschreibung   	 		& Benutzer kann sich seine persönlichen Notizen für die Registerkarte anzeigen lassen.\\
+Vorbedingung	 		& angewählte Registerkarte\\
+Nachbedingung	 		& \\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion}  	 & (3) Button Notizen bearbeiten\\ 
+Beschreibung   	 & Anwender kann seine schon gespeicherten Notizen bearbeiten, oder eine neue Notiz hinzufügen\\
+Vorbedingung	 & angewählte Registerkarte, Tabulatorreiter Notizen angewählt \\
+Nachbedingung	 & \\
+Öffnet			 & \glqq  Notizen Bearbeitungsfeld\grqq \\
+\end{tabular}\\\\
+
+
+
+
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 		 & \textbf{Notizen Bearbeitungsfeld} \\ 
+Modus 			 & nicht modal\\ 
+Beschreibung   	 & Benutzer kann Notizen hinzufügen und seine bereits erstellten Notizen bearbeiten \\\\
+
+\underline{Interaktion}  	 & (1) Button speichern\\ 
+Beschreibung   	 			 & Änderungen im Notizen Bearbeitungsfeld werden abgespeichert.\\
+Vorbedingung	 			 & Benutzer hat vorher den Button  Notizen bearbeiten gedrückt\\
+Nachbedingung	 			 & \\
+Öffnet			 			 & \glqq Notizen einsehen\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (2) Button abbrechen  \\ 
+Beschreibung   	 		& Benutzer möchte seine geänderten Notizen verwerfen. \\
+Vorbedingung	 		& Benutzer hat vorher den Button  Notizen bearbeiten gedrückt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq Notizen einsehen\grqq \\\\
+\end{tabular}
+
+
+
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 		 & \textbf{Diskussion anzeigen} \\ 
+Modus 			 & nicht modal\\ 
+Beschreibung   	 & Benutzer kann sich im Kontext der Lernumgebung die separaten Diskussionen anzeigen lassen, die dann automatisch unter der angewähtlen Registerkarte angezeigt wird. In der Disskusion kann er sich aktiv mit Text beteiligen und bestimmte Kommentare von anderen Nutzern des Systems bewerten.\\\\
+
+\underline{Interaktion} & (1) Karteikarte anwählen\\ 
+Beschreibung   	 		& Benutzer wählt die Diskussion an zu der er sich die Diskussionen anzeigen lassen möchte\\
+Vorbedingung	 		& ein angemeldeter Benutzer der sich in der Lernumgebung einer Veranstaltung befindet.\\
+Nachbedingung	 		& Registerkarte muss farblich hinterlegt sein.\\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (2) Tabulatorreiter \glqq Diskussion\grqq wurde angewählt \\ 
+Beschreibung   	 		& Informationsbereich zu der Registerkarte zeigt die Diskussionen über die Registerkarte an\\
+Vorbedingung	 		& angewählte Registerkarte \\
+Nachbedingung	 		& \\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (3) Auswahl einer Diskussion \\ 
+Beschreibung   	 		& Benutzer kann die verfügbaren Diskussion anklicken und entsprechende Diskussion wird unter der angewählten Registerkarte angezeigt.\\
+Vorbedingung	 		& angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt\\
+Nachbedingung	 		& angewählte Diskussion erscheint unter der gewählten Registerkarte\\
+Öffnet			 		& \glqq Diskussion\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (4) Button \glqq neue Diskussion starten\grqq  \\ 
+Beschreibung   	 		& Benutzer kann eine neue Diskussion zur einer Registerkarte anstoßen\\
+Vorbedingung	 		& angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt \\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq Diskussion erstellen \grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (5)  Kommentar schreiben \\ 
+Beschreibung   	 		& In diesem Textfeld kann der Nutzer deine Kommentare verfassen\\
+Vorbedingung	 		&angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Diskussion ausgewählt\\
+Nachbedingung	 		& eingegebene Text muss mit dem System kompatibel sein\\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (6) Button absenden  \\ 
+Beschreibung   	 		& Benutzer kann seinen bereits verfassten Kommentar zu der Diskussion hinzufügen.\\
+Vorbedingung	 		&angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Diskussion ausgewählt\\
+Nachbedingung	 		& Kommentar muss in der Diskussion ersichtlich sein\\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (7) Button ausblenden  \\ 
+Beschreibung   	 		& Benutzer möchte sich nicht mehr die Diskussion anzeigen lassen und kann diese durch den Button wieder ausblenden und es werden nur noch die einzelnen Registerkarten angezeigt\\
+Vorbedingung	 		&angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Diskussion ausgewählt\\
+Nachbedingung	 		& Es dürfen nur noch die einzelnen Registerkarten zu sehen sein\\
+Öffnet			 		& \glqq Lernumgebung\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (8) Button \glqq +1\grqq   \\ 
+Beschreibung   	 		& Mit diesem Button kann der Benutzer einzelne Kommentare bewerten\\
+Vorbedingung	 		&angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Diskussion ausgewählt\\
+Nachbedingung	 		& Die Anzahl der Bewertungen muss hinter dem Kommentar des Nutzern ersichtlich sein\\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+
+
+
+
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 		 & \textbf{Diskussion erstellen} \\ 
+Modus 			 & modal\\ 
+Beschreibung   	 & Benutzer kann eine neue Diskussion zu einer Registerkarte anstoßen, diese kann eine Frage oder ein Hinweis für die anderen Benutzer des Systems sein\\\\
+
+\underline{Interaktion} & (1) Button \glqq absenden \grqq\\ 
+Beschreibung   	 		& Benutzer kann seine erstellte Diskussion anstoßen.\\
+Vorbedingung	 		& angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Button neue Diskussion getätigt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq Diskussion anzeigen\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (2)Button abbrechen   \\ 
+Beschreibung   	 		& Benutzer kann Diskussionserstellung abbrechen in dem der Button geklickt wird, dabei wird keine neue Diskussion erstellt\\
+Vorbedingung	 		&angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Button neue Diskussion getätigt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq Diskussion anzeigen\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & Textfelder befüllen, Diskussionstyp wählen,Sichtbarkeit wählen, Formatierung bestimmen\\ 
+Beschreibung   	 		& Benutzer kann in entsprechenden Feldern in der Abbildung die Diskussionsinformationen festlegen und die Sichtbarkeit auswählen  \\
+Vorbedingung	 		&angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Button neue Diskussion getätigt\\
+Nachbedingung	 		& Button absenden muss getätigt werden damit die Informationen gespeichert werden und anderen Benutzern mit der entsprechen Berechtigung zur Verfügung stehen.\\
+Öffnet			 		& \\\\
+\end{tabular}
+
+
+
+
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 		 & \textbf{Verweise anzeigen} \\ 
+Modus 			 & nicht modal\\ 
+Beschreibung   	 & Benutzer kann sich zu Registerkarten die Verweise anzeigen lassen um weitere oder tiefgründigere Informationen anzeigen lassen\\\\
+
+\underline{Interaktion} & (1) Karteikarte anwählen\\ 
+Beschreibung   	 		& Benutzer wählt die Karteikarte an zu der er weitere Informationen haben möchte. \\
+Vorbedingung	 		& ein angemeldeter Benutzer der sich in der Lernumgebung einer Veranstaltung befindet.\\
+Nachbedingung	 		& Registerkarte muss farblich hinterlegt sein.\\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (2) Tabulatorreiter \glqq Verweis \grqq wählen \\ 
+Beschreibung   	 		& Informationsbereich zu der Registerkarte zeigt die Verweise der Registerkarte an\\
+Vorbedingung	 		& angewählte Registerkarte \\
+Nachbedingung	 		& lädt die Informationen über die Verweise im Tabulatorreiter\\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (3) Hyperlink zu einer bestimmten Registerkarte  \\ 
+Beschreibung   	 		& Benutzer wählt die gewünschte Information an und die verwiesene Registerkarte wird im mittleren Bildschirmteil angezeigt.\\
+Vorbedingung	 		& angewählte Registerkarte, Tabulatorreiter Verweis ist angewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq Lernumgebung \grqq \\\\
+\end{tabular}
+
+
+
+
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 		 & \textbf{Karteikarten ändern} \\ 
+Modus 			 & nicht modal\\ 
+Beschreibung   	 & Moderator oder Administrator kann Registerkarten bearbeiten löschen erstellen , den Roten Faden ändern, unnütze Kommentare entfernen sowie  selbst mit den einzelnen Benutzern des Systems interagieren.\\\\
+
+\underline{Interaktion} & (1)Button neue Karteikarte erstellen \\ 
+Beschreibung   	 		& Möchte der Moderator oder Administrator eine neue Registerkarte hinzufügen muss dieser Button geklickt werden.\\
+Vorbedingung	 		& angemeldeter Administrator der Moderator, Lernumgebung anzeigen\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq neue Karteikarte erstellen \grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (2)   Button roten Faden bearbeiten\\ 
+Beschreibung   	 		& Dozent/Moderator kann den initialen roten Faden bearbeiten um damit eventuell die Struktur oder den Lernerfolg der Benutzer verbessern. \\
+Vorbedingung	 		& angemeldeter Administrator oder Moderator, Lernumgebung anzeigen\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq roten Faden bearbeiten\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (3) Button Zahnrad auf der angewählten Registerkarte\\ 
+Beschreibung   	 		& Dozent/Moderator wählt die Karteikarte an um weitere Änderungen an den Registerkarten vorzunehmen. \\
+Vorbedingung	 		& Ein angemeldeter Dozent/Moderator der sich in der Lernumgebung einer Veranstaltung befindet.\\
+Nachbedingung	 		& Registerkarte muss farblich hinterlegt sein.\\
+Öffnet			 		& \glqq bestehende Registerkarte ändern\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (4)Button rotes X auf einer Registerkarte  \\ 
+Beschreibung   	 		& Dozent/Moderator nutzt diesen Button zur Löschung von einzelnen Registerkarten die nach einem Bestätigungs-Dialog aus der Datenbank entfernt werden. \\
+Vorbedingung	 		& Ein angemeldeter Administrator/Moderator der sich in der Lernumgebung einer Veranstaltung befindet. \\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq Bestätigung erfragen \grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (5)  Auswahl einer Diskussion oder eines Verweises \\ 
+Beschreibung   	 		& Dozent/Moderator kann die selben Interaktionen wie ein \glqq normaler Benutzer\grqq tätigen \\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, entsprechende Tabulatorkarte ist angewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (6)Button rotes X hinter einer Diskussion oder einem Verweis\\ 
+Beschreibung   	 		& Dozent/Moderator kann einzelne Diskussionen oder Verweise nach einer Bestätigung löschen. \\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte, entsprechende Tabulatorkarte ist angewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq Bestätigung erfragen\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (7) Button rotes X hinter einem Kommentar\\ 
+Beschreibung   	 		& Dozent/Moderator kann einzelne eventuell unnütze Kommentare nach einer Bestätigung löschen.\\
+Vorbedingung	 		&  Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt Diskussion unter der Registerkarte wird angezeigt\\
+Nachbedingung	 		& Kommentar ist aus dem Verlauf entfernt\\
+Öffnet			 		& \glqq Bestätigung erfragen\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (8) Combo Box  Sichtbarkeit wählen\\ 
+Beschreibung   	 		& Dozent/Moderator kann in den aufgerufenen Diskussionen einstellen für welche Benutzer diese Diskussion angezeigt wird.\\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt Diskussion unter der Registerkarte wird angezeigt\\
+Nachbedingung	 		& Diskussion muss bei den Benutzern die die entsprechenden Berechtigung besitzen nun unter der Registerkarte Diskussion angezeigt werden.\\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (9) Button \glqq +1\grqq   \\ 
+Beschreibung   	 		& Mit diesem Button kann der Benutzer einzelne Kommentare bewerten\\
+Vorbedingung	 		& angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Diskussion ausgewählt\\
+Nachbedingung	 		& Die Anzahl der Bewertungen muss hinter dem Kommentar des Nutzern ersichtlich sein\\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+
+
+
+
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 		 & \textbf{bestehende Karteikarte ändern} \\ 
+Modus 			 & modal\\ 
+Beschreibung   	 & Administrator/Moderator kann bereits bestehende Registerkarten manuell bearbeiten und diese Änderungen speichern\\\\
+
+\underline{Interaktion} & (1) Button Änderungen speichern \\ 
+Beschreibung   	 		& Änderungen in der bearbeiteten Registerkarte können mit diesem Button gesichert werden\\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte, Button Zahnrad wurde auf der gewählten Registerkarte getätigt\\
+Nachbedingung	 		& Änderungen werden sofort in der Registerkarte sichtbar\\
+Öffnet			 		& \glqq Karteikarten Ändern\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (2)  Button Bearbeitung  abbrechen  \\ 
+Beschreibung   	 		& Änderungen in der bearbeiteten Registerkarte können mit diesem Button verworfen werden\\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte, Button Zahnrad wurde auf der gewählten Registerkarte getätigt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq  Karteikarten Ändern\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (3) Textfelder bearbeiten, Verweise bearbeiten, Benachrichtigungen einstellen  \\ 
+Beschreibung   	 		& Die Interkationsfelder dienen Dozent/Moderator um die gewünschten Änderungen an der Registerkarte vorzunehmen. \\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte, Button Zahnrad wurde auf der gewählten Registerkarte getätigt\\
+Nachbedingung	 		& \\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+
+
+
+
+
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 		 & \textbf{neue Karteikarte erstellen} \\ 
+Modus 			 & nicht modal\\ 
+Beschreibung   	 & Administrator/Moderator können neue Registerkarten zur Lernumgebung hinzufügen.\\\\
+
+\underline{Interaktion} & Textfelder bearbeiten, Verweise bearbeiten \\ 
+Beschreibung   	 		& Die Interkationsfelder dienen Dozent/Moderator um die gewünschten Einstellungen an der Registerkarte vorzunehmen. \\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button neue Karteikarte erstellen wurde gewählt \\
+Nachbedingung	 		& \\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} &  Checkbox Alle Veranstaltungsmitglieder benachrichtigen\\ 
+Beschreibung   	 		& Soll alle Veranstaltungsmitglieder informieren, wenn eine neue Karteikarte erstellt wurde.\\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button neue Karteikarte erstellen wurde gewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & Checkbox Registerkarte an bestehenden roten Faden anhängen    \\ 
+Beschreibung   	 		& Bietet dem Administrator/Moderator die Möglichkeit bei der Ersterstellung einen initialen roten Faden zu verfolgen. \\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button neue Karteikarte erstellen wurde gewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & Button Registerkarte erstellen   \\ 
+Beschreibung   	 		& Dozent/Moderator kann damit die erstellten Daten der Registerkarte absichern und eine neue Registerkarte erstellen\\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button neue Karteikarte erstellen wurde gewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq Karteikarte ändern\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & Button Bearbeitung abbrechen   \\ 
+Beschreibung   	 		& Dozent/Moderator können die Registerkartenerstellung abbrechen\\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button neue Karteikarte erstellen wurde gewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \glqq Karteikarte ändern\grqq \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & Vaterknoten einstellen   \\ 
+Beschreibung   	 		& Dient zur Strukturierung der Registerkarten für zusammenhängende Themen\\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button neue Karteikarte erstellen wurde gewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \\\\
+\end{tabular}
+
+
+
+
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 		 & \textbf{Roter Faden bearbeiten} \\ 
+Modus 			 & nicht modal\\ 
+Beschreibung   	 & Dozent/Moderator kann hier den Roten Faden zum lernen oder Strukturierung parallel zur Vorlesung einstellen.\\\\
+
+\underline{Interaktion} & (1) Tool Box mit Radiergummi und Stift \\ 
+Beschreibung   	 		& Dozent/Moderator kann hier mit dem Mauscursor den roten Faden in dem Schaubild zeichnen, oder löschen. \\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button roter Faden bearbeiten wurde gewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		&  \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (2) Button Registerkarte zur Verfügung stellen  \\ 
+Beschreibung   	 		& Dozent/Moderator kann damit gesuchte Registerkarten in den Graph hinzufügen, das diese mit zum roten Faden hinzugefügt werden können. \\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button roter Faden bearbeiten wurde gewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} & (3) Button abbrechen   \\ 
+Beschreibung   	 		& Dozent/Moderator kann die Änderungen am roten Faden verwerfen.\\
+Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button roter Faden bearbeiten wurde gewählt\\
+Nachbedingung	 		& \\
+Öffnet			 		& \\\\
+\end{tabular}
+
+
 \subsection{Nutzungskonzept}
 Das Nutzungskonzept ist die Zuordnung der Anwendungsfälle aus Abschnitt 3.2.1 zu den Interaktionen aus Abschnitt 4.2
 \paragraph{Registrieren}
@@ -1882,7 +2303,62 @@ Beginn der Handlung ist die Startseite. Von dort aus werden folgende Interaktion
 \item \glqq Profil anzeigen\grqq: Dialogwechsel zu \glqq Profil anzeigen\grqq
 \item \glqq Profil bearbeiten\grqq: Dialogwechsel zu \glqq Profil bearbeiten\grqq
 \end{enumerate}
+\paragraph{Initiales Skript erstellen}
+Beginn der Handlung ist der Dialog \glqq Veranstaltung anlegen\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Skript anlegen\grqq: Dialogwechsel zu \glqq Karteikarte erstellen\grqq
+\end{enumerate}
 
+\paragraph{Lerninhalte einsehen}
+Beginn der Handlung ist der Dialog \glqq Veranstaltung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Lernumgebung anzeigen\grqq: Dialogwechsel zu \glqq Lernumgebung anzeigen\grqq
+\end{enumerate}
+
+\paragraph{Notizen machen}
+Beginn der Handlung ist der Dialog \glqq Veranstaltung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Lernumgebung anzeigen\grqq: Dialogwechsel zu \glqq Notizen einsehen\grqq
+\item \glqq Button Notizen bearbeiten\grqq: Dialogwechsel zu \glqq Notizen Bearbeitungsfeld\grqq
+\end{enumerate}
+
+\paragraph{Diskussionen einsehen}
+Beginn der Handlung ist der Dialog \glqq Lernumgebung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Karteikarte anwählen\grqq
+\item \glqq Tabulatorreiter Diskussion anwählen\grqq
+\item \glqq Auswahl einer Diskussion\grqq
+\end{enumerate}
+
+\paragraph{Diskussion anstoßen}
+Beginn der Handlung ist der Dialog \glqq Lernumgebung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Karteikarte anwählen\grqq
+\item \glqq Tabulatorreiter Diskussion anwählen\grqq
+\item \glqq Auswahl einer Diskussion\grqq
+\item \glqq Button neue Diskussion starten\grqq
+\end{enumerate}
+
+\paragraph{Kommentare bewerten}
+Beginn der Handlung ist der Dialog \glqq Diskussion anzeigen\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Button +1\grqq
+\end{enumerate}
+
+\paragraph{Beitrittsanfrage zur Gruppe beantworten}
+Beginn der Handlung ist der Dialog \glqq Startseite\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Button JA\grqq
+\item \glqq Button NEIN\grqq
+\end{enumerate}
+
+
+\paragraph{Kommentar schreiben}
+Beginn der Handlung ist der Dialog \glqq Diskussion anzeigen\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Kommentar schreiben\grqq
+\item \glqq Button absenden\grqq
+\end{enumerate}
 \end{document}
 
 
