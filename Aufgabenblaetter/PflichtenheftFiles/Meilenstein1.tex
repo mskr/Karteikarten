@@ -1157,6 +1157,47 @@ Hier werden alle nicht funktionalen Anforderungen aufgelistet, denen das System 
 	\label{GuiStartseite}
 \end{figure}
 
+\begin{tabular}{l p{12cm}}
+Dialog 	 & \textbf{Startseite} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Auf dieser Seite werden aktuelle Informationen zum System angezeigt.\\\\
+
+\underline{Interaktion} 	 & Veranstaltungen auflisten\\ 
+Beschreibung   	 & Das System wechselt in eine Übersicht, in der die einzelnen Veranstaltungen aufgelistet sind.\\
+Vorbedingung	& keine \\
+Nachbedingung	& keine \\
+Öffnet			& \glqq Veranstaltungen auflisten\grqq \\
+\end{tabular}\\\\
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} 	 & Gruppenübersicht anzeigen\\ 
+Beschreibung   	 & Das System wechselt zu einem Dialog, auf dem der Benutzer seien Gruppen verwalten kann.\\
+Vorbedingung	& keine \\
+Nachbedingung	& keine \\
+Öffnet			& \glqq Gruppenübersicht\grqq \\\\
+\end{tabular}\\\\
+
+\begin{tabular}{l p{12cm}}
+\underline{Interaktion} 	 & Profil anzeigen\\ 
+Beschreibung   	 & Das System wechselt zum persönlichen Profil des Benutzers.\\
+Vorbedingung	& keine \\
+Nachbedingung	& keine \\
+Öffnet			& \glqq Profil anzeigen\grqq \\\\
+\end{tabular}\\\\
+
+\begin{tabular}{l p{12cm}}
+Dialog 	 & \textbf{Profil suchen} \\ 
+Modus & nicht modal\\ 
+Beschreibung   	 & Der Benutzer kann in dem Textfeld nach anderen Benutzern suchen.\\\\
+
+\underline{Interaktion} 	 & Benutzerprofil auswählen\\ 
+Beschreibung   	 & Der Benutzer gibt einen Namen ein und wählt ein vom System vorgeschlagenes Profil aus.\\
+Vorbedingung	& keine \\
+Nachbedingung	& keine \\
+Öffnet			& \glqq Profil anzeigen\grqq \\\\
+
+\end{tabular}\\\\
+
 \begin{figure}[H]
 	\centering
 	\paragraph{Registrieren}
@@ -1182,20 +1223,13 @@ Hier werden alle nicht funktionalen Anforderungen aufgelistet, denen das System 
 \end{figure}
 
 
-\begin{tabular}{l p{12cm}}
-Dialog 	 & \textbf{Profil suchen} \\ 
-Modus & nicht modal\\ 
-Beschreibung   	 & Der Benutzer kann in dem Textfeld nach anderen Benutzern suchen.\\\\
-
-\underline{Interaktion} 	 & Benutzerprofil auswählen / Kennwort ändern\\ 
-Beschreibung   	 & Der Benutzer gibt einen Namen ein und wählt ein vom System vorgeschlagenes Profil aus.\\
-Vorbedingung	& keine \\
-Nachbedingung	& keine \\
-Öffnet			& \glqq Profil anzeigen\grqq \\\\
-			
-\hline
-\end{tabular}\\\\
-
+\begin{figure}[H]
+	\centering
+	\paragraph{Profil anzeigen}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/ProfilAnzeigen.png}
+	\caption{Profil anzeigen}
+	\label{ProfilAnzeigen}
+\end{figure}
 \begin{tabular}{l p{12cm}}
 Dialog 	 & \textbf{Profil anzeigen} \\ 
 Modus & nicht modal\\ 
@@ -1206,9 +1240,15 @@ Beschreibung   	 & Mit dieser Interaktion kann das Profil bearbeitet werden.\\
 Vorbedingung	& Es handelt sich um das eigene Profil \\
 Nachbedingung	& keine \\
 Öffnet			& \glqq Profil bearbeiten\grqq \\\\
-			
-\hline
 \end{tabular}\\\\
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Profil bearbeiten}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/ProfilBearbeiten.png}
+	\caption{Profil bearbeiten}
+	\label{ProfilBearbeiten}
+\end{figure}
 
 \begin{tabular}{l p{12cm}}
 Dialog 	 & \textbf{Profil bearbeiten} \\ 
@@ -1219,21 +1259,32 @@ Beschreibung   	 & Der Dialog zeigt die persönlichen Daten des Benutzers und Ei
 Beschreibung   	 & Der Benutzer gibt in die Textfelder seine Änderungen ein, die dann vom System gespeichert werden. Bei Fehleingaben werden die entsprechenden Textfelder markiert.\\
 Vorbedingung   	 & Alle Felder sind ausgefüllt\\
 Nachbedingung 	 & Profildaten sind gespeichert\\
-Öffnet			 & \glqq Profil anzeigen\grqq\\\\
+Öffnet			 & \glqq Profil anzeigen\grqq\\
+\end{tabular}\\\\
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion}  	 & Kennwort ändern\\ 
 Beschreibung   	 & Der Benutzer gibt sein aktuelles und sein neues Passwort ein. Das neue Passwort wird gespeichert. Macht der Benutzer einen Fehler, bleibt er auf dem aktuellen Dialog und es werden die entsprechenden Textfelder rot markiert. \\
 Vorbedingung   	 & Aktuelles Passwort ist korrekt. Neues Passwort ist lang genug. Die Textfelder neues Passwort und neues Passwort bestätigen stimmen überein\\
 Nachbedingung 	 & neues Kennwort wird gespeichert\\
-Öffnet			 & \glqq Profil anzeigen\grqq\\\\
+Öffnet			 & \glqq Profil anzeigen\grqq\\
+\end{tabular}\\\\
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion} 	 & Abbrechen\\ 
 Beschreibung   	 & Die Bearbeitung des Profils wird abgebrochen. \\
 Vorbedingung   	 & keine\\
 Nachbedingung 	 & Die Änderungen des Benutzers werden nicht gespeichert\\
 Öffnet			 & \glqq Profil anzeigen\grqq\\\\
-\hline
 \end{tabular}\\\\  
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Veranstaltungen auflisten}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/VeranstaltungenAuflisten.png}
+	\caption{Veranstaltungen auflisten}
+	\label{VeranstaltungenAuflisten}
+\end{figure}
 
 \begin{tabular}{l p{12cm}}
 Dialog 	 & \textbf{Veranstaltungen auflisten} \\ 
@@ -1244,27 +1295,40 @@ Beschreibung   	 & Auf dieser Oberfläche werden alle Veranstaltungen geordnet n
 Beschreibung   	 & Der Benutzer wählt beispielsweise den Punkt Wintersemester 2014/2015. Dann werden alle Studiengänge in diesem Semester als Unterpunkte angezeigt\\
 Vorbedingung	& keine \\
 Nachbedingung	& keine \\
-Öffnet			& kein neuer Dialog wird geöffnet\\\\
+Öffnet			& kein neuer Dialog wird geöffnet\\
+\end{tabular}\\\\ 
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion} 	 & Auswahl eines Studiengangs\\ 
 Beschreibung   	 & Nachdem der Benutzer das Semester gewählt hat, kann er einen Studiengang anklicken. Dann werden alle Veranstaltungen dieses Studiengangs als Unterpunkte angezeigt\\
 Vorbedingung	& keine \\
 Nachbedingung	& keine \\
-Öffnet			& kein neuer Dialog wird geöffnet\\\\
+Öffnet			& kein neuer Dialog wird geöffnet\\
+\end{tabular}\\\\ 
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion} 	 & Auswahl einer Veranstaltung\\ 
 Beschreibung   	 & Nachdem der Benutzer den Studiengang gewählt hat, kann er sich eine Veranstaltung aussuchen.\\
 Vorbedingung	& keine \\
 Nachbedingung	& keine \\
-Öffnet			& \glqq Veranstaltung\grqq, wenn der Benutzer für die Veranstaltung eingetragen ist. Falls nicht wird der Dialog \glqq Veranstaltung eintragen\grqq geöffnet \\\\
-			
+Öffnet			& \glqq Veranstaltung\grqq, wenn der Benutzer für die Veranstaltung eingetragen ist. Falls nicht wird der Dialog \glqq Veranstaltung eintragen\grqq geöffnet \\
+\end{tabular}\\\\
+		
+\begin{tabular}{l p{12cm}}	
 \underline{Interaktion} 	 & Veranstaltung erstellen\\ 
 Beschreibung   	 & Ein Dozent kann für seine Vorlesung eine neue Veranstaltung anlegen.\\
 Vorbedingung	& als Dozent angemeldet \\
 Nachbedingung	& keine \\
-Öffnet 			& \glqq Veranstaltung anlegen\grqq \\
-\hline
+Öffnet 			& \glqq Veranstaltung anlegen\grqq \\\\
 \end{tabular}\\\\
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Veranstaltung anlegen}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/VeranstaltungAnlegen.png}
+	\caption{Veranstaltung anlegen}
+	\label{VeranstaltungAnlegen}
+\end{figure}
 
 \begin{tabular}{l p{12cm}}
 Dialog 	 & \textbf{Veranstaltung anlegen} \\ 
@@ -1275,21 +1339,32 @@ Beschreibung   	 & Mit diesem Dialog kann ein Dozent eine neue Veranstaltung anl
 Beschreibung   	 & Mit dieser Option kann der Dozent ein initiales Skript erstellen.\\
 Vorbedingung   	 & keine\\
 Nachbedingung 	 & Die Veranstaltungsdaten, die der Dozent schon eingegeben hat, bleiben erhalten nachdem er das initiale Skript erstellt hat.\\
-Öffnet			 & \glqq Karteikarte erstellen\grqq \\\\
+Öffnet			 & \glqq Karteikarte erstellen\grqq \\
+\end{tabular}\\\\
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion}  	 & neue Veranstaltung erstellen\\ 
 Beschreibung   	 & Der Dozent bestätigt die Daten, die er für die Veranstaltung eingetragen hat und eine neue Veranstaltung wird erstellt. Wurden falsche Eingaben gemacht werden die entsprechenden Textfelder rot markiert. \\
 Vorbedingung   	 & Alle Pflichtfelder sind ausgefüllt.\\
 Nachbedingung	 & keine\\
-Öffnet			 & \glqq Veranstaltung \grqq, in dem die gerade erstellte Veranstaltung angezeigt wird. \\\\
+Öffnet			 & \glqq Veranstaltung \grqq, in dem die gerade erstellte Veranstaltung angezeigt wird. \\
+\end{tabular}\\\\
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion}  	 & Abbrechen\\ 
 Beschreibung   	 & Es wird keine neue Veranstaltung erstellt und die eingegebenen Daten verworfen.  \\
 Vorbedingung	 & keine \\
 Nachbedingung	 & keine \\
 Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\\\
-\hline
 \end{tabular}\\\\
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Veranstaltung bearbeiten}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/VeranstaltungBearbeiten.png}
+	\caption{Veranstaltung bearbeiten}
+	\label{VeranstaltungBearbeiten}
+\end{figure}
 
 \begin{tabular}{l p{12cm}}
 Dialog 	 & \textbf{Veranstaltung bearbeiten} \\ 
@@ -1300,15 +1375,24 @@ Beschreibung   	 & Hier kann ein Dozent die Daten seiner Veranstaltung bearbeite
 Beschreibung   	 & Der Dozent bestätigt seine Änderungen. Wurden falsche Eingaben gemacht werden die entsprechenden Textfelder rot markiert. \\
 Vorbedingung   	 & Alle Pflichtfelder sind ausgefüllt.\\
 Nachbedingung	 & keine\\
-Öffnet			 & \glqq Veranstaltung \grqq, in dem die gerade bearbeitete Veranstaltung angezeigt wird. \\\\
+Öffnet			 & \glqq Veranstaltung \grqq, in dem die gerade bearbeitete Veranstaltung angezeigt wird. \\
+\end{tabular}\\\\
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion}  	 & Abbrechen\\ 
 Beschreibung   	 & Es werden keine Änderungen an der Veranstaltung vorgenommen.  \\
 Vorbedingung	 & keine \\
 Nachbedingung	 & keine \\
 Öffnet			 & \glqq Veranstaltung\grqq \\\\
-\hline
 \end{tabular}\\\\
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Veranstaltung eintragen}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/VeranstaltungEintragen.png}
+	\caption{Veranstaltung eintragen}
+	\label{VeranstaltungEintragen}
+\end{figure}
 
 \begin{tabular}{l p{12cm}}
 Dialog 	 & \textbf{Veranstaltung eintragen} \\ 
@@ -1319,16 +1403,25 @@ Beschreibung   	 & Wenn der Benutzer noch nicht für diese Veranstaltung eingetr
 Beschreibung   	 & Der Benutzer gibt evtl. ein Passwort ein und bestätigt, dass er sich für diese Veranstaltung eintragen möchte.  \\
 Vorbedingung	 & Passwort korrekt \\
 Nachbedingung	 & Der Benutzer ist nun dauerhaft für diese Veranstaltung eingetragen \\
-Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\\\
+Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\
+\end{tabular}\\\\
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion}  	 & Abbrechen\\ 
 Beschreibung   	 & Der Benutzer wird nicht eingetragen.  \\
 Vorbedingung	 & keine \\
 Nachbedingung	 & keine \\
 Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\\\
 
-\hline
 \end{tabular}\\\\
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Veranstaltung}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/Veranstaltung.png}
+	\caption{Veranstaltung}
+	\label{Veranstaltung}
+\end{figure}
 
 \begin{tabular}{l p{12cm}}
 Dialog 	 & \textbf{Veranstaltung} \\ 
@@ -1339,30 +1432,37 @@ Beschreibung   	 & Auf diesem Dialog wird eine konkrete Veranstaltung angezeigt.
 Beschreibung   	 & Der Benutzer möchte zur Lernumgebung wechseln.  \\
 Vorbedingung	 & keine \\
 Nachbedingung	 & keine \\
-Öffnet			 & \glqq Lernumgebung anzeigen\grqq \\\\
+Öffnet			 & \glqq Lernumgebung anzeigen\grqq und \glqq Notizen einsehen\grqq \\
+\end{tabular}\\\\
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion}  	 & Von Veranstaltung abmelden\\ 
 Beschreibung   	 & Der Benutzer wird aus der Veranstaltung gelöscht.  \\
 Vorbedingung	 & keine \\
 Nachbedingung	 & Der Benutzer hat nun keinen Zugriff und bekommt keine Benachrichtigungen mehr zu dieser Veranstaltung. \\
-Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\\\
+Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\
+\end{tabular}\\\\
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion}  	 & Veranstaltung bearbeiten\\ 
 Beschreibung   	 & Der Dozent dieser Veranstaltung möchte bestimmte Daten der Veranstaltung ändern.  \\
 Vorbedingung	 & als Dozent angemeldet, der die Veranstaltung erstellt hat \\
 Nachbedingung	 & keine \\
-Öffnet			 & \glqq Veranstaltung bearbeiten\grqq \\\\
+Öffnet			 & \glqq Veranstaltung bearbeiten\grqq \\
+\end{tabular}\\\\
 
+\begin{tabular}{l p{12cm}}
 \underline{Interaktion}  	 & Veranstaltung löschen\\ 
 Beschreibung   	 & Der Dozent möchte seine Veranstaltung löschen.  \\
 Vorbedingung	 & als Dozent angemeldet, der die Veranstaltung erstellt hat \\
 Nachbedingung	 & keine \\
-Öffnet			 & \glqq Ja/Nein Dialog\grqq \\\\
+Öffnet			 & \glqq Ja/Nein Dialog\grqq \\
 
-\hline
 \end{tabular}\\\\
 
 \subsection{Nutzungskonzept}
+Das Nutzungskonzept ist die Zuordnung der Anwendungsfälle aus Abschnitt 3.2.1 zu den Interaktionen aus Abschnitt 4.2
+
 
 \end{document}
 
