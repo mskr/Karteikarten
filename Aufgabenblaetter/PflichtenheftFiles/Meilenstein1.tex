@@ -6,7 +6,8 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage[ngerman]{babel}
+\usepackage[ngerman]{babel} 
+\usepackage{pdflscape}
 \parindent0pt
 
 
@@ -769,7 +770,7 @@ Beschreibung & Die erfolgreiche Anmeldung wird dem Benutzer  \\
 \end{tabular} 
 
 \newpage
-\subparagraph{Benutzer - Anwendungsfall \glqq Am System anmelden \grqq (2)}\mbox{}
+\subparagraph{Benutzer - Anwendungsfall \glqq Am System anmelden\grqq (2)}\mbox{}
 
 \textbf{Eingabe der Zugangsdaten}\\
 \begin{tabular}{l|p{12cm}}
@@ -787,7 +788,7 @@ Beschreibung & Das System bestätigt dem Nutzer die Anmeldung. \\
 \end{tabular}\\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Vom System abmelden \grqq (2)}\mbox{}
+\subparagraph{Benutzer - Anwendungsfall \glqq Vom System abmelden\grqq (2)}\mbox{}
 
 \textbf{Abmelden}\\
 \begin{tabular}{l|p{12cm}}
@@ -805,7 +806,7 @@ Beschreibung &  Das System zeigt an, dass das Abmelden erfolgreich war. \\
 
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Veranstaltungen anzeigen \grqq (2)}\mbox{}
+\subparagraph{Benutzer - Anwendungsfall \glqq Veranstaltungen anzeigen\grqq (2)}\mbox{}
 
 \textbf{Alle Veranstaltungen anzeigen}\\
 \begin{tabular}{l|p{12cm}}
@@ -1142,13 +1143,68 @@ Hier werden alle nicht funktionalen Anforderungen aufgelistet, denen das System 
 \end{itemize}
 
 
-
+\begin{landscape}
 \section{Benutzerschnittstelle}
 \subsection{Dialogstruktur}
+In diesem Kapitel werden die Dialoge und ihr Zusammenhang dargestellt. Durch die Pfeile ist dargestellt, welche Dialogübergänge möglich sind. Auf den Pfeilen ist die Interaktion beschrieben die dafür notwendig ist. Beispielweise der Klick auf einen Link oder auf einen Button. Zusammengehörige Dialoge sind durch grüne Boxen gruppiert. Die Lernumgebung ist als hirarchischer Dialog aufgebaut. Die Dialoge innerhalb des Dialogs \glqq Lernumgebung anzeigen\grqq sind Teildialoge. Sie existieren also nicht als eigene Oberfläche. Nun wird zuerst eine Übersicht über die Dialoge dargestellt. Danach wird jeder Teil noch einmal vergrößert dargestellt.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=18cm]{Bilder/Mockups/DSDGesamt.png}
+	\caption{Überblick über Dialogstrukturdiagramm}
+	\label{Dialogstrukturdiagramm}
+\end{figure}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=25cm]{Bilder/Mockups/DSDGesamtuebersicht.png}
+	\caption{Kompaktere Zusammenfassung}
+	\label{DialogstrukturdiagrammZusammenfassung}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=25cm]{Bilder/Mockups/DSDAllgemeines.png}
+	\caption{Allgemeine Bestätigungs- und Fehlerdialoge}
+	\label{DSDAllgemeines}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=25cm]{Bilder/Mockups/DSDAnmeldungRegistierung.png}
+	\caption{Anmeldung und Registrierung}
+	\label{DSDAnmeldungRegistierung}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=25cm]{Bilder/Mockups/DSDProfilUndEinstellungen.png}
+	\caption{Benutzer-Profil}
+	\label{DSDProfilUndEinstellungen}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=25cm]{Bilder/Mockups/DSDGruppen.png}
+	\caption{Gruppenübersicht und -verwaltung}
+	\label{DSDGruppen}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=25cm]{Bilder/Mockups/DSDVeranstaltungen.png}
+	\caption{Veranstaltungsübersicht und -verwaltung für Dozenten und Studenten}
+	\label{DSDVeranstaltung}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=25cm]{Bilder/Mockups/DSDLernumgebung.png}
+	\caption{Dialoge für die Lernumgebung. Hierzu gehören Diskussionen, Notizen, Karteikarten, usw...}
+	\label{DSDLernumgebung}
+\end{figure}
+
+\end{landscape}
 \subsection{Dialoggestaltung}
-
 \begin{figure}[H]
 	\centering
 	\paragraph{Startseite}
@@ -1460,10 +1516,448 @@ Nachbedingung	 & keine \\
 
 \end{tabular}\\\\
 
+\begin{figure}[H]
+	\centering
+	\paragraph{Registrieren}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/Registrierung.png}
+	\caption{Registrieren}
+	\label{GuiRegistrieren}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Registrieren} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	 & Der Benutzer kann sich auf dieser Seite registrieren, falls er noch keinen Account im System besitzt. \\\\
+	
+	\underline{Interaktion} 	 & Registrieren\\ 
+	Beschreibung   	 & Siehe oben. Der Benutzer registriert sich im System.\\
+	Vorbedingung	& Benutzer ist noch nicht registriert.\\
+	Nachbedingung	& Benutzer ist im System registriert. \\
+	Öffnet			& Anmelde-Dialog wird geöffnet.\\\\
+
+\end{tabular}\\\\
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Anmelden}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/Anmeldung.png}
+	\caption{Anmelden}
+	\label{GuiAnmelden}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Anmelden} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Wenn der Benutzer die Webseite aufruft, landet er auf dem Anmelde-Dialog. \\\\
+	
+	\underline{Interaktion} 	 & Anmelden\\ 
+	Beschreibung   	& Der Benutzer gibt seine Anmeldedaten ein und kann sich in das System einloggen.\\
+	Vorbedingung	& Benutzer ist im System registriert.\\
+	Nachbedingung	& Das System eröffnet eine Session für den Benutzer. \\
+	Öffnet			& Startseite wird geöffnet.\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Passwort vergessen\\ 
+	Beschreibung   	& Der Benutzer hat sein Passwort vergessen und benötigt Hilfe.\\
+	Vorbedingung	& Benutzer ist im System registriert und weiß sein Passwort nicht mehr.\\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Passwort zurücksetzen\grqq\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Registrierung starten\\ 
+	Beschreibung   	& Der Benutzer hat keinen Account und möchte sich im System registrieren.\\
+	Vorbedingung	& Benutzer ist nicht im System registriert.\\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Registrieren\grqq\\\\
+\end{tabular}\\\\
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Passwort zurücksetzen}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/PasswortVergessen.png}
+	\caption{Passwort zurücksetzen}
+	\label{GuiPasswortVergessen}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Passwort zurücksetzen} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Wenn der Benutzer sein Passwort vergessen hat, muss er seine Mail-Adresse angeben und erhält eine Mail mit einem default-Passwort. \\\\
+	
+	\underline{Interaktion} 	 & Passwort zurücksetzen\\ 
+	Beschreibung   	& Der Benutzer setzt sein Passwort zurück durch Klicken auf Button 1.\\
+	Vorbedingung	& Benutzer ist im System registriert.\\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Anmelden\grqq.\\\\
+\end{tabular}
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Gruppe erstellen}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/GruppeErstellen.png}
+	\caption{Gruppe erstellen}
+	\label{GuiGruppeErstellen}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Gruppe erstellen} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Dieser Dialog wird verwendet um eine neue Gruppe anzulegen. Der Nutzer muss einen, innerhalb der Veranstaltung eindeutigen Namen wählen, die Veranstaltung selbst wählen und eine Beschreibung eingeben. Nun kann er Mitglieder hinzufügen. \\\\
+	
+	\underline{Interaktion} 	 & Mitglieder hinzufügen\\ 
+	Beschreibung   	& Der Ersteller kann Benutzer hinzufügen, indem er den Namen des Nutzers in das Textfeld schreibt. Während dem Schreiben werden ihm Vorschläge anzeigt. Durch Drücken der Enter-Taste wird der Nutzer als Mitglied hinzugefügt. Über das kleine rote X kann man den Benutzer wieder entfernen.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& keinen\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Gruppe anlegen\\ 
+	Beschreibung   	& Der Ersteller schließt den Vorgang ab indem er auf Button 2 klickt. Nun ist eine neue Gruppe erstellt.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Vorgang abbrechen\\ 
+	Beschreibung   	& Der Vorgang kann abgebrochen werden, indem man auf Button 3 klickt.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+\end{tabular}
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Gruppenübersicht}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/Gruppenuebersicht.png}
+	\caption{Gruppenübersicht}
+	\label{GuiGruppenuebersicht}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Gruppenübersicht} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Hier bekommt der Benutzer eine Übersicht über alle Gruppen, in denen er Mitglied ist oder die er erstellt hat. Der Administrator hat hier alle Rechte. Er kann alle Gruppen löschen, alle bearbeiten und neue anlegen, unabhängig davon, ob er Mitglied in einer Gruppe ist.\\\\
+	
+	\underline{Interaktion} 	 & Mitgliedschaft beenden\\ 
+	Beschreibung   	& Durch Klicken auf ein rotes X öffnet sich ein Bestätigungsdialog und die Mitgliedschaft wird beendet. Ist man selbst Ersteller der Gruppe, so wird die Gruppe ebenfalls entfernt.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Gruppe bearbeiten\\ 
+	Beschreibung   	& Der Ersteller einer Gruppe kann sie bearbeiten, indem er auf das kleine Zahnrad klickt.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Gruppen bearbeiten\grqq.\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Gruppe erstellen\\ 
+	Beschreibung   	& Der Benutzer kann eine neue Gruppe erstellen, indem er auf Button 2 klickt.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Gruppen anlegen\grqq.\\\\
+\end{tabular}
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Gruppe bearbeiten}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/GruppeBearbeiten.png}
+	\caption{Gruppe bearbeiten}
+	\label{GuiGruppeBearbeiten}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Gruppe bearbeiten} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Hier kann der Benutzer eine selbst erstellte Gruppe bearbeiten. Das Feld \glqq Veranstaltung\grqq ist nicht mehr editierbar. \\\\
+	
+	\underline{Interaktion} 	 & Änderungen speichern\\ 
+	Beschreibung   	& Durch Klicken auf Button 1 werden die Änderungen übernommen.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Abbrechen\\ 
+	Beschreibung   	& Durch Klicken auf Button 2 werden die Änderungen verworfen.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+\end{tabular}
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Benutzerverwaltung}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/Benutzerverwaltung[Admin].png}
+	\caption{Benutzerverwaltung}
+	\label{GuiBenutzerverwaltung}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Benutzerverwaltung} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Der Administrator hat die Möglichkeit den Status von Nutzern zu ändern, indem er den Namen im Textfeld eingibt. Es werden wieder Vorschläge anzeigt und durch das Drücken von Enter wird der Nutzer ausgewählt und die Daten werden unten angezeigt. Hier kann der Administrator den Nutzerstatus ändern oder den Benutzer löschen. \\\\
+	
+	\underline{Interaktion} 	 & Nutzerstatus ändern\\ 
+	Beschreibung   	& Der Administrator kann den Status eines ausgewählten Benutzers ändern, indem er den Typ aus einer Liste wählt. Mögliche Typen wären: Student oder Dozent.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& keinen\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Benutzer löschen\\ 
+	Beschreibung   	& Durch Klicken auf Button 5 und anschließender Bestätigung kann der Administrator einen Nutzer aus dem System löschen.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Benutzerverwaltung\grqq.\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Abbrechen\\ 
+	Beschreibung   	& Durch Klicken auf Button 2 werden die Änderungen verworfen.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Benutzerverwaltung\grqq.\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Änderungen speichern\\ 
+	Beschreibung   	& Der Administrator kann den Vorgang abbrechen, indem er auf Button 6 klickt.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Benutzerverwaltung\grqq.\\\\
+\end{tabular}
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Bestätigungs-Dialog}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/Bestaetigung.png}
+	\caption{Bestätigungs-Dialog}
+	\label{GuiBestaetigungsDialog}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Bestätigungs-Dialog} \\ 
+	Modus & modal\\ 
+	Beschreibung   	& Dieser Dialog zeigt jede Art von Bestätigung im System an. \\\\
+	
+	\underline{Interaktion} 	 & Bestätigen\\ 
+	Beschreibung   	& Schließt den Dialog und bestätigt ihn.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& keinen\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Abbrechen\\ 
+	Beschreibung   	& Schließt den Dialog und bricht die Aktion ab.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& keinen\\\\
+\end{tabular}
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Fehler-Dialog}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/Fehler.png}
+	\caption{Fehler-Dialog}
+	\label{GuiFehlerDialog}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Fehler-Dialog} \\ 
+	Modus & modal\\ 
+	Beschreibung   	& Dieser Dialog zeigt jede Art von Fehler im System an. \\\\
+	
+	\underline{Interaktion} 	 & Bestätigen\\ 
+	Beschreibung   	& Schließt den Dialog.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& keinen\\\\
+\end{tabular}
+
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Exporteinstellungen}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/Exporteinstellungen.png}
+	\caption{Exporteinstellungen}
+	\label{GuiExporteinstellungen}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Exporteinstellungen} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Hier kann der Benutzer Einstellungen darüber treffen, wie der Lernstoff als Skript exportiert wird. \\\\
+	
+	\underline{Interaktion} 	 & Exporteinstellungen treffen\\ 
+	Beschreibung   	& Der Nutzer kann die Exporteinstellungen für das zu erstellende PDF-Dokument treffen.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& keinen\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Skript erzeugen\\ 
+	Beschreibung   	& Durch Klicken auf Button 5 wird das Skript generiert und zum Download angeboten.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Download Skript\grqq.\\\\
+\end{tabular}
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Download Skript}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/DonwloadSkript.png}
+	\caption{Download Skript}
+	\label{GuiDownloadSkript}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Download Skript} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Hier kann der Nutzer das erstellte Skript herunterladen. \\\\
+	
+	\underline{Interaktion} 	 & Skript herunterladen\\ 
+	Beschreibung   	& Der Nutzer lädt das erstellte Skript herunter.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& Lernumgebung anzeigen\\\\
+\end{tabular}
+
+\begin{figure}[H]
+	\centering
+	\paragraph{Netz-Ansicht der Lernumgebung}
+	\includegraphics[width=\textwidth]{Bilder/Mockups/GUI/NetzAnsichtKarteikarten.png}
+	\caption{Netz-Ansicht der Lernumgebung}
+	\label{GuiNetzAnsichtKarteikarten}
+\end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Netz-Ansicht der Lernumgebung} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Hier wird der Lerninhalt in Form eines Netzes dargestellt. \\\\
+	
+	\underline{Interaktion} 	 & Karteikarte wählen\\ 
+	Beschreibung   	& Der Nutzer klickt auf eine Karteikarte. Dadurch wird diese hervorgehoben und der Inhalt in Box 4 angezeigt.\\
+	Vorbedingung	& keine \\
+	Nachbedingung	& keine \\
+	Öffnet			& keinen\\\\
+\end{tabular}
+
 \subsection{Nutzungskonzept}
 Das Nutzungskonzept ist die Zuordnung der Anwendungsfälle aus Abschnitt 3.2.1 zu den Interaktionen aus Abschnitt 4.2
+\paragraph{Registrieren}
+Beginn der Handlung ist die Anmeldeseite. Hier kann der Benutzer über einen Klick auf den Link \glqq Registrierungsformular\grqq auf das Registrierungsformular wechseln. Wenn er dort seine Daten eingibt und die Registrierung bestätigt, wird ein neuer Nutzer im System angelegt.
 
+\paragraph{Am System Anmelden}
+Beginn der Handlung ist das Aufrufen der Webseite. Um sich anzumelden gibt man seine Anmeldedaten im Dialog \glqq Anmeldung\grqq  an. Danach klickt man auf Anmelden und wir zur Startseite weitergeleitet.
 
+\paragraph{Vom System Abmelden}
+Man meldet sich im System ab, indem man von jeden beliebigen nicht modalen Dialog auf abmelden rechts oben klickt.
+
+\paragraph{Gruppen verwalten}
+Beginn der Handlung ist die Startseite. Hier werden folgende Interaktionen ausgeführt:
+\begin{enumerate}
+	\item \glqq Gruppenübersicht anzeigen\grqq: Klick auf Link \glqq Meine Gruppen\grqq
+	\item \glqq Gruppe bearbeiten\grqq: Klick auf Link \glqq Meine Gruppen\grqq . Danach Dialogwechsel zu  \glqq Gruppe bearbeiten\grqq, durch klick auf das Zahnrad der entsprechenden Gruppe.
+	\item \glqq Gruppe löschen\grqq: Klick auf Link \glqq Meine Gruppen\grqq . Danach klick auf das kleine rote X vor der entsprechenden Gruppe. Nach einer Bestätigung wird die Gruppe gelöscht.
+\end{enumerate}
+
+\paragraph{Skript exportieren}
+Um ein Skript zu exportieren muss man sich in der jeweiligen Lernumgebung befinden. Dann klickt man auf \glqq Skript exportieren\grqq  und gelangt zum Dialog \glqq  Exporteinstellungen\grqq. Hier spezifiziert man genauer was und in welcher Form der Inhalt der Lernumgebung exportiert werden soll. Danach klickt man auf den Button \glqq Generiere Skript\grqq und wird auf die Download-Seite (Dialog: \glqq Download Skript\grqq ) weitergeleitet.
+
+\paragraph{Nutzerstatus ändern}
+Der Administrator kann den Status eines Benutzers ändern, indem er von einer beliebigen Seite aus rechts auf \glqq Verwaltung für - Benutzer\grqq klickt. In diesem Dialog muss er den Namen des Benutzer in das Suchfeld eingeben. Hierbei wird er von einer Auto-Vervollständigung unterstützt, die ihm Benutzernamen vorschlägt. Durch die Bestätigung des Vorschlags (Enter drücken) werden die entsprechenden Nutzerdaten unten angezeigt. Der Administrator hat nun die Möglichkeit den Status des Nutzers zu ändern.
+Außerdem hat er hier die Möglichkeit den Vorgang abzubrechen, die Änderungen zu speichern oder den Benutzer komplett aus dem System zu löschen.
+
+\paragraph{Lerninhalt als Netz anzeigen}
+Wenn der Benutzer in der Lernumgebung ist, kann er die Ansicht umschalten auf \glqq Graphansicht\grqq indem er auf den entsprechenden Radiobutton klickt. Danach wechselt die Ansicht und stellt die Lerninhalte als Graph da, durch den navigiert werden kann.
+\paragraph{Veranstaltungen anzeigen}
+Beginn der Handlung ist die Startseite. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Veranstaltungen auflisten\grqq: Dialogwechsel zu \glqq Veranstaltungen auflisten\grqq
+\end{enumerate}
+
+\paragraph{Veranstaltung anlegen}
+Beginn der Handlung ist der Dialog \glqq Veranstaltungen auflisten\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Veranstaltung erstellen\grqq: Dialogwechsel zu \glqq Veranstaltung anlegen\grqq
+\end{enumerate}
+
+\paragraph{Moderator ernennen}
+Dieser Anwendungsfall wird innerhalb des Anwendungsfalls \glqq Veranstaltung anlegen\grqq erledigt.
+
+\paragraph{Initiales Skript erstellen}
+Beginn der Handlung ist der Dialog \glqq Veranstaltung anlegen\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Skript anlegen\grqq: Dialogwechsel zu \glqq Karteikarte erstellen\grqq
+\end{enumerate}
+
+\paragraph{Zu Veranstaltung anmelden}
+Beginn der Handlung ist der Dialog \glqq Veranstaltungen auflisten\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Auswahl des Semesters\grqq
+\item \glqq Auswahl eines Studiengangs\grqq
+\item \glqq Auswahl einer Veranstaltung\grqq: Dialogwechsel zu \glqq Veranstaltung eintragen\grqq
+\item \glqq eintragen\grqq: Dialogwechsel zu \glqq Veranstaltung\grqq
+\end{enumerate}
+
+\paragraph{Von Veranstaltung abmelden}
+Beginn der Handlung ist der Dialog \glqq Veranstaltung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Von Veranstaltung abmelden\grqq: Dialogwechsel zu \glqq Veranstaltung auflisten \grqq
+\end{enumerate}
+
+\paragraph{Veranstaltung löschen}
+Beginn der Handlung ist der Dialog \glqq Veranstaltung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Veranstaltung löschen\grqq: Dialogwechsel zu \glqq Veranstaltung auflisten \grqq
+\end{enumerate}
+
+\paragraph{Veranstaltung bearbeiten}
+Beginn der Handlung ist der Dialog \glqq Veranstaltung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Veranstaltung bearbeiten\grqq: Dialogwechsel zu \glqq Veranstaltung bearbeiten \grqq
+\end{enumerate}
+
+\paragraph{Lerninhalte einsehen}
+Beginn der Handlung ist der Dialog \glqq Veranstaltung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Lernumgebung anzeigen\grqq: Dialogwechsel zu \glqq Lernumgebung anzeigen\grqq
+\end{enumerate}
+
+\paragraph{Notizen machen}
+Beginn der Handlung ist der Dialog \glqq Veranstaltung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Lernumgebung anzeigen\grqq: Dialogwechsel zu \glqq Notizen einsehen\grqq
+\item \glqq Button Notizen bearbeiten\grqq: Dialogwechsel zu \glqq Notizen Bearbeitungsfeld\grqq
+\end{enumerate}
+
+\paragraph{Diskussionen einsehen}
+Beginn der Handlung ist der Dialog \glqq Lernumgebung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Diskussion anzeigen\grqq
+\end{enumerate}
+
+\paragraph{Diskussion anstoßen}
+Beginn der Handlung ist der Dialog \glqq Lernumgebung\grqq. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Diskussion anzeigen\grqq
+\item \glqq Diskussion erstellen\grqq: Dialogwechsel zu \glqq Diskussion Erstellen\grqq
+\end{enumerate}
+
+\paragraph{Benachrichtigungen anzeigen}
+Wird nicht durch eine konkrete Interaktion des Benutzers ausgelöst.
+
+\paragraph{Bestätigungs-/Info Mail senden}
+Wird bei unterschiedlichen Interaktionen vom System ausgeführt. Z.B bei der Registrierung.
+
+\paragraph{Profil und Einstellungen bearbeiten und ansehen}
+Beginn der Handlung ist die Startseite. Von dort aus werden folgende Interaktionen ausgeführt
+\begin{enumerate}
+\item \glqq Profil anzeigen\grqq: Dialogwechsel zu \glqq Profil anzeigen\grqq
+\item \glqq Profil bearbeiten\grqq: Dialogwechsel zu \glqq Profil bearbeiten\grqq
+\end{enumerate}
+
+\end{document}
 \end{document}
 
 
