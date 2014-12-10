@@ -1223,6 +1223,7 @@ Beschreibung   	 & Das System wechselt in eine Übersicht, in der die einzelnen 
 Vorbedingung	& keine \\
 Nachbedingung	& keine \\
 Öffnet			& \glqq Veranstaltungen auflisten\grqq \\
+Systemoperation & leseVeranstaltungen\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1231,6 +1232,7 @@ Beschreibung   	 & Das System wechselt zu einem Dialog, auf dem der Benutzer sei
 Vorbedingung	& keine \\
 Nachbedingung	& keine \\
 Öffnet			& \glqq Gruppenübersicht\grqq \\\\
+Systemoperation & leseGruppen\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1239,6 +1241,7 @@ Beschreibung   	 & Das System wechselt zum persönlichen Profil des Benutzers.\\
 Vorbedingung	& keine \\
 Nachbedingung	& keine \\
 Öffnet			& \glqq Profil anzeigen\grqq \\\\
+Systemoperation & leseBenutzerdaten\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1251,8 +1254,9 @@ Beschreibung   	 & Der Benutzer gibt einen Namen ein und wählt ein vom System v
 Vorbedingung	& keine \\
 Nachbedingung	& keine \\
 Öffnet			& \glqq Profil anzeigen\grqq \\\\
-
+Systemoperation & sucheBenutzer\\
 \end{tabular}\\\\
+
 
 \begin{figure}[H]
 	\centering
@@ -1261,6 +1265,19 @@ Nachbedingung	& keine \\
 	\caption{Registrieren}
 	\label{GuiRegistrieren}
 \end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Registrieren} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	 & Der Benutzer kann sich auf dieser Seite registrieren, falls er noch keinen Account im System besitzt. \\\\
+	
+	\underline{Interaktion} 	 & Registrieren\\ 
+	Beschreibung   	 & Siehe oben. Der Benutzer registriert sich im System.\\
+	Vorbedingung	& Benutzer ist noch nicht registriert.\\
+	Nachbedingung	& Benutzer ist im System registriert. \\
+	Öffnet			& Anmelde-Dialog wird geöffnet.\\
+	Systemoperation & registrieren\\\\
+	
+\end{tabular}\\\\
 
 \begin{figure}[H]
 	\centering
@@ -1269,6 +1286,34 @@ Nachbedingung	& keine \\
 	\caption{Anmelden}
 	\label{GuiAnmelden}
 \end{figure}
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Anmelden} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Wenn der Benutzer die Webseite aufruft, landet er auf dem Anmelde-Dialog. \\\\
+	
+	\underline{Interaktion} 	 & Anmelden\\ 
+	Beschreibung   	& Der Benutzer gibt seine Anmeldedaten ein und kann sich in das System einloggen.\\
+	Vorbedingung	& Benutzer ist im System registriert.\\
+	Nachbedingung	& Das System eröffnet eine Session für den Benutzer. \\
+	Öffnet			& Startseite wird geöffnet.\\
+	Systemoperation & anmelden,passwortPrüfen\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Passwort vergessen\\ 
+	Beschreibung   	& Der Benutzer hat sein Passwort vergessen und benötigt Hilfe.\\
+	Vorbedingung	& Benutzer ist im System registriert und weiß sein Passwort nicht mehr.\\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Passwort zurücksetzen\grqq\\\\
+\end{tabular}
+
+\begin{tabular}{l p{12cm}}
+	\underline{Interaktion} 	 & Registrierung starten\\ 
+	Beschreibung   	& Der Benutzer hat keinen Account und möchte sich im System registrieren.\\
+	Vorbedingung	& Benutzer ist nicht im System registriert.\\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Registrieren\grqq\\\\
+\end{tabular}\\\\
 
 \begin{figure}[H]
 	\centering
@@ -1277,7 +1322,18 @@ Nachbedingung	& keine \\
 	\caption{Passwort zurücksetzen}
 	\label{GuiPasswortVergessen}
 \end{figure}
-
+\begin{tabular}{l p{12cm}}
+	Dialog 	 & \textbf{Passwort zurücksetzen} \\ 
+	Modus & nicht modal\\ 
+	Beschreibung   	& Wenn der Benutzer sein Passwort vergessen hat, muss er seine Mail-Adresse angeben und erhält eine Mail mit einem default-Passwort. \\\\
+	
+	\underline{Interaktion} 	 & Passwort zurücksetzen\\ 
+	Beschreibung   	& Der Benutzer setzt sein Passwort zurück durch Klicken auf Button 1.\\
+	Vorbedingung	& Benutzer ist im System registriert.\\
+	Nachbedingung	& keine \\
+	Öffnet			& Dialog \glqq Anmelden\grqq.\\
+	Systemoperation & resetPasswort\\\\
+\end{tabular}
 
 \begin{figure}[H]
 	\centering
@@ -1316,6 +1372,7 @@ Beschreibung   	 & Der Benutzer gibt in die Textfelder seine Änderungen ein, di
 Vorbedingung   	 & Alle Felder sind ausgefüllt\\
 Nachbedingung 	 & Profildaten sind gespeichert\\
 Öffnet			 & \glqq Profil anzeigen\grqq\\
+Systemoperation & ändereBenutzerdaten\\\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1324,6 +1381,7 @@ Beschreibung   	 & Der Benutzer gibt sein aktuelles und sein neues Passwort ein.
 Vorbedingung   	 & Aktuelles Passwort ist korrekt. Neues Passwort ist lang genug. Die Textfelder neues Passwort und neues Passwort bestätigen stimmen überein\\
 Nachbedingung 	 & neues Kennwort wird gespeichert\\
 Öffnet			 & \glqq Profil anzeigen\grqq\\
+Systemoperation & passwortPrüfen\\\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1404,6 +1462,7 @@ Beschreibung   	 & Der Dozent bestätigt die Daten, die er für die Veranstaltun
 Vorbedingung   	 & Alle Pflichtfelder sind ausgefüllt.\\
 Nachbedingung	 & keine\\
 Öffnet			 & \glqq Veranstaltung \grqq, in dem die gerade erstellte Veranstaltung angezeigt wird. \\
+Systemoperation & veranstaltungAnlegen\\\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1432,6 +1491,7 @@ Beschreibung   	 & Der Dozent bestätigt seine Änderungen. Wurden falsche Einga
 Vorbedingung   	 & Alle Pflichtfelder sind ausgefüllt.\\
 Nachbedingung	 & keine\\
 Öffnet			 & \glqq Veranstaltung \grqq, in dem die gerade bearbeitete Veranstaltung angezeigt wird. \\
+Systemoperation & veranstaltungBearbeiten\\\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1460,6 +1520,7 @@ Beschreibung   	 & Der Benutzer gibt evtl. ein Passwort ein und bestätigt, dass
 Vorbedingung	 & Passwort korrekt \\
 Nachbedingung	 & Der Benutzer ist nun dauerhaft für diese Veranstaltung eingetragen \\
 Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\
+Systemoperation & veranstaltungEintragen,pruefePasswortVeranstaltung\\\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1489,6 +1550,7 @@ Beschreibung   	 & Der Benutzer möchte zur Lernumgebung wechseln.  \\
 Vorbedingung	 & keine \\
 Nachbedingung	 & keine \\
 Öffnet			 & \glqq Lernumgebung anzeigen\grqq und \glqq Notizen einsehen\grqq \\
+Systemoperation & karteikartenLesen\\\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1497,6 +1559,7 @@ Beschreibung   	 & Der Benutzer wird aus der Veranstaltung gelöscht.  \\
 Vorbedingung	 & keine \\
 Nachbedingung	 & Der Benutzer hat nun keinen Zugriff und bekommt keine Benachrichtigungen mehr zu dieser Veranstaltung. \\
 Öffnet			 & \glqq Veranstaltungen auflisten\grqq \\
+Systemoperation & vonVeranstaltungAbmelden\\\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1505,6 +1568,7 @@ Beschreibung   	 & Der Dozent dieser Veranstaltung möchte bestimmte Daten der V
 Vorbedingung	 & als Dozent angemeldet, der die Veranstaltung erstellt hat \\
 Nachbedingung	 & keine \\
 Öffnet			 & \glqq Veranstaltung bearbeiten\grqq \\
+Systemoperation & leseVeranstaltung\\\\
 \end{tabular}\\\\
 
 \begin{tabular}{l p{12cm}}
@@ -1513,7 +1577,7 @@ Beschreibung   	 & Der Dozent möchte seine Veranstaltung löschen.  \\
 Vorbedingung	 & als Dozent angemeldet, der die Veranstaltung erstellt hat \\
 Nachbedingung	 & keine \\
 Öffnet			 & \glqq Ja/Nein Dialog\grqq \\
-
+Systemoperation & veranstaltungLöschen\\\\
 \end{tabular}\\\\
 
 \begin{figure}[H]
@@ -1540,7 +1604,8 @@ Nachbedingung	 & keine \\
 	Beschreibung   	& Der Ersteller schließt den Vorgang ab indem er auf Button 2 klickt. Nun ist eine neue Gruppe erstellt.\\
 	Vorbedingung	& keine \\
 	Nachbedingung	& keine \\
-	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\
+	Systemoperation & gruppeErstellen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -1548,7 +1613,8 @@ Nachbedingung	 & keine \\
 	Beschreibung   	& Der Vorgang kann abgebrochen werden, indem man auf Button 3 klickt.\\
 	Vorbedingung	& keine \\
 	Nachbedingung	& keine \\
-	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\
+	Systemoperation & gruppenLesen\\\\
 \end{tabular}
 
 \begin{figure}[H]
@@ -1567,7 +1633,8 @@ Nachbedingung	 & keine \\
 	Beschreibung   	& Durch Klicken auf ein rotes X öffnet sich ein Bestätigungsdialog und die Mitgliedschaft wird beendet. Ist man selbst Ersteller der Gruppe, so wird die Gruppe ebenfalls entfernt.\\
 	Vorbedingung	& keine \\
 	Nachbedingung	& keine \\
-	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\
+	Systemoperation & gruppeVerlassen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -1575,7 +1642,8 @@ Nachbedingung	 & keine \\
 	Beschreibung   	& Der Ersteller einer Gruppe kann sie bearbeiten, indem er auf das kleine Zahnrad klickt.\\
 	Vorbedingung	& keine \\
 	Nachbedingung	& keine \\
-	Öffnet			& Dialog \glqq Gruppen bearbeiten\grqq.\\\\
+	Öffnet			& Dialog \glqq Gruppen bearbeiten\grqq.\\
+	Systemoperation & gruppeLesen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -1602,7 +1670,8 @@ Nachbedingung	 & keine \\
 	Beschreibung   	& Durch Klicken auf Button 1 werden die Änderungen übernommen.\\
 	Vorbedingung	& keine \\
 	Nachbedingung	& keine \\
-	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\
+	Systemoperation & gruppeBearbeiten\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -1610,7 +1679,8 @@ Nachbedingung	 & keine \\
 	Beschreibung   	& Durch Klicken auf Button 2 werden die Änderungen verworfen.\\
 	Vorbedingung	& keine \\
 	Nachbedingung	& keine \\
-	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\\\
+	Öffnet			& Dialog \glqq Gruppenübersicht\grqq.\\
+	Systemoperation & leseGruppen\\\\
 \end{tabular}
 
 \begin{figure}[H]
@@ -1637,7 +1707,8 @@ Nachbedingung	 & keine \\
 	Beschreibung   	& Durch Klicken auf Button 5 und anschließender Bestätigung kann der Administrator einen Nutzer aus dem System löschen.\\
 	Vorbedingung	& keine \\
 	Nachbedingung	& keine \\
-	Öffnet			& Dialog \glqq Benutzerverwaltung\grqq.\\\\
+	Öffnet			& Dialog \glqq Benutzerverwaltung\grqq.\\
+	Systemoperation & benutzerLöschen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -1653,7 +1724,8 @@ Nachbedingung	 & keine \\
 	Beschreibung   	& Der Administrator kann den Vorgang abbrechen, indem er auf Button 6 klickt.\\
 	Vorbedingung	& keine \\
 	Nachbedingung	& keine \\
-	Öffnet			& Dialog \glqq Benutzerverwaltung\grqq.\\\\
+	Öffnet			& Dialog \glqq Benutzerverwaltung\grqq.\\
+	Systemoperation & benuterstatusÄndern\\\\
 \end{tabular}
 
 \begin{figure}[H]
@@ -1727,7 +1799,8 @@ Nachbedingung	 & keine \\
 	Beschreibung   	& Durch Klicken auf Button 5 wird das Skript generiert und zum Download angeboten.\\
 	Vorbedingung	& keine \\
 	Nachbedingung	& keine \\
-	Öffnet			& Dialog \glqq Download Skript\grqq.\\\\
+	Öffnet			& Dialog \glqq Download Skript\grqq.\\
+	Systemoperation & eportLerninhalt\\\\
 \end{tabular}
 
 \begin{figure}[H]
@@ -1819,7 +1892,8 @@ Beschreibung   	 & In diesem Dialog kann sich der Benutzer auf der Lernumgebung 
 Beschreibung   	 			 & Mit einem einfachen Klick auf eine Registerkarte wird diese angewählt und die auf die Registerkarte bezogenen Daten werden in dem Infobereich im oberen rechten Bildschirmrand angezeigt.\\
 Vorbedingung	 			 & angemeldeter Benutzer, eine angemeldete Veranstaltung \\
 Nachbedingung	 			 & Registerkarte muss farblich hinterlegt sein.\\
-Öffnet			 			 &  \\\\
+Öffnet			 			 &  \\
+Systemoperation & notizLesen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -1855,7 +1929,8 @@ Beschreibung   	 & Benutzer kann Notizen hinzufügen und seine bereits erstellte
 Beschreibung   	 			 & Änderungen im Notizen Bearbeitungsfeld werden abgespeichert.\\
 Vorbedingung	 			 & Benutzer hat vorher den Button  Notizen bearbeiten gedrückt\\
 Nachbedingung	 			 & \\
-Öffnet			 			 & \glqq Notizen einsehen\grqq \\\\
+Öffnet			 			 & \glqq Notizen einsehen\grqq \\
+Systemoperation & notizSpeichern\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -1899,7 +1974,8 @@ Nachbedingung	 		& \\
 Beschreibung   	 		& Benutzer kann die verfügbaren Diskussion anklicken und entsprechende Diskussion wird unter der angewählten Registerkarte angezeigt.\\
 Vorbedingung	 		& angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt\\
 Nachbedingung	 		& angewählte Diskussion erscheint unter der gewählten Registerkarte\\
-Öffnet			 		& \glqq Diskussion\grqq \\\\
+Öffnet			 		& \glqq Diskussion\grqq \\
+Systemoperation & diskussionLesen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -1923,7 +1999,8 @@ Nachbedingung	 		& eingegebene Text muss mit dem System kompatibel sein\\
 Beschreibung   	 		& Benutzer kann seinen bereits verfassten Kommentar zu der Diskussion hinzufügen.\\
 Vorbedingung	 		&angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Diskussion ausgewählt\\
 Nachbedingung	 		& Kommentar muss in der Diskussion ersichtlich sein\\
-Öffnet			 		&  \\\\
+Öffnet			 		&  \\
+Systemoperation & kommentieren\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -1939,7 +2016,8 @@ Nachbedingung	 		& Es dürfen nur noch die einzelnen Registerkarten zu sehen sei
 Beschreibung   	 		& Mit diesem Button kann der Benutzer einzelne Kommentare bewerten\\
 Vorbedingung	 		&angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Diskussion ausgewählt\\
 Nachbedingung	 		& Die Anzahl der Bewertungen muss hinter dem Kommentar des Nutzern ersichtlich sein\\
-Öffnet			 		&  \\\\
+Öffnet			 		&  \\
+Systemoperation & bewerten\\\\
 \end{tabular}
 
 \begin{figure}[H]
@@ -1959,7 +2037,8 @@ Beschreibung   	 & Benutzer kann eine neue Diskussion zu einer Registerkarte ans
 Beschreibung   	 		& Benutzer kann seine erstellte Diskussion anstoßen.\\
 Vorbedingung	 		& angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Button neue Diskussion getätigt\\
 Nachbedingung	 		& \\
-Öffnet			 		& \glqq Diskussion anzeigen\grqq \\\\
+Öffnet			 		& \glqq Diskussion anzeigen\grqq \\
+Systemoperation & diskussionErstellen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -2055,7 +2134,8 @@ Nachbedingung	 		& Registerkarte muss farblich hinterlegt sein.\\
 Beschreibung   	 		& Dozent/Moderator nutzt diesen Button zur Löschung von einzelnen Registerkarten die nach einem Bestätigungs-Dialog aus der Datenbank entfernt werden. \\
 Vorbedingung	 		& Ein angemeldeter Administrator/Moderator der sich in der Lernumgebung einer Veranstaltung befindet. \\
 Nachbedingung	 		& \\
-Öffnet			 		& \glqq Bestätigung erfragen \grqq \\\\
+Öffnet			 		& \glqq Bestätigung erfragen \grqq \\
+Systemoperation & karteikarteLöschen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -2071,7 +2151,8 @@ Nachbedingung	 		& \\
 Beschreibung   	 		& Dozent/Moderator kann einzelne Diskussionen oder Verweise nach einer Bestätigung löschen. \\
 Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte, entsprechende Tabulatorkarte ist angewählt\\
 Nachbedingung	 		& \\
-Öffnet			 		& \glqq Bestätigung erfragen\grqq \\\\
+Öffnet			 		& \glqq Bestätigung erfragen\grqq \\
+Systemoperation & diskussionLöschen \\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -2079,7 +2160,8 @@ Nachbedingung	 		& \\
 Beschreibung   	 		& Dozent/Moderator kann einzelne eventuell unnütze Kommentare nach einer Bestätigung löschen.\\
 Vorbedingung	 		&  Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt Diskussion unter der Registerkarte wird angezeigt\\
 Nachbedingung	 		& Kommentar ist aus dem Verlauf entfernt\\
-Öffnet			 		& \glqq Bestätigung erfragen\grqq \\\\
+Öffnet			 		& \glqq Bestätigung erfragen\grqq \\
+Systemoperation & kommentarLöschen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -2087,7 +2169,8 @@ Nachbedingung	 		& Kommentar ist aus dem Verlauf entfernt\\
 Beschreibung   	 		& Dozent/Moderator kann in den aufgerufenen Diskussionen einstellen für welche Benutzer diese Diskussion angezeigt wird.\\
 Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt Diskussion unter der Registerkarte wird angezeigt\\
 Nachbedingung	 		& Diskussion muss bei den Benutzern die die entsprechenden Berechtigung besitzen nun unter der Registerkarte Diskussion angezeigt werden.\\
-Öffnet			 		&  \\\\
+Öffnet			 		&  \\
+Systemoperation & diskussionBearbeiten\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -2095,7 +2178,8 @@ Nachbedingung	 		& Diskussion muss bei den Benutzern die die entsprechenden Bere
 Beschreibung   	 		& Mit diesem Button kann der Benutzer einzelne Kommentare bewerten\\
 Vorbedingung	 		& angewählte Registerkarte,  Tabulatorreiter Diskussion angewählt, Diskussion ausgewählt\\
 Nachbedingung	 		& Die Anzahl der Bewertungen muss hinter dem Kommentar des Nutzern ersichtlich sein\\
-Öffnet			 		&  \\\\
+Öffnet			 		&  \\
+Systemoperation & bewerten\\\\
 \end{tabular}
 
 \begin{figure}[H]
@@ -2115,7 +2199,8 @@ Beschreibung   	 & Administrator/Moderator kann bereits bestehende Registerkarte
 Beschreibung   	 		& Änderungen in der bearbeiteten Registerkarte können mit diesem Button gesichert werden\\
 Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, angewählte Registerkarte, Button Zahnrad wurde auf der gewählten Registerkarte getätigt\\
 Nachbedingung	 		& Änderungen werden sofort in der Registerkarte sichtbar\\
-Öffnet			 		& \glqq Karteikarten Ändern\grqq \\\\
+Öffnet			 		& \glqq Karteikarten Ändern\grqq \\
+Systemoperation & karteikarteÄndern\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -2175,7 +2260,8 @@ Nachbedingung	 		& \\
 Beschreibung   	 		& Dozent/Moderator kann damit die erstellten Daten der Registerkarte absichern und eine neue Registerkarte erstellen\\
 Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button neue Karteikarte erstellen wurde gewählt\\
 Nachbedingung	 		& \\
-Öffnet			 		& \glqq Karteikarte ändern\grqq \\\\
+Öffnet			 		& \glqq Karteikarte ändern\grqq \\
+Systemoperation & karteikarteErzeugen\\\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -2220,6 +2306,7 @@ Beschreibung   	 		& Dozent/Moderator kann damit gesuchte Registerkarten in den 
 Vorbedingung	 		& Dozent/Moderator ist angemeldet, Lernumgebung aufgerufen, Button roter Faden bearbeiten wurde gewählt\\
 Nachbedingung	 		& \\
 Öffnet			 		& \\\\
+Systemoperation & karteikarteLaden\\
 \end{tabular}
 
 \begin{tabular}{l p{12cm}}
@@ -2406,12 +2493,9 @@ Im Schnittstellenmodell werden die verschiedenen Operationen beschrieben, die mi
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  Registrieren(neuerNutzer: Benutzer): Boolean \\ 
+	Operation &  \textbf{registrieren(neuerNutzer: Benutzer): Boolean }\\ 
 	Beschreibung & Ein Benutzer registriert sich neu im System und gibt alle verlangten Daten an. Die Operation prüft ob die Daten korrekt sind und legt den neuen Benutzer gegebenenfalls an.\\ 
 	Erzeugt &  Benutzer\\ 
-	Liest &  \\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
 	Pre &  Nutzer ist noch nicht registriert. \\ 
 	Post & Nutzer ist im System angelegt.  \\ 
 	\hline 
@@ -2419,12 +2503,10 @@ Im Schnittstellenmodell werden die verschiedenen Operationen beschrieben, die mi
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  Anmelden(eMail-Adresse: String, Passwort : String): Boolean \\ 
+	Operation &  \textbf{anmelden(eMail-Adresse: String, Passwort : String): Boolean} \\ 
 	Beschreibung &  Der Benutzer meldet sich mit seinen Anmeldedaten im System an. Die Operation prüft, ob die Anmeldedaten korrekt sind.\\ 
 	Erzeugt & Session \\ 
 	Liest & Benutzer \\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
 	Pre & Benutzer existiert im System. \\ 
 	Post & Benutzer ist angemeldet. \\ 
 	\hline 
@@ -2432,459 +2514,329 @@ Im Schnittstellenmodell werden die verschiedenen Operationen beschrieben, die mi
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  PasswortPrüfen(eMail-Adresse: String, Passwort : String): Boolean \\ 
+	Operation &  \textbf{passwortPrüfen(eMail-Adresse: String, Passwort : String): Boolean }\\ 
 	Beschreibung & Liefert True zurück, wenn das eingegebene Passwort zur eMail-Adresse gehört.\\ 
-	Erzeugt & \\ 
 	Liest & Passwort \\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
 	Pre & Benutzer existiert im System. \\ 
-	Post & \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  resetPasswort(eMail-Adresse: String) \\ 
+	Operation & \textbf{ resetPasswort(eMail-Adresse: String) }\\ 
 	Beschreibung & Setzt das Passwort des Benutzers mit der angegebenen eMail-Adresse auf ein zufälliges Passwort zurück. Außerdem wird der Benutzer per Mail über den Vorgang benachrichtigt. Hierbei erhält er das generierte Passwort. \\ 
-	Erzeugt &  \\ 
-	Liest &  \\ 
 	Ändert & Passwort \\ 
-	Löscht &  \\ 
-	Pre &  \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  gruppeErstellen(neueGruppe:Gruppe): Boolean \\ 
+	Operation & \textbf{ gruppeErstellen(neueGruppe:Gruppe): Boolean} \\ 
 	Beschreibung & Diese Operation legt eine neue Gruppe an und prüft, ob der Gruppen-Name innerhalb der angegebenen Veranstaltung eindeutig ist.\\ 
 	Erzeugt &  Gruppe\\ 
 	Liest &  Liste aller Gruppen, die zur Veranstaltung gehören.\\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
 	Pre & Veranstaltung existiert. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  gruppenLesen(Veranst: Veranstaltung, Mitglied: Benutzer=null): Gruppe[] \\ 
+	Operation &  \textbf{gruppenLesen(Veranst: Veranstaltung, Mitglied: Benutzer=null): Gruppe[] }\\ 
 	Beschreibung & Diese Operation liefert alle Gruppen, die zu einer Veranstaltung gehören. Wenn der Parameter Mitglied nicht null ist, dann werden nur Gruppen zurückgeliefert, die den Benutzer als Mitglied haben. Ist Mitglied \glqq null\grqq, so werden alle Gruppen der Veranstaltung zurückgeliefert.\\ 
-	Erzeugt &  \\ 
 	Liest & Gruppen \\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
-	Pre &  \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  gruppeBearbeiten(Grp: Gruppe): Boolean \\ 
+	Operation & \textbf{ gruppeBearbeiten(Grp: Gruppe): Boolean} \\ 
 	Beschreibung & Diese Methode ändert eine bestehende Gruppe in der Datenbank ab, indem Sie die Gruppe mit der übergebenen Information überschreibt. Die zugehörige Veranstaltung lässt sich nicht ändern. Der Versuch führt zu einer Fehlermeldung.\\ 
-	Erzeugt &  \\ 
-	Liest &  \\ 
 	Ändert & Gruppe \\ 
-	Löscht &  \\ 
 	Pre & Gruppe muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  gruppeVerlassen(Grp: Gruppe, Person:Benutzer): Boolean \\ 
+	Operation &  \textbf{gruppeVerlassen(Grp: Gruppe, Person:Benutzer): Boolean }\\ 
 	Beschreibung & Die Person wird aus der angegeben Gruppe entfernt. Wenn die Person kein Mitglied dieser Gruppe ist, dann wird ein Fehler zurückgegeben.\\ 
-	Erzeugt &  \\ 
-	Liest &  \\ 
 	Ändert & Gruppe \\ 
-	Löscht &  \\ 
 	Pre & Gruppe muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  BenutzerstatusAendern(Person: Benutzer, Status: Enum): Boolean \\ 
+	Operation &  \textbf{benutzerstatusAendern(Person: Benutzer, Status: Enum): Boolean} \\ 
 	Beschreibung & Ändert den Nutzerstatus der übergebenen Person in den Wert von \glqq Status\grqq. \\ 
-	Erzeugt &  \\ 
-	Liest &  \\ 
 	Ändert & Benutzer \\ 
-	Löscht &  \\ 
 	Pre & Nutzer muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  BenutzerLöschen(Person: Benutzer): Boolean \\ 
+	Operation &  \textbf{benutzerLöschen(Person: Benutzer): Boolean }\\ 
 	Beschreibung & Löscht die übergebene Person aus der Datenbank. \\ 
-	Erzeugt &  \\ 
-	Liest &  \\ 
-	Ändert &  \\ 
 	Löscht & Benutzer \\ 
 	Pre &  Nutzer muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  ExportLerninhalt(Einstellungen: Exporteinstellungen): Datei \\ 
+	Operation &  \textbf{exportLerninhalt(Einstellungen: Exporteinstellungen): Datei} \\ 
 	Beschreibung & Holt die Daten, die den Exporteinstellungen entsprechen und generiert eine PDF-Datei. Die Methode liefert ein Dateiobjekt zurück, das auf die erzeugte Datei zeigt. \\ 
 	Erzeugt & PDF-Dokument \\ 
 	Liest &  Karteikarten \\ 
-	Ändert &  \\ 
-	Löscht & \\ 
-	Pre & \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  BenachrichtigungHinzufuegen(Benachr: ? extends Benachrichtigung): Boolean \\ 
+	Operation & \textbf{ benachrichtigungHinzufuegen(Benachr: ? extends Benachrichtigung): Boolean }\\ 
 	Beschreibung & Diese Methode fügt eine neue Benachrichtigung in das System ein. Die Nachricht muss von Benachrichtigung abgeleitet sein.\\ 
 	Erzeugt & Benachrichtigung \\ 
-	Liest &  \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
-	Pre &  \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  KarteikarteErzeugen(Veranst: Veranstaltung, Karte: ? extends Karteikarte): Boolean \\ 
+	Operation &  \textbf{karteikarteErzeugen(Veranst: Veranstaltung, Karte: ? extends Karteikarte): Boolean} \\ 
 	Beschreibung & Diese Methode erzeugt eine neue Karteikarte im System.\\ 
 	Erzeugt & Karteikarte \\ 
-	Liest & \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Veranstaltung muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  KarteikarteAendern(Karte: ? extends Karteikarte): Boolean \\ 
+	Operation & \textbf{ karteikarteAendern(Karte: ? extends Karteikarte): Boolean} \\ 
 	Beschreibung & Diese Methode überschreibt die entsprechende Karteikarte mit den neuen Daten.\\ 
-	Erzeugt &  \\ 
-	Liest & \\ 
 	Ändert & Karteikarte \\ 
-	Löscht &  \\ 
 	Pre & Karteikarte muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  KarteikarteLoeschen(Karte: ? extends Karteikarte): Boolean \\ 
+	Operation & \textbf{ karteikarteLoeschen(Karte: ? extends Karteikarte): Boolean }\\ 
 	Beschreibung & Diese Methode entfernt die gegebene Karteikarte vom System.\\ 
-	Erzeugt &  \\ 
-	Liest & \\ 
-	Ändert & \\ 
 	Löscht & Karteikarte \\ 
 	Pre & Karteikarte muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  KarteikartenLesen(Veranst: Veranstaltung, Filter: KarteikartenFilter=null): ? extends Karteikarte[] \\ 
+	Operation &  \textbf{karteikartenLesen(Veranst: Veranstaltung, Filter: KarteikartenFilter=null): ? extends Karteikarte[]} \\ 
 	Beschreibung & Diese Methode liefert eine Liste aller Karteikarten einer Veranstaltung zurück. Es kann ein KarteikartenFilter spezifiziert werden, der die zurückgelieferten Karteikarten weiter einschränkt. Beispielsweise bestimmte Attribute o.ä.\\ 
-	Erzeugt &  \\ 
 	Liest & Karteikarten, Verweise \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Veranstaltung muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  roterFadenlesen(Veranst: Veranstaltung): ? extends Karteikarte[] \\ 
+	Operation &  \textbf{roterFadenlesen(Veranst: Veranstaltung): ? extends Karteikarte[]} \\ 
 	Beschreibung & Diese Methode liefert eine Liste der Karteikarten zurück, die im Roten Faden der Veranstaltung enthalten sind.\\ 
-	Erzeugt &  \\ 
 	Liest & Karteikarten \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Veranstaltung muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  roterFadenaendern(Veranst: Veranstaltung, roterFaden: ? extends Karteikarte[]): Boolean \\ 
+	Operation &  \textbf{roterFadenaendern(Veranst: Veranstaltung, roterFaden: ? extends Karteikarte[]): Boolean} \\ 
 	Beschreibung & Diese Methode ändert den roten Faden entsprechend der neuen Liste an Karteikarten ab.\\ 
 	Erzeugt & RoterFaden (Falls nicht schon erzeugt). \\ 
-	Liest &  \\ 
 	Ändert & RoterFaden \\ 
-	Löscht &  \\ 
 	Pre & Veranstaltung muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  NotizLesen(Karte: Karteikarte, Nutzer: Benutzer): Notiz \\ 
+	Operation &  \textbf{notizLesen(Karte: Karteikarte, Nutzer: Benutzer): Notiz} \\ 
 	Beschreibung & Liefert die zugehörige Notiz eines Benutzers zu einer Karteikarte zurück.\\ 
-	Erzeugt &  \\ 
 	Liest & Notiz \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Karteikarte muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  NotizSpeichern(Karte: Karteikarte, Nutzer: Benutzer, Inhalt: Notiz): Boolean \\ 
+	Operation &  \textbf{notizSpeichern(Karte: Karteikarte, Nutzer: Benutzer, Inhalt: Notiz): Boolean} \\ 
 	Beschreibung & Speichert die Notiz eines Benutzers zu einer Karteikarte.\\ 
 	Erzeugt & Notiz (Falls nicht schon erzeugt.) \\ 
-	Liest & \\ 
 	Ändert & Notiz \\ 
-	Löscht &  \\ 
 	Pre & Karteikarte muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  DiskussionsTitelLesen(Karte: Karteikarte): String[] \\ 
+	Operation &  \textbf{diskussionsTitelLesen(Karte: Karteikarte): String[]} \\ 
 	Beschreibung & Liefert die Namen der zugehörigen Diskussionen zurück.\\ 
-	Erzeugt &  \\ 
 	Liest & Diskussion \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Karteikarte muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  DiskussionLesen(Karte: Karteikarte, DiskussionsTitel: String): Diskussion \\ 
+	Operation &  \textbf{diskussionLesen(Karte: Karteikarte, DiskussionsTitel: String): Diskussion} \\ 
 	Beschreibung & Liefert die Diskussion mit dem entsprechenden Titel zurück, die zur angegebenen Karteikarte passt.\\ 
-	Erzeugt &  \\ 
 	Liest & Diskussion \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Karteikarte und Diskussionstitel muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  DiskussionErstellen(Diskuss: Diskussion, Karte: Karteikarte): Boolean \\ 
+	Operation &  \textbf{diskussionLöschen(DiskussionsTitel: String): Boolean} \\ 
+	Beschreibung & Entfernt die angegebene Diskussion aus dem System.\\ 
+	Löscht & Diskussion \\ 
+	Pre & Karteikarte und Diskussionstitel muss existieren. \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  \textbf{diskussionErstellen(Diskuss: Diskussion, Karte: Karteikarte): Boolean} \\ 
 	Beschreibung & Legt eine neue Diskussion in der Datenbank an.\\ 
 	Erzeugt & Diskussion \\ 
-	Liest &  \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Karteikarte und Diskussionstitel muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  kommentieren(Komment: Kommentar, Diskuss: Diskussion, Nutzer: Benutzer): Boolean \\ 
+	Operation &  \textbf{kommentieren(Komment: Kommentar, Diskuss: Diskussion, Nutzer: Benutzer): Boolean} \\ 
 	Beschreibung & Legt einen neuen Kommentar zu einer übergebenen Diskussion an.\\ 
 	Erzeugt & Kommentar \\ 
-	Liest &  \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Karteikarte und Diskussionstitel muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  bewerten(Komment: Kommentar, Nutzer: Benutzer): Boolean \\ 
+	Operation &  \textbf{bewerten(Komment: Kommentar, Nutzer: Benutzer): Boolean }\\ 
 	Beschreibung & Legt eine neue positive Bewertung für einen Kommentar an.\\ 
 	Erzeugt & Bewertung \\ 
-	Liest &  \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Karteikarte und Diskussionstitel muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  AktuellesLesen(anzahl: Int): Aktuelles[] \\ 
+	Operation & \textbf{ aktuellesLesen(anzahl: Int): Aktuelles[]} \\ 
 	Beschreibung & Liefert die letzten \glqq anzahl\grqq Einträge zurück.\\ 
 	Erzeugt & Diskussion \\ 
-	Liest &  \\ 
-	Ändert & \\ 
-	Löscht &  \\ 
 	Pre & Karteikarte und Diskussionstitel muss existieren. \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  leseVeranstaltungen(): Veranstaltungen[] \\ 
+	Operation &  \textbf{leseVeranstaltungen(): Veranstaltungen[] }\\ 
 	Beschreibung &  Es werden alle Veranstaltungen aus der Datenbank gelesen.\\ 
-	Erzeugt &  \\ 
 	Liest &  Liste von Veranstaltungen\\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
-	Pre &  \\ 
-	Post &  \\ 
-	Trigger &\\
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  pruefeVeranstaltungEingetragen(benutzer : Benutzer, veranstaltung : Veranstalung): Boolean \\ 
+	Operation &  \textbf{pruefeVeranstaltungEingetragen(benutzer : Benutzer, veranstaltung : Veranstalung): Boolean} \\ 
 	Beschreibung &  Wenn der Benutzer eine Veranstaltung auswählt, muss geprüft werden, ob er für diese eingetragen\\ 
-	Erzeugt &  \\ 
-	Liest &  \\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
 	Pre &  Veranstaltung und Benutzer vorhanden\\ 
-	Post &  \\ 
-	Trigger &  \\
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  leseVeranstaltung(name : String): Veranstaltung \\ 
+	Operation &  \textbf{leseVeranstaltung(name : String): Veranstaltung} \\ 
 	Beschreibung &  Liest ein Veranstaltungsobjekt aus der Datenbank\\ 
-	Erzeugt &  \\ 
 	Liest &  Veranstaltung\\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
 	Pre &  Veranstaltung vorhanden\\ 
-	Post &  \\ 
-	Trigger &  \\
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  pruefePasswortVeranstaltung(veranstaltung : Veranstaltung, passwort : String) : boolean \\ 
+	Operation &  \textbf{pruefePasswortVeranstaltung(veranstaltung : Veranstaltung, passwort : String) : boolean} \\ 
 	Beschreibung &  Das übergebene Passwort wird mit dem Passwort der Veranstaltung verglichen.\\ 
-	Erzeugt &  \\ 
-	Liest &  \\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
 	Pre & Veranstaltung vorhanden \\ 
-	Post &  \\ 
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  VeranstaltungEintragen(veranstaltung : Veranstaltung, benutzer : Benutzer) : String \\ 
+	Operation &  \textbf{veranstaltungEintragen(veranstaltung : Veranstaltung, benutzer : Benutzer) : String} \\ 
 	Beschreibung &  Der Benutzer wird für die Veranstaltung eingetragen. Zuvor wird mit der Methode pruefePasswort sichergestellt, dass der Benutzer Zugangsrechte hat.\\ 
 	Erzeugt &  Eine Zuordnung zwischen der Veranstaltung und dem Benutzer \\ 
-	Liest &  \\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
 	Pre & Veranstaltung und Benutzer vorhanden \\ 
-	Post &  \\
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  VeranstaltungAnlegen(veranstaltung : Veranstaltung) \\ 
+	Operation &  \textbf{veranstaltungAnlegen(veranstaltung : Veranstaltung) }\\ 
 	Beschreibung &  Eine neue Veranstaltung wird in der Datenbank erstellt.\\ 
 	Erzeugt &  Veranstaltung \\ 
-	Liest &  \\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
-	Pre &  \\ 
-	Post &  \\
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  VeranstaltungBearbeiten(veranstaltung : Veranstaltung) \\ 
+	Operation &  \textbf{veranstaltungBearbeiten(veranstaltung : Veranstaltung)} \\ 
 	Beschreibung &  Die vom Benutzer gewünschten Änderungen werden auf den Daten durchgeführt.\\ 
-	Erzeugt &   \\ 
-	Liest &  \\ 
 	Ändert &  Veranstaltung\\ 
-	Löscht &  \\ 
 	Pre &  Veranstaltung vorhanden\\ 
-	Post &  \\
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  VeranstaltungLöschen(veranstaltung : Veranstaltung) \\ 
+	Operation & \textbf{ VeranstaltungLöschen(veranstaltung : Veranstaltung)} \\ 
 	Beschreibung &  Die Veranstaltung wird in der Datenbank gelöscht.\\ 
-	Erzeugt &   \\ 
-	Liest &  \\ 
-	Ändert &  \\ 
 	Löscht &  Veranstaltung\\ 
 	Pre &  Veranstaltung vorhanden\\ 
-	Post &  \\
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  leseBenutzerdaten(name : String) : Benutzer \\ 
+	Operation &  \textbf{vonVeranstaltungAbmelden(veranstaltung : Veranstaltung, Person: Benutzer)} \\ 
+	Beschreibung &  Entfernt den angegebenen Benutzer von der Veranstaltung als Mitglied.\\ 
+	Ändert & Veranstaltung \\ 
+	Pre &  Veranstaltung vorhanden\\ 
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  \textbf{leseBenutzerdaten(name : String) : Benutzer} \\ 
 	Beschreibung &  Liefert die Daten des entsprechenden Benutzers.\\ 
-	Erzeugt &   \\ 
 	Liest &  Benutzer\\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
 	Pre &  Benutzer vorhanden\\ 
-	Post &  \\
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  ändereBenutzerdaten(benutzer : Benutzer) \\ 
+	Operation &  \textbf{ändereBenutzerdaten(benutzer : Benutzer)} \\ 
 	Beschreibung &  Die vom Benutzer geänderten Daten werden gespeichert.\\ 
-	Erzeugt &   \\ 
-	Liest &  \\ 
 	Ändert &  Benutzer\\ 
-	Löscht &  \\ 
 	Pre &  Benutzer vorhanden\\ 
-	Post &  \\
 	\hline 
 \end{tabular}\\\\
 
 \begin{tabular}{|l|p{12cm}|}
 	\hline
-	Operation &  sucheBenutzer(muster : String) : Benutzer[] \\ 
+	Operation &  \textbf{sucheBenutzer(muster : String) : Benutzer[] }\\ 
 	Beschreibung &  Liest alle Benutzer, die diesem Muster entsprechen.\\ 
-	Erzeugt &   \\ 
 	Liest &  Liste von Benutzern\\ 
-	Ändert &  \\ 
-	Löscht &  \\ 
-	Pre &  \\ 
-	Post &  \\
 	\hline 
 \end{tabular}\\\\
 
