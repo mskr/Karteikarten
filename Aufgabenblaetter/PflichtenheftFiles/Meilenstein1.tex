@@ -2414,6 +2414,153 @@ Beginn der Handlung ist der Dialog \glqq Diskussion anzeigen\grqq. Von dort aus 
 	Post &  \\ 
 	Trigger &  \\
 	\hline 
-\end{tabular} 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  leseVeranstaltungen(): Veranstaltungen[] \\ 
+	Beschreibung &  Es werden alle Veranstaltungen aus der Datenbank gelesen.\\ 
+	Erzeugt &  \\ 
+	Liest &  Liste von Veranstaltungen\\ 
+	Ändert &  \\ 
+	Löscht &  \\ 
+	Pre &  \\ 
+	Post &  \\ 
+	Trigger &\\
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  pruefeVeranstaltungEingetragen(benutzer : Benutzer, veranstaltung : Veranstalung): Boolean \\ 
+	Beschreibung &  Wenn der Benutzer eine Veranstaltung auswählt, muss geprüft werden, ob er für diese eingetragen\\ 
+	Erzeugt &  \\ 
+	Liest &  \\ 
+	Ändert &  \\ 
+	Löscht &  \\ 
+	Pre &  Veranstaltung und Benutzer vorhanden\\ 
+	Post &  \\ 
+	Trigger &  \\
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  leseVeranstaltung(name : String): Veranstaltung \\ 
+	Beschreibung &  Liest ein Veranstaltungsobjekt aus der Datenbank\\ 
+	Erzeugt &  \\ 
+	Liest &  Veranstaltung\\ 
+	Ändert &  \\ 
+	Löscht &  \\ 
+	Pre &  Veranstaltung vorhanden\\ 
+	Post &  \\ 
+	Trigger &  \\
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  pruefePasswortVeranstaltung(veranstaltung : Veranstaltung, passwort : String) : boolean \\ 
+	Beschreibung &  Das übergebene Passwort wird mit dem Passwort der Veranstaltung verglichen.\\ 
+	Erzeugt &  \\ 
+	Liest &  \\ 
+	Ändert &  \\ 
+	Löscht &  \\ 
+	Pre & Veranstaltung vorhanden \\ 
+	Post &  \\ 
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  VeranstaltungEintragen(veranstaltung : Veranstaltung, benutzer : Benutzer) : String \\ 
+	Beschreibung &  Der Benutzer wird für die Veranstaltung eingetragen. Zuvor wird mit der Methode pruefePasswort sichergestellt, dass der Benutzer Zugangsrechte hat.\\ 
+	Erzeugt &  Eine Zuordnung zwischen der Veranstaltung und dem Benutzer \\ 
+	Liest &  \\ 
+	Ändert &  \\ 
+	Löscht &  \\ 
+	Pre & Veranstaltung und Benutzer vorhanden \\ 
+	Post &  \\
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  VeranstaltungAnlegen(veranstaltung : Veranstaltung) \\ 
+	Beschreibung &  Eine neue Veranstaltung wird in der Datenbank erstellt.\\ 
+	Erzeugt &  Veranstaltung \\ 
+	Liest &  \\ 
+	Ändert &  \\ 
+	Löscht &  \\ 
+	Pre &  \\ 
+	Post &  \\
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  VeranstaltungBearbeiten(veranstaltung : Veranstaltung) \\ 
+	Beschreibung &  Die vom Benutzer gewünschten Änderungen werden auf den Daten durchgeführt.\\ 
+	Erzeugt &   \\ 
+	Liest &  \\ 
+	Ändert &  Veranstaltung\\ 
+	Löscht &  \\ 
+	Pre &  Veranstaltung vorhanden\\ 
+	Post &  \\
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  VeranstaltungLöschen(veranstaltung : Veranstaltung) \\ 
+	Beschreibung &  Die Veranstaltung wird in der Datenbank gelöscht.\\ 
+	Erzeugt &   \\ 
+	Liest &  \\ 
+	Ändert &  \\ 
+	Löscht &  Veranstaltung\\ 
+	Pre &  Veranstaltung vorhanden\\ 
+	Post &  \\
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  leseBenutzerdaten(name : String) : Benutzer \\ 
+	Beschreibung &  Liefert die Daten des entsprechenden Benutzers.\\ 
+	Erzeugt &   \\ 
+	Liest &  Benutzer\\ 
+	Ändert &  \\ 
+	Löscht &  \\ 
+	Pre &  Benutzer vorhanden\\ 
+	Post &  \\
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  ändereBenutzerdaten(benutzer : Benutzer) \\ 
+	Beschreibung &  Die vom Benutzer geänderten Daten werden gespeichert.\\ 
+	Erzeugt &   \\ 
+	Liest &  \\ 
+	Ändert &  Benutzer\\ 
+	Löscht &  \\ 
+	Pre &  Benutzer vorhanden\\ 
+	Post &  \\
+	\hline 
+\end{tabular}\\\\
+
+\begin{tabular}{|l|p{12cm}|}
+	\hline
+	Operation &  sucheBenutzer(muster : String) : Benutzer[] \\ 
+	Beschreibung &  Liest alle Benutzer, die diesem Muster entsprechen.\\ 
+	Erzeugt &   \\ 
+	Liest &  Liste von Benutzern\\ 
+	Ändert &  \\ 
+	Löscht &  \\ 
+	Pre &  \\ 
+	Post &  \\
+	\hline 
+\end{tabular}\\\\
+
 
 \end{document}
