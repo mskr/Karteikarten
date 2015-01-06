@@ -32,15 +32,16 @@ Mit unserem E-Learning System wollen wir diese Probleme anpacken!
 
 \newpage
 
-\subsection{Vision und Leitbild}
+\subsection{Vision}
 Das Ziel des Projekts ist es den Studenten für jede Vorlesung eine zentrale webbasierte Lernumgebung anzubieten. Der Dozent einer Vorlesung hat die Möglichkeit eine Veranstaltung anzulegen, auf der er dann ein initiales Skript bereitstellen kann. Durch die während des Semesters aufkommenden Diskussionen ist er in der Lage das Skript mit Hilfe der Studenten zu erweitern. Die Vorlesungsinhalte sollen dabei nicht mehr linear aufgebaut sein, sondern einzelne Teile (z.B. eine Definition oder ein Satz in der Mathematik) sollen auf Karteikarten gespeichert werden. Die Karteikarten sind hierarchisch angeordnet und zusätzlich durch Querverweise miteinander verknüpft werden, sodass ein Netzwerk entsteht. Dadurch ist es für die Anzeige beispielsweise möglich auf Vorlesungsfolien weniger Information zu packen, als ins Skript, sodass die Anzeige flexibel wird. Durch die Struktur als Netzwerk ist es für einen Student, der beispielsweise ein Matheskript liest und über den Begriff der Differenzialgleichung stößt, möglich zuerst eine kurze Definition zu dem Begriff zu erhalten. Falls dies nicht ausreichend ist, hat er die Wahl sich zwischen verschiedenen Quellen zu diesem Thema zu entscheiden. Beispielsweise könnte er auf ein YouTube-Video oder eine andere Website verlinkt werden. In dem Netzwerk ist es aber trotzdem noch wichtig dass es einen linearen Pfad gibt, der das Skript repräsentiert. Des weiteren soll ein Student zu jeder Karteikarte Notizen machen oder eine Diskussion anstoßen können. Der Student kann entscheiden, ob andere seine Notizen sehen dürfen. Um die Qualität der Diskussion beurteilen zu können, gibt es die Möglichkeit, einzelne Beiträge durch positive Bewertungen hervorzuheben. Außerdem existieren Moderatoren, die die Aufgabe haben, schlechte Beiträge zu entfernen und besonders gute Beiträge ins Skript einzuarbeiten. Die Rolle des Moderators kann z.B. der Dozent oder der Übungsleiter übernehmen.
 
 
-\section{Projektkontext}
-Das Software-System wird im Rahmen des Softwaregrundprojekts Wintersemester 2014/2015 im Bereich Informatik entstehen. Dies kann eventuell in den bestehenden Lehrbetrieb der Universität Ulm eingebettet werden, so dass allen Studenten an der Universität die Möglichkeit zu diesem System angeboten werden kann.
+\subsection{Projektkontext}
+Das Software-System wird im Rahmen des Softwaregrundprojekts Wintersemester 2014/2015 im Bereich Informatik entstehen. Dies kann eventuell in den bestehenden Lehrbetrieb der Universität Ulm eingebettet werden, so dass allen Personen die am Lehrbetrieb der Universität teilnehmen, die Möglichkeit haben dieses System zu nutzen. Ein Folge-Projekt könnte beispielsweise eine Importfunktion für die vorhanden Skripte die schon zur Verfügung stehen. Dieses Projekt im einzelnen stellt eine praxisorientierte Übung für die Studenten dar.
+ 
 
 \section{Anforderungsanalyse}
-\subsection{Fachwissen (Glossar)}
+\subsection{Fachwissen}
 \begin{tabular}{l p{12cm}}  
 BEGRIFF 	 & \textbf{Administrator} \\ 
 BESCHREIBUNG & Benutzer mit erweiterten Zugansrechten zur Systemverwaltung\\ 
@@ -84,7 +85,6 @@ BEISPIEL 	 & \\\\
 \end{tabular}\\\\   
 
 \begin{tabular}{l p{12cm}}
-\hline\\
 BEGRIFF 	 & \textbf{Moderator} \\ 
 BESCHREIBUNG & Person die Foren überwacht\\
 ISTEIN   	 & Benutzer \\
@@ -129,7 +129,6 @@ BEISPIEL 	 & Manuel Güntzel(Tutor)\\\\
 \end{tabular}\\\\  
 
 \begin{tabular}{l p{12cm}}
-\hline
 BEGRIFF 	 & \textbf{Übungsleiter} \\ 
 BESCHREIBUNG & Eine Person an der Universität \\ 
 ISTEIN   	 & Tutor\\
@@ -172,7 +171,6 @@ BEISPIEL 	 & Student macht sich zu Notizen\\
 \end{tabular}\\ 
 
 \begin{tabular}{l p{12cm}}
-\hline\\
 BEGRIFF 	 & \textbf{Datenbank} \\ 
 BESCHREIBUNG & System zur Datenverwaltung\\ 
 ISTEIN   	 & System\\
@@ -213,7 +211,6 @@ BEISPIEL 	 & Student downloaded sich das aktuelle Skript herunter\\\\
 \end{tabular}\\\\  
 
 \begin{tabular}{l p{12cm}}
-\hline\\
 BEGRIFF 	 & \textbf{Einstellungen} \\ 
 BESCHREIBUNG & manuelle Änderungs-Möglichkeiten im System \\
 ISTEIN   	 & -\\
@@ -488,7 +485,7 @@ BEISPIEL 	 & Student kann aufgrund seiner Zugangsrechte\\
 \end{tabular}\\\\ 
 \newpage
 
-\subsection{Systemkontext}
+\subsection{Anwendungskontext}
 \subsubsection{Akteure und Anwendungsfälle}
 In diesem Abschnitt werden die beteiligten Akteure identifiziert. Danach werden alle auftretenden Anwendungsfälle durch Anwendungsfalldiagrame dargestellt.
 Folgende Akteure sind am System beteiligt.\\
@@ -526,216 +523,216 @@ Akteur & \textbf{eMail-Server} \\
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/Benutzer.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/Benutzer.png}
 	\caption{Dies sind alle Aktionen die von einem Benutzer getätigt werden können.}
 	\label{AwfBenutzer}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[height=13cm]{Bilder/Anwendungsfalldiagramme/Moderator.jpg}
+	\includegraphics[height=13cm]{Bilder/Anwendungsfalldiagramme/Moderator.png}
 	\caption{Der Moderator erbt alle Anwendungsfälle vom Benutzer. Er kann zusätzlich die Karteikarten und Diskussionen verwalten.}
 	\label{AwfModerator}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/abbildung3.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Anwendungsfalldiagramme/Dozent.png}
 	\caption{Der Dozent erbt alle Anwendungsfälle vom Benutzer und vom Moderator. Zusätzlich kann er Veranstaltungen verwalten.}
 	\label{AwfDozent}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=10cm]{Bilder/Anwendungsfalldiagramme/Admin.jpg}
+	\includegraphics[width=10cm]{Bilder/Anwendungsfalldiagramme/Admin.png}
 	\caption{Der Administrator erbt von allen Akteuren und hat somit alle Rechte. Er kann Nutzer in den Dozenten-Status erheben.}
 	\label{AwfAdmin}
 \end{figure}
 
 \newpage
 
-\subsubsection{Szenarien}
+\subsubsection{Anwendungsszenarien}
 Alle Anwendungsfälle werden durch Sequenzdiagramme beschrieben. Diese Diagramme beschreiben einen beispielhaften Ablauf und die möglichen Alternativen einer Aktion auf.
 
 \begin{figure}[H]
 	\centering
 	\paragraph{Registrierung}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/Registrierung1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/Registrieren.png}
 	\caption{Die initiale Benutzerregistrierung im System.}
 	\label{SzRegistrieren}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Profil bearbeiten}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/ProfilBearbeiten1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/ProfilBearbeiten.png}
 	\caption{Der Benutzer bearbeitet sein persönliches Profil.}
 	\label{SzProfilBearbeiten}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Am System anmelden}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/AmSystemAnmelden1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/AmSystemAnmelden.png}
 	\caption{Die Benutzeranmeldung am System.}
 	\label{SzAmSystemAnmelden}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Vom System abmelden}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VomSystemAbmelden.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VomSystemAbmelden.png}
 	\caption{Die Benutzerabmeldung}
 	\label{SzVomSystemAbmelden}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Zu einer Veranstaltung anmelden}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/ZuVeranstaltungAnmelden1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/ZuVeranstaltungAnmelden.png}
 	\caption{Die Anmeldung von einem Benutzer zu einer Veranstaltung.}
 	\label{SzZuVeranstaltungAnmelden}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Von einer Veranstaltung abmelden}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VonVeranstaltungAbmelden1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VonVeranstaltungAbmelden.png}
 	\caption{Der Benutzer meldet sich von einer Veranstaltung ab.}
 	\label{SzVonVeranstaltungAbmelden}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Veranstaltung anzeigen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungenAnzeigen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungAnzeigen.png}
 	\caption{Der Benutzer zeigt sich alle bestehenden Veranstaltungen an.}
 	\label{SzVeranstaltungenAnzeigen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Eine neue Veranstaltung anlegen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungAnlegen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungAnlegen.png}
 	\caption{Der Dozent erstellt eine neue Veranstaltung.}
 	\label{SzVeranstaltungAnlegen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Eine vorhandene Veranstaltung löschen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungLoeschen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungLoeschen.png}
 	\caption{Die vom dem Dozenten erstellte Veranstaltungen löschen.}
 	\label{SzVeranstaltungLoeschen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Veranstaltung bearbeiten}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungBearbeiten1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VeranstaltungBearbeiten.png}
 	\caption{Der Dozent nimmt Änderungen an seiner Veranstaltungen vor.}
 	\label{SzVeranstaltungBearbeiten}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Lerninhalt einsehen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/LerninhalteEinsehen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/LehrinhalteEinsehen.png}
 	\caption{Der Benutzer zeigt sich eine Diskussion zu einer Karteikarte an.}
 	\label{SzLerninhaltEinsehen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Roter Faden bearbeiten}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/RoterFadenBearbeiten1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/RoterFadenBearbeiten.png}
 	\caption{Der Dozent nimmt Änderungen am roten Faden vor.}
 	\label{SzRoterFaden}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Notizen machen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/NotizenMachen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/NotizenMachen.png}
 	\caption{Der Benutzer legt eine Notiz zu einer Karteikarte an.}
 	\label{SzNotizenMachen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Skript exportieren}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/SkriptExportieren1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/SkriptExportieren.png}
 	\caption{Der Benutzer exportiert das Skript.}
 	\label{SzSkriptExportieren}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Diskussion beginnen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/DiskussionAnstossen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/DiskussionAnstossen.png}
 	\caption{Der Benutzer stößt eine Diskussion zu einer Karteikarte an.}
 	\label{SzDiskussionAnstossen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Diskussion einsehen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/DiskussionEinsehen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/DiskussionEinsehen.png}
 	\caption{Der Benutzer lässt sich eine Diskussion zu einer Karteikarte anzeigen.}
 	\label{SzDiskussionEinsehen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Kommentar schreiben}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KommentarSchreiben1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KommentarSchreiben.png}
 	\caption{Der Nutzer hinterlässt einen Kommentar zu einer Diskussion.}
 	\label{SzKommentarSchreiben}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Kommentare bewerten}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KommentareBewerten1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KommentarBewerten.png}
 	\caption{Der Nutzer bewertet einen Kommentar in einer Diskussion.}
 	\label{SzKommentareBewerten}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Kommentare löschen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KommentareLoeschen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KommentarLoeschen.png}
 	\caption{Der Moderator löscht nicht relevante Kommentare.}
 	\label{SzKommentarLoeschen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Karteikarte hinzufügen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KarteikarteHinzufuegen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KarteikarteHinzufuegen.png}
 	\caption{Der Moderator fügt eine neue Karteikarte hinzu.}
 	\label{SzKarteikarteHinzufuegen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Karteikarte ändern}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KarteikarteAendern1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KarteikarteAendern.png}
 	\caption{Der Moderator ändert eine Karteikarte.}
 	\label{SzKarteikarteAendern}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Karteikarte löschen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KarteikarteLoeschen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/KarteikarteLoeschen.png}
 	\caption{Der Moderator löscht eine Karteikarte.}
 	\label{SzKarteikarteLoeschen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Gruppe verwalten}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/GruppenVerwalten1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/GruppenVerwalten.png}
 	\caption{Der Benutzer verwaltet die Gruppen.}
 	\label{SzGruppenVerwalten}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Beitrittsanfrage zu Gruppe beantworten}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/BeitrittsanfrageZuGruppe1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/BeitrittsanfrageZuGruppe.png}
 	\caption{Der Benutzer beantwortet Beitrittsanfragen zu Gruppen.}
 	\label{SzBeitrittsanfrageZuGruppe}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Benachrichtigungen anzeigen}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/BenachrichtigungenAnzeigen1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/BenachrichtigungenAnzeigen.png}
 	\caption{Der Benutzer zeigt sich seine Benachrichtigungen an.}
 	\label{SzBenachrichtigungen}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\paragraph{Nutzerstatus ändern}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/NutzerstatusAendern1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/NutzerstatusAendern.png}
 	\caption{Der Administrator ändert die Profildaten eines Benutzers.}
 	\label{SzNutzerstatusAendern}
 \end{figure}
@@ -743,17 +740,16 @@ Alle Anwendungsfälle werden durch Sequenzdiagramme beschrieben. Diese Diagramme
 \begin{figure}[H]
 	\centering
 	\paragraph{Mail versenden}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/MailVersenden1.jpg}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/MailVersenden.png}
 	\caption{Das System sendet eine Mail an den Benutzer.}
 	\label{SzMailVersenden}
 \end{figure}
 
 
-\subsubsection{Systemaufgabe}
+\subsection{Funktionale Systemanforderungen}
 Hier werden alle Systemaufgaben, die dazugehörigen Teilnehmer und jeweils eine kurze Beschreibung aufgelistet. Außerdem wird jede Anforderung mit einer Markierung (von nicht sehr von Bedeutung [-2]  bis [2] sehr wichtig) versehen, die darlegt, wie wichtig diese Anforderung ist.
 
-\paragraph{Funktionale Anforderungen}
-\subparagraph{Benutzer - Anwendungsfall "Registrieren" (2)}\mbox{}\\
+\paragraph{Benutzer - Anwendungsfall "Registrieren" (2)}\mbox{}\\
 \textbf{Eingabe der Daten}\\
 \begin{tabular}{l| p{12cm}}
 \hline 
@@ -770,7 +766,7 @@ Beschreibung & Die erfolgreiche Anmeldung wird dem Benutzer  \\
 \end{tabular} 
 
 \newpage
-\subparagraph{Benutzer - Anwendungsfall \glqq Am System anmelden\grqq (2)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Am System anmelden\grqq (2)}\mbox{}
 
 \textbf{Eingabe der Zugangsdaten}\\
 \begin{tabular}{l|p{12cm}}
@@ -788,7 +784,7 @@ Beschreibung & Das System bestätigt dem Nutzer die Anmeldung. \\
 \end{tabular}\\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Vom System abmelden\grqq (2)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Vom System abmelden\grqq (2)}\mbox{}
 
 \textbf{Abmelden}\\
 \begin{tabular}{l|p{12cm}}
@@ -806,7 +802,7 @@ Beschreibung &  Das System zeigt an, dass das Abmelden erfolgreich war. \\
 
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Veranstaltungen anzeigen\grqq (2)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Veranstaltungen anzeigen\grqq (2)}\mbox{}
 
 \textbf{Alle Veranstaltungen anzeigen}\\
 \begin{tabular}{l|p{12cm}}
@@ -824,7 +820,7 @@ Beschreibung & Das System zeigt dem Benutzer alle Veranstaltung an, an denen er 
 
 \newpage
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Zu Veranstaltung anmelden \grqq (2)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Zu Veranstaltung anmelden \grqq (2)}\mbox{}
 
 \textbf{Zu Veranstaltung anmelden}\\
 \begin{tabular}{l|p{12cm}}
@@ -834,7 +830,7 @@ Beschreibung & Nachdem der Benutzer die Zugangsdaten zur Veranstaltung korrekt a
 \end{tabular}\\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Von Veranstaltung abmelden\grqq (0)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Von Veranstaltung abmelden\grqq (0)}\mbox{}
 
 \textbf{Von Veranstaltung abmelden}\\
 \begin{tabular}{l|p{12cm}}
@@ -844,7 +840,7 @@ Beschreibung & Das System meldet den Benutzer vom System ab und zeigt Ihm an ob 
 \end{tabular}\\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Skript exportieren\grqq (-1)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Skript exportieren\grqq (-1)}\mbox{}
 
 \textbf{Exportseite anzeigen und Skript wählen}\\
 \begin{tabular}{l|p{12cm}}
@@ -868,7 +864,7 @@ Beschreibung & Das System generiert das Dokument und bietet es dem Nutzer zum Do
 \end{tabular}\\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Profil und Einstellungen bearbeiten und ansehen\grqq  (2)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Profil und Einstellungen bearbeiten und ansehen\grqq  (2)}\mbox{}
 
 \textbf{Profil anzeigen}\\
 \begin{tabular}{l|p{12cm}}
@@ -899,7 +895,7 @@ Beschreibung & Das System bestätigt dem Benutzer die erfolgreiche Änderung ode
 \end{tabular}\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Diskussion anstoßen\grqq (1)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Diskussion anstoßen\grqq (1)}\mbox{}
 
 \textbf{Neue Diskussion erstellen}\\
 \begin{tabular}{l|p{12cm}}
@@ -916,7 +912,7 @@ Beschreibung & Der Nutzer kann beim Erstellen die Sichtbarkeit der Diskussion ei
 \end{tabular}\\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Kommentare machen\grqq (1)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Kommentare machen\grqq (1)}\mbox{}
 
 \textbf{Kommentar hinzufügen}\\
 \begin{tabular}{l|p{12cm}}
@@ -926,7 +922,7 @@ Beschreibung & Jeder Benutzer muss, wenn er die notwendigen Rechte besitzt, Komm
 \end{tabular}\\\\ 
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Notizen machen\grqq (1)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Notizen machen\grqq (1)}\mbox{}
 
 \textbf{Notizen hinzufügen}\\
 \begin{tabular}{l|p{12cm}}
@@ -936,7 +932,7 @@ Beschreibung & Jeder Benutzer muss sich zu einer Karteikarte Notizen machen. \\
 \end{tabular}\\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Kommentare bewerten\grqq (-1)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Kommentare bewerten\grqq (-1)}\mbox{}
 
 \textbf{Kommentar bewerten}\\
 \begin{tabular}{l|p{12cm}}
@@ -946,7 +942,7 @@ Beschreibung & Jeder Benutzer kann, wenn er die notwendigen Rechte(Sichtbarkeit)
 \end{tabular}\\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Gruppen verwalten\grqq (-2)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Gruppen verwalten\grqq (-2)}\mbox{}
 
 \textbf{Gruppe erstellen}\\
 \begin{tabular}{l|p{12cm}}
@@ -970,7 +966,7 @@ Beschreibung & Jeder Benutzer hat die Möglichkeit, seine selbst erstellten Grup
 \end{tabular}\\\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Benachrichtigungen anzeigen\grqq  (1)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Benachrichtigungen anzeigen\grqq  (1)}\mbox{}
 
 \textbf{Benachrichtigungen anzeigen}\\
 \begin{tabular}{l|p{12cm}}
@@ -981,7 +977,7 @@ Beschreibung & Jedem Benutzer werden immer aktuelle Informationen wie eine Beitr
  
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Lerninhalte anzeigen\grqq  (2)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Lerninhalte anzeigen\grqq  (2)}\mbox{}
 
 \textbf{Lerninhalte anzeigen}\\
 \begin{tabular}{l|p{12cm}}
@@ -991,7 +987,7 @@ Beschreibung & Jedem Benutzer werden die Lerninhalte zu einer Veranstaltung ange
 \end{tabular}\\
 
 
-\subparagraph{Benutzer - Anwendungsfall \glqq Beitrittsanfrage zu Gruppe beantworten\grqq (-2)}\mbox{}
+\paragraph{Benutzer - Anwendungsfall \glqq Beitrittsanfrage zu Gruppe beantworten\grqq (-2)}\mbox{}
 
 {\textbf{Beitrittsanfragen beantworten}\\
 \begin{tabular}{l|p{12cm}}
@@ -1001,7 +997,7 @@ Beschreibung & Jeder Benutzer kann über eine Oberfläche ausstehende Beitrittsa
 \end{tabular}\\\\
 
 
-\subparagraph{Dozent - Anwendungsfall \glqq Veranstaltung anlegen\grqq (2)}\mbox{}
+\paragraph{Dozent - Anwendungsfall \glqq Veranstaltung anlegen\grqq (2)}\mbox{}
 
 \textbf{Veranstaltungsdaten eingeben}\\
 \begin{tabular}{l|p{12cm}}
@@ -1011,7 +1007,7 @@ Beschreibung & Es gibt eine Oberfläche, wo der Dozent die Veranstaltungsdaten(N
 \end{tabular} \\\\
 
 
-\subparagraph{Dozent - Anwendungsfall \glqq Moderator ernennen\grqq (2)}\mbox{}
+\paragraph{Dozent - Anwendungsfall \glqq Moderator ernennen\grqq (2)}\mbox{}
 
 \textbf{Moderator ernennen}\\
 \begin{tabular}{l|p{12cm}}
@@ -1021,7 +1017,7 @@ Beschreibung & Der Dozent kann für seine Veranstaltungen Moderatoren angeben. \
 \end{tabular}\\\\
 
 
-\subparagraph{Dozent - Anwendungsfall \glqq Initiales Skript erstellen\grqq (1)}\mbox{}
+\paragraph{Dozent - Anwendungsfall \glqq Initiales Skript erstellen\grqq (1)}\mbox{}
 
 \textbf{Importseite anzeigen und Skript hochladen}\\
 \begin{tabular}{l|p{12cm}}
@@ -1032,7 +1028,7 @@ Beschreibung & Der Dozent bekommt eine Importoberfläche angezeigt und lädt ein
 
 \newpage
 
-\subparagraph{Dozent - Anwendungsfall \glqq Veranstaltung bearbeiten\grqq (0)}\mbox{}
+\paragraph{Dozent - Anwendungsfall \glqq Veranstaltung bearbeiten\grqq (0)}\mbox{}
 
 \textbf{Veranstaltung bearbetien}\\
 \begin{tabular}{l|p{12cm}}
@@ -1042,7 +1038,7 @@ Beschreibung & Der Dozent kann seine eigenen Veranstaltungen bearbeiten, indem e
 \end{tabular}\\\\
 
 
-\subparagraph{Dozent - Anwendungsfall \glqq Roter Faden anpassen\grqq (2)}\mbox{}
+\paragraph{Dozent - Anwendungsfall \glqq Roter Faden anpassen\grqq (2)}\mbox{}
 
 \textbf{Roter Faden anpassen}\\
 \begin{tabular}{l|p{12cm}}
@@ -1052,7 +1048,7 @@ Beschreibung & Der Dozent kann den initialen roten Faden anpassen, indem er dies
 \end{tabular}\\\\
 
 
-\subparagraph{Moderator - Anwendungsfall \glqq Karteikarte hinzufügen\grqq (2)}\mbox{}
+\paragraph{Moderator - Anwendungsfall \glqq Karteikarte hinzufügen\grqq (2)}\mbox{}
 
 \textbf{Karteikarte hinzufügen}\\
 \begin{tabular}{l|p{12cm}}
@@ -1061,7 +1057,7 @@ Beteiligt & Moderator, System \\
 Beschreibung & Der Moderator kann Karteikarten zum bestehenden Lernstoff hinzufügen. Hierbei muss er das Verweisziel angeben und Attribute setzen. \\ 
 \end{tabular}\\\\
 
-\subparagraph{Moderator - Anwendungsfall \glqq Karteikarte ändern\grqq (2)}\mbox{}
+\paragraph{Moderator - Anwendungsfall \glqq Karteikarte ändern\grqq (2)}\mbox{}
 
 \textbf{Karteikarte ändern}\\
 \begin{tabular}{l|p{12cm}}
@@ -1072,7 +1068,7 @@ Beschreibung & Der Moderator muss Änderungen der Karteikarten vornehmen können
 
 \newpage
 
-\subparagraph{Moderator - Anwendungsfall \glqq Karteikarte entfernen\grqq (2)}\mbox{}
+\paragraph{Moderator - Anwendungsfall \glqq Karteikarte entfernen\grqq (2)}\mbox{}
 
 \textbf{Karteikarte entfernen}\\
 \begin{tabular}{l|p{12cm}}
@@ -1082,7 +1078,7 @@ Beschreibung & Der Moderator soll Karteikarten entfernen können. \\
 \end{tabular}\\\\
 
 
-\subparagraph{Moderator - Anwendungsfall \glqq Kommentare entfernen\grqq (2)}\mbox{}
+\paragraph{Moderator - Anwendungsfall \glqq Kommentare entfernen\grqq (2)}\mbox{}
 
 \textbf{Karteikarte entfernen}\\
 \begin{tabular}{l|p{12cm}}
@@ -1091,7 +1087,7 @@ Beteiligt & Moderator, System \\
 Beschreibung & Der Moderator muss Kommentare entfernen können. \\ 
 \end{tabular}\\\\
 
-\subparagraph{Administrator - Anwendungsfall \glqq Nutzerstatus ändern\grqq (2)}\mbox{}
+\paragraph{Administrator - Anwendungsfall \glqq Nutzerstatus ändern\grqq (2)}\mbox{}
 
 \textbf{Nutzerstatus ändern}\\
 \begin{tabular}{l|p{12cm}}
@@ -1100,53 +1096,10 @@ Beteiligt & Administrator, System \\
 Beschreibung & Der Administrator kann Benutzer in den Dozentenstatus erheben. Das heißt, dass sich Dozenten zu Beginn als Studenten im System registrieren müssen. \\ 
 \end{tabular}\\\\ 
 
-\paragraph{Nicht funktionale Anforderungen}\mbox{}\\
-Hier werden alle nicht funktionalen Anforderungen aufgelistet, denen das System gerecht werden muss. Auch hier wird jeder Abschnitt mit einer Nummer zwischen -2 und 2 versehen. Diese Nummer repräsentiert auch hier, wie wichtig diese Anforderung für das System ist.
-\subparagraph{Benutzerfreundlichkeit (2)}
-\begin{itemize}
-\item Ein noch so gut funktionierendes System ist wertlos, wenn die Handhabung des Systems so schlecht ist, dass sich kein Anwender lange damit auseinandersetzen will. 
-\item Es muss intuitiv und einfach zu bedienen sein.
-\end{itemize}
-\subparagraph{Robustheit (1)}
-\begin{itemize}
-\item Das System muss robust gegenüber Abstürzen sein. 
-\item Es sollten keine unerwarteten Zustände auftreffen. Und falls doch, sollte sich das System so verhalten, dass keine Daten verloren gehen.
-\end{itemize}
-\subparagraph{Performance (0)}
-\begin{itemize}
-\item Das System sollte effizient sein.
-\item Viele Datenbankzugriffe erfordern eine effiziente Strukturierung der Daten.
-\item Es soll auf langsame Web-Plugins verzichtet werden, das diese die Geschwindikeit des Systems nur beeinträchtigen würden. 
-\end{itemize}
-\subparagraph{Sicherheit (1)}
-\begin{itemize}
-\item Die Sichtbarkeit und Zugangsrechte sollen einwandfrei funktionieren.
-\item Die privaten Daten wie z.b. Notizen sollten nur vom Erzeuger eingesehen werden können.
-\item Verbindungen sollten immer verschlüsselt sein.
-\end{itemize}
-\subparagraph{Verfügbarkeit (1)}
-\begin{itemize}
-\item Das System soll nicht nur aus dem Uni-Netz sondern auch Weltweit über das Web genutzt werden können.
-\item Es sollte zu Wartungszwecken nicht abgeschaltet werden müssen.
-\end{itemize}
-\subparagraph{Wartbarkeit (-1)}
-\begin{itemize}
-\item Es soll eine eigene Oberfläche für Administratoren geben. Diese soll  die Wartung des Systems erleichtern.
-\end{itemize}
-\subparagraph{Darstellungsunabhängigkeit (2)}
-\begin{itemize}
-\item Die Lehrinhalte müssen unabhängig von der Darstellung gespeichert sein.
-\end{itemize}
-\subparagraph{Plattformunabhängigkeit (2)}
-\begin{itemize}
-\item Das System soll als unabhängige Webanwendung implementiert werden.
-\end{itemize}
-
-
 \begin{landscape}
-\section{Benutzerschnittstelle}
-\subsection{Dialogstruktur}
-In diesem Kapitel werden die Dialoge und ihr Zusammenhang dargestellt. Durch die Pfeile ist dargestellt, welche Dialogübergänge möglich sind. Auf den Pfeilen ist die Interaktion beschrieben die dafür notwendig ist. Beispielweise der Klick auf einen Link oder auf einen Button. Zusammengehörige Dialoge sind durch grüne Boxen gruppiert. Die Lernumgebung ist als hirarchischer Dialog aufgebaut. Die Dialoge innerhalb des Dialogs \glqq Lernumgebung anzeigen\grqq sind Teildialoge. Sie existieren also nicht als eigene Oberfläche. Nun wird zuerst eine Übersicht über die Dialoge dargestellt. Danach wird jeder Teil noch einmal vergrößert dargestellt.
+\section{Softwarspezifikation}
+\subsection{Systemschnittstellen}
+In diesem Kapitel werden die Dialoge und ihr Zusammenhang dargestellt. Durch die Pfeile ist dargestellt, welche Dialogübergänge möglich sind. Auf den Pfeilen ist die Interaktion beschrieben die dafür notwendig ist. Beispielweise der Klick auf einen Link oder auf einen Button. Zusammengehörige Dialoge sind durch grüne Boxen gruppiert. Die Lernumgebung ist als hierarchischer Dialog aufgebaut. Die Dialoge innerhalb des Dialogs \glqq Lernumgebung anzeigen\grqq sind Teildialoge. Sie existieren  nicht als eigene Oberfläche. Nun wird zuerst eine Übersicht über die Dialoge dargestellt. Danach wird jeder Teil noch einmal vergrößert dargestellt.
 
 \begin{figure}[H]
 	\centering
@@ -1204,7 +1157,9 @@ In diesem Kapitel werden die Dialoge und ihr Zusammenhang dargestellt. Durch die
 \end{figure}
 
 \end{landscape}
-\subsection{Dialoggestaltung}
+
+
+\subsubsection{Dialoggestaltung}
 \begin{figure}[H]
 	\centering
 	\paragraph{Startseite}
@@ -2317,8 +2272,10 @@ Nachbedingung	 		& \\
 Öffnet			 		& \\\\
 \end{tabular}
 
+
+
 \subsection{Nutzungskonzept}
-Das Nutzungskonzept ist die Zuordnung der Anwendungsfälle aus Abschnitt 3.2.1 zu den Interaktionen aus Abschnitt 4.2
+Das Nutzungskonzept ist die Zuordnung der Anwendungsfälle zu den Interaktionen der einzelnen Dialoge 
 \paragraph{Registrieren}
 Beginn der Handlung ist die Anmeldeseite. Hier kann der Benutzer über einen Klick auf den Link \glqq Registrierungsformular\grqq auf das Registrierungsformular wechseln. Wenn er dort seine Daten eingibt und die Registrierung bestätigt, wird ein neuer Nutzer im System angelegt.
 
@@ -2476,7 +2433,7 @@ Beginn der Handlung ist der Dialog \glqq Diskussion anzeigen\grqq. Von dort aus 
 \end{enumerate}
 
 
-section{Systemmodell}
+\subsection{Datenmodell}
 
 \begin{figure}[H]
 	\centering
@@ -2487,8 +2444,8 @@ section{Systemmodell}
 \end{figure}
 
 
-\subsection{Schnittstellenmodell}
-Im Schnittstellenmodell werden die verschiedenen Operationen beschrieben, die mit dem System bzw. der Datenbank kommunizieren. Hierzu gehört das Erzeugen,Ändern,Löschen und Lesen von Daten. Die Operationen werden mit ihrer vollständigen Signatur aus Operationsname, Parametern und Rückgabetyp dargestellt und danach beschrieben. Außerdem wird angegeben, welche Objekte verändert werden oder auf welche Objekte zugegriffen werden muss. Danach werden die dafür nötigen Vor- und Nachbedingungen angegeben. Falls der Rückgabetyp einer Methode \glqq Boolean\grqq ist, steht \glqq True\grqq für den erfolgreichen Abschluss der Methode und \glqq False\grqq für einen Fehler bzw. Abbruch. Wenn nicht direkt klar ist, was für den Fehler verantwortlich ist, können die Methoden Exceptions werfen, die den Fehlertext enthalten. Beim Erzeugen, Lesen, Ändern und Löschen handelt es sich um Operationen die in der Datenbank ablaufen.
+\subsection{Funktionen}
+Beschreibung der verschiedenen Operationen, die mit dem System bzw. der Datenbank kommunizieren. Hierzu gehört das Erzeugen,Ändern,Löschen und Lesen von Daten. Die Operationen werden mit ihrer vollständigen Signatur aus Operationsname, Parametern und Rückgabetyp dargestellt und danach beschrieben. Außerdem wird angegeben, welche Objekte verändert werden oder auf welche Objekte zugegriffen werden muss. Danach werden die dafür nötigen Vor- und Nachbedingungen angegeben. Falls der Rückgabetyp einer Methode \glqq Boolean\grqq ist, steht \glqq True\grqq für den erfolgreichen Abschluss der Methode und \glqq False\grqq für einen Fehler bzw. Abbruch. Wenn nicht direkt klar ist, was für den Fehler verantwortlich ist, können die Methoden Exceptions werfen, die den Fehlertext enthalten. Beim Erzeugen, Lesen, Ändern und Löschen handelt es sich um Operationen die in der Datenbank ablaufen.
 \newline
 
 \begin{tabular}{|l|p{12cm}|}
@@ -2844,13 +2801,115 @@ Im Schnittstellenmodell werden die verschiedenen Operationen beschrieben, die mi
 
 \subsection{Qualität}
 
+\paragraph{Nicht funktionale Anforderungen}\mbox{}\\
+Hier werden alle nicht funktionalen Anforderungen aufgelistet, denen das System gerecht werden muss. Diese Anforderungen sollen die Qualität des Systems gewährleisten. Auch hier wird jeder Abschnitt mit einer Nummer zwischen -2 und 2 versehen. Diese Nummer repräsentiert auch hier, wie wichtig diese Anforderung für das System ist.
+
+\subparagraph{Benutzerfreundlichkeit (2)}
+\begin{itemize}
+	\item Ein noch so gut funktionierendes System ist wertlos, wenn die Handhabung des Systems so schlecht ist, dass sich kein Anwender lange damit auseinandersetzen will. 
+	\item Es muss intuitiv und einfach zu bedienen sein.
+\end{itemize}
+\subparagraph{Robustheit (1)}
+\begin{itemize}
+	\item Das System muss robust gegenüber Abstürzen sein. 
+	\item Es sollten keine unerwarteten Zustände auftreffen. Und falls doch, sollte sich das System so verhalten, dass keine Daten verloren gehen.
+\end{itemize}
+\subparagraph{Performance (0)}
+\begin{itemize}
+	\item Das System sollte effizient sein.
+	\item Viele Datenbankzugriffe erfordern eine effiziente Strukturierung der Daten.
+	\item Es soll auf langsame Web-Plugins verzichtet werden, das diese die Geschwindigkeit des Systems nur beeinträchtigen würden. 
+\end{itemize}
+\subparagraph{Sicherheit (1)}
+\begin{itemize}
+	\item Die Sichtbarkeit und Zugangsrechte sollen einwandfrei funktionieren.
+	\item Die privaten Daten wie z.b. Notizen sollten nur vom Erzeuger eingesehen werden können.
+	\item Verbindungen sollten immer verschlüsselt sein.
+\end{itemize}
+\subparagraph{Verfügbarkeit (1)}
+\begin{itemize}
+	\item Das System soll nicht nur aus dem Uni-Netz sondern auch Weltweit über das Web genutzt werden können.
+	\item Es sollte zu Wartungszwecken nicht abgeschaltet werden müssen.
+\end{itemize}
+\subparagraph{Wartbarkeit (-1)}
+\begin{itemize}
+	\item Es soll eine eigene Oberfläche für Administratoren geben. Diese soll  die Wartung des Systems erleichtern.
+\end{itemize}
+\subparagraph{Darstellungsunabhängigkeit (2)}
+\begin{itemize}
+	\item Die Lehrinhalte müssen unabhängig von der Darstellung gespeichert sein.
+\end{itemize}
+\subparagraph{Plattformunabhängigkeit (2)}
+\begin{itemize}
+	\item Das System soll als unabhängige Webanwendung implementiert werden.
+\end{itemize}
+
 \subsection{Betriebskonzept}
 Das System soll auf einem Apache Tomcat Server der Universität Ulm liegen. Der Dienst ist damit überall über das Internet erreichbar. Die Website wird so entwickelt, dass sie mit allen gängigen Browsern verfügbar ist. Als Betriebssystem auf dem Server wird Linux verwendet, da es im Gegensatz zu Windows kostenlos ist. Die wichtigste Hardwareanforderung an den Server ist ein schneller Datenzugriff, da unter Umständen viele Studenten gleichzeitig Inhalte vom Server anfordern. Die E-Learning Plattform soll das bisher verwendete Moodle System ablösen. Um die Akzeptanz des neuen Systems zu überprüfen, werden anfangs beide Systeme gleichzeitig betrieben. Eine Schulung für die Bedienung des neuen Systems ist nicht vorgesehen. Die Website soll ähnlich wie die Moodle Plattform zu bedienen sein, damit die Studenten schnell mit dem neuen System vertraut werden. Änderungen der E-Learning Plattform sind vorgesehen. So muss z.B. die beste Darstellung der Lerninhalte mit den Karteikarten erst noch ausprobiert werden. Mit dem Feedback der Studenten sollte das System ständig verbessert werden.
+
+
+Wer installiert wie die Anwendung?
+Welche Systemvoraussetzungen müssen erfüllt sein?
+Wer ist für den Normalbetrieb verantwortlich?
+Was hat die Arbeitsvorbereitung zu tun?
+Wie muss die Systemtechnik beschaffen sein?
+Was ist für die Betriebssicherheit notwendig?
+Wie läuft die Datensicherung?
+Wie läuft die Datenwiederherstellung?
+Was ist allgemein bei der Administration zu beachten?
+Wie läuft die Datenarchivierung?
+Wie kann das System heruntergefahren, d.h. der Betrieb unterbrochen oder beendet werden?
+Was ist im Fehlerfall oder beim Wiederanlauf zu beachten?
+Wie können Fehler lokalisiert, umgangen oder behoben werden?
+Liste aller Fehlermeldungen inkl. Ursachen und Lösungsansätzen
+Welche SLA (Service Level Agreements) sind zu beachten?
+Welche manuellen Eingriffe sind möglich und was ist zu beachten?
+Welche Wartungsarbeiten, regelmäßigen Bereinigungsarbeiten etc. sind im Normalbetrieb notwendig?
+Wie können Patches eingespielt werden?
+Was ist beim Releasewechsel zu beachten?
+Wer definiert die Zugriffsrechte für die Benutzer? 
 
 \subsection{Entwicklungsvorgaben}
 Für den Datenzugriff wird eine relationale Datenbank verwendet, die mittels SQL abgefragt werden kann. Die Logik des Systems wird mit Java implementiert. Für die Anzeige der Webseite kommen JSP,HTML und CSS zum Einsatz. Um die Datenbank zu erstellen wird das Programm phpMyAdmin verwendet und als Entwicklungsumgebung dient Eclipse. Die Organisation des Projekts ist so aufgebaut, dass die Analyse- und Entwurfsphase in Dreier-Teams bewältigt wird. Für die Implementierungs- und Testphase werden 2 Dreier-Teams zusammengeschlossen.
 
 \subsection{Abnahmekriterien}
-Für die Abnahme wird das System von einer unabhängigen Gruppe von Testern bewertet. Die Gruppe kann überprüfen ob das System alle im Pflichtenheft beschriebenen funktionalen Anforderungen erfüllt. Die Tester können außerdem nicht-funktionale Anforderungen wie Benutzerfreundlichkeit oder Plattformunabhängigkeit überprüfen. Um Anforderungen wie Performanz zu testen kann ein Script geschrieben werden, das viele Anfragen an den Server sendet und die Antwortzeiten protokolliert.
+
+
+\subsubsection{Abnahmekriterium 1 - Funktionale Anforderungen}
+Für die Abnahme wird das System von einer unabhängigen Gruppe von Testern bewertet. Diese Gruppe kann überprüfen ob das System die unten dargestellten funktionalen Anforderungen erfüllt.\\
+
+\begin{tabular}{|c|l|c|c|}
+	\hline  & Anforderung  & erfolgreich & fehlerhaft \\ 
+	\hline 1 & Registrierung &  &  \\ 
+	\hline 2 & Am System anmelden &  &  \\ 
+	\hline 3 & Vom System abmelden &  &  \\ 
+	\hline 4 & Veranstaltung anzeigen &  &  \\ 
+	\hline 5 & Profil einsehen und bearbeiten &  &  \\ 
+	\hline 6 & Karteikarte hinzufügen &  &  \\ 
+	\hline 7 & Karteikarte ändern &  &  \\ 
+	\hline 8 & Nutzerstatus ändern &  &  \\ 
+	\hline 9 & Roten Faden ändern &  &  \\ 
+	\hline 10& Skript exportieren &  &  \\ 
+	\hline 
+\end{tabular}\\ 
+
+
+
+\subsubsection{Abnahmekriterium 2 - Qualitätsanforderungen}
+Die Tester können außerdem nicht-funktionale Anforderungen wie Benutzerfreundlichkeit oder Plattformunabhängigkeit bewerten.\\
+\begin{tabular}{|c|l|c|c|c|}
+	\hline  & Bewertung  & nein & teilweise & ja  \\ 
+	\hline 1 & Benutzerfreundlichkeit &  & & \\ 
+	\hline 2 & Robust &  & &  \\ 
+	\hline 3 & Plattform-unabhängig &  & &  \\ 
+	\hline 4 & Wartbarkeit für Administration &  & & \\ 
+	\hline 5 & Sicherheit gegenüber den dargestellten Informationen &  & &  \\ 
+	\hline 6 & Darstellungsunabhängigkeit &  & &  \\ 
+	\hline
+\end{tabular}\\ 
+
+\subsubsection{Abnahmekriterium 3 - Protokollierung der Antwortzeiten}
+
+Um Anforderungen wie die Performanz zu testen, kann ein Script geschrieben werden, das viele Anfragen an den Server sendet und die Antwortzeiten protokolliert.
 
 \end{document}
