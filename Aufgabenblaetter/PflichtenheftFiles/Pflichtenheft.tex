@@ -530,7 +530,7 @@ Akteur & \textbf{eMail-Server} \\
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[height=13cm]{Bilder/Anwendungsfalldiagramme/Moderator.png}
+	\includegraphics[height=10cm]{Bilder/Anwendungsfalldiagramme/Moderator.png}
 	\caption{Der Moderator erbt alle Anwendungsfälle vom Benutzer. Er kann zusätzlich die Karteikarten und Diskussionen verwalten.}
 	\label{AwfModerator}
 \end{figure}
@@ -577,17 +577,10 @@ Alle Anwendungsfälle werden durch Sequenzdiagramme beschrieben. Diese Diagramme
 \end{figure}
 \begin{figure}[H]
 	\centering
-	\paragraph{Vom System abmelden}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VomSystemAbmelden.png}
+	\paragraph{Vom System abmelden}\mbox{}\\
+	\includegraphics[width=10cm]{Bilder/Sequenzdiagramme/VomSystemAbmelden.png}
 	\caption{Die Benutzerabmeldung}
 	\label{SzVomSystemAbmelden}
-\end{figure}
-\begin{figure}[H]
-	\centering
-	\paragraph{Zu einer Veranstaltung anmelden}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/ZuVeranstaltungAnmelden.png}
-	\caption{Die Anmeldung von einem Benutzer zu einer Veranstaltung.}
-	\label{SzZuVeranstaltungAnmelden}
 \end{figure}
 \begin{figure}[H]
 	\centering
@@ -595,6 +588,13 @@ Alle Anwendungsfälle werden durch Sequenzdiagramme beschrieben. Diese Diagramme
 	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/VonVeranstaltungAbmelden.png}
 	\caption{Der Benutzer meldet sich von einer Veranstaltung ab.}
 	\label{SzVonVeranstaltungAbmelden}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\paragraph{Zu einer Veranstaltung anmelden}
+	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/ZuVeranstaltungAnmelden.png}
+	\caption{Die Anmeldung von einem Benutzer zu einer Veranstaltung.}
+	\label{SzZuVeranstaltungAnmelden}
 \end{figure}
 \begin{figure}[H]
 	\centering
@@ -739,8 +739,8 @@ Alle Anwendungsfälle werden durch Sequenzdiagramme beschrieben. Diese Diagramme
 
 \begin{figure}[H]
 	\centering
-	\paragraph{Mail versenden}
-	\includegraphics[width=\textwidth]{Bilder/Sequenzdiagramme/MailVersenden.png}
+	\paragraph{Mail versenden}\mbox{}\\
+	\includegraphics[width=10cm]{Bilder/Sequenzdiagramme/MailVersenden.png}
 	\caption{Das System sendet eine Mail an den Benutzer.}
 	\label{SzMailVersenden}
 \end{figure}
@@ -1116,28 +1116,28 @@ In diesem Kapitel werden die Dialoge und ihr Zusammenhang dargestellt. Durch die
 \end{figure}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=25cm]{Bilder/Mockups/DSDAllgemeines.png}
+	\includegraphics[width=20cm]{Bilder/Mockups/DSDAllgemeines.png}
 	\caption{Allgemeine Bestätigungs- und Fehlerdialoge}
 	\label{DSDAllgemeines}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=25cm]{Bilder/Mockups/DSDAnmeldungRegistierung.png}
+	\includegraphics[width=20cm]{Bilder/Mockups/DSDAnmeldungRegistierung.png}
 	\caption{Anmeldung und Registrierung}
 	\label{DSDAnmeldungRegistierung}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=25cm]{Bilder/Mockups/DSDProfilUndEinstellungen.png}
+	\includegraphics[width=23cm]{Bilder/Mockups/DSDProfilUndEinstellungen.png}
 	\caption{Benutzer-Profil}
 	\label{DSDProfilUndEinstellungen}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=25cm]{Bilder/Mockups/DSDGruppen.png}
+	\includegraphics[width=20cm]{Bilder/Mockups/DSDGruppen.png}
 	\caption{Gruppenübersicht und -verwaltung}
 	\label{DSDGruppen}
 \end{figure}
@@ -1151,7 +1151,7 @@ In diesem Kapitel werden die Dialoge und ihr Zusammenhang dargestellt. Durch die
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=25cm]{Bilder/Mockups/DSDLernumgebung.png}
+	\includegraphics[width=24cm]{Bilder/Mockups/DSDLernumgebung.png}
 	\caption{Dialoge für die Lernumgebung. Hierzu gehören Diskussionen, Notizen, Karteikarten, usw...}
 	\label{DSDLernumgebung}
 \end{figure}
@@ -1181,7 +1181,7 @@ Systemoperation & leseVeranstaltungen\\
 
 \begin{tabular}{l p{12cm}}
 \underline{Interaktion} 	 & Gruppenübersicht anzeigen\\ 
-Beschreibung   	 & Das System wechselt zu einem Dialog, auf dem der Benutzer seien Gruppen verwalten kann.\\
+Beschreibung   	 & Das System wechselt zu einem Dialog, auf dem der Benutzer seine Gruppen verwalten kann.\\
 Vorbedingung	& keine \\
 Nachbedingung	& keine \\
 Öffnet			& \glqq Gruppenübersicht\grqq \\\\
@@ -1263,7 +1263,7 @@ Systemoperation & sucheBenutzer\\
 \begin{tabular}{l p{12cm}}
 	\underline{Interaktion} 	 & Registrierung starten\\ 
 	Beschreibung   	& Der Benutzer hat keinen Account und möchte sich im System registrieren.\\
-	Vorbedingung	& Benutzer ist nicht im System registriert.\\
+	Vorbedingung	& keine\\
 	Nachbedingung	& keine \\
 	Öffnet			& Dialog \glqq Registrieren\grqq\\\\
 \end{tabular}\\\\
@@ -1283,7 +1283,7 @@ Systemoperation & sucheBenutzer\\
 	\underline{Interaktion} 	 & Passwort zurücksetzen\\ 
 	Beschreibung   	& Der Benutzer setzt sein Passwort zurück durch Klicken auf Button 1.\\
 	Vorbedingung	& Benutzer ist im System registriert.\\
-	Nachbedingung	& keine \\
+	Nachbedingung	& Passwort ist zurückgesetzt. Der Nutzer erhält eine eMail mit dem neuen Passwort. \\
 	Öffnet			& Dialog \glqq Anmelden\grqq.\\
 	Systemoperation & resetPasswort\\\\
 \end{tabular}
