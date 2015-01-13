@@ -85,7 +85,7 @@
 
 \section{System-Architektur}
 
-\subsection{Kommunikationsdiagramm}
+\subsection{Kommunikationsdiagramme}
 
 \begin{figure}[H]
 	\centering
@@ -110,32 +110,134 @@
 \end{figure}
 
 
-
-
 \subsection{Klassendiagramm}
 
-% Klassendiagramm einfügen
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{Bilder/Klassendiagramm/Klassendiagramm}
+\caption{}
+\label{fig:Klassendiagramm}
+\end{figure}
+
 
 \subsection{Methodenbeschreibung}
 
 
-\paragraph{title}
+\paragraph{Controller Methoden}\mbox{}\\
 
 \begin{tabular}{|lp{12cm}|}
-			\hline
-			Operation &  \textbf{registrieren(neuerNutzer: Benutzer): Boolean }\\ 
-			Beschreibung & Ein Benutzer registriert sich neu im System und gibt alle verlangten Daten an. Die Operation prüft ob die Daten korrekt sind und legt den neuen Benutzer gegebenenfalls an.\\ 
-			\hline 
+	\hline
+	Operation &  \textbf{anmelden(eMail :String , password: String) }\\ 
+	Beschreibung & Methode hier sendet den Aufruf mit den entsprechechenden Daten einfach weiter an die Benutzerverwaltung. \\ 
+	\hline 
+	\end{tabular} \\\\
+	
+	
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{registrieren(user:Benutzer): Boolean) }\\ 
+	Beschreibung & Methode hier sendet den Aufruf mit den entsprechechenden Daten einfach weiter an die Benutzerverwaltung. \\ 
+	\hline 
+	\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{passwortAendern(user:Benutzer, altesPasswort:String, neuesPasswort:String): Boolean) }\\ 
+	Beschreibung & Methode hier sendet den Aufruf mit den entsprechechenden Daten einfach weiter an die Benutzerverwaltung. \\ 
+	\hline 
+\end{tabular} \\\\
+
+
+\paragraph{Benutzerverwaltung  Methoden}\mbox{}\\
+
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{getBenutzer(sessionID:String): Benutzer) }\\ 
+	Beschreibung & Liefert das Benutzerobjekt zur entsprechenden Session-ID zurück. Wenn die Benutzerverwaltung diese SessionID nicht kennt ist der Benutzer nicht angemeldet und es wird null zurückgeliefert. Die Benutzerverwaltung merkt sich die Zuweisung zwischen SessionID und eMail-Adresse und kann somit über den DatenbankManager den gewünschten Benutzer übergeben. \\ 
+	\hline 
 \end{tabular} \\\\
 
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{profilAnzeigen() }\\ 
-	Beschreibung & Ein Benutzer registriert sich neu im System und gibt alle verlangten Daten an. Die Operation prüft ob die Daten korrekt sind und legt den neuen Benutzer gegebenenfalls an.\\ 
+	Operation &  \textbf{anmelden(eMail:String, passwort:String) }\\ 
+	Beschreibung & Auf Grundlage von der SessionID Benutzer-eMail und dem dazugehörigen Passwort wird der Benutzer an dem System angemeldet.\\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{registrieren(user:Benutzer): Boolean) }\\ 
+	Beschreibung & Registrierung bekommt einen Benutzerobjekt mit allen Attributen die im Klassendiagamm dargestellt sind.Falls der Benutzer noch nicht existiert wirde dieser neun in der Datenbank angelegt. \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{passwortAendern(user:Benutzer, altesPasswort:String, neuesPasswort:String): Boolean }\\ 
+	Beschreibung & \\ 
 	\hline 
 \end{tabular} \\\\
 
 
+\paragraph{Datenbankmanager  Methoden}\mbox{}\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{getConnection(): Connection}\\ 
+	Beschreibung & \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{pruefeLogin(eMail:String, passwort:String): Boolean}\\ 
+	Beschreibung & \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{holeBenutzer(eMail:String): Benutzer}\\ 
+	Beschreibung & \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{speichereBenutzer(user:Benutzer, overwriteExisting:Boolean): Boolean}\\ 
+	Beschreibung & \\ 
+	\hline 
+\end{tabular} \\\\
+
+
+\paragraph{RegistrierenDialog  Methoden}\mbox{}\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{formularAnzeigen()}\\ 
+	Beschreibung & \\ 
+	\hline 
+\end{tabular} \\\\
+
+\paragraph{LoginDialog  Methoden}\mbox{}\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{loginDialogAnzeigen()}\\ 
+	Beschreibung & \\ 
+	\hline 
+\end{tabular} \\\\
+
+
+\paragraph{ProfilBearbeitenDialog  Methoden}\mbox{}\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{profilAnzeigen(user:Benutzer)}\\ 
+	Beschreibung & \\ 
+	\hline 
+\end{tabular} \\\\
 
 \end{document}
