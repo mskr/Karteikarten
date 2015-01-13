@@ -37,11 +37,12 @@ public class Controller extends HttpServlet {
 		
 	}
 	
-	public void registrieren(Benuzter user) {
+	public void registrieren(Benutzer user) {
 		
 	}
 	
 	public boolean passwortAendern(Benutzer user, String altesPasswort, String neuesPasswort) {
+		return false;
 		
 	}
 }

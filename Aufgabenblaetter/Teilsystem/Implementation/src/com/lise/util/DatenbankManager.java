@@ -2,6 +2,8 @@ package com.lise.util;
 
 import java.sql.Connection;
 
+import com.lise.data.Benutzer;
+
 public class DatenbankManager implements IDatenbankManager
 {	
 	protected Connection con = null;
