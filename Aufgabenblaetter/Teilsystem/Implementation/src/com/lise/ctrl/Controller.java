@@ -29,10 +29,9 @@ public class Controller extends HttpServlet {
 	{
 		HttpSession session = request.getSession();
 		
-		
 		//Ansicht generieren
-				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/View.jsp");
-				dispatcher.forward(request,response);
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/View.jsp");
+		dispatcher.forward(request,response);
 
 	}
 	
