@@ -58,8 +58,13 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 			throw new NullPointerException("eMail or passwort is null!");
 		
 		// Exception bei Fehler
-		dbManager.pruefeLogin(eMail, passwort);
-		
+		// TODO erst möglich wenn DB implementiert
+		// dbManager.pruefeLogin(eMail, passwort);
+		if(!passwort.equals("1234"))
+		{
+			LoginFailedException e = new LoginFailedException("Login fehlgeschlagen", true, false);
+			throw e;
+		}
 		// Wenn alles funktioniert hat, dann weiter
 		// Speichere SessionID in der Map
 		// TODO Map könnte man weglassen so wies aussieht !
@@ -69,7 +74,11 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		session.setAttribute("UsereMail", eMail);
 		// Sete Zeit, in der die Session gültig bleibt
 		// TODO test mit 10 Sekunden!
-		session.setMaxInactiveInterval(10);
+		session.setMaxInactiveInterval(30);
+		
+		System.out.println("Benutzer '" + eMail + "' ist angemeldet.");
+		System.out.println("SessionID = " + session.getId());
+		System.out.println("Gültigkeitsdauer = " + session.getMaxInactiveInterval() + " Sekunden");
 	}
 
 	/**
@@ -81,9 +90,7 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		if(user == null)
 			throw new NullPointerException("User is null");
 		
-		dbManager.speichereBenutzer(user, false);
-		
-		return false;
+		return dbManager.speichereBenutzer(user, false);
 	}
 
 	/**
@@ -137,7 +144,7 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		if(istEingeloggt(session))
 		{
 			session.invalidate();
-			System.out.println("Benutzer wurde ausgeloggt: id= " + session.getId());
+			System.out.println("Benutzer wurde ausgeloggt: id = " + session.getId());
 			return true;
 		}
 		
