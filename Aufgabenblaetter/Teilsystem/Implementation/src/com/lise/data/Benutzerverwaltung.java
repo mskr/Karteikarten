@@ -8,8 +8,6 @@ import com.lise.util.IDatenbankManager;
 import com.lise.util.LoginFailedException;
 
 public class  Benutzerverwaltung implements IBenutzerverwaltung{
-	
-	//private Map<String,String> aktiveBenutzer; 
 	private IDatenbankManager dbManager;
 
 	public Benutzerverwaltung(IDatenbankManager dbManager){		
@@ -18,7 +16,6 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 			throw new NullPointerException("DB-Manager should not be null!");
 			
 		this.dbManager = dbManager;
-		//this.aktiveBenutzer = new HashMap<String, String>();
 	}	
 
 	/**
@@ -60,20 +57,16 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		// Exception bei Fehler
 		// TODO erst möglich wenn DB implementiert
 		// dbManager.pruefeLogin(eMail, passwort);
-		if(!passwort.equals("1234"))
+		if(!passwort.equals("1234") || !eMail.equals("max.mustermann@test.com") )
 		{
-			LoginFailedException e = new LoginFailedException("Login fehlgeschlagen", true, false);
+			LoginFailedException e = new LoginFailedException("Login fehlgeschlagen", !passwort.equals("1234"), !eMail.equals("max.mustermann@test.com"));
 			throw e;
 		}
-		// Wenn alles funktioniert hat, dann weiter
-		// Speichere SessionID in der Map
-		// TODO Map könnte man weglassen so wies aussieht !
-		//aktiveBenutzer.put(session.getId(), eMail);
-		
+		// Wenn alles funktioniert hat, dann weiter		
 		// Setze Benutzer-eMail in Session
 		session.setAttribute("UsereMail", eMail);
 		// Sete Zeit, in der die Session gültig bleibt
-		// TODO test mit 10 Sekunden!
+		// TODO test mit ein paar Sekunden!
 		session.setMaxInactiveInterval(30);
 		
 		System.out.println("Benutzer '" + eMail + "' ist angemeldet.");
@@ -143,8 +136,9 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 	public boolean abmelden(HttpSession session) {
 		if(istEingeloggt(session))
 		{
+			// Beendet die Session. Die Session wird beim nächsten mal neu angelgegt.
 			session.invalidate();
-			System.out.println("Benutzer wurde ausgeloggt: id = " + session.getId());
+			System.out.println("Benutzer wurde ausgeloggt: id war " + session.getId());
 			return true;
 		}
 		
@@ -159,7 +153,4 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 	public boolean istEingeloggt(HttpSession session) {
 		return session.getAttribute("UsereMail") != null;
 	}
-
-
-
 }
