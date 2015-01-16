@@ -55,10 +55,10 @@ public class Controller extends HttpServlet {
 
 	// ---------------- Spezifische Parameter ---------------------
 	// Für Login usw.
-	private final String passwortParam = "passwort";
+	private final String passwortParam = "password";
 	// Für passwort ändern
-	private final String oldPassParam = "altesPasswort";
-	private final String newPassParam = "neuesPasswort";
+	private final String oldPassParam = "oldPassword";
+	private final String newPassParam = "newPassword";
 
 	// Mögliche Actions
 	private final String actionOptionLogin = "login";
@@ -158,7 +158,7 @@ public class Controller extends HttpServlet {
 			ArrayList<String> studienGaenge = new ArrayList<>();
 			studienGaenge.add("Informatik");
 			studienGaenge.add("Medieninformatik");
-			studienGaenge.add("Botanki");
+			studienGaenge.add("Botanik");
 
 			request.setAttribute("studiengaenge", studienGaenge);
 
@@ -259,7 +259,7 @@ public class Controller extends HttpServlet {
 			catch (LoginFailedException e) 
 			{
 				if(e.passwortWrong && e.eMailWrong)
-					request.setAttribute(errorParam, "Fehler beim Anmeldevorgang. EMail und Passwort falsch.");
+					request.setAttribute(errorParam, "Fehler beim Anmeldevorgang. eMail und Passwort falsch.");
 				else if(e.passwortWrong )
 					request.setAttribute(errorParam, "Fehler beim Anmeldevorgang. Passwort falsch.");
 				else if(e.eMailWrong )
@@ -325,7 +325,7 @@ public class Controller extends HttpServlet {
 		{
 			request.setAttribute(errorParam, "Nicht alle Felder sind ausgefüllt.");
 			System.out.println("Nicht alle Felder ausgefüllt.");
-			
+
 			// Weiter zu register seite
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
 			dispatcher.forward(request,response);
@@ -343,35 +343,54 @@ public class Controller extends HttpServlet {
 			// TODO exception abfangen
 			String matrikelNummer = request.getParameter("matNo");
 			if(matrikelNummer == null)
-				matrikelNummer="1";
+				matrikelNummer="0";
 			user.setMatrikelnummer(Integer.parseInt(matrikelNummer));
 
-			try 
+			// Prüfen ob Angaben gültig sind.
+			if(userValid(user, request))
 			{
-				// registrieren
-				benutzerverwaltung.registrieren(user);
-				System.out.println("Registrieren erfolgreich.");
-				request.setAttribute(infoParam, "Registrieren erfolgreich.");
+				try
+				{
+					// registrieren
+					benutzerverwaltung.registrieren(user);
+					System.out.println("Registrieren erfolgreich.");
+					request.setAttribute(infoParam, "Registrieren erfolgreich.");
 
-				// Weiter zu login seite
-				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(loginURL);
-				dispatcher.forward(request,response);
-			} 
-			catch (DbUserStoringException e) 
-			{
-				request.setAttribute(errorParam, "Registrieren fehlgeschlagen.");
-				System.out.println("Registrieren fehlgeschlagen.");
-				// Bei Fehler, die informationen an GUI weiterleiten
-				request.setAttribute("eMailInvalid", e.eMailInvalid);
-				request.setAttribute("martrikelnummerInvalid", e.martrikelnummerInvalid);
-				request.setAttribute("nachnameInvalid", e.nachnameInvalid);
-				request.setAttribute("nutzerstatusInvalid", e.nutzerstatusInvalid);
-				request.setAttribute("passwortInvalid", e.passwortInvalid);
-				request.setAttribute("studiengangNotSupported", e.studiengangNotSupported);
-				request.setAttribute("vornameInvalid", e.vornameInvalid);
+					// Weiter zu login seite
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(loginURL);
+					dispatcher.forward(request,response);
+				} 
+				catch (DbUserStoringException e) 
+				{
+					request.setAttribute(errorParam, "Registrieren fehlgeschlagen. Fehler beim Speichern in DB.");
+					System.out.println("Registrieren fehlgeschlagen.");
+					// Bei Fehler, die informationen an GUI weiterleiten
+					request.setAttribute("eMailInvalid", e.eMailInvalid);
+					request.setAttribute("martrikelnummerInvalid", e.martrikelnummerInvalid);
+					request.setAttribute("nachnameInvalid", e.nachnameInvalid);
+					request.setAttribute("nutzerstatusInvalid", e.nutzerstatusInvalid);
+					request.setAttribute("passwortInvalid", e.passwortInvalid);
+					request.setAttribute("studiengangNotSupported", e.studiengangNotSupported);
+					request.setAttribute("vornameInvalid", e.vornameInvalid);
+					
+					// TODO von DB holen
+					ArrayList<String> studienGaenge = new ArrayList<>();
+					studienGaenge.add("Informatik");
+					studienGaenge.add("Medieninformatik");
+					studienGaenge.add("Botanik");
 
-				// Weiter zu login seite
-				// TODO Registrieren Seeite
+					request.setAttribute("studiengaenge", studienGaenge);
+					
+					// Weiter zu register seite
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
+					dispatcher.forward(request,response);
+				}
+			}
+			else{
+
+				request.setAttribute(errorParam, "Registrieren fehlgeschlagen. Benutzerdaten ungültig.");
+				
+				// Weiter zu register seite
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
 				dispatcher.forward(request,response);
 			}
@@ -381,7 +400,47 @@ public class Controller extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		doGet(request, response);
-	}	
+	}
+
+	/**
+	 *  Prüft ob die angegeben Benutzerdaten gültig und nicht null sind. Andern falls wird der Fehler gesetzt.
+	 */
+	private boolean userValid(Benutzer b, HttpServletRequest request)
+	{
+		
+		if(isEmpty(b.getVorname()))
+		{
+			request.setAttribute("vornameInvalid", true);
+			return false;
+		}
+		else if(isEmpty(b.getNachname()))
+		{
+			request.setAttribute("nachnameInvalid", true);
+			return false;
+		}
+		else if(isEmpty(b.getPasswort()))
+		{
+			request.setAttribute("passwortInvalid", true);
+			return false;
+		}
+		else if(b.getMatrikelnummer() == 0)
+		{
+			request.setAttribute("martrikelnummerInvalid", true);
+			return false;
+		}
+		else if(isEmpty(b.getStudiengang()))
+		{
+			request.setAttribute("studiengangNotSupported", true);
+			return false;
+		}
+		else if(isEmpty(b.geteMail()) || !b.geteMail().contains("@"))
+		{
+			request.setAttribute("eMailInvalid", true);
+			return false;
+		}		
+		
+		return true;
+	}
 
 	private boolean isEmpty(String s) {
 		if(s == null || s == "")
