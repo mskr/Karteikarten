@@ -320,33 +320,44 @@ public class Controller extends HttpServlet {
 	IOException {
 		System.out.println("Registrierungsvorgang gestartet.");
 
+		
+		// Benutzerobjekt zusammenbauen
+		// TODO Prüfen ob werte richtig übergeben wurden
+		Benutzer user = new Benutzer();
+		user.seteMail(request.getParameter(eMailParam));
+		user.setVorname(request.getParameter("prename"));
+		user.setNachname(request.getParameter("surname"));
+		user.setPasswort(request.getParameter(passwortParam));
+		user.setStudiengang(request.getParameter("studiengang"));
+		// TODO exception abfangen
+		String matrikelNummer = request.getParameter("matNo");
+		try {
+			user.setMatrikelnummer(Integer.parseInt(matrikelNummer));
+		} catch (NumberFormatException e) {
+			user.setMatrikelnummer(0);
+		}
+		
 		if(isEmpty(request.getParameter(eMailParam))|| isEmpty(request.getParameter("prename"))|| isEmpty(request.getParameter("surname"))|| 
 				isEmpty(request.getParameter(passwortParam))|| isEmpty(request.getParameter("studiengang"))|| isEmpty(request.getParameter("matNo")))
 		{
 			request.setAttribute(errorParam, "Nicht alle Felder sind ausgefüllt.");
 			System.out.println("Nicht alle Felder ausgefüllt.");
 
+			// TODO von DB holen
+			ArrayList<String> studienGaenge = new ArrayList<>();
+			studienGaenge.add("Informatik");
+			studienGaenge.add("Medieninformatik");
+			studienGaenge.add("Botanik");
+
+			request.setAttribute("studiengaenge", studienGaenge);
+			request.setAttribute("user", user);
+			
 			// Weiter zu register seite
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
 			dispatcher.forward(request,response);
 		}
 		else{
 
-			// Benutzerobjekt zusammenbauen
-			// TODO Prüfen ob werte richtig übergeben wurden
-			Benutzer user = new Benutzer();
-			user.seteMail(request.getParameter(eMailParam));
-			user.setVorname(request.getParameter("prename"));
-			user.setNachname(request.getParameter("surname"));
-			user.setPasswort(request.getParameter(passwortParam));
-			user.setStudiengang(request.getParameter("studiengang"));
-			// TODO exception abfangen
-			String matrikelNummer = request.getParameter("matNo");
-			try {
-				user.setMatrikelnummer(Integer.parseInt(matrikelNummer));
-			} catch (NumberFormatException e) {
-				user.setMatrikelnummer(0);
-			}
 
 			// Prüfen ob Angaben gültig sind.
 			if(userValid(user, request))
@@ -382,6 +393,8 @@ public class Controller extends HttpServlet {
 					studienGaenge.add("Botanik");
 
 					request.setAttribute("studiengaenge", studienGaenge);
+					request.setAttribute("user", user);
+					
 					
 					// Weiter zu register seite
 					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
