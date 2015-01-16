@@ -107,7 +107,7 @@
 				</tr>
 				<tr>
 					<td><input name="b_register" type="submit" value="Registrierung abschließen" onclick="document.getElementById('action').value = 'register'"></input></td>
-					<td><input name="b_reg_cancel" type="submit" value="Registrierung abbrechen"  onclick="document.getElementById('action').value = 'login'"></input></td>				
+					<td><input name="b_reg_cancel" type="submit" value="Registrierung abbrechen"></input></td>				
 				</tr>
 			</table>
 		</form>

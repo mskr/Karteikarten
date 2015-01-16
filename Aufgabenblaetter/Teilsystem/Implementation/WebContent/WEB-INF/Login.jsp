@@ -9,6 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<script type="text/javascript" src="js/hash.js"></script>
 <title>Anmeldung</title>
 </head>
 <body>
@@ -83,7 +84,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input name="password" type="password" value="${param.pass}" placeholder="Passwort"	style="${passColor};">
+						<input id="pw" name="password" type="password" value="${param.pass}" placeholder="Passwort"	style="${passColor};">
 					</td>
 				</tr>
 		</table>
@@ -95,7 +96,7 @@
 		 <table align="center">
 				<tr>
 					<td>
-						<input name="b_submit" value="Anmelden"type="submit">
+						<input name="b_submit" value="Anmelden"type="submit" onclick="document.getElementById('pw').value = MD5(document.getElementById('pw').value)">
 					</td>
 					<td>
 						<input name="b_register" value="Registrieren"type="submit" onclick="document.getElementById('action').value = 'gotoRegister'">

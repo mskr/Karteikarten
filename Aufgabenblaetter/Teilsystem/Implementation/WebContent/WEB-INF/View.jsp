@@ -58,12 +58,15 @@
 	</p>
 
 	<form action="Controller">
-		<input name="action" value="logout" type="hidden"> 
+		<input id = "action" name="action" value="logout" type="hidden"> 
 		
 		<table>
 			<tr>
 				<td>
-					<input name="submit" value="Abmelden" type="submit">
+					<input name="b_logout" value="Abmelden" type="submit">
+				</td>
+				<td>
+					<input name="b_ch_pw" value="Passwort ändern" type="submit" onclick="document.getElementById('action').value = 'gotoChangePW'">
 				</td>
 			</tr>
 		</table>

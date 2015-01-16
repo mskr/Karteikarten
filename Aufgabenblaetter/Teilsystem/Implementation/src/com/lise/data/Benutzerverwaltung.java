@@ -68,7 +68,7 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		// Exception bei Fehler
 		// TODO erst möglich wenn DB implementiert
 		// dbManager.pruefeLogin(eMail, passwort);
-		if(!passwort.equals("1234") || !eMail.equals("max.mustermann@test.com") )
+		if(!passwort.equals("81dc9bdb52d04dc20036dbd8313ed055") || !eMail.equals("max.mustermann@test.com") )
 		{
 			LoginFailedException e = new LoginFailedException("Login fehlgeschlagen", !passwort.equals("1234"), !eMail.equals("max.mustermann@test.com"));
 			throw e;
