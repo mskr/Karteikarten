@@ -4,6 +4,10 @@ import com.lise.data.Benutzer;
 
 public class DbUserStoringException extends Exception
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public boolean vornameInvalid = false;
 	public boolean nachnameInvalid = false;
 	public boolean martrikelnummerInvalid = false;

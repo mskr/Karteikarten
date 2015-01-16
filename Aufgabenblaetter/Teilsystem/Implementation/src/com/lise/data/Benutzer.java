@@ -27,7 +27,7 @@ public class Benutzer {
 		this.vorname = vorname;
 		this.nachname = nachname;
 		this.matrikelnummer = matrikelnummer;
-		this.eMail = eMail;
+		this.email = eMail;
 		this.studiengang = studiengang;
 		this.passwort = passwort;
 		this.nutzerstatus = eNutzerstatus.valueOf(nutzerstatus);

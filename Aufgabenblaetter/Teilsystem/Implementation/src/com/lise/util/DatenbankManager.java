@@ -109,7 +109,7 @@ public class DatenbankManager implements IDatenbankManager
 			con = getConnection();
 			if(!overwriteExisting){
 				ps = con.prepareStatement("SELECT * FROM benutzer WHERE eMail = ?");
-				ps.setString(1, user.geteMail());
+				ps.setString(1, user.getEmail());
 				rs = ps.executeQuery();
 				if(rs.next()){
 					closeQuietly(con);
@@ -133,7 +133,7 @@ public class DatenbankManager implements IDatenbankManager
 				ps.setString(1, user.getVorname());
 				ps.setString(2, user.getNachname());
 				ps.setInt(3, user.getMatrikelnummer());
-				ps.setString(4, user.geteMail());
+				ps.setString(4, user.getEmail());
 				ps.setInt(5, Studiengang_id);
 				ps.setString(6,user.getPasswort());
 				ps.setString(7,String.valueOf(user.getNutzerstatus()));
