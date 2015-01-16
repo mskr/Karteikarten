@@ -2,6 +2,7 @@ package com.lise.ctrl;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -152,6 +153,14 @@ public class Controller extends HttpServlet {
 		else if(!isEmpty(action) && action.equals(actionOptionGoToRegister))
 		{
 			System.out.println("Wechsle zu Register-Seite.");
+			
+			// TODO von DB holen
+			ArrayList<String> studienGaenge = new ArrayList<>();
+			studienGaenge.add("Informatik");
+			studienGaenge.add("Medieninformatik");
+			studienGaenge.add("Botanki");
+			
+			request.setAttribute("studiengaenge", studienGaenge);
 			
 			// Weiter zu startseite
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
