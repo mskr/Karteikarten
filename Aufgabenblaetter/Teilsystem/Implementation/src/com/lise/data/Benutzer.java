@@ -9,7 +9,7 @@ public class Benutzer {
 	protected String vorname = null;
 	protected String nachname = null;
 	protected int matrikelnummer = 0;
-	protected String eMail = null;
+	protected String email = null;
 	protected String studiengang = null;
 	protected String passwort = null;
 	protected eNutzerstatus nutzerstatus = null;
@@ -67,13 +67,13 @@ public class Benutzer {
 	}
 
 
-	public String geteMail() {
-		return eMail;
+	public String getEmail() {
+		return email;
 	}
 
 
-	public void seteMail(String eMail) {
-		this.eMail = eMail;
+	public void setEmail(String eMail) {
+		this.email = eMail;
 	}
 
 

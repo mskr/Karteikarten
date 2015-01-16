@@ -2,9 +2,6 @@ package com.lise.util;
 
 import com.lise.data.Benutzer;
 
-import java.sql.Connection;
-
-
 public interface IDatenbankManager
 {
 	public boolean pruefeLogin(String eMail, String passwort) throws LoginFailedException;
