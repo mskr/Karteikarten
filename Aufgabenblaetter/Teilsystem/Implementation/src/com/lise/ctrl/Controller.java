@@ -296,7 +296,7 @@ public class Controller extends HttpServlet {
 		}
 
 		// Weiterleitung
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(startseiteURL);
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(loginURL);
 		dispatcher.forward(request,response);
 	}
 
