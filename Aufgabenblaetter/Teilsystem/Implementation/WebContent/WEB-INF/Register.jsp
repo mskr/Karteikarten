@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<jsp:useBean id="error" class="java.lang.String" scope="request" />
+<jsp:useBean id="info" class="java.lang.String" scope="request" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,9 +13,47 @@
 </head>
 <body>
 
+<%
+		if (!error.equals("") || !info.equals("")) {
+	%>
+	<fieldset>
+		<legend>Status</legend>
+		<%
+			}
+		%>
+		<div id="errorDiv">
+			<%
+				if (!error.equals("")) {
+			%>
+			<p id="errorText">
+				<c:out value="${error}"></c:out>
+			</p>
+			<%
+				}
+			%>
+		</div>
+
+		<div id="infoDiv">
+			<%
+				if (!info.equals("")) {
+			%>
+			<p id="infoText">
+				<c:out value="${info}"></c:out>
+			</p>
+			<%
+				}
+			%>
+		</div>
+		<%
+			if (!error.equals("") || !info.equals("")) {
+		%>
+	</fieldset>
+	<%
+		}
+	%>
+
 <!-- Überschrift -->
 <h2 align="center">Registrierung zu LISE</h2>
-
 
 <form action="Controller">
 <!-- Eingabefelder -->
@@ -26,15 +68,16 @@
 		</tr>
 		<tr>
 			<td>Martikelnummer: * </td>
-			<td><input id="matNo" type="text" size="30" maxlength="30" ></td>
+			<td><input id="matNo" name="matNo" type="text" size="30" maxlength="30" ></td>
 		</tr>
 		<tr>
 			<td>Studiengang :</td>
 			<td> 
-				<select name="studiengang">
-      				<option value="Informatik">Informatik</option>
-      				<option value="Medieninformatik">Medieninformatik</option>
-     			</select>
+				<select name="studiengang" id="studiengang" >
+						<c:forEach var="st" items="${studiengaenge}">
+							<option value="${st}"><c:out value="${st}"></c:out></option>		
+						</c:forEach>
+				</select> 
  			</td>
 		</tr>
 		<tr>
