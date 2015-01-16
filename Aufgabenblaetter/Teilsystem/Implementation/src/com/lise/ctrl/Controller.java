@@ -45,7 +45,7 @@ public class Controller extends HttpServlet {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// ---------------- Allgemeine Parameter ---------------------
 	// eMail-Adresse
-	private final String eMailParam = "eMail";
+	private final String eMailParam = "user_email";
 	// Aktuelle Aktion
 	private final String actionParam = "action";
 	// Fehlermeldungen. Weitere Informationen zu den Fehlern siehe Quelltext. Es wird noch gesetzt, was für Eingaben falsch waren.
@@ -55,7 +55,7 @@ public class Controller extends HttpServlet {
 
 	// ---------------- Spezifische Parameter ---------------------
 	// Für Login usw.
-	private final String passwortParam = "pass";
+	private final String passwortParam = "passwort";
 	// Für passwort ändern
 	private final String oldPassParam = "altesPasswort";
 	private final String newPassParam = "neuesPasswort";
@@ -65,7 +65,7 @@ public class Controller extends HttpServlet {
 	private final String actionOptionLogout = "logout";
 	private final String actionOptionChangePW = "changePW";
 	private final String actionOptionRegister = "register";
-	
+
 	// Befehle, die den Seitenwechsel einleiten
 	private final String actionOptionGoToRegister = "gotoRegister";
 	private final String actionOptionGoToChangePW = "gotoChange";
@@ -91,7 +91,7 @@ public class Controller extends HttpServlet {
 		// Bisschen platz zwischen den log meldungen
 		System.out.println();
 		System.out.println();
-		
+
 		// verarbeitet Anfrage
 		actionDispatcher(request, response, session);
 	}
@@ -109,7 +109,7 @@ public class Controller extends HttpServlet {
 	{
 		// Was will der Benutzer tun?
 		String action = request.getParameter(actionParam);
-		
+
 		// Prüfen ob Benutzer angemeldet ist
 		if(benutzerverwaltung.istEingeloggt(session))
 		{
@@ -129,16 +129,16 @@ public class Controller extends HttpServlet {
 			{
 				System.out.println("Wechsle zu ChangePW-Seite.");
 				request.setAttribute("user", benutzerverwaltung.getBenutzer(session));
-				
+
 				// Weiter zu startseite
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(passwChURL);
 				dispatcher.forward(request,response);
 			}
-			
+
 			// Passwortänderung
 			else if(!isEmpty(action) && action.equals(actionOptionChangePW))
 			{
-				
+
 				aenderePasswort(request, response, session);
 			}
 			else
@@ -153,16 +153,16 @@ public class Controller extends HttpServlet {
 		else if(!isEmpty(action) && action.equals(actionOptionGoToRegister))
 		{
 			System.out.println("Wechsle zu Register-Seite.");
-			
+
 			// TODO von DB holen
 			ArrayList<String> studienGaenge = new ArrayList<>();
 			studienGaenge.add("Informatik");
 			studienGaenge.add("Medieninformatik");
 			studienGaenge.add("Botanki");
-			
+
 			request.setAttribute("studiengaenge", studienGaenge);
-			
-			// Weiter zu startseite
+
+			// Weiter zu Register-Seite
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
 			dispatcher.forward(request,response);
 		}
@@ -198,10 +198,10 @@ public class Controller extends HttpServlet {
 	 */
 	private void aenderePasswort(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
-		
+
 
 		System.out.println("Ändere Passwort.");
-		
+
 		// Daten holen
 		String altesPassw = request.getParameter(oldPassParam);
 		String neuesPassw = request.getParameter(newPassParam);
@@ -319,47 +319,62 @@ public class Controller extends HttpServlet {
 	private void registrieren(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	IOException {
 		System.out.println("Registrierungsvorgang gestartet.");
-		// Benutzerobjekt zusammenbauen
-		// TODO Prüfen ob werte richtig übergeben wurden
-		Benutzer user = new Benutzer();
-		user.seteMail(request.getParameter(eMailParam));
-		user.setVorname(request.getParameter("vorname"));
-		user.setNachname(request.getParameter("nachname"));
-		user.setPasswort(request.getParameter(passwortParam));
-		user.setStudiengang(request.getParameter("studiengang"));
-		String matrikelNummer = request.getParameter("martrikelnummer");
-		if(matrikelNummer == null)
-			matrikelNummer="1";
-		user.setMatrikelnummer(Integer.parseInt(matrikelNummer));
 
-		try 
+		if(isEmpty(request.getParameter(eMailParam))|| isEmpty(request.getParameter("prename"))|| isEmpty(request.getParameter("surname"))|| 
+				isEmpty(request.getParameter(passwortParam))|| isEmpty(request.getParameter("studiengang"))|| isEmpty(request.getParameter("matNo")))
 		{
-			// registrieren
-			benutzerverwaltung.registrieren(user);
-			System.out.println("Registrieren erfolgreich.");
-			request.setAttribute(infoParam, "Registrieren erfolgreich.");
-
-			// Weiter zu login seite
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(loginURL);
-			dispatcher.forward(request,response);
-		} 
-		catch (DbUserStoringException e) 
-		{
-			request.setAttribute(errorParam, "Registrieren fehlgeschlagen.");
-			System.out.println("Registrieren fehlgeschlagen.");
-			// Bei Fehler, die informationen an GUI weiterleiten
-			request.setAttribute("eMailInvalid", e.eMailInvalid);
-			request.setAttribute("martrikelnummerInvalid", e.martrikelnummerInvalid);
-			request.setAttribute("nachnameInvalid", e.nachnameInvalid);
-			request.setAttribute("nutzerstatusInvalid", e.nutzerstatusInvalid);
-			request.setAttribute("passwortInvalid", e.passwortInvalid);
-			request.setAttribute("studiengangNotSupported", e.studiengangNotSupported);
-			request.setAttribute("vornameInvalid", e.vornameInvalid);
-
-			// Weiter zu login seite
-			// TODO Registrieren Seeite
+			request.setAttribute(errorParam, "Nicht alle Felder sind ausgefüllt.");
+			System.out.println("Nicht alle Felder ausgefüllt.");
+			
+			// Weiter zu register seite
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
 			dispatcher.forward(request,response);
+		}
+		else{
+
+			// Benutzerobjekt zusammenbauen
+			// TODO Prüfen ob werte richtig übergeben wurden
+			Benutzer user = new Benutzer();
+			user.seteMail(request.getParameter(eMailParam));
+			user.setVorname(request.getParameter("prename"));
+			user.setNachname(request.getParameter("surname"));
+			user.setPasswort(request.getParameter(passwortParam));
+			user.setStudiengang(request.getParameter("studiengang"));
+			// TODO exception abfangen
+			String matrikelNummer = request.getParameter("matNo");
+			if(matrikelNummer == null)
+				matrikelNummer="1";
+			user.setMatrikelnummer(Integer.parseInt(matrikelNummer));
+
+			try 
+			{
+				// registrieren
+				benutzerverwaltung.registrieren(user);
+				System.out.println("Registrieren erfolgreich.");
+				request.setAttribute(infoParam, "Registrieren erfolgreich.");
+
+				// Weiter zu login seite
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(loginURL);
+				dispatcher.forward(request,response);
+			} 
+			catch (DbUserStoringException e) 
+			{
+				request.setAttribute(errorParam, "Registrieren fehlgeschlagen.");
+				System.out.println("Registrieren fehlgeschlagen.");
+				// Bei Fehler, die informationen an GUI weiterleiten
+				request.setAttribute("eMailInvalid", e.eMailInvalid);
+				request.setAttribute("martrikelnummerInvalid", e.martrikelnummerInvalid);
+				request.setAttribute("nachnameInvalid", e.nachnameInvalid);
+				request.setAttribute("nutzerstatusInvalid", e.nutzerstatusInvalid);
+				request.setAttribute("passwortInvalid", e.passwortInvalid);
+				request.setAttribute("studiengangNotSupported", e.studiengangNotSupported);
+				request.setAttribute("vornameInvalid", e.vornameInvalid);
+
+				// Weiter zu login seite
+				// TODO Registrieren Seeite
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
+				dispatcher.forward(request,response);
+			}
 		}
 	}
 
