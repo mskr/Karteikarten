@@ -125,6 +125,10 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		} catch (DbUserNotExistsException e1) {
 			return false;
 		}
+
+		// TODO 
+		user = new Benutzer();
+		
 		// Ändere Passwort
 		user.passwort = neuesPasswort;
 		
