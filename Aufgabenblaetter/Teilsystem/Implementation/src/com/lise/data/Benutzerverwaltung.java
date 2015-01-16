@@ -32,15 +32,26 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 			return null;
 		else
 		{
-			try
-			{
-				return dbManager.holeBenutzer(eMail);
-			}
-			catch(DbUserNotExistsException e)
-			{
-				System.err.println("Error while reading User. EMail-Adress invalid: " + e.eMail);
-				return null;
-			}
+//			try
+//			{
+				//return dbManager.holeBenutzer(eMail);
+				Benutzer b = new Benutzer();
+				b.eMail = eMail;
+				b.id = 1;
+				b.matrikelnummer = 1234568;
+				b.studiengang = "Informatik";
+				b.vorname = "Hans";
+				b.nachname = "Mayer";
+				b.passwort = "1234";
+				return b;
+				
+				
+//			}
+//			catch(DbUserNotExistsException e)
+//			{
+//				System.err.println("Error while reading User. EMail-Adress invalid: " + e.eMail);
+//				return null;
+//			}
 		}
 	}
 

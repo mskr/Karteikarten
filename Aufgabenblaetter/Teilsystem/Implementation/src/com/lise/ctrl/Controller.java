@@ -64,6 +64,10 @@ public class Controller extends HttpServlet {
 	private final String actionOptionLogout = "logout";
 	private final String actionOptionChangePW = "changePW";
 	private final String actionOptionRegister = "register";
+	
+	// Befehle, die den Seitenwechsel einleiten
+	private final String actionOptionGoToRegister = "gotoRegister";
+	private final String actionOptionGoToChangePW = "gotoChange";
 
 
 
@@ -117,11 +121,23 @@ public class Controller extends HttpServlet {
 			// Abmeldevorgang?
 			if(!isEmpty(action) && action.equals(actionOptionLogout))
 			{
-				logout(response, session);
+				logout(request,response, session);
 			}
+			// Wechsle zu PW ändern Seite
+			else if(!isEmpty(action) && action.equals(actionOptionGoToChangePW))
+			{
+				System.out.println("Wechsle zu ChangePW-Seite.");
+				request.setAttribute("user", benutzerverwaltung.getBenutzer(session));
+				
+				// Weiter zu startseite
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(passwChURL);
+				dispatcher.forward(request,response);
+			}
+			
 			// Passwortänderung
 			else if(!isEmpty(action) && action.equals(actionOptionChangePW))
 			{
+				
 				aenderePasswort(request, response, session);
 			}
 			else
@@ -131,6 +147,15 @@ public class Controller extends HttpServlet {
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(startseiteURL);
 				dispatcher.forward(request,response);
 			}
+		}
+		// Wechseln zur Register-Seite?
+		else if(!isEmpty(action) && action.equals(actionOptionGoToRegister))
+		{
+			System.out.println("Wechsle zu Register-Seite.");
+			
+			// Weiter zu startseite
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
+			dispatcher.forward(request,response);
 		}
 		// Registrierung?
 		else if(!isEmpty(action) && action.equals(actionOptionRegister))
@@ -219,7 +244,8 @@ public class Controller extends HttpServlet {
 			try {
 				benutzerverwaltung.anmelden(eMail, pass, session);
 				System.out.println("Anmeldung erfolgreich. Weiterleitung.");
-				response.sendRedirect("/DurchstichLISE/Controller");
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(startseiteURL);
+				dispatcher.forward(request,response);
 			} 
 			catch (LoginFailedException e) 
 			{
@@ -258,8 +284,9 @@ public class Controller extends HttpServlet {
 	 * @param response
 	 * @param session
 	 * @throws IOException
+	 * @throws ServletException 
 	 */
-	private void logout(HttpServletResponse response, HttpSession session) throws IOException {
+	private void logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, ServletException {
 		if(benutzerverwaltung.abmelden(session)){
 			System.out.println("Abmeldung erfolgreich");
 		}
@@ -269,7 +296,8 @@ public class Controller extends HttpServlet {
 		}
 
 		// Weiterleitung
-		response.sendRedirect("/DurchstichLISE/Controller");
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(startseiteURL);
+		dispatcher.forward(request,response);
 	}
 
 	/**
