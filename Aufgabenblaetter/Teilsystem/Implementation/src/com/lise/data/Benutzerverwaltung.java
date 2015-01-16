@@ -77,8 +77,7 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		// Setze Benutzer-eMail in Session
 		session.setAttribute("UsereMail", eMail);
 		// Sete Zeit, in der die Session gültig bleibt
-		// TODO test mit ein paar Sekunden!
-		session.setMaxInactiveInterval(30);
+		session.setMaxInactiveInterval(60*60);
 		
 		System.out.println("Benutzer '" + eMail + "' ist angemeldet.");
 		System.out.println("SessionID = " + session.getId());
