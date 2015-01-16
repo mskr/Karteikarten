@@ -1,7 +1,10 @@
 package com.lise.ctrl;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,7 +27,7 @@ import com.lise.util.LoginFailedException;
  */
 @WebServlet("/Controller")
 public class Controller extends HttpServlet {
-	
+
 	IBenutzerverwaltung benutzerverwaltung;
 	IDatenbankManager datenbankmanager;
 
@@ -34,8 +37,8 @@ public class Controller extends HttpServlet {
 	private final String startseiteURL = "/WEB-INF/View.jsp";
 	private final String loginURL = "/WEB-INF/Login.jsp";
 	private final String registerURL = "/WEB-INF/Register.jsp";
-	private final String passwChURL = "/WEB-INF/View.jsp";
-	
+	private final String passwChURL = "/WEB-INF/chPassw.jsp";
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// URL-Parameter-Namen
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,55 +51,75 @@ public class Controller extends HttpServlet {
 	private final String errorParam = "error";
 	// Informationen
 	private final String infoParam = "info";
-	
+
 	// ---------------- Spezifische Parameter ---------------------
 	// Für Login usw.
 	private final String passwortParam = "pass";
 	// Für passwort ändern
 	private final String oldPassParam = "altesPasswort";
 	private final String newPassParam = "neuesPasswort";
-	
+
 	// Mögliche Actions
 	private final String actionOptionLogin = "login";
 	private final String actionOptionLogout = "logout";
 	private final String actionOptionChangePW = "changePW";
 	private final String actionOptionRegister = "register";
-	
-	
-	
+
+
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public Controller() {
 		super();
+		// DatenbankManager erzeugen
 		datenbankmanager = new DatenbankManager();
+		// Benutzerverwaltung erzeugen
 		benutzerverwaltung = new Benutzerverwaltung(datenbankmanager);
 	}
-	
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		// Aktuelle Session holen oder neue Session erstellen.
 		HttpSession session = request.getSession();
 
-		// Was will der Benutzer tun?
-		String action = request.getParameter(actionParam);
-		
 		// Bisschen platz zwischen den log meldungen
 		System.out.println();
 		System.out.println();
 		
-		// Prüfen ob benutzer angemeldet ist
+		// verarbeitet Anfrage
+		actionDispatcher(request, response, session);
+	}
+
+	/**
+	 * Verarbeitet ankommende Anfragen unter Berücksichtigung der gewählten "action" und ob der Benutzer angemeldet ist
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void actionDispatcher(HttpServletRequest request, HttpServletResponse response, HttpSession session) 
+			throws ServletException, IOException
+	{
+		// Was will der Benutzer tun?
+		String action = request.getParameter(actionParam);
+		
+		// Prüfen ob Benutzer angemeldet ist
 		if(benutzerverwaltung.istEingeloggt(session))
 		{
 			System.out.println("Benutzer ist eingeloggt: " + session.getAttribute("UsereMail"));
+			// Erzeuge hübschen Date-String
 			Date lastAccessed = new Date(session.getLastAccessedTime());
-			System.out.println("Er war zuletzt aktiv am " + lastAccessed);
-			
+			SimpleDateFormat sf = new SimpleDateFormat();
+			System.out.println("Zuletzt aktiv am " + sf.format(lastAccessed));
+
 			// Abmeldevorgang?
 			if(!isEmpty(action) && action.equals(actionOptionLogout))
 			{
 				logout(response, session);
 			}
+			// Passwortänderung
 			else if(!isEmpty(action) && action.equals(actionOptionChangePW))
 			{
 				aenderePasswort(request, response, session);
@@ -123,10 +146,12 @@ public class Controller extends HttpServlet {
 			request.setAttribute(infoParam, "Niemand eingeloggt.");
 			System.out.println("Niemand ist eingeloggt. Gehe zu Login.");
 
-			// Weiter zu login seite
+			// Weiter zu Login Seite
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(loginURL);
 			dispatcher.forward(request,response);
 		}
+
+
 	}
 
 	/**
@@ -139,10 +164,14 @@ public class Controller extends HttpServlet {
 	 */
 	private void aenderePasswort(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
+		
+
+		System.out.println("Ändere Passwort.");
+		
 		// Daten holen
 		String altesPassw = request.getParameter(oldPassParam);
 		String neuesPassw = request.getParameter(newPassParam);
-		
+
 		if(!isEmpty(altesPassw) && !isEmpty(neuesPassw))
 		{
 			if(!benutzerverwaltung.passwortAendern(session, altesPassw, neuesPassw))
@@ -180,10 +209,10 @@ public class Controller extends HttpServlet {
 	private void login(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws IOException, ServletException {
 		System.out.println("Niemand eingeloggt. Loginvorgang gestartet.");
-		
+
 		String eMail = request.getParameter(eMailParam);
 		String pass = request.getParameter(passwortParam);
-		
+
 		if(!isEmpty(eMail) && !isEmpty(pass))
 		{
 			// Anmelden
@@ -202,7 +231,7 @@ public class Controller extends HttpServlet {
 					request.setAttribute(errorParam, "Fehler beim Anmeldevorgang. eMail existert nicht.");
 				else
 					request.setAttribute(errorParam, "Fehler beim Anmeldevorgang. Fehler unbekannt");
-				
+
 				System.out.println("Fehler beim Anmeldevorgang.");
 				// Fehler beim anmelen
 				// Übergeben was falsch war. eMail und passwort stehen noch in der URL
@@ -251,7 +280,7 @@ public class Controller extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void registrieren(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
+	IOException {
 		System.out.println("Registrierungsvorgang gestartet.");
 		// Benutzerobjekt zusammenbauen
 		// TODO Prüfen ob werte richtig übergeben wurden
@@ -265,7 +294,7 @@ public class Controller extends HttpServlet {
 		if(matrikelNummer == null)
 			matrikelNummer="1";
 		user.setMatrikelnummer(Integer.parseInt(matrikelNummer));
-		
+
 		try 
 		{
 			// registrieren
@@ -289,19 +318,19 @@ public class Controller extends HttpServlet {
 			request.setAttribute("passwortInvalid", e.passwortInvalid);
 			request.setAttribute("studiengangNotSupported", e.studiengangNotSupported);
 			request.setAttribute("vornameInvalid", e.vornameInvalid);
-			
+
 			// Weiter zu login seite
 			// TODO Registrieren Seeite
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
 			dispatcher.forward(request,response);
 		}
 	}
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		doGet(request, response);
 	}	
-	
+
 	private boolean isEmpty(String s) {
 		if(s == null || s == "")
 			return true;
