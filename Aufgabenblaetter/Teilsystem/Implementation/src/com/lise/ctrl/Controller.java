@@ -342,9 +342,11 @@ public class Controller extends HttpServlet {
 			user.setStudiengang(request.getParameter("studiengang"));
 			// TODO exception abfangen
 			String matrikelNummer = request.getParameter("matNo");
-			if(matrikelNummer == null)
-				matrikelNummer="0";
-			user.setMatrikelnummer(Integer.parseInt(matrikelNummer));
+			try {
+				user.setMatrikelnummer(Integer.parseInt(matrikelNummer));
+			} catch (NumberFormatException e) {
+				user.setMatrikelnummer(0);
+			}
 
 			// Prüfen ob Angaben gültig sind.
 			if(userValid(user, request))
@@ -388,7 +390,16 @@ public class Controller extends HttpServlet {
 			}
 			else{
 
+				// TODO von DB holen
+				ArrayList<String> studienGaenge = new ArrayList<>();
+				studienGaenge.add("Informatik");
+				studienGaenge.add("Medieninformatik");
+				studienGaenge.add("Botanik");
+
+				request.setAttribute("studiengaenge", studienGaenge);
 				request.setAttribute(errorParam, "Registrieren fehlgeschlagen. Benutzerdaten ungültig.");
+				
+				request.setAttribute("user", user);
 				
 				// Weiter zu register seite
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
