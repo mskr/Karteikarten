@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Anmeldung</title>
 </head>
 <body>
 	<%
@@ -52,7 +52,7 @@
 	%>
 
 	<!-- Überschrift -->
-	<h4>Login LISE</h4>
+	<h2 align="center">Login LISE</h2>
 
 
 	<c:set value="color:black" var="passColor"></c:set>
@@ -66,12 +66,42 @@
 	</c:if>
 
 	<form action="Controller">
-		<input name="eMail" type="text" value="${param.eMail}"
-			placeholder="eMail-Addresse" style="${eMailColor};"> <input
-			name="pass" type="password" value="${param.pass}" placeholder="Passwort"
-			style="${passColor};"> <input name="action" value="login"
-			type="hidden"> <input name="submit" value="Anmelden"
-			type="submit">
+		
+	
+	
+	
+		<!-- Infos zum weiterleiten -->
+		<input id="action" name="action" value="login"	type="hidden">
+	
+	
+		<!-- Eingabefelder -->
+		<table align="center">
+				<tr>
+					<td>
+						<input name="user_email" type="text" value="${param.eMail}" placeholder="eMail-Addresse" style="${eMailColor};">
+					</td>				
+				</tr>
+				<tr>
+					<td>
+						<input name="password" type="password" value="${param.pass}" placeholder="Passwort"	style="${passColor};">
+					</td>
+				</tr>
+		</table>
+	
+		
+		
+		
+		<!-- Buttons zum anmelden --> 
+		 <table align="center">
+				<tr>
+					<td>
+						<input name="b_submit" value="Anmelden"type="submit">
+					</td>
+					<td>
+						<input name="b_register" value="Registrieren"type="submit" onclick="document.getElementById('action').value = 'gotoRegister'">
+					</td>			
+				</tr>
+			</table>
 	</form>
 
 

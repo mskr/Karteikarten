@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Startseite</title>
 </head>
 <body>
 	<%
@@ -51,15 +51,22 @@
 		}
 	%>
 	<!-- Überschrift -->
-	<h4>Startseite LISE</h4>
-	<p>
+	<h2 align="center">Herzlich Willkommen in LISE <br> Ihrem E-Learning Portal</h2>
+	<p align="center">
 		Benutzer ist angemeldet:
 		<c:out value="${sessionScope.UsereMail}"></c:out>
 	</p>
 
 	<form action="Controller">
-		<input name="action" value="logout" type="hidden"> <input
-			name="submit" value="Abmelden" type="submit">
+		<input name="action" value="logout" type="hidden"> 
+		
+		<table>
+			<tr>
+				<td>
+					<input name="submit" value="Abmelden" type="submit">
+				</td>
+			</tr>
+		</table>
 	</form>
 
 
