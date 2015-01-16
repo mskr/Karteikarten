@@ -38,7 +38,7 @@ public class Controller extends HttpServlet {
 	private final String startseiteURL = "/WEB-INF/View.jsp";
 	private final String loginURL = "/WEB-INF/Login.jsp";
 	private final String registerURL = "/WEB-INF/Register.jsp";
-	private final String passwChURL = "/WEB-INF/chPassw.jsp";
+	private final String passwChURL = "/WEB-INF/ChangePW.jsp";
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// URL-Parameter-Namen
@@ -68,7 +68,7 @@ public class Controller extends HttpServlet {
 
 	// Befehle, die den Seitenwechsel einleiten
 	private final String actionOptionGoToRegister = "gotoRegister";
-	private final String actionOptionGoToChangePW = "gotoChange";
+	private final String actionOptionGoToChangePW = "gotoChangePW";
 
 
 
@@ -138,7 +138,6 @@ public class Controller extends HttpServlet {
 			// Passwortänderung
 			else if(!isEmpty(action) && action.equals(actionOptionChangePW))
 			{
-
 				aenderePasswort(request, response, session);
 			}
 			else
