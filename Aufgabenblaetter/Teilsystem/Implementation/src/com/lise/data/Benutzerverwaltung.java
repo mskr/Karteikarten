@@ -36,7 +36,7 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 //			{
 				//return dbManager.holeBenutzer(eMail);
 				Benutzer b = new Benutzer();
-				b.eMail = eMail;
+				b.email = eMail;
 				b.id = 1;
 				b.matrikelnummer = 1234568;
 				b.studiengang = "Informatik";

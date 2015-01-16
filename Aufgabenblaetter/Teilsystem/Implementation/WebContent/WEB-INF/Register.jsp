@@ -60,33 +60,40 @@
 	<table  align="center">
 		<tr>
 			<td>Vorname: *</td>
-			<td><input name="prename" type="text" size="30" maxlength="30"></td>
+			<td><input name="prename" type="text" size="30" maxlength="30" placeholder="Max" value="${user.vorname}"></td>
 		</tr>
 		<tr>
 			<td>Nachname: * </td>
-			<td><input name="surname" type="text" size="30" maxlength="30" ></td>
+			<td><input name="surname" type="text" size="30" maxlength="30" placeholder="Mustermann" value="${user.nachname}"></td>
 		</tr>
 		<tr>
 			<td>Martikelnummer: * </td>
-			<td><input id="matNo" name="matNo" type="text" size="30" maxlength="30" ></td>
+			<td><input id="matNo" name="matNo" type="text" size="30" maxlength="30" placeholder="123456" value="${user.matrikelnummer}"></td>
 		</tr>
 		<tr>
 			<td>Studiengang :</td>
 			<td> 
-				<select name="studiengang" id="studiengang" >
+				<select name="studiengang" id="studiengang" >			
 						<c:forEach var="st" items="${studiengaenge}">
-							<option value="${st}"><c:out value="${st}"></c:out></option>		
+							<c:choose>
+								<c:when test="${st != user.studiengang}">
+									<option value='${st}'><c:out value="${st}"></c:out></option>		
+								</c:when>
+								<c:otherwise>
+									<option value='${st}' selected="selected"><c:out value="${st}"></c:out></option>
+								</c:otherwise>
+							</c:choose>		
 						</c:forEach>
 				</select> 
  			</td>
 		</tr>
 		<tr>
 			<td>email-Adresse: * </td>
-			<td><input name="user_email" type="text" size="30" maxlength="40" ></td>
+			<td><input name="user_email" type="text" size="30" maxlength="40" placeholder="eMail-Addresse" value="${user.email}"></td>
 		</tr>
 		<tr>
 			<td>Passwort: * </td>
-			<td><input name="password" type="password" size="30" maxlength="40" ></td>
+			<td><input name="password" type="password" size="30" maxlength="40" placeholder="kryptische Zeichen" value="${user.passwort}"></td>
 		</tr>
 	</table>	
 

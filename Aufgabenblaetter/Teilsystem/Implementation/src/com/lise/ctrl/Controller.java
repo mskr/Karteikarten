@@ -324,7 +324,7 @@ public class Controller extends HttpServlet {
 		// Benutzerobjekt zusammenbauen
 		// TODO Prüfen ob werte richtig übergeben wurden
 		Benutzer user = new Benutzer();
-		user.seteMail(request.getParameter(eMailParam));
+		user.setEmail(request.getParameter(eMailParam));
 		user.setVorname(request.getParameter("prename"));
 		user.setNachname(request.getParameter("surname"));
 		user.setPasswort(request.getParameter(passwortParam));
@@ -457,7 +457,7 @@ public class Controller extends HttpServlet {
 			request.setAttribute("studiengangNotSupported", true);
 			return false;
 		}
-		else if(isEmpty(b.geteMail()) || !b.geteMail().contains("@"))
+		else if(isEmpty(b.getEmail()) || !b.getEmail().contains("@"))
 		{
 			request.setAttribute("eMailInvalid", true);
 			return false;
