@@ -3,7 +3,7 @@ package com.lise.data;
 public class Benutzer {
 	
 	public enum eNutzerstatus {
-		Administrator, Dozent, Student,  
+		Administrator, Dozent, Benutzer,  
 	}
 	
 	protected String vorname = null;
@@ -18,7 +18,20 @@ public class Benutzer {
 	
 	
 	public Benutzer(){
-		setNutzerstatus(eNutzerstatus.Student);
+		setNutzerstatus(eNutzerstatus.Benutzer);
+	}
+	
+	public Benutzer(int id, String vorname, String nachname, int matrikelnummer, String eMail, String studiengang, String passwort, 
+			String nutzerstatus, BenutzerEinstellungen benutzereinstellungen){
+		this.id = id;
+		this.vorname = vorname;
+		this.nachname = nachname;
+		this.matrikelnummer = matrikelnummer;
+		this.eMail = eMail;
+		this.studiengang = studiengang;
+		this.passwort = passwort;
+		this.nutzerstatus = eNutzerstatus.valueOf(nutzerstatus);
+		this.benutzereinstellungen = benutzereinstellungen;
 	}
 	
 	//Methoden Getter/Setter

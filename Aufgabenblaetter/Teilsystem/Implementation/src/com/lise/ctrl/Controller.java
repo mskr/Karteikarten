@@ -10,7 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+
+
 import com.lise.data.Benutzer;
+import com.lise.data.BenutzerEinstellungen;
+import com.lise.util.DatenbankManager;
 
 /**
  * Servlet implementation class Wochenplaner
@@ -24,6 +28,7 @@ public class Controller extends HttpServlet {
 	public Controller() {
 		super();
 	}
+	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
