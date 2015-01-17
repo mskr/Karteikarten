@@ -61,7 +61,7 @@
 		Benutzer ist angemeldet:
 		<c:out value="${sessionScope.UsereMail}"></c:out>
 	</p>
-<form action="Controller">
+<form action="Controller" id="changePWFormular">
 <!-- Eingabefelder -->
 	<table  align="center">
 		<tr>
@@ -91,7 +91,7 @@
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
-					<td><input name="b_pw_save" type="submit" value="neues Passwort speichern" onclick="subnewpw()"></input></td>
+					<td><input name="b_pw_save" type="button" value="neues Passwort speichern" onclick="subnewpw()"></input></td>
 					<td><input name="b_pw_cancel" type="submit" value="Passwortänderung abbrechen"></input></td>				
 				</tr>
 			</table>

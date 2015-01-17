@@ -59,8 +59,8 @@ public class Controller extends HttpServlet {
 	// Für Login usw.
 	private final String passwortParam = "password";
 	// Für passwort ändern
-	private final String oldPassParam = "oldPassword";
-	private final String newPassParam = "newPassword";
+	private final String oldPassParam = "oldhashpassword";
+	private final String newPassParam = "newhashpassword";
 
 	// Mögliche Actions
 	private final String actionOptionLogin = "login";
@@ -377,7 +377,7 @@ public class Controller extends HttpServlet {
 				} 
 				catch (DbUserStoringException e) 
 				{
-					request.setAttribute(errorParam, "Registrieren fehlgeschlagen. Fehler beim Speichern in DB.");
+					request.setAttribute(errorParam, "Registrieren fehlgeschlagen. Fehler beim Speichern in DB: " + e.getMessage());
 					System.out.println("Registrieren fehlgeschlagen.");
 					// Bei Fehler, die informationen an GUI weiterleiten
 					request.setAttribute("eMailInvalid", e.eMailInvalid);

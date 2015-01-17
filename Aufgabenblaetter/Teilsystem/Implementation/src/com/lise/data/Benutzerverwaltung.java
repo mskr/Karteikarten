@@ -67,12 +67,12 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		
 		// Exception bei Fehler
 		// TODO erst möglich wenn DB implementiert
-		// dbManager.pruefeLogin(eMail, passwort);
-		if(!passwort.equals("81dc9bdb52d04dc20036dbd8313ed055") || !eMail.equals("max.mustermann@test.com") )
-		{
-			LoginFailedException e = new LoginFailedException("Login fehlgeschlagen", !passwort.equals("1234"), !eMail.equals("max.mustermann@test.com"));
-			throw e;
-		}
+		dbManager.pruefeLogin(eMail, passwort);
+//		if(!passwort.equals("81dc9bdb52d04dc20036dbd8313ed055") || !eMail.equals("max.mustermann@test.com") )
+//		{
+//			LoginFailedException e = new LoginFailedException("Login fehlgeschlagen", !passwort.equals("1234"), !eMail.equals("max.mustermann@test.com"));
+//			throw e;
+//		}
 		// Wenn alles funktioniert hat, dann weiter		
 		// Setze Benutzer-eMail in Session
 		session.setAttribute("UsereMail", eMail);
@@ -125,9 +125,11 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		} catch (DbUserNotExistsException e1) {
 			return false;
 		}
+		if(user == null)
+			return false;
 
 		// TODO 
-		user = new Benutzer();
+		//user = new Benutzer();
 		
 		// Ändere Passwort
 		user.passwort = neuesPasswort;

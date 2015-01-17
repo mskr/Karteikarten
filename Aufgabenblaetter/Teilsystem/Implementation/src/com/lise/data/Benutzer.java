@@ -19,6 +19,7 @@ public class Benutzer {
 	
 	public Benutzer(){
 		setNutzerstatus(eNutzerstatus.Benutzer);
+		setBenutzereinstellungen(new BenutzerEinstellungen(true, "VERANSTALTUNG_DIE_ICH_BESUCHER"));
 	}
 	
 	public Benutzer(int id, String vorname, String nachname, int matrikelnummer, String eMail, String studiengang, String passwort, 
