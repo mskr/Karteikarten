@@ -81,6 +81,7 @@
 
 <!-- Buttons zur Anmeldung und zum PW Rest-->			
 			<input id="action" name="action" type="hidden"	value=""></input>
+			<input id="oldhashpw" name="oldhashpassword" value=""	type="hidden">
 			<input id="newhashpw" name="newhashpassword" value=""	type="hidden">
 			<input id="newrephashpw" name="newrephashpassword" value=""	type="hidden">
 				
