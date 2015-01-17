@@ -8,7 +8,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<script type="text/javascript" src="js/view.js"></script>
+<script type="text/javascript" src="js/hash.js"></script>
+<script type="text/javascript" src="js/regpw.js"></script>
 <title>RegistrierungSeite</title>
 </head>
 <body>
@@ -93,12 +94,13 @@
 		</tr>
 		<tr>
 			<td>Passwort: * </td>
-			<td><input name="password" type="password" size="30" maxlength="40" placeholder="kryptische Zeichen" value="${user.passwort}"></td>
+			<td><input id="password" type="password" size="30" maxlength="40" placeholder="kryptische Zeichen" value="${user.passwort}"></td>
 		</tr>
 	</table>	
 
 <!-- Buttons zur Anmeldung und zum PW Rest-->			
 			<input id="action" name="action" type="hidden"	value=""></input>
+			<input id="reghashpw" name="reghashpassword" value="" type="hidden">
 				
 			<table align="center">
 				<tr>
@@ -106,7 +108,7 @@
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
-					<td><input name="b_register" type="submit" value="Registrierung abschließen" onclick="document.getElementById('action').value = 'register'"></input></td>
+					<td><input name="b_register" type="submit" value="Registrierung abschließen" onclick="regPWhash()"></input></td>
 					<td><input name="b_reg_cancel" type="submit" value="Registrierung abbrechen"></input></td>				
 				</tr>
 			</table>

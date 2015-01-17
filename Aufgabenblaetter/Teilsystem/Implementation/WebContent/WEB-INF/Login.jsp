@@ -73,6 +73,7 @@
 	
 		<!-- Infos zum weiterleiten -->
 		<input id="action" name="action" value="login"	type="hidden">
+		<input id="hashpw" name="password" value=""	type="hidden">
 	
 	
 		<!-- Eingabefelder -->
@@ -84,7 +85,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input id="pw" name="password" type="password" value="${param.pass}" placeholder="Passwort"	style="${passColor};">
+						<input id="pw" type="password" value="${param.pass}" placeholder="Passwort"	style="${passColor};">
 					</td>
 				</tr>
 		</table>
@@ -96,7 +97,7 @@
 		 <table align="center">
 				<tr>
 					<td>
-						<input name="b_submit" value="Anmelden"type="submit" onclick="document.getElementById('pw').value = MD5(document.getElementById('pw').value)">
+						<input name="b_submit" value="Anmelden"type="submit" onclick="document.getElementById('hashpw').value = MD5(document.getElementById('pw').value)">
 					</td>
 					<td>
 						<input name="b_register" value="Registrieren"type="submit" onclick="document.getElementById('action').value = 'gotoRegister'">

@@ -8,6 +8,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<script type="text/javascript" src="js/hash.js"></script>
+<script type="text/javascript" src="js/pwch.js"></script>
 <title>PasswortAenderungSeite</title>
 </head>
 <body>
@@ -64,21 +66,23 @@
 	<table  align="center">
 		<tr>
 			<td>altes Passwort: *</td>
-			<td><input name="oldPassword" type="text" size="30" maxlength="30" placeholder="Ihr derzeitiges Passwort"></td>
+			<td><input id="oldPassword" type="password" size="30" maxlength="30" placeholder="Ihr derzeitiges Passwort"></td>
 		</tr>
 		<tr>
 			<td>neues Passwort: * </td>
-			<td><input id="NewPw"name="newPassword" type="text" size="30" maxlength="30" placeholder="kryptische Zeichen"></td>
+			<td><input id="NewPw" type="password" size="30" maxlength="30" placeholder="kryptische Zeichen"></td>
 		</tr>
 		<tr>
 			<td>neues Kennwort wiederholen: * </td>
-			<td><input id="repNewPw" name="repNewPw" type="text" size="30" maxlength="30" placeholder="kryptische Zeichen"></td>
+			<td><input id="repNewPw" type="password" size="30" maxlength="30" placeholder="kryptische Zeichen"></td>
 		</tr>
 		
 	</table>	
 
 <!-- Buttons zur Anmeldung und zum PW Rest-->			
 			<input id="action" name="action" type="hidden"	value=""></input>
+			<input id="newhashpw" name="newhashpassword" value=""	type="hidden">
+			<input id="newrephashpw" name="newrephashpassword" value=""	type="hidden">
 				
 			<table align="center">
 				<tr>
@@ -86,7 +90,7 @@
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
-					<td><input name="b_pw_save" type="submit" value="neues Passwort speichern" onclick="document.getElementById('action').value = 'changePW'"></input></td>
+					<td><input name="b_pw_save" type="submit" value="neues Passwort speichern" onclick="subnewpw()"></input></td>
 					<td><input name="b_pw_cancel" type="submit" value="Passwortänderung abbrechen"></input></td>				
 				</tr>
 			</table>
