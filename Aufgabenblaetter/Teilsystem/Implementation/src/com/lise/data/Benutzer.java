@@ -35,6 +35,18 @@ public class Benutzer {
 		this.benutzereinstellungen = benutzereinstellungen;
 	}
 	
+	public Benutzer(String vorname, String nachname, int matrikelnummer, String eMail, String studiengang, String passwort, 
+			String nutzerstatus, BenutzerEinstellungen benutzereinstellungen){
+		this.vorname = vorname;
+		this.nachname = nachname;
+		this.matrikelnummer = matrikelnummer;
+		this.email = eMail;
+		this.studiengang = studiengang;
+		this.passwort = passwort;
+		this.nutzerstatus = eNutzerstatus.valueOf(nutzerstatus);
+		this.benutzereinstellungen = benutzereinstellungen;
+	}
+	
 	//Methoden Getter/Setter
 	
 	

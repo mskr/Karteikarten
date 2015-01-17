@@ -17,10 +17,14 @@ import javax.servlet.http.HttpSession;
 
 
 
+
+
+
 import com.lise.data.Benutzer;
 import com.lise.data.Benutzerverwaltung;
 import com.lise.data.IBenutzerverwaltung;
 import com.lise.util.DatenbankManager;
+import com.lise.util.DbUserNotExistsException;
 import com.lise.util.DbUserStoringException;
 import com.lise.util.IDatenbankManager;
 import com.lise.util.LoginFailedException;
