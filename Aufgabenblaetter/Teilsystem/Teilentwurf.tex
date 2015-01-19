@@ -1,31 +1,27 @@
-\documentclass[12pt,a4paper]{article} 
-\usepackage{a4wide}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{float}
-\usepackage[ngerman]{babel} 
-\usepackage{pdflscape}
-\usepackage{caption, booktabs}
-\parindent0pt
+\documentclass[12pt]{scrreprt}
 
+\usepackage[utf8]{inputenc}		% Ermögicht es umlaute direkt zu schreiben
+\usepackage{amsmath,amssymb} 	% Mathe symbole und funktionen
+\usepackage{graphicx}			% Bilder einbinden
+\usepackage[ngerman]{babel} 	% Deutscht alles ein
+\usepackage{pdflscape}			% Querformat
 
-\title{Teilentwurf von  LISE E-Learning System}
+\parindent 0px					% Einrückung von absätzen auf 0
 
+\subject{Teilentwurf}
+\title{LISE E-Learning System}
 \author{Matthias Englert, Fabian Schilha, Andreas Rottach}
 \date{Wintersemester 2014/2015}
 
 \begin{document}
 \maketitle
-\newpage
+
 \tableofcontents
-\newpage
 
-\section{Datenbankentwurf}
 
-\subsection{Datebankdiagramm}
+\chapter{Datenbankentwurf}
+
+\section{Datebankdiagramm}
 \begin{figure}[H]
 	\centering
 	\paragraph{Aufbau der Relationalen Datenbank}	\includegraphics[width=\textwidth]{Bilder/Datenbank/Datenbankentwurf.png}
@@ -33,7 +29,7 @@
 	\label{Datenbankdiagramm}
 \end{figure}
 
-\subsection{Beschreibung der Tabellen}
+\section{Beschreibung der Tabellen}
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
@@ -68,7 +64,6 @@
 	BESCHREIBUNG	&  Speichert wie ein Benutzer über Diskussionen informiert wird.\\
 	\hline
 \end{tabular}\\\\
-
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	TABELLE			&  Studiengang\\ 
@@ -83,9 +78,9 @@
 \end{tabular}\\\\
 
 
-\section{System-Architektur}
+\chapter{System-Architektur}
 
-\subsection{Kommunikationsdiagramme}
+\section{Kommunikationsdiagramme}
 
 \begin{figure}[H]
 	\centering
@@ -110,7 +105,7 @@
 \end{figure}
 
 
-\subsection{Klassendiagramm}
+\section{Klassendiagramm}
 
 \begin{figure}[H]
 \centering
@@ -120,19 +115,17 @@
 \end{figure}
 
 
-\subsection{Methodenbeschreibung}
-
-
-\paragraph{Controller Methoden}\mbox{}\\
+\section{Methodenbeschreibung}
+\subsection{Controller Methoden}
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{anmelden(eMail :String , password: String) }\\ 
 	Beschreibung & Methode hier sendet den Aufruf mit den entsprechechenden Daten einfach weiter an die Benutzerverwaltung. \\ 
 	\hline 
-	\end{tabular} \\\\
+\end{tabular} \\\\
 	
-	
+
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{registrieren(user:Benutzer): Boolean) }\\ 
@@ -148,8 +141,7 @@
 \end{tabular} \\\\
 
 
-\paragraph{Benutzerverwaltung  Methoden}\mbox{}\\
-
+\subsection{Benutzerverwaltung  Methoden}
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
@@ -181,8 +173,7 @@
 \end{tabular} \\\\
 
 
-\paragraph{Datenbankmanager  Methoden}\mbox{}\\
-
+\subsection{Datenbankmanager  Methoden}
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{getConnection(): Connection}\\ 
@@ -212,7 +203,7 @@
 \end{tabular} \\\\
 
 
-\paragraph{RegistrierenDialog  Methoden}\mbox{}\\
+\subsection{RegistrierenDialog  Methoden}
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
@@ -231,7 +222,7 @@
 \end{tabular} \\\\
 
 
-\paragraph{ProfilBearbeitenDialog  Methoden}\mbox{}\\
+\subsection{ProfilBearbeitenDialog  Methoden}
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
