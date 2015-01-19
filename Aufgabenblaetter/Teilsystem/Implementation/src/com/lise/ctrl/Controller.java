@@ -274,7 +274,7 @@ public class Controller extends HttpServlet {
 				// Fehler beim anmelen
 				// Übergeben was falsch war. eMail und passwort stehen noch in der URL
 				request.setAttribute("passInvalid", e.passwortWrong);
-				request.setAttribute("eMailInvlaid", e.eMailWrong);
+				request.setAttribute("eMailInvalid", e.eMailWrong);
 
 				// Weiter zu login seite
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(loginURL);

@@ -62,7 +62,7 @@
 	</c:if>
 
 	<c:set value="color:black" var="eMailColor"></c:set>
-	<c:if test="${eMailInvlaid}">
+	<c:if test="${eMailInvalid}">
 		<c:set value="color:red" var="eMailColor"></c:set>
 	</c:if>
 

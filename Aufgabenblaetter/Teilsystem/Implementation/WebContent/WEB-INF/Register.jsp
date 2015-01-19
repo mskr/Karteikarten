@@ -56,6 +56,22 @@
 <!-- Überschrift -->
 <h2 align="center">Registrierung zu LISE</h2>
 
+<c:set value="color:black" var="eMailColor"></c:set>
+	<c:if test="${eMailInvalid}">
+		<c:set value="color:red" var="eMailColor"></c:set>
+	</c:if>
+	
+	<c:set value="color:black" var="passColor"></c:set>
+	<c:if test="${passInvalid}">
+		<c:set value="color:red" var="passColor"></c:set>
+	</c:if>
+
+
+	<c:set value="color:black" var="matrikelColor"></c:set>
+	<c:if test="${martrikelnummerInvalid}">
+		<c:set value="color:red" var="matrikelColor"></c:set>
+	</c:if>
+
 <form action="Controller">
 <!-- Eingabefelder -->
 	<table  align="center">
@@ -69,7 +85,7 @@
 		</tr>
 		<tr>
 			<td>Martikelnummer: * </td>
-			<td><input id="matNo" name="matNo" type="text" size="30" maxlength="30" placeholder="123456" value="${user.matrikelnummer}"></td>
+			<td><input id="matNo" name="matNo" type="text" size="30" maxlength="30" value="${user.matrikelnummer}" style="${matrikelColor}"></td>
 		</tr>
 		<tr>
 			<td>Studiengang :</td>
@@ -90,11 +106,11 @@
 		</tr>
 		<tr>
 			<td>email-Adresse: * </td>
-			<td><input name="user_email" type="text" size="30" maxlength="40" placeholder="eMail-Addresse" value="${user.email}"></td>
+			<td><input name="user_email" type="text" size="30" maxlength="40" placeholder="eMail-Addresse" value="${user.email}" style="${eMailColor}"></td>
 		</tr>
 		<tr>
 			<td>Passwort: * </td>
-			<td><input id="password" type="password" size="30" maxlength="40" placeholder="kryptische Zeichen" value=""></td>
+			<td><input id="password" type="password" size="30" maxlength="40" placeholder="kryptische Zeichen" value="" style="${passColor};"></td>
 		</tr>
 	</table>	
 
