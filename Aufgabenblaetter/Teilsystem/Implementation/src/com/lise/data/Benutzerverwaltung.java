@@ -100,7 +100,6 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		// Login prüfen
 		try {
 			dbManager.pruefeLogin(eMail, altesPasswort);
-			
 		} catch (LoginFailedException e) {
 			return false;
 		}

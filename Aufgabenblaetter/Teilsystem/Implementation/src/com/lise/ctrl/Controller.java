@@ -212,7 +212,7 @@ public class Controller extends HttpServlet {
 		{
 			if(!benutzerverwaltung.passwortAendern(session, altesPassw, neuesPassw))
 			{
-				request.setAttribute(errorParam, "Fehler beim ändern des Passworts.");
+				request.setAttribute(errorParam, "Fehler beim ändern des Passworts. Eventuell ist ihr Kennwort falsch!");
 				System.out.println("Fehler beim ändern des Passworts.");
 			}
 			else
