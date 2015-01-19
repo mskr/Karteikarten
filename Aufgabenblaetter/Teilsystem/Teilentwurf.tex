@@ -5,6 +5,7 @@
 \usepackage{graphicx}			% Bilder einbinden
 \usepackage[ngerman]{babel} 	% Deutscht alles ein
 \usepackage{pdflscape}			% Querformat
+\usepackage[section]{placeins}	% Verhindert das Gleiten von Bildern in andere Sections
 
 \parindent 0px					% Einrückung von absätzen auf 0
 
@@ -22,7 +23,7 @@
 \chapter{Datenbankentwurf}
 
 \section{Datebankdiagramm}
-\begin{figure}[H]
+\begin{figure}[h]
 	\centering
 	\paragraph{Aufbau der Relationalen Datenbank}	\includegraphics[width=\textwidth]{Bilder/Datenbank/Datenbankentwurf.png}
 	\caption{Datenbankdiagramm}
@@ -64,6 +65,7 @@
 	BESCHREIBUNG	&  Speichert wie ein Benutzer über Diskussionen informiert wird.\\
 	\hline
 \end{tabular}\\\\
+
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	TABELLE			&  Studiengang\\ 
@@ -79,96 +81,139 @@
 
 
 \chapter{System-Architektur}
-
 \section{Kommunikationsdiagramme}
-
-\begin{figure}[H]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{Bilder/Kommunikationsdiagramme/registrieren}
 	\caption{Registrierung}
 	\label{Registrierung}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{Bilder/Kommunikationsdiagramme/anmelden}
+\includegraphics[width=\linewidth]{Bilder/Kommunikationsdiagramme/anmelden}
 \caption{Am System anmelden}
 \label{Am System anmelden}
 \end{figure}
 
-
-\begin{figure}[H]
+\begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{Bilder/Kommunikationsdiagramme/passwortAendern}
+\includegraphics[width=\linewidth]{Bilder/Kommunikationsdiagramme/passwortAendern}
 \caption{Passwortänderung}
 \label{Passwortaenderung}
 \end{figure}
 
-
+\begin{landscape}
 \section{Klassendiagramm}
-
-\begin{figure}[H]
+\begin{figure}[!h]
 \centering
 \includegraphics[width=\textwidth]{Bilder/Klassendiagramm/Klassendiagramm}
-\caption{}
+\caption{Klassendiagramm mit Realisierungsklassen}
 \label{fig:Klassendiagramm}
 \end{figure}
-
+\end{landscape}
 
 \section{Methodenbeschreibung}
 \subsection{Controller Methoden}
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{anmelden(eMail :String , password: String) }\\ 
-	Beschreibung & Methode hier sendet den Aufruf mit den entsprechechenden Daten einfach weiter an die Benutzerverwaltung. \\ 
+	Operation &  \textbf{doGet(HttpServletRequest request, HttpServletResponse response)}\\ 
+	Beschreibung & Diese Methode nimmt einen Ankommenden Request entgegen und gibt ihn an die Methode "actinDispatcher" weiter. \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{actionDispatcher(HttpServletRequest request, HttpServletResponse response, HttpSession session)}\\ 
+	Beschreibung & Diese Methode verwaltet die Weiterleitung zu den jeweils verantwortlichen Methoden für die Verarbeitung der Anfragen oder sie leitet weiter zu den Dialogen. \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{aenderePasswort(HttpServletRequest request, HttpServletResponse response, HttpSession session) }\\ 
+	Beschreibung & Diese Methode übernimmt die Verarbeitung der Passwort-Änderungs-Anfragen Sie liest die Parameter aus dem Request aus. Wenn diese richtig angegeben sind wird die Anfrage an die Benutzerverwaltung weitergegeben. Je nachdem ob dies erfolgreich war, wird dann auf die Seite weitergeleitet oder der Benutzer landet wieder beim gleichen Dialog, wenn ein Fehler auftrat.\\ 
 	\hline 
 \end{tabular} \\\\
 	
-
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{registrieren(user:Benutzer): Boolean) }\\ 
-	Beschreibung & Methode hier sendet den Aufruf mit den entsprechechenden Daten einfach weiter an die Benutzerverwaltung. \\ 
-	\hline 
-	\end{tabular} \\\\
-
-\begin{tabular}{|lp{12cm}|}
-	\hline
-	Operation &  \textbf{passwortAendern(user:Benutzer, altesPasswort:String, neuesPasswort:String): Boolean) }\\ 
-	Beschreibung & Methode hier sendet den Aufruf mit den entsprechechenden Daten einfach weiter an die Benutzerverwaltung. \\ 
+	Operation &  \textbf{login(HttpServletRequest request, HttpServletResponse response, HttpSession session)}\\ 
+	Beschreibung & Diese Methode übernimmt die Login-Anfragen. Sie liest die Parameter aus und leitet die Anfrage an die Benutzerverwaltung weiter. Es wird entweder auf die Startseite oder wieder die Loginseite weitergeleitet. \\ 
 	\hline 
 \end{tabular} \\\\
 
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{logout(HttpServletRequest request, HttpServletResponse response, HttpSession session)}\\ 
+	Beschreibung & Diese Methode übernimmt die Logout-Anfragen. Sie liest die Parameter aus und leitet die Anfrage an die Benutzerverwaltung weiter. Es wird auf die Loginseite weitergeleitet. \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{registrieren(HttpServletRequest request, HttpServletResponse response)}\\ 
+	Beschreibung & Diese Methode übernimmt die Registrierungsanfragen. Sie liest die Parameter aus und leitet die Anfrage an die Benutzerverwaltung weiter. Es wird auf die Loginseite weitergeleitet. \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{userValid(Benutzer b, HttpServletRequest request): Boolean}\\ 
+	Beschreibung & Diese Methode prüft, ob die gespeicherten Benutzerdaten gültig sind. Sie prüft ob alle Werte gesetzt sind und ob die eMail bspw. ein \@ und einen Punkt enthält. \\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{isEmpty(String s)}\\ 
+	Beschreibung & Diese Methode prüft, ob der übergeben String null ist oder ob es ein Leerstring ist. \\ 
+	\hline 
+\end{tabular} \\\\
 
 \subsection{Benutzerverwaltung  Methoden}
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{getBenutzer(sessionID:String): Benutzer) }\\ 
-	Beschreibung & Liefert das Benutzerobjekt zur entsprechenden Session-ID zurück. Wenn die Benutzerverwaltung diese SessionID nicht kennt ist der Benutzer nicht angemeldet und es wird null zurückgeliefert. Die Benutzerverwaltung merkt sich die Zuweisung zwischen SessionID und eMail-Adresse und kann somit über den DatenbankManager den gewünschten Benutzer übergeben. \\ 
+	Operation &  \textbf{getBenutzer(HttpSession: session): Benutzer) }\\ 
+	Beschreibung & Liefert das Benutzerobjekt zur entsprechenden Session zurück. Wenn die eMail-Addresse in der Session gespeichert ist, ist der Benutzer angemeldet. Dann wird das komplette Benutzerobjekt mit Hilfe des DB-Managers geladen und zurückgeliefert. Wenn ein Fehler auftritt wird null zurückgegeben.\\
 	\hline 
 \end{tabular} \\\\
 
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{anmelden(eMail:String, passwort:String) }\\ 
-	Beschreibung & Auf Grundlage von der SessionID Benutzer-eMail und dem dazugehörigen Passwort wird der Benutzer an dem System angemeldet.\\ 
+	Operation &  \textbf{anmelden(eMail:String, passwort:String, HttpSession: session) }\\ 
+	Beschreibung & Meldet den Benutzer mit Passwort und eMail im System an. Die eMail wird in der aktuellen Session gespeichert um einen Verweis auf den Benutzer zu haben. \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{registrieren(user:Benutzer): Boolean) }\\ 
-	Beschreibung & Registrierung bekommt einen Benutzerobjekt mit allen Attributen die im Klassendiagamm dargestellt sind.Falls der Benutzer noch nicht existiert wirde dieser neun in der Datenbank angelegt. \\ 
+	Beschreibung & Ruft beim Datenbankmanager "speichereBenutzer" auf. Wenn user null ist wird eine NullPointerException geworfen. \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{passwortAendern(user:Benutzer, altesPasswort:String, neuesPasswort:String): Boolean }\\ 
-	Beschreibung & \\ 
+	Operation &  \textbf{passwortAendern(HttpSession session, altesPasswort:String, neuesPasswort:String): Boolean }\\ 
+	Beschreibung & Diese Methode ändert das Passwort für den aktuell angemeldeten Benutzer, indem es den aktuellen Benutzer mit "holeBenutzer" holt, das Passwort neu setzt und den Benutzer mit Hilfe des Datenbankmanagers mit "bearbeiteBenutzer" speichert.\\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{abmelden(HttpSession session): Boolean }\\ 
+	Beschreibung & Falls ein Benutzer in der übergebenen Session angemeldet ist, wird die eMail aus der Session entfernt und der Benutzer somit abgemeldet. Ist der Benutzer schon ausgeloggt wird einfach false zurückgegeben.\\ 
+	\hline 
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
+	Operation &  \textbf{istEingeloggt(HttpSession session): Boolean }\\ 
+	Beschreibung & Prüft ob die eMail in der aktuellen Session enthalten ist. Wenn dies zutrifft ist der Benutzer angemeldet.\\ 
 	\hline 
 \end{tabular} \\\\
 
@@ -220,7 +265,6 @@
 	Beschreibung & \\ 
 	\hline 
 \end{tabular} \\\\
-
 
 \subsection{ProfilBearbeitenDialog  Methoden}
 

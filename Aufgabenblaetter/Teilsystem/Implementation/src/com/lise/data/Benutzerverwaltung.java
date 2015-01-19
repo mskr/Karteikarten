@@ -142,7 +142,6 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 			System.out.println("Benutzer wurde ausgeloggt: id war " + session.getId());
 			return true;
 		}
-		
 		return false;
 	}
 

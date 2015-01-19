@@ -440,7 +440,8 @@ public class Controller extends HttpServlet {
 			request.setAttribute("studiengangNotSupported", true);
 			return false;
 		}
-		else if(isEmpty(b.getEmail()) || !b.getEmail().contains("@"))
+		else if(isEmpty(b.getEmail()) || 
+				!(b.getEmail().contains("@") && b.getEmail().contains(".")))
 		{
 			request.setAttribute("eMailInvalid", true);
 			return false;
