@@ -62,6 +62,8 @@ public class Controller extends HttpServlet {
 	// ---------------- Spezifische Parameter ---------------------
 	// Für Login usw.
 	private final String passwortParam = "password";
+	
+	private final String passwortregParam = "reghashpassword";
 	// Für passwort ändern
 	private final String oldPassParam = "oldhashpassword";
 	private final String newPassParam = "newhashpassword";
@@ -120,6 +122,7 @@ public class Controller extends HttpServlet {
 		// Prüfen ob Benutzer angemeldet ist
 		if(benutzerverwaltung.istEingeloggt(session))
 		{
+			request.setAttribute("user", benutzerverwaltung.getBenutzer(session));
 			System.out.println("Benutzer ist eingeloggt: " + session.getAttribute("UsereMail"));
 			// Erzeuge hübschen Date-String
 			Date lastAccessed = new Date(session.getLastAccessedTime());
@@ -135,7 +138,6 @@ public class Controller extends HttpServlet {
 			else if(!isEmpty(action) && action.equals(actionOptionGoToChangePW))
 			{
 				System.out.println("Wechsle zu ChangePW-Seite.");
-				request.setAttribute("user", benutzerverwaltung.getBenutzer(session));
 
 				// Weiter zu startseite
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(passwChURL);
@@ -159,14 +161,8 @@ public class Controller extends HttpServlet {
 		else if(!isEmpty(action) && action.equals(actionOptionGoToRegister))
 		{
 			System.out.println("Wechsle zu Register-Seite.");
-
-			// TODO von DB holen
-			ArrayList<String> studienGaenge = new ArrayList<>();
-			studienGaenge.add("Informatik");
-			studienGaenge.add("Medieninformatik");
-			studienGaenge.add("Botanik");
-
-			request.setAttribute("studiengaenge", studienGaenge);
+			
+			request.setAttribute("studiengaenge", datenbankmanager.holeStudiengaenge());
 
 			// Weiter zu Register-Seite
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
@@ -225,7 +221,7 @@ public class Controller extends HttpServlet {
 				System.out.println("Passwort wurde erfolgreich geändert.");
 			}
 			// Weiter zur alten Seite
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(passwChURL);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(startseiteURL);
 			dispatcher.forward(request,response);
 		}
 		else
@@ -259,6 +255,7 @@ public class Controller extends HttpServlet {
 			try {
 				benutzerverwaltung.anmelden(eMail, pass, session);
 				System.out.println("Anmeldung erfolgreich. Weiterleitung.");
+				request.setAttribute("user", benutzerverwaltung.getBenutzer(session));
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(startseiteURL);
 				dispatcher.forward(request,response);
 			} 
@@ -333,7 +330,7 @@ public class Controller extends HttpServlet {
 		user.setEmail(request.getParameter(eMailParam));
 		user.setVorname(request.getParameter("prename"));
 		user.setNachname(request.getParameter("surname"));
-		user.setPasswort(request.getParameter(passwortParam));
+		user.setPasswort(request.getParameter(passwortregParam));
 		user.setStudiengang(request.getParameter("studiengang"));
 		// TODO exception abfangen
 		String matrikelNummer = request.getParameter("matNo");
@@ -344,18 +341,12 @@ public class Controller extends HttpServlet {
 		}
 		
 		if(isEmpty(request.getParameter(eMailParam))|| isEmpty(request.getParameter("prename"))|| isEmpty(request.getParameter("surname"))|| 
-				isEmpty(request.getParameter(passwortParam))|| isEmpty(request.getParameter("studiengang"))|| isEmpty(request.getParameter("matNo")))
+				isEmpty(request.getParameter(passwortregParam))|| isEmpty(request.getParameter("studiengang"))|| isEmpty(request.getParameter("matNo")))
 		{
 			request.setAttribute(errorParam, "Nicht alle Felder sind ausgefüllt.");
 			System.out.println("Nicht alle Felder ausgefüllt.");
 
-			// TODO von DB holen
-			ArrayList<String> studienGaenge = new ArrayList<>();
-			studienGaenge.add("Informatik");
-			studienGaenge.add("Medieninformatik");
-			studienGaenge.add("Botanik");
-
-			request.setAttribute("studiengaenge", studienGaenge);
+			request.setAttribute("studiengaenge", datenbankmanager.holeStudiengaenge());
 			request.setAttribute("user", user);
 			
 			// Weiter zu register seite
@@ -391,16 +382,9 @@ public class Controller extends HttpServlet {
 					request.setAttribute("passwortInvalid", e.passwortInvalid);
 					request.setAttribute("studiengangNotSupported", e.studiengangNotSupported);
 					request.setAttribute("vornameInvalid", e.vornameInvalid);
-					
-					// TODO von DB holen
-					ArrayList<String> studienGaenge = new ArrayList<>();
-					studienGaenge.add("Informatik");
-					studienGaenge.add("Medieninformatik");
-					studienGaenge.add("Botanik");
 
-					request.setAttribute("studiengaenge", studienGaenge);
+					request.setAttribute("studiengaenge", datenbankmanager.holeStudiengaenge());
 					request.setAttribute("user", user);
-					
 					
 					// Weiter zu register seite
 					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(registerURL);
@@ -408,14 +392,7 @@ public class Controller extends HttpServlet {
 				}
 			}
 			else{
-
-				// TODO von DB holen
-				ArrayList<String> studienGaenge = new ArrayList<>();
-				studienGaenge.add("Informatik");
-				studienGaenge.add("Medieninformatik");
-				studienGaenge.add("Botanik");
-
-				request.setAttribute("studiengaenge", studienGaenge);
+				request.setAttribute("studiengaenge", datenbankmanager.holeStudiengaenge());
 				request.setAttribute(errorParam, "Registrieren fehlgeschlagen. Benutzerdaten ungültig.");
 				
 				request.setAttribute("user", user);

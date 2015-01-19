@@ -32,26 +32,15 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 			return null;
 		else
 		{
-//			try
-//			{
-				//return dbManager.holeBenutzer(eMail);
-				Benutzer b = new Benutzer();
-				b.email = eMail;
-				b.id = 1;
-				b.matrikelnummer = 1234568;
-				b.studiengang = "Informatik";
-				b.vorname = "Hans";
-				b.nachname = "Mayer";
-				b.passwort = "1234";
-				return b;
-				
-				
-//			}
-//			catch(DbUserNotExistsException e)
-//			{
-//				System.err.println("Error while reading User. EMail-Adress invalid: " + e.eMail);
-//				return null;
-//			}
+			try
+			{
+				return dbManager.holeBenutzer(eMail);
+			}
+			catch(DbUserNotExistsException e)
+			{
+				System.err.println("Error while reading User. EMail-Adress invalid: " + e.eMail);
+				return null;
+			}
 		}
 	}
 
@@ -68,11 +57,7 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		// Exception bei Fehler
 		// TODO erst möglich wenn DB implementiert
 		dbManager.pruefeLogin(eMail, passwort);
-//		if(!passwort.equals("81dc9bdb52d04dc20036dbd8313ed055") || !eMail.equals("max.mustermann@test.com") )
-//		{
-//			LoginFailedException e = new LoginFailedException("Login fehlgeschlagen", !passwort.equals("1234"), !eMail.equals("max.mustermann@test.com"));
-//			throw e;
-//		}
+
 		// Wenn alles funktioniert hat, dann weiter		
 		// Setze Benutzer-eMail in Session
 		session.setAttribute("UsereMail", eMail);
@@ -93,7 +78,8 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		if(user == null)
 			throw new NullPointerException("User is null");
 		
-		return dbManager.speichereBenutzer(user, false);
+		dbManager.speichereBenutzer(user);
+		return true;
 	}
 
 	/**
@@ -136,7 +122,7 @@ public class  Benutzerverwaltung implements IBenutzerverwaltung{
 		
 		// speichere neuen Benutzer
 		try {
-			dbManager.speichereBenutzer(user, true);
+			dbManager.bearbeiteBenutzer(user);
 		} catch (DbUserStoringException e) {
 			return false;
 		}

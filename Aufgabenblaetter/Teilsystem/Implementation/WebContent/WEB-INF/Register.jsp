@@ -94,7 +94,7 @@
 		</tr>
 		<tr>
 			<td>Passwort: * </td>
-			<td><input id="password" type="password" size="30" maxlength="40" placeholder="kryptische Zeichen" value="${user.passwort}"></td>
+			<td><input id="password" type="password" size="30" maxlength="40" placeholder="kryptische Zeichen" value=""></td>
 		</tr>
 	</table>	
 

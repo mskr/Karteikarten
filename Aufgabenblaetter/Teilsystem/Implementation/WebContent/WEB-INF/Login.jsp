@@ -80,12 +80,12 @@
 		<table align="center">
 				<tr>
 					<td>
-						<input name="user_email" type="text" value="${param.eMail}" placeholder="eMail-Addresse" style="${eMailColor};">
+						<input name="user_email" type="text" value="${param.user_email}" placeholder="eMail-Addresse" style="${eMailColor};">
 					</td>				
 				</tr>
 				<tr>
 					<td>
-						<input id="pw" type="password" value="${param.pass}" placeholder="Passwort"	style="${passColor};">
+						<input id="pw" type="password" value="" placeholder="Passwort"	style="${passColor};">
 					</td>
 				</tr>
 		</table>
