@@ -14,13 +14,15 @@ public class DatenbankManager implements IDatenbankManager
 {	
 	protected Connection con = null;
 
-	public DatenbankManager() {
+	public DatenbankManager() throws SQLException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			con = getConnection();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	
 	}
 
 	public Connection getConnection() throws SQLException{
@@ -29,12 +31,10 @@ public class DatenbankManager implements IDatenbankManager
 
 	@Override
 	public boolean pruefeLogin(String eMail, String passwort) throws LoginFailedException {
-		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		boolean login_erfolgreich = false;
 		try{
-			con = getConnection();
 			ps = con.prepareStatement("SELECT * FROM benutzer WHERE eMail = ?");
 			ps.setString(1, eMail);
 			rs = ps.executeQuery();
@@ -57,7 +57,6 @@ public class DatenbankManager implements IDatenbankManager
 			e.printStackTrace();
 			System.out.println(e);
 		} finally{
-			closeQuietly(con);
 			closeQuietly(ps);
 			closeQuietly(rs);
 		}
@@ -67,12 +66,10 @@ public class DatenbankManager implements IDatenbankManager
 
 	@Override
 	public Benutzer holeBenutzer(String eMail) throws DbUserNotExistsException {
-		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Benutzer benutzer = null;
 		try{
-			con = getConnection();
 			ps = con.prepareStatement("SELECT b.ID,b.Vorname,b.Nachname,b.Matrikelnummer,s.Name,b.Kennwort,b.Nutzerstatus,"
 					+ "b.GruppeneinladungenErlauben,b.NotifyDiskussionen FROM benutzer AS b JOIN studiengang AS s ON "
 					+ "b.Studiengang_id = s.ID WHERE eMail = ?");
@@ -92,7 +89,6 @@ public class DatenbankManager implements IDatenbankManager
 			e.printStackTrace();
 			System.out.println(e);
 		} finally{
-			closeQuietly(con);
 			closeQuietly(ps);
 			closeQuietly(rs);
 		}
@@ -102,11 +98,9 @@ public class DatenbankManager implements IDatenbankManager
 
 	@Override
 	public void speichereBenutzer(Benutzer user) throws DbUserStoringException {
-		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try{
-			con = getConnection();
 			ps = con.prepareStatement("SELECT ID FROM studiengang WHERE Name = ?");
 			ps.setString(1, user.getStudiengang());
 			rs = ps.executeQuery();
@@ -138,7 +132,6 @@ public class DatenbankManager implements IDatenbankManager
 			e.printStackTrace();
 			System.out.println(e);
 		} finally{
-			closeQuietly(con);
 			closeQuietly(ps);
 			closeQuietly(rs);
 		}
@@ -146,11 +139,9 @@ public class DatenbankManager implements IDatenbankManager
 	
 	@Override
 	public void bearbeiteBenutzer(Benutzer user) throws DbUserStoringException{
-		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try{
-			con = getConnection();
 			ps = con.prepareStatement("SELECT ID FROM studiengang WHERE Name = ?");
 			ps.setString(1, user.getStudiengang());
 			rs = ps.executeQuery();
@@ -182,7 +173,6 @@ public class DatenbankManager implements IDatenbankManager
 			e.printStackTrace();
 			System.out.println(e);
 		} finally{
-			closeQuietly(con);
 			closeQuietly(ps);
 			closeQuietly(rs);
 		}
@@ -190,12 +180,10 @@ public class DatenbankManager implements IDatenbankManager
 
 	@Override
 	public ArrayList<String> holeStudiengaenge(){
-		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		ArrayList<String> studiengaenge = new ArrayList<String>();
 		try{
-			con = getConnection();
 			ps = con.prepareStatement("SELECT name FROM studiengang");
 			rs = ps.executeQuery();
 			while(rs.next())
@@ -206,7 +194,6 @@ public class DatenbankManager implements IDatenbankManager
 			e.printStackTrace();
 			System.out.println(e);
 		} finally{
-			closeQuietly(con);
 			closeQuietly(ps);
 			closeQuietly(rs);
 		}

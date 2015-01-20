@@ -222,29 +222,37 @@
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{getConnection(): Connection}\\ 
-	Beschreibung & \\ 
+	Beschreibung & Mit dieser Methode wird eine Verbindung zur Datenbank aufgebaut. Für alle Datenbankoperationen ist es eine Vorbedingung, dass eine Verbindung zur Datenbank existiert. \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{pruefeLogin(eMail:String, passwort:String): Boolean}\\ 
-	Beschreibung & \\ 
+	Beschreibung & \\ Es wird geprüft ob es in der Datenbank einen Benutzer mit der übergebenen eMail Adresse gibt. Als zweiter Schritt prüft die Methode, ob das Passwort zu diesem Benutzer passt. Wenn nicht wirft die Operation eine LoginFailedException. Die Exception bekommt als Parameter angegeben, ob die eMail oder das Passwort fehlerhaft ist. Sind die Benutzerdaten in Ordnung, dann gibt die Methode true zurück, ansonsten false.
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{holeBenutzer(eMail:String): Benutzer}\\ 
-	Beschreibung & \\ 
+	Beschreibung & \\ Vorbedingung: Benutzer in der Datenbank vorhanden. Die Operation liest aus der Datenbank den Benutzer mit der angegebenen eMail. Gibt es keinen passenden Benutzer in der Datenbank zu dieser eMail, dann wirft die Operation eine DbUserNotExistsException. Als Nachbedingung wird der Benutzer zurückgeliefert.
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{speichereBenutzer(user:Benutzer, overwriteExisting:Boolean): Boolean}\\ 
-	Beschreibung & \\ 
+	Operation &  \textbf{speichereBenutzer(user:Benutzer): Boolean}\\ 
+	Beschreibung & \\ Vorbedingung: Attribute des Benutzers sind alle korrekt. Beispielsweise dürfen Name und Vorname keine Leerstrings sein oder die eMail des Benutzers muss eindeutig sein. Außerdem muss der Studiengang des Benutzers in der Datenbanktabelle Studiengang vorhanden sein. Die Operation speichert den Benutzer in der Datenbank in der Tabelle Benutzer. Nachbedingung ist dass der Benutzer in der Datenbank gespeichert ist.
 	\hline 
+	
+	Operation &  \textbf{bearbeiteBenutzer(user:Benutzer)}\\ 
+	Beschreibung & \\ Vorbedingung: Benutzer ist in der Datenbank vorhanden, die Attribute des Benutzers sind alle korrekt und der Studiengang des Benutzers in der Datenbanktabelle Studiengang vorhanden sein. Die Operation ändert die Attribute des Benutzers in der Datenbank.
+	\hline 
+	
+	Operation &  \textbf{holeStudiengaenge(): List<String>}\\ 
+	Beschreibung & \\ Es gibt keine Vorbedingungen. Die Operation liest alle Studiengänge aus der Datenbank aus und gibt sie in einer Liste zurück.
+		\hline 
 \end{tabular} \\\\
 
 
