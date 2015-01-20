@@ -85,7 +85,7 @@
 		</tr>
 		<tr>
 			<td>Martikelnummer: * </td>
-			<td><input id="matNo" name="matNo" type="text" size="30" maxlength="30" value="${user.matrikelnummer}" style="${matrikelColor}"></td>
+			<td><input id="matNo" name="matNo" type="text" size="30" maxlength="30" value="${user.matrikelnummer}" style="${matrikelColor}" placeholder="48975"></td>
 		</tr>
 		<tr>
 			<td>Studiengang :</td>
@@ -106,7 +106,7 @@
 		</tr>
 		<tr>
 			<td>email-Adresse: * </td>
-			<td><input name="user_email" type="text" size="30" maxlength="40" placeholder="eMail-Addresse" value="${user.email}" style="${eMailColor}"></td>
+			<td><input name="user_email" type="text" size="30" maxlength="40" placeholder="max.mustermann@uni-ulm.de" value="${user.email}" style="${eMailColor}"></td>
 		</tr>
 		<tr>
 			<td>Passwort: * </td>

@@ -1,6 +1,7 @@
 package com.lise.ctrl;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 
 
 
@@ -36,7 +38,7 @@ import com.lise.util.LoginFailedException;
 public class Controller extends HttpServlet {
 
 	IBenutzerverwaltung benutzerverwaltung;
-	IDatenbankManager datenbankmanager;
+	IDatenbankManager datenbankmanager = null;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// URL-Namen für die Weiterleitung
@@ -86,9 +88,14 @@ public class Controller extends HttpServlet {
 	public Controller() {
 		super();
 		// DatenbankManager erzeugen
-		datenbankmanager = new DatenbankManager();
-		// Benutzerverwaltung erzeugen
-		benutzerverwaltung = new Benutzerverwaltung(datenbankmanager);
+		try {
+			datenbankmanager = new DatenbankManager();
+			// Benutzerverwaltung erzeugen
+			benutzerverwaltung = new Benutzerverwaltung(datenbankmanager);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	
@@ -116,6 +123,13 @@ public class Controller extends HttpServlet {
 	private void actionDispatcher(HttpServletRequest request, HttpServletResponse response, HttpSession session) 
 			throws ServletException, IOException
 	{
+		if(datenbankmanager == null){
+			request.setAttribute(errorParam, "Keine Datenbank-Verbindung bitte starten Sie die dazugehörige Datenbank!");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(loginURL);
+			dispatcher.forward(request,response);
+			return;
+		}
+		
 		// Was will der Benutzer tun?
 		String action = request.getParameter(actionParam);
 

@@ -20,10 +20,11 @@
 \tableofcontents
 
 
+
 \chapter{Datenbankentwurf}
 
 \section{Datebankdiagramm}
-\begin{figure}[h]
+\begin{figure}[!h]
 	\centering
 	\paragraph{Aufbau der Relationalen Datenbank}	\includegraphics[width=\textwidth]{Bilder/Datenbank/Datenbankentwurf.png}
 	\caption{Datenbankdiagramm}
@@ -49,7 +50,7 @@
 	FELD		    &  eMail : String\\ 
 	BESCHREIBUNG	&  Veranstaltungsbeschreibung\\
 	&  \\
-	FELD		    &  Studiengang : Enum\\ 
+	FELD		    &  Studiengang : Int\\ 
 	BESCHREIBUNG	&  Fremdschlüssel, Benutzer ist bestimmtem Studiengang zugeordnet. Dozenten sind hier keinem Studiengang zugeordnet. Referenziert auf Tabelle Studiengang\\ 
 	&  \\
 	FELD		    &  Kennwport : String\\ 
@@ -74,7 +75,7 @@
 	SCHLÜSSEL		&  ID : Integer\\ 
 	\hline
 	&  \\
-	FELD		    &  Studiengang : String\\ 
+	FELD		    &  Name : String\\ 
 	BESCHREIBUNG	&  Text der den Studiengang beschreibt.\\
 	\hline
 \end{tabular}\\\\
@@ -90,28 +91,28 @@
 \end{figure}
 
 \begin{figure}[h]
-\centering
-\includegraphics[width=\linewidth]{Bilder/Kommunikationsdiagramme/anmelden}
-\caption{Am System anmelden}
-\label{Am System anmelden}
+	\centering
+	\includegraphics[width=\linewidth]{Bilder/Kommunikationsdiagramme/anmelden}
+	\caption{Am System anmelden}
+	\label{Am System anmelden}
 \end{figure}
 
 \begin{figure}[h]
-\centering
-\includegraphics[width=\linewidth]{Bilder/Kommunikationsdiagramme/passwortAendern}
-\caption{Passwortänderung}
-\label{Passwortaenderung}
+	\centering
+	\includegraphics[width=\linewidth]{Bilder/Kommunikationsdiagramme/passwortAendern}
+	\caption{Passwortänderung}
+	\label{Passwortaenderung}
 \end{figure}
 
-\begin{landscape}
+%\begin{landscape}
 \section{Klassendiagramm}
 \begin{figure}[!h]
-\centering
-\includegraphics[width=\textwidth]{Bilder/Klassendiagramm/Klassendiagramm}
-\caption{Klassendiagramm mit Realisierungsklassen}
-\label{fig:Klassendiagramm}
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/Klassendiagramm/RealisierungsklassenKlassen.png}
+	\caption{Klassendiagramm mit Realisierungsklassen}
+	\label{fig:Klassendiagramm}
 \end{figure}
-\end{landscape}
+%\end{landscape}
 
 \section{Methodenbeschreibung}
 \subsection{Controller Methoden}
@@ -119,28 +120,28 @@
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{doGet(HttpServletRequest request, HttpServletResponse response)}\\ 
-	Beschreibung & Diese Methode nimmt einen Ankommenden Request entgegen und gibt ihn an die Methode "actinDispatcher" weiter. \\ 
+	Beschreibung & Diese Methode nimmt einen ankommenden Request entgegen und gibt ihn an die Methode \glqq actionDispatcher\grqq weiter. \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{actionDispatcher(HttpServletRequest request, HttpServletResponse response, HttpSession session)}\\ 
-	Beschreibung & Diese Methode verwaltet die Weiterleitung zu den jeweils verantwortlichen Methoden für die Verarbeitung der Anfragen oder sie leitet weiter zu den Dialogen. \\ 
+	Beschreibung & Diese Methode verwaltet die Weiterleitung zu den jeweils verantwortlichen Methoden für die Verarbeitung der Anfragen. Entsprechend zu der gewählten Action wird auf einen neuen Dialog weitergeleitet. \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{aenderePasswort(HttpServletRequest request, HttpServletResponse response, HttpSession session) }\\ 
-	Beschreibung & Diese Methode übernimmt die Verarbeitung der Passwort-Änderungs-Anfragen Sie liest die Parameter aus dem Request aus. Wenn diese richtig angegeben sind wird die Anfrage an die Benutzerverwaltung weitergegeben. Je nachdem ob dies erfolgreich war, wird dann auf die Seite weitergeleitet oder der Benutzer landet wieder beim gleichen Dialog, wenn ein Fehler auftrat.\\ 
+	Beschreibung & Diese Methode übernimmt die Verarbeitung der Passwort-Änderungs-Anfragen. Es werden die Parameter aus dem Request ausgelesen. Wenn die empfangenen Parameter  korrekt angegeben sind, wird die Anfrage an die Benutzerverwaltung weitergegeben. Je nachdem ob dies erfolgreich war, wird auf die Startseite weitergeleitet oder der Benutzer bekommt den gleichen Dialog nochmal angezeigt, wenn ein Fehler aufgetreten ist.\\ 
 	\hline 
 \end{tabular} \\\\
-	
+
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{login(HttpServletRequest request, HttpServletResponse response, HttpSession session)}\\ 
-	Beschreibung & Diese Methode übernimmt die Login-Anfragen. Sie liest die Parameter aus und leitet die Anfrage an die Benutzerverwaltung weiter. Es wird entweder auf die Startseite oder wieder die Loginseite weitergeleitet. \\ 
+	Beschreibung & Diese Methode übernimmt die Login-Anfragen. Sie liest die Parameter aus und leitet die Anfrage an die Benutzerverwaltung weiter. Es wird entweder auf die Startseite oder die Loginseite weitergeleitet. \\ 
 	\hline 
 \end{tabular} \\\\
 
@@ -192,14 +193,14 @@
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{registrieren(user:Benutzer): Boolean) }\\ 
-	Beschreibung & Ruft beim Datenbankmanager "speichereBenutzer" auf. Wenn user null ist wird eine NullPointerException geworfen. \\ 
+	Beschreibung & Ruft beim Datenbankmanager \glqq speichereBenutzer\grqq auf. Wenn user null ist wird eine NullPointerException geworfen. \\ 
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{passwortAendern(HttpSession session, altesPasswort:String, neuesPasswort:String): Boolean }\\ 
-	Beschreibung & Diese Methode ändert das Passwort für den aktuell angemeldeten Benutzer, indem es den aktuellen Benutzer mit "holeBenutzer" holt, das Passwort neu setzt und den Benutzer mit Hilfe des Datenbankmanagers mit "bearbeiteBenutzer" speichert.\\ 
+	Beschreibung & Diese Methode ändert das Passwort für den aktuell angemeldeten Benutzer, indem es den aktuellen Benutzer mit \glqq holeBenutzer\grqq holt, das Passwort neu setzt und den Benutzer mit Hilfe des Datenbankmanagers mit \glqq bearbeiteBenutzer\grqq speichert.\\ 
 	\hline 
 \end{tabular} \\\\
 
@@ -218,6 +219,8 @@
 \end{tabular} \\\\
 
 
+
+
 \subsection{Datenbankmanager  Methoden}
 \begin{tabular}{|lp{12cm}|}
 	\hline
@@ -229,57 +232,62 @@
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{pruefeLogin(eMail:String, passwort:String): Boolean}\\ 
-	Beschreibung & \\ Es wird geprüft ob es in der Datenbank einen Benutzer mit der übergebenen eMail Adresse gibt. Als zweiter Schritt prüft die Methode, ob das Passwort zu diesem Benutzer passt. Wenn nicht wirft die Operation eine LoginFailedException. Die Exception bekommt als Parameter angegeben, ob die eMail oder das Passwort fehlerhaft ist. Sind die Benutzerdaten in Ordnung, dann gibt die Methode true zurück, ansonsten false.
+	Beschreibung & Es wird geprüft ob es in der Datenbank einen Benutzer mit der übergebenen eMail Adresse gibt. Als zweiter Schritt prüft die Methode, ob das Passwort zu diesem Benutzer passt. Wenn nicht wirft die Operation eine LoginFailedException. Die Exception bekommt als Parameter angegeben, ob die eMail oder das Passwort fehlerhaft ist. Sind die Benutzerdaten in Ordnung, dann gibt die Methode true zurück, ansonsten false.\\
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{holeBenutzer(eMail:String): Benutzer}\\ 
-	Beschreibung & \\ Vorbedingung: Benutzer in der Datenbank vorhanden. Die Operation liest aus der Datenbank den Benutzer mit der angegebenen eMail. Gibt es keinen passenden Benutzer in der Datenbank zu dieser eMail, dann wirft die Operation eine DbUserNotExistsException. Als Nachbedingung wird der Benutzer zurückgeliefert.
+	Beschreibung & Vorbedingung: Benutzer in der Datenbank vorhanden. Die Operation liest aus der Datenbank den Benutzer mit der angegebenen eMail. Gibt es keinen passenden Benutzer in der Datenbank zu dieser eMail, dann wirft die Operation eine DbUserNotExistsException. Als Nachbedingung wird der Benutzer zurückgeliefert.\\
 	\hline 
 \end{tabular} \\\\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
 	Operation &  \textbf{speichereBenutzer(user:Benutzer): Boolean}\\ 
-	Beschreibung & \\ Vorbedingung: Attribute des Benutzers sind alle korrekt. Beispielsweise dürfen Name und Vorname keine Leerstrings sein oder die eMail des Benutzers muss eindeutig sein. Außerdem muss der Studiengang des Benutzers in der Datenbanktabelle Studiengang vorhanden sein. Die Operation speichert den Benutzer in der Datenbank in der Tabelle Benutzer. Nachbedingung ist dass der Benutzer in der Datenbank gespeichert ist.
+	Beschreibung & Vorbedingung: Attribute des Benutzers sind alle korrekt. Beispielsweise dürfen Name und Vorname keine Leerstrings sein oder die eMail des Benutzers muss eindeutig sein. Außerdem muss der Studiengang des Benutzers in der Datenbanktabelle Studiengang vorhanden sein. Die Operation speichert den Benutzer in der Datenbank in der Tabelle Benutzer. Nachbedingung ist dass der Benutzer in der Datenbank gespeichert ist.\\
 	\hline 
-	
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
 	Operation &  \textbf{bearbeiteBenutzer(user:Benutzer)}\\ 
-	Beschreibung & \\ Vorbedingung: Benutzer ist in der Datenbank vorhanden, die Attribute des Benutzers sind alle korrekt und der Studiengang des Benutzers in der Datenbanktabelle Studiengang vorhanden sein. Die Operation ändert die Attribute des Benutzers in der Datenbank.
+	Beschreibung & Vorbedingung: Benutzer ist in der Datenbank vorhanden, die Attribute des Benutzers sind alle korrekt und der Studiengang des Benutzers in der Datenbanktabelle Studiengang vorhanden sein. Die Operation ändert die Attribute des Benutzers in der Datenbank.\\
 	\hline 
 	
+\end{tabular} \\\\
+
+\begin{tabular}{|lp{12cm}|}
+	\hline
 	Operation &  \textbf{holeStudiengaenge(): List<String>}\\ 
-	Beschreibung & \\ Es gibt keine Vorbedingungen. Die Operation liest alle Studiengänge aus der Datenbank aus und gibt sie in einer Liste zurück.
+	Beschreibung & Es gibt keine Vorbedingungen. Die Operation liest alle Studiengänge aus der Datenbank aus und gibt sie in einer Liste zurück.\\
 		\hline 
 \end{tabular} \\\\
 
 
-\subsection{RegistrierenDialog  Methoden}
+\subsection{Dialoge}
+
+Da sämtliche Dialoge nur HTML-Asichten im JSP-Format sind besitzen diese lediglich eine Javascript Hashfunktion um die eingegebenen Passwörter zu verschlüsseln. \\
 
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{formularAnzeigen()}\\ 
-	Beschreibung & \\ 
+	Ansicht &  \textbf{Login-Dialog}\\ 
+	Beschreibung & In dieser Ansicht hat der Benutzer die Möglichkeit sich mit seiner gewählten eMail-Adresse und dem dazugehörigem Passwort anzumelden, sollte das Kennwort oder die eMail-Adresse falsch oder nicht existent sein werden diese farblich markiert und eine Fehlermeldung ausgegeben.\\ 
 	\hline 
 \end{tabular} \\\\
 
-\paragraph{LoginDialog  Methoden}\mbox{}\\
-
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{loginDialogAnzeigen()}\\ 
-	Beschreibung & \\ 
+	Ansicht &  \textbf{Registrieren-Dialog}\\
+	Beschreibung & In dieser Ansicht hat  der Benutzer die Möglichkeit sich am System zu registrieren. Hierbei müssen alle gekennzeichneten Pflichtfelder ausgefüllt werden. Sollte der Button  Registrierung abschließen betätigt wird der Benutzer wieder zum Login-Dialog geführt, sollten Fehler auftreten verbleibt der Benutzer auf dem Registrationsdialog.\\ 
 	\hline 
 \end{tabular} \\\\
 
-\subsection{ProfilBearbeitenDialog  Methoden}
-
 \begin{tabular}{|lp{12cm}|}
 	\hline
-	Operation &  \textbf{profilAnzeigen(user:Benutzer)}\\ 
-	Beschreibung & \\ 
+	Ansicht &  \textbf{Passwortänderungs-Dialog}\\ 
+	Beschreibung & In dieser Ansicht kann der Benutzer sein gewähltes Passwort ändern. Sollten die Angaben fehlerhaft sein werden diese durch Fehlermeldungen oder Pop-up-Meldungen kenntlich gemacht. Ist die Änderung erfolgreich gelangt der Benutzer zum Login-Dialog, oder der Benutzer kann die Passwortänderung mit dem Button abbrechen.\\ 
 	\hline 
 \end{tabular} \\\\
 
