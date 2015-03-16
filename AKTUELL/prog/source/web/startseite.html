@@ -16,7 +16,10 @@
 <link rel="stylesheet" href="fonts/ComputerModern/Sans/cmun-sans.css" type="text/css">
 <!-- JQuery -->
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<!-- Login Script -->
 <script src="JS/login.js"></script>
+<!-- Error Code Mapping Script -->
+<script src="JS/errorCodeMapper.js"></script>
 </head>
 <body>
 
@@ -25,20 +28,20 @@
 		<span class="mega-octicon octicon-three-bars" id="mypersonalbox_toggleicon"></span>
 	</div>
 	<h3>Start</h3>
-	<form action="hauptseite.html">
+	<form>
 		<input id="login_email" class="login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
 		<input id="login_pass" class="login_input pw" type="password" name="passwort" placeholder="Passwort" required>
-		<input id="login_submit" class="mybutton_dark loginbutton" type="submit" value="Login">
+		<input id="login_submit" class="mybutton_dark loginbutton" type="button" value="Login">
 	</form>
 	<a class="pwreset">Passwort zurücksetzen</a>
-	<form action="">
+	<form>
 		<p>
 		<input type="password" class="login_input" name="passwort_wdh" placeholder="Passwort wiederholen" required> <br>
 		<input type="text" class="login_input" name="vorname" placeholder="Vorname"> <br>
 		<input type="text" class="login_input" name="nachname" placeholder="Nachname"> <br>
 		<input type="text" class="login_input" name="matrikelnummer" placeholder="Matrikelnummer"> <br>
 		<input type="text" class="login_input" name="studiengang" placeholder="Studiengang"> <br>
-		<input type="submit" class="mybutton_dark_flat regbutton" value="Registrieren">
+		<input class="mybutton_dark_flat regbutton" type="button" value="Registrieren">
 		</p>
 	</form>
 </div>

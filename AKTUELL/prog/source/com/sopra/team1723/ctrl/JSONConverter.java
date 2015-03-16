@@ -8,15 +8,15 @@ public class JSONConverter
      * JSON-Feld-Werte
      */
     
-    static private final String jsonErrorTxt = "ERROR";
+    static private final String jsonErrorTxt = "error";
     // Alle bekannten Fehlertypen
-    static public final String jsonErrorNoError = "NOERROR";
-    static public final String jsonErrorNotLoggedIn = "NOTLOGGEDIN";
-    static public final String jsonErrorLoginFailed = "LOGINFAILED";
-    static public final String jsonErrorLogoutFailed = "LOGOUTFAILED";
-    static public final String jsonErrorRegisterFailed = "REGISTERFAILED";
-    static public final String jsonErrorPwResetFailed = "PWRESETFAILED";
-    static public final String jsonErrorInvalidParam = "INVALIDPARAM";
+    static public final String jsonErrorNoError = "noerror";
+    static public final String jsonErrorNotLoggedIn = "notloggedin";
+    static public final String jsonErrorLoginFailed = "loginfailed";
+    static public final String jsonErrorLogoutFailed = "logoutfailed";
+    static public final String jsonErrorRegisterFailed = "registerfailed";
+    static public final String jsonErrorPwResetFailed = "pwresetfailed";
+    static public final String jsonErrorInvalidParam = "invalidparam";
     
     
     /**
