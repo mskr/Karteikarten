@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 import javax.servlet.http.*;
 
-import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
+//import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 
 /**
