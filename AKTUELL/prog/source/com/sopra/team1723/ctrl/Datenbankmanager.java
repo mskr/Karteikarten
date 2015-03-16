@@ -26,7 +26,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     public Datenbankmanager() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
         conMysql = DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root","");
-        conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
+        //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
     }
     
     public void closeQuietly(Connection connection){
