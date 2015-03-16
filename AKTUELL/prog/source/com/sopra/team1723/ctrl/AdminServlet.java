@@ -8,7 +8,7 @@ import com.sopra.team1723.data.*;
  */
 public class AdminServlet extends ServletController {
 
-    /**
+    /**    
      * Steuert Administrator-Funktionalitäten
      */
     public AdminServlet() {
