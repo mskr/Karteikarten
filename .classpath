@@ -25,5 +25,5 @@
 	<classpathentry kind="lib" path="D:/xampp/tomcat/lib/tomcat-i18n-ja.jar"/>
 	<classpathentry kind="lib" path="D:/xampp/tomcat/lib/tomcat-jdbc.jar"/>
 	<classpathentry kind="lib" path="D:/xampp/tomcat/lib/tomcat-util.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="AKTUELL/prog/bin"/>
 </classpath>
