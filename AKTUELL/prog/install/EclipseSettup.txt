@@ -1,0 +1,13 @@
+1. EGit - Plugin installieren
+2. Repository clonen
+	- Klicken auf "Import", dann "projects from git", weiter
+	- "Clone URI" wählen, weiter
+	- URI, Passwort und Username eintragen, weiter
+	- "Import as General Project" anwählen, weiter
+	- Rechtsklick aufs Projekt und auf "Properties"
+	- Menüpunkt "Project Facets" auswählen
+	- "Convert to faceted from"
+	- Auf Menüpunkt "Java Build Path" wechseln
+	- Beim Tab "Source" alle fehlerhaft erkannten Source Ordner entfernen (Nur prog/source)
+	- Beim Tab "Libraires" die JRE anklicken
+	- Auf "Add External JARs" klicken zum Ordner "xampp\topmcat\lib" navigieren und alle JARs markieren und Enter Drücken.

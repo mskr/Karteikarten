@@ -5,12 +5,12 @@ import java.util.*;
 /**
  * 
  */
-public abstract class Karteikarten {
+public abstract class Karteikarte {
 
     /**
      * 
      */
-    public Karteikarten() {
+    public Karteikarte() {
     }
 
     /**

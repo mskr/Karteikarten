@@ -1,6 +1,7 @@
 package com.sopra.team1723.ctrl;
 
-import java.util.*;
+import javax.servlet.http.*;
+import com.sopra.team1723.data.*;
 
 /**
  * Verwaltet Kommentare

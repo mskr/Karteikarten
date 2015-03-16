@@ -5,12 +5,12 @@ import java.util.*;
 /**
  * 
  */
-public class Notizen {
+public class Notiz {
 
     /**
      * 
      */
-    public Notizen() {
+    public Notiz() {
     }
 
     /**

@@ -1,6 +1,8 @@
 package com.sopra.team1723.ctrl;
 
-import java.util.*;
+import javax.servlet.http.*;
+
+import com.sopra.team1723.data.*;
 
 /**
  * Interface zur Datenbank
@@ -63,7 +65,7 @@ public interface IDatenbankmanager {
      * @param neuesPasswort String 
      * @return
      */
-    public boolean passwortAendern(void eMail String, void neuesPasswort String);
+    public boolean passwortAendern(String eMail , String neuesPasswort );
 
     /**
      * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
@@ -126,7 +128,7 @@ public interface IDatenbankmanager {
      * @param Position 
      * @return
      */
-    public boolean schreibeKarteikarte(Karteikarte karteik, integer vaterKarteikID, integer Position);
+    public boolean schreibeKarteikarte(Karteikarte karteik, int vaterKarteikID, int Position);
 
     /**
      * @param karteik 

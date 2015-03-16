@@ -1,6 +1,9 @@
 package com.sopra.team1723.ctrl;
 
-import java.util.*;
+import javax.servlet.http.*;
+
+import com.sopra.team1723.ctrl.*;
+import com.sopra.team1723.data.*;
 
 /**
  * Steuert den Login-/Logout- und den Registrierungsvorgang. Außerdem steuert dieses Servlet den Reset des Passworts.

@@ -1,6 +1,7 @@
 package com.sopra.team1723.ctrl;
 
-import java.util.*;
+import javax.servlet.http.*;
+import com.sopra.team1723.data.*;
 
 /**
  * Verwaltet die Notizen
@@ -22,7 +23,7 @@ public class NotizServlet extends ServletController {
      * @param response HttpServletResponse 
      * @return
      */
-    private boolean notizErstellen(HttpServletRequest request, void response HttpServletResponse) {
+    private boolean notizErstellen(HttpServletRequest request, HttpServletResponse response ) {
         // TODO implement here
         return false;
     }
@@ -36,7 +37,7 @@ public class NotizServlet extends ServletController {
      * @param response HttpServletResponse 
      * @return
      */
-    private boolean notizAnzeigen(HttpServletRequest request, void response HttpServletResponse) {
+    private boolean notizAnzeigen(HttpServletRequest request, HttpServletResponse response ) {
         // TODO implement here
         return false;
     }
@@ -50,7 +51,7 @@ public class NotizServlet extends ServletController {
      * @param response HttpServletResponse 
      * @return
      */
-    private boolean notizBearbeiten(HttpServletRequest request, void response HttpServletResponse) {
+    private boolean notizBearbeiten(HttpServletRequest request, HttpServletResponse response ) {
         // TODO implement here
         return false;
     }
@@ -64,7 +65,7 @@ public class NotizServlet extends ServletController {
      * @param response HttpServletResponse 
      * @return
      */
-    private boolean notizLoeschen(HttpServletRequest request, void response HttpServletResponse) {
+    private boolean notizLoeschen(HttpServletRequest request, HttpServletResponse response ) {
         // TODO implement here
         return false;
     }
