@@ -4,8 +4,8 @@
 <meta charset="utf-8"/>
 <title>Startseite</title>
 
-<link rel="stylesheet" href="sopra.css" type="text/css">
-<link rel="stylesheet" href="mybuttonstyle.css" type="text/css">
+<link rel="stylesheet" href="CSS/sopra.css" type="text/css">
+<link rel="stylesheet" href="CSS/mybuttonstyle.css" type="text/css">
 <!-- Open Sans Schriftart (see http://www.google.com/fonts/specimen/Open+Sans) -->
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 <!-- GitHub Octicons -->
@@ -14,23 +14,9 @@
 <link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
 <!-- Computer Modern Sans -->
 <link rel="stylesheet" href="fonts/ComputerModern/Sans/cmun-sans.css" type="text/css">
-
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script>
-
-// $(document).ready( function() {
-// 	$('#mypersonalbox_toggle').click( function() {
-// 		if( $('#mypersonalbox').height()<100 ) {
-// 			$('#mypersonalbox').height('auto');
-// 			$('#mypersonalbox_toggleicon').removeClass('octicon octicon-triangle-down').addClass('octicon octicon-triangle-up');
-// 		} else {
-// 			$('#mypersonalbox').height(50);
-// 			$('#mypersonalbox_toggleicon').removeClass('octicon octicon-triangle-up').addClass('octicon octicon-triangle-down');
-// 		}
-// 	});
-// });
-</script>
-
+<!-- JQuery -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="JS/login.js"></script>
 </head>
 <body>
 
@@ -40,9 +26,9 @@
 	</div>
 	<h3>Start</h3>
 	<form action="hauptseite.html">
-		<input class="login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
-		<input class="login_input pw" type="password" name="passwort" placeholder="Passwort" required>
-		<input class="mybutton_dark loginbutton" type="submit" value="Login">
+		<input id="login_email" class="login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
+		<input id="login_pass" class="login_input pw" type="password" name="passwort" placeholder="Passwort" required>
+		<input id="login_submit" class="mybutton_dark loginbutton" type="submit" value="Login">
 	</form>
 	<a class="pwreset">Passwort zurücksetzen</a>
 	<form action="">
