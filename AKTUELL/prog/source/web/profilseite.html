@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Profilseite</title>
+<link rel="stylesheet" href="sopra.css" type="text/css">
+<link rel="stylesheet" href="mybuttonstyle.css" type="text/css">
+<!-- Open Sans (see http://www.google.com/fonts/specimen/Open+Sans) -->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<!-- Computer Modern Serif -->
+<link href='fonts/ComputerModern/Serif/cmun-serif.css' rel='stylesheet' type='text/css'>
+<!-- GitHub Octicons -->
+<link rel="stylesheet" href="octicons/octicons.css">
+<!-- MySopraIcons -->
+<link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
+</head>
+<body>
+
+<div class="mypersonalbox" id="mypersonalbox">
+<div class="mypersonalbox_toggle" id="mypersonalbox_toggle"><span class="octicon octicon-triangle-down" id="mypersonalbox_toggleicon"></span></div>
+<!-- Return Link erscheint nur auf der Veranstaltungseite -->
+<a class="return" data-tooltip="Zurück zu den Veranstaltungen" href="hauptseite.html"><span class="mega-octicon octicon-chevron-left"></span></a>
+<div class="user_container">
+<span class="mysopraicon sopra-usericon usericon"><br></span>
+<a href="" class="username" data-tooltip="zum Profil gehen">Marius Kircher</a>
+<br>
+<span class="rolle"><span class="octicon octicon-key"></span> Student</span>
+<a href="" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Abmelden</a>
+</div>
+<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
+<br>
+<ul class="meinevn">
+	<li><a class="vn_angepinnt">Analysis I</a></li>
+	<li><a class="vn_angepinnt">Algorithmen</a></li>
+	<li><a class="vn_angepinnt">Lineare Algebra</a></li>
+</ul>
+<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
+<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
+	<div class="bn neu">
+		<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
+	</div>
+	<div class="bn gelesen">
+		<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+	</div>
+	<div class="bn gelesen">
+		<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+	</div>
+	<div class="bn gelesen">
+		<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+	</div>
+	<div class="bn gelesen">
+		<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+	</div>
+</div>
+</div>
+
+<div class="mainbox" id="mainbox">
+	<div class="profil_head">
+		<span class="profil_avatar"><span class="mysopraicon sopra-usericon"></span></span>
+		<span class="profil_username"><strong>Marius Kircher</strong><br>Student</span>
+		<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
+	</div>
+	<div class="profil_body">
+		<div class="profil_daten">
+			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email" value="marius_kircher@uni-ulm.de"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password" value="123456"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text" value="Marius"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_nachname"><label for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" type="text" value="Kircher"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_matrikelnummer"><label for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" type="text" value="123456"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_studiengang"><label for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" type="text" value="Medieninformatik"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_rolle">
+				<label for="profil_rolle_input">Rolle</label>
+				<select id="profil_rolle_input">
+					<option>Student</option>
+					<option>Dozent</option>
+					<option>Administrator</option>
+				</select>
+			</span>
+		</div>
+		<div class="profil_buttons">
+			<span class="profil_speichern"><span class="mybutton_dark">Speichern</span></span>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

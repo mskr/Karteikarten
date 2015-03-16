@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Startseite</title>
+
+<link rel="stylesheet" href="sopra.css" type="text/css">
+<link rel="stylesheet" href="mybuttonstyle.css" type="text/css">
+<!-- Open Sans Schriftart (see http://www.google.com/fonts/specimen/Open+Sans) -->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<!-- GitHub Octicons -->
+<link rel="stylesheet" href="octicons/octicons.css">
+<!-- MySopraIcons -->
+<link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
+<!-- Computer Modern Sans -->
+<link rel="stylesheet" href="fonts/ComputerModern/Sans/cmun-sans.css" type="text/css">
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+
+// $(document).ready( function() {
+// 	$('#mypersonalbox_toggle').click( function() {
+// 		if( $('#mypersonalbox').height()<100 ) {
+// 			$('#mypersonalbox').height('auto');
+// 			$('#mypersonalbox_toggleicon').removeClass('octicon octicon-triangle-down').addClass('octicon octicon-triangle-up');
+// 		} else {
+// 			$('#mypersonalbox').height(50);
+// 			$('#mypersonalbox_toggleicon').removeClass('octicon octicon-triangle-up').addClass('octicon octicon-triangle-down');
+// 		}
+// 	});
+// });
+</script>
+
+</head>
+<body>
+
+<div class="mypersonalbox" id="mypersonalbox">
+	<div class="mypersonalbox_toggle" id="mypersonalbox_toggle">
+		<span class="mega-octicon octicon-three-bars" id="mypersonalbox_toggleicon"></span>
+	</div>
+	<h3>Start</h3>
+	<form action="hauptseite.html">
+		<input class="login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
+		<input class="login_input pw" type="password" name="passwort" placeholder="Passwort" required>
+		<input class="mybutton_dark loginbutton" type="submit" value="Login">
+	</form>
+	<a class="pwreset">Passwort zurücksetzen</a>
+	<form action="">
+		<p>
+		<input type="password" class="login_input" name="passwort_wdh" placeholder="Passwort wiederholen" required> <br>
+		<input type="text" class="login_input" name="vorname" placeholder="Vorname"> <br>
+		<input type="text" class="login_input" name="nachname" placeholder="Nachname"> <br>
+		<input type="text" class="login_input" name="matrikelnummer" placeholder="Matrikelnummer"> <br>
+		<input type="text" class="login_input" name="studiengang" placeholder="Studiengang"> <br>
+		<input type="submit" class="mybutton_dark_flat regbutton" value="Registrieren">
+		</p>
+	</form>
+</div>
+
+<!-- Hauptcontainer zeigt später z.B. Kurse, Karteikarten oder Profileinstellungen -->
+<div class="mainbox" id="mainbox">
+
+<!-- <span class="logo">StudyHub</span> -->
+
+<span class="mysopraicon sopra-sleepicon sleepicon"></span>
+</div>
+
+</body>
+</html>
