@@ -1,6 +1,10 @@
 package com.sopra.team1723.ctrl;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.*;
+
 import com.sopra.team1723.data.*;
 
 /**
@@ -28,5 +32,16 @@ public class AdminServlet extends ServletController {
         // TODO implement here
         return false;
     }
+    
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	// TODO Auto-generated method stub
+    	super.doGet(req, resp);
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	// TODO Auto-generated method stub
+    	super.doPost(req, resp);
+    }
 }

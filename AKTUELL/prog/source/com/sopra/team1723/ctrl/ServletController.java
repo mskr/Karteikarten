@@ -1,5 +1,9 @@
 package com.sopra.team1723.ctrl;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import com.sopra.team1723.data.*;
@@ -7,6 +11,7 @@ import com.sopra.team1723.data.*;
 /**
  * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
  */
+@WebServlet("/BenutzerServlet")
 public class ServletController extends HttpServlet {
 
     /**
@@ -43,5 +48,4 @@ public class ServletController extends HttpServlet {
         // TODO implement here
         return null;
     }
-
 }

@@ -1,7 +1,10 @@
 package com.sopra.team1723.ctrl;
 
 import java.io.File;
+import java.io.IOException;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import com.sopra.team1723.data.*;
@@ -9,6 +12,7 @@ import com.sopra.team1723.data.*;
 /**
  * Verwaltet die Karteikarten
  */
+@WebServlet("/BenutzerServlet")
 public class KarteikartenServlet extends ServletController {
 
     /**
@@ -109,6 +113,17 @@ public class KarteikartenServlet extends ServletController {
     private File exportiereKarteikarten(Karteikarte vater, String dateiname, boolean bilder, boolean notizen, boolean kommentare, boolean querverweise) {
         // TODO implement here
         return null;
+    }    
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	// TODO Auto-generated method stub
+    	super.doGet(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	// TODO Auto-generated method stub
+    	super.doPost(req, resp);
     }
 
 }

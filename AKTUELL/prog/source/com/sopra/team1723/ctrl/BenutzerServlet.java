@@ -1,5 +1,9 @@
 package com.sopra.team1723.ctrl;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import com.sopra.team1723.ctrl.*;
@@ -8,6 +12,7 @@ import com.sopra.team1723.data.*;
 /**
  * Steuert den Login-/Logout- und den Registrierungsvorgang. Außerdem steuert dieses Servlet den Reset des Passworts.
  */
+@WebServlet("/BenutzerServlet")
 public class BenutzerServlet extends HttpServlet {
 
     /**
@@ -107,6 +112,17 @@ public class BenutzerServlet extends HttpServlet {
     private boolean sendePasswortResetMail(String generiertesPW) {
         // TODO implement here
         return false;
+    }
+    
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	// TODO Auto-generated method stub
+    	super.doPost(req, resp);
     }
 
 }
