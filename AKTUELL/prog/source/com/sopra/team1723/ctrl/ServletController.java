@@ -55,8 +55,8 @@ public class ServletController extends HttpServlet
         }
         catch (Exception e)
         {
+            dbManager= null;
             System.err.println("Es Konnte keine Verbindung zur Datenbank hergestellt werden oder ein unerwarteter Fehler ist aufgetreten!");
-            throw e;
         }
     }
 
