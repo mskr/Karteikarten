@@ -28,6 +28,21 @@ public class Benutzer {
         this.notifyKarteikartenAenderung = notifyKarteikartenAenderung;
         this.notifyKommentare = notifyKommentare;
     }
+    
+    public Benutzer(String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
+            String kennwort)
+    {
+        this.eMail = eMail;
+        this.vorname = vorname;
+        this.nachname = nachname;
+        this.matrikelnummer = matrikelnummer;
+        this.studiengang = studiengang;
+        this.kennwort = kennwort;
+        this.nutzerstatus = Nutzerstatus.STUDENT;
+        this.notifyVeranstAenderung = false;
+        this.notifyKarteikartenAenderung = false;
+        this.notifyKommentare = NotifyKommentare.KEINE;
+    }
 
     /**
      * 

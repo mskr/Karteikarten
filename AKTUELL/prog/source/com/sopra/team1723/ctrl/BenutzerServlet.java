@@ -38,10 +38,10 @@ public class BenutzerServlet extends ServletController {
      */
     private boolean login(HttpServletRequest request, HttpServletResponse response) 
     {
-        String eMail = request.getParameter(requestEmail);
-        String pass = request.getParameter(requestPassword);
+        String email = request.getParameter(requestEmail);
+        String passwort = request.getParameter(requestPassword);
         
-        if(eMail == null || pass == null)
+        if(isEmpty(email) || isEmpty(passwort))
         {
             return false;
         }
@@ -50,9 +50,9 @@ public class BenutzerServlet extends ServletController {
             return false;
         
         // Zugangsdaten richtig?
-        if(dbManager.pruefeLogin(eMail, pass))
+        if(dbManager.pruefeLogin(email, passwort))
         {
-            aktuelleSession.setAttribute(sessionAttributeEMail, eMail);
+            aktuelleSession.setAttribute(sessionAttributeEMail, email);
             return true;
         }
         
@@ -70,23 +70,49 @@ public class BenutzerServlet extends ServletController {
      * @return
      */
     private boolean logout(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+        // Schon ausgeloggt?
+        if(!pruefeLogin(aktuelleSession))
+            return true;
+        
+        // Session für ungültig erklären
+        aktuelleSession.invalidate();
+        
+         return true;
     }
 
     /**
      * Die Daten des Benutzers werden aus der Request gelesen. Diese
-     * werden gepruft und dann wird daraus ein Benutzerobjekt erschaffen.
+     * werden geprüuft und dann wird daraus ein Benutzerobjekt erschaffen.
      * Dieses wird an den Datenbankmanager weitergegeben, welcher
-     * dann den Benutzer in der DB anlegt. Gibt "trueuruck, wenn bei
-     * diesem Ablauf keine Fehler auftreten, und "false"bei Fehlern.
+     * dann den Benutzer in der DB anlegt. Gibt "true" zurüuck, wenn bei
+     * diesem Ablauf keine Fehler auftreten, und "false" bei Fehlern.
      * @param request 
      * @param response 
      * @return
      */
     private boolean registrieren(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+        
+        String email = request.getParameter(requestEmail);
+        String passwort = request.getParameter(requestPassword);
+        String vorname = request.getParameter(requestVorname);
+        String nachname = request.getParameter(requestNachname);
+        String studienGang = request.getParameter(requestStudiengang);
+        String martikelNrStr = request.getParameter(requestMatrikelNr);
+        
+        if(isEmpty(email) || isEmpty(passwort) || isEmpty(vorname)||isEmpty(nachname)
+                || isEmpty(studienGang) || isEmpty(martikelNrStr))
+            return false;
+        
+        int matrikelNr = Integer.valueOf(martikelNrStr);
+        
+        Benutzer nutzer = new Benutzer(email,
+                vorname,
+                nachname,
+                matrikelNr,
+                studienGang,
+                passwort);
+        
+        return dbManager.schreibeBenutzer(nutzer);
     }
 
     /**
@@ -134,7 +160,7 @@ public class BenutzerServlet extends ServletController {
         // Hole die vom client angefragte Aktion
         String action = req.getParameter(requestAction);
         
-        if(action == null)
+        if(isEmpty(action))
         {
             // Sende Nack mit ErrorText zurück
             JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
@@ -142,65 +168,63 @@ public class BenutzerServlet extends ServletController {
             return;
         }
         
+        System.out.println("Action: " + action);
+        
         // Anfrage weiterleiten an verantwortliche Funktion
+        JSONObject jo  = null;
+
+        System.out.println(JSONConverter.jsonErrorNoError);
+        
         if(action.equals(requestActionLogin))
         {
             if(login(req, resp))
             {
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
-                outWriter.print(jo);
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
             }
             else
             {
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
-                outWriter.print(jo);
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
             }
         }
         else if(action.equals(requestActionLogout))
         {
             if(logout(req, resp))
             {
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
-                outWriter.print(jo);
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
             }
             else
             {
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLogoutFailed);
-                outWriter.print(jo);
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLogoutFailed);
             }
         }
         else if(action.equals(requestActionRegister))
         {
             if(registrieren(req, resp))
             {
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
-                outWriter.print(jo);
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
             }
             else
             {
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorRegisterFailed);
-                outWriter.print(jo);
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorRegisterFailed);
             }
         }
         else if(action.equals(requestActionResetPasswort))
         {
             if(passwortReset(req, resp))
             {
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
-                outWriter.print(jo);
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
             }
             else
             {
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
-                outWriter.print(jo);
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
             }
         }
         else
         {
             // Sende Nack mit ErrorText zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
-            outWriter.print(jo);
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
         }
+        outWriter.print(jo);
         
     }
 

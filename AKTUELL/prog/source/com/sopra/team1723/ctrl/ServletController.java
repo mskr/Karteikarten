@@ -21,8 +21,6 @@ import com.sopra.team1723.data.*;
  * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
  * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
  */
-// Descriptor entfernen ?! Dann ist der Controller nichtmehr direkt aufrufbar
-@WebServlet("/ServletController")
 public class ServletController extends HttpServlet 
 {
     /**
@@ -42,6 +40,11 @@ public class ServletController extends HttpServlet
 
     protected final String requestEmail = "email";
     protected final String requestPassword = "pass";
+    protected final String requestVorname = "vorname";
+    protected final String requestNachname = "nachname";
+    protected final String requestMatrikelNr = "martikelNr";
+    protected final String requestStudiengang = "studienGang";
+    protected final String requestNutzerstatus = "nutzerStatus";
 
     /**
      * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
@@ -145,4 +148,16 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
         }
     }
+    
+    boolean isEmpty(String txt)
+    {
+        if(txt == null)
+            return true;
+        
+        if(txt.equals(""))
+            return true;
+        
+        return false;
+    }
+    
 }

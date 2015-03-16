@@ -17,7 +17,7 @@ public class JSONConverter
     static public final String jsonErrorRegisterFailed = "registerfailed";
     static public final String jsonErrorPwResetFailed = "pwresetfailed";
     static public final String jsonErrorInvalidParam = "invalidparam";
-    
+     
     
     /**
      * Einfache Bestätigung von Aktionen oder Error
