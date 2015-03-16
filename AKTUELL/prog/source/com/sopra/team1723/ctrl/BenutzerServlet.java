@@ -172,9 +172,7 @@ public class BenutzerServlet extends ServletController {
         
         // Anfrage weiterleiten an verantwortliche Funktion
         JSONObject jo  = null;
-
-        System.out.println(JSONConverter.jsonErrorNoError);
-        
+       
         if(action.equals(requestActionLogin))
         {
             if(login(req, resp))
