@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 import javax.servlet.http.*;
 
+import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 
 /**
@@ -28,7 +29,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         conMysql = DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root","");
         conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
     }
-    
+
     public void closeQuietly(Connection connection){
         if (null == connection) return;
         try {
@@ -94,20 +95,20 @@ public class Datenbankmanager implements IDatenbankmanager {
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try{
-                ps = conMysql.prepareStatement("INSERT INTO benutzer (Vorname,Nachname,Matrikelnummer,eMail,Studiengang,"
-                        + "Kennwort,Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung"
-                        + "notifyKarteikartenAenderung) VALUES(?,?,?,?,?,?,?,?,?,?)");
-                ps.setString(1, benutzer.getVorname());
-                ps.setString(2, benutzer.getNachname());
-                ps.setInt(3, benutzer.getMatrikelnummer());
-                ps.setString(4, benutzer.geteMail());
-                ps.setString(5, benutzer.getStudiengang());
-                ps.setString(6,benutzer.getKennwort());
-                ps.setString(7,String.valueOf(benutzer.getNutzerstatus()));
-                ps.setString(8, String.valueOf(benutzer.getNotifyKommentare()));
-                ps.setBoolean(9, benutzer.isNotifyVeranstAenderung());
-                ps.setBoolean(10, benutzer.isNotifyKarteikartenAenderung());
-            
+            ps = conMysql.prepareStatement("INSERT INTO benutzer (Vorname,Nachname,Matrikelnummer,eMail,Studiengang,"
+                    + "Kennwort,Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung"
+                    + "NotifyKarteikartenAenderung) VALUES(?,?,?,?,?,?,?,?,?,?)");
+            ps.setString(1, benutzer.getVorname());
+            ps.setString(2, benutzer.getNachname());
+            ps.setInt(3, benutzer.getMatrikelnummer());
+            ps.setString(4, benutzer.geteMail());
+            ps.setString(5, benutzer.getStudiengang());
+            ps.setString(6,benutzer.getKennwort());
+            ps.setString(7,String.valueOf(benutzer.getNutzerstatus()));
+            ps.setString(8, String.valueOf(benutzer.getNotifyKommentare()));
+            ps.setBoolean(9, benutzer.isNotifyVeranstAenderung());
+            ps.setBoolean(10, benutzer.isNotifyKarteikartenAenderung());
+
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
@@ -119,14 +120,48 @@ public class Datenbankmanager implements IDatenbankmanager {
 
     @Override
     public boolean bearbeiteBenutzer(Benutzer benutzer) {
-        // TODO Auto-generated method stub
-        return false;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conMysql.prepareStatement("UPDATE benutzer SET Vorname=?,Nachname=?,Matrikelnummer=?,Studiengang=?,Kennwort=?,"
+                    + "Nutzerstatus=?, NotifyKommentare=?, NotifyVeranstAenderung=?"
+                    + "NotifyKarteikartenAenderung=?  WHERE eMail = ?");
+            ps.setString(1, benutzer.getVorname());
+            ps.setString(2, benutzer.getNachname());
+            ps.setInt(3, benutzer.getMatrikelnummer());
+            ps.setString(4, benutzer.getStudiengang());
+            ps.setString(5,benutzer.getKennwort());
+            ps.setString(6,String.valueOf(benutzer.getNutzerstatus()));
+            ps.setString(7, String.valueOf(benutzer.getNotifyKommentare()));
+            ps.setBoolean(8, benutzer.isNotifyVeranstAenderung());
+            ps.setBoolean(9, benutzer.isNotifyKarteikartenAenderung());
+            ps.setString(10, benutzer.geteMail());
+
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+            System.out.println(e);
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+        return erfolgreich;
     }
 
     @Override
     public boolean loescheBenutzer(String eMail) {
-        // TODO Auto-generated method stub
-        return false;
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conMysql.prepareStatement("DELETE FROM benutzer WHERE eMail=?");
+            ps.setString(1, eMail);
+        } catch(SQLException e){
+            erfolgreich = false;
+        } finally{
+            closeQuietly(ps);
+        }
+        return erfolgreich;
     }
 
     @Override
