@@ -5,12 +5,5 @@
 	- "Clone URI" wählen, weiter
 	- URI, Passwort und Username eintragen, weiter
 	- "Import as General Project" anwählen, weiter
-	- Rechtsklick aufs Projekt und auf "Properties"
-	- Menüpunkt "Project Facets" auswählen
-	- "Convert to faceted from"
-	- Auf Menüpunkt "Java Build Path" wechseln
-	- Beim Tab "Source" alle fehlerhaft erkannten Source Ordner entfernen (Nur prog/source)
-	- OutputFolder ändern auf "AKTUELLES/proc/bin"
-	- Beim Tab "Libraires" die JRE anklicken
-	- Auf "Add External JARs" klicken zum Ordner "xampp\topmcat\lib" navigieren und alle JARs markieren und Enter Drücken.
-4. 
+4. Dynamic Web Project anlegen und nach folgender Anletung vorgehen: 
+   http://stackoverflow.com/questions/18492293/eclipse-and-external-src-and-web-content-folder-linking-or-mapping
