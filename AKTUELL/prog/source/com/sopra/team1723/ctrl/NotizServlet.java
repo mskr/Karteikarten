@@ -11,7 +11,7 @@ import com.sopra.team1723.data.*;
 /**
  * Verwaltet die Notizen
  */
-@WebServlet("/BenutzerServlet")
+@WebServlet("/NotizServlet")
 public class NotizServlet extends ServletController {
 
     /**

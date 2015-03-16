@@ -11,7 +11,7 @@ import com.sopra.team1723.data.*;
 /**
  * Verwaltet Kommentare
  */
-@WebServlet("/BenutzerServlet")
+@WebServlet("/KommentarServlet")
 public class KommentarServlet extends ServletController {
 
     /**

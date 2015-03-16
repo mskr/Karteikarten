@@ -11,7 +11,7 @@ import com.sopra.team1723.data.*;
 /**
  * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
  */
-@WebServlet("/BenutzerServlet")
+@WebServlet("/ServletController")
 public class ServletController extends HttpServlet {
 
     /**
