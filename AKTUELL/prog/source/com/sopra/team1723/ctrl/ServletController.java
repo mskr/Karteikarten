@@ -1,63 +1,148 @@
+/**
+ * @author Andreas
+ * 
+ */
+
+
 package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import org.json.simple.JSONObject;
+
 import com.sopra.team1723.data.*;
 
 /**
- * Abstrakte Oberklasse, die die Login-ÃœberprÃ¼fung Ã¼bernimmt und gegebenenfalls an das Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurÃ¼ckgibt.
+ * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
+ * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
  */
+// Descriptor entfernen ?! Dann ist der Controller nichtmehr direkt aufrufbar
 @WebServlet("/ServletController")
-public class ServletController extends HttpServlet {
+public class ServletController extends HttpServlet 
+{
+    /**
+     *  Session Attribute, die verwendet werden
+     */
+    protected final String sessionAttributeEMail = "eMail";
+    // TODO: Alle benutzer attribute speichern oder nur eMail? Was passiert wenn Benutzer geändert wird ?!
+    
+    /**
+     *  Request Parameter
+     */
+    protected final String requestAction = "action";
+    protected final String requestActionLogin = "login";
+    protected final String requestActionLogout = "logout";
+    protected final String requestActionRegister = "registrieren";
+    protected final String requestActionResetPasswort = "resetPasswort";
+
+    protected final String requestEmail = "email";
+    protected final String requestPassword = "pass";
 
     /**
-     * Abstrakte Oberklasse, die die Login-ÃœberprÃ¼fung Ã¼bernimmt und gegebenenfalls an das Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurÃ¼ckgibt.
+     * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
+     * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
      */
-    public ServletController() {
+    public ServletController() 
+    {
+        try
+        {
+            dbManager = new Datenbankmanager();
+        }
+        catch (Exception e)
+        {
+            System.err.println("Es Konnte keine Verbindung zur Datenbank hergestellt werden oder ein unerwarteter Fehler ist aufgetreten!");
+            throw e;
+        }
     }
 
     /**
      * Aktuell angemeldeter Benutzer. Null, falls Benutzer nicht angemeldet ist.
      */
-    protected Benutzer aktuellerBenutzer;
+    protected Benutzer aktuellerBenutzer = null;
 
     /**
      * 
      */
-    private IDatenbankmanager dbManager;
+    protected IDatenbankmanager dbManager = null;
+    
+    /**
+     *  Aktuelle Session.
+     */
+    protected HttpSession aktuelleSession = null;
+    /**
+     *  Print Writer über den Daten an den Client geschrieben werden können
+     */
+    protected PrintWriter outWriter = null;
+    
 
     /**
-     * PrÃ¼ft, ob die eMail-Adresse des Benutzers in der aktuellen Session vorhanden ist und ob der Benutzer somit eingeloggt ist.
+     * Prüft, ob die eMail-Adresse des Benutzers in der aktuellen Session vorhanden ist und ob der Benutzer somit eingeloggt ist.
      * @return
      */
-    private boolean pruefeLogin() {
-        // TODO implement here
-        return false;
+    protected boolean pruefeLogin(HttpSession session) 
+    {
+        if(dbManager == null)
+            return false;
+        
+        // Benutzer nicht eingeloggt?
+        if(session.getAttribute(sessionAttributeEMail) == null)
+            return false;
+        
+        // Attribut ist gesetzt, Benutzer muss eingeloggt sein
+        return true; 
     }
 
     /**
-     * liest das Benutzerobjekt aus der Session aus.
+     * liest das Benutzerobjekt aus der Datenbank aus.
      * @param session 
      * @return
      */
-    private Benutzer leseBenutzer(HttpSession session) {
-        // TODO implement here
-        return null;
+    private Benutzer leseBenutzer(HttpSession session) 
+    {
+        if(dbManager == null)
+            return null;
+        
+        String eMail = (String) session.getAttribute(sessionAttributeEMail);
+        
+        if(eMail == null)
+            return null;
+        
+        return dbManager.leseBenutzer(eMail);
     }
     
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	// TODO Auto-generated method stub
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    {
+    	doPost(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	// TODO Auto-generated method stub
+    /**
+     * Login Prüfen und  Benutzerobjet laden
+     */
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    {
+        // aktuelle Session holen
+        aktuelleSession = req.getSession();
+        outWriter = resp.getWriter();
+                
+        // Ist der Benutzer eingeloggt ?
+        if(pruefeLogin(aktuelleSession))
+        {
+            // Wenn ja, dann stelle allen Servlets den Benutzer zur Verfügung
+            aktuellerBenutzer = leseBenutzer(aktuelleSession);
+        }
+        // wenn nicht eingeloggt fehlermeldung zurückgeben an Aufrufer
+        else
+        {
+            // Sende Nack mit ErrorText zurück
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNotLoggedIn);
+            outWriter.print(jo);
+        }
     }
-    
 }

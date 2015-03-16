@@ -105,13 +105,11 @@ public class VeranstaltungServlet extends ServletController {
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	// TODO Auto-generated method stub
-
+        doPost(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	// TODO Auto-generated method stub
-
+    	super.doPost(req, resp);
     }
 }
