@@ -2,6 +2,7 @@ package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import org.jsoup.Jsoup;
 
 import com.sopra.team1723.ctrl.*;
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 
 /**
@@ -56,6 +58,14 @@ public class BenutzerServlet extends ServletController {
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
             outWriter.print(jo);
             return false;
+        }
+        
+        // Schon eingeloggt ?  Dann ist alles gut
+        if(pruefeLogin(aktuelleSession))
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+            outWriter.print(jo);
+            return true;
         }
         
         // Zugangsdaten richtig?
@@ -154,13 +164,23 @@ public class BenutzerServlet extends ServletController {
                 studienGang,
                 passwort);
         
-        if(!dbManager.schreibeBenutzer(nutzer))
+        
+        try
+        {
+            dbManager.schreibeBenutzer(nutzer);
+        }
+        catch (DbUniqueConstraintException e)
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorEmailAlreadyInUse);
+            outWriter.print(jo);
+            return false;
+        }
+        catch (SQLException e)
         {
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorRegisterFailed);
             outWriter.print(jo);
             return false;
         }
-        
         jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
         outWriter.print(jo);
         return true;
