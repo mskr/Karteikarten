@@ -12,13 +12,13 @@ import com.sopra.team1723.ctrl.*;
 import com.sopra.team1723.data.*;
 
 /**
- * Steuert den Login-/Logout- und den Registrierungsvorgang. Außerdem steuert dieses Servlet den Reset des Passworts.
+ * Steuert den Login-/Logout- und den Registrierungsvorgang. Ausserdem steuert dieses Servlet den Reset des Passworts.
  */
 @WebServlet("/BenutzerServlet")
 public class BenutzerServlet extends ServletController {
 
     /**
-     * Steuert den Login-/Logout- und den Registrierungsvorgang. Außerdem steuert dieses Servlet den Reset des Passworts.
+     * Steuert den Login-/Logout- und den Registrierungsvorgang. Ausserdem steuert dieses Servlet den Reset des Passworts.
      */
     public BenutzerServlet() {
     }
@@ -97,13 +97,19 @@ public class BenutzerServlet extends ServletController {
         String vorname = request.getParameter(requestVorname);
         String nachname = request.getParameter(requestNachname);
         String studienGang = request.getParameter(requestStudiengang);
-        String martikelNrStr = request.getParameter(requestMatrikelNr);
+        String matrikelNrStr = request.getParameter(requestMatrikelNr);
         
         if(isEmpty(email) || isEmpty(passwort) || isEmpty(vorname)||isEmpty(nachname)
-                || isEmpty(studienGang) || isEmpty(martikelNrStr))
+                || isEmpty(studienGang) || isEmpty(matrikelNrStr))
             return false;
         
-        int matrikelNr = Integer.valueOf(martikelNrStr);
+        // Hier fliegt die Exception wenn der Nutzer keine Zahl als Matrikelnummer eingibt.
+        int matrikelNr;
+        try {
+            matrikelNr = Integer.valueOf(matrikelNrStr);
+        } catch(NumberFormatException e) {
+            return false;
+        }
         
         Benutzer nutzer = new Benutzer(email,
                 vorname,
@@ -173,6 +179,9 @@ public class BenutzerServlet extends ServletController {
         // Anfrage weiterleiten an verantwortliche Funktion
         JSONObject jo  = null;
        
+
+//        System.out.println(JSONConverter.jsonErrorNoError);
+        
         if(action.equals(requestActionLogin))
         {
             if(login(req, resp))
