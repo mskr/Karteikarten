@@ -8,16 +8,20 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.*;
 
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.*;
 
 /**
  * Implementiert die Methoden des @ref IDatenbankmanager. Bietet eine Schnittstelle zur Datenbank.
  */
 public class Datenbankmanager implements IDatenbankmanager {
+    final int UNIQUE_CONSTRAINT_ERROR = 2525;
     private Connection conMysql = null;
     private Connection conNeo4j = null;
     /**
@@ -91,9 +95,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean schreibeBenutzer(Benutzer benutzer) {
+    public void schreibeBenutzer(Benutzer benutzer) throws DbUniqueConstraintException, SQLException{
         PreparedStatement ps = null;
-        boolean erfolgreich = true;
         try{
             ps = conMysql.prepareStatement("INSERT INTO benutzer (Vorname,Nachname,Matrikelnummer,eMail,Studiengang,"
                     + "Kennwort, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, "
@@ -109,16 +112,18 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setBoolean(9, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(10, benutzer.isNotifyKarteikartenAenderung());
             
-            if(ps.executeUpdate()!= 1)
-                return false;
+            ps.executeUpdate();
 
         } catch (SQLException e) {
-            erfolgreich = false;
             e.printStackTrace();
+            System.out.println(e);
+            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
+                throw new DbUniqueConstraintException();
+            else
+                throw e;
         } finally{
             closeQuietly(ps);
         }
-        return erfolgreich;
     }
 
     @Override
@@ -135,8 +140,8 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(3, benutzer.getMatrikelnummer());
             ps.setString(4, benutzer.getStudiengang());
             ps.setString(5,benutzer.getKennwort());
-            ps.setString(6,String.valueOf(benutzer.getNutzerstatus()));
-            ps.setString(7, String.valueOf(benutzer.getNotifyKommentare()));
+            ps.setString(6,benutzer.getNutzerstatus().name());
+            ps.setString(7, benutzer.getNotifyKommentare().name());
             ps.setBoolean(8, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(9, benutzer.isNotifyKarteikartenAenderung());
             ps.setString(10, benutzer.geteMail());    
@@ -197,6 +202,27 @@ public class Datenbankmanager implements IDatenbankmanager {
         return erfolgreich;
     }
 
+    @Override
+    public List<String> leseStudiengaenge(){
+        ArrayList<String> studiengaenge = new ArrayList<String>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            ps = conMysql.prepareStatement("SELECT Name FROM Studiengang");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                studiengaenge.add(rs.getString("Name"));
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+            System.out.println(e);
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+        return studiengaenge;
+    }
+    
     @Override
     public boolean passwortAendern(String eMail, String neuesPasswort) {
         // TODO Auto-generated method stub

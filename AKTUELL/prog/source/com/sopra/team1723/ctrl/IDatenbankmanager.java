@@ -1,8 +1,12 @@
 package com.sopra.team1723.ctrl;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import javax.servlet.http.*;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
  * Interface zur Datenbank
@@ -25,7 +29,7 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public boolean schreibeBenutzer(Benutzer benutzer);
+    public void schreibeBenutzer(Benutzer benutzer)  throws DbUniqueConstraintException, SQLException;
 
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet.
@@ -65,6 +69,9 @@ public interface IDatenbankmanager {
      * @param neuesPasswort String 
      * @return
      */
+    
+    public List<String> leseStudiengaenge();
+    
     public boolean passwortAendern(String eMail , String neuesPasswort );
 
     /**
