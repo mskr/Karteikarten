@@ -15,6 +15,6 @@ function buildMessage(errCode) {
         case "logoutfailed": return "Ihr Logout ist fehlgeschlagen.";
         case "registerfailed": return "Ihre Daten konnten nicht registriert werden. Bitte versuchen Sie es erneut.";
         case "pwresetfailed": return "Ihr Passwort konnte nicht zurueckgesetzt werden. Bitte versuchen Sie es erneut.";
-        case "invalidparam": return "Der Server hat falsche Parameter erhalten.";
+        case "invalidparam": return "Der Server hat ungueltige oder fehlende Parameter erhalten.";
     }
 }

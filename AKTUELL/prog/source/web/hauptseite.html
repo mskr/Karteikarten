@@ -33,29 +33,7 @@ $(document).ready( function() {
 		blur: false,
 		transition: 'all 0.3s'
 	});
-	
-	$('#bn-header').click( function() {
-		if( $('.bn_container').is(':hidden') ) {
-			$('.bn_container').slideDown('slow');
-// 			$('#bn-header').animate({
-// 				bottom: "210px",
-// 			}, 600);
-		} else {
-			$('.bn_container').slideUp('slow');
-// 			$('#bn-header').animate({	// Das fuehrt in der Smartphoneansicht
-// 				bottom: "5px",			// zu Problemen, da die Benachrichtigungen
-// 			}, 650);					// dann nicht mehr absolut am unteren Rand positioniert sind.
-		}
-	});
-	$('#mypersonalbox_toggle').click( function() {
-		if( $('#mypersonalbox').height()<100 ) {
-			$('#mypersonalbox').height('auto');
-			$('#mypersonalbox_toggleicon').attr('class','octicon octicon-triangle-up');
-		} else {
-			$('#mypersonalbox').height(50);
-			$('#mypersonalbox_toggleicon').attr('class','octicon octicon-triangle-down');
-		}
-	});
+
 	// Code fuer das Ausklappen der Veranstaltungs-Listenelemente
 	$('.vn_mehr_einbl').html('<span class="octicon octicon-three-bars"></span> Mehr');
 	$('.vn_mehr_einbl').click( function() {
@@ -83,7 +61,6 @@ $(document).ready( function() {
 <div class="msg success"></div>
 
 <div class="mypersonalbox" id="mypersonalbox">
-<div class="mypersonalbox_toggle" id="mypersonalbox_toggle"><span class="octicon octicon-triangle-down" id="mypersonalbox_toggleicon"></span></div>
 <div class="user_container">
 <span class="mysopraicon sopra-usericon usericon" id="usericon"><br></span>
 <a class="username" href="profilseite.html" data-tooltip="zum Profil gehen">Marius Kircher</a>
