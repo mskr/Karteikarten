@@ -12,6 +12,7 @@ import javax.mail.internet.*;
 import javax.activation.*;
 
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
 
 import com.sopra.team1723.ctrl.*;
 import com.sopra.team1723.data.*;
@@ -44,24 +45,32 @@ public class BenutzerServlet extends ServletController {
      */
     private boolean login(HttpServletRequest request, HttpServletResponse response) 
     {
+        JSONObject jo = null;
+        
         String email = request.getParameter(requestEmail);
         String passwort = request.getParameter(requestPassword);
         
-        if(isEmpty(email) || isEmpty(passwort))
+        
+        if(isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(passwort))
         {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
+            outWriter.print(jo);
             return false;
         }
-        
-        if(dbManager == null)
-            return false;
         
         // Zugangsdaten richtig?
-        if(dbManager.pruefeLogin(email, passwort))
+        if(!dbManager.pruefeLogin(email, passwort))
         {
-            aktuelleSession.setAttribute(sessionAttributeEMail, email);
-            return true;
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
+            outWriter.print(jo);
+            return false;
         }
-        return false;
+        
+        aktuelleSession.setAttribute(sessionAttributeEMail, email);
+
+        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+        outWriter.print(jo);
+        return true;
     }
 
     /**
@@ -73,14 +82,19 @@ public class BenutzerServlet extends ServletController {
      * @param response 
      * @return
      */
-    private boolean logout(HttpServletRequest request, HttpServletResponse response) {
-        // Schon ausgeloggt?
-        if(!pruefeLogin(aktuelleSession))
-            return true;
+    private boolean logout(HttpServletRequest request, HttpServletResponse response) 
+    {
+        JSONObject jo = null;
         
-        // Session für ungültig erklären
-        aktuelleSession.invalidate();
-        
+        // Noch eingeloggt?
+        if(pruefeLogin(aktuelleSession))
+        {
+            // Session für ungültig erklären
+            aktuelleSession.invalidate();
+        }
+
+        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+        outWriter.print(jo);
          return true;
     }
 
@@ -94,7 +108,9 @@ public class BenutzerServlet extends ServletController {
      * @param response 
      * @return
      */
-    private boolean registrieren(HttpServletRequest request, HttpServletResponse response) {
+    private boolean registrieren(HttpServletRequest request, HttpServletResponse response) 
+    {
+        JSONObject jo = null;
         
         String email = request.getParameter(requestEmail);
         String passwort = request.getParameter(requestPassword);
@@ -103,15 +119,31 @@ public class BenutzerServlet extends ServletController {
         String studienGang = request.getParameter(requestStudiengang);
         String matrikelNrStr = request.getParameter(requestMatrikelNr);
         
-        if(isEmpty(email) || isEmpty(passwort) || isEmpty(vorname)||isEmpty(nachname)
-                || isEmpty(studienGang) || isEmpty(matrikelNrStr))
+        if(isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(passwort) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
+                || isEmptyAndRemoveSpaces(studienGang) || isEmptyAndRemoveSpaces(matrikelNrStr))
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
             return false;
+        }
+        
+        // Remove HTML-Tags
+        email = Jsoup.parse(email).text();
+        //passwort = Jsoup.parse(passwort).text();
+        vorname = Jsoup.parse(vorname).text();
+        nachname = Jsoup.parse(nachname).text();
+        studienGang = Jsoup.parse(studienGang).text();
+        matrikelNrStr = Jsoup.parse(matrikelNrStr).text();
         
         // Hier fliegt die Exception wenn der Nutzer keine Zahl als Matrikelnummer eingibt.
         int matrikelNr;
         try {
             matrikelNr = Integer.valueOf(matrikelNrStr);
-        } catch(NumberFormatException e) {
+        } 
+        catch(NumberFormatException e) 
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
             return false;
         }
         
@@ -122,7 +154,16 @@ public class BenutzerServlet extends ServletController {
                 studienGang,
                 passwort);
         
-        return dbManager.schreibeBenutzer(nutzer);
+        if(!dbManager.schreibeBenutzer(nutzer))
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorRegisterFailed);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+        outWriter.print(jo);
+        return true;
     }
 
     /**
@@ -137,30 +178,47 @@ public class BenutzerServlet extends ServletController {
      */
     private boolean passwortReset(HttpServletRequest request, HttpServletResponse response) 
     {
+        JSONObject jo = null;
         String eMail = request.getParameter(requestEmail);
         // TODO Reicht uns wirklich die eMail-Adresse?!
         if(eMail == null)
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
             return false;
+        }
         
         // TODO
         String generiertesPW = "1234";
         
         Benutzer user = dbManager.leseBenutzer(eMail);
-        
-        // Neues Passwort setzen
-        user.setKennwort(generiertesPW);
+        String altesPasswort =  user.getKennwort();
         
         System.out.println("Update Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ") in der DB.");
         // In Datenbank speichern
-        if(!dbManager.bearbeiteBenutzer(user))
+        if(!dbManager.passwortAendern(eMail, generiertesPW))
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
+            outWriter.print(jo);
             return false;
+        }
 
         System.out.println("Sende Mail an Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ").");
         // Sende Bestätigungs-EMail
         if(!sendePasswortResetMail(user.geteMail(), generiertesPW))
+        {
+            // Änderung rückgängig machen
+            user.setKennwort(altesPasswort);
+            dbManager.bearbeiteBenutzer(user);
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
+            outWriter.print(jo);
             return false;
-        
+        }
+
+        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+        outWriter.print(jo);
         return true;
+
     }
 
     /**
@@ -225,25 +283,35 @@ public class BenutzerServlet extends ServletController {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    {
         doPost(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    {
         // TODO hier ist die einzige Ausnahme wo mann nicht die überschriebe Funktion aufruft.
         // super.doPost(req, resp);
-        
+       
         // aktuelle Session holen
         aktuelleSession = req.getSession();
         outWriter = resp.getWriter();
         
+        if(dbManager == null)
+        {
+            // Sende Error zurück
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            outWriter.print(jo);
+            return;
+        }
+        
         // Hole die vom client angefragte Aktion
         String action = req.getParameter(requestAction);
         
-        if(isEmpty(action))
+        if(isEmptyAndRemoveSpaces(action))
         {
-            // Sende Nack mit ErrorText zurück
+            // Sende Error zurück
             JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
@@ -251,61 +319,31 @@ public class BenutzerServlet extends ServletController {
         
         System.out.println("Action: " + action);
         
-        // Anfrage weiterleiten an verantwortliche Funktion
-        JSONObject jo  = null;
-               
+        // Anfrage weiterleiten an verantwortliche Funktion               
         if(action.equals(requestActionLogin))
         {
-            if(login(req, resp))
-            {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
-            }
-            else
-            {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
-            }
+            login(req, resp);
         }
         else if(action.equals(requestActionLogout))
         {
-            if(logout(req, resp))
-            {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
-            }
-            else
-            {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLogoutFailed);
-            }
+            logout(req, resp);
         }
         else if(action.equals(requestActionRegister))
         {
-            if(registrieren(req, resp))
-            {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
-            }
-            else
-            {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorRegisterFailed);
-            }
+            registrieren(req, resp);
         }
         else if(action.equals(requestActionResetPasswort))
         {
-            if(passwortReset(req, resp))
-            {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
-            }
-            else
-            {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
-            }
+            passwortReset(req, resp);
         }
         else
         {
             // Sende Nack mit ErrorText zurück
+            JSONObject jo  = null;
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            System.out.println("Antwort: " + jo.toJSONString());
+            outWriter.print(jo);
         }
-        System.out.println("Antwort: " + jo.toJSONString());
-        outWriter.print(jo);
-        
     }
 
 }
