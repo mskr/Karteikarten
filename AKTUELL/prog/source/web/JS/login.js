@@ -17,7 +17,13 @@ $(document).ready(function() {
                     window.location.href = "hauptseite.html";
                 } else {
                     $(".err").html(buildMessage(errCode));
-                    $(".err").show().fadeOut(5000);
+                    if( !$(".err").is(":visible") ) {
+                        $(".err").show().fadeOut(5000);
+                    } else {
+                        $(".err").stop();
+                        $(".err").css("opacity","1");
+                        $(".err").fadeOut(5000);
+                    }
                 }
             }
         });
