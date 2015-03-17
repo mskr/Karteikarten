@@ -1,15 +1,21 @@
 package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
 
 import org.json.simple.JSONObject;
 
 import com.sopra.team1723.ctrl.*;
 import com.sopra.team1723.data.*;
+
 
 /**
  * Steuert den Login-/Logout- und den Registrierungsvorgang. Ausserdem steuert dieses Servlet den Reset des Passworts.
@@ -122,31 +128,102 @@ public class BenutzerServlet extends ServletController {
     }
 
     /**
-     * Aus der ubergebenen Request werden die Parameter zum
-     * zurucksetzen des Passworts herausgelesen. Anschlieend wird ein
+     * Aus der übergebenen Request werden die Parameter zum
+     * zurücksetzen des Passworts herausgelesen. Anschließend wird ein
      * neues Passwort generiert. Dieses wird in die DB geschrieben. Gibt
-     * "trueuruck, wenn bei diesem Ablauf keine Fehler auftreten, und
-     * "false"bei Fehlern
+     * "true" zurück, wenn bei diesem Ablauf keine Fehler auftreten, und
+     * "false" bei Fehlern.
      * @param request 
      * @param response 
      * @return
      */
-    private boolean passwortReset(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+    private boolean passwortReset(HttpServletRequest request, HttpServletResponse response) 
+    {
+        String eMail = request.getParameter(requestEmail);
+        // TODO Reicht uns wirklich die eMail-Adresse?!
+        if(eMail == null)
+            return false;
+        
+        // TODO
+        String generiertesPW = "1234";
+        
+        Benutzer user = dbManager.leseBenutzer(eMail);
+        
+        // Neues Passwort setzen
+        user.setKennwort(generiertesPW);
+        
+        System.out.println("Update Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ") in der DB.");
+        // In Datenbank speichern
+        if(!dbManager.bearbeiteBenutzer(user))
+            return false;
+
+        System.out.println("Sende Mail an Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ").");
+        // Sende Bestätigungs-EMail
+        if(!sendePasswortResetMail(user.geteMail(), generiertesPW))
+            return false;
+        
+        return true;
     }
 
     /**
      * Das in passwortReset(rq, resp) generierte Passwort, wird an
-     * die Emailadresse des Benutzers, der sein Passwort zurucksetzen
-     * mochte, gesendet. Gibt "trueuruck, wenn bei diesem Ablauf keine
-     * Fehler auftreten, und "false"bei Fehlern.
+     * die Emailadresse des Benutzers, der sein Passwort zurücksetzen
+     * möchte, gesendet. Gibt "true" zurück, wenn bei diesem Ablauf keine
+     * Fehler auftreten, und "false" bei Fehlern.
      * @param generiertesPW 
      * @return
      */
-    private boolean sendePasswortResetMail(String generiertesPW) {
-        // TODO implement here
-        return false;
+    private boolean sendePasswortResetMail(String eMail, String generiertesPW) 
+    {
+        // Code von : http://www.tutorialspoint.com/java/java_sending_email.htm
+        
+        // Recipient's email ID needs to be mentioned.
+        String to = eMail;
+
+        // Sender's email ID needs to be mentioned
+        String from = "noreply@team1723.com";
+
+        // Assuming you are sending email from localhost
+        String host = "localhost";
+
+        // Get system properties
+        Properties properties = System.getProperties();
+
+        // Setup mail server
+        properties.setProperty("mail.smtp.host", host);
+
+        // Get the default Session object.
+        Session session = Session.getDefaultInstance(properties);
+
+        try{
+           // Create a default MimeMessage object.
+           MimeMessage message = new MimeMessage(session);
+
+           // Set From: header field of the header.
+           message.setFrom(new InternetAddress(from));
+
+           // Set To: header field of the header.
+           message.addRecipient(Message.RecipientType.TO,
+                                    new InternetAddress(to));
+
+           // Set Subject: header field
+           message.setSubject("Ihr Passwort wurde zurückgesetzt!");
+
+           // Send the actual HTML message, as big as you like
+           message.setText("<h1>Passwort-Reset</h1> <p> Ihr neues Passwort lautet: \"" + generiertesPW + "\"</p>",
+                              "text/html" );
+
+           // Send message
+           Transport.send(message);
+           System.out.println("Reset-eMail gesendet an "+ eMail);
+           
+        }catch (MessagingException mex) 
+        {
+           mex.printStackTrace();
+           System.err.println("Möglicherweise ist der Mail-Server aus oder Senden von localhost ist blockiert. (Mercury richtg konfigurieren.)");
+           return false;
+        }
+        return true;
     }
 
     @Override
@@ -178,10 +255,7 @@ public class BenutzerServlet extends ServletController {
         
         // Anfrage weiterleiten an verantwortliche Funktion
         JSONObject jo  = null;
-       
-
-//        System.out.println(JSONConverter.jsonErrorNoError);
-        
+               
         if(action.equals(requestActionLogin))
         {
             if(login(req, resp))

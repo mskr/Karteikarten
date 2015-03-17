@@ -96,7 +96,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         boolean erfolgreich = true;
         try{
             ps = conMysql.prepareStatement("INSERT INTO benutzer (Vorname,Nachname,Matrikelnummer,eMail,Studiengang,"
-                    + "Kennwort,Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung"
+                    + "Kennwort, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, "
                     + "NotifyKarteikartenAenderung) VALUES(?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, benutzer.getVorname());
             ps.setString(2, benutzer.getNachname());
@@ -104,10 +104,13 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(4, benutzer.geteMail());
             ps.setString(5, benutzer.getStudiengang());
             ps.setString(6,benutzer.getKennwort());
-            ps.setString(7,String.valueOf(benutzer.getNutzerstatus()));
-            ps.setString(8, String.valueOf(benutzer.getNotifyKommentare()));
+            ps.setString(7,benutzer.getNutzerstatus().name());
+            ps.setString(8, benutzer.getNotifyKommentare().name());
             ps.setBoolean(9, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(10, benutzer.isNotifyKarteikartenAenderung());
+            
+            if(ps.executeUpdate()!= 1)
+                return false;
 
         } catch (SQLException e) {
             erfolgreich = false;
@@ -136,7 +139,9 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(7, String.valueOf(benutzer.getNotifyKommentare()));
             ps.setBoolean(8, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(9, benutzer.isNotifyKarteikartenAenderung());
-            ps.setString(10, benutzer.geteMail());
+            ps.setString(10, benutzer.geteMail());    
+            if(ps.executeUpdate()!= 1)
+                return false;
 
         } catch (SQLException e) {
             erfolgreich = false;
@@ -155,7 +160,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         boolean erfolgreich = true;
         try{
             ps = conMysql.prepareStatement("DELETE FROM benutzer WHERE eMail=?");
-            ps.setString(1, eMail);
+            ps.setString(1, eMail);    
+            if(ps.executeUpdate()!= 1)
+                return false;
         } catch(SQLException e){
             erfolgreich = false;
         } finally{
