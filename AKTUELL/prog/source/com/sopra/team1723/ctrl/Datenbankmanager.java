@@ -170,6 +170,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         boolean erfolgreich = true;
         try{
+            System.out.println("DB prueft: email="+eMail+", passwort="+passwort);
             ps = conMysql.prepareStatement("SELECT * FROM benutzer WHERE eMail = ? AND Kennwort = ?");
             ps.setString(1, eMail);
             ps.setString(2, passwort);

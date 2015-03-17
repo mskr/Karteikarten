@@ -1,0 +1,50 @@
+/**
+ * @author mk
+ */
+
+$(document).ready(function() {
+    $("#registrieren_form").submit(function(event) {
+        // Textfelder auslesen
+        var email = $("#login_email").val();
+        var pass = $("#login_pass").val();
+        var passwdh = $("#reg_pass").val();
+        var vorname = $("#reg_vorname").val();
+        var nachname = $("#reg_nachname").val();
+        var matnr = $("#reg_matnr").val();
+        var studiengang = $("#reg_studiengang").val();
+        // Passwortwiederholung ueberpruefen
+        if(pass == passwdh) {
+            $.ajax({
+               type: "POST",
+               url: "BenutzerServlet",
+               data: "action=registrieren"
+                   +"&email="+email
+                   +"&pass="+pass
+                   +"&vorname="+vorname
+                   +"&nachname="+nachname
+                   +"&matrikelNr="+matnr
+                   +"&studienGang="+studiengang,
+               success: function(response) {
+                   var jsonObj = $.parseJSON(response);
+                   var errCode = jsonObj["error"];
+                   if(errCode == "noerror") {
+                       $(".success").html("Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.");
+                       $(".success").show().fadeOut(5000);
+                   } else {
+                       $(".err").html(buildMessage(errCode));
+                       $(".err").show().fadeOut(5000);
+                   }
+               }
+            });
+        } else {
+            // Falsche Passwortwiederholung
+            $("#reg_pass").focus();
+            $("#reg_pass").select();
+            $("#reg_pass").css("border","4px solid IndianRed");
+            $(".err").html("Ihre Passwortbestaetigung stimmt nicht mit dem Original ueberein. Bitte bestaetigen Sie es erneut.");
+            $(".err").show().fadeOut(5000);
+        }
+        // Verhindert das normale Absenden des Formulars
+        event.preventDefault();
+    });
+});

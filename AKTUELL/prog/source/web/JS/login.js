@@ -3,10 +3,9 @@
  */
 
 $(document).ready(function() {
-    $("#login_submit").click(function() {
+    $("#login_form").submit(function(event) {
         var email = $("#login_email").val();
         var pass = $("#login_pass").val();
-        alert("Email="+email+", PW="+pass); //Debug
         $.ajax({
             type: "POST",
             url: "BenutzerServlet",
@@ -14,14 +13,16 @@ $(document).ready(function() {
             success: function(response) {
                 var jsonObj = $.parseJSON(response);
                 var errCode = jsonObj["error"];
-                alert("errCode="+errCode); //Debug
                 if(errCode == "noerror") {
                     window.location.href = "hauptseite.html";
                 } else {
-                    alert(buildMessage(errCode));
+                    $(".err").html(buildMessage(errCode));
+                    $(".err").show().fadeOut(5000);
                 }
             }
         });
+        // Verhindert das normale Absenden des Formulars
+        event.preventDefault();
     });
 });
 
