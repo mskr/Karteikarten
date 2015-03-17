@@ -177,9 +177,10 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void pruefeLogin(String eMail, String passwort) throws DbLoginFailedException, SQLException{
+    public boolean pruefeLogin(String eMail, String passwort) {
         PreparedStatement ps = null;
         ResultSet rs = null;
+        boolean erfolgreich = true;
         try{
             System.out.println("DB prueft: email="+eMail+", passwort="+passwort);
             ps = conMysql.prepareStatement("SELECT * FROM benutzer WHERE eMail = ? AND Kennwort = ?");
@@ -187,17 +188,18 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(2, passwort);
             rs = ps.executeQuery();
             if(!rs.next())
-                throw new DbLoginFailedException();
+                erfolgreich = false;
 
         } catch (SQLException e) {
+            erfolgreich = false;
             e.printStackTrace();
             System.out.println(e);
-            throw e;
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
         }
 
+        return erfolgreich;
     }
 
     @Override
