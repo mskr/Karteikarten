@@ -21,6 +21,8 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!-- JQuery Popup Overlay -->
 <script src="http://vast-engineering.github.io/jquery-popup-overlay/jquery.popupoverlay.js"></script>
+<!-- Logout Script -->
+<script src="JS/logout.js"></script>
 <script>
 $(document).ready( function() {
 	
@@ -77,6 +79,9 @@ $(document).ready( function() {
 </head>
 <body>
 
+<div class="msg err"></div>
+<div class="msg success"></div>
+
 <div class="mypersonalbox" id="mypersonalbox">
 <div class="mypersonalbox_toggle" id="mypersonalbox_toggle"><span class="octicon octicon-triangle-down" id="mypersonalbox_toggleicon"></span></div>
 <div class="user_container">
@@ -84,7 +89,7 @@ $(document).ready( function() {
 <a class="username" href="profilseite.html" data-tooltip="zum Profil gehen">Marius Kircher</a>
 <br>
 <span class="rolle"><span class="octicon octicon-key"></span> Student</span>
-<a href="" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Abmelden</a>
+<a id="logout" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Abmelden</a>
 </div>
 <span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
 <br>
