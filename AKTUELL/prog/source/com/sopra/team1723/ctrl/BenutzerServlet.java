@@ -61,16 +61,14 @@ public class BenutzerServlet extends ServletController {
             aktuelleSession.setAttribute(sessionAttributeEMail, email);
             return true;
         }
-        
         return false;
-        
     }
 
     /**
-     * Loscht die ubergebene HttpSession via invalidate() und somit alle
-     * temporar server-seitig gespeicherten Daten und Parameter.Gibt
-     * "trueuruck, wenn bei diesem Ablauf keine Fehler auftreten, und
-     * "false"bei Fehlern.
+     * Läscht die übergebene HttpSession via invalidate() und somit alle
+     * temporär server-seitig gespeicherten Daten und Parameter. Gibt
+     * "true" zurück, wenn bei diesem Ablauf keine Fehler auftreten, und
+     * "false" bei Fehlern.
      * @param request 
      * @param response 
      * @return
@@ -305,6 +303,7 @@ public class BenutzerServlet extends ServletController {
             // Sende Nack mit ErrorText zurück
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
         }
+        System.out.println("Antwort: " + jo.toJSONString());
         outWriter.print(jo);
         
     }
