@@ -10,13 +10,14 @@ public class JSONConverter
     
     static private final String jsonErrorTxt = "error";
     // Alle bekannten Fehlertypen
-    static public final String jsonErrorNoError = "noerror";
-    static public final String jsonErrorNotLoggedIn = "notloggedin";
-    static public final String jsonErrorLoginFailed = "loginfailed";
-    static public final String jsonErrorLogoutFailed = "logoutfailed";
-    static public final String jsonErrorRegisterFailed = "registerfailed";
-    static public final String jsonErrorPwResetFailed = "pwresetfailed";
-    static public final String jsonErrorInvalidParam = "invalidparam";
+    static public final String jsonErrorNoError = "noerror";                        // Kein Fehler
+    static public final String jsonErrorSystemError = "systemerror";                // Ein Interner Fehler ist aufgetreten
+    static public final String jsonErrorInvalidParam = "invalidparam";              // Allgemeiner Fehler. Die Übergebene Parameter sind unbekannt oder es fehlen Parameter
+    static public final String jsonErrorNotLoggedIn = "notloggedin";                // Der Benutzer ist nicht eingeloggt und hat deshalb nicht die benötigen Rechte
+    static public final String jsonErrorLoginFailed = "loginfailed";                // Login ist fehlgeschlagen. Email existiert nicht oder Passwort ist falsch.  
+    static public final String jsonErrorRegisterFailed = "registerfailed";          // Allgemeiner Fehler beim Registreren
+    static public final String jsonErrorEmailAlreadyInUse = "emailalreadyinuse";    // Fehler beim Registieren. Email-Adresse schon vergeben
+    static public final String jsonErrorPwResetFailed = "pwresetfailed";            // Fehler beim Zurücksetzen des Passworts
      
     
     /**

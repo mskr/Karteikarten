@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
 
 import com.sopra.team1723.data.*;
 
@@ -77,6 +78,7 @@ public class ServletController extends HttpServlet
      *  Aktuelle Session.
      */
     protected HttpSession aktuelleSession = null;
+    
     /**
      *  Print Writer über den Daten an den Client geschrieben werden können
      */
@@ -106,10 +108,7 @@ public class ServletController extends HttpServlet
      * @return
      */
     private Benutzer leseBenutzer(HttpSession session) 
-    {
-        if(dbManager == null)
-            return null;
-        
+    {        
         String eMail = (String) session.getAttribute(sessionAttributeEMail);
         
         if(eMail == null)
@@ -133,6 +132,15 @@ public class ServletController extends HttpServlet
         // aktuelle Session holen
         aktuelleSession = req.getSession();
         outWriter = resp.getWriter();
+        
+        if(dbManager == null)
+        {
+            // Sende Error zurück
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            outWriter.print(jo);
+            return;
+        }
+        
                 
         // Ist der Benutzer eingeloggt ?
         if(pruefeLogin(aktuelleSession))
@@ -149,7 +157,7 @@ public class ServletController extends HttpServlet
         }
     }
     
-    boolean isEmpty(String txt)
+    boolean isEmptyAndRemoveSpaces(String txt)
     {
         if(txt == null)
             return true;
@@ -157,7 +165,9 @@ public class ServletController extends HttpServlet
         if(txt.equals(""))
             return true;
         
+        // Falls doch inhalt drin ist, trim alle leerzeichen/zeilen weg
+        txt.trim();
+        
         return false;
     }
-    
 }
