@@ -17,6 +17,7 @@ import org.jsoup.Jsoup;
 
 import com.sopra.team1723.ctrl.*;
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.DbLoginFailedException;
 import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 
@@ -69,9 +70,15 @@ public class BenutzerServlet extends ServletController {
         }
         
         // Zugangsdaten richtig?
-        if(!dbManager.pruefeLogin(email, passwort))
-        {
+        try {
+            dbManager.pruefeLogin(email, passwort);
+        }
+        catch(DbLoginFailedException e){
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
+            outWriter.print(jo);
+            return false;
+        } catch(SQLException e){
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorRegisterFailed);
             outWriter.print(jo);
             return false;
         }
