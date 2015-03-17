@@ -21,7 +21,7 @@ import com.sopra.team1723.exceptions.*;
  * Implementiert die Methoden des @ref IDatenbankmanager. Bietet eine Schnittstelle zur Datenbank.
  */
 public class Datenbankmanager implements IDatenbankmanager {
-    final int UNIQUE_CONSTRAINT_ERROR = 2525;
+    final int UNIQUE_CONSTRAINT_ERROR = 1062;
     private Connection conMysql = null;
     private Connection conNeo4j = null;
     /**
