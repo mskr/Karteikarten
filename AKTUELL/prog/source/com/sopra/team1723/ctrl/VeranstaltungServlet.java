@@ -106,5 +106,10 @@ public class VeranstaltungServlet extends ServletController {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	super.doPost(req, resp);
+        
+        // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
+        if(!doProcessing())
+            return;
+        
     }
 }

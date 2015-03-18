@@ -159,7 +159,8 @@ public class ServletController extends HttpServlet
         }
 
         aktuelleSession = req.getSession();
-        aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
+        if(aktuelleSession.isNew())
+            aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
 
         if(dbManager == null)
         {
@@ -204,12 +205,22 @@ public class ServletController extends HttpServlet
         doPorcessing = true;
         System.out.println("Action: " + aktuelleAction);
     }
-    
+    /**
+     * Gibt "True" zurück, wenn Aufruf von super.doPost(...) keinen Error an den Client zurückgegeben hat.
+     * Wenn dies der fall ist, dann sollte der Aufrufer eine Antwort an den Client schicken
+     * @return
+     */
     protected boolean doProcessing()
     {
         return doPorcessing;
     }
     
+    /**
+     * Diese Funktion prüft, ob der übergebene String leer ist und 
+     * ob entfernt automatisch alle Leerzeichen am Anfang und am Ende.
+     * @param txt
+     * @return
+     */
     boolean isEmptyAndRemoveSpaces(String txt)
     {
         if(txt == null)
