@@ -85,6 +85,11 @@ public class ServletController extends HttpServlet
      */
     protected PrintWriter outWriter = null;
     
+    /**
+     * Hier steht die vom ServletController ausgelesene Aktion, die der Client ausführen will.
+     */
+    protected String aktuelleAction = null;
+    
 
     /**
      * Prüft, ob die eMail-Adresse des Benutzers in der aktuellen Session vorhanden ist und ob der Benutzer somit eingeloggt ist.
@@ -141,8 +146,7 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
-        
-                
+
         // Ist der Benutzer eingeloggt ?
         if(pruefeLogin(aktuelleSession))
         {
@@ -155,6 +159,17 @@ public class ServletController extends HttpServlet
             // Sende Nack mit ErrorText zurück
             JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNotLoggedIn);
             outWriter.print(jo);
+        }
+        
+        // Hole die vom client angefragte Aktion
+        aktuelleAction = req.getParameter(requestAction);
+        
+        if(isEmptyAndRemoveSpaces(aktuelleAction))
+        {
+            // Sende Error zurück
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
         }
     }
     

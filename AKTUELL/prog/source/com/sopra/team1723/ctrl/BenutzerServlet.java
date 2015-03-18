@@ -365,14 +365,12 @@ public class BenutzerServlet extends ServletController {
             //  4. Schicke dieses JSON Objekt an den Client.
             if(pruefeLogin(aktuelleSession))
             {
-                Object email = aktuelleSession.getAttribute(sessionAttributeEMail);
-                if(email instanceof String)
-                {
-                    Benutzer benutzer = dbManager.leseBenutzer((String)email);
-                    JSONObject jo = JSONConverter.toJsonBenutzer(benutzer);
-                    outWriter.print(jo);
-                    return;
-                }
+                String email = (String)aktuelleSession.getAttribute(sessionAttributeEMail);
+
+                Benutzer benutzer = dbManager.leseBenutzer(email);
+                JSONObject jo = JSONConverter.toJsonBenutzer(benutzer);
+                outWriter.print(jo);
+                return;
             }
             else
             {

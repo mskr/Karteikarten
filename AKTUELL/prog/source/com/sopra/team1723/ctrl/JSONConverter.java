@@ -11,8 +11,9 @@ public class JSONConverter
      */
     
     static private final String jsonErrorTxt = "error";
-    // Alle bekannten Fehlertypen
     static public final String jsonErrorNoError = "noerror";                        // Kein Fehler
+
+    // Alle bekannten Fehlertypen
     static public final String jsonErrorSystemError = "systemerror";                // Ein Interner Fehler ist aufgetreten
     static public final String jsonErrorInvalidParam = "invalidparam";              // Allgemeiner Fehler. Die Übergebene Parameter sind unbekannt oder es fehlen Parameter
     static public final String jsonErrorNotLoggedIn = "notloggedin";                // Der Benutzer ist nicht eingeloggt und hat deshalb nicht die benötigen Rechte
@@ -20,7 +21,15 @@ public class JSONConverter
     static public final String jsonErrorRegisterFailed = "registerfailed";          // Allgemeiner Fehler beim Registreren
     static public final String jsonErrorEmailAlreadyInUse = "emailalreadyinuse";    // Fehler beim Registieren. Email-Adresse schon vergeben
     static public final String jsonErrorPwResetFailed = "pwresetfailed";            // Fehler beim Zurücksetzen des Passworts
-     
+
+    // Benutzer 
+    static public final String jsonEmail = "email";
+    static public final String jsonVorname = "vorname";
+    static public final String jsonNachname = "nachname";
+    static public final String jsonMatrikelNr = "matrikelnr";
+    static public final String jsonNutzerstatus = "nutzerstatus";
+    static public final String jsonStudiengang = "studiengang";
+    static public final String jsonPasswort = "passwort";
     
     /**
      * Einfache Bestätigung von Aktionen oder Error
@@ -53,12 +62,12 @@ public class JSONConverter
         
         // TODO HashMap parametrisieren?
         jo.put(jsonErrorTxt, jsonErrorNoError);
-        jo.put("email", benutzer.geteMail());
-        jo.put("vorname", benutzer.getVorname());
-        jo.put("nachname", benutzer.getNachname());
-        jo.put("matrikelnr", new Integer(benutzer.getMatrikelnummer()).toString());
-        jo.put("nutzerstatus", benutzer.getNutzerstatus().toString());
-        jo.put("studiengang", benutzer.getStudiengang());
+        jo.put(jsonEmail, benutzer.geteMail());
+        jo.put(jsonVorname, benutzer.getVorname());
+        jo.put(jsonNachname, benutzer.getNachname());
+        jo.put(jsonMatrikelNr, new Integer(benutzer.getMatrikelnummer()).toString());
+        jo.put(jsonNutzerstatus, benutzer.getNutzerstatus().toString());
+        jo.put(jsonStudiengang, benutzer.getStudiengang());
         
         return jo;
     }
