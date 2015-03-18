@@ -27,6 +27,8 @@ public class ServletController extends HttpServlet
     protected final String sessionAttributeEMail = "eMail";
     // TODO: Alle benutzer attribute speichern oder nur eMail? Was passiert wenn Benutzer geändert wird ?!
     
+    protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
+    
     /**
      *  Request Parameter
      */
@@ -133,9 +135,38 @@ public class ServletController extends HttpServlet
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
-        // aktuelle Session holen
-        aktuelleSession = req.getSession();
+        // Alles zurücksetzen
+        aktuelleSession = null;
+        aktuellerBenutzer = null;
+        aktuelleAction = null;
+
         outWriter = resp.getWriter();
+        
+        // Prüfen ob session abgelaufen ist
+        if (req.getRequestedSessionId() != null
+                && !req.isRequestedSessionIdValid()) 
+        {
+            System.out.println("Session " + req.getRequestedSessionId() + " ist abgelaufen!");
+            // Session is expired
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSessionExpired);
+            outWriter.print(jo);
+            
+            // Neue Session erzeugen
+            aktuelleSession = req.getSession();
+            aktuelleSession.setMaxInactiveInterval(10);
+            return;
+        }
+        // Neue Session erstellen und Timeout setzen
+        else if(req.getSession(false) == null)
+        {
+            aktuelleSession = req.getSession();
+            aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
+        }
+        else
+        {
+            // aktuelle Session holen
+            aktuelleSession = req.getSession();
+        }
         
         if(dbManager == null)
         {
@@ -161,7 +192,6 @@ public class ServletController extends HttpServlet
         // wenn nicht eingeloggt fehlermeldung zurückgeben an Aufrufer
         else
         {
-            aktuellerBenutzer = null;
             // Sende Nack mit ErrorText zurück
             JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNotLoggedIn);
             outWriter.print(jo);

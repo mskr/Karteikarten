@@ -23,6 +23,7 @@ public class JSONConverter
     static public final String jsonErrorRegisterFailed = "registerfailed";          // Allgemeiner Fehler beim Registreren
     static public final String jsonErrorEmailAlreadyInUse = "emailalreadyinuse";    // Fehler beim Registieren. Email-Adresse schon vergeben
     static public final String jsonErrorPwResetFailed = "pwresetfailed";            // Fehler beim Zurücksetzen des Passworts
+    static public final String jsonErrorSessionExpired = "sessionexpired";          // Fehler beim Zurücksetzen des Passworts
 
     // Benutzer 
     static public final String jsonEmail = "email";
