@@ -1,5 +1,7 @@
 package com.sopra.team1723.ctrl;
 
+import java.util.List;
+
 import org.json.simple.*;
 
 import com.sopra.team1723.data.Benutzer;
@@ -31,6 +33,10 @@ public class JSONConverter
     static public final String jsonStudiengang = "studiengang";
     static public final String jsonPasswort = "passwort";
     
+    // ArrayResults
+    static public final String jsonArrResult = "arrResult";
+    
+    
     /**
      * Einfache Bestätigung von Aktionen oder Error
      * @param erroText 
@@ -40,7 +46,6 @@ public class JSONConverter
     {
         JSONObject jo = new JSONObject();
         
-        // TODO HashMap parametrisieren?
         jo.put(jsonErrorTxt, erroText);
        
         return jo;
@@ -60,14 +65,32 @@ public class JSONConverter
     {
         JSONObject jo = new JSONObject();
         
-        // TODO HashMap parametrisieren?
         jo.put(jsonErrorTxt, jsonErrorNoError);
         jo.put(jsonEmail, benutzer.geteMail());
         jo.put(jsonVorname, benutzer.getVorname());
         jo.put(jsonNachname, benutzer.getNachname());
         jo.put(jsonMatrikelNr, new Integer(benutzer.getMatrikelnummer()).toString());
-        jo.put(jsonNutzerstatus, benutzer.getNutzerstatus().toString());
+        jo.put(jsonNutzerstatus, benutzer.getNutzerstatus().name());
         jo.put(jsonStudiengang, benutzer.getStudiengang());
+        
+        return jo;
+    }
+    /**
+     * 
+     * @param strings
+     * @return JSONObject mit einer Liste von Strings
+     */
+    static JSONObject toJsonStrArray(List<String> strings) 
+    {
+        JSONObject jo = new JSONObject();
+        
+        jo.put(jsonErrorTxt, jsonErrorNoError);
+        JSONArray array = new JSONArray();
+        
+        for(String s: strings)
+            array.add(s);
+        
+        jo.put("jsonArrResult", array);
         
         return jo;
     }
