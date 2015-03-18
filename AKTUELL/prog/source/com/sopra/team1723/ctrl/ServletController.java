@@ -152,13 +152,22 @@ public class ServletController extends HttpServlet
         {
             // Wenn ja, dann stelle allen Servlets den Benutzer zur Verfügung
             aktuellerBenutzer = leseBenutzer(aktuelleSession);
+            if(aktuellerBenutzer == null)
+            {
+                // Sende Nack mit ErrorText zurück
+                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+                outWriter.print(jo);
+                return;
+            }
         }
         // wenn nicht eingeloggt fehlermeldung zurückgeben an Aufrufer
         else
         {
+            aktuellerBenutzer = null;
             // Sende Nack mit ErrorText zurück
             JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNotLoggedIn);
             outWriter.print(jo);
+            return;
         }
         
         // Hole die vom client angefragte Aktion
@@ -171,6 +180,11 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
+    }
+    
+    protected boolean doProcessing()
+    {
+        return aktuelleAction!=null && aktuellerBenutzer != null && outWriter != null && aktuelleSession!=null;
     }
     
     boolean isEmptyAndRemoveSpaces(String txt)

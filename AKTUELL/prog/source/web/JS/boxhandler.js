@@ -20,7 +20,7 @@ $(document).ready(function() {
 function getBenutzer() {
 	$.ajax({
         type: "POST",
-        url: "BenutzerServlet",
+        url: "ProfilServlet",
 		data: "action=getBenutzer",
 		success: function(response) {
             var jsonObj = $.parseJSON(response);

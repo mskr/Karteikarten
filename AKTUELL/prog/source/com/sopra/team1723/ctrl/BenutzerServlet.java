@@ -356,29 +356,6 @@ public class BenutzerServlet extends ServletController {
         {
             passwortReset(req, resp);
         }
-        else if(action.equals(requestActionGetBenutzer))
-        {
-            // Falls ein Benutzer eingeloggt ist:
-            //  1. Hole die Email aus der aktuellen Session.
-            //  2. Hole den Benutzer mit dieser Email aus der Datenbank.
-            //  3. Verpacke den Benutzer in ein JSON Objekt (ohne Passwort).
-            //  4. Schicke dieses JSON Objekt an den Client.
-            if(pruefeLogin(aktuelleSession))
-            {
-                String email = (String)aktuelleSession.getAttribute(sessionAttributeEMail);
-
-                Benutzer benutzer = dbManager.leseBenutzer(email);
-                JSONObject jo = JSONConverter.toJsonBenutzer(benutzer);
-                outWriter.print(jo);
-                return;
-            }
-            else
-            {
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNotLoggedIn);
-                outWriter.print(jo);
-                return;
-            }
-        }
         else
         {
             // Sende Nack mit ErrorText zurück
