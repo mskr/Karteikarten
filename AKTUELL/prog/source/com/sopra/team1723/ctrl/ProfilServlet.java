@@ -85,7 +85,6 @@ public class ProfilServlet extends ServletController {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	// TODO Auto-generated method stub
     	super.doPost(req, resp);
     	
     	// Ist beim ServletController schon eine Antowrt zurückgegeben worden?

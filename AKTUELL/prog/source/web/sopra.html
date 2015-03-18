@@ -24,6 +24,20 @@
 <link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
 <!-- JQuery -->
 <script src="JS/jquery-latest.min.js"></script>
+
+<script type="text/javascript">
+	$.ajaxSetup({
+		timeout: 1000,
+		error: function(xhr, status, err)
+		{ 
+		    //status === 'timeout' if it took too long.
+		    //handle that however you want.
+		    console.log(status,err); 
+		    alert("Error: " + status);
+		}
+	});
+</script>
+
 <!-- JQuery Popup Overlay -->
 <script src="JS/jquery.popupoverlay.js"></script>
 <!-- CKEditor Core -->
