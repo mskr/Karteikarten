@@ -62,7 +62,7 @@ public class JSONConverter
      * @param benutzer
      * @return JSONObject mit den Benutzerdaten
      */
-    static JSONObject toJsonBenutzer(Benutzer benutzer) 
+    static JSONObject toJson(Benutzer benutzer) 
     {
         JSONObject jo = new JSONObject();
         
@@ -81,7 +81,7 @@ public class JSONConverter
      * @param strings
      * @return JSONObject mit einer Liste von Strings
      */
-    static JSONObject toJsonStrArray(List<String> strings) 
+    static JSONObject toJson(List<String> strings) 
     {
         JSONObject jo = new JSONObject();
         

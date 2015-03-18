@@ -88,7 +88,7 @@ public class ProfilServlet extends ServletController {
     	
     	if(aktuelleAction.equals(requestActionGetBenutzer))
         {
-    	    JSONObject jo = JSONConverter.toJsonBenutzer(aktuellerBenutzer);
+    	    JSONObject jo = JSONConverter.toJson(aktuellerBenutzer);
     	    outWriter.print(jo);
     	    return;
         }

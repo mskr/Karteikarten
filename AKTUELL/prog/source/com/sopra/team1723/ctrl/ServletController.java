@@ -48,6 +48,8 @@ public class ServletController extends HttpServlet
     protected final String requestStudiengang = "studienGang";
     protected final String requestNutzerstatus = "nutzerStatus";
 
+    private boolean doPorcessing = false;
+    
     /**
      * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
      * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
@@ -135,11 +137,10 @@ public class ServletController extends HttpServlet
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
-        // Alles zurücksetzen
+        doPorcessing = false;
         aktuelleSession = null;
-        aktuellerBenutzer = null;
         aktuelleAction = null;
-
+        aktuellerBenutzer = null;
         outWriter = resp.getWriter();
         
         // Prüfen ob session abgelaufen ist
@@ -153,21 +154,13 @@ public class ServletController extends HttpServlet
             
             // Neue Session erzeugen
             aktuelleSession = req.getSession();
-            aktuelleSession.setMaxInactiveInterval(10);
+            aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
             return;
         }
-        // Neue Session erstellen und Timeout setzen
-        else if(req.getSession(false) == null)
-        {
-            aktuelleSession = req.getSession();
-            aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
-        }
-        else
-        {
-            // aktuelle Session holen
-            aktuelleSession = req.getSession();
-        }
-        
+
+        aktuelleSession = req.getSession();
+        aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
+
         if(dbManager == null)
         {
             // Sende Error zurück
@@ -208,11 +201,13 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
+        doPorcessing = true;
+        System.out.println("Action: " + aktuelleAction);
     }
     
     protected boolean doProcessing()
     {
-        return aktuelleAction!=null && aktuellerBenutzer != null && outWriter != null && aktuelleSession!=null;
+        return doPorcessing;
     }
     
     boolean isEmptyAndRemoveSpaces(String txt)

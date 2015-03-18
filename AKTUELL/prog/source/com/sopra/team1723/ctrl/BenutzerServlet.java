@@ -314,7 +314,7 @@ public class BenutzerServlet extends ServletController {
         List<String> list = dbManager.leseStudiengaenge();
         if(list != null)
         {
-            JSONObject jo = JSONConverter.toJsonStrArray(list);
+            JSONObject jo = JSONConverter.toJson(list);
             outWriter.print(jo);
             return true;
         }
