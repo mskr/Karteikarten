@@ -76,6 +76,10 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(1, eMail);
             rs = ps.executeQuery();
             if(rs.next()){
+                //TODO IllegalArgumentException bei Enum.valueOf!!
+                // Grund: In der Datenbank heissen die Rollen anders als im Nutzerstatus Enum
+                // Benutzer muss Student heissen...
+                System.out.println((rs.getString("Nutzerstatus"))); // Debug
                 benutzer = new Benutzer(eMail,rs.getString("Vorname"),rs.getString("Nachname"),
                         rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 

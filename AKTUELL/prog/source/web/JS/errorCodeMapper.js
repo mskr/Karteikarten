@@ -1,6 +1,6 @@
 /**
  * @author mk
- * @see Servlet
+ * @see JSONConverter.java
 */
 
 /*
@@ -10,11 +10,12 @@
 */
 function buildMessage(errCode) {
     switch(errCode) {
-        case "notloggedin": return "Bitte melden Sie sich erneut an.";
-        case "loginfailed": return "Dieser Eintrag wurde in der Datenbank nicht gefunden oder ein Serverfehler ist aufgetreten.";
-        case "logoutfailed": return "Ihr Logout ist fehlgeschlagen.";
-        case "registerfailed": return "Ihre Daten konnten nicht registriert werden. Bitte versuchen Sie es erneut.";
-        case "pwresetfailed": return "Ihr Passwort konnte nicht zurueckgesetzt werden. Bitte versuchen Sie es erneut.";
+        case "systemerror": return "Ein interner Serverfehler ist aufgetreten.";
         case "invalidparam": return "Der Server hat ungueltige oder fehlende Parameter erhalten.";
+        case "notloggedin": return "Sie sind nicht eingeloggt.";
+        case "loginfailed": return "Dieser Eintrag wurde in der Datenbank nicht gefunden oder die Datenbank ist nicht erreichbar.";
+        case "registerfailed": return "Ihre Daten konnten nicht registriert werden. Bitte versuchen Sie es erneut.";
+        case "emailalreadyinuse": return "Entschuldigung, diese E-Mail Adresse ist bereits vergeben.";
+        case "pwresetfailed": return "Ihr Passwort konnte nicht zurueckgesetzt werden. Bitte versuchen Sie es erneut.";
     }
 }

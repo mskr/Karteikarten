@@ -2,6 +2,8 @@ package com.sopra.team1723.ctrl;
 
 import org.json.simple.*;
 
+import com.sopra.team1723.data.Benutzer;
+
 public class JSONConverter
 {
     /**
@@ -32,6 +34,32 @@ public class JSONConverter
         // TODO HashMap parametrisieren?
         jo.put(jsonErrorTxt, erroText);
        
+        return jo;
+    }
+    
+    /**
+     * Verpackt die Daten eines Benutzer Objekts in
+     * ein JSON Objekt und gibt dieses zurueck.
+     * Das Passwort wird aus Sicherheitsgruenden 
+     * nicht in das JSON Objekt gepackt.
+     * Die Reihenfolge der Daten darf nicht veraendert werden,
+     * da der Benutzer beim Client sonst falsch gelesen wird!
+     * @param benutzer
+     * @return JSONObject mit den Benutzerdaten
+     */
+    static JSONObject toJsonBenutzer(Benutzer benutzer) 
+    {
+        JSONObject jo = new JSONObject();
+        
+        // TODO HashMap parametrisieren?
+        jo.put(jsonErrorTxt, jsonErrorNoError);
+        jo.put("email", benutzer.geteMail());
+        jo.put("vorname", benutzer.getVorname());
+        jo.put("nachname", benutzer.getNachname());
+        jo.put("matrikelnr", new Integer(benutzer.getMatrikelnummer()).toString());
+        jo.put("nutzerstatus", benutzer.getNutzerstatus().toString());
+        jo.put("studiengang", benutzer.getStudiengang());
+        
         return jo;
     }
 }

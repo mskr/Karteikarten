@@ -14,16 +14,13 @@ $(document).ready(function() {
                 var jsonObj = $.parseJSON(response);
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
-                    window.location.href = "hauptseite.html";
+                    $("#mypersonalbox_startseite").hide();
+                    $("#mainbox_startseite").hide();
+                    $("#mypersonalbox_hauptseite").show();
+                    $("#mainbox_hauptseite").show();
+                    message(1, "Willkommen :)");
                 } else {
-                    $(".err").html(buildMessage(errCode));
-                    if( !$(".err").is(":visible") ) {
-                        $(".err").show().fadeOut(5000);
-                    } else {
-                        $(".err").stop();
-                        $(".err").css("opacity","1");
-                        $(".err").fadeOut(5000);
-                    }
+                    message(0, buildMessage(errCode));
                 }
             }
         });

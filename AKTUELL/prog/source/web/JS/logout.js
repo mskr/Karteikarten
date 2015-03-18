@@ -12,9 +12,13 @@ $(document).ready(function() {
                 var jsonObj = $.parseJSON(response);
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
-                    window.location.href = "startseite.html";
+                    $("#mypersonalbox_hauptseite").hide();
+                    $("#mainbox_hauptseite").hide();
+                    $("#mypersonalbox_startseite").show();
+                    $("#mainbox_startseite").show();
+                    message(1, "Sie haben sich ausgeloggt.");
                 } else {
-                    $(".err").html(buildMessage(errCode));
+                    message(0, buildMessage(errCode));
                 }
             }
         });

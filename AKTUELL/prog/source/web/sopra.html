@@ -2,55 +2,318 @@
 <!-- vn = Veranstaltung -->
 <!-- bn = Benachrichtigung -->
 <!-- bt = Button -->
-<!-- komm = Kommentar -->
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>Veranstaltungseite</title>
+<title>Sopra</title>
+<!-- Main CSS -->
 <link rel="stylesheet" href="CSS/sopra.css" type="text/css">
+<!-- Button CSS -->
 <link rel="stylesheet" href="CSS/mybuttonstyle.css" type="text/css">
-<!-- Open Sans (see http://www.google.com/fonts/specimen/Open+Sans) -->
+<!-- Open Sans Schriftart (see http://www.google.com/fonts/specimen/Open+Sans) -->
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<!-- Computer Modern Sans -->
+<link rel="stylesheet" href="fonts/ComputerModern/Sans/cmun-sans.css" type="text/css">
 <!-- Computer Modern Serif -->
-<link href='fonts/ComputerModern/Serif/cmun-serif.css' rel='stylesheet' type='text/css'>
+<link rel='stylesheet' href='fonts/ComputerModern/Serif/cmun-serif.css' type='text/css'>
 <!-- GitHub Octicons -->
 <link rel="stylesheet" href="octicons/octicons.css">
 <!-- MySopraIcons -->
 <link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
+<!-- JQuery -->
+<script src="JS/jquery-latest.min.js"></script>
+<!-- JQuery Popup Overlay -->
+<script src="JS/jquery.popupoverlay.js"></script>
 <!-- CKEditor Core -->
 <script src="ckeditor/ckeditor.js"></script>
+<!-- CKEditor Config -->
+<script src="ckeditor/build-config.js"></script>
 <!-- CKEditor JQuery Adapter -->
 <script src="ckeditor/adapters/jquery.js"></script>
 <!-- CKEditor Code Snippet Syntax Highlighting CSS -->
 <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/zenburn.css" rel="stylesheet">
-<!-- CKEditor Config -->
-<script src="ckeditor/build-config.js"></script>
-<!-- JQuery -->
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<!-- JQuery Popup Overlay -->
-<script src="http://vast-engineering.github.io/jquery-popup-overlay/jquery.popupoverlay.js"></script>
+<!-- Error Code Mapping Script -->
+<script src="JS/errorCodeMapper.js"></script>
+<!-- Login Script -->
+<script src="JS/login.js"></script>
+<!-- Registrieren Script -->
+<script src="JS/registrieren.js"></script>
+<!-- Logout Script -->
+<script src="JS/logout.js"></script>
+<!-- Error Message Skript -->
+<script src="JS/errorMessageMaker.js"></script>
+<!-- Box Handler Skript -->
+<script src="JS/boxhandler.js"></script>
+</head>
+<body>
+
+<div class="msg err"></div>
+<div class="msg success"></div>
+
+<div id="mypersonalbox_startseite" class="mypersonalbox">
+	<div class="mypersonalbox_toggle" id="mypersonalbox_toggle">
+		<span class="mega-octicon octicon-three-bars" id="mypersonalbox_toggleicon"></span>
+	</div>
+	<h3>Start</h3>
+	<form id="login_form">
+		<input id="login_email" class="login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
+		<input id="login_pass" class="login_input pw" type="password" name="passwort" placeholder="Passwort" required>
+		<input id="login_submit" class="mybutton_dark loginbutton" type="submit" value="Login">
+	</form>
+	<a class="pwreset">Passwort zurücksetzen</a>
+	<form id="registrieren_form">
+		<p>
+		<input id="reg_pass" class="login_input" type="password" name="passwort_wdh" placeholder="Passwort wiederholen" required> <br>
+		<input id="reg_vorname" class="login_input" type="text" name="vorname" placeholder="Vorname" required> <br>
+		<input id="reg_nachname" class="login_input" type="text" name="nachname" placeholder="Nachname" required> <br>
+		<input id="reg_matnr" class="login_input" type="text" name="matrikelnummer" placeholder="Matrikelnummer" required> <br>
+		<input id="reg_studiengang" class="login_input" type="text" name="studiengang" placeholder="Studiengang" required> <br>
+		<input id="reg_submit" class="mybutton_dark_flat regbutton" type="submit" value="Registrieren">
+		</p>
+	</form>
+</div>
+
+<div id="mainbox_startseite" class="mainbox">
+	<span class="mysopraicon sopra-sleepicon sleepicon"></span>
+</div>
+
+<div id="mainbox_profilseite" class="mainbox">
+	<div class="profil_head">
+		<span class="profil_avatar"><span class="mysopraicon sopra-usericon"></span></span>
+		<span class="profil_username"><strong>Marius Kircher</strong><br>Student</span>
+		<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
+	</div>
+	<div class="profil_body">
+		<div class="profil_daten">
+			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email" value="marius_kircher@uni-ulm.de"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password" value="123456"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text" value="Marius"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_nachname"><label for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" type="text" value="Kircher"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_matrikelnummer"><label for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" type="text" value="123456"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_studiengang"><label for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" type="text" value="Medieninformatik"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_rolle">
+				<label for="profil_rolle_input">Rolle</label>
+				<select id="profil_rolle_input">
+					<option>Student</option>
+					<option>Dozent</option>
+					<option>Administrator</option>
+				</select>
+			</span>
+		</div>
+		<div class="profil_buttons">
+			<span class="profil_speichern"><span class="mybutton_dark">Speichern</span></span>
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).ready( function() {
+    // Code fuer das Veranstaltung erstellen Popup
+	$('#vn_erstellen_popup').popup({
+		openelement: '.vn_erstellen_bt',
+		closeelement: '.vn_popup_close',
+		focuselement: '#vn_titel_input',
+		blur: false,
+		transition: 'all 0.3s'
+	});
+	// Code fuer das Ausklappen der Veranstaltungs-Listenelemente
+	$('.vn_mehr_einbl').html('<span class="octicon octicon-three-bars"></span> Mehr');
+	$('.vn_mehr_einbl').click( function() {
+		var vnmehr_domelem = $(this).next().next().get(0);
+		console.log('DOM Element class:'+vnmehr_domelem.getAttribute('class'));
+		var vnmehr_jqueryobj = $(vnmehr_domelem);
+		console.log('JQuery Object class:'+vnmehr_jqueryobj.attr('class'));
+		if( vnmehr_jqueryobj.is(':hidden') ) {
+			console.log('War hidden... Rufe jetzt slideDown() auf...');
+			vnmehr_jqueryobj.slideDown();
+			$(this).html('<span class="octicon octicon-three-bars"></span> Weniger');
+		} else {
+			console.log('War nicht hidde... Rufe jetzt slideUp() auf');
+			vnmehr_jqueryobj.slideUp();
+			$(this).html('<span class="octicon octicon-three-bars"></span> Mehr');
+		}
+	});
+});
+</script>
+
+<div id="mypersonalbox_hauptseite" class="mypersonalbox">
+	<div class="user_container">
+		<span class="mysopraicon sopra-usericon usericon" id="usericon"><br></span>
+		<a class="username" href="profilseite.html" data-tooltip="zum Profil gehen">Marius Kircher</a>
+		<br>
+		<span class="rolle"><span class="octicon octicon-key"></span> Student</span>
+		<a id="logout" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Abmelden</a>
+	</div>
+	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
+	<br>
+	<ul class="meinevn">
+		<li><a href="veranstaltungseite.html" class="vn_angepinnt">Analysis I</a></li>
+		<li><a class="vn_angepinnt">Algorithmen</a></li>
+		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
+	</ul>
+	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
+	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
+		<div class="bn neu">
+			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+	</div>
+</div>
+
+<div id="mainbox_hauptseite" class="mainbox">
+	<!-- Trick: Suchfeld ist auf autofocus und required gesetzt. So kann der User sofort lostippen und per CSS wird das Feld hervorgehoben, wann etwas eingegeben wurde (denn das leere required-Field ist invalid). -->
+	<input class="suche_etwas" type="search" placeholder="Veranstaltungen und Personen finden..." required autofocus>
+	<span class="mybutton_green vn_erstellen_bt"><span class="octicon octicon-plus"></span> </span>
+	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
+	<div class="vn_container">
+		<div class="vn_tab meine_vn">
+			<input class="vn_tabradio" type="radio" id="tab-1" name="group1" checked>
+			<label for="tab-1">Meine</label>
+			<div class="vn_tabcontent">
+				<div class="vn_fktn_spez_wrapper"><a class="vn_fktn_spez" href=""><span class="octicon octicon-question"></span> Funktion</a></div>
+				<div class="vn">
+					<span class="vn_titel">Molekularbiologie I</span>
+					<span class="vn_details"><span class="vn_detail">Prof. Dr. Oberhuber</span><br><span class="vn_detail">60 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
+					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
+					<div class="vn_mehr_wrapper">
+						<span class="vn_mehr">Die Molekularbiologie befasst sich mit der Struktur, Biosynthese und Funktion von DNA und RNA auf molekularer Ebene und wie diese untereinander und mit Proteinen interagieren. Das Forschungsgebiet der Molekularbiologie überlappt dabei immer mehr mit weiteren Feldern der Biologie und Chemie, insbesondere der Genetik und der Biochemie. Die Grenzen zwischen diesen Fachbereichen sind dabei oft fließend. Der Name für dieses Fach wurde 1952 durch den englischen Physiker und Molekularbiologen William Astbury geprägt.</span>
+						<div class="vn_optionen">
+							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+						</div>
+					</div>
+				</div>
+				<div class="vn">
+					<span class="vn_titel">Algorithmen</span>
+					<span class="vn_details"><span class="vn_detail">Prof. Dr. Schöning</span><br><span class="vn_detail">40 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
+					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
+					<div class="vn_mehr_wrapper">
+						<span class="vn_mehr">Ein Algorithmus ist eine eindeutige Handlungsvorschrift zur Lösung eines Problems oder einer Klasse von Problemen. Algorithmen bestehen aus endlich vielen, wohldefinierten Einzelschritten.[1] Somit können sie zur Ausführung in einem Computerprogramm implementiert, aber auch in menschlicher Sprache formuliert werden. Bei der Problemlösung wird eine bestimmte Eingabe in eine bestimmte Ausgabe überführt.[2]</span>
+						<div class="vn_optionen">
+							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+						</div>
+					</div>
+				</div>
+				<div class="vn">
+					<span class="vn_titel">Lineare Algebra</span>
+					<span class="vn_details"><span class="vn_detail">Dr. Liebezeit</span><br><span class="vn_detail">30 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
+					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
+					<div class="vn_mehr_wrapper">
+						<span class="vn_mehr">Die lineare Algebra (auch Vektoralgebra) ist ein Teilgebiet der Mathematik, das sich mit Vektorräumen und linearen Abbildungen zwischen diesen beschäftigt. Dies schließt insbesondere auch die Betrachtung von linearen Gleichungssystemen und Matrizen mit ein. Vektorräume und deren lineare Abbildungen sind ein wichtiges Hilfsmittel in vielen Bereichen der Mathematik. Außerhalb der reinen Mathematik finden sich Anwendungen u. a. in den Naturwissenschaften, in der Informatik und in der Wirtschaftswissenschaft (z. B. in der Optimierung).Die lineare Algebra entstand aus zwei konkreten Anforderungen heraus: einerseits dem Lösen von linearen Gleichungssystemen, andererseits der rechnerischen Beschreibung geometrischer Objekte, der sogenannten analytischen Geometrie (daher bezeichnen manche Autoren lineare Algebra als lineare Geometrie).</span>
+						<div class="vn_optionen">
+							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="vn_tab studiengang_vn">
+			<input class="vn_tabradio" type="radio" id="tab-2" name="group1">
+			<label for="tab-2">Studiengang</label>
+			<div class="vn_tabcontent">
+				<div class="vn">
+					<span class="vn_titel">Algorithmen</span>
+					<span class="vn_details"><span class="vn_detail">Prof. Dr. Schöning</span><br><span class="vn_detail">30 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
+					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
+					<div class="vn_mehr_wrapper">
+						<span class="vn_mehr">Die lineare Algebra (auch Vektoralgebra) ist ein Teilgebiet der Mathematik, das sich mit Vektorräumen und linearen Abbildungen zwischen diesen beschäftigt. Dies schließt insbesondere auch die Betrachtung von linearen Gleichungssystemen und Matrizen mit ein. Vektorräume und deren lineare Abbildungen sind ein wichtiges Hilfsmittel in vielen Bereichen der Mathematik. Außerhalb der reinen Mathematik finden sich Anwendungen u. a. in den Naturwissenschaften, in der Informatik und in der Wirtschaftswissenschaft (z. B. in der Optimierung).Die lineare Algebra entstand aus zwei konkreten Anforderungen heraus: einerseits dem Lösen von linearen Gleichungssystemen, andererseits der rechnerischen Beschreibung geometrischer Objekte, der sogenannten analytischen Geometrie (daher bezeichnen manche Autoren lineare Algebra als lineare Geometrie).</span>
+						<div class="vn_optionen">
+							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+						</div>
+					</div>
+				</div>
+				<div class="vn">
+					<span class="vn_titel">Lineare Algebra</span>
+				</div>
+				<div class="vn">
+					<span class="vn_titel">Grundlagen Interaktiver Systeme</span>
+				</div>
+			</div>
+		</div>
+		<div class="vn_tab semester_vn">
+			<input class="vn_tabradio" type="radio" id="tab-3" name="group1">
+			<label for="tab-3">Semester</label>
+			<div class="vn_tabcontent">
+				<div class="vn">Algorithmen</div>
+			</div>
+		</div>
+		<div class="vn_tab alle_vn">
+			<input class="vn_tabradio" type="radio" id="tab-4" name="group1">
+			<label for="tab-4">Alle</label>
+			<div class="vn_tabcontent">
+				<div class="vn">Molekularbiologie I</div>
+				<div class="vn">Algorithmen</div>
+				<div class="vn">Lineare Algebra</div>
+				<div class="vn">Grundlagen Interaktiver Systeme</div>
+				<div class="vn">Grundlagen der Rechnernetze</div>
+				<div class="vn">Grundlagen der Betriebssysteme</div>
+				<div class="vn">English in Science and Technology I</div>
+				<div class="vn">Formale Grundlagen</div>
+				<div class="vn">Analysis I</div>
+				<div class="vn">Analysis II</div>
+				<div class="vn">Einführung in die Informatik</div>
+			</div>
+		</div>
+		<span class="mybutton_dark_flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span>
+	</div>
+	<div class="impressum">Uni Ulm <br> WiSe 14/15 <br> Informatik <br> Softwaregrundprojekt <br> Team 17: Andreas Rottach, Fabian Schilha, Matthias Englert <br> Team 23: Julius Friedrich, Lorenz Weiß, Marius Kircher</div>
+</div>
+
+<div id="vn_erstellen_popup">
+	<div class="vn_popup_titel">
+		<h3>Veranstaltung erstellen</h3>
+	</div>
+	<div class="vn_popup_close">
+		<span class="octicon octicon-x"></span>
+	</div>
+	<div class="vn_popup_form">
+		<input class="popup_input" id="vn_titel_input" type="text" placeholder="Titel">
+		<input class="popup_input" id="vn_studg_input" type="text" placeholder="Studiengang">
+		<select class="popup_select" id="vn_semester_select">
+			<option value="wise1415">Aktuelles Semester (WiSe 14/15)</option>
+			<option value="sose15">SoSe 15</option>
+			<option value="wise1516">WiSe 15/16</option>
+		</select>
+		<input class="popup_input" id="vn_mod_input" type="text" placeholder="Moderatoren">
+		<input class="popup_input" id="vn_mehr_input" type="text" placeholder="Beschreibung">
+		<div class="popup_spalte">
+			<span>Wer darf bearbeiten?</span>
+			<span><input id="vn_jeder_bearb" type="radio" name="wer_darf_bearb"><label for="vn_jeder_bearb">Jeder</label></span>
+			<span><input id="vn_mod_bearb" type="radio" name="wer_darf_bearb"><label for="vn_mod_bearb">Nur Moderatoren</label></span>
+			<span><input id="vn_keiner_bearb" type="radio" name="wer_darf_bearb" checked><label for="vn_keiner_bearb">Nur ich</label></span>
+		</div>
+		<div class="popup_spalte">
+			<span><input id="vn_komm_erlaubt" type="checkbox" checked><label for="vn_komm_erlaubt">Kommentare erlaubt</label></span>
+			<span><input id="vn_bew_erlaubt" type="checkbox" checked><label for="vn_bew_erlaubt">Bewertungen erlaubt</label></span>
+		</div>
+	</div>
+	<div class="vn_popup_foot">
+		<input class="mybutton_dark_flat popup_close" type="button" value="Abbrechen">
+		<input class="mybutton_green" type="submit" value="Erstellen">
+	</div>
+</div>
+
 <script>
 $(document).ready(function() {
-	
+    // Code fuer das Attribute Tooltip
  	$("#attr_popup").popup({
 			type: 'tooltip',
 			vertical: 'topedge',
 			horizontal: 'leftedge'
 	});
-	
 // 	CKEDITOR.config.irgendeinPlugin
-	
-// 	$('#mypersonalbox_toggle').click( function() {
-// 		if( $('#mypersonalbox').height()<100 ) {
-// 			$('#mypersonalbox').height('auto');
-// 			$('#mypersonalbox_toggleicon').attr('class','octicon octicon-triangle-up');
-// 		} else {
-// 			$('#mypersonalbox').height(50);
-// 			$('#mypersonalbox_toggleicon').attr('class','octicon octicon-triangle-down');
-// 		}
-// 	});
 	// Einklappen der Kommentarboxen
 	$('.kk_kommtoggle').html('Einklappen');
 	var height = 0;
@@ -72,10 +335,8 @@ $(document).ready(function() {
 	});
 });
 </script>
-</head>
-<body>
 
-<div class="mypersonalbox" id="mypersonalbox">
+<div id="mypersonalbox_veranstaltungseite" class="mypersonalbox">
 	<div class="mypersonalbox_toggle" id="mypersonalbox_toggle"><span class="octicon octicon-three-bars" id="mypersonalbox_toggleicon"></span></div>
 	<!-- Return Link erscheint nicht auf Hauptseite -->
 	<a class="return" data-tooltip="Zurück zu den Veranstaltungen" href="hauptseite.html"><span class="mega-octicon octicon-chevron-left"></span></a>
@@ -113,7 +374,7 @@ $(document).ready(function() {
 	</div>
 </div>
 
-<div class="mainbox" id="mainbox">
+<div id="mainbox_veranstaltungseite" class="mainbox">
 	<div class="kk_toolbar">
 		<div class="mybuttongroup filtern" grouplabel="Filter">
 			<input id="filter0" type="radio" name="group_filtern" checked>
@@ -429,8 +690,9 @@ $(document).ready(function() {
 
 <!-- Script fuer HTML5-Video-Player -->
 <script>
-(function() { // Stellt sicher, dass das Dokument geladen wurde, bevor das Script ausgefuehrt wird (wie JQuery document.ready)
-	
+// Dieses Skript muss ganz am Ende des Dokuments stehenn.
+// Stellt sicher, dass das Dokument geladen wurde, bevor das Script ausgefuehrt wird (wie JQuery document.ready)
+(function() {
 	var controls; // Enthaelt das video_controls-DIV der letzten Interaktion
 	var video; // Enthaelt das video Element der letzten Interaktion
 	var playPauseBtn; // Enthaelt den Play-Pause Button der letzten Interaktion
@@ -439,7 +701,6 @@ $(document).ready(function() {
 	var suchleiste;
 	var volRegler;
 	var volReglerValueTmp = 1.0; // Merke Lautstaerke vor dem Stummschalten, um sie wiederherstellen zu koennen.
-	
 	// Registriere fuer alle Play Buttons einen Eventlistener.
 	var playPauseBtns = document.getElementsByClassName("play_pause");
 	var playPauseClickCount = 0;
@@ -486,7 +747,6 @@ $(document).ready(function() {
 			++playPauseClickCount;
 		});
 	}
-	
 	// Registriere fuer alle Stumm Buttons einen Eventlistener.
 	var muteBtns = document.getElementsByClassName("stumm");
 	for(var i=0; i<muteBtns.length; ++i) {
@@ -507,7 +767,6 @@ $(document).ready(function() {
 			}
 		});
 	}
-	
 	// Registriere fuer alle Vollbild Buttons einen Eventlistener.
 	var fullscreenBtns = document.getElementsByClassName("vollbild");
 	for(var i=0; i<fullscreenBtns.length; ++i) {
@@ -524,7 +783,6 @@ $(document).ready(function() {
 			}
 		});
 	}
-	
 	// Registriere fuer alle Suchleisten einen Eventlistener.
 	var suchleisten = document.getElementsByClassName("suchleiste");
 	for(var i=0; i<suchleisten.length; ++i) {
@@ -550,7 +808,6 @@ $(document).ready(function() {
 			playPauseBtn.firstChild.setAttribute("class", "mega-octicon octicon-playback-pause");
 		});
 	}
-	
 	// Registriere fuer alle Lautstaerkeregler einen Eventlistener
 	var volReglerArray = document.getElementsByClassName("lautstaerke");
 	for(var i=0; i<volReglerArray.length; ++i) {
@@ -570,5 +827,6 @@ $(document).ready(function() {
 	
 })();
 </script>
+
 </body>
 </html>
