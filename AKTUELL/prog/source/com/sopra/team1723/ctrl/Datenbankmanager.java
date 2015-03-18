@@ -229,14 +229,62 @@ public class Datenbankmanager implements IDatenbankmanager {
     
     @Override
     public boolean passwortAendern(String eMail, String neuesPasswort) {
-        // TODO Auto-generated method stub
-        return false;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conMysql.prepareStatement("UPDATE benutzer SET Kennwort=? WHERE eMail=?");
+            ps.setString(1, neuesPasswort);
+            ps.setString(2, eMail);
+            if(ps.executeUpdate()!= 1)
+                return false;
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+            System.out.println(e);
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+        return erfolgreich;
     }
 
     @Override
     public Veranstaltung leseVeranstaltung(String veranstTitel) {
-        // TODO Auto-generated method stub
-        return null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Veranstaltung veranstaltung = null;
+        try{
+            ArrayList<String> moderatoren = new ArrayList<String>();
+            ps = conMysql.prepareStatement("SELECT m.Benutzer FROM veranstaltung AS v JOIN moderator AS m WHERE v.Titel=?");
+            ps.setString(1, veranstTitel);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                moderatoren.add(rs.getString("m.Benutzer"));
+            }
+            closeQuietly(ps);
+            closeQuietly(rs);
+            
+            ps = conMysql.prepareStatement("SELECT Beschreibung, Studiengang, Semester, Kennwort, BewertungenErlaubt,"
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, Benutzer FROM veranstaltung WHERE Titel = ?");
+            ps.setString(1, veranstTitel);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                veranstaltung = new Veranstaltung(veranstTitel,rs.getString("Beschreibung"),rs.getString("Studiengang"),
+                        rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
+                        moderatoren, rs.getBoolean("KommentareErlaubt"));
+            }
+        } catch (SQLException e) {
+            veranstaltung = null;
+            e.printStackTrace();
+            System.out.println(e);
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return veranstaltung;
     }
 
     @Override
