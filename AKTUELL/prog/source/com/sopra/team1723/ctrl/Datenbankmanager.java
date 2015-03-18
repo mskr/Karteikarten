@@ -79,17 +79,17 @@ public class Datenbankmanager implements IDatenbankmanager {
                 //TODO IllegalArgumentException bei Enum.valueOf!!
                 // Grund: In der Datenbank heissen die Rollen anders als im Nutzerstatus Enum
                 // Benutzer muss Student heissen...
-                System.out.println((rs.getString("Nutzerstatus"))); // Debug
+                // System.out.println((rs.getString("Nutzerstatus"))); // Debug
                 benutzer = new Benutzer(eMail,rs.getString("Vorname"),rs.getString("Nachname"),
                         rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
-                        NotifyKommentare.valueOf(rs.getString("NotifyDiskussionen")));
+                        NotifyKommentare.valueOf(rs.getString("NotifyKommentare")));
             }
         } catch (SQLException e) {
             benutzer = null;
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -120,7 +120,7 @@ public class Datenbankmanager implements IDatenbankmanager {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println(e);
+            
             if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
             else
@@ -155,7 +155,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -197,7 +197,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -219,7 +219,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             }
         } catch (SQLException e){
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -241,7 +241,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -278,7 +278,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             veranstaltung = null;
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
