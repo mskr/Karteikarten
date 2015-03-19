@@ -9,16 +9,14 @@ $(document).ready(function() {
         $.ajax({
             type: "POST",
             url: "BenutzerServlet",
-            data: "action=login"+"&email="+email+"&pass="+pass,
+            data: "action="+actionLogin+
+            	"&"+paramEmail+"="+email+
+            	"&"+paramPasswort+"="+pass,
             success: function(response) {
                 var jsonObj = $.parseJSON(response);
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
-                    $("#mypersonalbox_startseite").hide();
-                    $("#mainbox_startseite").hide();
-                    $("#mypersonalbox_hauptseite").show();
-                    $("#mainbox_hauptseite").show();
-                    message(1, "Willkommen :)");
+                    handle();
                 } else {
                     message(0, buildMessage(errCode));
                 }
