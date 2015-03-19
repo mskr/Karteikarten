@@ -24,20 +24,6 @@
 <link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
 <!-- JQuery -->
 <script src="JS/jquery-latest.min.js"></script>
-
-<script type="text/javascript">
-	$.ajaxSetup({
-		timeout: 1000,
-		error: function(xhr, status, err)
-		{ 
-		    //status === 'timeout' if it took too long.
-		    //handle that however you want.
-		    console.log(status,err); 
-		    alert("Error: " + status);
-		}
-	});
-</script>
-
 <!-- JQuery Popup Overlay -->
 <script src="JS/jquery.popupoverlay.js"></script>
 <!-- CKEditor Core -->
@@ -48,28 +34,45 @@
 <script src="ckeditor/adapters/jquery.js"></script>
 <!-- CKEditor Code Snippet Syntax Highlighting CSS -->
 <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/zenburn.css" rel="stylesheet">
+<!-- Ajax Setup Skript -->
+<script src="JS/ajaxSetup.js"></script>
 <!-- Error Code Mapping Script -->
 <script src="JS/errorCodeMapper.js"></script>
+<!-- Error Message Skript -->
+<script src="JS/errorMessageMaker.js"></script>
+<!-- Variablen fuer Action Kommandos und Parameter -->
+<script src="JS/actionDefines.js"></script>
 <!-- Login Script -->
 <script src="JS/login.js"></script>
 <!-- Registrieren Script -->
 <script src="JS/registrieren.js"></script>
 <!-- Logout Script -->
 <script src="JS/logout.js"></script>
-<!-- Error Message Skript -->
-<script src="JS/errorMessageMaker.js"></script>
 <!-- Box Handler Skript -->
 <script src="JS/boxhandler.js"></script>
+<!-- Startseite Skript -->
+<script src="JS/startseite.js"></script>
+<!-- mypersonalbox Skript -->
+<script src="JS/mypersonalbox.js"></script>
+<!-- Profilseite Skript -->
+<script src="JS/profilseite.js"></script>
+<!-- Initial alle Kind<div>s von <body> verbergen und Ladeanimation anzeigen -->
+<style>
+body > div {
+	display: none;
+}
+</style>
 </head>
+
 <body>
 
 <div class="msg err"></div>
 <div class="msg success"></div>
 
+<!-- <span id="mypersonalbox_laden"></span> -->
+<span id="mainbox_laden"></span>
+
 <div id="mypersonalbox_startseite" class="mypersonalbox">
-	<div class="mypersonalbox_toggle" id="mypersonalbox_toggle">
-		<span class="mega-octicon octicon-three-bars" id="mypersonalbox_toggleicon"></span>
-	</div>
 	<h3>Start</h3>
 	<form id="login_form">
 		<input id="login_email" class="login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
@@ -83,7 +86,7 @@
 		<input id="reg_vorname" class="login_input" type="text" name="vorname" placeholder="Vorname" required> <br>
 		<input id="reg_nachname" class="login_input" type="text" name="nachname" placeholder="Nachname" required> <br>
 		<input id="reg_matnr" class="login_input" type="text" name="matrikelnummer" placeholder="Matrikelnummer" required> <br>
-		<input id="reg_studiengang" class="login_input" type="text" name="studiengang" placeholder="Studiengang" required> <br>
+		<select id="reg_studiengang" class="login_select" form="registrieren_form" required></select> <br>
 		<input id="reg_submit" class="mybutton_dark_flat regbutton" type="submit" value="Registrieren">
 		</p>
 	</form>
@@ -91,6 +94,43 @@
 
 <div id="mainbox_startseite" class="mainbox">
 	<span class="mysopraicon sopra-sleepicon sleepicon"></span>
+</div>
+
+<div id="mypersonalbox_profilseite" class="mypersonalbox">
+	<!-- Return Link erscheint nicht auf Hauptseite -->
+	<a class="return" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
+	<div class="user_container">
+		<span class="mysopraicon sopra-usericon usericon"><br></span>
+		<a href="" class="username" data-tooltip="zum Profil gehen"></a>
+		<br>
+		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
+		<a href="" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
+	</div>
+	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
+	<br>
+	<ul class="meinevn">
+		<li><a class="vn_angepinnt">Analysis I</a></li>
+		<li><a class="vn_angepinnt">Algorithmen</a></li>
+		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
+	</ul>
+	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
+	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
+		<div class="bn neu">
+			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+	</div>
 </div>
 
 <div id="mainbox_profilseite" class="mainbox">
@@ -101,18 +141,19 @@
 	</div>
 	<div class="profil_body">
 		<div class="profil_daten">
-			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email" value="marius_kircher@uni-ulm.de"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password" value="123456"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text" value="Marius"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_nachname"><label for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" type="text" value="Kircher"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_matrikelnummer"><label for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" type="text" value="123456"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_studiengang"><label for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" type="text" value="Medieninformatik"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password"><span class="octicon octicon-pencil"></span></span>
+			<span class='profil_passwort_wdh' style="display:none"><label for='profil_passwort_wdh_input'>Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
+			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_nachname"><label for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_matrikelnummer"><label for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_studiengang"><label for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" type="text"><span class="octicon octicon-pencil"></span></span>
 			<span class="profil_rolle">
 				<label for="profil_rolle_input">Rolle</label>
 				<select id="profil_rolle_input">
-					<option>Student</option>
-					<option>Dozent</option>
-					<option>Administrator</option>
+					<option>STUDENT</option>
+					<option>DOZENT</option>
+					<option>ADMIN</option>
 				</select>
 			</span>
 		</div>
@@ -155,10 +196,10 @@ $(document).ready( function() {
 <div id="mypersonalbox_hauptseite" class="mypersonalbox">
 	<div class="user_container">
 		<span class="mysopraicon sopra-usericon usericon" id="usericon"><br></span>
-		<a class="username" href="profilseite.html" data-tooltip="zum Profil gehen">Marius Kircher</a>
+		<a class="username" data-tooltip="zum Profil gehen"></a>
 		<br>
-		<span class="rolle"><span class="octicon octicon-key"></span> Student</span>
-		<a id="logout" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Abmelden</a>
+		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
+		<a id="logout" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
 	</div>
 	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
 	<br>
@@ -189,7 +230,7 @@ $(document).ready( function() {
 
 <div id="mainbox_hauptseite" class="mainbox">
 	<!-- Trick: Suchfeld ist auf autofocus und required gesetzt. So kann der User sofort lostippen und per CSS wird das Feld hervorgehoben, wann etwas eingegeben wurde (denn das leere required-Field ist invalid). -->
-	<input class="suche_etwas" type="search" placeholder="Veranstaltungen und Personen finden..." required autofocus>
+	<input class="suche_etwas" type="search" placeholder="Veranstaltungen und Personen finden..." required>
 	<span class="mybutton_green vn_erstellen_bt"><span class="octicon octicon-plus"></span> </span>
 	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
 	<div class="vn_container">
@@ -351,15 +392,14 @@ $(document).ready(function() {
 </script>
 
 <div id="mypersonalbox_veranstaltungseite" class="mypersonalbox">
-	<div class="mypersonalbox_toggle" id="mypersonalbox_toggle"><span class="octicon octicon-three-bars" id="mypersonalbox_toggleicon"></span></div>
 	<!-- Return Link erscheint nicht auf Hauptseite -->
 	<a class="return" data-tooltip="Zurück zu den Veranstaltungen" href="hauptseite.html"><span class="mega-octicon octicon-chevron-left"></span></a>
 	<div class="user_container">
 		<span class="mysopraicon sopra-usericon usericon"><br></span>
 		<a href="" class="username" data-tooltip="zum Profil gehen">Marius Kircher</a>
 		<br>
-		<span class="rolle"><span class="octicon octicon-key"></span> Student</span>
-		<a href="" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Abmelden</a>
+		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
+		<a href="" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
 	</div>
 	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
 	<br>
@@ -622,7 +662,7 @@ $(document).ready(function() {
 		<div class="kk_notizen" contenteditable="true"></div>
 		<div class="kk inhalt_video">
 			<video class="kk_video">
-				<source src="video/TheQuotientRuleMadeEasier(mathbff).mp4" type="video/mp4">
+<!-- 				<source src="video/TheQuotientRuleMadeEasier(mathbff).mp4" type="video/mp4"> -->
 			</video>
 			<div class="video_controls"> <!-- Niemals die Reihenfolge der Childs aendern! -->
 				<a class="play_pause"><span class="mega-octicon octicon-playback-play"></span></a>
@@ -843,4 +883,5 @@ $(document).ready(function() {
 </script>
 
 </body>
+
 </html>

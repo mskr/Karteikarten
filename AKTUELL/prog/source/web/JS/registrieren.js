@@ -17,13 +17,13 @@ $(document).ready(function() {
             $.ajax({
                type: "POST",
                url: "BenutzerServlet",
-               data: "action=registrieren"
-                   +"&email="+email
-                   +"&pass="+pass
-                   +"&vorname="+vorname
-                   +"&nachname="+nachname
-                   +"&matrikelNr="+matnr
-                   +"&studienGang="+studiengang,
+               data: "action="+actionRegister
+                   +"&"+paramEmail+"="+email
+                   +"&"+paramPasswort+"="+pass
+                   +"&"+paramVorname+"="+vorname
+                   +"&"+paramNachname+"="+nachname
+                   +"&"+paramStudiengang+"="+studiengang
+                   +"&"+paramMatrikelNr+"="+matnr,
                success: function(response) {
                    var jsonObj = $.parseJSON(response);
                    var errCode = jsonObj["error"];

@@ -11,23 +11,18 @@
  * @param text ist die anzuzeigende Meldung.
  */
 function message(type, text) {
+	var elemClass;
     if(type == 0) {
-        $(".err").html(text);
-        if( !$(".err").is(":visible") ) {
-            $(".err").show().fadeOut(5000);
-        } else {
-            $(".err").stop();
-            $(".err").css("opacity","1");
-            $(".err").fadeOut(5000);
-        }
+    	elemClass = ".err";
     } else {
-        $(".success").html(text);
-        if( !$(".success").is(":visible") ) {
-            $(".success").show().fadeOut(5000);
-        } else {
-            $(".success").stop();
-            $(".success").css("opacity","1");
-            $(".success").fadeOut(5000);
-        }
+    	elemClass = ".success";
+    }
+    $(elemClass).html(text);
+    if( !$(elemClass).is(":visible") ) {
+        $(elemClass).show().fadeOut(5000);
+    } else {
+        $(elemClass).stop();
+        $(elemClass).css("opacity","1");
+        $(elemClass).fadeOut(5000);
     }
 }

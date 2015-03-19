@@ -57,8 +57,6 @@ public class JSONConverter
      * ein JSON Objekt und gibt dieses zurueck.
      * Das Passwort wird aus Sicherheitsgruenden 
      * nicht in das JSON Objekt gepackt.
-     * Die Reihenfolge der Daten darf nicht veraendert werden,
-     * da der Benutzer beim Client sonst falsch gelesen wird!
      * @param benutzer
      * @return JSONObject mit den Benutzerdaten
      */
