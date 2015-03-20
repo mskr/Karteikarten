@@ -1672,6 +1672,11 @@ h1 {
 	padding-left: 20px;
 } .profil_daten select:hover:disabled {
 	padding: 5px 10px;
+=======
+	background: #292929;
+} .profil_daten select:hover:disabled {
+	padding: 5px 10px;
+	background: none;
 	color: grey;
 } .profil_daten select:focus {
 	padding-right: 0;

@@ -41,7 +41,7 @@ function handle() {
                 // Zeige hierfuer unterschiedliche Fehlermeldungen an,
                 // leite aber immer zur Startseite weiter:
                 message(0, buildMessage(errCode));
-                displayStartseite();
+               displayStartseite();
             }
         }
     });
