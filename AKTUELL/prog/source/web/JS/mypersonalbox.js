@@ -17,6 +17,19 @@ function fillMyPersonalBox() {
             handle();
         });
     }
+    if(lastVisited == 2) {
+        // Derzeit wird die Profilseite angezeigt,
+        // also ist der Nutzername jetzt nicht mehr verlinkt.
+        $(".username").off();
+    } else {
+        $(".username").click(function() {
+            lastVisited = 2;
+            handle();
+            if(jsonBenutzer != "null") {
+                fillProfilseite();
+            }
+        });
+    }
 }
 
 /**

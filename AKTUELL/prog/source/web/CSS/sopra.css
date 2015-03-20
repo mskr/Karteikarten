@@ -1587,8 +1587,8 @@ h1 {
 } .profil_avatar {
 	vertical-align: middle;
 	text-shadow: 0px -2px 0px #000;
-	font-size: 100px;
-} .profil_username {
+	font-size: 80px;
+} .avatar_aendern {
 	vertical-align: middle;
 	display: inline-block;
 	text-align: left;
@@ -1612,7 +1612,7 @@ h1 {
 	padding: 5px 10px;
 	width: 50%;
 	height: 30px;
-	background: #333333;
+	background: #292929;
 	color: white;
 	font-size: 16px;
 	border: none;
@@ -1625,7 +1625,6 @@ h1 {
 } .profil_daten input:hover {
 	padding-right: 0;
 	padding-left: 20px;
-	background: #292929;
 } .profil_daten input:focus {
 	padding-right: 0;
 	padding-left: 20px;
@@ -1638,7 +1637,6 @@ h1 {
 	color: grey;
 } .profil_daten input:disabled:hover {
 	padding: 5px 10px;
-	background: none
 } .profil_daten span .octicon {
 	margin: 5px 5px;
 	color: grey;
@@ -1656,7 +1654,7 @@ h1 {
 	padding: 5px 10px;
 	width: calc(50% + 33px);
 	height: 40px;
-	background: #333333;
+	background: #292929;
 	color: white;
 	font-size: 16px;
 	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
@@ -1672,10 +1670,8 @@ h1 {
 } .profil_daten select:hover {
 	padding-right: 0;
 	padding-left: 20px;
-	background: #292929;
 } .profil_daten select:hover:disabled {
 	padding: 5px 10px;
-	background: none;
 	color: grey;
 } .profil_daten select:focus {
 	padding-right: 0;

@@ -21,6 +21,7 @@ var jsonBenutzer = "null";
  * Zeigt dann die richtigen <div> Container an und delegiert weitere Aktionen.
  */
 function handle() {
+    console.log("lastVisited="+lastVisited);
     $.ajax({
         type: "POST",
         url: "ProfilServlet",
@@ -39,8 +40,7 @@ function handle() {
                 // oder seine HTTPSession ist abgelaufen.
                 // Zeige hierfuer unterschiedliche Fehlermeldungen an,
                 // leite aber immer zur Startseite weiter:
-                if(errCode != "notloggedin")
-                    message(0, buildMessage(errCode));
+                message(0, buildMessage(errCode));
                 displayStartseite();
             }
         }
@@ -51,7 +51,9 @@ function handle() {
 // Ein eingeloggter Benutzer wird dorthin geleitet.
 // Initialer Wert: "hauptseite"
 // Ein nicht eingeloggter Besucher wird zur Startseite geleitet.
-// TODO: Das muss spaeter mit HTML Rewriting geaendert werden.
+// TODO Das Merken funktioniert so nicht, denn beim Aktualisieren der Seite
+// wird auch das Skript neu geladen und lastVisited auf 1 (Hauptseite) gesetzt.
+// Das muss spaeter mit URL Rewriting irgendwie besser werden.
 var alleAnsichten = ["startseite","hauptseite","profilseite","veranstaltungseite"];
 var lastVisited = 1;
 

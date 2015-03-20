@@ -147,6 +147,7 @@ public class ServletController extends HttpServlet
         if (req.getRequestedSessionId() != null
                 && !req.isRequestedSessionIdValid()) 
         {
+            // TODO Manchmal wird eine Session als abgelaufen gemeldet, wenn sich der Nutzer normal ausgeloggt hat.
             System.out.println("Session " + req.getRequestedSessionId() + " ist abgelaufen!");
             // Session is expired
             JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSessionExpired);

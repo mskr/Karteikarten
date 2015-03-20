@@ -2,16 +2,6 @@
  * @author mk
  */
 
-$(document).ready(function() {
-    $(".username").click(function() {
-        lastVisited = 2;
-        handle();
-        if(jsonBenutzer != "null") {
-            fillProfilseite();
-        }
-    });
-});
-
 function fillProfilseite() {
     $("#profil_email_input").val(jsonBenutzer["email"]);
     $("#profil_passwort_input").val("[geheim]");

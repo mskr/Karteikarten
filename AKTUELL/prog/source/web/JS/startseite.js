@@ -20,7 +20,6 @@ function fillStartseite() {
             var errCode = jsonObj["error"];
             if(errCode == "noerror") {
                 $("#reg_studiengang").empty();
-                $("#reg_studiengang").append("<option disabled selected>Studiengang</option>");
             	var studgArr = jsonObj[keyJsonArrResult];
             	for(var studg of studgArr) {
             		$("#reg_studiengang").append("<option>"+studg+"</option>");

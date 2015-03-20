@@ -69,9 +69,6 @@ body > div {
 <div class="msg err"></div>
 <div class="msg success"></div>
 
-<!-- <span id="mypersonalbox_laden"></span> -->
-<span id="mainbox_laden"></span>
-
 <div id="mypersonalbox_startseite" class="mypersonalbox">
 	<h3>Start</h3>
 	<form id="login_form">
@@ -94,73 +91,6 @@ body > div {
 
 <div id="mainbox_startseite" class="mainbox">
 	<span class="mysopraicon sopra-sleepicon sleepicon"></span>
-</div>
-
-<div id="mypersonalbox_profilseite" class="mypersonalbox">
-	<!-- Return Link erscheint nicht auf Hauptseite -->
-	<a class="return" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
-	<div class="user_container">
-		<span class="mysopraicon sopra-usericon usericon"><br></span>
-		<a href="" class="username" data-tooltip="zum Profil gehen"></a>
-		<br>
-		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
-		<a href="" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
-	</div>
-	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
-	<br>
-	<ul class="meinevn">
-		<li><a class="vn_angepinnt">Analysis I</a></li>
-		<li><a class="vn_angepinnt">Algorithmen</a></li>
-		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
-	</ul>
-	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
-	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
-		<div class="bn neu">
-			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-	</div>
-</div>
-
-<div id="mainbox_profilseite" class="mainbox">
-	<div class="profil_head">
-		<span class="profil_avatar"><span class="mysopraicon sopra-usericon"></span></span>
-		<span class="profil_username"><strong>Marius Kircher</strong><br>Student</span>
-		<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
-	</div>
-	<div class="profil_body">
-		<div class="profil_daten">
-			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password"><span class="octicon octicon-pencil"></span></span>
-			<span class='profil_passwort_wdh' style="display:none"><label for='profil_passwort_wdh_input'>Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
-			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_nachname"><label for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" type="text"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_matrikelnummer"><label for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" type="text"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_studiengang"><label for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" type="text"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_rolle">
-				<label for="profil_rolle_input">Rolle</label>
-				<select id="profil_rolle_input">
-					<option>STUDENT</option>
-					<option>DOZENT</option>
-					<option>ADMIN</option>
-				</select>
-			</span>
-		</div>
-		<div class="profil_buttons">
-			<span class="profil_speichern"><span class="mybutton_dark">Speichern</span></span>
-		</div>
-	</div>
 </div>
 
 <script>
@@ -204,7 +134,7 @@ $(document).ready( function() {
 	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
 	<br>
 	<ul class="meinevn">
-		<li><a href="veranstaltungseite.html" class="vn_angepinnt">Analysis I</a></li>
+		<li><a class="vn_angepinnt">Analysis I</a></li>
 		<li><a class="vn_angepinnt">Algorithmen</a></li>
 		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
 	</ul>
@@ -238,7 +168,7 @@ $(document).ready( function() {
 			<input class="vn_tabradio" type="radio" id="tab-1" name="group1" checked>
 			<label for="tab-1">Meine</label>
 			<div class="vn_tabcontent">
-				<div class="vn_fktn_spez_wrapper"><a class="vn_fktn_spez" href=""><span class="octicon octicon-question"></span> Funktion</a></div>
+				<div class="vn_fktn_spez_wrapper"><a class="vn_fktn_spez"><span class="octicon octicon-question"></span> Funktion</a></div>
 				<div class="vn">
 					<span class="vn_titel">Molekularbiologie I</span>
 					<span class="vn_details"><span class="vn_detail">Prof. Dr. Oberhuber</span><br><span class="vn_detail">60 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
@@ -360,6 +290,72 @@ $(document).ready( function() {
 	</div>
 </div>
 
+<div id="mypersonalbox_profilseite" class="mypersonalbox">
+	<!-- Return Link erscheint nicht auf Hauptseite -->
+	<a class="return" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
+	<div class="user_container">
+		<span class="mysopraicon sopra-usericon usericon"><br></span>
+		<a class="username" data-tooltip="zum Profil gehen"></a>
+		<br>
+		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
+		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
+	</div>
+	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
+	<br>
+	<ul class="meinevn">
+		<li><a class="vn_angepinnt">Analysis I</a></li>
+		<li><a class="vn_angepinnt">Algorithmen</a></li>
+		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
+	</ul>
+	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
+	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
+		<div class="bn neu">
+			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+	</div>
+</div>
+
+<div id="mainbox_profilseite" class="mainbox">
+	<div class="profil_head">
+		<a class="avatar_aendern"><span class="profil_avatar"><span class="mysopraicon sopra-usericon"></span></span> Avatar bearbeiten</a>
+		<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
+	</div>
+	<div class="profil_body">
+		<div class="profil_daten">
+			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password"><span class="octicon octicon-pencil"></span></span>
+			<span class='profil_passwort_wdh' style="display:none"><label for='profil_passwort_wdh_input'>Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
+			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_nachname"><label for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_matrikelnummer"><label for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_studiengang"><label for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_rolle">
+				<label for="profil_rolle_input">Rolle</label>
+				<select id="profil_rolle_input">
+					<option>STUDENT</option>
+					<option>DOZENT</option>
+					<option>ADMIN</option>
+				</select>
+			</span>
+		</div>
+		<div class="profil_buttons">
+			<span class="profil_speichern"><span class="mybutton_dark">Speichern</span></span>
+		</div>
+	</div>
+</div>
+
 <script>
 $(document).ready(function() {
     // Code fuer das Attribute Tooltip
@@ -393,13 +389,13 @@ $(document).ready(function() {
 
 <div id="mypersonalbox_veranstaltungseite" class="mypersonalbox">
 	<!-- Return Link erscheint nicht auf Hauptseite -->
-	<a class="return" data-tooltip="Zurück zu den Veranstaltungen" href="hauptseite.html"><span class="mega-octicon octicon-chevron-left"></span></a>
+	<a class="return" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
 	<div class="user_container">
 		<span class="mysopraicon sopra-usericon usericon"><br></span>
-		<a href="" class="username" data-tooltip="zum Profil gehen">Marius Kircher</a>
+		<a class="username" data-tooltip="zum Profil gehen">Marius Kircher</a>
 		<br>
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
-		<a href="" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
+		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
 	</div>
 	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
 	<br>
@@ -515,15 +511,15 @@ $(document).ready(function() {
 	</div>
 	<div class="kk_wrapper">
 		<div class="kk_votes">
-			<a class="kk_voteup" href=""><span class="mega-octicon octicon-triangle-up"></span></a>
+			<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
 			<div class="kk_votestat">-5</div>
-			<a class="kk_votedown" href=""><span class="mega-octicon octicon-triangle-down"></span></a>
+			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
 		<div class="kk_optionen">
-			<a class="option permalink" data-tooltip="Link kopieren" href="">
+			<a class="option permalink" data-tooltip="Link kopieren">
 				<span class="octicon octicon-link"></span>
 			</a>
-			<a class="option loeschen" data-tooltip="Karteikarte löschen" href="">
+			<a class="option loeschen" data-tooltip="Karteikarte löschen">
 				<span class="octicon octicon-trashcan"></span>
 			</a>
 			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
@@ -547,27 +543,27 @@ $(document).ready(function() {
 					<a><span class="octicon octicon-trashcan"></span></a>
 				</div>
 				Mir ist nicht so ganz klar wie man allgemein die Randkurve von einem Körper bestimmt. Z.B. bei der Aufgabe 1c braucht man ja die Randkurve des Kegels für den Satz von Stokes
-				<div class="kk_komminfo"><a href="">Matthias Englert</a><span>28. Jan '15 um 15:29</span></div>
+				<div class="kk_komminfo"><a>Matthias Englert</a><span>28. Jan '15 um 15:29</span></div>
 				<div class="kk_subkomm">
 					<div class="kk_komm_loeschen">
 						<a><span class="octicon octicon-trashcan"></span></a>
 					</div>
 					Ist der Papst katholisch?
-					<div class="kk_komminfo"><a class="kk_kommautor" href="">Jan Willem Liebezeit</a><span class="kk_kommzeit">28. Jan '15 um 16:29</span></div>
+					<div class="kk_komminfo"><a class="kk_kommautor">Jan Willem Liebezeit</a><span class="kk_kommzeit">28. Jan '15 um 16:29</span></div>
 				</div>
 				<div class="kk_subkomm">
 					<div class="kk_komm_loeschen">
 						<a><span class="octicon octicon-trashcan"></span></a>
 					</div>
 					Welche Farbe hat das weiße Pferd von Napoleon?
-					<div class="kk_komminfo"><a class="kk_kommautor" href="">Matthias Englert</a><span class="kk_kommzeit">28. Jan '15 um 17:31</span></div>
+					<div class="kk_komminfo"><a class="kk_kommautor">Matthias Englert</a><span class="kk_kommzeit">28. Jan '15 um 17:31</span></div>
 				</div>
 				<div class="kk_subkomm">
 					<div class="kk_komm_loeschen">
 						<a><span class="octicon octicon-trashcan"></span></a>
 					</div>
 					Die Randkurve bestimmt man wie im Skript Satz 13.5
-					<div class="kk_komminfo"><a class="kk_kommautor" href="">Erik Hintz</a><span class="kk_kommzeit">29. Jan '15 um 12:29</span></div>
+					<div class="kk_komminfo"><a class="kk_kommautor">Erik Hintz</a><span class="kk_kommzeit">29. Jan '15 um 12:29</span></div>
 				</div>
 				<div class="kk_kommantwort">
 					<textarea id="textarea1.1" placeholder="Antworten..." rows="1"></textarea>
@@ -583,13 +579,13 @@ $(document).ready(function() {
 					<a><span class="octicon octicon-trashcan"></span></a>
 				</div>
 				Ich check hier garnix alder wasn da los!?
-				<div class="kk_komminfo"><a class="kk_kommautor" href="">Torsten Torstensson</a><span class="kk_kommzeit">30. Jan '15 um 03:29</span></div>
+				<div class="kk_komminfo"><a class="kk_kommautor">Torsten Torstensson</a><span class="kk_kommzeit">30. Jan '15 um 03:29</span></div>
 				<div class="kk_subkomm">
 					<div class="kk_komm_loeschen">
 						<a><span class="octicon octicon-trashcan"></span></a>
 					</div>
 					Hör auf zu labern du Labersack -.-
-					<div class="kk_komminfo"><a class="kk_kommautor" href="">Jan Willem Liebezeit</a><span class="kk_kommzeit">30. Jan '15 um 04:00</span></div>
+					<div class="kk_komminfo"><a class="kk_kommautor">Jan Willem Liebezeit</a><span class="kk_kommzeit">30. Jan '15 um 04:00</span></div>
 				</div>
 				<div class="kk_kommantwort">
 					<textarea id="textarea1.2" placeholder="Antworten..." rows="1"></textarea>
@@ -603,15 +599,15 @@ $(document).ready(function() {
 	</div>
 	<div class="kk_wrapper">
 		<div class="kk_votes">
-			<a class="kk_voteup" href=""><span class="mega-octicon octicon-triangle-up"></span></a>
+			<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
 			<div class="kk_votestat">42</div>
-			<a class="kk_votedown" href=""><span class="mega-octicon octicon-triangle-down"></span></a>
+			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
 		<div class="kk_optionen">
-			<a class="option permalink" data-tooltip="Link kopieren" href="">
+			<a class="option permalink" data-tooltip="Link kopieren">
 				<span class="octicon octicon-link"></span>
 			</a>
-			<a class="option loeschen" data-tooltip="Karteikarte löschen" href="">
+			<a class="option loeschen" data-tooltip="Karteikarte löschen">
 				<span class="octicon octicon-trashcan"></span>
 			</a>
 			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
@@ -638,15 +634,15 @@ $(document).ready(function() {
 	</div>
 	<div class="kk_wrapper">
 		<div class="kk_votes">
-			<a class="kk_voteup" href=""><span class="mega-octicon octicon-triangle-up"></span></a>
+			<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
 			<div class="kk_votestat">0</div>
-			<a class="kk_votedown" href=""><span class="mega-octicon octicon-triangle-down"></span></a>
+			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
 		<div class="kk_optionen">
-			<a class="option permalink" data-tooltip="Link kopieren" href="">
+			<a class="option permalink" data-tooltip="Link kopieren">
 				<span class="octicon octicon-link"></span>
 			</a>
-			<a class="option loeschen" data-tooltip="Karteikarte löschen" href="">
+			<a class="option loeschen" data-tooltip="Karteikarte löschen">
 				<span class="octicon octicon-trashcan"></span>
 			</a>
 			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
@@ -684,7 +680,7 @@ $(document).ready(function() {
 					<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
 				</div>
 				<a class="video_kommzeit">00:00:10: </a>Sehr toll erklärt! Die Dame macht das wirklich gut
-				<div class="kk_komminfo"><a class="kk_kommautor" href="">Torsten Torstensson</a><span class="kk_kommzeit">30. Jan '15 um 03:29</span></div>
+				<div class="kk_komminfo"><a class="kk_kommautor">Torsten Torstensson</a><span class="kk_kommzeit">30. Jan '15 um 03:29</span></div>
 				<div class="kk_kommantwort">
 					<textarea id="textarea1.2" placeholder="Antworten..." rows="1"></textarea>
 				</div>
@@ -697,15 +693,15 @@ $(document).ready(function() {
 	</div>
 	<div class="kk_wrapper">
 		<div class="kk_votes">
-			<a class="kk_voteup" href=""><span class="mega-octicon octicon-triangle-up"></span></a>
+			<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
 			<div class="kk_votestat">1</div>
-			<a class="kk_votedown" href=""><span class="mega-octicon octicon-triangle-down"></span></a>
+			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
 		<div class="kk_optionen">
-			<a class="option permalink" data-tooltip="Link kopieren" href="">
+			<a class="option permalink" data-tooltip="Link kopieren">
 				<span class="octicon octicon-link"></span>
 			</a>
-			<a class="option loeschen" data-tooltip="Karteikarte löschen" href="">
+			<a class="option loeschen" data-tooltip="Karteikarte löschen">
 				<span class="octicon octicon-trashcan"></span>
 			</a>
 			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">

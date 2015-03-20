@@ -12,7 +12,6 @@ $.ajaxSetup({
 	error: function(xhr, status, err) { 
 	    //status === 'timeout' if it took too long.
 	    //handle that however you want.
-	    console.log(status,err); 
-	    alert("Error: " + status);
+	    alert("Ajax Call returned error");
 	}
 });

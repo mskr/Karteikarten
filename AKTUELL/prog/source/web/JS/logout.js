@@ -3,7 +3,13 @@
  */
 
 $(document).ready(function() {
-    $("#logout").click(function() {
+    /**
+     * Beim Ausloggen wird das Logout Kommando an den Server gesendet.
+     * Antwortet dieser mit einem No Error wird einfach die Seite
+     * neu geladen. Das darauf folgende getBenutzer erkennt,
+     * dass niemand eingeloggt ist und leitet zur Startseite weiter.
+     */
+    $(".logout").click(function() {
         $.ajax({
             type: "POST",
             url: "BenutzerServlet",
@@ -12,8 +18,7 @@ $(document).ready(function() {
                 var jsonObj = $.parseJSON(response);
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
-                    displayStartseite();
-                    message(1, "Sie haben sich ausgeloggt.");
+                    location.reload();
                 } else {
                     message(0, buildMessage(errCode));
                 }
