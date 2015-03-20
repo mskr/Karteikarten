@@ -144,8 +144,10 @@ public class ServletController extends HttpServlet
         outWriter = resp.getWriter();
         
         // Prüfen ob session abgelaufen ist
-        if (req.getRequestedSessionId() != null
-                && !req.isRequestedSessionIdValid()) 
+        if (req.getRequestedSessionId() != null && 
+                !req.isRequestedSessionIdValid() && 
+                req.getSession(false) != null && 
+                !req.getSession(false).isNew()) 
         {
             // TODO Manchmal wird eine Session als abgelaufen gemeldet, wenn sich der Nutzer normal ausgeloggt hat.
             System.out.println("Session " + req.getRequestedSessionId() + " ist abgelaufen!");
