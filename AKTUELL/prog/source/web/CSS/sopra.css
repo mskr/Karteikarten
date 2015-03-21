@@ -1697,6 +1697,8 @@ h1 {
 } .profil_infotext {
 	font-size: 14px;
 	font-weight: bold;
+} .profil_body h3 {
+	text-align: center;
 } @media screen and (max-width: 1000px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
 	/* ZUSAETZLICHER CODE FUER MITTELGROSSE BILDSCHIRME */
 	.profil_daten, .profil_buttons {

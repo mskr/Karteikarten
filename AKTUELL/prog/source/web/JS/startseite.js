@@ -12,7 +12,6 @@
  */
 function fillStartseite() {
     $.ajax({
-    	type: "POST",
     	url: "BenutzerServlet",
     	data: "action="+actionGetStudiengaenge,
     	success: function(response) {
