@@ -137,7 +137,7 @@ public class BenutzerServlet extends ServletController {
         String studienGang = request.getParameter(requestStudiengang);
         String matrikelNrStr = request.getParameter(requestMatrikelNr);
         
-        if(isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(passwort) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
+        if(passwort.contains(" ") || isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(passwort) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
                 || isEmptyAndRemoveSpaces(studienGang) || isEmptyAndRemoveSpaces(matrikelNrStr))
         {
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
@@ -184,7 +184,7 @@ public class BenutzerServlet extends ServletController {
         }
         catch (SQLException e)
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorRegisterFailed);
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }

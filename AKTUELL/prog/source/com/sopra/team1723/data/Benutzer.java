@@ -13,6 +13,7 @@ public class Benutzer {
     public Benutzer() {
     }
     
+    // Konstruktor der alle Attribute setzt
     public Benutzer(String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
             String kennwort, Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung,
             boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare)
@@ -29,6 +30,38 @@ public class Benutzer {
         this.notifyKommentare = notifyKommentare;
     }
     
+    // Konstruktur ohne Kennwort, Matrikelnummer, Studiengang, Nutzerstatus (Die letzten 3 können vom Benutzer
+    // selbst nicht geändert werden
+    public Benutzer(String eMail, String vorname, String nachname, boolean notifyVeranstAenderung,
+            boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare)
+    {
+        super();
+        this.eMail = eMail;
+        this.vorname = vorname;
+        this.nachname = nachname;
+        this.notifyVeranstAenderung = notifyVeranstAenderung;
+        this.notifyKarteikartenAenderung = notifyKarteikartenAenderung;
+        this.notifyKommentare = notifyKommentare;
+    }
+
+    // Konstruktor ohne Kennwort
+    public Benutzer(String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
+            Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung, boolean notifyKarteikartenAenderung,
+            NotifyKommentare notifyKommentare)
+    {
+        super();
+        this.eMail = eMail;
+        this.vorname = vorname;
+        this.nachname = nachname;
+        this.matrikelnummer = matrikelnummer;
+        this.studiengang = studiengang;
+        this.nutzerstatus = nutzerstatus;
+        this.notifyVeranstAenderung = notifyVeranstAenderung;
+        this.notifyKarteikartenAenderung = notifyKarteikartenAenderung;
+        this.notifyKommentare = notifyKommentare;
+    }
+
+    // Konstruktor ohne die persönlichen Einstellungen des Benutzers
     public Benutzer(String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
             String kennwort)
     {

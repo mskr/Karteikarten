@@ -34,9 +34,10 @@ public interface IDatenbankmanager {
     public void schreibeBenutzer(Benutzer benutzer)  throws DbUniqueConstraintException, SQLException;
 
     /**
-     * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Die eMail kann auch geändert werden.
-     * Der Datensatz wird dabei mithilfe des Parameters alteMail identifiziert. Diese Methode wird aufgerufen,
-     * wenn ein Benutzer sein eigenes Profil bearbeiten will. Das Kennwort kann in einer separaten Methode
+     * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Kennwort, Matrikelnummer, 
+     * Studiengang und Nutzerstatus werden nicht gesetzt, da der Benutzer diese nicht selbst ändern kann
+     * Die eMail kann auch geändert werden.Der Datensatz wird dabei mithilfe des Parameters alteMail identifiziert. 
+     * Diese Methode wird aufgerufen,wenn ein Benutzer sein eigenes Profil bearbeiten will. Das Kennwort kann in einer separaten Methode
      * bearbeitet werden. Matrikelnummer und Studiengang kann ein Benutzer nicht selber bearbeiten.
      * Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
      * mit einer bereits vorhandenen eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
@@ -44,12 +45,10 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public void bearbeiteBenutzer(String alteMail, String neueMail, String vorname, String nachname,
-            NotifyKommentare notifyKommentare, boolean notifyVeranstAenderung, 
-            boolean notifyKarteikartenAenderung) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzer(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
     
     /**
-     * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Diese Methode wird verwendet, wenn
+     * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt. Diese Methode wird verwendet, wenn
      * der Admin die Daten eines Benutzers bearbeiten möchte. Er kann dabei alle Attribute also auch
      * Matrikelnummer und Studiengang ändern. Um den Datensatz zu identifizieren wird der Parameter alteMail
      * verwendet. Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
@@ -58,7 +57,7 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public void bearbeiteBenutzer(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzerAdmin(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Entfernt den Benutzer aus der Datenbank. Tritt ein Fehler auf gibt
