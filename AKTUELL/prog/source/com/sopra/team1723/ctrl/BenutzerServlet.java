@@ -25,7 +25,6 @@ import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 /**
  * Steuert den Login-/Logout- und den Registrierungsvorgang. Ausserdem steuert dieses Servlet den Reset des Passworts.
  */
-@WebServlet("/BenutzerServlet")
 public class BenutzerServlet extends ServletController {
 
     /**

@@ -11,7 +11,6 @@ import com.sopra.team1723.data.*;
 /**
  * Verwaltet die Verastaltungen
  */
-@WebServlet("/VeranstaltungServlet")
 public class VeranstaltungServlet extends ServletController {
 
     /**

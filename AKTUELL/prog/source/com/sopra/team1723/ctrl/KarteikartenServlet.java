@@ -12,7 +12,6 @@ import com.sopra.team1723.data.*;
 /**
  * Verwaltet die Karteikarten
  */
-@WebServlet("/KarteikartenServlet")
 public class KarteikartenServlet extends ServletController {
 
     /**

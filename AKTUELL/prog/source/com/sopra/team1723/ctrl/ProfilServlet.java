@@ -13,7 +13,6 @@ import com.sopra.team1723.data.*;
 /**
  * Steuert das anzeigen und bearbeiten eines Profils.
  */
-@WebServlet("/ProfilServlet")
 public class ProfilServlet extends ServletController {
 
     /**
