@@ -13,12 +13,12 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import javax.activation.*;
 
-
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 
 import com.sopra.team1723.ctrl.*;
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.DbFalseLoginDataException;
 import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 
@@ -71,22 +71,29 @@ public class BenutzerServlet extends ServletController {
         }
         
         // Zugangsdaten richtig?
-        if(!dbManager.pruefeLogin(email, passwort))
+        try
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
-            outWriter.print(jo);
-            return false;
+            dbManager.pruefeLogin(email, passwort);
+            aktuelleSession.setAttribute(sessionAttributeEMail, email);
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
         }
-        
-        aktuelleSession.setAttribute(sessionAttributeEMail, email);
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+        }
+        catch (DbFalseLoginDataException e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
+        }
 
-        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
         outWriter.print(jo);
         return true;
     }
 
     /**
-     * Läscht die übergebene HttpSession via invalidate() und somit alle
+     * Löscht die übergebene HttpSession via invalidate() und somit alle
      * temporär server-seitig gespeicherten Daten und Parameter. Gibt
      * "true" zurück, wenn bei diesem Ablauf keine Fehler auftreten, und
      * "false" bei Fehlern.
