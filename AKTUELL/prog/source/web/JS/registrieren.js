@@ -15,7 +15,7 @@ $(document).ready(function() {
         // Passwortwiederholung ueberpruefen
         if(pass == passwdh) {
             $.ajax({
-               url: "BenutzerServlet",
+               url: benutzerServlet,
                data: "action="+actionRegister
                    +"&"+paramEmail+"="+email
                    +"&"+paramPasswort+"="+pass

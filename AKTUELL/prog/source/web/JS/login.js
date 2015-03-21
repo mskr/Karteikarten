@@ -7,7 +7,7 @@ $(document).ready(function() {
         var email = $("#login_email").val();
         var pass = $("#login_pass").val();
         $.ajax({
-            url: "BenutzerServlet",
+            url: benutzerServlet,
             data: "action="+actionLogin+
             	"&"+paramEmail+"="+email+
             	"&"+paramPasswort+"="+pass,
@@ -15,7 +15,9 @@ $(document).ready(function() {
                 var jsonObj = $.parseJSON(response);
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
-                    handle();
+                    var paramObj = {};
+                    paramObj[urlParamLocation] = ansichtHauptseite;
+                    buildUrlQuery(paramObj);
                 } else {
                     message(0, buildMessage(errCode));
                 }

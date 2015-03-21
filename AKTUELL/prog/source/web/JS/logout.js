@@ -11,7 +11,7 @@ $(document).ready(function() {
      */
     $(".logout").click(function() {
         $.ajax({
-            url: "BenutzerServlet",
+            url: benutzerServlet,
             data: "action="+actionLogout,
             success: function(response) {
                 var jsonObj = $.parseJSON(response);

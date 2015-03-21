@@ -7,11 +7,11 @@
  */
 
 $(document).ready(function() {
-    handle();
+//    handle();
 });
 
-// Der aktuell eingeloggte Benutzer als JSON Objekt.
-var jsonBenutzer = "null";
+//// Der aktuell eingeloggte Benutzer als JSON Objekt.
+//var jsonBenutzer = "null";
 
 /**
  * Fragt den aktuell eingeloggten Benutzer beim Servlet an.
@@ -23,7 +23,7 @@ var jsonBenutzer = "null";
 function handle() {
     console.log("lastVisited="+lastVisited);
     $.ajax({
-        url: "ProfilServlet",
+        url: profilServlet,
         data: "action="+actionGetBenutzer,
         success: function(response) {
             jsonObj = $.parseJSON(response);
@@ -71,18 +71,4 @@ function displayStartseite() {
     $("#mypersonalbox_"+alleAnsichten[0]).show();
     $("#mainbox_"+alleAnsichten[0]).show();
     fillStartseite();
-}
-
-/**
- * Zeigt die durch den Arrayindex angegebene Seite an.
- */
-function display(index) {
-	for(var i=0; i<alleAnsichten.length; i++) {
-		if(i != index) {
-        	$("#mypersonalbox_"+alleAnsichten[i]).hide();
-        	$("#mainbox_"+alleAnsichten[i]).hide();
-		}
-	}
-	$("#mypersonalbox_"+alleAnsichten[index]).show();
-	$("#mainbox_"+alleAnsichten[index]).show();
 }

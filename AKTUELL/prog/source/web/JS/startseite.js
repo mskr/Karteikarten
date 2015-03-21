@@ -12,7 +12,7 @@
  */
 function fillStartseite() {
     $.ajax({
-    	url: "BenutzerServlet",
+    	url: benutzerServlet,
     	data: "action="+actionGetStudiengaenge,
     	success: function(response) {
             var jsonObj = $.parseJSON(response);

@@ -6,30 +6,20 @@
  * Fuellt die mypersonalbox mit den benoetigten Informationen.
  */
 function fillMyPersonalBox() {
-    if(jsonBenutzer != "null") {
+    if(jsonBenutzer != undefined) {
         fillUserContainer();
     }
-    if(lastVisited != 1) {
-        // Derzeit wird nicht die Hauptseite angezeigt,
-        // also erhaelt der Zurueckpfeil eine Click Function
-        $(".return").click(function() {
-            lastVisited = 1;
-            handle();
-        });
-    }
-    if(lastVisited == 2) {
-        // Derzeit wird die Profilseite angezeigt,
-        // also ist der Nutzername jetzt nicht mehr verlinkt.
-        $(".username").off();
-    } else {
-        $(".username").click(function() {
-            lastVisited = 2;
-            handle();
-            if(jsonBenutzer != "null") {
-                fillProfilseite();
-            }
-        });
-    }
+    $(".return").click(function() {
+        var paramObj = {};
+        paramObj[urlParamLocation] = ansichtHauptseite;
+        buildUrlQuery(paramObj);
+    });
+    $(".username").click(function() {
+        var paramObj = {};
+        paramObj[urlParamLocation] = ansichtProfilseite;
+        buildUrlQuery(paramObj);
+    });
+    // TODO Was passiert wenn man aus der Profilseite heraus auf den Usernamen klickt??
 }
 
 /**
