@@ -10,44 +10,16 @@
 -->
 <urlrewrite>
     
-    <rule>
-    	<name>MyFirstRule</name>
-    	<note>
-       	 	Erste Test der Weiterleitung.
-   		</note>
-        <from>/sopra/location/([a-zA-Z0-9]+)</from>
-        <to>/sopra.html?goTo=$1</to>
-    </rule>
-    
-    <rule>
-    	<name>MyFirstRule</name>
-    	<note>
-       	 	Erste Test der Weiterleitung.
-   		</note>
-        <from>/sopra/location/([a-zA-Z0-9]+)</from>
-        <to>/sopra.html?goTo=$1</to>
-    </rule>
-    
-    <rule>
-    	<name>MySecondRule</name>
-    	<note>
-       	 	Erste Test der Weiterleitung.
-   		</note>
-        <from>/sopra</from>
-        <to>/sopra.html</to>
-    </rule>
-
-    <rule>
-    	<name>MySecondRule</name>
-    	<note>
-       	 	Erste Test der Weiterleitung.
-   		</note>
-        <from>/sopra/</from>
-        <to>/sopra.html</to>
-    </rule>
-
-
     <!--
+    <rule>
+    	<name>MyFirstRule</name>
+    	<note>
+       	 	Erste Test der Weiterleitung.
+   		</note>
+        <from>/sopra/location/([a-zA-Z0-9]+)</from>
+        <to>/sopra\.html?goTo=$1</to>
+    </rule>
+    
 
     INSTALLATION
 
