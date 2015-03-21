@@ -33,15 +33,28 @@ public interface IDatenbankmanager {
      */
     public void schreibeBenutzer(Benutzer benutzer)  throws DbUniqueConstraintException, SQLException;
 
+    /**
+     * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Die eMail kann auch geändert werden.
+     * Der Datensatz wird dabei mithilfe des Parameters alteMail identifiziert. Diese Methode wird aufgerufen,
+     * wenn ein Benutzer sein eigenes Profil bearbeiten will. Das Kennwort kann in einer separaten Methode
+     * bearbeitet werden. Matrikelnummer und Studiengang kann ein Benutzer nicht selber bearbeiten.
+     * Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
+     * mit einer bereits vorhandenen eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
+     * geworfen
+     * @param benutzer 
+     * @return
+     */
     public void bearbeiteBenutzer(String alteMail, String neueMail, String vorname, String nachname,
             NotifyKommentare notifyKommentare, boolean notifyVeranstAenderung, 
             boolean notifyKarteikartenAenderung) throws SQLException, DbUniqueConstraintException;
     
     /**
-     * Daten des angegebenen Benutzers werden in der Datenbank geupdatet.
-     * Bei Erfolg liefert die Methode true zurüuck (auch wenn der
-     * Benutzer gar nicht in der Datenbank vorhanden ist). Bei einem
-     * Fehler false.
+     * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Diese Methode wird verwendet, wenn
+     * der Admin die Daten eines Benutzers bearbeiten möchte. Er kann dabei alle Attribute also auch
+     * Matrikelnummer und Studiengang ändern. Um den Datensatz zu identifizieren wird der Parameter alteMail
+     * verwendet. Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
+     * mit einer bereits vorhandenen eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
+     * geworfen
      * @param benutzer 
      * @return
      */
