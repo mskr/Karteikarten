@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.*;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.DbFalseLoginDataException;
 import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
@@ -58,7 +59,7 @@ public interface IDatenbankmanager {
      * @param passwort 
      * @return
      */
-    public boolean pruefeLogin(String eMail, String passwort);
+    public void pruefeLogin(String eMail, String passwort) throws SQLException, DbFalseLoginDataException;
 
     /**
      * Andert das Passwort des angegebenen Benutzers. Liefert bei Erfolg
