@@ -7,7 +7,6 @@ $(document).ready(function() {
         var email = $("#login_email").val();
         var pass = $("#login_pass").val();
         $.ajax({
-            type: "POST",
             url: "BenutzerServlet",
             data: "action="+actionLogin+
             	"&"+paramEmail+"="+email+
