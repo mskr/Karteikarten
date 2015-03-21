@@ -49,6 +49,9 @@ public class ServletController extends HttpServlet
     protected final String requestMatrikelNr = "matrikelNr";
     protected final String requestStudiengang = "studienGang";
     protected final String requestNutzerstatus = "nutzerStatus";
+    protected final String requestNotifyVeranstAenderung = "notifyVeranstAenderung";
+    protected final String requestNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
+    protected final String requestNotifyKommentare = "notifyKommentare";
 
     private boolean doPorcessing = false;
     

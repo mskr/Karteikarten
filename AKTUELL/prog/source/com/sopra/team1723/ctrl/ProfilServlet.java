@@ -32,8 +32,12 @@ public class ProfilServlet extends ServletController {
      * @return
      */
     private boolean profilBearbeiten(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+        
+        String email = request.getParameter(requestEmail);
+        String vorname = request.getParameter(requestVorname);
+        String nachname = request.getParameter(requestNachname);
+        
+        return true;
     }
 
     /**
@@ -74,6 +78,10 @@ public class ProfilServlet extends ServletController {
             JSONObject jo = JSONConverter.toJson(aktuellerBenutzer);
             outWriter.print(jo);
             return;
+        }
+    	else if(aktuelleAction.equals(requestActionAendereProfil))
+        {
+    	    profilBearbeiten(req,resp);
         }
         else
         {
