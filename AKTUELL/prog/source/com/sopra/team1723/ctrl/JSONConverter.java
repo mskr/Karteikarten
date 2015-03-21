@@ -33,6 +33,9 @@ public class JSONConverter
     static public final String jsonNutzerstatus = "nutzerstatus";
     static public final String jsonStudiengang = "studiengang";
     static public final String jsonPasswort = "passwort";
+    static public final String jsonNotifyVeranstAenderung = "notifyVeranstAenderung";
+    static public final String jsonNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
+    static public final String jsonNotifyKommentare = "notifyKommentare";
     
     // ArrayResults
     static public final String jsonArrResult = "arrResult";
@@ -71,6 +74,9 @@ public class JSONConverter
         jo.put(jsonMatrikelNr, new Integer(benutzer.getMatrikelnummer()).toString());
         jo.put(jsonNutzerstatus, benutzer.getNutzerstatus().name());
         jo.put(jsonStudiengang, benutzer.getStudiengang());
+        jo.put(jsonNotifyVeranstAenderung, benutzer.isNotifyVeranstAenderung());
+        jo.put(jsonNotifyKarteikartenAenderung, benutzer.isNotifyKarteikartenAenderung());
+        jo.put(jsonNotifyKommentare, benutzer.getNotifyKommentare().name());
         
         return jo;
     }

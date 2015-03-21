@@ -39,6 +39,8 @@ public class ServletController extends HttpServlet
     protected final String requestActionResetPasswort = "resetPasswort";
     protected final String requestActionGetBenutzer = "getBenutzer";
     protected final String requestActionGetStudiengaenge = "getStudiengaenge";
+    protected final String requestActionAenderePasswort = "aenderePasswort";
+    protected final String requestActionAendereProfil = "aendereProfil";
 
     protected final String requestEmail = "email";
     protected final String requestPassword = "pass";
@@ -47,6 +49,9 @@ public class ServletController extends HttpServlet
     protected final String requestMatrikelNr = "matrikelNr";
     protected final String requestStudiengang = "studienGang";
     protected final String requestNutzerstatus = "nutzerStatus";
+    protected final String requestNotifyVeranstAenderung = "notifyVeranstAenderung";
+    protected final String requestNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
+    protected final String requestNotifyKommentare = "notifyKommentare";
 
     private boolean doPorcessing = false;
     
@@ -144,8 +149,10 @@ public class ServletController extends HttpServlet
         outWriter = resp.getWriter();
         
         // Prüfen ob session abgelaufen ist
-        if (req.getRequestedSessionId() != null
-                && !req.isRequestedSessionIdValid()) 
+        if (req.getRequestedSessionId() != null && 
+                !req.isRequestedSessionIdValid() && 
+                req.getSession(false) != null && 
+                !req.getSession(false).isNew()) 
         {
             // TODO Manchmal wird eine Session als abgelaufen gemeldet, wenn sich der Nutzer normal ausgeloggt hat.
             System.out.println("Session " + req.getRequestedSessionId() + " ist abgelaufen!");

@@ -21,23 +21,6 @@ public class ProfilServlet extends ServletController {
      */
     public ProfilServlet() {
     }
-
-    /**
-     * Liest aus der Request die ID des Benutzer aus und schickt damit
-     * eine Anfrage an den Datenbankmanager, der die Profildaten aus
-     * der DB liest. Diese Methode gibt dann via Printwriter die Proldatenpackage com.sopra.team1723.ctrl;
-
-     * aus. Gibt "trueuruck, wenn bei diesem Ablauf keine Fehler
-     * auftreten, und "false"bei Fehlern.
-     * @param request 
-     * @param response 
-     * @return
-     */
-    private boolean profilAnzeigen(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
-    }
-
     /**
      * Aus der Request werden die neuen Proldaten ausgelesen. Diese
      * werden gepruft und wenn diese Prufung erfolgreich war, werden
@@ -49,12 +32,16 @@ public class ProfilServlet extends ServletController {
      * @return
      */
     private boolean profilBearbeiten(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+        
+        String email = request.getParameter(requestEmail);
+        String vorname = request.getParameter(requestVorname);
+        String nachname = request.getParameter(requestNachname);
+        
+        return true;
     }
 
     /**
-     * Loschen? siehe Benutzerservlet selbe Methode.
+     * Löschen? siehe Benutzerservlet selbe Methode.
      * @param request 
      * @param response 
      * @return
@@ -65,9 +52,9 @@ public class ProfilServlet extends ServletController {
     }
 
     /**
-     * Liest aus der Request ID und Verikationsparameter fur diese
-     * Handlung aus.Wenn Benutzer existiert, rufe Methode zum Loschen
-     * von Benutzern des Datenbankmanagers auf. Gibt "trueuruck,
+     * Liest aus der Request ID und Verifikationsparameter für diese
+     * Handlung aus. Wenn Benutzer existiert, rufe Methode zum Lüschen
+     * von Benutzern des Datenbankmanagers auf. Gibt "true" zurück,
      * wenn bei diesem Ablauf keine Fehler auftreten, und "false"bei Fehlern.
      * @param request 
      * @param response 
@@ -88,9 +75,13 @@ public class ProfilServlet extends ServletController {
     	
     	if(aktuelleAction.equals(requestActionGetBenutzer))
         {
-    	    JSONObject jo = JSONConverter.toJson(aktuellerBenutzer);
-    	    outWriter.print(jo);
-    	    return;
+            JSONObject jo = JSONConverter.toJson(aktuellerBenutzer);
+            outWriter.print(jo);
+            return;
+        }
+    	else if(aktuelleAction.equals(requestActionAendereProfil))
+        {
+    	    profilBearbeiten(req,resp);
         }
         else
         {

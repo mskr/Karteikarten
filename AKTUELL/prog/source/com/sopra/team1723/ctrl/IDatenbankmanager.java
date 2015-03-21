@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.*;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.DbFalseLoginDataException;
 import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
@@ -15,35 +16,40 @@ public interface IDatenbankmanager {
 
     /**
      * Liest Benutzer mit der angegebenen Email aus. Wird kein Benutzer
-     * gefunden, so gibt die Methode null zuruck
+     * gefunden, so gibt die Methode null zurück
      * @param eMail 
      * @return
      */
     public Benutzer leseBenutzer(String eMail);
 
     /**
-     * Legt neuen Benutzer in der Datenbank an. War das Speichern erfolgreich
-     * so gibt die Methode true zuruck. Bei Auftreten eines Fehlers
-     * oder falls es schon einen Benutzer mit der selben eMail Adresse
-     * gibt, wird false zuruckgegeben.
+     * Legt neuen Benutzer in der Datenbank an. Tritt ein Fehler in der 
+     * Datenbank auf, dann wird eine SQLException geworfen.
+     * Wird versucht einen Benutzer mit einer bereits vorhandenen 
+     * eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
+     * geworfen
      * @param benutzer 
      * @return
      */
     public void schreibeBenutzer(Benutzer benutzer)  throws DbUniqueConstraintException, SQLException;
 
+    public void bearbeiteBenutzer(String alteMail, String neueMail, String vorname, String nachname,
+            NotifyKommentare notifyKommentare, boolean notifyVeranstAenderung, 
+            boolean notifyKarteikartenAenderung) throws SQLException, DbUniqueConstraintException;
+    
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet.
-     * Bei Erfolg liefert die Methode true zuruck (auch wenn der
+     * Bei Erfolg liefert die Methode true zurüuck (auch wenn der
      * Benutzer gar nicht in der Datenbank vorhanden ist). Bei einem
      * Fehler false.
      * @param benutzer 
      * @return
      */
-    public boolean bearbeiteBenutzer(Benutzer benutzer);
+    public void bearbeiteBenutzer(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Entfernt den Benutzer aus der Datenbank. Tritt ein Fehler auf gibt
-     * die Methode false zuruck. Ansonsten true. (Auch wenn der Benutzer
+     * die Methode false zurück. Ansonsten true. (Auch wenn der Benutzer
      * gar nicht in der Datenbank vorhanden war.)
      * @param eMail 
      * @return
@@ -51,33 +57,40 @@ public interface IDatenbankmanager {
     public boolean loescheBenutzer(String eMail);
 
     /**
-     * Uberpruft, ob eMail und passwort zusammenpassen. Falls nicht
-     * oder falls ein Fehler in der Datenbank auftritt gibt die Methode
-     * false zuruck. Ansonsten true.
+     * Überprüft, ob eMail und Passwort zusammenpassen. 
+     * Tritt ein Fehler in der Datenbank auf, dann wird eine
+     * SQLException geworfen. Wenn kein Benutzer zu der angegebenen
+     * eMail und Passwort gefunden wird, wird eine DbFalseLoginDataException geworfen
      * @param eMail 
      * @param passwort 
      * @return
      */
-    public boolean pruefeLogin(String eMail, String passwort);
+    public void pruefeLogin(String eMail, String passwort) throws SQLException, DbFalseLoginDataException;
+    
+    /**
+     * Gibt eine Liste aller Studiengänge zurück. Tritt ein Fehler
+     * auf wird null zurückgegeben. Sind keine Studiengänge in der 
+     * Datenbnak vorhanden, dann wird eine leere Liste zurückgegeben
+     * @param eMail 
+     * @param passwort 
+     * @return
+     */
+    public List<String> leseStudiengaenge();
 
     /**
-     * Andert das Passwort des angegebenen Benutzers. Liefert bei Erfolg
-     * true zuruck. (Auch wenn der Benutzer gar nicht in der Datenbank
-     * vorhanden ist.) Bei einem Fehler wird false zuruckgegeben.
-     * Operation leseVeranstaltung (String veranstTitel): Veranstaltung
+     * Ändert das Passwort des angegebenen Benutzers. Liefert bei Erfolg
+     * true zurück. (Auch wenn der Benutzer gar nicht in der Datenbank
+     * vorhanden ist.) Bei einem Fehler wird false zurückgegeben.
      * @param eMail String 
      * @param neuesPasswort String 
      * @return
      */
-    
-    public List<String> leseStudiengaenge();
-    
     public boolean passwortAendern(String eMail , String neuesPasswort );
 
     /**
      * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
-     * Ist keine Veranstaltung mit diesem Titel vorhanden, wird null
-     * zuruckgegeben.
+     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
+     * Fehler auf, wird null zurückgegeben.
      * @param veranstTitel 
      * @return
      */
