@@ -25,7 +25,6 @@ import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 /**
  * Steuert den Login-/Logout- und den Registrierungsvorgang. Ausserdem steuert dieses Servlet den Reset des Passworts.
  */
-@WebServlet("/BenutzerServlet")
 public class BenutzerServlet extends ServletController {
 
     /**
@@ -206,45 +205,46 @@ public class BenutzerServlet extends ServletController {
      */
     private boolean passwortReset(HttpServletRequest request, HttpServletResponse response) 
     {
-        JSONObject jo = null;
-        String eMail = request.getParameter(requestEmail);
-        // TODO Reicht uns wirklich die eMail-Adresse?!
-        if(eMail == null)
-        {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
-            outWriter.print(jo);
-            return false;
-        }
-        
         // TODO
-        String generiertesPW = "1234";
-        
-        Benutzer user = dbManager.leseBenutzer(eMail);
-        String altesPasswort =  user.getKennwort();
-        
-        System.out.println("Update Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ") in der DB.");
-        // In Datenbank speichern
-        if(!dbManager.passwortAendern(eMail, generiertesPW))
-        {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
-            outWriter.print(jo);
-            return false;
-        }
-
-        System.out.println("Sende Mail an Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ").");
-        // Sende Bestätigungs-EMail
-        if(!sendePasswortResetMail(user.geteMail(), generiertesPW))
-        {
-            // Änderung rückgängig machen
-            user.setKennwort(altesPasswort);
-            dbManager.bearbeiteBenutzer(user);
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
-            outWriter.print(jo);
-            return false;
-        }
-
-        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
-        outWriter.print(jo);
+//        JSONObject jo = null;
+//        String eMail = request.getParameter(requestEmail);
+//        // TODO Reicht uns wirklich die eMail-Adresse?!
+//        if(eMail == null)
+//        {
+//            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+//            outWriter.print(jo);
+//            return false;
+//        }
+//        
+//        // TODO
+//        String generiertesPW = "1234";
+//        
+//        Benutzer user = dbManager.leseBenutzer(eMail);
+//        String altesPasswort =  user.getKennwort();
+//        
+//        System.out.println("Update Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ") in der DB.");
+//        // In Datenbank speichern
+//        if(!dbManager.passwortAendern(eMail, generiertesPW))
+//        {
+//            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
+//            outWriter.print(jo);
+//            return false;
+//        }
+//
+//        System.out.println("Sende Mail an Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ").");
+//        // Sende Bestätigungs-EMail
+//        if(!sendePasswortResetMail(user.geteMail(), generiertesPW))
+//        {
+//            // Änderung rückgängig machen
+//            user.setKennwort(altesPasswort);
+//            dbManager.bearbeiteBenutzer(user);
+//            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
+//            outWriter.print(jo);
+//            return false;
+//        }
+//
+//        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+//        outWriter.print(jo);
         return true;
 
     }

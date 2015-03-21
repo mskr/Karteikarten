@@ -8,11 +8,13 @@ package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
+
 import com.sopra.team1723.data.*;
 
 /**
@@ -38,6 +40,7 @@ public class ServletController extends HttpServlet
     protected final String requestActionRegister = "registrieren";
     protected final String requestActionResetPasswort = "resetPasswort";
     protected final String requestActionGetBenutzer = "getBenutzer";
+    protected final String requestActionGetOtherBenutzer = "getOtherBenutzer";
     protected final String requestActionGetStudiengaenge = "getStudiengaenge";
     protected final String requestActionAenderePasswort = "aenderePasswort";
     protected final String requestActionAendereProfil = "aendereProfil";
@@ -129,7 +132,29 @@ public class ServletController extends HttpServlet
         
         return dbManager.leseBenutzer(eMail);
     }
-    
+    /**
+     * Gibt alle Parameter aus, die am Request hängen
+     * @param req
+     */
+    private void printAllParameters(HttpServletRequest req)
+    {
+        Enumeration<String> parameterNames = req.getParameterNames();
+        System.out.println("URL: " + req.getRequestURI());
+        System.out.println("Empfangene Parameter: ");
+        while (parameterNames.hasMoreElements()) 
+        {
+            String paramName = parameterNames.nextElement();
+            System.out.print(paramName + " :");
+
+            String[] paramValues = req.getParameterValues(paramName);
+            for (int i = 0; i < paramValues.length; i++) {
+                String paramValue = paramValues[i];
+                System.out.print(" " + paramValue + ", ");
+            }
+            System.out.println();
+
+        }
+    }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
@@ -170,6 +195,8 @@ public class ServletController extends HttpServlet
         if(aktuelleSession.isNew())
             aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
 
+        printAllParameters(req);
+        
         if(dbManager == null)
         {
             // Sende Error zurück

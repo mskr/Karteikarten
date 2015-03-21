@@ -11,7 +11,6 @@ $(document).ready(function() {
      */
     $(".logout").click(function() {
         $.ajax({
-            type: "POST",
             url: "BenutzerServlet",
             data: "action="+actionLogout,
             success: function(response) {

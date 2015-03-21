@@ -63,7 +63,7 @@ public class JSONConverter
      * @param benutzer
      * @return JSONObject mit den Benutzerdaten
      */
-    static JSONObject toJson(Benutzer benutzer) 
+    static JSONObject toJson(Benutzer benutzer, boolean full) 
     {
         JSONObject jo = new JSONObject();
         
@@ -74,10 +74,13 @@ public class JSONConverter
         jo.put(jsonMatrikelNr, new Integer(benutzer.getMatrikelnummer()).toString());
         jo.put(jsonNutzerstatus, benutzer.getNutzerstatus().name());
         jo.put(jsonStudiengang, benutzer.getStudiengang());
-        jo.put(jsonNotifyVeranstAenderung, benutzer.isNotifyVeranstAenderung());
-        jo.put(jsonNotifyKarteikartenAenderung, benutzer.isNotifyKarteikartenAenderung());
-        jo.put(jsonNotifyKommentare, benutzer.getNotifyKommentare().name());
         
+        if(full)
+        {
+            jo.put(jsonNotifyVeranstAenderung, benutzer.isNotifyVeranstAenderung());
+            jo.put(jsonNotifyKarteikartenAenderung, benutzer.isNotifyKarteikartenAenderung());
+            jo.put(jsonNotifyKommentare, benutzer.getNotifyKommentare().name());
+        }
         return jo;
     }
     /**

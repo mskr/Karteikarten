@@ -8,6 +8,7 @@
  * wird ein Fehler ausgegeben.
  */
 $.ajaxSetup({
+    type: "GET",
 	timeout: 1000,
 	error: function(xhr, status, err) { 
 	    //status === 'timeout' if it took too long.

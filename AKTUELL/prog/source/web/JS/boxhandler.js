@@ -23,7 +23,6 @@ var jsonBenutzer = "null";
 function handle() {
     console.log("lastVisited="+lastVisited);
     $.ajax({
-        type: "POST",
         url: "ProfilServlet",
         data: "action="+actionGetBenutzer,
         success: function(response) {
