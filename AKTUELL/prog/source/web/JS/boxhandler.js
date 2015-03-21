@@ -40,7 +40,11 @@ function handle() {
                 // oder seine HTTPSession ist abgelaufen.
                 // Zeige hierfuer unterschiedliche Fehlermeldungen an,
                 // leite aber immer zur Startseite weiter:
-                message(0, buildMessage(errCode));
+               if(errCode == "notloggedin") {
+                   message(1, "Bitte loggen Sie sich ein um fortzufahren.");
+               } else {
+                   message(0, buildMessage(errCode));
+               }
                displayStartseite();
             }
         }

@@ -333,10 +333,9 @@ $(document).ready( function() {
 		<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
 	</div>
 	<div class="profil_body">
+		<h3>Ihre Daten</h3>
 		<div class="profil_daten">
 			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password"><span class="octicon octicon-pencil"></span></span>
-			<span class='profil_passwort_wdh' style="display:none"><label for='profil_passwort_wdh_input'>Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
 			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text"><span class="octicon octicon-pencil"></span></span>
 			<span class="profil_nachname"><label for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" type="text"><span class="octicon octicon-pencil"></span></span>
 			<span class="profil_matrikelnummer"><label for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" type="text"><span class="octicon octicon-pencil"></span></span>
@@ -349,6 +348,22 @@ $(document).ready( function() {
 					<option>ADMIN</option>
 				</select>
 			</span>
+		</div>
+		<h3>Passwort</h3>
+		<div class="profil_daten">
+			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_passwort_wdh" style="display:none"><label for="profil_passwort_wdh_input">Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
+			<span class="profil_passwort_alt" style="display:none"><label for="profil_passwort_alt_input">Altes Passwort</label><input id='profil_passwort_alt_input' type='password'><span class='octicon octicon-pencil'></span></span>
+		</div>
+		<h3>Einstellungen</h3>
+		<div class="profil_einstellungen">
+			<span class="profil_infotext">Über neue Kommentare benachrichtigen...</span>
+			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_teilgenommen" type="checkbox"><label for="notifyKommentare_input_teilgenommen">Bei allen meinen Veranstaltungen</label></span>
+			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_diskussionen" type="checkbox"><label for="notifyKommentare_input_diskussionen">Nur bei Disussionen, an denen ich teilgenommen habe</label></span>
+			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_nie" type="checkbox"><label for="notifyKommentare_input_nie">Niemals</label></span>
+			<br>
+			<span class="profil_notifyVeranstAenderung"><input id="notifyVeranstAenderung_input" type="checkbox"><label for="notifyVeranstAenderung_input">Über Veranstaltungsänderungen benachrichtigen</label></span>
+			<span class="profil_notifyKarteikartenAenderung"><input id="notifyKarteikartenAenderung_input" type="checkbox"><label for="notifyKarteikartenAenderung_input">Über Karteikartenänderungen benachrichtigen</label></span>
 		</div>
 		<div class="profil_buttons">
 			<span class="profil_speichern"><span class="mybutton_dark">Speichern</span></span>
