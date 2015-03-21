@@ -19,6 +19,9 @@ function fillProfilseite() {
         $(".profil_passwort_wdh").css("display","block");
         $(".profil_passwort_wdh").hide();
         $(".profil_passwort_wdh").slideDown();
+        $(".profil_passwort_alt").css("display","block");
+        $(".profil_passwort_alt").hide();
+        $(".profil_passwort_alt").slideDown();
     });
     
 }
