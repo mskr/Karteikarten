@@ -3,6 +3,7 @@ package com.sopra.team1723.ctrl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.activation.*;
+
 
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
@@ -164,7 +166,6 @@ public class BenutzerServlet extends ServletController {
                 studienGang,
                 passwort);
         
-        
         try
         {
             dbManager.schreibeBenutzer(nutzer);
@@ -302,12 +303,30 @@ public class BenutzerServlet extends ServletController {
         return true;
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
-    {
-        doPost(req, resp);
-    }
 
+    /**
+     * Gibt alle gespeicherten Studiengänge zum Client zurück
+     * @param request 
+     * @param response 
+     * @return
+     */
+    private boolean leseStudiengaenge(HttpServletRequest request, HttpServletResponse response) 
+    {
+        List<String> list = dbManager.leseStudiengaenge();
+        if(list != null)
+        {
+            JSONObject jo = JSONConverter.toJson(list);
+            outWriter.print(jo);
+            return true;
+        }
+        else
+        {
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+    }
+  
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
@@ -355,6 +374,10 @@ public class BenutzerServlet extends ServletController {
         else if(action.equals(requestActionResetPasswort))
         {
             passwortReset(req, resp);
+        }
+        else if(action.equals(requestActionGetStudiengaenge))
+        {
+            leseStudiengaenge(req, resp);
         }
         else
         {

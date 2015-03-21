@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import org.json.simple.JSONObject;
+
 import com.sopra.team1723.data.*;
 
 /**
@@ -77,13 +79,26 @@ public class ProfilServlet extends ServletController {
     }
     
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	// TODO Auto-generated method stub
     	super.doPost(req, resp);
+    	
+    	// Ist beim ServletController schon eine Antowrt zurückgegeben worden?
+    	if(!doProcessing())
+    	    return;
+    	
+    	if(aktuelleAction.equals(requestActionGetBenutzer))
+        {
+    	    JSONObject jo = JSONConverter.toJson(aktuellerBenutzer);
+    	    outWriter.print(jo);
+    	    return;
+        }
+        else
+        {
+            // Sende Nack mit ErrorText zurück
+            JSONObject jo  = null;
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            System.out.println("Antwort: " + jo.toJSONString());
+            outWriter.print(jo);
+        }
     }
 }

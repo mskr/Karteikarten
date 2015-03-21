@@ -10,12 +10,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
-import org.jsoup.Jsoup;
-
 import com.sopra.team1723.data.*;
 
 /**
@@ -30,6 +27,8 @@ public class ServletController extends HttpServlet
     protected final String sessionAttributeEMail = "eMail";
     // TODO: Alle benutzer attribute speichern oder nur eMail? Was passiert wenn Benutzer geändert wird ?!
     
+    protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
+    
     /**
      *  Request Parameter
      */
@@ -38,6 +37,8 @@ public class ServletController extends HttpServlet
     protected final String requestActionLogout = "logout";
     protected final String requestActionRegister = "registrieren";
     protected final String requestActionResetPasswort = "resetPasswort";
+    protected final String requestActionGetBenutzer = "getBenutzer";
+    protected final String requestActionGetStudiengaenge = "getStudiengaenge";
 
     protected final String requestEmail = "email";
     protected final String requestPassword = "pass";
@@ -47,6 +48,8 @@ public class ServletController extends HttpServlet
     protected final String requestStudiengang = "studienGang";
     protected final String requestNutzerstatus = "nutzerStatus";
 
+    private boolean doPorcessing = false;
+    
     /**
      * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
      * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
@@ -83,6 +86,11 @@ public class ServletController extends HttpServlet
      *  Print Writer über den Daten an den Client geschrieben werden können
      */
     protected PrintWriter outWriter = null;
+    
+    /**
+     * Hier steht die vom ServletController ausgelesene Aktion, die der Client ausführen will.
+     */
+    protected String aktuelleAction = null;
     
 
     /**
@@ -129,10 +137,34 @@ public class ServletController extends HttpServlet
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
-        // aktuelle Session holen
-        aktuelleSession = req.getSession();
+        doPorcessing = false;
+        aktuelleSession = null;
+        aktuelleAction = null;
+        aktuellerBenutzer = null;
         outWriter = resp.getWriter();
         
+        // Prüfen ob session abgelaufen ist
+        if (req.getRequestedSessionId() != null && 
+                !req.isRequestedSessionIdValid() && 
+                req.getSession(false) != null && 
+                !req.getSession(false).isNew()) 
+        {
+            // TODO Manchmal wird eine Session als abgelaufen gemeldet, wenn sich der Nutzer normal ausgeloggt hat.
+            System.out.println("Session " + req.getRequestedSessionId() + " ist abgelaufen!");
+            // Session is expired
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSessionExpired);
+            outWriter.print(jo);
+            
+            // Neue Session erzeugen
+            aktuelleSession = req.getSession();
+            aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
+            return;
+        }
+
+        aktuelleSession = req.getSession();
+        if(aktuelleSession.isNew())
+            aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
+
         if(dbManager == null)
         {
             // Sende Error zurück
@@ -140,13 +172,19 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
-        
-                
+
         // Ist der Benutzer eingeloggt ?
         if(pruefeLogin(aktuelleSession))
         {
             // Wenn ja, dann stelle allen Servlets den Benutzer zur Verfügung
             aktuellerBenutzer = leseBenutzer(aktuelleSession);
+            if(aktuellerBenutzer == null)
+            {
+                // Sende Nack mit ErrorText zurück
+                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+                outWriter.print(jo);
+                return;
+            }
         }
         // wenn nicht eingeloggt fehlermeldung zurückgeben an Aufrufer
         else
@@ -154,9 +192,38 @@ public class ServletController extends HttpServlet
             // Sende Nack mit ErrorText zurück
             JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNotLoggedIn);
             outWriter.print(jo);
+            return;
         }
+        
+        // Hole die vom client angefragte Aktion
+        aktuelleAction = req.getParameter(requestAction);
+        
+        if(isEmptyAndRemoveSpaces(aktuelleAction))
+        {
+            // Sende Error zurück
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
+        doPorcessing = true;
+        System.out.println("Action: " + aktuelleAction);
+    }
+    /**
+     * Gibt "True" zurück, wenn Aufruf von super.doPost(...) keinen Error an den Client zurückgegeben hat.
+     * Wenn dies der fall ist, dann sollte der Aufrufer eine Antwort an den Client schicken
+     * @return
+     */
+    protected boolean doProcessing()
+    {
+        return doPorcessing;
     }
     
+    /**
+     * Diese Funktion prüft, ob der übergebene String leer ist und 
+     * ob entfernt automatisch alle Leerzeichen am Anfang und am Ende.
+     * @param txt
+     * @return
+     */
     boolean isEmptyAndRemoveSpaces(String txt)
     {
         if(txt == null)

@@ -72,15 +72,15 @@ public class KommentarServlet extends ServletController {
         // TODO implement here
         return false;
     }
-    
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	// TODO Auto-generated method stub
     	super.doPost(req, resp);
+        
+        // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
+        if(!doProcessing())
+            return;
+        
     }
 }

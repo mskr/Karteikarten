@@ -3,18 +3,24 @@
  */
 
 $(document).ready(function() {
-    $("#logout").click(function() {
+    /**
+     * Beim Ausloggen wird das Logout Kommando an den Server gesendet.
+     * Antwortet dieser mit einem No Error wird einfach die Seite
+     * neu geladen. Das darauf folgende getBenutzer erkennt,
+     * dass niemand eingeloggt ist und leitet zur Startseite weiter.
+     */
+    $(".logout").click(function() {
         $.ajax({
             type: "POST",
             url: "BenutzerServlet",
-            data: "action=logout",
+            data: "action="+actionLogout,
             success: function(response) {
                 var jsonObj = $.parseJSON(response);
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
-                    window.location.href = "startseite.html";
+                    location.reload();
                 } else {
-                    $(".err").html(buildMessage(errCode));
+                    message(0, buildMessage(errCode));
                 }
             }
         });

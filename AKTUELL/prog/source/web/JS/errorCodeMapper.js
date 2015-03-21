@@ -1,20 +1,23 @@
 /**
  * @author mk
- * @see Servlet
+ * @see JSONConverter.java
 */
 
-/*
+/**
  * Zentrale Funktion,
  * die vom Server empfangene Error-Codes
  * in eine Fehlermeldung fuer den Benutzer uebersetzt.
 */
 function buildMessage(errCode) {
     switch(errCode) {
-        case "notloggedin": return "Bitte melden Sie sich erneut an.";
-        case "loginfailed": return "Dieser Eintrag wurde in der Datenbank nicht gefunden oder ein Serverfehler ist aufgetreten.";
-        case "logoutfailed": return "Ihr Logout ist fehlgeschlagen.";
+        case "systemerror": return "Ein interner Serverfehler ist aufgetreten.";
+        case "invalidparam": return "Der Server hat ungueltige oder fehlende Parameter erhalten. Bitte machen Sie andere Eingaben!";
+        case "notloggedin": return "Sie sind nicht eingeloggt.";
+        case "loginfailed": return "Dieser Eintrag wurde in der Datenbank nicht gefunden.";
         case "registerfailed": return "Ihre Daten konnten nicht registriert werden. Bitte versuchen Sie es erneut.";
+        case "emailalreadyinuse": return "Entschuldigung, diese E-Mail Adresse ist bereits vergeben.";
         case "pwresetfailed": return "Ihr Passwort konnte nicht zurueckgesetzt werden. Bitte versuchen Sie es erneut.";
-        case "invalidparam": return "Der Server hat ungueltige oder fehlende Parameter erhalten.";
+        case "sessionexpired": return "Ihre Login Session ist abgelaufen. Bitte loggen Sie sich erneut ein.";
+        default: return "Ein unbekannter Fehler ist aufgetreten.";
     }
 }

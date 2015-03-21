@@ -1,0 +1,883 @@
+<!-- ABKUERZUNGEN fuer class und id Attribute -->
+<!-- vn = Veranstaltung -->
+<!-- bn = Benachrichtigung -->
+<!-- bt = Button -->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Sopra</title>
+<!-- Main CSS -->
+<link rel="stylesheet" href="CSS/sopra.css" type="text/css">
+<!-- Button CSS -->
+<link rel="stylesheet" href="CSS/mybuttonstyle.css" type="text/css">
+<!-- Open Sans Schriftart (see http://www.google.com/fonts/specimen/Open+Sans) -->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<!-- Computer Modern Sans -->
+<link rel="stylesheet" href="fonts/ComputerModern/Sans/cmun-sans.css" type="text/css">
+<!-- Computer Modern Serif -->
+<link rel='stylesheet' href='fonts/ComputerModern/Serif/cmun-serif.css' type='text/css'>
+<!-- GitHub Octicons -->
+<link rel="stylesheet" href="octicons/octicons.css">
+<!-- MySopraIcons -->
+<link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
+<!-- JQuery -->
+<script src="JS/jquery-latest.min.js"></script>
+<!-- JQuery Popup Overlay -->
+<script src="JS/jquery.popupoverlay.js"></script>
+<!-- CKEditor Core -->
+<script src="ckeditor/ckeditor.js"></script>
+<!-- CKEditor Config -->
+<script src="ckeditor/build-config.js"></script>
+<!-- CKEditor JQuery Adapter -->
+<script src="ckeditor/adapters/jquery.js"></script>
+<!-- CKEditor Code Snippet Syntax Highlighting CSS -->
+<link href="ckeditor/plugins/codesnippet/lib/highlight/styles/zenburn.css" rel="stylesheet">
+<!-- Ajax Setup Skript -->
+<script src="JS/ajaxSetup.js"></script>
+<!-- Error Code Mapping Script -->
+<script src="JS/errorCodeMapper.js"></script>
+<!-- Error Message Skript -->
+<script src="JS/errorMessageMaker.js"></script>
+<!-- Variablen fuer Action Kommandos und Parameter -->
+<script src="JS/actionDefines.js"></script>
+<!-- Login Script -->
+<script src="JS/login.js"></script>
+<!-- Registrieren Script -->
+<script src="JS/registrieren.js"></script>
+<!-- Logout Script -->
+<script src="JS/logout.js"></script>
+<!-- Box Handler Skript -->
+<script src="JS/boxhandler.js"></script>
+<!-- Startseite Skript -->
+<script src="JS/startseite.js"></script>
+<!-- mypersonalbox Skript -->
+<script src="JS/mypersonalbox.js"></script>
+<!-- Profilseite Skript -->
+<script src="JS/profilseite.js"></script>
+<!-- Initial alle Kind<div>s von <body> verbergen und Ladeanimation anzeigen -->
+<style>
+body > div {
+	display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="msg err"></div>
+<div class="msg success"></div>
+
+<div id="mypersonalbox_startseite" class="mypersonalbox">
+	<h3>Start</h3>
+	<form id="login_form">
+		<input id="login_email" class="login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
+		<input id="login_pass" class="login_input pw" type="password" name="passwort" placeholder="Passwort" required>
+		<input id="login_submit" class="mybutton_dark loginbutton" type="submit" value="Login">
+	</form>
+	<a class="pwreset">Passwort zurücksetzen</a>
+	<form id="registrieren_form">
+		<p>
+		<input id="reg_pass" class="login_input" type="password" name="passwort_wdh" placeholder="Passwort wiederholen" required> <br>
+		<input id="reg_vorname" class="login_input" type="text" name="vorname" placeholder="Vorname" required> <br>
+		<input id="reg_nachname" class="login_input" type="text" name="nachname" placeholder="Nachname" required> <br>
+		<input id="reg_matnr" class="login_input" type="text" name="matrikelnummer" placeholder="Matrikelnummer" required> <br>
+		<select id="reg_studiengang" class="login_select" form="registrieren_form" required></select> <br>
+		<input id="reg_submit" class="mybutton_dark_flat regbutton" type="submit" value="Registrieren">
+		</p>
+	</form>
+</div>
+
+<div id="mainbox_startseite" class="mainbox">
+	<span class="mysopraicon sopra-sleepicon sleepicon"></span>
+</div>
+
+<script>
+$(document).ready( function() {
+    // Code fuer das Veranstaltung erstellen Popup
+	$('#vn_erstellen_popup').popup({
+		openelement: '.vn_erstellen_bt',
+		closeelement: '.vn_popup_close',
+		focuselement: '#vn_titel_input',
+		blur: false,
+		transition: 'all 0.3s'
+	});
+	// Code fuer das Ausklappen der Veranstaltungs-Listenelemente
+	$('.vn_mehr_einbl').html('<span class="octicon octicon-three-bars"></span> Mehr');
+	$('.vn_mehr_einbl').click( function() {
+		var vnmehr_domelem = $(this).next().next().get(0);
+		console.log('DOM Element class:'+vnmehr_domelem.getAttribute('class'));
+		var vnmehr_jqueryobj = $(vnmehr_domelem);
+		console.log('JQuery Object class:'+vnmehr_jqueryobj.attr('class'));
+		if( vnmehr_jqueryobj.is(':hidden') ) {
+			console.log('War hidden... Rufe jetzt slideDown() auf...');
+			vnmehr_jqueryobj.slideDown();
+			$(this).html('<span class="octicon octicon-three-bars"></span> Weniger');
+		} else {
+			console.log('War nicht hidde... Rufe jetzt slideUp() auf');
+			vnmehr_jqueryobj.slideUp();
+			$(this).html('<span class="octicon octicon-three-bars"></span> Mehr');
+		}
+	});
+});
+</script>
+
+<div id="mypersonalbox_hauptseite" class="mypersonalbox">
+	<div class="user_container">
+		<span class="mysopraicon sopra-usericon usericon" id="usericon"><br></span>
+		<a class="username" data-tooltip="zum Profil gehen"></a>
+		<br>
+		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
+		<a id="logout" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
+	</div>
+	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
+	<br>
+	<ul class="meinevn">
+		<li><a class="vn_angepinnt">Analysis I</a></li>
+		<li><a class="vn_angepinnt">Algorithmen</a></li>
+		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
+	</ul>
+	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
+	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
+		<div class="bn neu">
+			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+	</div>
+</div>
+
+<div id="mainbox_hauptseite" class="mainbox">
+	<!-- Trick: Suchfeld ist auf autofocus und required gesetzt. So kann der User sofort lostippen und per CSS wird das Feld hervorgehoben, wann etwas eingegeben wurde (denn das leere required-Field ist invalid). -->
+	<input class="suche_etwas" type="search" placeholder="Veranstaltungen und Personen finden..." required>
+	<span class="mybutton_green vn_erstellen_bt"><span class="octicon octicon-plus"></span> </span>
+	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
+	<div class="vn_container">
+		<div class="vn_tab meine_vn">
+			<input class="vn_tabradio" type="radio" id="tab-1" name="group1" checked>
+			<label for="tab-1">Meine</label>
+			<div class="vn_tabcontent">
+				<div class="vn_fktn_spez_wrapper"><a class="vn_fktn_spez"><span class="octicon octicon-question"></span> Funktion</a></div>
+				<div class="vn">
+					<span class="vn_titel">Molekularbiologie I</span>
+					<span class="vn_details"><span class="vn_detail">Prof. Dr. Oberhuber</span><br><span class="vn_detail">60 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
+					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
+					<div class="vn_mehr_wrapper">
+						<span class="vn_mehr">Die Molekularbiologie befasst sich mit der Struktur, Biosynthese und Funktion von DNA und RNA auf molekularer Ebene und wie diese untereinander und mit Proteinen interagieren. Das Forschungsgebiet der Molekularbiologie überlappt dabei immer mehr mit weiteren Feldern der Biologie und Chemie, insbesondere der Genetik und der Biochemie. Die Grenzen zwischen diesen Fachbereichen sind dabei oft fließend. Der Name für dieses Fach wurde 1952 durch den englischen Physiker und Molekularbiologen William Astbury geprägt.</span>
+						<div class="vn_optionen">
+							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+						</div>
+					</div>
+				</div>
+				<div class="vn">
+					<span class="vn_titel">Algorithmen</span>
+					<span class="vn_details"><span class="vn_detail">Prof. Dr. Schöning</span><br><span class="vn_detail">40 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
+					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
+					<div class="vn_mehr_wrapper">
+						<span class="vn_mehr">Ein Algorithmus ist eine eindeutige Handlungsvorschrift zur Lösung eines Problems oder einer Klasse von Problemen. Algorithmen bestehen aus endlich vielen, wohldefinierten Einzelschritten.[1] Somit können sie zur Ausführung in einem Computerprogramm implementiert, aber auch in menschlicher Sprache formuliert werden. Bei der Problemlösung wird eine bestimmte Eingabe in eine bestimmte Ausgabe überführt.[2]</span>
+						<div class="vn_optionen">
+							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+						</div>
+					</div>
+				</div>
+				<div class="vn">
+					<span class="vn_titel">Lineare Algebra</span>
+					<span class="vn_details"><span class="vn_detail">Dr. Liebezeit</span><br><span class="vn_detail">30 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
+					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
+					<div class="vn_mehr_wrapper">
+						<span class="vn_mehr">Die lineare Algebra (auch Vektoralgebra) ist ein Teilgebiet der Mathematik, das sich mit Vektorräumen und linearen Abbildungen zwischen diesen beschäftigt. Dies schließt insbesondere auch die Betrachtung von linearen Gleichungssystemen und Matrizen mit ein. Vektorräume und deren lineare Abbildungen sind ein wichtiges Hilfsmittel in vielen Bereichen der Mathematik. Außerhalb der reinen Mathematik finden sich Anwendungen u. a. in den Naturwissenschaften, in der Informatik und in der Wirtschaftswissenschaft (z. B. in der Optimierung).Die lineare Algebra entstand aus zwei konkreten Anforderungen heraus: einerseits dem Lösen von linearen Gleichungssystemen, andererseits der rechnerischen Beschreibung geometrischer Objekte, der sogenannten analytischen Geometrie (daher bezeichnen manche Autoren lineare Algebra als lineare Geometrie).</span>
+						<div class="vn_optionen">
+							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="vn_tab studiengang_vn">
+			<input class="vn_tabradio" type="radio" id="tab-2" name="group1">
+			<label for="tab-2">Studiengang</label>
+			<div class="vn_tabcontent">
+				<div class="vn">
+					<span class="vn_titel">Algorithmen</span>
+					<span class="vn_details"><span class="vn_detail">Prof. Dr. Schöning</span><br><span class="vn_detail">30 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
+					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
+					<div class="vn_mehr_wrapper">
+						<span class="vn_mehr">Die lineare Algebra (auch Vektoralgebra) ist ein Teilgebiet der Mathematik, das sich mit Vektorräumen und linearen Abbildungen zwischen diesen beschäftigt. Dies schließt insbesondere auch die Betrachtung von linearen Gleichungssystemen und Matrizen mit ein. Vektorräume und deren lineare Abbildungen sind ein wichtiges Hilfsmittel in vielen Bereichen der Mathematik. Außerhalb der reinen Mathematik finden sich Anwendungen u. a. in den Naturwissenschaften, in der Informatik und in der Wirtschaftswissenschaft (z. B. in der Optimierung).Die lineare Algebra entstand aus zwei konkreten Anforderungen heraus: einerseits dem Lösen von linearen Gleichungssystemen, andererseits der rechnerischen Beschreibung geometrischer Objekte, der sogenannten analytischen Geometrie (daher bezeichnen manche Autoren lineare Algebra als lineare Geometrie).</span>
+						<div class="vn_optionen">
+							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+						</div>
+					</div>
+				</div>
+				<div class="vn">
+					<span class="vn_titel">Lineare Algebra</span>
+				</div>
+				<div class="vn">
+					<span class="vn_titel">Grundlagen Interaktiver Systeme</span>
+				</div>
+			</div>
+		</div>
+		<div class="vn_tab semester_vn">
+			<input class="vn_tabradio" type="radio" id="tab-3" name="group1">
+			<label for="tab-3">Semester</label>
+			<div class="vn_tabcontent">
+				<div class="vn">Algorithmen</div>
+			</div>
+		</div>
+		<div class="vn_tab alle_vn">
+			<input class="vn_tabradio" type="radio" id="tab-4" name="group1">
+			<label for="tab-4">Alle</label>
+			<div class="vn_tabcontent">
+				<div class="vn">Molekularbiologie I</div>
+				<div class="vn">Algorithmen</div>
+				<div class="vn">Lineare Algebra</div>
+				<div class="vn">Grundlagen Interaktiver Systeme</div>
+				<div class="vn">Grundlagen der Rechnernetze</div>
+				<div class="vn">Grundlagen der Betriebssysteme</div>
+				<div class="vn">English in Science and Technology I</div>
+				<div class="vn">Formale Grundlagen</div>
+				<div class="vn">Analysis I</div>
+				<div class="vn">Analysis II</div>
+				<div class="vn">Einführung in die Informatik</div>
+			</div>
+		</div>
+		<span class="mybutton_dark_flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span>
+	</div>
+	<div class="impressum">Uni Ulm <br> WiSe 14/15 <br> Informatik <br> Softwaregrundprojekt <br> Team 17: Andreas Rottach, Fabian Schilha, Matthias Englert <br> Team 23: Julius Friedrich, Lorenz Weiß, Marius Kircher</div>
+</div>
+
+<div id="vn_erstellen_popup">
+	<div class="vn_popup_titel">
+		<h3>Veranstaltung erstellen</h3>
+	</div>
+	<div class="vn_popup_close">
+		<span class="octicon octicon-x"></span>
+	</div>
+	<div class="vn_popup_form">
+		<input class="popup_input" id="vn_titel_input" type="text" placeholder="Titel">
+		<input class="popup_input" id="vn_studg_input" type="text" placeholder="Studiengang">
+		<select class="popup_select" id="vn_semester_select">
+			<option value="wise1415">Aktuelles Semester (WiSe 14/15)</option>
+			<option value="sose15">SoSe 15</option>
+			<option value="wise1516">WiSe 15/16</option>
+		</select>
+		<input class="popup_input" id="vn_mod_input" type="text" placeholder="Moderatoren">
+		<input class="popup_input" id="vn_mehr_input" type="text" placeholder="Beschreibung">
+		<div class="popup_spalte">
+			<span>Wer darf bearbeiten?</span>
+			<span><input id="vn_jeder_bearb" type="radio" name="wer_darf_bearb"><label for="vn_jeder_bearb">Jeder</label></span>
+			<span><input id="vn_mod_bearb" type="radio" name="wer_darf_bearb"><label for="vn_mod_bearb">Nur Moderatoren</label></span>
+			<span><input id="vn_keiner_bearb" type="radio" name="wer_darf_bearb" checked><label for="vn_keiner_bearb">Nur ich</label></span>
+		</div>
+		<div class="popup_spalte">
+			<span><input id="vn_komm_erlaubt" type="checkbox" checked><label for="vn_komm_erlaubt">Kommentare erlaubt</label></span>
+			<span><input id="vn_bew_erlaubt" type="checkbox" checked><label for="vn_bew_erlaubt">Bewertungen erlaubt</label></span>
+		</div>
+	</div>
+	<div class="vn_popup_foot">
+		<input class="mybutton_dark_flat popup_close" type="button" value="Abbrechen">
+		<input class="mybutton_green" type="submit" value="Erstellen">
+	</div>
+</div>
+
+<div id="mypersonalbox_profilseite" class="mypersonalbox">
+	<!-- Return Link erscheint nicht auf Hauptseite -->
+	<a class="return" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
+	<div class="user_container">
+		<span class="mysopraicon sopra-usericon usericon"><br></span>
+		<a class="username" data-tooltip="zum Profil gehen"></a>
+		<br>
+		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
+		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
+	</div>
+	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
+	<br>
+	<ul class="meinevn">
+		<li><a class="vn_angepinnt">Analysis I</a></li>
+		<li><a class="vn_angepinnt">Algorithmen</a></li>
+		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
+	</ul>
+	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
+	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
+		<div class="bn neu">
+			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+	</div>
+</div>
+
+<div id="mainbox_profilseite" class="mainbox">
+	<div class="profil_head">
+		<a class="avatar_aendern"><span class=""><span class="mysopraicon sopra-usericon"></span></span> Avatar bearbeiten</a>
+		<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
+	</div>
+	<div class="profil_body">
+		<div class="profil_daten">
+			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password"><span class="octicon octicon-pencil"></span></span>
+			<span class='profil_passwort_wdh' style="display:none"><label for='profil_passwort_wdh_input'>Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
+			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_nachname"><label for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_matrikelnummer"><label for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_studiengang"><label for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" type="text"><span class="octicon octicon-pencil"></span></span>
+			<span class="profil_rolle">
+				<label for="profil_rolle_input">Rolle</label>
+				<select id="profil_rolle_input">
+					<option>STUDENT</option>
+					<option>DOZENT</option>
+					<option>ADMIN</option>
+				</select>
+			</span>
+		</div>
+		<div class="profil_buttons">
+			<span class="profil_speichern"><span class="mybutton_dark">Speichern</span></span>
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Code fuer das Attribute Tooltip
+ 	$("#attr_popup").popup({
+			type: 'tooltip',
+			vertical: 'topedge',
+			horizontal: 'leftedge'
+	});
+// 	CKEDITOR.config.irgendeinPlugin
+	// Einklappen der Kommentarboxen
+	$('.kk_kommtoggle').html('Einklappen');
+	var height = 0;
+	$('.kk_kommtoggle').click( function() {
+		var domelem = $(this).parent().get(0);
+		var jqueryobj = $(domelem);
+		if( jqueryobj.height()>50 ) {
+			height = jqueryobj.height();
+			jqueryobj.animate({
+				height: "15px"
+			}, 500 );
+			$(this).html('Ausklappen');
+		} else {
+			jqueryobj.animate({
+				height: ""+height+"px"
+			}, 500 );
+			$(this).html('Einklappen');
+		}
+	});
+});
+</script>
+
+<div id="mypersonalbox_veranstaltungseite" class="mypersonalbox">
+	<!-- Return Link erscheint nicht auf Hauptseite -->
+	<a class="return" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
+	<div class="user_container">
+		<span class="mysopraicon sopra-usericon usericon"><br></span>
+		<a class="username" data-tooltip="zum Profil gehen">Marius Kircher</a>
+		<br>
+		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
+		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
+	</div>
+	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
+	<br>
+	<ul class="meinevn">
+		<li><a class="vn_angepinnt">Analysis I</a></li>
+		<li><a class="vn_angepinnt">Algorithmen</a></li>
+		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
+	</ul>
+	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
+	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
+		<div class="bn neu">
+			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+		<div class="bn gelesen">
+			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		</div>
+	</div>
+</div>
+
+<div id="mainbox_veranstaltungseite" class="mainbox">
+	<div class="kk_toolbar">
+		<div class="mybuttongroup filtern" grouplabel="Filter">
+			<input id="filter0" type="radio" name="group_filtern" checked>
+			<label for="filter0">
+				<a class="groupelem left alle" data-tooltip="Alle">
+					<span class="octicon octicon-versions"></span>
+				</a>
+			</label>
+			<input id="filter1" type="radio" name="group_filtern">
+			<label for="filter1">
+				<a class="groupelem middle wichtig" data-tooltip="Wichtig">
+					<span class="octicon octicon-star"></span>
+				</a>
+			</label>
+			<input id="filter2" type="radio" name="group_filtern">
+			<label for="filter2">
+				<a class="groupelem middle bilder" data-tooltip="Bilder">
+					<span class="octicon octicon-device-camera"></span>
+				</a>
+			</label>
+			<input id="filter3" type="radio" name="group_filtern">
+			<label for="filter3">
+				<a class="groupelem middle videos" data-tooltip="Videos">
+					<span class="octicon octicon-device-camera-video"></span>
+				</a>
+			</label>
+			<input id="filter4" type="radio" name="group_filtern">
+			<label for="filter4">
+				<input class="groupelem_input right filterstring" type="search" placeholder="Karteikarten filtern..." required autofocus>
+			</label>
+		</div>
+		<div class="mybuttongroup sortieren" grouplabel="Sortieren">
+			<input id="sortier0" type="radio" name="group_sortieren" checked>
+			<label for="sortier0">
+				<a class="groupelem left roterfaden" data-tooltip="Standard">
+					<span class="octicon octicon-ellipsis"></span>
+				</a>
+			</label>
+			<input id="sortier1" type="radio" name="group_sortieren">
+			<label for="sortier1">
+				<a class="groupelem middle beliebt" data-tooltip="Upvotes">
+					<span class="octicon octicon-triangle-up"></span>
+				</a>
+			</label>
+			<input id="sortier2" type="radio" name="group_sortieren">
+			<label for="sortier2">
+				<a class="groupelem right neueste" data-tooltip="Neu">
+					<span class="octicon octicon-clock"></span>
+				</a>
+			</label>
+		</div>
+		<div class="mybuttongroup ansicht" grouplabel="Ansicht">
+			<input id="ansicht0" type="radio" name="group_ansicht" checked>
+			<label for="ansicht0">
+				<a class="groupelem left lese" data-tooltip="Lesen">
+					<span class="octicon octicon-book"></span>
+				</a>
+			</label>
+			<input id="ansicht1" type="radio" name="group_ansicht">
+			<label for="ansicht1">
+				<a class="groupelem middle baum" data-tooltip="Baum">
+					<span class="octicon octicon-unfold"></span>
+				</a>
+			</label>
+			<input id="ansicht2" type="radio" name="group_ansicht">
+			<label for="ansicht2">
+				<a class="groupelem right graph" data-tooltip="Graph">
+					<span class="octicon octicon-git-merge"></span>
+				</a>
+			</label>
+		</div>
+		<div class="kk_export_bt">
+			<span class="mybutton_dark"><span class="octicon octicon-cloud-download"></span></span>
+		</div>
+		<div class="kk_erstellen_bt">
+			<span class="mybutton_green"><span class="octicon octicon-plus"></span></span>
+		</div>
+	</div>
+	<div class="vn_header">
+		<h1>Analysis I</h1>
+		<span class="mybutton_red"><span class="octicon octicon-trashcan"></span></span>
+		<span class="mybutton_dark"><span class="octicon octicon-pencil"></span></span>
+		<span>Dr. Liebezeit<br>Wintersemester 2014/15</span>
+	</div>
+	<div class="kk_wrapper">
+		<div class="kk_votes">
+			<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
+			<div class="kk_votestat">-5</div>
+			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
+		</div>
+		<div class="kk_optionen">
+			<a class="option permalink" data-tooltip="Link kopieren">
+				<span class="octicon octicon-link"></span>
+			</a>
+			<a class="option loeschen" data-tooltip="Karteikarte löschen">
+				<span class="octicon octicon-trashcan"></span>
+			</a>
+			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
+				<span class="octicon octicon-plus"></span>
+			</a>
+			<a class="option attribute attr_popup_open" data-tooltip="Attribute ändern">
+				<span class="octicon octicon-checklist"></span>
+			</a>
+		</div>
+		<div class="kk_notizen" contenteditable="true">Verstehe ich nicht</div>
+		<div class="kk inhalt_text" contenteditable="true"><strong>5.19 Definition.</strong> Sei D ⊂ R m × R d und F : D → R deine Funktion. Eine implizitdefinierte Funktion oder implizite Funktion ist eine Funktion y : Rm → Rd, derenFunktionswerte durch die Gleichung F(x, y(x)) = 0 definiert sind.</div>
+		<div class="kk_kommbox">
+			<div class="kk_kommheader"><span class="octicon octicon-comment-discussion"></span> Kommentare (6)</div>
+			<div class="kk_superkomm">
+				<div class="kk_kommvotes">
+					<a class="komm_voteup"><span class="octicon octicon-triangle-up"></span></a>
+					<div class="komm_votestat">3</div>
+					<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
+				</div>
+				<div class="kk_komm_loeschen">
+					<a><span class="octicon octicon-trashcan"></span></a>
+				</div>
+				Mir ist nicht so ganz klar wie man allgemein die Randkurve von einem Körper bestimmt. Z.B. bei der Aufgabe 1c braucht man ja die Randkurve des Kegels für den Satz von Stokes
+				<div class="kk_komminfo"><a>Matthias Englert</a><span>28. Jan '15 um 15:29</span></div>
+				<div class="kk_subkomm">
+					<div class="kk_komm_loeschen">
+						<a><span class="octicon octicon-trashcan"></span></a>
+					</div>
+					Ist der Papst katholisch?
+					<div class="kk_komminfo"><a class="kk_kommautor">Jan Willem Liebezeit</a><span class="kk_kommzeit">28. Jan '15 um 16:29</span></div>
+				</div>
+				<div class="kk_subkomm">
+					<div class="kk_komm_loeschen">
+						<a><span class="octicon octicon-trashcan"></span></a>
+					</div>
+					Welche Farbe hat das weiße Pferd von Napoleon?
+					<div class="kk_komminfo"><a class="kk_kommautor">Matthias Englert</a><span class="kk_kommzeit">28. Jan '15 um 17:31</span></div>
+				</div>
+				<div class="kk_subkomm">
+					<div class="kk_komm_loeschen">
+						<a><span class="octicon octicon-trashcan"></span></a>
+					</div>
+					Die Randkurve bestimmt man wie im Skript Satz 13.5
+					<div class="kk_komminfo"><a class="kk_kommautor">Erik Hintz</a><span class="kk_kommzeit">29. Jan '15 um 12:29</span></div>
+				</div>
+				<div class="kk_kommantwort">
+					<textarea id="textarea1.1" placeholder="Antworten..." rows="1"></textarea>
+				</div>
+			</div>
+			<div class="kk_superkomm">
+				<div class="kk_kommvotes">
+					<a class="komm_voteup"><span class="octicon octicon-triangle-up"></span></a>
+					<div class="komm_votestat">-20</div>
+					<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
+				</div>
+				<div class="kk_komm_loeschen">
+					<a><span class="octicon octicon-trashcan"></span></a>
+				</div>
+				Ich check hier garnix alder wasn da los!?
+				<div class="kk_komminfo"><a class="kk_kommautor">Torsten Torstensson</a><span class="kk_kommzeit">30. Jan '15 um 03:29</span></div>
+				<div class="kk_subkomm">
+					<div class="kk_komm_loeschen">
+						<a><span class="octicon octicon-trashcan"></span></a>
+					</div>
+					Hör auf zu labern du Labersack -.-
+					<div class="kk_komminfo"><a class="kk_kommautor">Jan Willem Liebezeit</a><span class="kk_kommzeit">30. Jan '15 um 04:00</span></div>
+				</div>
+				<div class="kk_kommantwort">
+					<textarea id="textarea1.2" placeholder="Antworten..." rows="1"></textarea>
+				</div>
+			</div>
+			<div class="kk_kommerstellen">
+				<textarea id="textarea1.3" placeholder="Neues Thema beginnen..."></textarea>
+			</div>
+			<a class="kk_kommtoggle"></a>
+		</div>
+	</div>
+	<div class="kk_wrapper">
+		<div class="kk_votes">
+			<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
+			<div class="kk_votestat">42</div>
+			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
+		</div>
+		<div class="kk_optionen">
+			<a class="option permalink" data-tooltip="Link kopieren">
+				<span class="octicon octicon-link"></span>
+			</a>
+			<a class="option loeschen" data-tooltip="Karteikarte löschen">
+				<span class="octicon octicon-trashcan"></span>
+			</a>
+			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
+				<span class="octicon octicon-plus"></span>
+			</a>
+			<a class="option hochladen" data-tooltip="Neue Version dieses Bildes hochladen">
+				<span class="octicon octicon-cloud-upload"></span>
+			</a>
+			<a class="option attribute attr_popup_open" data-tooltip="Attribute ändern">
+				<span class="octicon octicon-checklist"></span>
+			</a>
+		</div>
+		<div class="kk_notizen" contenteditable="true"></div>
+		<div class="kk inhalt_bild">
+			<img class="kk_bild" src="img/monalisa.jpg">
+		</div>
+		<div class="kk_bildunterschrift" contenteditable="true"><span><strong>Abbildung 1:</strong> ...</span></div>
+		<div class="kk_kommbox">
+			<div class="kk_kommheader"><span class="octicon octicon-comment-discussion"></span> Kommentare (0)</div>
+			<div class="kk_kommerstellen">
+				<textarea placeholder="Neues Thema beginnen..."></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="kk_wrapper">
+		<div class="kk_votes">
+			<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
+			<div class="kk_votestat">0</div>
+			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
+		</div>
+		<div class="kk_optionen">
+			<a class="option permalink" data-tooltip="Link kopieren">
+				<span class="octicon octicon-link"></span>
+			</a>
+			<a class="option loeschen" data-tooltip="Karteikarte löschen">
+				<span class="octicon octicon-trashcan"></span>
+			</a>
+			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
+				<span class="octicon octicon-plus"></span>
+			</a>
+			<a class="option hochladen" data-tooltip="Neue Version dieses Videos hochladen">
+				<span class="octicon octicon-cloud-upload"></span>
+			</a>
+			<a class="option attribute attr_popup_open" data-tooltip="Attribute ändern">
+				<span class="octicon octicon-checklist"></span>
+			</a>
+		</div>
+		<div class="kk_notizen" contenteditable="true"></div>
+		<div class="kk inhalt_video">
+			<video class="kk_video">
+<!-- 				<source src="video/TheQuotientRuleMadeEasier(mathbff).mp4" type="video/mp4"> -->
+			</video>
+			<div class="video_controls"> <!-- Niemals die Reihenfolge der Childs aendern! -->
+				<a class="play_pause"><span class="mega-octicon octicon-playback-play"></span></a>
+				<input class="suchleiste" type="range" value="0">
+				<a class="stumm"><span class="octicon octicon-unmute"></span></a>
+				<input class="lautstaerke" type="range" min="0" max="1" step="0.1" value="1">
+				<a class="vollbild"><span class="octicon octicon-screen-full"></span></a>
+			</div>
+		</div>
+		<div class="kk_kommbox">
+			<div class="kk_kommheader"><span class="octicon octicon-comment-discussion"></span> Kommentare (1)</div>
+			<div class="kk_superkomm">
+				<div class="kk_komm_loeschen">
+					<a><span class="octicon octicon-trashcan"></span></a>
+				</div>
+				<div class="kk_kommvotes">
+					<a class="komm_voteup"><span class="octicon octicon-triangle-up"></span></a>
+					<div class="komm_votestat">-20</div>
+					<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
+				</div>
+				<a class="video_kommzeit">00:00:10: </a>Sehr toll erklärt! Die Dame macht das wirklich gut
+				<div class="kk_komminfo"><a class="kk_kommautor">Torsten Torstensson</a><span class="kk_kommzeit">30. Jan '15 um 03:29</span></div>
+				<div class="kk_kommantwort">
+					<textarea id="textarea1.2" placeholder="Antworten..." rows="1"></textarea>
+				</div>
+			</div>
+			<div class="kk_kommerstellen">
+				<span class="video_timebadge">00:00:00</span>
+				<textarea placeholder="An dieser Stelle kommentieren..."></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="kk_wrapper">
+		<div class="kk_votes">
+			<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
+			<div class="kk_votestat">1</div>
+			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
+		</div>
+		<div class="kk_optionen">
+			<a class="option permalink" data-tooltip="Link kopieren">
+				<span class="octicon octicon-link"></span>
+			</a>
+			<a class="option loeschen" data-tooltip="Karteikarte löschen">
+				<span class="octicon octicon-trashcan"></span>
+			</a>
+			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
+				<span class="octicon octicon-plus"></span>
+			</a>
+			<a class="option attribute attr_popup_open" data-tooltip="Attribute ändern">
+				<span class="octicon octicon-checklist"></span>
+			</a>
+		</div>
+		<div class="kk_notizen" contenteditable="true"></div>
+		<div class="kk inhalt_text" contenteditable="true"></div>
+		<div class="kk_kommbox">
+			<div class="kk_kommheader"><span class="octicon octicon-comment-discussion"></span> Kommentare (0)</div>
+			<div class="kk_kommerstellen">
+				<textarea placeholder="Neues Thema beginnen..."></textarea>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="attr_popup">
+	<div class="attr_popup_pfeil"></div>
+	<div class="attr_popup_head">
+		<span class="octicon octicon-checklist"></span><span> Attribute ändern</span>
+	</div>
+	<div class="attr_popup_body">
+		<span><input id="attr_satz" type="checkbox" name="attr"><label for="attr_satz">Satz</label></span>
+		<span><input id="attr_beweis" type="checkbox" name="attr"><label for="attr_beweis">Beweis</label></span>
+		<span><input id="attr_def" type="checkbox" name="attr"><label for="attr_def">Definition</label></span>
+		<span><input id="attr_wichtig" type="checkbox" name="attr"><label for="attr_wichtig">Wichtig</label></span>
+		<span><input id="attr_grundl" type="checkbox" name="attr"><label for="attr_grundl">Grundlagen</label></span>
+		<span><input id="attr_ueberschr" type="checkbox" name="attr"><label for="attr_ueberschr">Überschrift</label></span>
+	</div>
+	<div class="attr_popup_foot"></div>
+</div>
+
+<!-- Script fuer HTML5-Video-Player -->
+<script>
+// Dieses Skript muss ganz am Ende des Dokuments stehenn.
+// Stellt sicher, dass das Dokument geladen wurde, bevor das Script ausgefuehrt wird (wie JQuery document.ready)
+(function() {
+	var controls; // Enthaelt das video_controls-DIV der letzten Interaktion
+	var video; // Enthaelt das video Element der letzten Interaktion
+	var playPauseBtn; // Enthaelt den Play-Pause Button der letzten Interaktion
+	var muteBtn; // usw.
+	var fullscreenBtn;
+	var suchleiste;
+	var volRegler;
+	var volReglerValueTmp = 1.0; // Merke Lautstaerke vor dem Stummschalten, um sie wiederherstellen zu koennen.
+	// Registriere fuer alle Play Buttons einen Eventlistener.
+	var playPauseBtns = document.getElementsByClassName("play_pause");
+	var playPauseClickCount = 0;
+	for(var i=0; i<playPauseBtns.length; ++i) {
+		playPauseBtn = playPauseBtns[i];
+		playPauseBtn.addEventListener("click", function() {
+			// Erst wenn der User eine Interaktion mit dem Video macht (z.B. auf Play drueckt),
+			// kann das Script wissen, welches Video gesteuert werden soll.
+			controls = playPauseBtn.parentNode;
+			video = controls.previousSibling.previousSibling;
+			// Nachdem bekannt ist welches Video gesteuert werden soll,
+			// registriere den Eventlistener um die Suchleiste laufen zu lassen.
+			if(playPauseClickCount==0) { // Registriere den Eventlistener nur einmal
+				video.addEventListener("timeupdate", function() {
+					// Wird kontinuierlich aufgerufen, waehrend das Video laeuft.
+					var value = (100 / video.duration) * video.currentTime;
+					var sl = playPauseBtn.nextSibling.nextSibling;
+					sl.value = value;
+					var kk_wrapper = controls.parentNode.parentNode.parentNode;
+					var timebatch = kk_wrapper.getElementsByClassName("video_timebadge")[0];
+					var secg = Math.round(video.currentTime);
+					var std = Math.floor(secg/3600);
+					var min = Math.floor(secg/60);
+					var sec = secg - (min*60);
+					if(std<10) std = "0"+std;
+					if(min<10) min = "0"+min;
+					if(sec<10) sec = "0"+sec;
+					var formatted = ""+std+":"+min+":"+sec;
+					timebatch.innerHTML = formatted;
+				});
+				video.addEventListener("ended", function() {
+					console.log("Ended!")
+					// Reset nach dem Ende des Videos
+					playPauseBtn.firstChild.setAttribute("class", "mega-octicon octicon-playback-rewind");
+				});
+			}
+			if(video.paused == true) {
+				video.play();
+				playPauseBtn.firstChild.setAttribute("class", "mega-octicon octicon-playback-pause");
+			} else {
+				video.pause();
+				playPauseBtn.firstChild.setAttribute("class", "mega-octicon octicon-playback-play");
+			}
+			++playPauseClickCount;
+		});
+	}
+	// Registriere fuer alle Stumm Buttons einen Eventlistener.
+	var muteBtns = document.getElementsByClassName("stumm");
+	for(var i=0; i<muteBtns.length; ++i) {
+		muteBtn = muteBtns[i];
+		muteBtn.addEventListener("click", function() {
+			controls = muteBtn.parentNode;
+			video = controls.previousSibling.previousSibling;
+			if(video.muted == false) {
+				video.muted = true;
+				muteBtn.firstChild.setAttribute("class", "octicon octicon-mute");
+				volRegler = muteBtn.nextSibling.nextSibling;
+				volReglerValueTmp = volRegler.value;
+				volRegler.value = 0.0;
+			} else {
+				video.muted = false;
+				muteBtn.firstChild.setAttribute("class", "octicon octicon-unmute");
+				volRegler.value = volReglerValueTmp;
+			}
+		});
+	}
+	// Registriere fuer alle Vollbild Buttons einen Eventlistener.
+	var fullscreenBtns = document.getElementsByClassName("vollbild");
+	for(var i=0; i<fullscreenBtns.length; ++i) {
+		fullscreenBtn = fullscreenBtns[i];
+		fullscreenBtn.addEventListener("click", function() {
+			controls = fullscreenBtn.parentNode;
+			video = controls.previousSibling.previousSibling;
+			if(video.requestFullscreen) {
+				video.requestFullscreen(); // W3C Standard
+			} else if(video.mozRequestFullScreen) {
+				video.mozRequestFullScreen(); // Firefox specific
+			} else if(video.webkitRequestFullscreen) {
+				video.webkitRequestFullscreen(); // Chrome and Safari specific
+			}
+		});
+	}
+	// Registriere fuer alle Suchleisten einen Eventlistener.
+	var suchleisten = document.getElementsByClassName("suchleiste");
+	for(var i=0; i<suchleisten.length; ++i) {
+		suchleiste = suchleisten[i];
+		suchleiste.addEventListener("change", function() {
+			controls = suchleiste.parentNode;
+			video = controls.previousSibling.previousSibling;
+			// Zeit berechnen zu der gesprungen werden soll
+			var time = video.duration * (suchleiste.value / 100);
+			// Video auf diese Zeit setzen
+			video.currentTime = time;
+		});
+		suchleiste.addEventListener("mousedown", function() {
+			controls = suchleiste.parentNode;
+			video = controls.previousSibling.previousSibling;
+			video.pause();
+		});
+		suchleiste.addEventListener("mouseup", function() {
+			controls = suchleiste.parentNode;
+			video = controls.previousSibling.previousSibling;
+			video.play();
+			playPauseBtn = suchleiste.previousSibling.previousSibling;
+			playPauseBtn.firstChild.setAttribute("class", "mega-octicon octicon-playback-pause");
+		});
+	}
+	// Registriere fuer alle Lautstaerkeregler einen Eventlistener
+	var volReglerArray = document.getElementsByClassName("lautstaerke");
+	for(var i=0; i<volReglerArray.length; ++i) {
+		volRegler = volReglerArray[i];
+		volRegler.addEventListener("change", function() {
+			controls = volRegler.parentNode;
+			video = controls.previousSibling.previousSibling;
+			video.volume = volRegler.value;
+			muteBtn = volRegler.previousSibling.previousSibling;
+			if(volRegler.value == 0.0) {
+				muteBtn.firstChild.setAttribute("class", "octicon octicon-mute");
+			} else {
+				muteBtn.firstChild.setAttribute("class", "octicon octicon-unmute");
+			}
+		});
+	}
+	
+})();
+</script>
+
+</body>
+
+</html>

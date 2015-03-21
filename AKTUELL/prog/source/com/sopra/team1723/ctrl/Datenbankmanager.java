@@ -11,8 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.*;
-
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -80,12 +78,12 @@ public class Datenbankmanager implements IDatenbankmanager {
                         rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
-                        NotifyKommentare.valueOf(rs.getString("NotifyDiskussionen")));
+                        NotifyKommentare.valueOf(rs.getString("NotifyKommentare")));
             }
         } catch (SQLException e) {
             benutzer = null;
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -116,7 +114,7 @@ public class Datenbankmanager implements IDatenbankmanager {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println(e);
+            
             if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
             else
@@ -151,7 +149,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -193,7 +191,7 @@ public class Datenbankmanager implements IDatenbankmanager {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println(e);
+            
             throw e;
         } finally{
             closeQuietly(ps);
@@ -215,7 +213,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             }
         } catch (SQLException e){
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -237,7 +235,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -274,7 +272,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             veranstaltung = null;
             e.printStackTrace();
-            System.out.println(e);
+            
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);

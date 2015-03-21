@@ -113,16 +113,17 @@ public class KarteikartenServlet extends ServletController {
     private File exportiereKarteikarten(Karteikarte vater, String dateiname, boolean bilder, boolean notizen, boolean kommentare, boolean querverweise) {
         // TODO implement here
         return null;
-    }    
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	// TODO Auto-generated method stub
     	super.doPost(req, resp);
+        
+        // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
+        if(!doProcessing())
+            return;
+        
     }
 
 }

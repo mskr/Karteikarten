@@ -9,21 +9,16 @@ $(document).ready(function() {
         $.ajax({
             type: "POST",
             url: "BenutzerServlet",
-            data: "action=login"+"&email="+email+"&pass="+pass,
+            data: "action="+actionLogin+
+            	"&"+paramEmail+"="+email+
+            	"&"+paramPasswort+"="+pass,
             success: function(response) {
                 var jsonObj = $.parseJSON(response);
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
-                    window.location.href = "hauptseite.html";
+                    handle();
                 } else {
-                    $(".err").html(buildMessage(errCode));
-                    if( !$(".err").is(":visible") ) {
-                        $(".err").show().fadeOut(5000);
-                    } else {
-                        $(".err").stop();
-                        $(".err").css("opacity","1");
-                        $(".err").fadeOut(5000);
-                    }
+                    message(0, buildMessage(errCode));
                 }
             }
         });

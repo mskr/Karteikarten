@@ -17,22 +17,20 @@ $(document).ready(function() {
             $.ajax({
                type: "POST",
                url: "BenutzerServlet",
-               data: "action=registrieren"
-                   +"&email="+email
-                   +"&pass="+pass
-                   +"&vorname="+vorname
-                   +"&nachname="+nachname
-                   +"&matrikelNr="+matnr
-                   +"&studienGang="+studiengang,
+               data: "action="+actionRegister
+                   +"&"+paramEmail+"="+email
+                   +"&"+paramPasswort+"="+pass
+                   +"&"+paramVorname+"="+vorname
+                   +"&"+paramNachname+"="+nachname
+                   +"&"+paramStudiengang+"="+studiengang
+                   +"&"+paramMatrikelNr+"="+matnr,
                success: function(response) {
                    var jsonObj = $.parseJSON(response);
                    var errCode = jsonObj["error"];
                    if(errCode == "noerror") {
-                       $(".success").html("Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.");
-                       $(".success").show().fadeOut(5000);
+                       message(1, "Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.");
                    } else {
-                       $(".err").html(buildMessage(errCode));
-                       $(".err").show().fadeOut(5000);
+                       message(0, buildMessage(errCode));
                    }
                }
             });
@@ -41,8 +39,7 @@ $(document).ready(function() {
             $("#reg_pass").focus();
             $("#reg_pass").select();
             $("#reg_pass").css("border","4px solid IndianRed");
-            $(".err").html("Ihre Passwortbestaetigung stimmt nicht mit dem Original ueberein. Bitte bestaetigen Sie es erneut.");
-            $(".err").show().fadeOut(5000);
+            message(0, "Ihre Passwortbestaetigung stimmt nicht mit dem Original ueberein. Bitte bestaetigen Sie es erneut.");
         }
         // Verhindert das normale Absenden des Formulars
         event.preventDefault();
