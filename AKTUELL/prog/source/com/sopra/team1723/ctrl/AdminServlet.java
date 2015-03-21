@@ -11,7 +11,6 @@ import com.sopra.team1723.data.*;
 /**
  * Steuert Administrator-Funktionalitäten
  */
-@WebServlet("/AdminServlet")
 public class AdminServlet extends ServletController {
 
     /**    

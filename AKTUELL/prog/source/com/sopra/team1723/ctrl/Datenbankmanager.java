@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -125,21 +126,20 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void bearbeiteBenutzer(String alteMail, String neueMail, String vorname, String nachname,
-            NotifyKommentare notifyKommentare, boolean notifyVeranstAenderung, boolean notifyKarteikartenAenderung)
+    public void bearbeiteBenutzer(String alteMail, Benutzer benutzer)
                     throws SQLException, DbUniqueConstraintException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
-            ps = conMysql.prepareStatement("UPDATE benutzer SET eMail=? Vorname=?,Nachname=?,"
-                    + "Nutzerstatus=?, NotifyKommentare=?, NotifyVeranstAenderung=?"
+            ps = conMysql.prepareStatement("UPDATE benutzer SET eMail=?, Vorname=?,Nachname=?,"
+                    + "NotifyKommentare=?, NotifyVeranstAenderung=?,"
                     + "NotifyKarteikartenAenderung=?  WHERE eMail = ?");
-            ps.setString(1, neueMail);
-            ps.setString(2, vorname);
-            ps.setString(3, nachname);
-            ps.setString(4, notifyKommentare.name());
-            ps.setBoolean(5, notifyVeranstAenderung);
-            ps.setBoolean(6, notifyKarteikartenAenderung);
+            ps.setString(1, benutzer.geteMail());
+            ps.setString(2, benutzer.getVorname());
+            ps.setString(3, benutzer.getNachname());
+            ps.setString(4, benutzer.getNotifyKommentare().name());
+            ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
+            ps.setBoolean(6, benutzer.isNotifyVeranstAenderung());
             ps.setString(7, alteMail);    
             ps.executeUpdate();
 
@@ -157,24 +157,23 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void bearbeiteBenutzer(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException {
+    public void bearbeiteBenutzerAdmin(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
-            ps = conMysql.prepareStatement("UPDATE benutzer SET eMail=? Vorname=?,Nachname=?,Matrikelnummer=?,Studiengang=?,Kennwort=?,"
-                    + "Nutzerstatus=?, NotifyKommentare=?, NotifyVeranstAenderung=?"
+            ps = conMysql.prepareStatement("UPDATE benutzer SET eMail=?, Vorname=?,Nachname=?,Matrikelnummer=?,Studiengang=?,"
+                    + "Nutzerstatus=?, NotifyKommentare=?, NotifyVeranstAenderung=?,"
                     + "NotifyKarteikartenAenderung=?  WHERE eMail = ?");
             ps.setString(1, benutzer.geteMail());
             ps.setString(2, benutzer.getVorname());
             ps.setString(3, benutzer.getNachname());
             ps.setInt(4, benutzer.getMatrikelnummer());
             ps.setString(5, benutzer.getStudiengang());
-            ps.setString(6,benutzer.getKennwort());
-            ps.setString(7,benutzer.getNutzerstatus().name());
-            ps.setString(8, benutzer.getNotifyKommentare().name());
+            ps.setString(6, benutzer.getNutzerstatus().name());
+            ps.setString(7, benutzer.getNotifyKommentare().name());
+            ps.setBoolean(8, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(9, benutzer.isNotifyVeranstAenderung());
-            ps.setBoolean(10, benutzer.isNotifyKarteikartenAenderung());
-            ps.setString(11, alteMail);    
+            ps.setString(10, alteMail);    
             ps.executeUpdate();
 
         } catch (SQLException e) {

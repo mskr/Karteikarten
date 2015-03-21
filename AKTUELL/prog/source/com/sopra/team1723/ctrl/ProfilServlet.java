@@ -1,19 +1,22 @@
 package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import javax.crypto.AEADBadTagException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
  * Steuert das anzeigen und bearbeiten eines Profils.
  */
-@WebServlet("/ProfilServlet")
 public class ProfilServlet extends ServletController {
 
     /**
@@ -32,7 +35,7 @@ public class ProfilServlet extends ServletController {
      * @return
      */
     private boolean profilBearbeiten(HttpServletRequest request, HttpServletResponse response) {
-        
+
         String email = request.getParameter(requestEmail);
         String vorname = request.getParameter(requestVorname);
         String nachname = request.getParameter(requestNachname);
@@ -50,6 +53,9 @@ public class ProfilServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
+        email = Jsoup.parse(email).text();
+        vorname = Jsoup.parse(vorname).text();
+        nachname = Jsoup.parse(nachname).text();
         // Boolean konvertieren
         boolean bNotifyVeranstAenderung = false;
         if(notifyVeranstAenderung.equals("true"))
@@ -82,9 +88,10 @@ public class ProfilServlet extends ServletController {
             return false;
         }
         // Enum konvertieren
+        NotifyKommentare eNotifyKommentare;
         try
         {
-            NotifyKommentare eNotifyKommentare = NotifyKommentare.valueOf(notifyKommentare);
+            eNotifyKommentare = NotifyKommentare.valueOf(notifyKommentare);
         } 
         catch (IllegalArgumentException e) 
         {
@@ -92,47 +99,76 @@ public class ProfilServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-        
-        // Prüfen ob dies ein Admin ist und gegebenfalls alle Parameter holen
-        if(aktuellerBenutzer.getNutzerstatus()==Nutzerstatus.ADMIN)
-        {
-            String studienGang = request.getParameter(requestStudiengang);
-            String matrikelNrStr = request.getParameter(requestMatrikelNr);
-            String nutzerstatus = request.getParameter(requestNutzerstatus);
-            
-            // Alle Parameter angegeben?
-            if(isEmptyAndRemoveSpaces(studienGang) || isEmptyAndRemoveSpaces(matrikelNrStr)||isEmptyAndRemoveSpaces(nutzerstatus))
+
+        Benutzer benutzer;
+        // Sowohl wenn der Admin ein Profil ändert, als auch der Benutzer sein eigenes, müssen diese Exceptions abgefangen werden
+        try{
+
+            // Prüfen ob dies ein Admin ist und gegebenfalls alle Parameter holen
+            if(aktuellerBenutzer.getNutzerstatus()==Nutzerstatus.ADMIN)
             {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
-                outWriter.print(jo);
-                return false;
+                String studiengang = request.getParameter(requestStudiengang);
+                String matrikelNrStr = request.getParameter(requestMatrikelNr);
+                String nutzerstatus = request.getParameter(requestNutzerstatus);
+
+                // Alle Parameter angegeben?
+                if(isEmptyAndRemoveSpaces(studiengang) || isEmptyAndRemoveSpaces(matrikelNrStr)||isEmptyAndRemoveSpaces(nutzerstatus))
+                {
+                    jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                    outWriter.print(jo);
+                    return false;
+                }
+                studiengang = Jsoup.parse(studiengang).text();
+                matrikelNrStr = Jsoup.parse(matrikelNrStr).text();
+                // Matrikelnummer konvertieren
+                int nMatrikelNr = 0;
+                Nutzerstatus eNutzerstatus;
+                try
+                {
+                    nMatrikelNr = Integer.parseInt(matrikelNrStr);
+                    eNutzerstatus = Nutzerstatus.valueOf(nutzerstatus);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                    outWriter.print(jo);
+                    return false;
+                }
+
+                benutzer = new Benutzer(email, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus, 
+                        bNotifyVeranstAenderung, bNotifyKarteikartenAenderung, eNotifyKommentare);
+                String alteMail = aktuelleSession.getAttribute(sessionAttributeEMail).toString();
+                if(alteMail == null){
+                    jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+                    outWriter.print(jo);
+                    return false;
+                }
+                dbManager.bearbeiteBenutzer(alteMail, benutzer);
             }
-            // Matrikelnummer konvertieren
-            int nMatrikelNr = 0;
-            try
+            // Normaler benutzer Speichern
+            else
             {
-                nMatrikelNr = Integer.parseInt(matrikelNrStr);
+                benutzer = new Benutzer(email, vorname, nachname, bNotifyVeranstAenderung, 
+                        bNotifyKarteikartenAenderung, eNotifyKommentare);
+                dbManager.bearbeiteBenutzer(aktuelleSession.getAttribute(sessionAttributeEMail).toString(), benutzer);
             }
-            catch (NumberFormatException e)
-            {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
-                outWriter.print(jo);
-                return false;
-            }
-            
-            //Benutzer user = new Benutzer(email,vorname,nachname,nMatrikelNr,studienGang,aktuellerBenutzer);
-            
-            
-            // Wenn ja, dann neues Benutzerobjekt speichern
         }
-        // Normaler benutzer Speichern
-        else
+        catch(SQLException e)
         {
-            
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        } 
+        catch(DbUniqueConstraintException e){
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorEmailAlreadyInUse);
+            outWriter.print(jo);
+            return false;
         }
         
-        
-        
+        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+        outWriter.print(jo);
+
+
         return true;
     }
 
@@ -143,8 +179,24 @@ public class ProfilServlet extends ServletController {
      * @return
      */
     private boolean passwortAendern(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+        String neuesPasswort = request.getParameter(requestPassword);
+        JSONObject jo = null;
+        if(neuesPasswort.contains(" ") || isEmptyAndRemoveSpaces(neuesPasswort))
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        String benutzerMail = aktuelleSession.getAttribute(sessionAttributeEMail).toString();
+        if(benutzerMail == null){
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+        if(dbManager.passwortAendern(benutzerMail, neuesPasswort))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -160,14 +212,14 @@ public class ProfilServlet extends ServletController {
         // TODO implement here
         return false;
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	super.doPost(req, resp);
-    	
-    	// Ist beim ServletController schon eine Antowrt zurückgegeben worden?
-    	if(!doProcessing())
-    	    return;
+        super.doPost(req, resp);
+
+        // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
+        if(!doProcessing())
+            return;
 
         if(aktuelleAction.equals(requestActionGetBenutzer))
         {
@@ -194,9 +246,13 @@ public class ProfilServlet extends ServletController {
                 return;
             }
         }
-    	else if(aktuelleAction.equals(requestActionAendereProfil))
+        else if(aktuelleAction.equals(requestActionAendereProfil))
         {
-    	    profilBearbeiten(req,resp);
+            profilBearbeiten(req,resp);
+        }
+        else if(aktuelleAction.equals(requestActionAenderePasswort))
+        {
+            passwortAendern(req, resp);
         }
         else
         {

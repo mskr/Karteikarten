@@ -25,7 +25,6 @@ import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 /**
  * Steuert den Login-/Logout- und den Registrierungsvorgang. Ausserdem steuert dieses Servlet den Reset des Passworts.
  */
-@WebServlet("/BenutzerServlet")
 public class BenutzerServlet extends ServletController {
 
     /**
@@ -138,7 +137,7 @@ public class BenutzerServlet extends ServletController {
         String studienGang = request.getParameter(requestStudiengang);
         String matrikelNrStr = request.getParameter(requestMatrikelNr);
         
-        if(isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(passwort) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
+        if(passwort.contains(" ") || isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(passwort) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
                 || isEmptyAndRemoveSpaces(studienGang) || isEmptyAndRemoveSpaces(matrikelNrStr))
         {
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
@@ -185,7 +184,7 @@ public class BenutzerServlet extends ServletController {
         }
         catch (SQLException e)
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorRegisterFailed);
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }
