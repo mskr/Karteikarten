@@ -38,6 +38,7 @@ public class ServletController extends HttpServlet
     protected final String requestActionRegister = "registrieren";
     protected final String requestActionResetPasswort = "resetPasswort";
     protected final String requestActionGetBenutzer = "getBenutzer";
+    protected final String requestActionGetOtherBenutzer = "getOtherBenutzer";
     protected final String requestActionGetStudiengaenge = "getStudiengaenge";
     protected final String requestActionAenderePasswort = "aenderePasswort";
     protected final String requestActionAendereProfil = "aendereProfil";

@@ -85,7 +85,8 @@ public class ProfilServlet extends ServletController {
         try
         {
             NotifyKommentare eNotifyKommentare = NotifyKommentare.valueOf(notifyKommentare);
-        } catch (IllegalArgumentException e) 
+        } 
+        catch (IllegalArgumentException e) 
         {
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
             outWriter.print(jo);
@@ -167,12 +168,31 @@ public class ProfilServlet extends ServletController {
     	// Ist beim ServletController schon eine Antowrt zurückgegeben worden?
     	if(!doProcessing())
     	    return;
-    	
-    	if(aktuelleAction.equals(requestActionGetBenutzer))
+
+        if(aktuelleAction.equals(requestActionGetBenutzer))
         {
-            JSONObject jo = JSONConverter.toJson(aktuellerBenutzer);
+            JSONObject jo = JSONConverter.toJson(aktuellerBenutzer,true);
             outWriter.print(jo);
             return;
+        }
+        else if(aktuelleAction.equals(requestActionGetOtherBenutzer))
+        {
+            String eMail = req.getParameter(requestEmail);
+            Benutzer b = dbManager.leseBenutzer(eMail);
+            if(b == null)
+            {
+                JSONObject jo  = null;
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return;
+            }
+            else
+            {
+                // TODO Testen!
+                JSONObject jo = JSONConverter.toJson(b,aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN);
+                outWriter.print(jo);
+                return;
+            }
         }
     	else if(aktuelleAction.equals(requestActionAendereProfil))
         {
@@ -183,7 +203,6 @@ public class ProfilServlet extends ServletController {
             // Sende Nack mit ErrorText zurück
             JSONObject jo  = null;
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
-            System.out.println("Antwort: " + jo.toJSONString());
             outWriter.print(jo);
         }
     }
