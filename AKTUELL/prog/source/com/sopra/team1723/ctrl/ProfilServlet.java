@@ -36,6 +36,101 @@ public class ProfilServlet extends ServletController {
         String email = request.getParameter(requestEmail);
         String vorname = request.getParameter(requestVorname);
         String nachname = request.getParameter(requestNachname);
+        String notifyVeranstAenderung = request.getParameter(requestNotifyVeranstAenderung);
+        String notifyKarteikartenAenderung = request.getParameter(requestNotifyKarteikartenAenderung);
+        String notifyKommentare = request.getParameter(requestNotifyKommentare);
+
+        JSONObject jo = null;
+        // Alle Parameter angegeben?
+        if(isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
+                || isEmptyAndRemoveSpaces(notifyVeranstAenderung) || isEmptyAndRemoveSpaces(notifyKarteikartenAenderung)
+                || isEmptyAndRemoveSpaces(notifyKommentare))
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        // Boolean konvertieren
+        boolean bNotifyVeranstAenderung = false;
+        if(notifyVeranstAenderung.equals("true"))
+        {
+            bNotifyVeranstAenderung = true;
+        }
+        else if(notifyVeranstAenderung.equals("false"))
+        {
+            bNotifyVeranstAenderung = false;
+        }
+        else
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        boolean bNotifyKarteikartenAenderung = false;
+        if(notifyKarteikartenAenderung.equals("true"))
+        {
+            bNotifyKarteikartenAenderung = true;
+        }
+        else if(notifyKarteikartenAenderung.equals("false"))
+        {
+            bNotifyKarteikartenAenderung = false;
+        }
+        else
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        // Enum konvertieren
+        try
+        {
+            NotifyKommentare eNotifyKommentare = NotifyKommentare.valueOf(notifyKommentare);
+        } catch (IllegalArgumentException e) 
+        {
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        // Prüfen ob dies ein Admin ist und gegebenfalls alle Parameter holen
+        if(aktuellerBenutzer.getNutzerstatus()==Nutzerstatus.ADMIN)
+        {
+            String studienGang = request.getParameter(requestStudiengang);
+            String matrikelNrStr = request.getParameter(requestMatrikelNr);
+            String nutzerstatus = request.getParameter(requestNutzerstatus);
+            
+            // Alle Parameter angegeben?
+            if(isEmptyAndRemoveSpaces(studienGang) || isEmptyAndRemoveSpaces(matrikelNrStr)||isEmptyAndRemoveSpaces(nutzerstatus))
+            {
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return false;
+            }
+            // Matrikelnummer konvertieren
+            int nMatrikelNr = 0;
+            try
+            {
+                nMatrikelNr = Integer.parseInt(matrikelNrStr);
+            }
+            catch (NumberFormatException e)
+            {
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return false;
+            }
+            
+            //Benutzer user = new Benutzer(email,vorname,nachname,nMatrikelNr,studienGang,aktuellerBenutzer);
+            
+            
+            // Wenn ja, dann neues Benutzerobjekt speichern
+        }
+        // Normaler benutzer Speichern
+        else
+        {
+            
+        }
+        
+        
         
         return true;
     }
