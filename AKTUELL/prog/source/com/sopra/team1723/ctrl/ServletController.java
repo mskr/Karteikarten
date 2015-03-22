@@ -49,9 +49,9 @@ public class ServletController extends HttpServlet
     protected final String requestPassword = "pass";
     protected final String requestVorname = "vorname";
     protected final String requestNachname = "nachname";
-    protected final String requestMatrikelNr = "matrikelNr";
-    protected final String requestStudiengang = "studienGang";
-    protected final String requestNutzerstatus = "nutzerStatus";
+    protected final String requestMatrikelNr = "matrikelnr";
+    protected final String requestStudiengang = "studiengang";
+    protected final String requestNutzerstatus = "nutzerstatus";
     protected final String requestNotifyVeranstAenderung = "notifyVeranstAenderung";
     protected final String requestNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
     protected final String requestNotifyKommentare = "notifyKommentare";

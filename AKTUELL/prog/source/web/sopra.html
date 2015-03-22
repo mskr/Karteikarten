@@ -351,24 +351,31 @@ $(document).ready( function() {
 				</select>
 			</span>
 		</div>
-		<h3></h3>
+		<h3>Passwort ändern</h3>
 		<div class="profil_daten">
 			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password"><span class="octicon octicon-pencil"></span></span>
 			<span class="profil_passwort_wdh" style="display:none"><label for="profil_passwort_wdh_input">Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
 			<span class="profil_passwort_alt" style="display:none"><label for="profil_passwort_alt_input">Altes Passwort</label><input id='profil_passwort_alt_input' type='password'><span class='octicon octicon-pencil'></span></span>
 		</div>
+		<div class="profil_buttons">
+			<span class="profil_speichern"id="profil_passwort_speichern">
+				<input  id="profil_passwort_speichern" class="mybutton_dark" type="button" value="Passwort speichern">
+			</span>
+		</div>
 		<h3>Einstellungen</h3>
 		<div class="profil_einstellungen">
 			<span class="profil_infotext">Über neue Kommentare benachrichtigen...</span>
-			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_teilgenommen" type="checkbox"><label for="notifyKommentare_input_teilgenommen">Bei allen meinen Veranstaltungen</label></span>
-			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_diskussionen" type="checkbox"><label for="notifyKommentare_input_diskussionen">Nur bei Disussionen, an denen ich teilgenommen habe</label></span>
-			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_nie" type="checkbox"><label for="notifyKommentare_input_nie">Niemals</label></span>
+			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_teilgenommen" name="profil_notifyKommentareRb" type="radio" value="VERANSTALTUNG_TEILGENOMMEN"><label for="notifyKommentare_input_teilgenommen">Bei allen meinen Veranstaltungen</label></span>
+			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_diskussionen" name="profil_notifyKommentareRb" type="radio" value="DISKUSSION_TEILGENOMMEN"><label for="notifyKommentare_input_diskussionen">Nur bei Disussionen, an denen ich teilgenommen habe</label></span>
+			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_nie" name="profil_notifyKommentareRb" type="radio" value="KEINE"><label for="notifyKommentare_input_nie">Niemals</label></span>
 			<br>
 			<span class="profil_notifyVeranstAenderung"><input id="notifyVeranstAenderung_input" type="checkbox"><label for="notifyVeranstAenderung_input">Über Veranstaltungsänderungen benachrichtigen</label></span>
 			<span class="profil_notifyKarteikartenAenderung"><input id="notifyKarteikartenAenderung_input" type="checkbox"><label for="notifyKarteikartenAenderung_input">Über Karteikartenänderungen benachrichtigen</label></span>
 		</div>
 		<div class="profil_buttons">
-			<span class="profil_speichern"><span class="mybutton_dark">Speichern</span></span>
+			<span class="profil_speichern">
+				<input  id="profil_daten_speichern" class="mybutton_dark" type="button" value="Daten und Einstellungen speichern">
+			</span>
 		</div>
 	</div>
 </div>

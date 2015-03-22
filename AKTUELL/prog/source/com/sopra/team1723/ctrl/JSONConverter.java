@@ -31,7 +31,7 @@ public class JSONConverter
     static public final String jsonMatrikelNr = "matrikelnr";
     static public final String jsonNutzerstatus = "nutzerstatus";
     static public final String jsonStudiengang = "studiengang";
-    static public final String jsonPasswort = "passwort";
+    static public final String jsonPasswort = "pass";
     static public final String jsonNotifyVeranstAenderung = "notifyVeranstAenderung";
     static public final String jsonNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
     static public final String jsonNotifyKommentare = "notifyKommentare";

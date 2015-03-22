@@ -57,17 +57,22 @@ function buildUrlQuery(paramObj) {
  */
 function interpreteUrlQuery(paramObj) {
     var ziel = paramObj[urlParamLocation];
-    if(jsonBenutzer != undefined) { // Benutzer eingeloggt
+    if(jsonBenutzer != undefined)
+    { // Benutzer eingeloggt
         fillMyPersonalBox();
         if(ziel == undefined || 
            ziel == ansichtStartseite ||
-           ziel == ansichtHauptseite) {
+           ziel == ansichtHauptseite) 
+        {
             ziel = ansichtHauptseite;
-        } else if(ziel == ansichtProfilseite) {
+        } else if(ziel == ansichtProfilseite) 
+        {
             fillProfilseite();
         }
         display(ziel);
-    } else { // Benutzer nicht eingeloggt
+    } 
+    else 
+    { // Benutzer nicht eingeloggt
         fillStartseite();
         display(ansichtStartseite);
     }
@@ -77,22 +82,30 @@ function interpreteUrlQuery(paramObj) {
  * Enthaelt den Ajax Call mit der getBenutzer action.
  * @returns when Ajax Call is finished
  */
-function getBenutzer() {
+function getBenutzer() 
+{
     return $.ajax({
         url: profilServlet,
         data: "action="+actionGetBenutzer,
-        success: function(response) {
+        success: function(response) 
+        {
             jsonObj = $.parseJSON(response);
             var errCode = jsonObj["error"];
-            if(errCode == "noerror") {
+            if(errCode == "noerror") 
+            {
                 // Ein Benutzer ist eingeloggt
                 jsonBenutzer = jsonObj;
-            } else {
+            } 
+            else 
+            {
                 // Niemand ist eingeloggt.
                 jsonBenutzer = undefined;
-               if(errCode == "notloggedin") {
+               if(errCode == "notloggedin") 
+               {
                    message(1, "Bitte loggen Sie sich ein um fortzufahren.");
-               } else {
+               } 
+               else 
+               {
                    message(0, buildMessage(errCode));
                }
             }
@@ -103,10 +116,14 @@ function getBenutzer() {
 /**
  * Zeigt die durch den Arrayindex angegebene Seite an.
  */
-function display(ansicht) {
+function display(ansicht) 
+{
     var isValid = false;
-    for(var i=0; i<alleAnsichten.length; i++) {
-        if(alleAnsichten[i] == ansicht) {
+    for(var i=0; i<alleAnsichten.length; i++)
+    {
+    	// Richtige ansicht suchen und einblenden
+        if(alleAnsichten[i] == ansicht) 
+        {
             $("#mypersonalbox_"+alleAnsichten[i]).show();
             $("#mainbox_"+alleAnsichten[i]).show();
             isValid = true;
@@ -115,7 +132,8 @@ function display(ansicht) {
             $("#mainbox_"+alleAnsichten[i]).hide();
         }
     }
-    if(!isValid) {
+    if(!isValid) 
+    {
         console.log("Ungueltige Ansicht: "+ansicht);
     }
 }
