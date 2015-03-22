@@ -16,14 +16,26 @@ var actionRegister = "registrieren";
 var actionResetPasswort = "resetPasswort";
 var actionGetBenutzer = "getBenutzer";
 var actionGetStudiengaenge = "getStudiengaenge";
+var actionGetOtherBenutzer = "getOtherBenutzer";
+var actionGetStudiengaenge = "getStudiengaenge";
+var actionAenderePasswort = "aenderePasswort";
+var actionAendereProfil = "aendereProfil";
 
 var paramEmail = "email";
 var paramPasswort = "pass";
+var paramPasswortNew = "passNew";
 var paramVorname = "vorname";
 var paramNachname = "nachname";
-var paramMatrikelNr = "matrikelNr";
-var paramStudiengang = "studienGang";
-var paramNutzerstatus = "nutzerStatus";
+var paramMatrikelNr = "matrikelnr";
+var paramStudiengang = "studiengang";
+var paramNutzerstatus = "nutzerstatus";
+var paramNofityVeranstAenderung = "notifyVeranstAenderung";
+var paramNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
+var paramNotifyKommentare = "notifyKommentare";
+var paramNotifyKommentareValKeine = "KEINE";
+var paramNotifyKommentareValVeranst = "VERANSTALTUNG_TEILGENOMMEN";
+var paramNotifyKommentareValDiskussion = "DISKUSSION_TEILGENOMMEN";
+
 
 var keyJsonArrResult = "jsonArrResult";
 

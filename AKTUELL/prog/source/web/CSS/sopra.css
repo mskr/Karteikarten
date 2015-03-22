@@ -48,6 +48,10 @@ h1 {
 	display: inline-block;
 }
 
+label {
+	cursor: pointer;
+}
+
 .msg {
 	padding: 10px;
 	width: calc(100% - 20px);
@@ -296,21 +300,18 @@ h1 {
     position: absolute;
     width: 0;
     height: 0;
-    border-top: 7px solid black;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
+    border-top: 5px solid black;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
     opacity: 0;
     display: none;
 } .username:hover:after {
-	bottom: 120%;
-    left: 20%;
+	bottom: calc(100% + 5px);
+    left: 0;
     display: inline;
-	-webkit-box-shadow: 0px 0px 5px black;
-	-moz-box-shadow: 0px 0px 5px black;
-	box-shadow: 0px 0px 5px black;
 } .username:hover:before {
-	bottom: 90%;
-    left: 30%;
+	bottom: 100%;
+    left: 50%;
     display: inline;
 } .username:hover:after, .username:hover:before {
 	opacity: 1;											/* TOOLTIP CODE ENDE */
@@ -1580,39 +1581,65 @@ h1 {
 	box-shadow: 0px 0px 5px black;
 }
 
-.profil_head {
-	margin: 0;
-	padding: 2% 2% 0 2%;
+.card {
+	margin: 1%;
+	padding: 2%;
 	background: #333333;
-	-webkit-border-radius: 2px 2px 0 0;
-	-moz-border-radius: 2px 2px 0 0;
-	border-radius: 2px 2px 0 0;
 	-webkit-box-shadow: 0px 2px 2px #000;
 	-moz-box-shadow: 0px 2px 2px #000;
 	box-shadow: 0px 2px 2px #000;
-	text-align: center;
-	text-shadow: 0px -1px 0px #000;
+} .card_title {
+	text-align: left;
+	font-weight: bold;
+}
+
+.flex_container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-content: stretch;
+	align-items: flex-start;
+}
+
+.flex_elem {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.profil_head {
+	margin: 1%;
+	padding: 0;
+	width: 100%;
 } .profil_avatar {
 	vertical-align: middle;
 	text-shadow: 0px -2px 0px #000;
 	font-size: 80px;
 } .profil_loeschen {
 	float: right;
-} .profil_body {
-	padding: 2% 2% 2% 2%;
-	background: #333333;
-	-webkit-box-shadow: 0px 2px 2px #000;
-	-moz-box-shadow: 0px 2px 2px #000;
-	box-shadow: 0px 2px 2px #000;
-} .profil_daten {
+}
+
+.profil_daten {
+	text-align: right;
+}
+
+.profil_notifyKommentare {
+	margin-bottom: 10px;
+} .profil_buttons {
+	padding: 20px 0 20px 0;
 	width: 70%;
 	text-align: right;
-	font-size: 14px;
-} .profil_daten > span {
-	margin: 0;
+} .profil_buttons > span {
+	padding-right: 32px;
 	display: block;
-} .profil_daten input {
-	margin: 5px 10px;
+}
+
+.profil_infotext, .profil_label {
+	font-size: 14px;
+}
+
+.profil_input {
+	margin: 0 0 10px 10px;
 	padding: 5px 10px;
 	width: 50%;
 	height: 30px;
@@ -1625,11 +1652,11 @@ h1 {
 	border-radius: 4px;
 	outline: 0;
 	position: relative;
-	transition: padding 0.1s;
-} .profil_daten input:hover {
+	transition: all .1s;
+} .profil_input:hover {
 	padding-right: 0;
 	padding-left: 20px;
-} .profil_daten input:focus {
+} .profil_input:focus {
 	padding-right: 0;
 	padding-left: 20px;
 	background: white;
@@ -1637,76 +1664,15 @@ h1 {
 	-webkit-box-shadow: 0px 2px 2px black;
 	-moz-box-shadow: 0px 2px 2px black;
 	box-shadow: 0px 2px 2px black;
-} .profil_daten input:disabled {
+} .profil_input:disabled {
 	color: grey;
-} .profil_daten input:disabled:hover {
+} .profil_input:disabled:hover {
 	padding: 5px 10px;
-} .profil_daten span .octicon {
-	margin: 5px 5px;
-	color: grey;
-	position: relative;
-	left: -40px;
-	opacity: 0;
-} .profil_daten input:hover + .octicon {
-	opacity: 1;
-} .profil_daten input:disabled:hover + .octicon {
-	opacity: 0;
-} .profil_rolle {
-	padding-right: 24px;
-} .profil_daten select {
-	margin: 5px 10px;
-	padding: 5px 10px;
-	width: calc(50% + 33px);
+}
+
+select.profil_input {
+	width: calc(50% + 20px);
 	height: 40px;
-	background: #292929;
-	color: white;
-	font-size: 16px;
-	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
-	background-clip: padding-box;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	border: none;
-	outline: 0;
-	transition: all 0.1s;
-} .profil_daten select {
-	color: white;
-} .profil_daten select:hover {
-	padding-right: 0;
-	padding-left: 20px;
-} .profil_daten select:disabled {
-	background: #292929;
-} .profil_daten select:disabled:hover {
-	padding: 5px 10px;
-} .profil_daten select:focus {
-	padding-right: 0;
-	padding-left: 20px;
-	background: white;
-	color: black;
-	-webkit-box-shadow: 0px 2px 2px black;
-	-moz-box-shadow: 0px 2px 2px black;
-	box-shadow: 0px 2px 2px black;
-	border-radius: 4px 4px 0 0;
-} .profil_einstellungen {
-	width: 70%;
-	text-align: center;
-} .profil_einstellungen span {
-	margin: 10px 0;
-	display: block;
-	text-align: left;
-} .profil_buttons {
-	padding: 20px 0 20px 0;
-	width: 70%;
-	text-align: right;
-} .profil_buttons > span {
-	padding-right: 32px;
-	display: block;
-} .profil_infotext {
-	font-size: 14px;
-	font-weight: bold;
-} @media screen and (max-width: 1000px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER MITTELGROSSE BILDSCHIRME */
-	.profil_daten, .profil_buttons {
-		width: 100%;
-	}
+	-webkit-appearance: none;
+	-moz-appearance: none;
 }

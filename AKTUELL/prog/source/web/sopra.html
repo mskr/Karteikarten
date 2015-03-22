@@ -330,43 +330,50 @@ $(document).ready( function() {
 </div>
 
 <div id="mainbox_profilseite" class="mainbox">
-	<div class="profil_head">
-		<span>
-			<span class="profil_avatar"><span class="mysopraicon sopra-usericon"></span></span>
-			<span class="profil_benutzer"></span>
-		</span>
-		<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
-	</div>
-	<div class="profil_body">
-		<div class="profil_daten">
-			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_nachname"><label for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" type="text"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_matrikelnummer"><label for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" type="text"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_studiengang"><label for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" type="text"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_rolle">
-				<label for="profil_rolle_input">Rolle</label>
-				<select id="profil_rolle_input">
-					<option>STUDENT</option>
-					<option>DOZENT</option>
-					<option>ADMIN</option>
-				</select>
+	<div class="flex_container">
+		<div class="profil_head">
+			<span>
+				<span class="profil_avatar"><span class="mysopraicon sopra-usericon"></span></span>
+				<span class="profil_benutzer">Hier den angezeigten Benutzer einfuegen</span>
 			</span>
-			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_passwort_wdh"><label for="profil_passwort_wdh_input">Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
-			<span class="profil_passwort_alt"><label for="profil_passwort_alt_input">Altes Passwort</label><input id='profil_passwort_alt_input' type='password'><span class='octicon octicon-pencil'></span></span>
+			<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
 		</div>
-		<h3><span>Einstellungen</span></h3>
-		<div class="profil_einstellungen">
-			<span class="profil_infotext">Über neue Kommentare benachrichtigen...</span>
-			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_teilgenommen" type="checkbox"><label for="notifyKommentare_input_teilgenommen">Bei allen meinen Veranstaltungen</label></span>
-			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_diskussionen" type="checkbox"><label for="notifyKommentare_input_diskussionen">Nur bei Disussionen, an denen ich teilgenommen habe</label></span>
-			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_nie" type="checkbox"><label for="notifyKommentare_input_nie">Niemals</label></span>
-			<span class="profil_notifyVeranstAenderung"><input id="notifyVeranstAenderung_input" type="checkbox"><label for="notifyVeranstAenderung_input">Über Veranstaltungsänderungen benachrichtigen</label></span>
-			<span class="profil_notifyKarteikartenAenderung"><input id="notifyKarteikartenAenderung_input" type="checkbox"><label for="notifyKarteikartenAenderung_input">Über Karteikartenänderungen benachrichtigen</label></span>
+		<div class="profil_daten card flex_elem">
+			<div class="card_title">Profil</div>
+			<form>
+				<div id="profil_email"><label class="profil_label" for="profil_email_input">E-Mail</label><input id="profil_email_input" class="profil_input" type="email"></div>
+				<div id="profil_vorname"><label class="profil_label" for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" class="profil_input" type="text"></div>
+				<div id="profil_nachname"><label class="profil_label" for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" class="profil_input" type="text"></div>
+				<div id="profil_matrikelnummer"><label class="profil_label" for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" class="profil_input" type="text"></div>
+				<div id="profil_studiengang"><label class="profil_label" for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" class="profil_input" type="text"></div>
+				<div id="profil_rolle">
+					<label for="profil_rolle_input">Rolle</label>
+					<select id="profil_rolle_input" class="profil_input">
+						<option>STUDENT</option>
+						<option>DOZENT</option>
+						<option>ADMIN</option>
+					</select>
+				</div>
+				<input id="profil_daten_speichern" class="mybutton_dark" type="submit" value="Speichern">
+			</form>
 		</div>
-		<div class="profil_buttons">
-			<span class="profil_speichern"><span class="mybutton_dark">Speichern</span></span>
+		<div class="profil_einstellungen card flex_elem">
+			<div class="card_title">Einstellungen</div>
+			<div class="profil_notifyKommentare">
+				<div class="profil_infotext">Über neue Kommentare benachrichtigen...</div>
+				<div><input id="notifyKommentare_input_teilgenommen" name="profil_notifyKommentareRb" type="radio" value="VERANSTALTUNG_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_teilgenommen">immer.</label></div>
+				<div><input id="notifyKommentare_input_diskussionen" name="profil_notifyKommentareRb" type="radio" value="DISKUSSION_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_diskussionen">nur bei Disussionen, an denen ich teilgenommen habe.</label></div>
+				<div><input id="notifyKommentare_input_nie" name="profil_notifyKommentareRb" type="radio" value="KEINE"><label class="profil_label" for="notifyKommentare_input_nie">niemals.</label></div>
+			</div>
+			<div class="profil_notifyVeranstAenderung"><input id="notifyVeranstAenderung_input" type="checkbox"><label class="profil_label" for="notifyVeranstAenderung_input">Über Veranstaltungsänderungen benachrichtigen</label></div>
+			<div class="profil_notifyKarteikartenAenderung"><input id="notifyKarteikartenAenderung_input" type="checkbox"><label class="profil_label" for="notifyKarteikartenAenderung_input">Über Karteikartenänderungen benachrichtigen</label></div>
+			<span id="profil_einstellungen_speichern" class="mybutton_dark">Speichern</span>
+		</div>
+		<div class="profil_passwort card flex_elem">
+			<span id="profil_passwort"><label class="profil_label" for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" class="profil_input" type="password"></span>
+			<span id="profil_passwort_wdh"><label class="profil_label" for="profil_passwort_wdh_input">Passwort wiederholen</label><input id="profil_passwort_wdh_input" class="profil_input" type="password"></span>
+			<span id="profil_passwort_alt"><label class="profil_label" for="profil_passwort_alt_input">Altes Passwort</label><input id="profil_passwort_alt_input" class="profil_input" type="password"></span>
+			<span id="profil_passwort_speichern" class="mybutton_dark">Speichern</span>
 		</div>
 	</div>
 </div>

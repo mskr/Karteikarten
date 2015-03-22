@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.DbFalseLoginDataException;
 import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
@@ -179,24 +180,59 @@ public class ProfilServlet extends ServletController {
      * @return
      */
     private boolean passwortAendern(HttpServletRequest request, HttpServletResponse response) {
-        String neuesPasswort = request.getParameter(requestPassword);
+        String neuesPasswort = request.getParameter(requestPasswordNew);
+        String altesPasswort = request.getParameter(requestPassword);
+        
         JSONObject jo = null;
-        if(neuesPasswort.contains(" ") || isEmptyAndRemoveSpaces(neuesPasswort))
+        
+        try
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
-            outWriter.print(jo);
-            return false;
+            // Prüfen ob altes Passwort richtig
+            dbManager.pruefeLogin(aktuellerBenutzer.geteMail(), altesPasswort);
+
+            if(neuesPasswort.contains(" ") || isEmptyAndRemoveSpaces(neuesPasswort))
+            {
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return false;
+            }
+            String benutzerMail = aktuellerBenutzer.geteMail();
+            // TODO Vllt weglassen
+            if(benutzerMail == null)
+            {
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+                outWriter.print(jo);
+                return false;
+            }
+            if(dbManager.passwortAendern(benutzerMail, neuesPasswort))
+            {
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+                outWriter.print(jo);
+                return false;
+            }
+            else
+            {
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+                outWriter.print(jo);
+                return false;
+            }
         }
-        String benutzerMail = aktuelleSession.getAttribute(sessionAttributeEMail).toString();
-        if(benutzerMail == null){
+        catch (SQLException e)
+        {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }
-        if(dbManager.passwortAendern(benutzerMail, neuesPasswort))
-            return true;
-        else
+        catch (DbFalseLoginDataException e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
+            outWriter.print(jo);
             return false;
+        }
+            
+        
     }
 
     /**

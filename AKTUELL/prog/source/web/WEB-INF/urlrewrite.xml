@@ -10,17 +10,18 @@
 -->
 <urlrewrite>
     
-    <!--
-    <rule>
+    
+	
+<!--
+    
+   <rule>
     	<name>MyFirstRule</name>
     	<note>
        	 	Erste Test der Weiterleitung.
    		</note>
-        <from>/sopra/location/([a-zA-Z0-9]+)</from>
-        <to>/sopra\.html?goTo=$1</to>
+        <from>\/sopra\/location\/([a-zA-Z0-9]*)</from>
+        <to>\sopra.html?section=$1</to>
     </rule>
-    
-
     INSTALLATION
 
         in your web.xml add...
