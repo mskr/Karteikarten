@@ -61,6 +61,7 @@ function interpreteUrlQuery(paramObj) {
     { // Benutzer eingeloggt
         fillMyPersonalBox();
         if(ziel == undefined || 
+           $.inArray(ziel, alleAnsichten) == -1 ||			// Keine Gültige Ansicht?
            ziel == ansichtStartseite ||
            ziel == ansichtHauptseite) 
         {
