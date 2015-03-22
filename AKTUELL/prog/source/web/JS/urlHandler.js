@@ -45,7 +45,7 @@ function buildUrlQuery(paramObj) {
     for(var param in paramObj) {
         locationSearchTmp += param + "=" + paramObj[param] + "&";
     }
-    location.search = locationSearchTmp;
+    location.search = locationSearchTmp; // Dies laedt auch die Seite neu
 }
 
 /**
@@ -101,7 +101,7 @@ function getBenutzer() {
 }
 
 /**
- * Zeigt die durch den Arrayindex angegebene Seite an.
+ * Zeigt die durch den angegebene Seite an.
  */
 function display(ansicht) {
     var isValid = false;

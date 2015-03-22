@@ -16,3 +16,11 @@ $.ajaxSetup({
 	    alert("Ajax Call returned error");
 	}
 });
+
+$(document).ready(function() {
+    $('#loading').bind('ajaxStart', function(){
+        $(this).show();
+    }).bind('ajaxStop', function(){
+        $(this).hide();
+    });
+});

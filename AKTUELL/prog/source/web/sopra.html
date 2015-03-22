@@ -34,31 +34,29 @@
 <script src="ckeditor/adapters/jquery.js"></script>
 <!-- CKEditor Code Snippet Syntax Highlighting CSS -->
 <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/zenburn.css" rel="stylesheet">
+<!-- Zentrale Variablen -->
+<script src="JS/defines.js"></script>
 <!-- Ajax Setup Skript -->
 <script src="JS/ajaxSetup.js"></script>
 <!-- Error Code Mapping Script -->
 <script src="JS/errorCodeMapper.js"></script>
 <!-- Error Message Skript -->
 <script src="JS/errorMessageMaker.js"></script>
-<!-- Zentrale Variablen -->
-<script src="JS/defines.js"></script>
 <!-- URL Handler -->
 <script src="JS/urlHandler.js"></script>
-<!-- Login Script -->
-<script src="JS/login.js"></script>
 <!-- Registrieren Script -->
 <script src="JS/registrieren.js"></script>
+<!-- Login Script -->
+<script src="JS/login.js"></script>
 <!-- Logout Script -->
 <script src="JS/logout.js"></script>
-<!-- Box Handler Skript -->
-<script src="JS/boxhandler.js"></script>
 <!-- Startseite Skript -->
 <script src="JS/startseite.js"></script>
 <!-- mypersonalbox Skript -->
 <script src="JS/mypersonalbox.js"></script>
 <!-- Profilseite Skript -->
 <script src="JS/profilseite.js"></script>
-<!-- Initial alle Kind<div>s von <body> verbergen und Ladeanimation anzeigen -->
+<!-- Initial alle Kind<div>s von <body> verbergen -->
 <style>
 body > div {
 	display: none;
@@ -70,6 +68,8 @@ body > div {
 
 <div class="msg err"></div>
 <div class="msg success"></div>
+
+<div id="loading">Loading...</div>
 
 <div id="mypersonalbox_startseite" class="mypersonalbox">
 	<h3>Start</h3>
@@ -331,11 +331,13 @@ $(document).ready( function() {
 
 <div id="mainbox_profilseite" class="mainbox">
 	<div class="profil_head">
-		<a class="avatar_aendern"><span class=""><span class="mysopraicon sopra-usericon"></span></span> Avatar bearbeiten</a>
+		<span>
+			<span class="profil_avatar"><span class="mysopraicon sopra-usericon"></span></span>
+			<span class="profil_benutzer"></span>
+		</span>
 		<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
 	</div>
 	<div class="profil_body">
-		<h3>Ihre Daten</h3>
 		<div class="profil_daten">
 			<span class="profil_email"><label for="profil_email_input">E-Mail</label><input id="profil_email_input" type="email"><span class="octicon octicon-pencil"></span></span>
 			<span class="profil_vorname"><label for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" type="text"><span class="octicon octicon-pencil"></span></span>
@@ -350,20 +352,16 @@ $(document).ready( function() {
 					<option>ADMIN</option>
 				</select>
 			</span>
-		</div>
-		<h3></h3>
-		<div class="profil_daten">
 			<span class="profil_passwort"><label for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" type="password"><span class="octicon octicon-pencil"></span></span>
-			<span class="profil_passwort_wdh" style="display:none"><label for="profil_passwort_wdh_input">Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
-			<span class="profil_passwort_alt" style="display:none"><label for="profil_passwort_alt_input">Altes Passwort</label><input id='profil_passwort_alt_input' type='password'><span class='octicon octicon-pencil'></span></span>
+			<span class="profil_passwort_wdh"><label for="profil_passwort_wdh_input">Passwort wiederholen</label><input id='profil_passwort_wdh_input' type='password'><span class='octicon octicon-pencil'></span></span>
+			<span class="profil_passwort_alt"><label for="profil_passwort_alt_input">Altes Passwort</label><input id='profil_passwort_alt_input' type='password'><span class='octicon octicon-pencil'></span></span>
 		</div>
-		<h3>Einstellungen</h3>
+		<h3><span>Einstellungen</span></h3>
 		<div class="profil_einstellungen">
 			<span class="profil_infotext">Über neue Kommentare benachrichtigen...</span>
 			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_teilgenommen" type="checkbox"><label for="notifyKommentare_input_teilgenommen">Bei allen meinen Veranstaltungen</label></span>
 			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_diskussionen" type="checkbox"><label for="notifyKommentare_input_diskussionen">Nur bei Disussionen, an denen ich teilgenommen habe</label></span>
 			<span class="profil_notifyKommentare"><input id="notifyKommentare_input_nie" type="checkbox"><label for="notifyKommentare_input_nie">Niemals</label></span>
-			<br>
 			<span class="profil_notifyVeranstAenderung"><input id="notifyVeranstAenderung_input" type="checkbox"><label for="notifyVeranstAenderung_input">Über Veranstaltungsänderungen benachrichtigen</label></span>
 			<span class="profil_notifyKarteikartenAenderung"><input id="notifyKarteikartenAenderung_input" type="checkbox"><label for="notifyKarteikartenAenderung_input">Über Karteikartenänderungen benachrichtigen</label></span>
 		</div>
