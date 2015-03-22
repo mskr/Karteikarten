@@ -47,6 +47,7 @@ public class ServletController extends HttpServlet
 
     protected final String requestEmail = "email";
     protected final String requestPassword = "pass";
+    protected final String requestPasswordNew = "passNew";
     protected final String requestVorname = "vorname";
     protected final String requestNachname = "nachname";
     protected final String requestMatrikelNr = "matrikelnr";

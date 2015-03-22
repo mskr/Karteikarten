@@ -82,16 +82,23 @@ function fillProfilseite() {
              $("#profil_email_input").css("border","4px solid IndianRed");
         	 validInput = false;
          }
+         else
+             $("#profil_email_input").css("border","none");
+         
          if(vorname == "")
          {
              $("#profil_vorname_input").css("border","4px solid IndianRed");
         	 validInput = false;
          }
+         else
+             $("#profil_vorname_input").css("border","none");
          if(nachname == "")
          {
              $("#profil_nachname_input").css("border","4px solid IndianRed");
         	 validInput = false;
          }
+         else
+             $("#profil_nachname_input").css("border","none");
          if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
     	 {
              if(matnr == "")
@@ -99,21 +106,27 @@ function fillProfilseite() {
                  $("#profil_matnr_input").css("border","4px solid IndianRed");
             	 validInput = false;
              }
+             else
+                 $("#profil_matnr_input").css("border","none");
              if(studiengang == "")
              {
                  $("#profil_studiengang_input").css("border","4px solid IndianRed");
             	 validInput = false;
              }
+             else
+                 $("#profil_studiengang_input").css("border","none");
              if(rolle == "")
              {
                  $("#profil_rolle_input").css("border","4px solid IndianRed");
             	 validInput = false;
              }
+             else
+                 $("#profil_rolle_input").css("border","none");
     	 }
          
          if(!validInput)
          {
-         	message(0, "Bitte alle Felder ausfüllen!.");
+         	message(0, "Bitte alle Felder ausfüllen!");
          }
          else
     	 {
@@ -148,8 +161,81 @@ function fillProfilseite() {
                      }
                  }
               });
-    	 }
-                  
+    	 }              
+	});
+    
+    $("#profil_passwort_speichern").click(function() 
+	{
+    	var pwNeu = $("#profil_passwort_input").val();
+    	var pwNeuWdh = $("#profil_passwort_wdh_input").val();
+    	var pwAlt = $("#profil_passwort_alt_input").val();
+
+    	var validInput = true;
+        if(pwNeu == "")
+        {
+            $("#profil_passwort_input").css("border","4px solid IndianRed");
+       	 	validInput = false;
+        }
+        else
+            $("#profil_passwort_input").css("border","none");
+        if(pwNeuWdh == "")
+        {
+            $("#profil_passwort_wdh_input").css("border","4px solid IndianRed");
+       	 	validInput = false;
+        }
+        else
+            $("#profil_passwort_wdh_input").css("border","none");
+        if(pwAlt == "")
+        {
+            $("#profil_passwort_alt_input").css("border","4px solid IndianRed");
+       	 	validInput = false;
+        }
+        else
+            $("#profil_passwort_alt_input").css("border","none");
+
+        if(!validInput)
+        {
+        	message(0, "Bitte alle Felder ausfüllen!.");
+        	// ausklappen
+        	$(".profil_passwort_wdh, .profil_passwort_alt").slideDown("slow");
+        }
+        else if(pwNeu != pwNeuWdh)
+    	{
+        	// Wdh-Feld leeren
+        	$("#profil_passwort_wdh_input").val("");
+            $("#profil_passwort_wdh_input").css("border","4px solid IndianRed");
+            message(0, "Passwortwiederholung falsch! Bitte prüfen Sie Ihre Eingaben!");
+        	// ausklappen
+        	$(".profil_passwort_wdh, .profil_passwort_alt").slideDown("slow");
+    	}
+        else
+        { 
+        	var dataStr = "action="+actionAenderePasswort
+						            +"&"+paramPasswortNew+"="+pwNeu
+						            +"&"+paramPasswort+"="+pwAlt
+        	$.ajax({
+        		url: profilServlet,
+        		data: dataStr,
+        		success: function(response) {
+        			var jsonObj = $.parseJSON(response);
+        			var errCode = jsonObj["error"];
+        			if(errCode == "noerror") 
+        			{
+        				var paramObj = {};
+        				paramObj[urlParamLocation] = ansichtProfilseite;
+        				buildUrlQuery(paramObj);
+        			} 
+        			else if(errCode = "loginfailed") 
+        			{
+        	            $("#profil_passwort_alt_input").css("border","4px solid IndianRed");
+        				message(0, "Altes Passwort ist falsch!");
+        			} else {
+        				message(0, buildMessage(errCode));
+        			}
+        		}
+        	});
+    	}
+    	
 	});
     
 }

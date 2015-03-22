@@ -23,6 +23,7 @@ var actionAendereProfil = "aendereProfil";
 
 var paramEmail = "email";
 var paramPasswort = "pass";
+var paramPasswortNew = "passNew";
 var paramVorname = "vorname";
 var paramNachname = "nachname";
 var paramMatrikelNr = "matrikelnr";
