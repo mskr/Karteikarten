@@ -137,7 +137,7 @@ public class BenutzerServlet extends ServletController {
         String studienGang = request.getParameter(requestStudiengang);
         String matrikelNrStr = request.getParameter(requestMatrikelNr);
         
-        if(passwort.contains(" ") || isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(passwort) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
+        if(isEmptyAndRemoveSpaces(email) || isEmpty(passwort) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
                 || isEmptyAndRemoveSpaces(studienGang) || isEmptyAndRemoveSpaces(matrikelNrStr))
         {
             jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
