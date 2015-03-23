@@ -9,6 +9,7 @@ var kommentarServlet = "KommentarServlet";
 var notizServlet = "NotizServlet";
 var profilServlet = "ProfilServlet";
 var veranstaltungServlet = "VeranstaltungServlet";
+var fileUploadServlet = "FileUploadServlet";
 
 var actionLogin = "login";
 var actionLogout = "logout";
@@ -20,6 +21,7 @@ var actionGetOtherBenutzer = "getOtherBenutzer";
 var actionGetStudiengaenge = "getStudiengaenge";
 var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
+var actionUploadProfilBild = "uploadProfilBild";
 
 // GET/POST-Parameter fuer die Servlets
 // Werden auch als Schluesselnamen fuer JSON Objekte verwendet

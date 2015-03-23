@@ -37,6 +37,7 @@ function fillProfilseite() {
         fillProfilDaten();
         fillProfilEinstellungen();
         registerProfilSpeichernEvents();
+        registerAvatarAendernEvent();
     }
     else
     {
@@ -240,5 +241,24 @@ function registerProfilSpeichernEvents() {
         // Verhindert das normale Absenden des Formulars
         event.preventDefault();
     });
-    
+}
+
+function registerAvatarAendernEvent() {
+    var formData = new FormData();
+    formData.append('file', $('#profil_avatar_aendern_file')[0].files[0]);
+    formData.append('action', actionUploadProfilBild);
+    $("#profil_avatar_aendern").submit(function(event) {
+        $.ajax({
+            type: "POST",
+            url: fileUploadServlet,
+            enctype: "multipart/form-data",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log(response);
+            }
+        });
+        event.preventDefault();
+    });
 }
