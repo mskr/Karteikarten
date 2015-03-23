@@ -2,6 +2,8 @@
  * @author mk
  */
 
+    // Speichere die angezeigten Variablen
+    // TODO Evntl in defines.js auslagern
     var profilEmail;
     var profilVorname;
     var profilNachname;
@@ -16,8 +18,6 @@
  * Zeigt die Daten des Benutzers im Profil an
  * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
  */
-// TODO Funktion um Benutzer-Parameter erweitern, um belibige Profile anzuzeigen
-// TODO 2. Prameter um Passwort/Einstellungen- feld an oder auszuschalten.
 function fillProfilseite() {
     
     var profilBenutzerEmail = getUrlParameterByName(urlParamBenutzerProfil);
@@ -47,7 +47,7 @@ function fillProfilseite() {
                 "&"+paramEmail+"="+getUrlParameterByName(urlParamBenutzerProfil),
             success: function(response)
             {
-                var jsonObj = $.parseJSON(response);
+                var jsonObj = response;
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror")
                 {
@@ -84,6 +84,9 @@ function fillProfilseite() {
                 else
                 {
                     message(0, buildMessage(errCode));
+                    // Angefragter Benutzer existiert evntl nicht
+                    // -> Server schickt Invalid Parameter Error
+//                    location.search = ""; // Loesche alle URL Parameter und lade die Seite neu
                 }
             }
         });
@@ -170,7 +173,7 @@ function registerProfilSpeichernEvents() {
                  $("#profil_daten_speichern").prop("disabled", true);
              },
              success: function(response) {
-                 var jsonObj = $.parseJSON(response);
+                 var jsonObj = response;
                  var errCode = jsonObj["error"];
                  if(errCode == "noerror") {
                      message(1, "Gespeichert.");
@@ -213,7 +216,7 @@ function registerProfilSpeichernEvents() {
                     $("#profil_passwort_speichern").prop('disabled', true);
                 },
                 success: function(response) {
-                    var jsonObj = $.parseJSON(response);
+                    var jsonObj = response;
                     var errCode = jsonObj["error"];
                     if(errCode == "noerror") 
                     {

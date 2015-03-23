@@ -14,7 +14,7 @@ $(document).ready(function() {
             url: benutzerServlet,
             data: "action="+actionLogout,
             success: function(response) {
-                var jsonObj = $.parseJSON(response);
+                var jsonObj = response;
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
                     location.reload();

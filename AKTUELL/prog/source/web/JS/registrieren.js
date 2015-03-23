@@ -24,7 +24,7 @@ $(document).ready(function() {
                    +"&"+paramStudiengang+"="+studiengang
                    +"&"+paramMatrikelNr+"="+matnr,
                success: function(response) {
-                   var jsonObj = $.parseJSON(response);
+                   var jsonObj = response;
                    var errCode = jsonObj["error"];
                    if(errCode == "noerror") {
                        message(1, "Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.");

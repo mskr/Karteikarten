@@ -15,7 +15,7 @@ function fillStartseite() {
     	url: benutzerServlet,
     	data: "action="+actionGetStudiengaenge,
     	success: function(response) {
-            var jsonObj = $.parseJSON(response);
+            var jsonObj = response;
             var errCode = jsonObj["error"];
             if(errCode == "noerror") {
                 $("#reg_studiengang").empty();
