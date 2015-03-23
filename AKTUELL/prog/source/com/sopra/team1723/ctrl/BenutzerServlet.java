@@ -364,8 +364,6 @@ public class BenutzerServlet extends ServletController {
             return;
         }
         
-        System.out.println("Action: " + action);
-        
         // Anfrage weiterleiten an verantwortliche Funktion               
         if(action.equals(requestActionLogin))
         {
