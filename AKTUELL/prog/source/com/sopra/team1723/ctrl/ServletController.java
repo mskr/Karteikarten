@@ -46,6 +46,7 @@ public class ServletController extends HttpServlet
     protected final String requestActionAendereProfil = "aendereProfil";
 
     protected final String requestEmail = "email";
+    protected final String requestEmailNew = "emailNew";
     protected final String requestPassword = "pass";
     protected final String requestPasswordNew = "passNew";
     protected final String requestVorname = "vorname";
@@ -250,7 +251,7 @@ public class ServletController extends HttpServlet
     {
         return doPorcessing;
     }
-    
+
     /**
      * Diese Funktion prüft, ob der übergebene String leer ist und 
      * ob entfernt automatisch alle Leerzeichen am Anfang und am Ende.
@@ -267,6 +268,21 @@ public class ServletController extends HttpServlet
         
         // Falls doch inhalt drin ist, trim alle leerzeichen/zeilen weg
         txt.trim();
+        
+        return false;
+    }
+    /**
+     * Diese Funktion prüft, ob der übergebene String leer ist.
+     * @param txt
+     * @return
+     */
+    boolean isEmpty(String txt)
+    {
+        if(txt == null)
+            return true;
+        
+        if(txt.equals(""))
+            return true;
         
         return false;
     }

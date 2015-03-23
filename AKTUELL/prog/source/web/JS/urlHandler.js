@@ -60,8 +60,21 @@ function getUrlParameterByName(name) {
  */
 function buildUrlQuery(paramObj) {
     var locationSearchTmp = "?";
-    for(var param in paramObj) {
-        locationSearchTmp += param + "=" + paramObj[param] + "&";
+    var i = 0;
+    // Anzahl elemente Bestimmen
+    var maxI = 0;
+    for(var param in paramObj) 
+    {
+    	maxI++;
+    }
+    
+    for(var param in paramObj) 
+    {
+        locationSearchTmp += param + "=" + paramObj[param]
+        if(i < maxI-1)
+        	locationSearchTmp += "&";
+        
+        i++;
     }
     location.search = locationSearchTmp; // Dies laedt auch die Seite neu
 }

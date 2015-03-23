@@ -38,6 +38,7 @@ public class ProfilServlet extends ServletController {
     private boolean profilBearbeiten(HttpServletRequest request, HttpServletResponse response) {
 
         String email = request.getParameter(requestEmail);
+        String emailNew = request.getParameter(requestEmailNew);
         String vorname = request.getParameter(requestVorname);
         String nachname = request.getParameter(requestNachname);
         String notifyVeranstAenderung = request.getParameter(requestNotifyVeranstAenderung);
@@ -46,7 +47,7 @@ public class ProfilServlet extends ServletController {
 
         JSONObject jo = null;
         // Alle Parameter angegeben?
-        if(isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
+        if(isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(emailNew) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
                 || isEmptyAndRemoveSpaces(notifyVeranstAenderung) || isEmptyAndRemoveSpaces(notifyKarteikartenAenderung)
                 || isEmptyAndRemoveSpaces(notifyKommentare))
         {
@@ -54,9 +55,23 @@ public class ProfilServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
+        // HTML entfernen!
         email = Jsoup.parse(email).text();
         vorname = Jsoup.parse(vorname).text();
         nachname = Jsoup.parse(nachname).text();
+        
+        // Eigene eMail oder andere ?
+        if(!email.equalsIgnoreCase(aktuellerBenutzer.geteMail()))
+        {
+            // Andere eMail. Bin ich also Admin?
+            if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+            {
+                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return false;
+            }
+        }
+        
         // Boolean konvertieren
         boolean bNotifyVeranstAenderung = false;
         if(notifyVeranstAenderung.equals("true"))
@@ -113,7 +128,7 @@ public class ProfilServlet extends ServletController {
                 String nutzerstatus = request.getParameter(requestNutzerstatus);
 
                 // Alle Parameter angegeben?
-                if(isEmptyAndRemoveSpaces(studiengang) || isEmptyAndRemoveSpaces(matrikelNrStr)||isEmptyAndRemoveSpaces(nutzerstatus))
+                if(isEmptyAndRemoveSpaces(studiengang) || isEmptyAndRemoveSpaces(matrikelNrStr) || isEmptyAndRemoveSpaces(nutzerstatus))
                 {
                     jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
                     outWriter.print(jo);
@@ -121,6 +136,7 @@ public class ProfilServlet extends ServletController {
                 }
                 studiengang = Jsoup.parse(studiengang).text();
                 matrikelNrStr = Jsoup.parse(matrikelNrStr).text();
+                
                 // Matrikelnummer konvertieren
                 int nMatrikelNr = 0;
                 Nutzerstatus eNutzerstatus;
@@ -136,22 +152,17 @@ public class ProfilServlet extends ServletController {
                     return false;
                 }
 
-                benutzer = new Benutzer(email, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus, 
+                benutzer = new Benutzer(emailNew, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus, 
                         bNotifyVeranstAenderung, bNotifyKarteikartenAenderung, eNotifyKommentare);
-                String alteMail = aktuelleSession.getAttribute(sessionAttributeEMail).toString();
-                if(alteMail == null){
-                    jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
-                    outWriter.print(jo);
-                    return false;
-                }
-                dbManager.bearbeiteBenutzer(alteMail, benutzer);
+                
+                dbManager.bearbeiteBenutzer(email, benutzer);
             }
             // Normaler benutzer Speichern
             else
             {
-                benutzer = new Benutzer(email, vorname, nachname, bNotifyVeranstAenderung, 
+                benutzer = new Benutzer(emailNew, vorname, nachname, bNotifyVeranstAenderung, 
                         bNotifyKarteikartenAenderung, eNotifyKommentare);
-                dbManager.bearbeiteBenutzer(aktuelleSession.getAttribute(sessionAttributeEMail).toString(), benutzer);
+                dbManager.bearbeiteBenutzer(email, benutzer);
             }
         }
         catch(SQLException e)
@@ -189,23 +200,28 @@ public class ProfilServlet extends ServletController {
         
         try
         {
+            // Eigenes Profil oder nicht ? 
             if(!benutzerMail.equalsIgnoreCase(aktuellerBenutzer.geteMail()))
             {
+                // Nicht eigenes Profil. Ist der Benuzer als Admin ?
                 if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
                 {
+                    // wenn nein, dann error
                     jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
                     outWriter.print(jo);
                     return false;
                 }
             }
+            // Eigenes Profil
             else
             {
+                // Nochmal mit richtiger groß und kleinschreibung holen
                 benutzerMail = aktuellerBenutzer.geteMail();
                 // Prüfen ob altes Passwort richtig
                 dbManager.pruefeLogin(benutzerMail, altesPasswort);
             }
-
-            if(neuesPasswort.contains(" ") || isEmptyAndRemoveSpaces(neuesPasswort))
+            // neues Passwort angegeben ?
+            if(isEmpty(neuesPasswort))
             {
                 jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
                 outWriter.print(jo);
@@ -218,6 +234,7 @@ public class ProfilServlet extends ServletController {
                 outWriter.print(jo);
                 return false;
             }
+            // Passwort ändern
             if(dbManager.passwortAendern(benutzerMail, neuesPasswort))
             {
                 jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
