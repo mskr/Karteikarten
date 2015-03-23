@@ -36,7 +36,7 @@ public class ServletController extends HttpServlet
      *  DateiPfade
      */
     protected final String dirFiles = "files/";             
-    protected final String dirProfilBilder = dirFiles + "profilPictures/";
+    protected final String dirProfilBilder = dirFiles + "profilBilder/";
     
     /**
      *  Request Parameter
@@ -252,8 +252,6 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
-        System.out.println("Action: " + aktuelleAction);
-
         doPorcessing = true;
     }
     /**
