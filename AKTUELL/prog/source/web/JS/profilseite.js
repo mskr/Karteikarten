@@ -147,12 +147,13 @@ function registerProfilSpeichernEvents() {
          
          // Datenstring zusammenbauen
          var dataStr = "action="+actionAendereProfil
-         +"&"+paramEmail+"="+email
+         +"&"+paramEmail+"="+getUrlParameterByName(urlParamBenutzerProfil)
          +"&"+paramVorname+"="+vorname
          +"&"+paramNachname+"="+nachname
          +"&"+paramNofityVeranstAenderung+"="+notifyVeranst
          +"&"+paramNotifyKarteikartenAenderung+"="+notifyKarteikarten
-         +"&"+paramNotifyKommentare+"="+notifyKommentare;
+         +"&"+paramNotifyKommentare+"="+notifyKommentare
+         +"&"+paramEmailNew+"="+email;
 
          if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
          {

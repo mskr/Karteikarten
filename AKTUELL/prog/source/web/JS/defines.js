@@ -24,6 +24,7 @@ var actionAendereProfil = "aendereProfil";
 // GET/POST-Parameter fuer die Servlets
 // Werden auch als Schluesselnamen fuer JSON Objekte verwendet
 var paramEmail = "email";
+var paramEmailNew = "emailNew";
 var paramPasswort = "pass";
 var paramPasswortNew = "passNew";
 var paramVorname = "vorname";
