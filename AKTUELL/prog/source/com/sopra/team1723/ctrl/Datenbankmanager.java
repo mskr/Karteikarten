@@ -139,7 +139,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(3, benutzer.getNachname());
             ps.setString(4, benutzer.getNotifyKommentare().name());
             ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
-            ps.setBoolean(6, benutzer.isNotifyVeranstAenderung());
+            ps.setBoolean(6, benutzer.isNotifyKarteikartenAenderung());
             ps.setString(7, alteMail);    
             ps.executeUpdate();
 
@@ -172,7 +172,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(6, benutzer.getNutzerstatus().name());
             ps.setString(7, benutzer.getNotifyKommentare().name());
             ps.setBoolean(8, benutzer.isNotifyVeranstAenderung());
-            ps.setBoolean(9, benutzer.isNotifyVeranstAenderung());
+            ps.setBoolean(9, benutzer.isNotifyKarteikartenAenderung());
             ps.setString(10, alteMail);    
             ps.executeUpdate();
 

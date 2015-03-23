@@ -6,29 +6,14 @@
  * Konfiguriert alle Ajax Calls.
  * Kommt vom Server keine Antwort,
  * wird ein Fehler ausgegeben.
+ * Setzt einen Timeout.
  */
 $.ajaxSetup({
     type: "GET",
 	timeout: 1000,
-	error: function(xhr, status, err) { 
+	error: function(jqXHR, textStatus, errorThrown) { 
 	    //status === 'timeout' if it took too long.
 	    //handle that however you want.
-	    alert("Ajax Call returned error");
+	    alert("Ajax Call returned error. Debug Info: "+jqXHR.status+", "+textStatus+", "+errorThrown);
 	}
-});
-
-/**
- * Ajax Call Ladeanmation
- * @see http://stackoverflow.com/questions/1964839
- */
-$(document).ready(function() {
-    $('#loading').bind('ajaxStart', function(){
-        $(this).show();
-    }).bind('ajaxStop', function(){
-        $(this).hide();
-    });
-//    $(document).on({
-//        ajaxStart: function() { $body.addClass("loading");    },
-//        ajaxStop:  function() { $body.removeClass("loading"); }    
-//    });
 });

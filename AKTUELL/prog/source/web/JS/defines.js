@@ -42,7 +42,7 @@ var paramNotifyKommentareValVeranst = "VERANSTALTUNG_TEILGENOMMEN";
 var paramNotifyKommentareValDiskussion = "DISKUSSION_TEILGENOMMEN";
 
 // Schluesselnamen fuer JSON Objekte
-var keyJsonArrResult = "jsonArrResult";
+var keyJsonArrResult = "arrResult";
 
 // GET-Parameter fuer den urlHandler.js
 var urlParamLocation = "location";

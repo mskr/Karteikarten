@@ -2,7 +2,7 @@
  * @author mk
  */
 
-    // Speichere die angezeigten Variablen
+    // Temporaere Variablen fuer die vom Server geladenen Daten.
     // TODO Evntl in defines.js auslagern
     var profilEmail;
     var profilVorname;
@@ -20,6 +20,7 @@
  */
 function fillProfilseite() {
     
+    // Der Benutzer dessen Profil angezeigt wird
     var profilBenutzerEmail = getUrlParameterByName(urlParamBenutzerProfil);
     
     if(profilBenutzerEmail == jsonBenutzer[paramEmail])
@@ -34,6 +35,7 @@ function fillProfilseite() {
         profilNotifyKommentare = jsonBenutzer[paramNotifyKommentare];
         profilNotifyVeranstAenderung = jsonBenutzer[paramNofityVeranstAenderung];
         profilNotifyKarteikartenAenderung = jsonBenutzer[paramNotifyKarteikartenAenderung];
+        $(".profil_benutzer").text(profilVorname+" "+profilNachname);
         fillProfilDaten();
         fillProfilEinstellungen();
         registerProfilSpeichernEvents();
@@ -58,6 +60,7 @@ function fillProfilseite() {
                     profilMatrikelNr = jsonObj[paramMatrikelNr];
                     profilStudiengang = jsonObj[paramStudiengang];
                     profilNutzerstatus = jsonObj[paramNutzerstatus];
+                    $(".profil_benutzer").text(profilVorname+" "+profilNachname);
                     fillProfilDaten();
                     if(jsonBenutzer[paramNutzerstatus] != "ADMIN")
                     {
@@ -100,7 +103,6 @@ function fillProfilseite() {
         $("#profil_studiengang_input").prop("disabled", true);
         $("#profil_rolle_input").prop("disabled", true);
     }
-    
 }
 
 function fillProfilDaten() {
@@ -108,12 +110,32 @@ function fillProfilDaten() {
     $("#profil_vorname_input").val(profilVorname);
     $("#profil_nachname_input").val(profilNachname);
     $("#profil_matnr_input").val(profilMatrikelNr);
-    $("#profil_studiengang_input").val(profilStudiengang);
+    fillProfilStudiengaenge();
     $("#profil_rolle_input").val(profilNutzerstatus);
 }
 
+function fillProfilStudiengaenge() {
+    $.ajax({
+        url: benutzerServlet,
+        data: "action="+actionGetStudiengaenge,
+        success: function(response) {
+            var jsonObj = response;
+            var errCode = jsonObj["error"];
+            if(errCode == "noerror") {
+                $("#profil_studiengang_input").empty();
+                var studgArr = jsonObj[keyJsonArrResult];
+                for(var studg of studgArr) {
+                    $("#profil_studiengang_input").append("<option>"+studg+"</option>");
+                }
+                $("#profil_studiengang_input").val(profilStudiengang);
+            } else {
+                message(0, buildMessage(errCode));
+            }
+        }
+    });
+}
+
 function fillProfilEinstellungen() {
-    // TODO Auf false setzen vorher notwendig ?!
     switch(profilNotifyKommentare)
     {
         case paramNotifyKommentareValVeranst:
@@ -134,21 +156,19 @@ function registerProfilSpeichernEvents() {
     
     $("#profil_daten_form").submit(function(event) 
     {
-         var email = $("#profil_email_input").val();
-         var vorname = $("#profil_vorname_input").val();
-         var nachname = $("#profil_nachname_input").val();
-
-         var notifyVeranst = $("#notifyVeranstAenderung_input").prop("checked");
-         var notifyKarteikarten = $("#notifyKarteikartenAenderung_input").prop("checked");
-         var notifyKommentare =  $("input[name=profil_notifyKommentareRb]:checked").val();
-         
-         if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
-         {
-             var matnr = $("#profil_matnr_input").val();
-             var studiengang = $("#profil_studiengang_input").val();
-             var rolle = $("#profil_rolle_input").val();
-         }
-         
+        // Felder auslesen
+        var email = $("#profil_email_input").val();
+        var vorname = $("#profil_vorname_input").val();
+        var nachname = $("#profil_nachname_input").val();
+        var notifyVeranst = $("#notifyVeranstAenderung_input").prop("checked");
+        var notifyKarteikarten = $("#notifyKarteikartenAenderung_input").prop("checked");
+        var notifyKommentare =  $("input[name=profil_notifyKommentareRb]:checked").val();
+        if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
+        {
+            var matnr = $("#profil_matnr_input").val();
+            var studiengang = $("#profil_studiengang_input").val();
+            var rolle = $("#profil_rolle_input").val();
+        }
          // Datenstring zusammenbauen
          var dataStr = "action="+actionAendereProfil
          +"&"+paramEmail+"="+getUrlParameterByName(urlParamBenutzerProfil)
@@ -158,14 +178,13 @@ function registerProfilSpeichernEvents() {
          +"&"+paramNotifyKarteikartenAenderung+"="+notifyKarteikarten
          +"&"+paramNotifyKommentare+"="+notifyKommentare
          +"&"+paramEmailNew+"="+email;
-
          if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
          {
              dataStr+= "&"+paramNutzerstatus+"="+rolle
                         +"&"+paramStudiengang+"="+studiengang
                         +"&"+paramMatrikelNr+"="+matnr;
          }
-         
+         // Daten via Ajax an Server senden
          $.ajax({
              url: profilServlet,
              data: dataStr,
@@ -178,9 +197,12 @@ function registerProfilSpeichernEvents() {
                  var errCode = jsonObj["error"];
                  if(errCode == "noerror") {
                      message(1, "Gespeichert.");
+                     location.reload();
                  } else {
                      message(0, buildMessage(errCode));
                  }
+             },
+             complete: function() {
                  $("#profil_daten_speichern").val("Speichern");
                  $("#profil_daten_speichern").prop('disabled', false);
              }
@@ -191,10 +213,11 @@ function registerProfilSpeichernEvents() {
             
     $("#profil_passwort_form").submit(function(event) 
     {
+        // Felder auslesen
         var pwNeu = $("#profil_passwort_input").val();
         var pwNeuWdh = $("#profil_passwort_wdh_input").val();
         var pwAlt = $("#profil_passwort_alt_input").val();
-        
+        // Fehleingaben abfangen
         if(pwNeu != pwNeuWdh)
         {
             // Wdh-Feld leeren
@@ -204,11 +227,13 @@ function registerProfilSpeichernEvents() {
             message(0, "Bitte prüfen Sie Ihre Eingaben.");
         }
         else
-        { 
+        {
+            // Datenstring zusammenbauen
             var dataStr = "action="+actionAenderePasswort
                                     +"&"+paramPasswortNew+"="+pwNeu
                                     +"&"+paramPasswort+"="+pwAlt
                                     +"&"+paramEmail+"="+profilEmail;
+            // Daten via Ajax an Server senden
             $.ajax({
                 url: profilServlet,
                 data: dataStr,
@@ -233,6 +258,8 @@ function registerProfilSpeichernEvents() {
                     } else {
                         message(0, buildMessage(errCode));
                     }
+                },
+                complete: function() {
                     $("#profil_passwort_speichern").val("Speichern");
                     $("#profil_passwort_speichern").prop('disabled', false);
                 }

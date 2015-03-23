@@ -55,7 +55,7 @@ label {
 .msg {
 	padding: 10px;
 	width: calc(100% - 20px);
-	position: absolute;
+	position: fixed;
 	top: 0;
 	z-index: 101;
 	color: white;
@@ -1506,9 +1506,12 @@ label {
 	padding: 0;
 	width: 100%;
 } .profil_avatar {
+	margin-right: 20px;
 	vertical-align: middle;
 	text-shadow: 0px -2px 0px #000;
 	font-size: 80px;
+} .profil_benutzer {
+	font-weight: bold;
 } .profil_loeschen {
 	float: right;
 }
@@ -1563,8 +1566,11 @@ label {
 }
 
 select.profil_input {
+	/* Fix the different appearance of the select compared to text inputs */
 	width: calc(50% + 20px);
 	height: 40px;
 	-webkit-appearance: none;
 	-moz-appearance: none;
+} select.profil_input::selection {
+	background: red;
 }

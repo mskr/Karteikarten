@@ -17,7 +17,7 @@ $(document).ready(function() {
                 var jsonObj = response;
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
-                    location.reload();
+                    location.search = "";
                 } else {
                     message(0, buildMessage(errCode));
                 }

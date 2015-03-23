@@ -71,8 +71,6 @@ body > div {
 <div class="msg err"></div>
 <div class="msg success"></div>
 
-<div id="loading">Loading...</div>
-
 <div id="mypersonalbox_startseite" class="mypersonalbox">
 	<h3>Start</h3>
 	<form id="login_form">
@@ -336,7 +334,7 @@ $(document).ready( function() {
 		<div class="profil_head">
 			<span>
 				<span class="profil_avatar"><span class="mysopraicon sopra-usericon"></span></span>
-				<span class="profil_benutzer">Hier den angezeigten Benutzer einfuegen</span>
+				<span class="profil_benutzer"></span>
 			</span>
 			<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
 		</div>
@@ -347,7 +345,11 @@ $(document).ready( function() {
 				<div id="profil_vorname"><label class="profil_label" for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" class="profil_input" type="text" required></div>
 				<div id="profil_nachname"><label class="profil_label" for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" class="profil_input" type="text" required></div>
 				<div id="profil_matrikelnummer"><label class="profil_label" for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" class="profil_input" type="text" required></div>
-				<div id="profil_studiengang"><label class="profil_label" for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" class="profil_input" type="text" required></div>
+				<div id="profil_studiengang">
+					<label class="profil_label" for="profil_studiengang_input">Studiengang</label>
+					<select id="profil_studiengang_input" class="profil_input">
+					</select>
+				</div>
 				<div id="profil_rolle">
 					<label class="profil_label" for="profil_rolle_input">Rolle</label>
 					<select id="profil_rolle_input" class="profil_input">

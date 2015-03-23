@@ -1,21 +1,21 @@
 /**
+ * Wird beim Neuladen der Seite automatisch aktiv:
+ * 1. Liest die URL Parameter
+ * 2. Sendet action getBenutzer an Server
+ * 3. Interpretiert die URL Parameter
+ * 4. Zeigt entsprechende Ansicht an
  * @author mk
  */
 
 $(document).ready(function() {
     var urlQuery = parseUrlQuery();
-    // TODO Hier in when einen Ajax Call hinzufuegen, der die (auf dem Server gespeicherte) Ansicht holt,
-    // die der Benutzer zuletzt angesehen hat.
-    // So kann man nach einem Session Expired schoener reagieren.
-    console.log("URL Parameter location="+urlQuery[urlParamLocation]);
+    console.log("[urlHandler] location="+urlQuery[urlParamLocation]);
     $.when(getBenutzer()).done(function(a1) {
         interpreteUrlQuery(urlQuery);
     });
 });
 
 //Der aktuell eingeloggte Benutzer als JSON Objekt.
-// TODO Ueberlegen, ob das gefaehrlich ist, 
-// weil sich jemand beim Aendern dieser Variable als jemand anders ausgeben kann.
 var jsonBenutzer;
 
 /**
@@ -30,7 +30,7 @@ function parseUrlQuery() {
     query  = window.location.search.substring(1),
     urlParams = {};
     while (match = search.exec(query)) {
-        console.log("jsonBenutzer="+jsonBenutzer);
+        console.log("[urlHandler] jsonBenutzer="+jsonBenutzer);
         urlParams[decode(match[1])] = decode(match[2]);
     }
     return urlParams;
@@ -92,12 +92,12 @@ function interpreteUrlQuery(paramObj) {
     if(jsonBenutzer != undefined)
     { // Benutzer eingeloggt
         fillMyPersonalBox();
-        if(ziel == undefined || 
-           $.inArray(ziel, alleAnsichten) == -1 ||			// Keine Gültige Ansicht?
-           ziel == ansichtStartseite ||
-           ziel == ansichtHauptseite) 
+        if(ziel == undefined ||                         // Kein location Parameter
+           $.inArray(ziel, alleAnsichten) == -1 ||      // Kein bekannter location Parameter
+           ziel == ansichtStartseite ||                 // location ist Startseite
+           ziel == ansichtHauptseite)                   // location ist Hauptseite
         {
-            ziel = ansichtHauptseite;
+            ziel = ansichtHauptseite;                   // Dann gehe zu Hauptseite
         } else if(ziel == ansichtProfilseite) 
         {
             fillProfilseite();

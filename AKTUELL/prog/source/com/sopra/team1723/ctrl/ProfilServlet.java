@@ -151,11 +151,11 @@ public class ProfilServlet extends ServletController {
                     outWriter.print(jo);
                     return false;
                 }
-
+                
                 benutzer = new Benutzer(emailNew, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus, 
                         bNotifyVeranstAenderung, bNotifyKarteikartenAenderung, eNotifyKommentare);
                 
-                dbManager.bearbeiteBenutzer(email, benutzer);
+                dbManager.bearbeiteBenutzerAdmin(email, benutzer);
             }
             // Normaler benutzer Speichern
             else
