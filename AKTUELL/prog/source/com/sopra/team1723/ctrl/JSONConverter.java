@@ -38,6 +38,7 @@ public class JSONConverter
     
     // ArrayResults
     static public final String jsonArrResult = "arrResult";
+    static public final String jsonStrResult = "strResult";
        
     
     /**
@@ -97,7 +98,20 @@ public class JSONConverter
         for(String s: strings)
             array.add(s);
         
-        jo.put("jsonArrResult", array);
+        jo.put(jsonArrResult, array);
+        
+        return jo;
+    }
+    
+    /**
+     * 
+     * @param strings
+     * @return JSONObject mit NoError und einem String
+     */
+    static JSONObject toJson(String txt) 
+    {
+        JSONObject jo = new JSONObject();        
+        jo.put(jsonStrResult, txt);
         
         return jo;
     }

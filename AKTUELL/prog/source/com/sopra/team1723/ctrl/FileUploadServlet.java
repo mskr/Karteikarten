@@ -3,114 +3,83 @@ package com.sopra.team1723.ctrl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONObject;
 
+@MultipartConfig
 public class FileUploadServlet extends ServletController
 {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
-        //super.doPost(req, resp);
+        super.doPost(req, resp);
 
-        resp.setContentType("text/json");
-        outWriter = resp.getWriter();
-        
-        boolean isMultipartContent = ServletFileUpload.isMultipartContent(req);
-        if (!isMultipartContent) 
-        {
-            System.out.println("Kein Dateiupload!");
+        if(!doProcessing())
             return;
-        }
-        System.out.println("File upload gestartet!");
         
-        FileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        try 
+        if(!aktuelleAction.equals(requestActionUploadProfilBild))
         {
-            List<FileItem> fields = upload.parseRequest(req);
-            System.out.println("Anzahl Formular Felder: " + fields.size());
-            
-            Iterator<FileItem> it = fields.iterator();
-            if (!it.hasNext()) 
-            {
-                System.out.println("Keine Felder wurden übertragen!");
-                return;
-            }
-            System.out.println("Lese Felder...");
-            List<String> filePathes = new ArrayList<>();
-            while (it.hasNext()) 
-            {
-                FileItem fileItem = it.next();
-                boolean isFormField = fileItem.isFormField();
-                if (isFormField) 
-                {
-                    System.out.println("Formular Feld: " + fileItem.getFieldName() );
-                    System.out.println("Text-Inhalt: " + fileItem.getString());
-                } 
-                else 
-                {
-                    System.out.println("Datei Feld: " + fileItem.getFieldName());
-
-                    if(fileItem.getName().equals(""))
-                    {
-                        System.out.println("Dateiname leer. Überspringen!");
-                        System.out.println();
-                        continue;
-                    }
-                    
-//                    System.out.println("Text Inhalt: " + fileItem.getString());
-                    System.out.println("Datei Name: " + fileItem.getName());
-                    System.out.println("Content Type: " + fileItem.getContentType());
-                    System.out.println("Dateigröße (Byte): " + fileItem.getSize());
-                    
-                    
-                    // Datei erzeugen
-                    ServletContext servletContext = getServletContext();
-                    String contextPath = servletContext.getRealPath(File.separator);
-                    String absolutePath = contextPath + "/files/" + fileItem.getName();
-                    
-                    File f = new File(absolutePath);
-                    if(f.exists())
-                        System.out.println("WARNING: Datei existiert bereits! Sie wird nun überschrieben!");
-
-                    f.createNewFile();
-                    FileOutputStream fstr = new FileOutputStream(f);
-                    
-                    fstr.write(fileItem.get());
-                    fstr.close();
-                    System.out.println("File gespeichert: " + f.getAbsolutePath());
-                    System.out.println("  relativer Pfad: " + "/files/" + fileItem.getName());
-                    
-                    filePathes.add("/files/" + fileItem.getName());
-                }
-                System.out.println();
-            }
             // Sende Error zurück
-            JSONObject jo = JSONConverter.toJson(filePathes);
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
-        catch (FileUploadException e) 
-        {
-            e.printStackTrace();
-            // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
-            outWriter.print(jo);
-            return;
+        
+        Part uploadedFile = req.getPart(requestUploadFile);
+        String fileName = getFileName(uploadedFile);
+        InputStream contentStream = uploadedFile.getInputStream();
+
+        ServletContext servletContext = getServletContext();
+        String contextPath = servletContext.getRealPath(File.separator);
+        String relativerPfad = dirProfilBilder + aktuellerBenutzer.geteMail() + "." + FilenameUtils.getExtension(fileName);
+        String absolutePath = contextPath + relativerPfad;
+        
+        File f = new File(absolutePath);
+        if(f.exists())
+            System.out.println("WARNING: Datei existiert bereits! Sie wird nun überschrieben!");
+
+        f.createNewFile();
+
+        FileOutputStream outputStream = new FileOutputStream(f);
+
+        int read = 0;
+        byte[] bytes = new byte[1024];
+
+        while ((read = contentStream.read(bytes)) != -1) {
+            outputStream.write(bytes, 0, read);
         }
+
+        outputStream.close();
+        
+        System.out.println("File gespeichert: " + absolutePath);
+        System.out.println("  relativer Pfad: " + relativerPfad);
+
+        JSONObject jo = JSONConverter.toJson(relativerPfad);
+        outWriter.print(jo);
+        return;
     }
+    private String getFileName(Part part) 
+    {
+        for (String cd : part.getHeader("content-disposition").split(";")) 
+        {
+            if (cd.trim().startsWith("filename"))
+            {
+                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
+    } 
 }
+

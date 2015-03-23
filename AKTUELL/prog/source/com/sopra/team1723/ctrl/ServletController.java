@@ -13,6 +13,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.simple.JSONObject;
 
 import com.sopra.team1723.data.*;
@@ -32,6 +33,12 @@ public class ServletController extends HttpServlet
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
     
     /**
+     *  DateiPfade
+     */
+    protected final String dirFiles = "files/";             
+    protected final String dirProfilBilder = dirFiles + "profilPictures/";
+    
+    /**
      *  Request Parameter
      */
     protected final String requestAction = "action";
@@ -44,6 +51,7 @@ public class ServletController extends HttpServlet
     protected final String requestActionGetStudiengaenge = "getStudiengaenge";
     protected final String requestActionAenderePasswort = "aenderePasswort";
     protected final String requestActionAendereProfil = "aendereProfil";
+    protected final String requestActionUploadProfilBild = "uploadProfilBild";
 
     protected final String requestEmail = "email";
     protected final String requestEmailNew = "emailNew";
@@ -57,6 +65,7 @@ public class ServletController extends HttpServlet
     protected final String requestNotifyVeranstAenderung = "notifyVeranstAenderung";
     protected final String requestNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
     protected final String requestNotifyKommentare = "notifyKommentare";
+    protected final String requestUploadFile = "file";
 
     private boolean doPorcessing = false;
     
@@ -175,6 +184,10 @@ public class ServletController extends HttpServlet
         aktuellerBenutzer = null;
         resp.setContentType("text/json");
         outWriter = resp.getWriter();
+
+        // Bisschen platz zwischen den Requests
+        System.out.println();
+        System.out.println();
         
         // Prüfen ob session abgelaufen ist
         if (req.getRequestedSessionId() != null && 
@@ -229,10 +242,9 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
-        
         // Hole die vom client angefragte Aktion
         aktuelleAction = req.getParameter(requestAction);
-        
+
         if(isEmptyAndRemoveSpaces(aktuelleAction))
         {
             // Sende Error zurück
@@ -240,8 +252,9 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
-        doPorcessing = true;
         System.out.println("Action: " + aktuelleAction);
+
+        doPorcessing = true;
     }
     /**
      * Gibt "True" zurück, wenn Aufruf von super.doPost(...) keinen Error an den Client zurückgegeben hat.
