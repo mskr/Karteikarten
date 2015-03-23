@@ -21,6 +21,8 @@ var actionGetStudiengaenge = "getStudiengaenge";
 var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 
+// GET/POST-Parameter fuer die Servlets
+// Werden auch als Schluesselnamen fuer JSON Objekte verwendet
 var paramEmail = "email";
 var paramPasswort = "pass";
 var paramPasswortNew = "passNew";
@@ -36,10 +38,12 @@ var paramNotifyKommentareValKeine = "KEINE";
 var paramNotifyKommentareValVeranst = "VERANSTALTUNG_TEILGENOMMEN";
 var paramNotifyKommentareValDiskussion = "DISKUSSION_TEILGENOMMEN";
 
-
+// Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "jsonArrResult";
 
+// GET-Parameter fuer den urlHandler.js
 var urlParamLocation = "location";
+var urlParamBenutzerProfil = "user";
 
 var ansichtStartseite = "startseite";
 var ansichtHauptseite = "hauptseite";

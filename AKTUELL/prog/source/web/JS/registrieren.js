@@ -38,7 +38,7 @@ $(document).ready(function() {
             $("#reg_pass").focus();
             $("#reg_pass").select();
             $("#reg_pass").css("border","4px solid IndianRed");
-            message(0, "Ihre Passwortbestaetigung stimmt nicht mit dem Original ueberein. Bitte bestaetigen Sie es erneut.");
+            message(0, "Bitte prüfen Sie Ihre Eingaben.");
         }
         // Verhindert das normale Absenden des Formulars
         event.preventDefault();

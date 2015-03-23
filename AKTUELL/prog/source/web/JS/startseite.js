@@ -3,7 +3,7 @@
  */
 
 /**
- * Wird von boxhandler.js aufgerufen,
+ * Wird von urlHandler.js aufgerufen,
  * nachdem die <div> Container fuer die Startseite angezeigt wurden.
  * Holt die benoetigten Daten per Ajax Call vom Server
  * und traegt sie in die richtigen HTML Elemente ein.

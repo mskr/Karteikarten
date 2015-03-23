@@ -2,6 +2,16 @@
  * @author mk
  */
 
+    var profilEmail;
+    var profilVorname;
+    var profilNachname;
+    var profilMatrikelNr;
+    var profilStudiengang;
+    var profilNutzerstatus;
+    var profilNotifyKommentare;
+    var profilNotifyVeranstAenderung;
+    var profilNotifyKarteikartenAenderung;
+
 /**
  * Zeigt die Daten des Benutzers im Profil an
  * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
@@ -9,56 +19,116 @@
 // TODO Funktion um Benutzer-Parameter erweitern, um belibige Profile anzuzeigen
 // TODO 2. Prameter um Passwort/Einstellungen- feld an oder auszuschalten.
 function fillProfilseite() {
-    //TODO Durch variablen ersetzen
-    $("#profil_email_input").val(jsonBenutzer[paramEmail]);
-    //$("#profil_passwort_input").val("[geheim]");
-    $("#profil_vorname_input").val(jsonBenutzer[paramVorname]);
-    $("#profil_nachname_input").val(jsonBenutzer[paramNachname]);
-    $("#profil_matnr_input").val(jsonBenutzer[paramMatrikelNr]);
-    $("#profil_studiengang_input").val(jsonBenutzer[paramStudiengang]);
-    $("#profil_rolle_input").val(jsonBenutzer[paramNutzerstatus]);
+    
+    var profilBenutzerEmail = getUrlParameterByName(urlParamBenutzerProfil);
+    
+    if(profilBenutzerEmail == jsonBenutzer[paramEmail])
+    {
+        // Benutzer zeigt eigenes Profil an
+        profilEmail = jsonBenutzer[paramEmail];
+        profilVorname = jsonBenutzer[paramVorname];
+        profilNachname = jsonBenutzer[paramNachname];
+        profilMatrikelNr = jsonBenutzer[paramMatrikelNr];
+        profilStudiengang = jsonBenutzer[paramStudiengang];
+        profilNutzerstatus = jsonBenutzer[paramNutzerstatus];
+        profilNotifyKommentare = jsonBenutzer[paramNotifyKommentare];
+        profilNotifyVeranstAenderung = jsonBenutzer[paramNofityVeranstAenderung];
+        profilNotifyKarteikartenAenderung = jsonBenutzer[paramNotifyKarteikartenAenderung];
+        fillProfilDaten();
+        fillProfilEinstellungen();
+        registerProfilSpeichernEvents();
+    }
+    else
+    {
+        // Benutzer zeigt anderes Profil an
+        $.ajax({
+            url: profilServlet,
+            data: "action="+actionGetOtherBenutzer+
+                "&"+paramEmail+"="+getUrlParameterByName(urlParamBenutzerProfil),
+            success: function(response)
+            {
+                var jsonObj = $.parseJSON(response);
+                var errCode = jsonObj["error"];
+                if(errCode == "noerror")
+                {
+                    profilEmail = jsonObj[paramEmail];
+                    profilVorname = jsonObj[paramVorname];
+                    profilNachname = jsonObj[paramNachname];
+                    profilMatrikelNr = jsonObj[paramMatrikelNr];
+                    profilStudiengang = jsonObj[paramStudiengang];
+                    profilNutzerstatus = jsonObj[paramNutzerstatus];
+                    fillProfilDaten();
+                    if(jsonBenutzer[paramNutzerstatus] != "ADMIN")
+                    {
+                        // Eingeloggter normaler Benutzer zeigt anderes Profil an
+                        $("#profil_email_input").prop("disabled", true);
+                        $("#profil_vorname_input").prop("disabled", true);
+                        $("#profil_nachname_input").prop("disabled", true);
+                        $("#profil_einstellungen").hide();
+                        $("#profil_passwort").hide();
+                        $("#profil_daten_speichern").hide();
+                    }
+                    else
+                    {
+                        // Eingeloggter Admin zeigt anderes Profil an
+                        profilNotifyKommentare = jsonObj[paramNotifyKommentare];
+                        profilNotifyVeranstAenderung = jsonObj[paramNofityVeranstAenderung];
+                        profilNotifyKarteikartenAenderung = jsonObj[paramNotifyKarteikartenAenderung];
+                        fillProfilEinstellungen();
+                        registerProfilSpeichernEvents();
+                        // Ein eingeloggter Admin kann auf dem Profil eines anderen Benutzers das Passwort aendern
+                        // OHNE das alte Passwort einzugeben.
+                        $("#profil_passwort_alt").remove();
+                    }
+                }
+                else
+                {
+                    message(0, buildMessage(errCode));
+                }
+            }
+        });
+    }
+
     if(jsonBenutzer[paramNutzerstatus] != "ADMIN") 
     {
+        // Eingeloggter Benutzer zeigt eigenes Profil an
         $("#profil_matnr_input").prop("disabled", true);
         $("#profil_studiengang_input").prop("disabled", true);
         $("#profil_rolle_input").prop("disabled", true);
     }
-    // Zwar existent, aber unsichtbar
-    $(".profil_passwort_wdh, .profil_passwort_alt").css("display","block");
-    $(".profil_passwort_wdh, .profil_passwort_alt").hide();
     
-    $("#profil_passwort_input").focus(function() 
-    {
-        // ausklappen
-        $(".profil_passwort_wdh, .profil_passwort_alt").slideDown("slow");
-    });
-    $("#profil_passwort_input").focusout(function() 
-    {
-        // Wieder einklappen wenn Eingabefelder leer sind
-        if($("#profil_passwort_wdh_input").val() == "" && 
-           $("#profil_passwort_alt_input").val() == "" && 
-           $("#profil_passwort_input").val() == "" )
-        {
-            $(".profil_passwort_wdh, .profil_passwort_alt").slideUp("slow");
-        }
-    });
+}
 
-    // Einstellungen setzen
+function fillProfilDaten() {
+    $("#profil_email_input").val(profilEmail);
+    $("#profil_vorname_input").val(profilVorname);
+    $("#profil_nachname_input").val(profilNachname);
+    $("#profil_matnr_input").val(profilMatrikelNr);
+    $("#profil_studiengang_input").val(profilStudiengang);
+    $("#profil_rolle_input").val(profilNutzerstatus);
+}
+
+function fillProfilEinstellungen() {
     // TODO Auf false setzen vorher notwendig ?!
-    if(jsonBenutzer[paramNotifyKommentare] == paramNotifyKommentareValVeranst)
-        $("#notifyKommentare_input_teilgenommen").prop("checked",true);
-    if(jsonBenutzer[paramNotifyKommentare] == paramNotifyKommentareValDiskussion)
-        $("#notifyKommentare_input_diskussionen").prop("checked",true);
-    if(jsonBenutzer[paramNotifyKommentare] == paramNotifyKommentareValKeine)
-        $("#notifyKommentare_input_nie").prop("checked",true);
+    switch(profilNotifyKommentare)
+    {
+        case paramNotifyKommentareValVeranst:
+            $("#notifyKommentare_input_teilgenommen").prop("checked",true);
+            break;
+        case paramNotifyKommentareValDiskussion:
+            $("#notifyKommentare_input_diskussionen").prop("checked",true);
+            break;
+        case paramNotifyKommentareValKeine:
+            $("#notifyKommentare_input_nie").prop("checked",true);
+    }
+    $("#notifyVeranstAenderung_input").prop("checked",profilNotifyVeranstAenderung);
+    $("#notifyKarteikartenAenderung_input").prop("checked",profilNotifyKarteikartenAenderung);
     
+}
 
-    $("#notifyVeranstAenderung_input").prop("checked",jsonBenutzer[paramNofityVeranstAenderung]);
-    $("#notifyKarteikartenAenderung_input").prop("checked",jsonBenutzer[paramNotifyKarteikartenAenderung]);
+function registerProfilSpeichernEvents() {
     
-    
-    // Buttons
-    $("#profil_daten_speichern").click(function() 
+    $("#profil_daten_form").submit(function(event) 
     {
          var email = $("#profil_email_input").val();
          var vorname = $("#profil_vorname_input").val();
@@ -75,167 +145,96 @@ function fillProfilseite() {
              var rolle = $("#profil_rolle_input").val();
          }
          
-         // Prüfen ob alles ausgefüllt und bei Fehler einzeln hervorheben!
-         var validInput = true;
-         if(email == "")
-         {
-             $("#profil_email_input").css("border","4px solid IndianRed");
-             validInput = false;
-         }
-         else
-             $("#profil_email_input").css("border","none");
-         
-         if(vorname == "")
-         {
-             $("#profil_vorname_input").css("border","4px solid IndianRed");
-             validInput = false;
-         }
-         else
-             $("#profil_vorname_input").css("border","none");
-         if(nachname == "")
-         {
-             $("#profil_nachname_input").css("border","4px solid IndianRed");
-             validInput = false;
-         }
-         else
-             $("#profil_nachname_input").css("border","none");
+         // Datenstring zusammenbauen
+         var dataStr = "action="+actionAendereProfil
+         +"&"+paramEmail+"="+email
+         +"&"+paramVorname+"="+vorname
+         +"&"+paramNachname+"="+nachname
+         +"&"+paramNofityVeranstAenderung+"="+notifyVeranst
+         +"&"+paramNotifyKarteikartenAenderung+"="+notifyKarteikarten
+         +"&"+paramNotifyKommentare+"="+notifyKommentare;
+
          if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
          {
-             if(matnr == "")
-             {
-                 $("#profil_matnr_input").css("border","4px solid IndianRed");
-                 validInput = false;
-             }
-             else
-                 $("#profil_matnr_input").css("border","none");
-             if(studiengang == "")
-             {
-                 $("#profil_studiengang_input").css("border","4px solid IndianRed");
-                 validInput = false;
-             }
-             else
-                 $("#profil_studiengang_input").css("border","none");
-             if(rolle == "")
-             {
-                 $("#profil_rolle_input").css("border","4px solid IndianRed");
-                 validInput = false;
-             }
-             else
-                 $("#profil_rolle_input").css("border","none");
+             dataStr+= "&"+paramNutzerstatus+"="+rolle
+                        +"&"+paramStudiengang+"="+studiengang
+                        +"&"+paramMatrikelNr+"="+matnr;
          }
          
-         if(!validInput)
-         {
-            message(0, "Bitte alle Felder ausfüllen!");
-         }
-         else
-         {
-             // Datenstring zusammenbauen
-             var dataStr = "action="+actionAendereProfil
-             +"&"+paramEmail+"="+email
-             +"&"+paramVorname+"="+vorname
-             +"&"+paramNachname+"="+nachname
-             +"&"+paramNofityVeranstAenderung+"="+notifyVeranst
-             +"&"+paramNotifyKarteikartenAenderung+"="+notifyKarteikarten
-             +"&"+paramNotifyKommentare+"="+notifyKommentare;
-
-             if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
-             {
-                 dataStr+= "&"+paramNutzerstatus+"="+rolle
-                            +"&"+paramStudiengang+"="+studiengang
-                            +"&"+paramMatrikelNr+"="+matnr
-             }
-             
-             $.ajax({
-                 url: profilServlet,
-                 data: dataStr,
-                 success: function(response) {
-                     var jsonObj = $.parseJSON(response);
-                     var errCode = jsonObj["error"];
-                     if(errCode == "noerror") {
-                         var paramObj = {};
-                         paramObj[urlParamLocation] = ansichtProfilseite;
-                         buildUrlQuery(paramObj);
-                     } else {
-                         message(0, buildMessage(errCode));
-                     }
+         $.ajax({
+             url: profilServlet,
+             data: dataStr,
+             beforeSend: function() {
+                 $("#profil_daten_speichern").val("Lädt...");
+                 $("#profil_daten_speichern").prop('disabled', true);
+             },
+             success: function(response) {
+                 var jsonObj = $.parseJSON(response);
+                 var errCode = jsonObj["error"];
+                 if(errCode == "noerror") {
+                     message(1, "Gespeichert.");
+                 } else {
+                     message(0, buildMessage(errCode));
                  }
-              });
-         }              
+                 $("#profil_daten_speichern").val("Speichern");
+                 $("#profil_daten_speichern").prop('disabled', false);
+             }
+          }); 
+         // Verhindert das normale Absenden des Formulars
+         event.preventDefault();         
     });
-    
-    $("#profil_passwort_speichern").click(function() 
+            
+    $("#profil_passwort_form").submit(function(event) 
     {
         var pwNeu = $("#profil_passwort_input").val();
         var pwNeuWdh = $("#profil_passwort_wdh_input").val();
         var pwAlt = $("#profil_passwort_alt_input").val();
-
-        var validInput = true;
-        if(pwNeu == "")
-        {
-            $("#profil_passwort_input").css("border","4px solid IndianRed");
-            validInput = false;
-        }
-        else
-            $("#profil_passwort_input").css("border","none");
-        if(pwNeuWdh == "")
-        {
-            $("#profil_passwort_wdh_input").css("border","4px solid IndianRed");
-            validInput = false;
-        }
-        else
-            $("#profil_passwort_wdh_input").css("border","none");
-        if(pwAlt == "")
-        {
-            $("#profil_passwort_alt_input").css("border","4px solid IndianRed");
-            validInput = false;
-        }
-        else
-            $("#profil_passwort_alt_input").css("border","none");
-
-        if(!validInput)
-        {
-            message(0, "Bitte alle Felder ausfüllen!.");
-            // ausklappen
-            $(".profil_passwort_wdh, .profil_passwort_alt").slideDown("slow");
-        }
-        else if(pwNeu != pwNeuWdh)
+        
+        if(pwNeu != pwNeuWdh)
         {
             // Wdh-Feld leeren
             $("#profil_passwort_wdh_input").val("");
+            $("#profil_passwort_wdh_input").focus();
             $("#profil_passwort_wdh_input").css("border","4px solid IndianRed");
-            message(0, "Passwortwiederholung falsch! Bitte prüfen Sie Ihre Eingaben!");
-            // ausklappen
-            $(".profil_passwort_wdh, .profil_passwort_alt").slideDown("slow");
+            message(0, "Bitte prüfen Sie Ihre Eingaben.");
         }
         else
         { 
             var dataStr = "action="+actionAenderePasswort
                                     +"&"+paramPasswortNew+"="+pwNeu
                                     +"&"+paramPasswort+"="+pwAlt
+                                    +"&"+paramEmail+"="+profilEmail;
             $.ajax({
                 url: profilServlet,
                 data: dataStr,
+                beforeSend: function() {
+                    $("#profil_passwort_speichern").val("Lädt...");
+                    $("#profil_passwort_speichern").prop('disabled', true);
+                },
                 success: function(response) {
                     var jsonObj = $.parseJSON(response);
                     var errCode = jsonObj["error"];
                     if(errCode == "noerror") 
                     {
-                        var paramObj = {};
-                        paramObj[urlParamLocation] = ansichtProfilseite;
-                        buildUrlQuery(paramObj);
+                        message(1, "Gespeichert.");
+                        location.reload();
                     } 
                     else if(errCode = "loginfailed") 
                     {
                         $("#profil_passwort_alt_input").css("border","4px solid IndianRed");
-                        message(0, "Altes Passwort ist falsch!");
+                        $("#profil_passwort_alt_input").val("");
+                        $("#profil_passwort_alt_input").focus();
+                        message(0, "Bitte prüfen Sie Ihre Eingaben.");
                     } else {
                         message(0, buildMessage(errCode));
                     }
+                    $("#profil_passwort_speichern").val("Speichern");
+                    $("#profil_passwort_speichern").prop('disabled', false);
                 }
             });
         }
-        
+        // Verhindert das normale Absenden des Formulars
+        event.preventDefault();
     });
     
 }

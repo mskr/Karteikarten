@@ -75,6 +75,53 @@ label {
 	color: yellow;
 }
 
+.tiptrigger:after {
+	/* Das eigentliche Tooltip */
+	content: attr(data-tooltip);
+	font-size: 12px;
+	font-weight: 300;
+    position: absolute;
+    background: black;
+    padding: 5px 15px;
+    color: white;
+    -webkit-border-radius: 2px;
+    -moz-border-radius   : 2px;
+    border-radius        : 2px;
+    white-space: nowrap;
+    opacity: 0;
+    display: none;
+} .tiptrigger:before {
+	/* Der kleine Pfeil */
+	content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    opacity: 1;
+    display: none;
+} .tiptrigger:hover:after {
+    left: 0;
+    display: inline;
+} .tiptrigger:hover:before {
+    left: 50%;
+    display: inline;
+} .tiptrigger:hover:after, .username:hover:before {
+	opacity: 1;
+} .tipabove:before {
+    border-top: 5px solid black;
+} .tipabove:hover:after {
+	bottom: calc(100% + 5px);
+} .tipabove:hover:before {
+	bottom: 100%;
+} .tipbelow:before {
+    border-bottom: 5px solid black;
+} .tipbelow:hover:after {
+	bottom: -5px;
+} .tipbelow:hover:before {
+	bottom: 0;
+}
+
 .mypersonalbox {
 	margin: 1%;
 	padding: 15px;
@@ -279,42 +326,6 @@ label {
 	display: inline;
 	position: relative;
 	z-index: 103;
-} .username:after {									/* TOOLTIP CODE BEGINN */
-	/* Das eigentliche Tooltip */
-	content: attr(data-tooltip);
-	font-size: 12px;
-	font-weight: 300;
-    position: absolute;
-    background: black;
-    padding: 5px 15px;
-    color: white;
-    -webkit-border-radius: 2px;
-    -moz-border-radius   : 2px;
-    border-radius        : 2px;
-    white-space: nowrap;
-    opacity: 0;
-    display: none;
-} .username:before {
-	/* Der kleine Pfeil nach unten */
-	content: "";
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-top: 5px solid black;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    opacity: 0;
-    display: none;
-} .username:hover:after {
-	bottom: calc(100% + 5px);
-    left: 0;
-    display: inline;
-} .username:hover:before {
-	bottom: 100%;
-    left: 50%;
-    display: inline;
-} .username:hover:after, .username:hover:before {
-	opacity: 1;											/* TOOLTIP CODE ENDE */
 } .rolle {
 	margin: 0 5px;
 	font-size: 12px;
@@ -586,45 +597,6 @@ label {
 } .return:hover {
 	padding-left: 0px;
 	padding-right: 10px;
-} .return:after {				/* TOOLTIP CODE BEGINN */
-	/* Das eigentliche Tooltip */
-	content: attr(data-tooltip);
-	font-size: 12px;
-	font-weight: 300;
-    position: absolute;
-    background: black;
-    padding: 5px 15px;
-    color: white;
-    -webkit-border-radius: 2px;
-    -moz-border-radius   : 2px;
-    border-radius        : 2px;
-    white-space: nowrap;
-    opacity: 0;
-    display: none;
-} .return:before {
-	/* Der kleine Pfeil nach unten */
-	content: "";
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-top: 7px solid black;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    opacity: 0;
-    display: none;
-} .return:hover:after {
-	bottom: 110%;
-    left: 20%;
-    display: inline;
-	-webkit-box-shadow: 0px 0px 5px black;
-	-moz-box-shadow: 0px 0px 5px black;
-	box-shadow: 0px 0px 5px black;
-} .return:hover:before {
-	bottom: 90%;
-    left: 80%;
-    display: inline;
-} .return:after, .return:before {
-	opacity: 1;											/* TOOLTIP CODE ENDE */
 } @media screen and (max-width: 750px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
 	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
 	.return {
@@ -681,46 +653,6 @@ label {
 } .groupelem {
 	position: relative;
 	z-index: 4;
-} .groupelem:after {				/* TOOLTIP CODE BEGINN */
-	/* Das eigentliche Tooltip */
-	content: attr(data-tooltip);
-	font-size: 12px;
-	font-weight: 300;
-    position: absolute;
-	z-index: 5;
-    background: black;
-    padding: 5px 15px;
-    color: white;
-    -webkit-border-radius: 2px;
-    -moz-border-radius   : 2px;
-    border-radius        : 2px;
-    white-space: nowrap;
-    opacity: 0;
-    display: none;
-} .groupelem:before {
-	/* Der kleine Pfeil nach unten */
-	content: "";
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-bottom: 7px solid black;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    opacity: 0;
-    display: none;
-} .groupelem:hover:after {
-	bottom: -120%;
-    left: -20px;
-    display: inline;
-	-webkit-box-shadow: 0px 0px 5px black;
-	-moz-box-shadow: 0px 0px 5px black;
-	box-shadow: 0px 0px 5px black;
-} .groupelem:hover:before {
-	bottom: -30%;
-    left: 30%;
-    display: inline;
-} .groupelem:hover:after, .groupelem:hover:before {
-	opacity: 1;											/* TOOLTIP CODE ENDE */
 } @media screen and (max-width: 1400px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
 	/* ZUSAETZLICHER CODE FUER MITTELGROSSE BILDSCHIRME */
 	.kk_export_bt > span:after {
@@ -793,45 +725,6 @@ label {
 	z-index: 9;
 } .loeschen:hover {
 	color: #800000;
-} .option:after {									/* TOOLTIP CODE BEGINN */
-	/* Das eigentliche Tooltip */
-	content: attr(data-tooltip);
-	font-size: 12px;
-	font-weight: 300;
-    position: absolute;
-    background: black;
-    padding: 5px 15px;
-    color: white;
-    -webkit-border-radius: 2px;
-    -moz-border-radius   : 2px;
-    border-radius        : 2px;
-    white-space: nowrap;
-    opacity: 0;
-    display: none;
-} .option:before {
-	/* Der kleine Pfeil nach unten */
-	content: "";
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-top: 7px solid black;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    opacity: 0;
-    display: none;
-} .option:hover:after {
-	bottom: 105%;
-    left: 20%;
-    display: inline;
-	-webkit-box-shadow: 0px 0px 5px black;
-	-moz-box-shadow: 0px 0px 5px black;
-	box-shadow: 0px 0px 5px black;
-} .option:hover:before {
-	bottom: 80%;
-    left: 42%;
-    display: inline;
-} .option:hover:after, .option:hover:before {
-	opacity: 1;											/* TOOLTIP CODE ENDE */
 }
 
 .kk {
@@ -1605,6 +1498,7 @@ label {
 .flex_elem {
     flex-grow: 1;
     flex-shrink: 0;
+    flex-basis: 0;
 }
 
 .profil_head {
@@ -1619,19 +1513,17 @@ label {
 	float: right;
 }
 
-.profil_daten {
+.profil_daten, .profil_passwort {
+	min-width: 400px;
 	text-align: right;
-}
-
-.profil_notifyKommentare {
-	margin-bottom: 10px;
-} .profil_buttons {
-	padding: 20px 0 20px 0;
-	width: 70%;
-	text-align: right;
-} .profil_buttons > span {
-	padding-right: 32px;
-	display: block;
+} .profil_einstellungen {
+	min-width: 400px;
+} .profil_einstellungen {
+	text-align: left;
+} .profil_einstellungen input {
+	margin-right: 10px;
+} .profil_notifyKommentare, .profil_notifyAenderungen {
+	margin: 10px 0;
 }
 
 .profil_infotext, .profil_label {

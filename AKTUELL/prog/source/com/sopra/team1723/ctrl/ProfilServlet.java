@@ -182,13 +182,28 @@ public class ProfilServlet extends ServletController {
     private boolean passwortAendern(HttpServletRequest request, HttpServletResponse response) {
         String neuesPasswort = request.getParameter(requestPasswordNew);
         String altesPasswort = request.getParameter(requestPassword);
+        // Nutze diese Methode auch, wenn ein Admin die Email eines anderen Benutzers aendert
+        String benutzerMail = request.getParameter(requestEmail);
         
         JSONObject jo = null;
         
         try
         {
-            // Prüfen ob altes Passwort richtig
-            dbManager.pruefeLogin(aktuellerBenutzer.geteMail(), altesPasswort);
+            if(!benutzerMail.equalsIgnoreCase(aktuellerBenutzer.geteMail()))
+            {
+                if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+                {
+                    jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                    outWriter.print(jo);
+                    return false;
+                }
+            }
+            else
+            {
+                benutzerMail = aktuellerBenutzer.geteMail();
+                // Prüfen ob altes Passwort richtig
+                dbManager.pruefeLogin(benutzerMail, altesPasswort);
+            }
 
             if(neuesPasswort.contains(" ") || isEmptyAndRemoveSpaces(neuesPasswort))
             {
@@ -196,7 +211,6 @@ public class ProfilServlet extends ServletController {
                 outWriter.print(jo);
                 return false;
             }
-            String benutzerMail = aktuellerBenutzer.geteMail();
             // TODO Vllt weglassen
             if(benutzerMail == null)
             {
@@ -270,6 +284,7 @@ public class ProfilServlet extends ServletController {
             if(b == null)
             {
                 JSONObject jo  = null;
+                // TODO Evntl detailliertere Fehlermeldung, z.B. userNotFound einfuehren?
                 jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return;

@@ -4,15 +4,18 @@
 
 $(document).ready(function() {
     var urlQuery = parseUrlQuery();
-    // Hier in when einen Ajax Call hinzufuegen, der die (auf dem Server gespeicherte) Ansicht holt,
+    // TODO Hier in when einen Ajax Call hinzufuegen, der die (auf dem Server gespeicherte) Ansicht holt,
     // die der Benutzer zuletzt angesehen hat.
     // So kann man nach einem Session Expired schoener reagieren.
+    console.log("URL Parameter location="+urlQuery[urlParamLocation]);
     $.when(getBenutzer()).done(function(a1) {
         interpreteUrlQuery(urlQuery);
     });
 });
 
 //Der aktuell eingeloggte Benutzer als JSON Objekt.
+// TODO Ueberlegen, ob das gefaehrlich ist, 
+// weil sich jemand beim Aendern dieser Variable als jemand anders ausgeben kann.
 var jsonBenutzer;
 
 /**
@@ -27,9 +30,24 @@ function parseUrlQuery() {
     query  = window.location.search.substring(1),
     urlParams = {};
     while (match = search.exec(query)) {
+        console.log("jsonBenutzer="+jsonBenutzer);
         urlParams[decode(match[1])] = decode(match[2]);
     }
     return urlParams;
+}
+
+/**
+ * Liefert den Wert zu einem gegebenen Parameternamen.
+ * @see http://stackoverflow.com/questions/901115
+ * @param name ist der Parametername
+ * @returns Wert des Parameters
+ * oder leerer String bei nicht vorhandenem Parameter
+ */
+function getUrlParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 /**
@@ -49,10 +67,10 @@ function buildUrlQuery(paramObj) {
 }
 
 /**
- * Wird aufgerufen wenn die getBenutzer Abfrage vom Server
- * beantwortet wurde.
- * Interpretiert den URL Query String und
- * zeigt die entsprechende Seite an.
+ * Wird aufgerufen wenn die getBenutzer Anfrage vom Server beantwortet wurde.
+ * Interpretiert den URL Query String.
+ * Aktuell wird nur der location Parameter gelesen und
+ * die entsprechende Seite angezeigt.
  * @param paramObj enthaehlt die Parameter als Map
  */
 function interpreteUrlQuery(paramObj) {
@@ -90,7 +108,7 @@ function getBenutzer()
         data: "action="+actionGetBenutzer,
         success: function(response) 
         {
-            jsonObj = $.parseJSON(response);
+            var jsonObj = $.parseJSON(response);
             var errCode = jsonObj["error"];
             if(errCode == "noerror") 
             {
@@ -101,21 +119,21 @@ function getBenutzer()
             {
                 // Niemand ist eingeloggt.
                 jsonBenutzer = undefined;
-               if(errCode == "notloggedin") 
-               {
-                   message(1, "Bitte loggen Sie sich ein um fortzufahren.");
-               } 
-               else 
-               {
-                   message(0, buildMessage(errCode));
-               }
+                if(errCode == "notloggedin") 
+                {
+                    message(1, "Bitte loggen Sie sich ein um fortzufahren.");
+                } 
+                else 
+                {
+                    message(0, buildMessage(errCode));
+                }
             }
         }
     });
 }
 
 /**
- * Zeigt die durch den angegebene Seite an.
+ * Blendet alle nicht benoetigten mainboxen aus und die richtige ein.
  */
 function display(ansicht) 
 {

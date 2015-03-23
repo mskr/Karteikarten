@@ -71,6 +71,13 @@
 	text-decoration: none;
 } .mybutton_dark:focus {
 	border: 1px solid white;
+} .mybutton_dark:disabled {
+	background: #4f4f4f;
+	background-image: none;
+	box-shadow: none;
+	border: 1px solid #262626;
+	color: grey;
+	text-shadow: none;
 }
 
 .mybutton_dark_flat {

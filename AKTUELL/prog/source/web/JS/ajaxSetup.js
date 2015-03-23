@@ -17,10 +17,18 @@ $.ajaxSetup({
 	}
 });
 
+/**
+ * Ajax Call Ladeanmation
+ * @see http://stackoverflow.com/questions/1964839
+ */
 $(document).ready(function() {
     $('#loading').bind('ajaxStart', function(){
         $(this).show();
     }).bind('ajaxStop', function(){
         $(this).hide();
     });
+//    $(document).on({
+//        ajaxStart: function() { $body.addClass("loading");    },
+//        ajaxStop:  function() { $body.removeClass("loading"); }    
+//    });
 });

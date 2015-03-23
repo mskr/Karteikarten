@@ -128,7 +128,7 @@ $(document).ready( function() {
 <div id="mypersonalbox_hauptseite" class="mypersonalbox">
 	<div class="user_container">
 		<span class="mysopraicon sopra-usericon usericon" id="usericon"><br></span>
-		<a class="username" data-tooltip="zum Profil gehen"></a>
+		<a class="username tiptrigger tipabove" data-tooltip="zum Profil gehen"></a>
 		<br>
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
 		<a id="logout" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
@@ -294,10 +294,10 @@ $(document).ready( function() {
 
 <div id="mypersonalbox_profilseite" class="mypersonalbox">
 	<!-- Return Link erscheint nicht auf Hauptseite -->
-	<a class="return" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
+	<a class="return tiptrigger tipabove" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
 	<div class="user_container">
 		<span class="mysopraicon sopra-usericon usericon"><br></span>
-		<a class="username" data-tooltip="zum Profil gehen"></a>
+		<a class="username tiptrigger tipabove" data-tooltip="zum Profil gehen"></a>
 		<br>
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
 		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
@@ -340,40 +340,45 @@ $(document).ready( function() {
 		</div>
 		<div class="profil_daten card flex_elem">
 			<div class="card_title">Profil</div>
-			<form>
-				<div id="profil_email"><label class="profil_label" for="profil_email_input">E-Mail</label><input id="profil_email_input" class="profil_input" type="email"></div>
-				<div id="profil_vorname"><label class="profil_label" for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" class="profil_input" type="text"></div>
-				<div id="profil_nachname"><label class="profil_label" for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" class="profil_input" type="text"></div>
-				<div id="profil_matrikelnummer"><label class="profil_label" for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" class="profil_input" type="text"></div>
-				<div id="profil_studiengang"><label class="profil_label" for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" class="profil_input" type="text"></div>
+			<form id="profil_daten_form">
+				<div id="profil_email"><label class="profil_label" for="profil_email_input">E-Mail</label><input id="profil_email_input" class="profil_input" type="email" required></div>
+				<div id="profil_vorname"><label class="profil_label" for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" class="profil_input" type="text" required></div>
+				<div id="profil_nachname"><label class="profil_label" for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" class="profil_input" type="text" required></div>
+				<div id="profil_matrikelnummer"><label class="profil_label" for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" class="profil_input" type="text" required></div>
+				<div id="profil_studiengang"><label class="profil_label" for="profil_studiengang_input">Studiengang</label><input id="profil_studiengang_input" class="profil_input" type="text" required></div>
 				<div id="profil_rolle">
-					<label for="profil_rolle_input">Rolle</label>
+					<label class="profil_label" for="profil_rolle_input">Rolle</label>
 					<select id="profil_rolle_input" class="profil_input">
 						<option>STUDENT</option>
 						<option>DOZENT</option>
 						<option>ADMIN</option>
 					</select>
 				</div>
+				<div id="profil_einstellungen" class="profil_einstellungen">
+					<div class="card_title">Einstellungen</div>
+					<div class="profil_notifyKommentare">
+						<div class="profil_infotext">Benachrichtigungen über Kommentare...</div>
+						<div><input id="notifyKommentare_input_teilgenommen" name="profil_notifyKommentareRb" type="radio" value="VERANSTALTUNG_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_teilgenommen">immer.</label></div>
+						<div><input id="notifyKommentare_input_diskussionen" name="profil_notifyKommentareRb" type="radio" value="DISKUSSION_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_diskussionen">nur bei Disussionen, an denen ich teilgenommen habe.</label></div>
+						<div><input id="notifyKommentare_input_nie" name="profil_notifyKommentareRb" type="radio" value="KEINE"><label class="profil_label" for="notifyKommentare_input_nie">niemals.</label></div>
+					</div>
+					<div class="profil_notifyAenderungen">
+						<div class="profil_infotext">Benachrichtigungen über Änderungen in...</div>
+						<div><input id="notifyVeranstAenderung_input" type="checkbox"><label class="profil_label" for="notifyVeranstAenderung_input">Veranstaltungen.</label></div>
+						<div><input id="notifyKarteikartenAenderung_input" type="checkbox"><label class="profil_label" for="notifyKarteikartenAenderung_input">Karteikarten.</label></div>
+					</div>
+				</div>
 				<input id="profil_daten_speichern" class="mybutton_dark" type="submit" value="Speichern">
 			</form>
 		</div>
-		<div class="profil_einstellungen card flex_elem">
-			<div class="card_title">Einstellungen</div>
-			<div class="profil_notifyKommentare">
-				<div class="profil_infotext">Über neue Kommentare benachrichtigen...</div>
-				<div><input id="notifyKommentare_input_teilgenommen" name="profil_notifyKommentareRb" type="radio" value="VERANSTALTUNG_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_teilgenommen">immer.</label></div>
-				<div><input id="notifyKommentare_input_diskussionen" name="profil_notifyKommentareRb" type="radio" value="DISKUSSION_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_diskussionen">nur bei Disussionen, an denen ich teilgenommen habe.</label></div>
-				<div><input id="notifyKommentare_input_nie" name="profil_notifyKommentareRb" type="radio" value="KEINE"><label class="profil_label" for="notifyKommentare_input_nie">niemals.</label></div>
-			</div>
-			<div class="profil_notifyVeranstAenderung"><input id="notifyVeranstAenderung_input" type="checkbox"><label class="profil_label" for="notifyVeranstAenderung_input">Über Veranstaltungsänderungen benachrichtigen</label></div>
-			<div class="profil_notifyKarteikartenAenderung"><input id="notifyKarteikartenAenderung_input" type="checkbox"><label class="profil_label" for="notifyKarteikartenAenderung_input">Über Karteikartenänderungen benachrichtigen</label></div>
-			<span id="profil_einstellungen_speichern" class="mybutton_dark">Speichern</span>
-		</div>
-		<div class="profil_passwort card flex_elem">
-			<span id="profil_passwort"><label class="profil_label" for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" class="profil_input" type="password"></span>
-			<span id="profil_passwort_wdh"><label class="profil_label" for="profil_passwort_wdh_input">Passwort wiederholen</label><input id="profil_passwort_wdh_input" class="profil_input" type="password"></span>
-			<span id="profil_passwort_alt"><label class="profil_label" for="profil_passwort_alt_input">Altes Passwort</label><input id="profil_passwort_alt_input" class="profil_input" type="password"></span>
-			<span id="profil_passwort_speichern" class="mybutton_dark">Speichern</span>
+		<div id="profil_passwort" class="profil_passwort card flex_elem">
+			<form id="profil_passwort_form">
+				<div class="card_title">Passwort ändern</div>
+				<div><span id="profil_passwort"><label class="profil_label" for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" class="profil_input" type="password" required></span></div>
+				<div><span id="profil_passwort_wdh"><label class="profil_label" for="profil_passwort_wdh_input">Passwort wiederholen</label><input id="profil_passwort_wdh_input" class="profil_input" type="password" required></span></div>
+				<div><span id="profil_passwort_alt"><label class="profil_label" for="profil_passwort_alt_input">Altes Passwort</label><input id="profil_passwort_alt_input" class="profil_input" type="password" required></span></div>
+				<input id="profil_passwort_speichern" class="mybutton_dark" type="submit" value="Speichern">
+			</form>
 		</div>
 	</div>
 </div>
@@ -411,10 +416,10 @@ $(document).ready(function() {
 
 <div id="mypersonalbox_veranstaltungseite" class="mypersonalbox">
 	<!-- Return Link erscheint nicht auf Hauptseite -->
-	<a class="return" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
+	<a class="return tiptrigger tipabove" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
 	<div class="user_container">
 		<span class="mysopraicon sopra-usericon usericon"><br></span>
-		<a class="username" data-tooltip="zum Profil gehen">Marius Kircher</a>
+		<a class="username tiptrigger tipabove" data-tooltip="zum Profil gehen">Marius Kircher</a>
 		<br>
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
 		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
@@ -451,25 +456,25 @@ $(document).ready(function() {
 		<div class="mybuttongroup filtern" grouplabel="Filter">
 			<input id="filter0" type="radio" name="group_filtern" checked>
 			<label for="filter0">
-				<a class="groupelem left alle" data-tooltip="Alle">
+				<a class="groupelem left alle tiptrigger tipbelow" data-tooltip="Alle">
 					<span class="octicon octicon-versions"></span>
 				</a>
 			</label>
 			<input id="filter1" type="radio" name="group_filtern">
 			<label for="filter1">
-				<a class="groupelem middle wichtig" data-tooltip="Wichtig">
+				<a class="groupelem middle wichtig tiptrigger tipbelow" data-tooltip="Wichtig">
 					<span class="octicon octicon-star"></span>
 				</a>
 			</label>
 			<input id="filter2" type="radio" name="group_filtern">
 			<label for="filter2">
-				<a class="groupelem middle bilder" data-tooltip="Bilder">
+				<a class="groupelem middle bilder tiptrigger tipbelow" data-tooltip="Bilder">
 					<span class="octicon octicon-device-camera"></span>
 				</a>
 			</label>
 			<input id="filter3" type="radio" name="group_filtern">
 			<label for="filter3">
-				<a class="groupelem middle videos" data-tooltip="Videos">
+				<a class="groupelem middle videos tiptrigger tipbelow" data-tooltip="Videos">
 					<span class="octicon octicon-device-camera-video"></span>
 				</a>
 			</label>
@@ -481,19 +486,19 @@ $(document).ready(function() {
 		<div class="mybuttongroup sortieren" grouplabel="Sortieren">
 			<input id="sortier0" type="radio" name="group_sortieren" checked>
 			<label for="sortier0">
-				<a class="groupelem left roterfaden" data-tooltip="Standard">
+				<a class="groupelem left roterfaden tiptrigger tipbelow" data-tooltip="Standard">
 					<span class="octicon octicon-ellipsis"></span>
 				</a>
 			</label>
 			<input id="sortier1" type="radio" name="group_sortieren">
 			<label for="sortier1">
-				<a class="groupelem middle beliebt" data-tooltip="Upvotes">
+				<a class="groupelem middle beliebt tiptrigger tipbelow" data-tooltip="Upvotes">
 					<span class="octicon octicon-triangle-up"></span>
 				</a>
 			</label>
 			<input id="sortier2" type="radio" name="group_sortieren">
 			<label for="sortier2">
-				<a class="groupelem right neueste" data-tooltip="Neu">
+				<a class="groupelem right neueste tiptrigger tipbelow" data-tooltip="Neu">
 					<span class="octicon octicon-clock"></span>
 				</a>
 			</label>
@@ -501,19 +506,19 @@ $(document).ready(function() {
 		<div class="mybuttongroup ansicht" grouplabel="Ansicht">
 			<input id="ansicht0" type="radio" name="group_ansicht" checked>
 			<label for="ansicht0">
-				<a class="groupelem left lese" data-tooltip="Lesen">
+				<a class="groupelem left lese tiptrigger tipbelow" data-tooltip="Lesen">
 					<span class="octicon octicon-book"></span>
 				</a>
 			</label>
 			<input id="ansicht1" type="radio" name="group_ansicht">
 			<label for="ansicht1">
-				<a class="groupelem middle baum" data-tooltip="Baum">
+				<a class="groupelem middle baum tiptrigger tipbelow" data-tooltip="Baum">
 					<span class="octicon octicon-unfold"></span>
 				</a>
 			</label>
 			<input id="ansicht2" type="radio" name="group_ansicht">
 			<label for="ansicht2">
-				<a class="groupelem right graph" data-tooltip="Graph">
+				<a class="groupelem right graph tiptrigger tipbelow" data-tooltip="Graph">
 					<span class="octicon octicon-git-merge"></span>
 				</a>
 			</label>
@@ -538,16 +543,16 @@ $(document).ready(function() {
 			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
 		<div class="kk_optionen">
-			<a class="option permalink" data-tooltip="Link kopieren">
+			<a class="option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
 				<span class="octicon octicon-link"></span>
 			</a>
-			<a class="option loeschen" data-tooltip="Karteikarte löschen">
+			<a class="option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
 				<span class="octicon octicon-trashcan"></span>
 			</a>
-			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
+			<a class="option einfuegen tiptrigger tipabove" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
 				<span class="octicon octicon-plus"></span>
 			</a>
-			<a class="option attribute attr_popup_open" data-tooltip="Attribute ändern">
+			<a class="option attribute attr_popup_open tiptrigger tipabove" data-tooltip="Attribute ändern">
 				<span class="octicon octicon-checklist"></span>
 			</a>
 		</div>
@@ -626,19 +631,19 @@ $(document).ready(function() {
 			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
 		<div class="kk_optionen">
-			<a class="option permalink" data-tooltip="Link kopieren">
+			<a class="option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
 				<span class="octicon octicon-link"></span>
 			</a>
-			<a class="option loeschen" data-tooltip="Karteikarte löschen">
+			<a class="option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
 				<span class="octicon octicon-trashcan"></span>
 			</a>
-			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
+			<a class="option einfuegen tiptrigger tipabove" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
 				<span class="octicon octicon-plus"></span>
 			</a>
-			<a class="option hochladen" data-tooltip="Neue Version dieses Bildes hochladen">
+			<a class="option hochladen tiptrigger tipabove" data-tooltip="Neue Version dieses Bildes hochladen">
 				<span class="octicon octicon-cloud-upload"></span>
 			</a>
-			<a class="option attribute attr_popup_open" data-tooltip="Attribute ändern">
+			<a class="option attribute attr_popup_open tiptrigger tipabove" data-tooltip="Attribute ändern">
 				<span class="octicon octicon-checklist"></span>
 			</a>
 		</div>
@@ -661,19 +666,19 @@ $(document).ready(function() {
 			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
 		<div class="kk_optionen">
-			<a class="option permalink" data-tooltip="Link kopieren">
+			<a class="option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
 				<span class="octicon octicon-link"></span>
 			</a>
-			<a class="option loeschen" data-tooltip="Karteikarte löschen">
+			<a class="option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
 				<span class="octicon octicon-trashcan"></span>
 			</a>
-			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
+			<a class="option einfuegen tiptrigger tipabove" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
 				<span class="octicon octicon-plus"></span>
 			</a>
-			<a class="option hochladen" data-tooltip="Neue Version dieses Videos hochladen">
+			<a class="option hochladen tiptrigger tipabove" data-tooltip="Neue Version dieses Videos hochladen">
 				<span class="octicon octicon-cloud-upload"></span>
 			</a>
-			<a class="option attribute attr_popup_open" data-tooltip="Attribute ändern">
+			<a class="option attribute attr_popup_open tiptrigger tipabove" data-tooltip="Attribute ändern">
 				<span class="octicon octicon-checklist"></span>
 			</a>
 		</div>
@@ -720,16 +725,16 @@ $(document).ready(function() {
 			<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
 		<div class="kk_optionen">
-			<a class="option permalink" data-tooltip="Link kopieren">
+			<a class="option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
 				<span class="octicon octicon-link"></span>
 			</a>
-			<a class="option loeschen" data-tooltip="Karteikarte löschen">
+			<a class="option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
 				<span class="octicon octicon-trashcan"></span>
 			</a>
-			<a class="option einfuegen" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
+			<a class="option einfuegen tiptrigger tipabove" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
 				<span class="octicon octicon-plus"></span>
 			</a>
-			<a class="option attribute attr_popup_open" data-tooltip="Attribute ändern">
+			<a class="option attribute attr_popup_open tiptrigger tipabove" data-tooltip="Attribute ändern">
 				<span class="octicon octicon-checklist"></span>
 			</a>
 		</div>

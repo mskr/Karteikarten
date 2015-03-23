@@ -6,27 +6,31 @@
  * Fuellt die mypersonalbox mit den benoetigten Informationen.
  */
 function fillMyPersonalBox() {
-    if(jsonBenutzer != undefined) {
-        fillUserContainer();
-    }
+    fillUserContainer();
     $(".return").click(function() {
         var paramObj = {};
         paramObj[urlParamLocation] = ansichtHauptseite;
         buildUrlQuery(paramObj);
     });
+    if(jsonBenutzer == undefined) {
+        return;
+    }
     $(".username").click(function() {
         var paramObj = {};
         paramObj[urlParamLocation] = ansichtProfilseite;
+        paramObj[urlParamBenutzerProfil] = jsonBenutzer[paramEmail];
         buildUrlQuery(paramObj);
     });
-    // TODO Was passiert wenn man aus der Profilseite heraus auf den Usernamen klickt??
 }
 
 /**
- * Zeigt Benutzername und Rolle an
+ * Zeigt Benutzername und Rolle
  * in der mypersonalbox an.
  */
 function fillUserContainer() {
+    if(jsonBenutzer == undefined) {
+        return;
+    }
     var vorname = jsonBenutzer["vorname"];
     var nachname = jsonBenutzer["nachname"];
     var nutzerstatus = jsonBenutzer["nutzerstatus"];
