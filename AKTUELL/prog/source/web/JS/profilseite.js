@@ -244,10 +244,10 @@ function registerProfilSpeichernEvents() {
 }
 
 function registerAvatarAendernEvent() {
-    var formData = new FormData();
-    formData.append('file', $('#profil_avatar_aendern_file')[0].files[0]);
-    formData.append('action', actionUploadProfilBild);
     $("#profil_avatar_aendern").submit(function(event) {
+        var formData = new FormData();
+        formData.append('file', $('#profil_avatar_aendern_file')[0].files[0]);
+        formData.append('action', actionUploadProfilBild);
         $.ajax({
             type: "POST",
             url: fileUploadServlet,
