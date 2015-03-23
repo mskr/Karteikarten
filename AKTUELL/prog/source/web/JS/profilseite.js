@@ -251,7 +251,7 @@ function registerAvatarAendernEvent() {
         $.ajax({
             type: "POST",
             url: fileUploadServlet,
-            //enctype: "multipart/form-data",
+            enctype: "multipart/form-data",
             data: formData,
             processData: false,
             contentType: false,
