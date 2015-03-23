@@ -342,6 +342,7 @@ public class BenutzerServlet extends ServletController {
        
         // aktuelle Session holen
         aktuelleSession = req.getSession();
+        resp.setContentType("text/json");
         outWriter = resp.getWriter();
         
         if(dbManager == null)

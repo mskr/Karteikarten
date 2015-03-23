@@ -125,7 +125,7 @@
     (default WARN) -->
     <init-param>
         <param-name>logLevel</param-name>
-        <param-value>DEBUG</param-value>
+        <param-value>INFO</param-value>
     </init-param>
 
     <!-- you can change status path so that it does not

@@ -3,6 +3,7 @@ package com.sopra.team1723.ctrl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.simple.JSONObject;
 
 public class FileUploadServlet extends ServletController
 {
@@ -23,6 +25,9 @@ public class FileUploadServlet extends ServletController
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
         //super.doPost(req, resp);
+
+        resp.setContentType("text/json");
+        outWriter = resp.getWriter();
         
         boolean isMultipartContent = ServletFileUpload.isMultipartContent(req);
         if (!isMultipartContent) 
@@ -46,6 +51,7 @@ public class FileUploadServlet extends ServletController
                 return;
             }
             System.out.println("Lese Felder...");
+            List<String> filePathes = new ArrayList<>();
             while (it.hasNext()) 
             {
                 FileItem fileItem = it.next();
@@ -75,20 +81,33 @@ public class FileUploadServlet extends ServletController
                     // Datei erzeugen
                     ServletContext servletContext = getServletContext();
                     String contextPath = servletContext.getRealPath(File.separator);
-                    String relativeWebPath = contextPath + "/files/" + fileItem.getName();
+                    String absolutePath = contextPath + "/files/" + fileItem.getName();
                     
-                    File f = new File(relativeWebPath);
+                    File f = new File(absolutePath);
                     f.createNewFile();
                     FileOutputStream fstr = new FileOutputStream(f);
                     
                     fstr.write(fileItem.get());
                     fstr.close();
                     System.out.println("File gespeichert: " + f.getAbsolutePath());
+                    System.out.println("  relativer Pfad: " + "/files/" + fileItem.getName());
+                    
+                    filePathes.add("/files/" + fileItem.getName());
                 }
                 System.out.println();
             }
-        } catch (FileUploadException e) {
+            // Sende Error zurück
+            JSONObject jo = JSONConverter.toJson(filePathes);
+            outWriter.print(jo);
+            return;
+        }
+        catch (FileUploadException e) 
+        {
             e.printStackTrace();
+            // Sende Error zurück
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            outWriter.print(jo);
+            return;
         }
     }
 }

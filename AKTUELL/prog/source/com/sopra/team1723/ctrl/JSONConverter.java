@@ -38,7 +38,7 @@ public class JSONConverter
     
     // ArrayResults
     static public final String jsonArrResult = "arrResult";
-    
+       
     
     /**
      * Einfache Bestätigung von Aktionen oder Error

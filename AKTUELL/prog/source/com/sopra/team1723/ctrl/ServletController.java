@@ -173,6 +173,7 @@ public class ServletController extends HttpServlet
         aktuelleSession = null;
         aktuelleAction = null;
         aktuellerBenutzer = null;
+        resp.setContentType("text/json");
         outWriter = resp.getWriter();
         
         // Prüfen ob session abgelaufen ist
