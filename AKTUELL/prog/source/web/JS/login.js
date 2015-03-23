@@ -15,9 +15,7 @@ $(document).ready(function() {
                 var jsonObj = $.parseJSON(response);
                 var errCode = jsonObj["error"];
                 if(errCode == "noerror") {
-                    var paramObj = {};
-                    paramObj[urlParamLocation] = ansichtHauptseite;
-                    buildUrlQuery(paramObj);
+                    location.reload();
                 } else {
                     message(0, buildMessage(errCode));
                 }

@@ -167,7 +167,7 @@ function registerProfilSpeichernEvents() {
              data: dataStr,
              beforeSend: function() {
                  $("#profil_daten_speichern").val("Lädt...");
-                 $("#profil_daten_speichern").prop('disabled', true);
+                 $("#profil_daten_speichern").prop("disabled", true);
              },
              success: function(response) {
                  var jsonObj = $.parseJSON(response);
