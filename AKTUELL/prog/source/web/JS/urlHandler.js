@@ -58,7 +58,8 @@ function getUrlParameterByName(name) {
  * Danach wird die Seite automatisch neu geladen.
  * @param paramObj enthaelt alle Query Parameter
  */
-function buildUrlQuery(paramObj) {
+function buildUrlQuery(paramObj) 
+{
     var locationSearchTmp = "?";
     var i = 0;
     // Anzahl elemente Bestimmen

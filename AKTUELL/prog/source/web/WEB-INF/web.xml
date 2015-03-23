@@ -35,6 +35,10 @@
         <servlet-class>com.sopra.team1723.ctrl.AdminServlet</servlet-class>
     </servlet>
     <servlet>
+    	<servlet-name>FileUploadServlet</servlet-name>
+    	<servlet-class>com.sopra.team1723.ctrl.FileUploadServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>BenutzerServlet</servlet-name>
         <servlet-class>com.sopra.team1723.ctrl.BenutzerServlet</servlet-class>
     </servlet>
@@ -62,6 +66,10 @@
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
         <url-pattern>/AdminServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+    	<servlet-name>FileUploadServlet</servlet-name>
+    	<url-pattern>/FileUploadServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>BenutzerServlet</servlet-name>
