@@ -84,6 +84,9 @@ public class FileUploadServlet extends ServletController
                     String absolutePath = contextPath + "/files/" + fileItem.getName();
                     
                     File f = new File(absolutePath);
+                    if(f.exists())
+                        System.out.println("WARNING: Datei existiert bereits! Sie wird nun überschrieben!");
+
                     f.createNewFile();
                     FileOutputStream fstr = new FileOutputStream(f);
                     
