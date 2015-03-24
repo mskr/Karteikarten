@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 21. Mrz 2015 um 15:07
+-- Erstellungszeit: 24. Mrz 2015 um 16:49
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -49,7 +49,7 @@ INSERT INTO `benutzer` (`eMail`, `Vorname`, `Nachname`, `Matrikelnummer`, `Studi
 ('alber.einstein@uni-ulm.de', 'Albert', 'Einstein', 333333, 'Physik', '1234', 'DOZENT', 'KEINE', 0, 0),
 ('andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', 12345, 'Informatik', '1234', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1),
 ('marius.kircher@uni-ulm.de', 'Marius', 'Kircher', 111111, 'Medieninformatik', '1234', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 0),
-('matthais.englert@uni-ulm.de', 'Matthias', 'Englert', 828584, 'Informatik', '1234', 'STUDENT', 'KEINE', 0, 0);
+('matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 828584, 'Informatik', '1234', 'STUDENT', 'KEINE', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` varchar(30) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -69,14 +69,14 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 
 INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
 (1, 'marius.kircher@uni-ulm.de', 1),
-(2, 'matthais.englert@uni-ulm.de', 1),
+(2, 'matthias.englert@uni-ulm.de', 1),
 (3, 'andreas.rottach@uni-ulm.de', 1),
 (4, 'abc@def.de', 2),
 (5, 'alber.einstein@uni-ulm.de', 5),
 (6, 'marius.kircher@uni-ulm.de', 4),
-(7, 'matthais.englert@uni-ulm.de', 4),
-(8, 'admin@blablub.de', 3),
-(9, 'andreas.rottach@uni-ulm.de', 6);
+(7, 'matthias.englert@uni-ulm.de', 4),
+(9, 'andreas.rottach@uni-ulm.de', 6),
+(10, 'admin@blablub.de', 3);
 
 -- --------------------------------------------------------
 
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `einladung_moderator_benachrichtigung` (
 
 INSERT INTO `einladung_moderator_benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`, `Benutzer`, `Veranstaltung`) VALUES
 (1, 'Einladung als Moderator für die Vorlesung Softwaretechnik', '2015-03-21', 'andreas.rottach@uni-ulm.de', 1),
-(2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-03-03', 'matthais.englert@uni-ulm.de', 4);
+(2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-03-03', 'matthias.englert@uni-ulm.de', 4);
 
 -- --------------------------------------------------------
 
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
   `Benutzer` varchar(30) NOT NULL,
   `KarteikarteID` int(11) NOT NULL,
   `VaterkommentarID` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `moderator` (
 
 INSERT INTO `moderator` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
 (1, 'andreas.rottach@uni-ulm.de', 1),
-(2, 'matthais.englert@uni-ulm.de', 4);
+(2, 'matthias.englert@uni-ulm.de', 4);
 
 -- --------------------------------------------------------
 
@@ -255,9 +255,9 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
 --
 
 INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `KommentareErlaubt`, `BewertungenErlaubt`, `ModeratorKarteikartenBearbeiten`, `Ersteller`, `Titel`, `ErsteKarteik`) VALUES
-(1, 'Softwaretechnik Vorlesung', 'WiSe2014/15', '1234', 1, 1, 1, 'matthais.englert@uni-ulm.de', 'Softwaretechnik', 1),
-(2, 'Softwaretechnik Vorlesung', 'WiSe2015/16', '1234', 1, 1, 1, 'matthais.englert@uni-ulm.de', 'Softwaretechnik', 1),
-(3, 'Tierversuche für Fortgeschrittene', 'SoSe2013', '1234', 0, 1, 1, 'abc@def.de', 'Tierversuche für Fortgeschrittene', 10),
+(1, 'Softwaretechnik Vorlesung', 'WiSe2014/15', '1234', 1, 1, 1, 'matthias.englert@uni-ulm.de', 'Softwaretechnik', 1),
+(2, 'Softwaretechnik Vorlesung', 'WiSe2015/16', '1234', 1, 1, 1, 'matthias.englert@uni-ulm.de', 'Softwaretechnik', 1),
+(3, 'Medizin I', 'SoSe2013', '1234', 1, 0, 0, 'admin@blablub.de', 'Medizin I', 30),
 (4, 'Algorithmen und Datenstrukturen Vorlesung', 'WiSe2014/15', '1234', 1, 0, 1, 'abc@def.de', 'Algorithmen und Datenstrukture', 2),
 (5, 'Physik I für Ingenieure Vorlesung', 'SoSe2015', '1234', 1, 0, 0, 'alber.einstein@uni-ulm.de', 'Physik I für Ingenieure', 4),
 (6, 'Latex Kurs', 'WiSe2014/15', '1234', 1, 1, 1, 'admin@blablub.de', 'Latex Kurs', 15);
@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
@@ -305,15 +305,15 @@ INSERT INTO `veranstaltung_studiengang_zuordnung` (`ID`, `Veranstaltung`, `Studi
 (4, 2, 'Informatik'),
 (5, 2, 'Medieninformatik'),
 (6, 2, 'Softwareengeneering'),
-(7, 3, 'Biologie'),
-(8, 3, 'Medizin'),
 (9, 4, 'Informatik'),
 (10, 4, 'Medieninformatik'),
 (11, 5, 'Physik'),
 (12, 5, 'Informatik'),
 (13, 5, 'Elektrotechnik'),
 (14, 5, 'Informationssystemtechnik'),
-(15, 6, 'Sonstiges');
+(15, 6, 'Sonstiges'),
+(16, 3, 'Biologie'),
+(17, 3, 'Medizin');
 
 --
 -- Indizes der exportierten Tabellen
@@ -411,7 +411,7 @@ ALTER TABLE `veranstaltung_studiengang_zuordnung`
 -- AUTO_INCREMENT für Tabelle `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT für Tabelle `bewertung_karteikarte`
 --
@@ -441,7 +441,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT für Tabelle `kommentar`
 --
 ALTER TABLE `kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `moderator`
 --
@@ -466,7 +466,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT für Tabelle `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- Constraints der exportierten Tabellen
 --
@@ -481,7 +481,7 @@ ADD CONSTRAINT `benutzer_ibfk_1` FOREIGN KEY (`Studiengang`) REFERENCES `studien
 -- Constraints der Tabelle `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-ADD CONSTRAINT `benutzer_veranstaltung_zuordnung_ibfk_2` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`),
+ADD CONSTRAINT `benutzer_veranstaltung_zuordnung_ibfk_2` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`) ON UPDATE CASCADE,
 ADD CONSTRAINT `benutzer_veranstaltung_zuordnung_ibfk_3` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`);
 
 --
@@ -489,7 +489,7 @@ ADD CONSTRAINT `benutzer_veranstaltung_zuordnung_ibfk_3` FOREIGN KEY (`Veranstal
 --
 ALTER TABLE `bewertung_karteikarte`
 ADD CONSTRAINT `bewertung_karteikarte_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`),
-ADD CONSTRAINT `bewertung_karteikarte_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`);
+ADD CONSTRAINT `bewertung_karteikarte_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`) ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `bewertung_kommentar`
@@ -502,7 +502,7 @@ ADD CONSTRAINT `bewertung_kommentar_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES 
 -- Constraints der Tabelle `einladung_moderator_benachrichtigung`
 --
 ALTER TABLE `einladung_moderator_benachrichtigung`
-ADD CONSTRAINT `einladung_moderator_benachrichtigung_ibfk_1` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`),
+ADD CONSTRAINT `einladung_moderator_benachrichtigung_ibfk_1` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`) ON UPDATE CASCADE,
 ADD CONSTRAINT `einladung_moderator_benachrichtigung_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`);
 
 --
@@ -530,7 +530,7 @@ ADD CONSTRAINT `kommentar_ibfk_6` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer`
 -- Constraints der Tabelle `moderator`
 --
 ALTER TABLE `moderator`
-ADD CONSTRAINT `moderator_ibfk_1` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`),
+ADD CONSTRAINT `moderator_ibfk_1` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`) ON UPDATE CASCADE,
 ADD CONSTRAINT `moderator_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`);
 
 --
@@ -538,13 +538,13 @@ ADD CONSTRAINT `moderator_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `vera
 --
 ALTER TABLE `notiz`
 ADD CONSTRAINT `notiz_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`),
-ADD CONSTRAINT `notiz_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`);
+ADD CONSTRAINT `notiz_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`eMail`) ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
-ADD CONSTRAINT `veranstaltung_ibfk_1` FOREIGN KEY (`Ersteller`) REFERENCES `benutzer` (`eMail`);
+ADD CONSTRAINT `veranstaltung_ibfk_1` FOREIGN KEY (`Ersteller`) REFERENCES `benutzer` (`eMail`) ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `veranstaltungs_benachrichtigung`
