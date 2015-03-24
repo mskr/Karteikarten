@@ -11,6 +11,11 @@ public class Benutzer {
      * 
      */
     public Benutzer() {
+        this.nutzerstatus = Nutzerstatus.STUDENT;
+        this.notifyVeranstAenderung = false;
+        this.notifyKarteikartenAenderung = false;
+        this.notifyKommentare = NotifyKommentare.KEINE;
+        this.profilBild = "default.png";
     }
     
     // Konstruktor der alle Parameter setzt
@@ -18,6 +23,7 @@ public class Benutzer {
             String kennwort, Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung,
             boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare)
     {
+        super();
         this.id = id;
         this.eMail = eMail;
         this.vorname = vorname;
@@ -36,6 +42,7 @@ public class Benutzer {
             String kennwort, Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung,
             boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare)
     {
+        super();
         this.eMail = eMail;
         this.vorname = vorname;
         this.nachname = nachname;
@@ -89,10 +96,6 @@ public class Benutzer {
         this.matrikelnummer = matrikelnummer;
         this.studiengang = studiengang;
         this.kennwort = kennwort;
-        this.nutzerstatus = Nutzerstatus.STUDENT;
-        this.notifyVeranstAenderung = false;
-        this.notifyKarteikartenAenderung = false;
-        this.notifyKommentare = NotifyKommentare.KEINE;
     }
 
     /**
@@ -213,12 +216,12 @@ public class Benutzer {
     
     public String getProfilBildPfad()
     {
-        return profilBildPfad;
+        return profilBild;
     }
 
     public void setProfilBildPfad(String profilBildPfad)
     {
-        this.profilBildPfad = profilBildPfad;
+        this.profilBild = profilBildPfad;
     }
 
     /**
@@ -281,6 +284,6 @@ public class Benutzer {
     /**
      * 
      */
-    private String profilBildPfad;
+    private String profilBild;
 
 }

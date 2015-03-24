@@ -13,6 +13,7 @@ import java.util.List;
 
 
 
+
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -72,7 +73,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         Benutzer benutzer = null;
         try{
             ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
-                    + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung FROM benutzer WHERE eMail = ?");
+                    + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
             if(rs.next()){
@@ -81,6 +82,8 @@ public class Datenbankmanager implements IDatenbankmanager {
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
                         NotifyKommentare.valueOf(rs.getString("NotifyKommentare")));
+                
+                benutzer.setProfilBildPfad(ServletController.dirProfilBilder + rs.getString("Profilbild"));
             }
         } catch (SQLException e) {
             benutzer = null;
@@ -262,6 +265,28 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             ps = conMysql.prepareStatement("UPDATE benutzer SET Kennwort=? WHERE eMail=?");
             ps.setString(1, neuesPasswort);
+            ps.setString(2, eMail);
+            if(ps.executeUpdate()!= 1)
+                return false;
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+        return erfolgreich;
+    }
+    @Override
+    public boolean aendereProfilBild(String eMail, String dateiName)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conMysql.prepareStatement("UPDATE benutzer SET Profilbild=? WHERE eMail=?");
+            ps.setString(1, dateiName);
             ps.setString(2, eMail);
             if(ps.executeUpdate()!= 1)
                 return false;
@@ -464,6 +489,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         // TODO Auto-generated method stub
         return false;
     }
+
 
 
 }

@@ -62,7 +62,6 @@ public class FileUploadServlet extends ServletController
             return;
         }
         
-        
         // Bild neu Skalieren und speichern
         BufferedImage originalImage = ImageIO.read(contentStream);
         BufferedImage scaledImage = new BufferedImage(profilBildWidth, profilBildHeigth, BufferedImage.TYPE_INT_ARGB);
@@ -70,13 +69,20 @@ public class FileUploadServlet extends ServletController
         g.drawImage(originalImage, 0, 0, profilBildWidth, profilBildHeigth, null);
         g.dispose();
 
-        String relativerPfad = dirProfilBilder + aktuellerBenutzer.geteMail() + ".png";
+        String relativerPfad = dirProfilBilder + aktuellerBenutzer.getId() + ".png";
         String absolutePath = contextPath + relativerPfad;
         ImageIO.write(scaledImage, "png", new File(absolutePath));
-
+        
+        if(!dbManager.aendereProfilBild(aktuellerBenutzer.geteMail(), aktuellerBenutzer.getId() + ".png"))
+        {
+            // Sende Error zurück
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            outWriter.print(jo);
+            return;
+        }
         
         System.out.println("File gespeichert: " + absolutePath);
-        System.out.println("  relativer Pfad: " + relativerPfad);
+        System.out.println("relativer Pfad: " + relativerPfad);
 
         JSONObject jo = JSONConverter.toJson(relativerPfad);
         outWriter.print(jo);

@@ -47,6 +47,16 @@ public interface IDatenbankmanager {
      */
     public void bearbeiteBenutzer(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
     
+
+   /**
+    * TODO
+    * @param eMail
+    * @param dateiName
+ * @return 
+    * @throws SQLException
+    */
+    public boolean aendereProfilBild(String eMail, String dateiName);
+    
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt. Diese Methode wird verwendet, wenn
      * der Admin die Daten eines Benutzers bearbeiten möchte. Er kann dabei alle Attribute also auch

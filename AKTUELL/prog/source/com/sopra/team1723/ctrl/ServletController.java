@@ -37,37 +37,37 @@ public class ServletController extends HttpServlet
     /**
      *  DateiPfade
      */
-    protected final String dirFiles = "files/";             
-    protected final String dirProfilBilder = dirFiles + "profilBilder/";
+    public final static String dirFiles = "files/";             
+    public final static String dirProfilBilder = dirFiles + "profilBilder/";
     
     /**
      *  Request Parameter
      */
-    protected final String requestAction = "action";
-    protected final String requestActionLogin = "login";
-    protected final String requestActionLogout = "logout";
-    protected final String requestActionRegister = "registrieren";
-    protected final String requestActionResetPasswort = "resetPasswort";
-    protected final String requestActionGetBenutzer = "getBenutzer";
-    protected final String requestActionGetOtherBenutzer = "getOtherBenutzer";
-    protected final String requestActionGetStudiengaenge = "getStudiengaenge";
-    protected final String requestActionAenderePasswort = "aenderePasswort";
-    protected final String requestActionAendereProfil = "aendereProfil";
-    protected final String requestActionUploadProfilBild = "uploadProfilBild";
+    protected final static String requestAction = "action";
+    protected final static String requestActionLogin = "login";
+    protected final static String requestActionLogout = "logout";
+    protected final static String requestActionRegister = "registrieren";
+    protected final static String requestActionResetPasswort = "resetPasswort";
+    protected final static String requestActionGetBenutzer = "getBenutzer";
+    protected final static String requestActionGetOtherBenutzer = "getOtherBenutzer";
+    protected final static String requestActionGetStudiengaenge = "getStudiengaenge";
+    protected final static String requestActionAenderePasswort = "aenderePasswort";
+    protected final static String requestActionAendereProfil = "aendereProfil";
+    protected final static String requestActionUploadProfilBild = "uploadProfilBild";
 
-    protected final String requestEmail = "email";
-    protected final String requestEmailNew = "emailNew";
-    protected final String requestPassword = "pass";
-    protected final String requestPasswordNew = "passNew";
-    protected final String requestVorname = "vorname";
-    protected final String requestNachname = "nachname";
-    protected final String requestMatrikelNr = "matrikelnr";
-    protected final String requestStudiengang = "studiengang";
-    protected final String requestNutzerstatus = "nutzerstatus";
-    protected final String requestNotifyVeranstAenderung = "notifyVeranstAenderung";
-    protected final String requestNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
-    protected final String requestNotifyKommentare = "notifyKommentare";
-    protected final String requestUploadFile = "file";
+    protected final static String requestEmail = "email";
+    protected final static String requestEmailNew = "emailNew";
+    protected final static String requestPassword = "pass";
+    protected final static String requestPasswordNew = "passNew";
+    protected final static String requestVorname = "vorname";
+    protected final static String requestNachname = "nachname";
+    protected final static String requestMatrikelNr = "matrikelnr";
+    protected final static String requestStudiengang = "studiengang";
+    protected final static String requestNutzerstatus = "nutzerstatus";
+    protected final static String requestNotifyVeranstAenderung = "notifyVeranstAenderung";
+    protected final static String requestNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
+    protected final static String requestNotifyKommentare = "notifyKommentare";
+    protected final static String requestUploadFile = "file";
 
     private boolean doPorcessing = false;
     
@@ -254,20 +254,6 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
-        
-        // TODO Test
-        ServletContext servletContext = getServletContext();
-        String contextPath = servletContext.getRealPath(File.separator);
-        String relativerPfad = dirProfilBilder + aktuellerBenutzer.geteMail() + ".png";
-        String absolutePath = contextPath + relativerPfad;
-        
-        File f = new File(absolutePath);
-        
-        if(f.exists())
-            aktuellerBenutzer.setProfilBildPfad(relativerPfad);
-        else
-            aktuellerBenutzer.setProfilBildPfad(dirProfilBilder + "default.png");
-        
         doPorcessing = true;
     }
     /**
