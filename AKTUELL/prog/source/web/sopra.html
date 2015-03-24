@@ -40,6 +40,8 @@
 <script src="JS/defines.js"></script>
 <!-- Ajax Setup Skript -->
 <script src="JS/ajaxSetup.js"></script>
+<!-- FileUploader -->
+<script src="JS/fileUploader.js"></script>
 <!-- Error Code Mapping Script -->
 <script src="JS/errorCodeMapper.js"></script>
 <!-- Error Message Skript -->
@@ -95,7 +97,8 @@ body > div {
 	<!-- Return Link erscheint nicht auf Hauptseite -->
 	<a class="return tiptrigger tipabove" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
 	<div class="user_container">
-		<span class="mysopraicon sopra-usericon usericon"><br></span>
+		<img class="user_MyProfilBild" alt="profilBild" src="files/profilBilder/default.png"><br>
+		<!-- <span class="mysopraicon sopra-usericon usericon"><br></span> -->
 		<a class="username tiptrigger tipabove" data-tooltip="zum Profil gehen"></a>
 		<br>
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
@@ -234,7 +237,9 @@ body > div {
 	<div class="flex_container">
 		<div class="profil_head">
 			<span>
-				<span class="profil_avatar"><span class="mysopraicon sopra-usericon"></span></span>
+				<span class="profil_avatar">
+					<img class="profil_avatar_img" alt="profilBild" src="files/profilBilder/default.png">
+				</span>
 				<span class="profil_benutzer"></span>
 			</span>
 			<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>

@@ -1,5 +1,9 @@
 package com.sopra.team1723.ctrl;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -21,6 +26,10 @@ import org.json.simple.JSONObject;
 @MultipartConfig
 public class FileUploadServlet extends ServletController
 {
+    
+    protected final int profilBildHeigth = 112;
+    protected final int profilBildWidth = 112;
+    
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
@@ -43,25 +52,28 @@ public class FileUploadServlet extends ServletController
 
         ServletContext servletContext = getServletContext();
         String contextPath = servletContext.getRealPath(File.separator);
-        String relativerPfad = dirProfilBilder + aktuellerBenutzer.geteMail() + "." + FilenameUtils.getExtension(fileName);
-        String absolutePath = contextPath + relativerPfad;
+        String fileExt = FilenameUtils.getExtension(fileName);
         
-        File f = new File(absolutePath);
-        if(f.exists())
-            System.out.println("WARNING: Datei existiert bereits! Sie wird nun überschrieben!");
-
-        f.createNewFile();
-
-        FileOutputStream outputStream = new FileOutputStream(f);
-
-        int read = 0;
-        byte[] bytes = new byte[1024];
-
-        while ((read = contentStream.read(bytes)) != -1) {
-            outputStream.write(bytes, 0, read);
+        if(fileExt == null)
+        {
+            // Sende Error zurück
+            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
         }
+        
+        
+        // Bild neu Skalieren und speichern
+        BufferedImage originalImage = ImageIO.read(contentStream);
+        BufferedImage scaledImage = new BufferedImage(profilBildWidth, profilBildHeigth, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = scaledImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, profilBildWidth, profilBildHeigth, null);
+        g.dispose();
 
-        outputStream.close();
+        String relativerPfad = dirProfilBilder + aktuellerBenutzer.geteMail() + ".png";
+        String absolutePath = contextPath + relativerPfad;
+        ImageIO.write(scaledImage, "png", new File(absolutePath));
+
         
         System.out.println("File gespeichert: " + absolutePath);
         System.out.println("  relativer Pfad: " + relativerPfad);
@@ -70,6 +82,7 @@ public class FileUploadServlet extends ServletController
         outWriter.print(jo);
         return;
     }
+    
     private String getFileName(Part part) 
     {
         for (String cd : part.getHeader("content-disposition").split(";")) 

@@ -1,13 +1,16 @@
 package com.sopra.team1723.ctrl;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.crypto.AEADBadTagException;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 
@@ -298,6 +301,8 @@ public class ProfilServlet extends ServletController {
         {
             String eMail = req.getParameter(requestEmail);
             Benutzer b = dbManager.leseBenutzer(eMail);
+
+            
             if(b == null)
             {
                 JSONObject jo  = null;

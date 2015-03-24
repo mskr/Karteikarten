@@ -13,6 +13,8 @@ public class Benutzer {
     public Benutzer() {
     }
     
+    // TODO Profil-Bild sinnvoll setzen
+    
     // Konstruktor der alle Attribute setzt
     public Benutzer(String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
             String kennwort, Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung,
@@ -178,6 +180,16 @@ public class Benutzer {
         this.nutzerstatus = nutzerstatus;
     }
 
+    public String getProfilBildPfad()
+    {
+        return profilBildPfad;
+    }
+
+    public void setProfilBildPfad(String profilBildPfad)
+    {
+        this.profilBildPfad = profilBildPfad;
+    }
+
     /**
      * 
      */
@@ -223,5 +235,10 @@ public class Benutzer {
      * 
      */
     private NotifyKommentare notifyKommentare;
+    
+    /**
+     * 
+     */
+    private String profilBildPfad;
 
 }
