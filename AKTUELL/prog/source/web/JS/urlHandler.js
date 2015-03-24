@@ -151,22 +151,31 @@ function getBenutzer()
  */
 function display(ansicht) 
 {
+    // mypersonalbox
+    if(ansicht == ansichtStartseite)
+    {
+        $("#mypersonalbox_startseite").show();
+        $("mypersonalbox_main").hide();
+    }
+    else
+    {
+        $("#mypersonalbox_main").show();
+        $("mypersonalbox_startseite").hide();
+    }
+    // mainbox
     var isValid = false;
     for(var i=0; i<alleAnsichten.length; i++)
     {
-    	// Richtige ansicht suchen und einblenden
         if(alleAnsichten[i] == ansicht) 
         {
-            $("#mypersonalbox_"+alleAnsichten[i]).show();
             $("#mainbox_"+alleAnsichten[i]).show();
             isValid = true;
         } else {
-            $("#mypersonalbox_"+alleAnsichten[i]).hide();
             $("#mainbox_"+alleAnsichten[i]).hide();
         }
     }
     if(!isValid) 
     {
-        console.log("Ungueltige Ansicht: "+ansicht);
+        console.log("[urlHandler] Ungueltige Ansicht: "+ansicht);
     }
 }

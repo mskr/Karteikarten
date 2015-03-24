@@ -91,54 +91,22 @@ body > div {
 	</form>
 </div>
 
-<div id="mainbox_startseite" class="mainbox">
-	<span class="mysopraicon sopra-sleepicon sleepicon"></span>
-</div>
-
-<script>
-$(document).ready( function() {
-    // Code fuer das Veranstaltung erstellen Popup
-	$('#vn_erstellen_popup').popup({
-		openelement: '.vn_erstellen_bt',
-		closeelement: '.vn_popup_close',
-		focuselement: '#vn_titel_input',
-		blur: false,
-		transition: 'all 0.3s'
-	});
-	// Code fuer das Ausklappen der Veranstaltungs-Listenelemente
-	$('.vn_mehr_einbl').html('<span class="octicon octicon-three-bars"></span> Mehr');
-	$('.vn_mehr_einbl').click( function() {
-		var vnmehr_domelem = $(this).next().next().get(0);
-		console.log('DOM Element class:'+vnmehr_domelem.getAttribute('class'));
-		var vnmehr_jqueryobj = $(vnmehr_domelem);
-		console.log('JQuery Object class:'+vnmehr_jqueryobj.attr('class'));
-		if( vnmehr_jqueryobj.is(':hidden') ) {
-			console.log('War hidden... Rufe jetzt slideDown() auf...');
-			vnmehr_jqueryobj.slideDown();
-			$(this).html('<span class="octicon octicon-three-bars"></span> Weniger');
-		} else {
-			console.log('War nicht hidde... Rufe jetzt slideUp() auf');
-			vnmehr_jqueryobj.slideUp();
-			$(this).html('<span class="octicon octicon-three-bars"></span> Mehr');
-		}
-	});
-});
-</script>
-
-<div id="mypersonalbox_hauptseite" class="mypersonalbox">
+<div id="mypersonalbox_main" class="mypersonalbox">
+	<!-- Return Link erscheint nicht auf Hauptseite -->
+	<a class="return tiptrigger tipabove" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
 	<div class="user_container">
-		<span class="mysopraicon sopra-usericon usericon" id="usericon"><br></span>
+		<span class="mysopraicon sopra-usericon usericon"><br></span>
 		<a class="username tiptrigger tipabove" data-tooltip="zum Profil gehen"></a>
 		<br>
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
-		<a id="logout" class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
+		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
 	</div>
 	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
 	<br>
 	<ul class="meinevn">
 		<li><a class="vn_angepinnt">Analysis I</a></li>
 		<li><a class="vn_angepinnt">Algorithmen</a></li>
-		<li><a class="vn_angepinnt">Lineare Algebra</a></li> 
+		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
 	</ul>
 	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
 	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
@@ -158,6 +126,10 @@ $(document).ready( function() {
 			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
 		</div>
 	</div>
+</div>
+
+<div id="mainbox_startseite" class="mainbox">
+	<span class="mysopraicon sopra-sleepicon sleepicon"></span>
 </div>
 
 <div id="mainbox_hauptseite" class="mainbox">
@@ -258,77 +230,6 @@ $(document).ready( function() {
 	<div class="impressum">Uni Ulm <br> WiSe 14/15 <br> Informatik <br> Softwaregrundprojekt <br> Team 17: Andreas Rottach, Fabian Schilha, Matthias Englert <br> Team 23: Julius Friedrich, Lorenz Weiß, Marius Kircher</div>
 </div>
 
-<div id="vn_erstellen_popup">
-	<div class="vn_popup_titel">
-		<h3>Veranstaltung erstellen</h3>
-	</div>
-	<div class="vn_popup_close">
-		<span class="octicon octicon-x"></span>
-	</div>
-	<div class="vn_popup_form">
-		<input class="popup_input" id="vn_titel_input" type="text" placeholder="Titel">
-		<input class="popup_input" id="vn_studg_input" type="text" placeholder="Studiengang">
-		<select class="popup_select" id="vn_semester_select">
-			<option value="wise1415">Aktuelles Semester (WiSe 14/15)</option>
-			<option value="sose15">SoSe 15</option>
-			<option value="wise1516">WiSe 15/16</option>
-		</select>
-		<input class="popup_input" id="vn_mod_input" type="text" placeholder="Moderatoren">
-		<input class="popup_input" id="vn_mehr_input" type="text" placeholder="Beschreibung">
-		<div class="popup_spalte">
-			<span>Wer darf bearbeiten?</span>
-			<span><input id="vn_jeder_bearb" type="radio" name="wer_darf_bearb"><label for="vn_jeder_bearb">Jeder</label></span>
-			<span><input id="vn_mod_bearb" type="radio" name="wer_darf_bearb"><label for="vn_mod_bearb">Nur Moderatoren</label></span>
-			<span><input id="vn_keiner_bearb" type="radio" name="wer_darf_bearb" checked><label for="vn_keiner_bearb">Nur ich</label></span>
-		</div>
-		<div class="popup_spalte">
-			<span><input id="vn_komm_erlaubt" type="checkbox" checked><label for="vn_komm_erlaubt">Kommentare erlaubt</label></span>
-			<span><input id="vn_bew_erlaubt" type="checkbox" checked><label for="vn_bew_erlaubt">Bewertungen erlaubt</label></span>
-		</div>
-	</div>
-	<div class="vn_popup_foot">
-		<input class="mybutton_dark_flat popup_close" type="button" value="Abbrechen">
-		<input class="mybutton_green" type="submit" value="Erstellen">
-	</div>
-</div>
-
-<div id="mypersonalbox_profilseite" class="mypersonalbox">
-	<!-- Return Link erscheint nicht auf Hauptseite -->
-	<a class="return tiptrigger tipabove" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
-	<div class="user_container">
-		<span class="mysopraicon sopra-usericon usericon"><br></span>
-		<a class="username tiptrigger tipabove" data-tooltip="zum Profil gehen"></a>
-		<br>
-		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
-		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
-	</div>
-	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
-	<br>
-	<ul class="meinevn">
-		<li><a class="vn_angepinnt">Analysis I</a></li>
-		<li><a class="vn_angepinnt">Algorithmen</a></li>
-		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
-	</ul>
-	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
-	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
-		<div class="bn neu">
-			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-	</div>
-</div>
-
 <div id="mainbox_profilseite" class="mainbox">
 	<div class="flex_container">
 		<div class="profil_head">
@@ -389,74 +290,6 @@ $(document).ready( function() {
 				<input id="profil_avatar_aendern_file" type="file" name="file">
 				<input type="submit" value="Upload">
 			</form>
-		</div>
-	</div>
-</div>
-
-<script>
-$(document).ready(function() {
-    // Code fuer das Attribute Tooltip
- 	$("#attr_popup").popup({
-			type: 'tooltip',
-			vertical: 'topedge',
-			horizontal: 'leftedge'
-	});
-// 	CKEDITOR.config.irgendeinPlugin
-	// Einklappen der Kommentarboxen
-	$('.kk_kommtoggle').html('Einklappen');
-	var height = 0;
-	$('.kk_kommtoggle').click( function() {
-		var domelem = $(this).parent().get(0);
-		var jqueryobj = $(domelem);
-		if( jqueryobj.height()>50 ) {
-			height = jqueryobj.height();
-			jqueryobj.animate({
-				height: "15px"
-			}, 500 );
-			$(this).html('Ausklappen');
-		} else {
-			jqueryobj.animate({
-				height: ""+height+"px"
-			}, 500 );
-			$(this).html('Einklappen');
-		}
-	});
-});
-</script>
-
-<div id="mypersonalbox_veranstaltungseite" class="mypersonalbox">
-	<!-- Return Link erscheint nicht auf Hauptseite -->
-	<a class="return tiptrigger tipabove" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
-	<div class="user_container">
-		<span class="mysopraicon sopra-usericon usericon"><br></span>
-		<a class="username tiptrigger tipabove" data-tooltip="zum Profil gehen">Marius Kircher</a>
-		<br>
-		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
-		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
-	</div>
-	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
-	<br>
-	<ul class="meinevn">
-		<li><a class="vn_angepinnt">Analysis I</a></li>
-		<li><a class="vn_angepinnt">Algorithmen</a></li>
-		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
-	</ul>
-	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
-	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
-		<div class="bn neu">
-			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
 		</div>
 	</div>
 </div>
@@ -756,6 +589,40 @@ $(document).ready(function() {
 				<textarea placeholder="Neues Thema beginnen..."></textarea>
 			</div>
 		</div>
+	</div>
+</div>
+
+<div id="vn_erstellen_popup">
+	<div class="vn_popup_titel">
+		<h3>Veranstaltung erstellen</h3>
+	</div>
+	<div class="vn_popup_close">
+		<span class="octicon octicon-x"></span>
+	</div>
+	<div class="vn_popup_form">
+		<input class="popup_input" id="vn_titel_input" type="text" placeholder="Titel">
+		<input class="popup_input" id="vn_studg_input" type="text" placeholder="Studiengang">
+		<select class="popup_select" id="vn_semester_select">
+			<option value="wise1415">Aktuelles Semester (WiSe 14/15)</option>
+			<option value="sose15">SoSe 15</option>
+			<option value="wise1516">WiSe 15/16</option>
+		</select>
+		<input class="popup_input" id="vn_mod_input" type="text" placeholder="Moderatoren">
+		<input class="popup_input" id="vn_mehr_input" type="text" placeholder="Beschreibung">
+		<div class="popup_spalte">
+			<span>Wer darf bearbeiten?</span>
+			<span><input id="vn_jeder_bearb" type="radio" name="wer_darf_bearb"><label for="vn_jeder_bearb">Jeder</label></span>
+			<span><input id="vn_mod_bearb" type="radio" name="wer_darf_bearb"><label for="vn_mod_bearb">Nur Moderatoren</label></span>
+			<span><input id="vn_keiner_bearb" type="radio" name="wer_darf_bearb" checked><label for="vn_keiner_bearb">Nur ich</label></span>
+		</div>
+		<div class="popup_spalte">
+			<span><input id="vn_komm_erlaubt" type="checkbox" checked><label for="vn_komm_erlaubt">Kommentare erlaubt</label></span>
+			<span><input id="vn_bew_erlaubt" type="checkbox" checked><label for="vn_bew_erlaubt">Bewertungen erlaubt</label></span>
+		</div>
+	</div>
+	<div class="vn_popup_foot">
+		<input class="mybutton_dark_flat popup_close" type="button" value="Abbrechen">
+		<input class="mybutton_green" type="submit" value="Erstellen">
 	</div>
 </div>
 

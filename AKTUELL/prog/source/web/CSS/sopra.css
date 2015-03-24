@@ -582,6 +582,7 @@ label {
 
 /* Der Return Link sorgt dafuer, dass der User immer wieder zurueck zur Hauptseit (Veranstaltungsliste) gehen kann */
 .return {
+	display: none; /* Initialwert der in JS dynamisch modifiziert wird */
 	width: 90px;
 	position: absolute;
 	top: 65px;
@@ -1571,6 +1572,4 @@ select.profil_input {
 	height: 40px;
 	-webkit-appearance: none;
 	-moz-appearance: none;
-} select.profil_input::selection {
-	background: red;
 }

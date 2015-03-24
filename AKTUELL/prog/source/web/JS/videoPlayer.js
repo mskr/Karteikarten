@@ -2,7 +2,7 @@
  * Steuert alle html-5 VideoPlayer
  */
 
-$(document).ready(
+$(document).ready(function() {
 	// Dieses Skript muss ganz am Ende des Dokuments stehenn.
 	// Stellt sicher, dass das Dokument geladen wurde, bevor das Script ausgefuehrt wird (wie JQuery document.ready)
 	function() {
@@ -139,4 +139,4 @@ $(document).ready(
 		}
 		
 	}
-);
+});
