@@ -71,12 +71,12 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         Benutzer benutzer = null;
         try{
-            ps = conMysql.prepareStatement("SELECT Vorname,Nachname,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
+            ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
                     + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
             if(rs.next()){
-                benutzer = new Benutzer(eMail,rs.getString("Vorname"),rs.getString("Nachname"),
+                benutzer = new Benutzer(rs.getInt("ID"), eMail,rs.getString("Vorname"),rs.getString("Nachname"),
                         rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
