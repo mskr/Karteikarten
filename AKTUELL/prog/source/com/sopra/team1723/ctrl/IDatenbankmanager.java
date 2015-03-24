@@ -148,6 +148,13 @@ public interface IDatenbankmanager {
     public boolean loescheVeranstaltung(String veranstTitel);
 
     /**
+     * 
+     * return
+     * @param suchmuster 
+     * @return
+     */
+    public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster);
+    /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
      * return
      * @param karteikID 

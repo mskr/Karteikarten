@@ -14,6 +14,7 @@ import java.util.List;
 
 
 
+
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -337,6 +338,38 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
 
         return veranstaltung;
+    }
+    
+    @Override
+    public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<ErgebnisseSuchfeld> ergebnisse = null;
+        try{
+            ergebnisse = new ArrayList<ErgebnisseSuchfeld>();
+            ps = conMysql.prepareStatement("SELECT Vorname AS Text, ID, 'Benutzer' AS Tabelle FROM Benutzer "
+                    + "WHERE levenshtein(=?,Vorname) BETWEEN 0 AND 5 UNION "
+                    + "SELECT Nachname AS Text, ID, 'Benutzer' AS Tabelle FROM Benutzer WHERE levenshtein(=?,Nachname) BETWEEN 0 AND 5 UNION"
+                    + "SELECT Titel AS Text, ID, 'Veranstaltung' AS Tabelle FROM Benutzer WHERE levenshtein(=?,Titel) BETWEEN 0 AND 5 LIMIT 5");
+                  
+            ps.setString(1, suchmuster);
+            ps.setString(2, suchmuster);
+            ps.setString(3, suchmuster);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                ergebnisse.add(new ErgebnisseSuchfeld(rs.getString("Text"), rs.getInt("ID"), rs.getString("Tabelle")));
+            }
+            
+        } catch (SQLException e) {
+            ergebnisse = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+        return ergebnisse;
     }
 
     @Override
