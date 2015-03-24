@@ -73,7 +73,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         Benutzer benutzer = null;
         try{
-            ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
+            ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
                     + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
@@ -82,7 +82,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                         rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
-                        NotifyKommentare.valueOf(rs.getString("NotifyKommentare")));
+                        NotifyKommentare.valueOf(rs.getString("NotifyKommentare")),rs.getString("Profilbild"));
                 
                 benutzer.setProfilBildPfad(ServletController.dirProfilBilder + rs.getString("Profilbild"));
             }
@@ -351,7 +351,8 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps = conMysql.prepareStatement("SELECT Vorname AS Text, ID, 'Benutzer' AS Tabelle FROM Benutzer "
                     + "WHERE levenshtein(=?,Vorname) BETWEEN 0 AND 5 UNION "
                     + "SELECT Nachname AS Text, ID, 'Benutzer' AS Tabelle FROM Benutzer WHERE levenshtein(=?,Nachname) BETWEEN 0 AND 5 UNION"
-                    + "SELECT Titel AS Text, ID, 'Veranstaltung' AS Tabelle FROM Benutzer WHERE levenshtein(=?,Titel) BETWEEN 0 AND 5 LIMIT 5");
+                    + "SELECT Titel AS Text, ID, 'Veranstaltung' AS Tabelle FROM Benutzer "
+                    + "WHERE levenshtein(=?,Titel) BETWEEN 0 AND 5 LIMIT 5");
                   
             ps.setString(1, suchmuster);
             ps.setString(2, suchmuster);
