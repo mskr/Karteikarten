@@ -32,6 +32,8 @@ function fillUserContainer()
     var nutzerstatus = jsonBenutzer["nutzerstatus"];
     $(".username").html(vorname+" "+nachname);
     $(".rolle").html(" "+nutzerstatus);
+    // ProfilBild anzeigen
+    $(".user_MyProfilBild").attr("src", jsonBenutzer[paramProfilBild]);
 }
 
 /**

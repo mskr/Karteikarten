@@ -35,6 +35,7 @@ public class JSONConverter
     static public final String jsonNotifyVeranstAenderung = "notifyVeranstAenderung";
     static public final String jsonNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
     static public final String jsonNotifyKommentare = "notifyKommentare";
+    static public final String jsonProfilBildPfad = "profilBildPfad";
     
     // ArrayResults
     static public final String jsonArrResult = "arrResult";
@@ -74,6 +75,7 @@ public class JSONConverter
         jo.put(jsonMatrikelNr, new Integer(benutzer.getMatrikelnummer()).toString());
         jo.put(jsonNutzerstatus, benutzer.getNutzerstatus().name());
         jo.put(jsonStudiengang, benutzer.getStudiengang());
+        jo.put(jsonProfilBildPfad, benutzer.getProfilBildPfad());
         
         if(full)
         {
@@ -110,7 +112,8 @@ public class JSONConverter
      */
     static JSONObject toJson(String txt) 
     {
-        JSONObject jo = new JSONObject();        
+        JSONObject jo = new JSONObject();  
+        jo.put(jsonErrorTxt, jsonErrorNoError);      
         jo.put(jsonStrResult, txt);
         
         return jo;

@@ -36,6 +36,8 @@ function fillProfilseite() {
         profilNotifyVeranstAenderung = jsonBenutzer[paramNofityVeranstAenderung];
         profilNotifyKarteikartenAenderung = jsonBenutzer[paramNotifyKarteikartenAenderung];
         $(".profil_benutzer").text(profilVorname+" "+profilNachname);
+        $(".profil_avatar_img").attr("src", jsonBenutzer[paramProfilBild]);
+        
         fillProfilDaten();
         fillProfilEinstellungen();
         registerProfilSpeichernEvents();
@@ -61,6 +63,7 @@ function fillProfilseite() {
                     profilStudiengang = jsonObj[paramStudiengang];
                     profilNutzerstatus = jsonObj[paramNutzerstatus];
                     $(".profil_benutzer").text(profilVorname+" "+profilNachname);
+                    $(".profil_avatar_img").attr("src", jsonBenutzer[paramProfilBild]);
                     fillProfilDaten();
                     if(jsonBenutzer[paramNutzerstatus] != "ADMIN")
                     {
@@ -272,20 +275,43 @@ function registerProfilSpeichernEvents() {
 
 function registerAvatarAendernEvent() {
     $("#profil_avatar_aendern").submit(function(event) {
-        var formData = new FormData();
-        formData.append('file', $('#profil_avatar_aendern_file')[0].files[0]);
-        formData.append('action', actionUploadProfilBild);
-        $.ajax({
-            type: "POST",
-            url: fileUploadServlet,
-            enctype: "multipart/form-data",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                console.log(response);
-            }
-        });
         event.preventDefault();
+    	var file = $('#profil_avatar_aendern_file')[0].files[0];
+    	
+    	uploadFile(file, 
+    			function(response) {
+		    		var jsonObj = response;
+		            var errCode = jsonObj["error"];
+		            if(errCode == "noerror") 
+                    {
+                        message(1, "Gespeichert.");
+                        location.reload();
+                    } 
+		            else if(errCode == "invalidparam")
+		            {
+                    	message(0, "Keine gültige Datei angegeben. Versuchen Sie es erneut!");
+                    }
+		            else 
+		            {
+                    	message(0, buildMessage(errCode));
+                    }
+		            console.log(response);
+		        },
+    	actionUploadProfilBild);
+    	
+//        var formData = new FormData();
+//        formData.append('file', );
+//        formData.append('action', actionUploadProfilBild);
+//        $.ajax({
+//            type: "POST",
+//            url: fileUploadServlet,
+//            enctype: "multipart/form-data",
+//            data: formData,
+//            processData: false,
+//            contentType: false,
+//            success: function(response) {
+//                console.log(response);
+//            }
+//        });
     });
 }

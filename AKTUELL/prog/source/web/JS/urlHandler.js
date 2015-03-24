@@ -128,6 +128,7 @@ function getBenutzer()
             {
                 // Ein Benutzer ist eingeloggt
                 jsonBenutzer = jsonObj;
+                
             } 
             else 
             {

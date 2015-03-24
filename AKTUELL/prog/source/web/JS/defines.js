@@ -40,6 +40,7 @@ var paramNotifyKommentare = "notifyKommentare";
 var paramNotifyKommentareValKeine = "KEINE";
 var paramNotifyKommentareValVeranst = "VERANSTALTUNG_TEILGENOMMEN";
 var paramNotifyKommentareValDiskussion = "DISKUSSION_TEILGENOMMEN";
+var paramProfilBild = "profilBildPfad";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";

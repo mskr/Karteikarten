@@ -6,10 +6,12 @@
 
 package com.sopra.team1723.ctrl;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
@@ -252,6 +254,20 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
+        
+        // TODO Test
+        ServletContext servletContext = getServletContext();
+        String contextPath = servletContext.getRealPath(File.separator);
+        String relativerPfad = dirProfilBilder + aktuellerBenutzer.geteMail() + ".png";
+        String absolutePath = contextPath + relativerPfad;
+        
+        File f = new File(absolutePath);
+        
+        if(f.exists())
+            aktuellerBenutzer.setProfilBildPfad(relativerPfad);
+        else
+            aktuellerBenutzer.setProfilBildPfad(dirProfilBilder + "default.png");
+        
         doPorcessing = true;
     }
     /**

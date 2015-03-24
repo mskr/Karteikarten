@@ -210,13 +210,31 @@ public class Benutzer {
         this.id = id;
     }
     
-    private int id;
+    
+    public String getProfilBildPfad()
+    {
+        return profilBildPfad;
+    }
 
-    private String eMail;
+    public void setProfilBildPfad(String profilBildPfad)
+    {
+        this.profilBildPfad = profilBildPfad;
+    }
+
+    /**
+     * 
+     */
+    private int id;
     
     /**
      * 
      */
+    private String eMail;
+     
+     /**
+     * 
+     */
+    
     private String vorname;
 
     /**
@@ -259,5 +277,10 @@ public class Benutzer {
      * 
      */
     private NotifyKommentare notifyKommentare;
+    
+    /**
+     * 
+     */
+    private String profilBildPfad;
 
 }
