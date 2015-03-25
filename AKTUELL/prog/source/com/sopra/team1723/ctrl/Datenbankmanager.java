@@ -356,20 +356,25 @@ public class Datenbankmanager implements IDatenbankmanager {
                 String sql = new String("");
                 while(it.hasNext()){
                     aktSuchfeld = DatenbankKlassenNamenMapping.matching.get(aktSuchfeld);
+                    if (aktSuchfeld == null){
+                        System.out.println("Angegebenes Klassenfeld konnte nicht auf ein Feld in der db gematcht werden");
+                        return null;
+                    }
                     sql = sql + "SELECT "+aktSuchfeld.feld+" AS Text, ID, '"+aktSuchfeld.klasse+"' AS Tabelle,"
                             + "levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") AS lev FROM "+aktSuchfeld.klasse+" "
-                            + "levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") BETWEEN 0 and 5 UNION ";
-                    
+                            + " WHERE levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") BETWEEN 0 and 5 UNION ";
+                    aktSuchfeld = it.next();
                 }
                 aktSuchfeld = DatenbankKlassenNamenMapping.matching.get(aktSuchfeld);
                 sql = sql + "SELECT "+aktSuchfeld.feld+" AS Text, ID, '"+aktSuchfeld.klasse+"' AS Tabelle,"
                         + "levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") AS lev FROM "+aktSuchfeld.klasse+" "
-                        + "levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") BETWEEN 0 and 5 ORDER BY lev LIMIT 5";
+                        + "WHERE levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") BETWEEN 0 and 5 ORDER BY lev LIMIT 5";
 
-                ps = conMysql.prepareStatement("sql");
+                ps = conMysql.prepareStatement(sql);
                 rs = ps.executeQuery();
-                while(rs.next()){
-                    ergebnisse.add(new ErgebnisseSuchfeld(rs.getString("Text"), rs.getInt("ID"), rs.getString("Tabelle")));
+                while(rs.next()){         
+                    ergebnisse.add(new ErgebnisseSuchfeld(rs.getString("Text"),rs.getInt("ID"),
+                            DatenbankKlassenNamenMapping.matchTabelleKlasse.get(rs.getString("Tabelle"))));
                 }
             }
 

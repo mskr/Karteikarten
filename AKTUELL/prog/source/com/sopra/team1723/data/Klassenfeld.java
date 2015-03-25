@@ -1,6 +1,8 @@
 package com.sopra.team1723.data;
 
-
+// Ein Attribut ist eindeutig durch den Klassennamen und den Attributnamen bestimmt
+// Objekte dieser Klasse können an die Suchfunktion übergeben werden, die dann weiß
+// dass sie das Suchmuster mit diesem Attribut in der db vergleichen soll.
 public class Klassenfeld{
     public String klasse;
     public String feld;

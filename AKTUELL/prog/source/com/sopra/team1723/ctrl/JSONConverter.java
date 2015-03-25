@@ -41,6 +41,7 @@ public class JSONConverter
     // ArrayResults
     static public final String jsonArrResult = "arrResult";
     static public final String jsonStrResult = "strResult";
+    static public final String jsonArrSuchfeldResult = "arrSuchfeldResult";
        
     
     /**
@@ -106,6 +107,12 @@ public class JSONConverter
         return jo;
     }
     
+    /**
+     * Von den Ergebnissen der Suche, welche in der Klasse
+     * ErgebnisseSuchfeld gekapselt sind, werden an die GUI
+     * nur die ähnlichen Texte gegeben
+     * @return JSONObject mit einer Liste von Strings
+     */
     static JSONObject toJsonSuchfeld(List<ErgebnisseSuchfeld> suchtreffer) 
     {
         JSONObject jo = new JSONObject();
@@ -116,7 +123,7 @@ public class JSONConverter
         for(ErgebnisseSuchfeld ergs: suchtreffer)
             array.add(ergs.text);
         
-        jo.put(jsonArrResult, array);
+        jo.put(jsonArrSuchfeldResult, array);
         
         return jo;
     }
