@@ -127,8 +127,8 @@ function fillProfilStudiengaenge() {
             if(errCode == "noerror") {
                 $("#profil_studiengang_input").empty();
                 var studgArr = jsonObj[keyJsonArrResult];
-                for(var studg of studgArr) {
-                    $("#profil_studiengang_input").append("<option>"+studg+"</option>");
+                for(var i in studgArr) {
+                    $("#profil_studiengang_input").append("<option>"+studgArr[i]+"</option>");
                 }
                 $("#profil_studiengang_input").val(profilStudiengang);
             } else {

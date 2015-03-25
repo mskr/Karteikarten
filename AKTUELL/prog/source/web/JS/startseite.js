@@ -20,8 +20,8 @@ function fillStartseite() {
             if(errCode == "noerror") {
                 $("#reg_studiengang").empty();
                 var studgArr = jsonObj[keyJsonArrResult];
-            	for(var studg of studgArr) {
-            		$("#reg_studiengang").append("<option>"+studg+"</option>");
+            	for(var i in studgArr) {
+            		$("#reg_studiengang").append("<option>"+studgArr[i]+"</option>");
             	}
             } else {
             	message(0, buildMessage(errCode));
