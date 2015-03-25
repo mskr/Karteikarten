@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.simple.*;
 
 import com.sopra.team1723.data.Benutzer;
+import com.sopra.team1723.data.ErgebnisseSuchfeld;
 
 public class JSONConverter
 {
@@ -99,6 +100,21 @@ public class JSONConverter
         
         for(String s: strings)
             array.add(s);
+        
+        jo.put(jsonArrResult, array);
+        
+        return jo;
+    }
+    
+    static JSONObject toJsonSuchfeld(List<ErgebnisseSuchfeld> suchtreffer) 
+    {
+        JSONObject jo = new JSONObject();
+        
+        jo.put(jsonErrorTxt, jsonErrorNoError);
+        JSONArray array = new JSONArray();
+        
+        for(ErgebnisseSuchfeld ergs: suchtreffer)
+            array.add(ergs.text);
         
         jo.put(jsonArrResult, array);
         

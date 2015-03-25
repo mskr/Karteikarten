@@ -153,7 +153,7 @@ public interface IDatenbankmanager {
      * @param suchmuster 
      * @return
      */
-    public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster);
+    public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster, List<Klassenfeld> suchfeld);
     /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
      * return
