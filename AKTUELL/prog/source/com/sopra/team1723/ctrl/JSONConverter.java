@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.simple.*;
 
 import com.sopra.team1723.data.Benutzer;
+import com.sopra.team1723.data.ErgebnisseSuchfeld;
 
 public class JSONConverter
 {
@@ -40,6 +41,7 @@ public class JSONConverter
     // ArrayResults
     static public final String jsonArrResult = "arrResult";
     static public final String jsonStrResult = "strResult";
+    static public final String jsonArrSuchfeldResult = "arrSuchfeldResult";
        
     
     /**
@@ -101,6 +103,27 @@ public class JSONConverter
             array.add(s);
         
         jo.put(jsonArrResult, array);
+        
+        return jo;
+    }
+    
+    /**
+     * Von den Ergebnissen der Suche, welche in der Klasse
+     * ErgebnisseSuchfeld gekapselt sind, werden an die GUI
+     * nur die ähnlichen Texte gegeben
+     * @return JSONObject mit einer Liste von Strings
+     */
+    static JSONObject toJsonSuchfeld(List<ErgebnisseSuchfeld> suchtreffer) 
+    {
+        JSONObject jo = new JSONObject();
+        
+        jo.put(jsonErrorTxt, jsonErrorNoError);
+        JSONArray array = new JSONArray();
+        
+        for(ErgebnisseSuchfeld ergs: suchtreffer)
+            array.add(ergs.text);
+        
+        jo.put(jsonArrSuchfeldResult, array);
         
         return jo;
     }

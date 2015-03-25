@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 24. Mrz 2015 um 18:19
+-- Erstellungszeit: 24. Mrz 2015 um 22:41
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -80,10 +80,10 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
   `Matrikelnummer` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL,
   `Kennwort` varchar(30) NOT NULL,
-  `Nutzerstatus` enum('STUDENT','DOZENT','ADMIN','') NOT NULL,
-  `NotifyKommentare` enum('KEINE','VERANSTALTUNG_TEILGENOMMEN','DISKUSSION_TEILGENOMMEN','') NOT NULL,
-  `NotifyVeranstAenderung` tinyint(1) NOT NULL,
-  `NotifyKarteikartenAenderung` tinyint(1) NOT NULL
+  `Nutzerstatus` enum('STUDENT','DOZENT','ADMIN','') NOT NULL DEFAULT 'STUDENT',
+  `NotifyKommentare` enum('KEINE','VERANSTALTUNG_TEILGENOMMEN','DISKUSSION_TEILGENOMMEN','') NOT NULL DEFAULT 'KEINE',
+  `NotifyVeranstAenderung` tinyint(1) NOT NULL DEFAULT '0',
+  `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --

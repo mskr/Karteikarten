@@ -1,6 +1,5 @@
 package com.sopra.team1723.data;
 
-import java.util.*;
 
 /**
  * 
@@ -21,9 +20,8 @@ public class Benutzer {
     // Konstruktor der alle Parameter setzt
     public Benutzer(int id, String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
             String kennwort, Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung,
-            boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare)
+            boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare, String profilBild)
     {
-        super();
         this.id = id;
         this.eMail = eMail;
         this.vorname = vorname;
@@ -35,32 +33,14 @@ public class Benutzer {
         this.notifyVeranstAenderung = notifyVeranstAenderung;
         this.notifyKarteikartenAenderung = notifyKarteikartenAenderung;
         this.notifyKommentare = notifyKommentare;
+        this.profilBild = profilBild;
     }
     
-    // Konstruktor der alle Attribute setzt bis auf id
-    public Benutzer(String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
-            String kennwort, Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung,
-            boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare)
-    {
-        super();
-        this.eMail = eMail;
-        this.vorname = vorname;
-        this.nachname = nachname;
-        this.matrikelnummer = matrikelnummer;
-        this.studiengang = studiengang;
-        this.kennwort = kennwort;
-        this.nutzerstatus = nutzerstatus;
-        this.notifyVeranstAenderung = notifyVeranstAenderung;
-        this.notifyKarteikartenAenderung = notifyKarteikartenAenderung;
-        this.notifyKommentare = notifyKommentare;
-    }
-
     // Konstruktur ohne Kennwort, Matrikelnummer, Studiengang, Nutzerstatus (Die letzten 3 können vom Benutzer
     // selbst nicht geändert werden
     public Benutzer(String eMail, String vorname, String nachname, boolean notifyVeranstAenderung,
             boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare)
     {
-        super();
         this.eMail = eMail;
         this.vorname = vorname;
         this.nachname = nachname;
@@ -74,7 +54,6 @@ public class Benutzer {
             Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung, boolean notifyKarteikartenAenderung,
             NotifyKommentare notifyKommentare)
     {
-        super();
         this.eMail = eMail;
         this.vorname = vorname;
         this.nachname = nachname;
@@ -95,6 +74,7 @@ public class Benutzer {
     public Benutzer(String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
             String kennwort)
     {
+        super();
         this.eMail = eMail;
         this.vorname = vorname;
         this.nachname = nachname;

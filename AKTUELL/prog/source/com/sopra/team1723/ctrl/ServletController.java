@@ -54,6 +54,7 @@ public class ServletController extends HttpServlet
     protected final static String requestActionAenderePasswort = "aenderePasswort";
     protected final static String requestActionAendereProfil = "aendereProfil";
     protected final static String requestActionUploadProfilBild = "uploadProfilBild";
+    protected final static String requestActionSucheBenVeranst = "sucheBenVeranst";
 
     protected final static String requestEmail = "email";
     protected final static String requestEmailNew = "emailNew";
@@ -68,6 +69,7 @@ public class ServletController extends HttpServlet
     protected final static String requestNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
     protected final static String requestNotifyKommentare = "notifyKommentare";
     protected final static String requestUploadFile = "file";
+    protected final static String requestSuchmuster = "suchmuster";
 
     private boolean doPorcessing = false;
     

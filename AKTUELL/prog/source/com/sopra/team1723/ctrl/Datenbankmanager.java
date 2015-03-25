@@ -9,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
 
 
 
@@ -73,7 +75,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         Benutzer benutzer = null;
         try{
-            ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
+            ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
                     + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
@@ -82,8 +84,8 @@ public class Datenbankmanager implements IDatenbankmanager {
                         rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
-                        NotifyKommentare.valueOf(rs.getString("NotifyKommentare")));
-                
+                        NotifyKommentare.valueOf(rs.getString("NotifyKommentare")),rs.getString("Profilbild"));
+
                 benutzer.setProfilBildPfad(ServletController.dirProfilBilder + rs.getString("Profilbild"));
             }
         } catch (SQLException e) {
@@ -131,7 +133,7 @@ public class Datenbankmanager implements IDatenbankmanager {
 
     @Override
     public void bearbeiteBenutzer(String alteMail, Benutzer benutzer)
-                    throws SQLException, DbUniqueConstraintException {
+            throws SQLException, DbUniqueConstraintException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
@@ -339,28 +341,43 @@ public class Datenbankmanager implements IDatenbankmanager {
 
         return veranstaltung;
     }
-    
+
     @Override
-    public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster)
+    public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster, List<Klassenfeld> suchfelder)
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<ErgebnisseSuchfeld> ergebnisse = null;
         try{
             ergebnisse = new ArrayList<ErgebnisseSuchfeld>();
-            ps = conMysql.prepareStatement("SELECT Vorname AS Text, ID, 'Benutzer' AS Tabelle FROM Benutzer "
-                    + "WHERE levenshtein(=?,Vorname) BETWEEN 0 AND 5 UNION "
-                    + "SELECT Nachname AS Text, ID, 'Benutzer' AS Tabelle FROM Benutzer WHERE levenshtein(=?,Nachname) BETWEEN 0 AND 5 UNION"
-                    + "SELECT Titel AS Text, ID, 'Veranstaltung' AS Tabelle FROM Benutzer WHERE levenshtein(=?,Titel) BETWEEN 0 AND 5 LIMIT 5");
-                  
-            ps.setString(1, suchmuster);
-            ps.setString(2, suchmuster);
-            ps.setString(3, suchmuster);
-            rs = ps.executeQuery();
-            while(rs.next()){
-                ergebnisse.add(new ErgebnisseSuchfeld(rs.getString("Text"), rs.getInt("ID"), rs.getString("Tabelle")));
+            if(suchfelder != null && suchfelder.size() > 0){
+                Iterator<Klassenfeld> it = suchfelder.iterator();
+                Klassenfeld aktSuchfeld = it.next();
+                String sql = new String("");
+                while(it.hasNext()){
+                    aktSuchfeld = DatenbankKlassenNamenMapping.matching.get(aktSuchfeld);
+                    if (aktSuchfeld == null){
+                        System.out.println("Angegebenes Klassenfeld konnte nicht auf ein Feld in der db gematcht werden");
+                        return null;
+                    }
+                    sql = sql + "SELECT "+aktSuchfeld.feld+" AS Text, ID, '"+aktSuchfeld.klasse+"' AS Tabelle,"
+                            + "levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") AS lev FROM "+aktSuchfeld.klasse+" "
+                            + " WHERE levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") BETWEEN 0 and 5 UNION ";
+                    aktSuchfeld = it.next();
+                }
+                aktSuchfeld = DatenbankKlassenNamenMapping.matching.get(aktSuchfeld);
+                sql = sql + "SELECT "+aktSuchfeld.feld+" AS Text, ID, '"+aktSuchfeld.klasse+"' AS Tabelle,"
+                        + "levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") AS lev FROM "+aktSuchfeld.klasse+" "
+                        + "WHERE levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") BETWEEN 0 and 5 ORDER BY lev LIMIT 5";
+
+                ps = conMysql.prepareStatement(sql);
+                rs = ps.executeQuery();
+                while(rs.next()){         
+                    ergebnisse.add(new ErgebnisseSuchfeld(rs.getString("Text"),rs.getInt("ID"),
+                            DatenbankKlassenNamenMapping.matchTabelleKlasse.get(rs.getString("Tabelle"))));
+                }
             }
-            
+
         } catch (SQLException e) {
             ergebnisse = null;
             e.printStackTrace();
