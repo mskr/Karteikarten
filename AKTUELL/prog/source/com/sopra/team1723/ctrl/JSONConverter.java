@@ -1,12 +1,15 @@
 package com.sopra.team1723.ctrl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.*;
 
 import com.sopra.team1723.data.Benutzer;
 import com.sopra.team1723.data.ErgebnisseSuchfeld;
+import com.sopra.team1723.data.Veranstaltung;
 
+@SuppressWarnings("unchecked")
 public class JSONConverter
 {
     
@@ -104,6 +107,70 @@ public class JSONConverter
         JSONObject jo = new JSONObject();  
         jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);      
         jo.put(ParamDefines.jsonStrResult, txt);
+        
+        return jo;
+    }
+    
+    /**
+     * 
+     * @param strings
+     * @return JSONObject mit NoError und einem String
+     */
+    static JSONObject toJsonVeranstList(List<Veranstaltung> veranstList) 
+    {
+        JSONObject jo = new JSONObject();  
+        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
+        
+        JSONArray array = new JSONArray();
+
+        for(Veranstaltung v: veranstList)
+        {
+            JSONObject o = new JSONObject();
+
+            o.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);      
+            o.put(ParamDefines.Titel, v.getTitel()); 
+            o.put(ParamDefines.Beschr, v.getBeschreibung()); 
+            o.put(ParamDefines.Semester, v.getSemester()); 
+            o.put(ParamDefines.BewertungenErlauben, v.isBewertungenErlaubt()); 
+            o.put(ParamDefines.ModeratorKkBearbeiten, v.isModeratorKarteikartenBearbeiten()); 
+            o.put(ParamDefines.KommentareErlauben,v.isKommentareErlaubt());
+            o.put(ParamDefines.Ersteller,v.getErsteller());
+            
+            JSONArray arr = new JSONArray();
+            for(String s: v.getModeratoren())
+                arr.add(s);
+            o.put(ParamDefines.Moderatoren,arr);
+            
+            
+            array.add(o);
+        }
+
+        jo.put(ParamDefines.jsonArrResult, array);
+
+        return jo;
+    }
+    
+    /**
+     * 
+     * @param strings
+     * @return JSONObject mit NoError und einem String
+     */
+    static JSONObject toJson(Veranstaltung veranst) 
+    {
+        JSONObject jo = new JSONObject();
+        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);      
+        jo.put(ParamDefines.Titel, veranst.getTitel()); 
+        jo.put(ParamDefines.Beschr, veranst.getBeschreibung()); 
+        jo.put(ParamDefines.Semester, veranst.getSemester()); 
+        jo.put(ParamDefines.BewertungenErlauben, veranst.isBewertungenErlaubt()); 
+        jo.put(ParamDefines.ModeratorKkBearbeiten, veranst.isModeratorKarteikartenBearbeiten()); 
+        jo.put(ParamDefines.KommentareErlauben,veranst.isKommentareErlaubt());
+        jo.put(ParamDefines.Ersteller,veranst.getErsteller());
+        
+        JSONArray arr = new JSONArray();
+        for(String s: veranst.getModeratoren())
+            arr.add(s);
+        jo.put(ParamDefines.Moderatoren,arr);
         
         return jo;
     }

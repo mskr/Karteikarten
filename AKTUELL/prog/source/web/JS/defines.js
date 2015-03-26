@@ -22,6 +22,12 @@ var actionGetStudiengaenge = "getStudiengaenge";
 var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
+var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
+var leseVeranstMode = "mode";                        // Liefert Veranstaltungen
+var leseVeranstModeAlle = "alle";                    // Liefert alle Veranstaltungen
+var leseVeranstModeSemester = "semester";            // Liefert alle Veranstaltungen im aktuellen Semester
+var leseVeranstModeStudiengang = "studiengang";      // Liefert alle Veranstaltungen im aktuellen Studiengang (TODO)
+var leseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
 
 // GET/POST-Parameter fuer die Servlets
 // Werden auch als Schluesselnamen fuer JSON Objekte verwendet
@@ -41,6 +47,16 @@ var paramNotifyKommentareValKeine = "KEINE";
 var paramNotifyKommentareValVeranst = "VERANSTALTUNG_TEILGENOMMEN";
 var paramNotifyKommentareValDiskussion = "DISKUSSION_TEILGENOMMEN";
 var paramProfilBild = "profilBildPfad";
+
+// Veranstaltungen
+var paramTitel = "titel";
+var paramBeschr = "beschr";
+var paramSemester = "semester";
+var paramBewertungenErlauben = "bewertungenErlauben";
+var paramModeratorKkBearbeiten = "moderatorKkBearbeiten";
+var paramKommentareErlauben = "kommentareErlauben";
+var paramErsteller = "ersteller";
+var paramModeratoren = "moderatoren";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";

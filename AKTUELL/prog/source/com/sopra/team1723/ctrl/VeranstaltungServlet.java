@@ -1,6 +1,8 @@
 package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,22 +50,48 @@ public class VeranstaltungServlet extends ServletController {
      */
     private boolean veranstaltungenAnzeigen(HttpServletRequest request, HttpServletResponse response) 
     {
-        
+        JSONObject jo;
         String mode = request.getParameter(ParamDefines.LeseVeranstMode);
         if(isEmpty(mode))
         {
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
         }
         
         if(mode.equals(ParamDefines.LeseVeranstModeAlle))
         {
+            // TODO Test
+           List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
+           // TODO Vieles Klären!
+           Veranstaltung s = new Veranstaltung("Informatik für Anfänger", "Dies ist ein Beispieltext", "Informatik", "WiSe 15", "1234", true, true, "Max Mustermann", new ArrayList<>(), true);
+           Veranstaltung s2 = new Veranstaltung("Informatik für Anfänger", "Dies ist ein Beispieltext", "Informatik", "WiSe 15", "1234", true, true, "Karl-Heinz", new ArrayList<>(), true);
+           Veranstaltung s3 = new Veranstaltung("Informatik für Anfänger", "Dies ist ein Beispieltext", "Informatik", "WiSe 15", "1234", true, true, "Peter Mayer", new ArrayList<>(), true);
+           verAnst.add(s);
+           verAnst.add(s2);
+           verAnst.add(s3);
+           jo = JSONConverter.toJsonVeranstList(verAnst);
+           outWriter.print(jo);
+           return true;
+        }
+        else if(mode.equals(ParamDefines.LeseVeranstModeMeine))
+        {
             // TODO dbManager.leseVer
+            
+        }
+        else if(mode.equals(ParamDefines.LeseVeranstModeSemester))
+        {
+            // TODO dbManager.leseVer
+            
+        }
+        else if(mode.equals(ParamDefines.LeseVeranstModeStudiengang))
+        {
+            // TODO dbManager.leseVer
+            
         }
         else
         {
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
         }

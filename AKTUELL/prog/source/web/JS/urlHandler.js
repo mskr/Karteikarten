@@ -98,6 +98,7 @@ function interpreteUrlQuery(paramObj) {
            ziel == ansichtHauptseite)                   // location ist Hauptseite
         {
             ziel = ansichtHauptseite;                   // Dann gehe zu Hauptseite
+            fillHauptseite();
         } else if(ziel == ansichtProfilseite) 
         {
             fillProfilseite();

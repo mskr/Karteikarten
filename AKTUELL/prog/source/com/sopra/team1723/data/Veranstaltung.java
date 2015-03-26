@@ -81,11 +81,6 @@ public class Veranstaltung {
      * 
      */
     private ArrayList<String> moderatoren;
-    
-    /**
-     * 
-     */
-    private boolean diskussionenErlaubt;
 
     public String getBeschreibung()
     {
@@ -126,10 +121,19 @@ public class Veranstaltung {
     {
         this.zugangspasswort = zugangspasswort;
     }
-
-    public boolean isDiskussionenErlaubt()
+    public boolean isBewertungenErlaubt()
     {
-        return diskussionenErlaubt;
+        return bewertungenErlaubt;
+    }
+
+    public void setTitel(String titel)
+    {
+        this.titel = titel;
+    }
+
+    public void setModeratoren(ArrayList<String> moderatoren)
+    {
+        this.moderatoren = moderatoren;
     }
 
     public void setBewertungenErlaubt(boolean bewertungenErlaubt)

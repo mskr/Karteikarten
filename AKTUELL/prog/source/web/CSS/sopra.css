@@ -25,11 +25,6 @@ body {
 	background: #4a4a4a;
 	color: #e0e0e0;
 	font-family: 'Open Sans', sans-serif;
-} @media screen and (max-width: 1000px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	body {
-		font-size: 2em;
-	}
 }
 
 a { /* Link Style */
@@ -144,36 +139,6 @@ label {
 	text-shadow: 0px -1px 0px #000;
 } .mypersonalbox_toggle {
 	display: none;
-} @media screen and (max-width: 1000px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	.mypersonalbox {
-		margin: 0;
-		padding: 2%;
-		width: 100%;
-		height: 10%;
-		box-shadow: none;
-		border: none;
-		border-radius: none;
-		text-shadow: none;
-		position: relative;
-	} .mypersonalbox_toggle {
-		margin: 0;
-		padding: 0;
-		width: 25%;
-		height: 100%;
-		position: absolute;
-		z-index: 101;
-		top: 0;
-		left: 0;
-		display: inline-block;
-		background: red;
-	} .mypersonalbox_toggle:active {
-		background: blue;
-	} .mypersonalbox_toggle + input {
-		
-	} .mypersonalbox_toggle + input:checked {
-		background: yellow;
-	}
 }
 
 .mainbox { /* #WTF: WIESO IST AM RECHTEN RAND IMMER EIN STUECK PLATZ!? */
@@ -188,19 +153,6 @@ label {
 	float: left;
 	overflow: visible;
 	vertical-align: middle;
-} @media screen and (max-width: 1000px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	.mainbox {
-		margin: 0;
-		padding: 2%;
-		width: 100%;
-		box-shadow: none;
-		border: none;
-		border-radius: none;
-		text-shadow: none;
-		position: relative;
-		background: green;
-	}
 }
 
 .impressum {
@@ -231,11 +183,6 @@ label {
 	color: #6e6e6e;
 	font-size: 400px;
 	text-shadow: 0px -2px 0px #363636;
-} @media screen and (max-width: 1000px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	.sleepicon {
-		font-size: 5em;
-	}
 }
 
 .login_input { /* Wird auch auf die Felder fuers Registrieren angewendet */
@@ -317,13 +264,7 @@ label {
 } .usericon {
 	color: white;
 	font-size: 100px;
-} @media screen and (max-width: 750px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	.usericon {
-		display: none;
-	}
 }
-
 .username {
 	color: white;
 	font-weight: bold;
@@ -355,24 +296,33 @@ label {
 	font-size: 14px;
 }
 
+/* Benachrichtigungen als Tabelle aufbauen. */
+.bn_full {
+	position: absolute;
+    bottom: 0px;
+    margin-bottom: 10px;
+    width: inherit;
+    display: table;
+}
 .bn_header {
-	position: absolute;
-	z-index: 101;
-	bottom: 210px;
 	font-weight: bold;
-} .bn_container {
-	width: 90%;
-	height: 200px;
-	position: absolute;
-	z-index: 101;
-	bottom: 5px;
-	overflow: auto;
-} .bn_container::-webkit-scrollbar {
+	display:table-header-group;
+} 
+.bn_container {
+	height: 100%;
+	max-height: 200px;
+	overflow-y: scroll !important;	/* Darf von JQuery beim sliden nicht überschrieben werden.*/
+	display: none;
+} 
+/* Was macht das ?? TODO */
+.bn_container::-webkit-scrollbar {
 	width: 5px;
 	background-color: #333333;
-} .bn_container::-webkit-scrollbar-thumb {
+} 
+.bn_container::-webkit-scrollbar-thumb {
 	background-color: #141414;
-} .bn {
+}
+.bn {
 	margin: 2px 0px;
 	padding: 6px 10px;
 	font-size: 12px;
@@ -395,19 +345,9 @@ label {
 	border-left: 3px solid gray;
 } .bn_text {
 	display: inline-block;
-} @media screen and (max-width: 750px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	.bn_header {
-		position: relative;
-		bottom: 0;
-	} .bn_container {
-		margin-top: 5px;
-		width: 100%;
-		height: auto; /* Dies bewirkt, dass der Nutzer in der Smartphoneansicht immer alle Benachrichtigungen sieht, wenn die mypersonalbox ausklappt (koennen evntl. sehr viele werden) */
-		position: relative;
-		bottom: 0;
-	}
 }
+
+
 
 .suche_etwas {
 	margin: 0px 0px;
@@ -448,11 +388,6 @@ label {
  	top: 0;
 } .vn_erstellen_bt:after {
 	content: "Veranstaltung erstellen";
-} @media screen and (max-width: 750px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	.vn_erstellen_bt:after {
-		content: "";
-	}
 }
 
 /* Tabs erstellt nach dieser Anleitung: */
@@ -577,13 +512,7 @@ label {
 	width: 100%;
 	text-align: left;
 	font-size: 12px;
-} @media screen and (max-width: 750px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	.vn_mehr_einbl:after {
-		content: "";
-	}
 }
-
 /* Der Return Link sorgt dafuer, dass der User immer wieder zurueck zur Hauptseit (Veranstaltungsliste) gehen kann */
 .return {
 	display: none; /* Initialwert der in JS dynamisch modifiziert wird */
@@ -602,14 +531,7 @@ label {
 } .return:hover {
 	padding-left: 0px;
 	padding-right: 10px;
-} @media screen and (max-width: 750px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	.return {
-		width: 20%;
-		top: 35px;
-	}
 }
-
 .kk_toolbar {
 	margin-bottom: 30px;
 	width: 100%;
@@ -658,11 +580,6 @@ label {
 } .groupelem {
 	position: relative;
 	z-index: 4;
-} @media screen and (max-width: 1400px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER MITTELGROSSE BILDSCHIRME */
-	.kk_export_bt > span:after {
-		content: "";
-	}
 }
 
 .vn_header {
@@ -1148,111 +1065,6 @@ label {
 	text-shadow: 0px -1px 0px #000;
 }
 
-@media screen and (max-width: 1000px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER MITTELGROSSE BILDSCHIRME */
-	.kk {
-		-webkit-border-radius: 0;
-		-moz-border-radius: 0;
-		left: 0;
-	} .kk_toolbar {
-		height: 100px;
-	} .kk_votes {
-		position: relative;
-		left: 0px;
-	} .kk_voteup, .kk_votedown {
-		float: left;
-		margin: 5px;
-	} .kk_votestat {
-		float: left;
-		margin: 5px;
-	} .kk_notizen {
-		margin-top: 1px;
-		padding: 1%;
-		padding-top: 25px;
-		width: calc(2% + 500px);
-		min-height: 30px;
-		height: 30px;
-		display: block;
-		position: relative;
-		left: 0;
-		-webkit-transition: height 0.5s;
-		transition: height 0.5s;
-	} .kk_notizen:focus {
-		height:300px;
-	} .kk_optionen {
-		width: 50%;
-		margin: 0;
-		clear: none;
-		left: 0;
-		display: inline-block;
-		float: right;
-	} .option {
-		margin: 0;
-		padding: 15px;
-		display: inline;
-		float: right;
-	} .option:hover:after {
-		bottom: 95%;
-	    left: -150%;
-	} .kk_bildunterschrift {
-		left: 0;
-	} .kk_kommbox {
-		left: 0;
-	} .kk_erstellen_bt > span:after {
-		content: "";
-	}
-} @media screen and (max-width: 750px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	.kk_wrapper {
-		margin: 20px 0 0 0;
-		width: 100%;
-	} .kk {
-		padding: 3%;
-		max-width: 94%;
-		left: 0;
-	} .kk_bildunterschrift {
-		width: 96%;
-	} .kk_kommbox {
-		padding: 3%;
-		max-width: 100%;
-		width: 94%;
-		left: 0;
-	} .kk_superkomm {
-		font-size: 25px;
-	} .kk_kommheader {
-		font-size: 16px;
-	} .kk_notizen {
-		padding: 3%;
-		width: 94%;
-		left: 0;
-		-webkit-border-top-left-radius: 2px;
-		-moz-border-top-left-radius: 2px;
-		border-top-left-radius: 2px;
-		font-size: 40px;
-	} .kk_notizen:after {
-		content: "";
-	} .kk_optionen {
-		width: 50%;
-		margin: 0;
-		clear: none;
-		left: 0;
-		display: inline-block;
-		float: right;
-	} .option {
-		margin: 0;
-		padding: 15px;
-		display: inline;
-		float: right;
-	} .kk_votes {
-		left: 0;
-	} .kk_erstellen_bt {
-		width: 60px;
-		height: 60px;
-		text-align: center;
-	} .kk_erstellen_bt > span:after {
-		content: "";
-	}
-}
 
 .popup_input {
 	margin-top: 12px;
@@ -1399,9 +1211,6 @@ label {
 	-webkit-box-shadow: 0px 2px 2px #000;
 	-moz-box-shadow: 0px 2px 2px #000;
 	box-shadow: 0px 2px 2px #000;
-} @media screen and (max-width: 750px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-	/* ZUSAETZLICHER CODE FUER KLEINE BILDSCHIRME */
-	
 }
 
 #attr_popup div {
@@ -1548,3 +1357,5 @@ select.profil_input {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 }
+
+

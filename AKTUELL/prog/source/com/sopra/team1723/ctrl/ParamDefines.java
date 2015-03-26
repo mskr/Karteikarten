@@ -21,12 +21,11 @@ public class ParamDefines
     public final static String ActionSucheBenVeranst = "sucheBenVeranst";
     
     public final static String ActionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
-    public final static String LeseVeranstMode = "mode";                        // Liefert alle VeranstaltungsNamen + ID
-    public final static String LeseVeranstModeAlle = "alle";                    // Liefert alle VeranstaltungsNamen + ID
-    public final static String LeseVeranstModeSemester = "semester";            // Liefert alle VeranstaltungsNamen im aktuellen Semester +ID
-    public final static String LeseVeranstModeStudiengang = "studiengang";      // Liefert alle VeranstaltungsNamen im aktuellen Studiengang +ID (TODO)
-    public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine VeranstaltungsNamen + ID
-    public final static String LeseVeranstModeID = "id";                        // Liefert die Veranstaltung komplett die zur ID gehört
+    public final static String LeseVeranstMode = "mode";                        // Liefert Veranstaltungen
+    public final static String LeseVeranstModeAlle = "alle";                    // Liefert alle Veranstaltungen
+    public final static String LeseVeranstModeSemester = "semester";            // Liefert alle Veranstaltungen im aktuellen Semester
+    public final static String LeseVeranstModeStudiengang = "studiengang";      // Liefert alle Veranstaltungen im aktuellen Studiengang (TODO)
+    public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
 
     public final static String Email = "email";
     public final static String EmailNew = "emailNew";
@@ -43,6 +42,16 @@ public class ParamDefines
     public final static String ProfilBildPfad = "profilBildPfad";
     public final static String UploadFile = "file";
     public final static String Suchmuster = "suchmuster";
+    
+
+    public final static String Titel = "titel";
+    public final static String Beschr = "beschr";
+    public final static String Semester = "semester";
+    public final static String BewertungenErlauben = "bewertungenErlauben";
+    public final static String ModeratorKkBearbeiten = "moderatorKkBearbeiten";
+    public final static String KommentareErlauben = "kommentareErlauben";
+    public final static String Ersteller = "ersteller";
+    public final static String Moderatoren = "moderatoren";
     
     
     /**

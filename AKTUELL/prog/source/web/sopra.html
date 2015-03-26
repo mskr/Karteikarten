@@ -74,17 +74,23 @@ body > div {
 
 <body>
 
+<!-- Div-Container für messages -->
 <div class="msg err"></div>
 <div class="msg success"></div>
 
+<!-- Container für die Startseite -->
 <div id="mypersonalbox_startseite" class="mypersonalbox">
+
 	<h3>Start</h3>
+	
 	<form id="login_form">
 		<input id="login_email" class="login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
 		<input id="login_pass" class="login_input pw" type="password" name="passwort" placeholder="Passwort" required>
 		<input id="login_submit" class="mybutton_dark loginbutton" type="submit" value="Login">
 	</form>
+	
 	<a class="pwreset">Passwort zurücksetzen</a>
+	
 	<form id="registrieren_form">
 		<p>
 		<input id="reg_pass" class="login_input" type="password" name="passwort_wdh" placeholder="Passwort wiederholen" required> <br>
@@ -95,11 +101,14 @@ body > div {
 		<input id="reg_submit" class="mybutton_dark_flat regbutton" type="submit" value="Registrieren">
 		</p>
 	</form>
+	
 </div>
 
 <div id="mypersonalbox_main" class="mypersonalbox">
+
 	<!-- Return Link erscheint nicht auf Hauptseite -->
-	<a class="return tiptrigger tipabove" data-tooltip="Zurück zu den Veranstaltungen"><span class="mega-octicon octicon-chevron-left"></span></a>
+	<a class="return tiptrigger tipabove" data-tooltip="Zurück zur Hauptseite"><span class="mega-octicon octicon-chevron-left"></span></a>
+	
 	<div class="user_container">
 		<img class="user_MyProfilBild" alt="profilBild" src="files/profilBilder/default.png"><br>
 		<!-- <span class="mysopraicon sopra-usericon usericon"><br></span> -->
@@ -108,31 +117,41 @@ body > div {
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
 		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
 	</div>
-	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
+	
+	<!-- TODO Wie soll man das hier machen? Vllt weglassen weil == Meine Veranstaltungen. 
+	Dann aber so leer.-->
+<!--	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
 	<br>
 	<ul class="meinevn">
-		<li><a class="vn_angepinnt">Analysis I</a></li>
+ 		<li><a class="vn_angepinnt">Analysis I</a></li>
 		<li><a class="vn_angepinnt">Algorithmen</a></li>
-		<li><a class="vn_angepinnt">Lineare Algebra</a></li>
-	</ul>
-	<span class="bn_header" id="bn-header"><span class="octicon octicon-pulse"></span> Benachrichtigungen</span>
-	<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
-		<div class="bn neu">
-			<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
-		</div>
-		<div class="bn gelesen">
-			<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+		<li><a class="vn_angepinnt">Lineare Algebra</a></li> 
+	</ul>-->
+	
+	<div class="bn_full">
+		<span class="bn_header" id="bn-header" style="cursor: pointer;"><span class="octicon octicon-pulse""></span> Benachrichtigungen</span>
+		<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
+			<div class="bn" id="keine_bn">
+					<span class="bn_text">Keine Benachrichtigungen verfügbar.</span>
+			</div>
+	<!-- 		<div class="bn neu">
+				<span class="bn_text">Kommentar auf Karteikarte "Proteinbiosynthese" in "Molekularbiologie I"</span>
+			</div>
+			<div class="bn gelesen">
+				<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+			</div>
+			<div class="bn gelesen">
+				<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+			</div>
+			<div class="bn gelesen">
+				<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+			</div>
+			<div class="bn gelesen">
+				<span class="bn_text">Neue Karteikarte "Beispiel" in Veranstaltung "Algorithmen"</span>
+			</div> -->
 		</div>
 	</div>
+	
 </div>
 
 <div id="mainbox_startseite" class="mainbox">
@@ -140,17 +159,21 @@ body > div {
 </div>
 
 <div id="mainbox_hauptseite" class="mainbox">
-	<!-- Trick: Suchfeld ist auf autofocus und required gesetzt. So kann der User sofort lostippen und per CSS wird das Feld hervorgehoben, wann etwas eingegeben wurde (denn das leere required-Field ist invalid). -->
+	<!-- Trick: Suchfeld ist auf autofocus und required gesetzt. So kann der User sofort lostippen und 
+	per CSS wird das Feld hervorgehoben, wann etwas eingegeben wurde (denn das leere required-Field ist invalid). -->
 	<input class="suche_etwas" type="search" placeholder="Veranstaltungen und Personen finden..." required>
+	
 	<span class="mybutton_green vn_erstellen_bt"><span class="octicon octicon-plus"></span> </span>
+	
 	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
 	<div class="vn_container">
+	
 		<div class="vn_tab meine_vn">
 			<input class="vn_tabradio" type="radio" id="tab-1" name="group1" checked>
 			<label for="tab-1">Meine</label>
-			<div class="vn_tabcontent">
-				<div class="vn_fktn_spez_wrapper"><a class="vn_fktn_spez"><span class="octicon octicon-question"></span> Funktion</a></div>
-				<div class="vn">
+			
+			<div class="vn_tabcontent" id="vn_tabcontent_meine">
+<!-- 				<div class="vn">
 					<span class="vn_titel">Molekularbiologie I</span>
 					<span class="vn_details"><span class="vn_detail">Prof. Dr. Oberhuber</span><br><span class="vn_detail">60 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
 					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
@@ -161,6 +184,7 @@ body > div {
 						</div>
 					</div>
 				</div>
+				
 				<div class="vn">
 					<span class="vn_titel">Algorithmen</span>
 					<span class="vn_details"><span class="vn_detail">Prof. Dr. Schöning</span><br><span class="vn_detail">40 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
@@ -172,6 +196,7 @@ body > div {
 						</div>
 					</div>
 				</div>
+				
 				<div class="vn">
 					<span class="vn_titel">Lineare Algebra</span>
 					<span class="vn_details"><span class="vn_detail">Dr. Liebezeit</span><br><span class="vn_detail">30 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
@@ -182,14 +207,19 @@ body > div {
 							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
 						</div>
 					</div>
-				</div>
+				</div> -->
+				
 			</div>
 		</div>
+		
+		
 		<div class="vn_tab studiengang_vn">
 			<input class="vn_tabradio" type="radio" id="tab-2" name="group1">
 			<label for="tab-2">Studiengang</label>
-			<div class="vn_tabcontent">
-				<div class="vn">
+			
+			<div class="vn_tabcontent" id="vn_tabcontent_studiengang">
+			
+				<!-- <div class="vn">
 					<span class="vn_titel">Algorithmen</span>
 					<span class="vn_details"><span class="vn_detail">Prof. Dr. Schöning</span><br><span class="vn_detail">30 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
 					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
@@ -200,27 +230,36 @@ body > div {
 						</div>
 					</div>
 				</div>
+				
 				<div class="vn">
 					<span class="vn_titel">Lineare Algebra</span>
 				</div>
+				
 				<div class="vn">
 					<span class="vn_titel">Grundlagen Interaktiver Systeme</span>
-				</div>
+				</div> -->
+				
 			</div>
 		</div>
+		
+		
 		<div class="vn_tab semester_vn">
 			<input class="vn_tabradio" type="radio" id="tab-3" name="group1">
 			<label for="tab-3">Semester</label>
-			<div class="vn_tabcontent">
-				<div class="vn">Algorithmen</div>
+			
+			<div class="vn_tabcontent" id="vn_tabcontent_semester">
+				<!-- <div class="vn">Algorithmen</div> -->
 			</div>
 		</div>
+		
+		
 		<div class="vn_tab alle_vn">
 			<input class="vn_tabradio" type="radio" id="tab-4" name="group1">
 			<label for="tab-4">Alle</label>
-			<div class="vn_tabcontent">
-				<div class="vn">Molekularbiologie I</div>
-				<div class="vn">Algorithmen</div>
+			
+			<div class="vn_tabcontent" id="vn_tabcontent_alle">
+	<!--			<div class="vn">Molekularbiologie I</div>
+	 			<div class="vn">Algorithmen</div>
 				<div class="vn">Lineare Algebra</div>
 				<div class="vn">Grundlagen Interaktiver Systeme</div>
 				<div class="vn">Grundlagen der Rechnernetze</div>
@@ -229,9 +268,11 @@ body > div {
 				<div class="vn">Formale Grundlagen</div>
 				<div class="vn">Analysis I</div>
 				<div class="vn">Analysis II</div>
-				<div class="vn">Einführung in die Informatik</div>
+				<div class="vn">Einführung in die Informatik</div> -->
+				
 			</div>
 		</div>
+		
 		<span class="mybutton_dark_flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span>
 	</div>
 	<div class="impressum">Uni Ulm <br> WiSe 14/15 <br> Informatik <br> Softwaregrundprojekt <br> Team 17: Andreas Rottach, Fabian Schilha, Matthias Englert <br> Team 23: Julius Friedrich, Lorenz Weiß, Marius Kircher</div>
@@ -239,6 +280,7 @@ body > div {
 
 <div id="mainbox_profilseite" class="mainbox">
 	<div class="flex_container">
+	
 		<div class="profil_head">
 			<span>
 				<span class="profil_avatar">
@@ -248,8 +290,10 @@ body > div {
 			</span>
 			<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
 		</div>
+		
 		<div class="profil_daten card flex_elem">
 			<div class="card_title">Profil</div>
+			
 			<form id="profil_daten_form">
 				<div id="profil_email"><label class="profil_label" for="profil_email_input">E-Mail</label><input id="profil_email_input" class="profil_input" type="email" required></div>
 				<div id="profil_vorname"><label class="profil_label" for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" class="profil_input" type="text" required></div>
@@ -260,6 +304,7 @@ body > div {
 					<select id="profil_studiengang_input" class="profil_input">
 					</select>
 				</div>
+				
 				<div id="profil_rolle">
 					<label class="profil_label" for="profil_rolle_input">Rolle</label>
 					<select id="profil_rolle_input" class="profil_input">
@@ -268,6 +313,7 @@ body > div {
 						<option>ADMIN</option>
 					</select>
 				</div>
+				
 				<div id="profil_einstellungen" class="profil_einstellungen">
 					<div class="card_title">Einstellungen</div>
 					<div class="profil_notifyKommentare">
@@ -282,9 +328,11 @@ body > div {
 						<div><input id="notifyKarteikartenAenderung_input" type="checkbox"><label class="profil_label" for="notifyKarteikartenAenderung_input">Karteikarten.</label></div>
 					</div>
 				</div>
+				
 				<input id="profil_daten_speichern" class="mybutton_dark" type="submit" value="Speichern">
 			</form>
 		</div>
+		
 		<div id="profil_passwort" class="profil_passwort card flex_elem">
 			<form id="profil_passwort_form">
 				<div class="card_title">Passwort ändern</div>
@@ -294,12 +342,14 @@ body > div {
 				<input id="profil_passwort_speichern" class="mybutton_dark" type="submit" value="Speichern">
 			</form>
 		</div>
+		
 		<div class="card flex_elem">
 			<form id="profil_avatar_aendern">
 				<input id="profil_avatar_aendern_file" type="file" name="file">
 				<input type="submit" value="Upload">
 			</form>
 		</div>
+		
 	</div>
 </div>
 
