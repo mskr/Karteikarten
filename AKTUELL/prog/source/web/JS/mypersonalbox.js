@@ -59,14 +59,22 @@ function fillUserContainer()
  * @param isNeu Als neu markieren
  * @param onClickFkt CallBack-Function, die beim click aufgerufen werden soll
  */
+var newBnCount = 0;
 function addBenachrichtigung(text, isNeu, onClickFkt)
 {
+	// Jetzt existieren benachrichtigungen
+	$("#keine_bn").slideUp("slow");
+	
 	var contentDiv = $("#bn_container");
 	var divBn = $("<div></div>");
 	divBn.addClass("bn");
 	
 	if(isNeu == true)
+	{
 		divBn.addClass("neu");
+		newBnCount++;
+		$("#bn_anzahl").text("(" + newBnCount+ " neu)");
+	}
 	else
 		divBn.addClass("gelesen");
 	
@@ -76,10 +84,25 @@ function addBenachrichtigung(text, isNeu, onClickFkt)
 	
 	divBn.append(spanCntnt);
 	$(divBn).click(onClickFkt);
-	
+	divBn.hide();
 	contentDiv.append(divBn);
 	
+	divBn.slideDown("slow");
+	
 	// TODO Div reordering (neu nach oben)
+	var elem = contentDiv.find('div').sort(sortDivByClassName);
+	contentDiv.append(elem);
+}
+function sortDivByClassName(a,b)
+{
+	if($(a).hasClass("neu") && $(b).hasClass("neu"))
+		return 1;
+	if($(a).hasClass("neu"))
+		return -1;
+	if($(b).hasClass("neu"))
+		return 1;
+	else 
+		return 0;
 }
 
 /**
