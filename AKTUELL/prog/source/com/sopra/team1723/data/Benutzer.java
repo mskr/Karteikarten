@@ -65,7 +65,12 @@ public class Benutzer {
         this.notifyKommentare = notifyKommentare;
     }
 
-    // Konstruktor ohne die persönlichen Einstellungen des Benutzers
+    // Konstruktor ohne die persönlichen Einstellungen des Benutzers und ohne Nutzerstatus.
+    // nutzerstatus wird auf die Defaulteinstellung STUDENT gesetzt
+    // notifyKommentare wird auf DISKUSSION_TEILGENOMMEN gesetzt
+    // notifyVeranstAenderung wird auf true gesetzt
+    // notifyKarteikartenAenderung wird auf true gesetzt
+    // Dieser Konstruktor wird beim Registrieren verwendet.
     public Benutzer(String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
             String kennwort)
     {
@@ -76,6 +81,10 @@ public class Benutzer {
         this.matrikelnummer = matrikelnummer;
         this.studiengang = studiengang;
         this.kennwort = kennwort;
+        this.nutzerstatus = Nutzerstatus.STUDENT;
+        this.notifyKommentare = NotifyKommentare.DISKUSSION_TEILGENOMMEN;
+        this.notifyVeranstAenderung = true;
+        this.notifyKarteikartenAenderung = true;
     }
 
     /**
