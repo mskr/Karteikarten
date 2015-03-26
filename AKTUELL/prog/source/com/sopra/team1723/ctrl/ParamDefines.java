@@ -19,6 +19,14 @@ public class ParamDefines
     public final static String ActionAendereProfil = "aendereProfil";
     public final static String ActionUploadProfilBild = "uploadProfilBild";
     public final static String ActionSucheBenVeranst = "sucheBenVeranst";
+    
+    public final static String ActionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
+    public final static String LeseVeranstMode = "mode";                        // Liefert alle VeranstaltungsNamen + ID
+    public final static String LeseVeranstModeAlle = "alle";                    // Liefert alle VeranstaltungsNamen + ID
+    public final static String LeseVeranstModeSemester = "semester";            // Liefert alle VeranstaltungsNamen im aktuellen Semester +ID
+    public final static String LeseVeranstModeStudiengang = "studiengang";      // Liefert alle VeranstaltungsNamen im aktuellen Studiengang +ID (TODO)
+    public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine VeranstaltungsNamen + ID
+    public final static String LeseVeranstModeID = "id";                        // Liefert die Veranstaltung komplett die zur ID gehört
 
     public final static String Email = "email";
     public final static String EmailNew = "emailNew";
@@ -35,6 +43,7 @@ public class ParamDefines
     public final static String ProfilBildPfad = "profilBildPfad";
     public final static String UploadFile = "file";
     public final static String Suchmuster = "suchmuster";
+    
     
     /**
      * JSON-Feld-Werte, die nicht schon als Parameter vorkommen

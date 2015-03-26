@@ -6,6 +6,10 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import org.json.simple.JSONObject;
+
+import sun.security.pkcs11.Secmod.DbMode;
+
 import com.sopra.team1723.data.*;
 
 /**
@@ -42,8 +46,27 @@ public class VeranstaltungServlet extends ServletController {
      * @param response 
      * @return
      */
-    private boolean veranstaltungenAnzeigen(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
+    private boolean veranstaltungenAnzeigen(HttpServletRequest request, HttpServletResponse response) 
+    {
+        
+        String mode = request.getParameter(ParamDefines.LeseVeranstMode);
+        if(isEmpty(mode))
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        if(mode.equals(ParamDefines.LeseVeranstModeAlle))
+        {
+            // TODO dbManager.leseVer
+        }
+        else
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
         return false;
     }
 
@@ -109,6 +132,17 @@ public class VeranstaltungServlet extends ServletController {
         // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
         if(!doProcessing())
             return;
+        
+        if(aktuelleAction.equals(ParamDefines.ActionLeseVeranst))
+        {
+            veranstaltungenAnzeigen(req,resp);
+        }
+        else
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
         
     }
 }
