@@ -40,13 +40,13 @@ public class ProfilServlet extends ServletController {
      */
     private boolean profilBearbeiten(HttpServletRequest request, HttpServletResponse response) {
 
-        String email = request.getParameter(requestEmail);
-        String emailNew = request.getParameter(requestEmailNew);
-        String vorname = request.getParameter(requestVorname);
-        String nachname = request.getParameter(requestNachname);
-        String notifyVeranstAenderung = request.getParameter(requestNotifyVeranstAenderung);
-        String notifyKarteikartenAenderung = request.getParameter(requestNotifyKarteikartenAenderung);
-        String notifyKommentare = request.getParameter(requestNotifyKommentare);
+        String email = request.getParameter(ParamDefines.Email);
+        String emailNew = request.getParameter(ParamDefines.EmailNew);
+        String vorname = request.getParameter(ParamDefines.Vorname);
+        String nachname = request.getParameter(ParamDefines.Nachname);
+        String notifyVeranstAenderung = request.getParameter(ParamDefines.NotifyVeranstAenderung);
+        String notifyKarteikartenAenderung = request.getParameter(ParamDefines.NotifyKarteikartenAenderung);
+        String notifyKommentare = request.getParameter(ParamDefines.NotifyKommentare);
 
         JSONObject jo = null;
         // Alle Parameter angegeben?
@@ -54,7 +54,7 @@ public class ProfilServlet extends ServletController {
                 || isEmptyAndRemoveSpaces(notifyVeranstAenderung) || isEmptyAndRemoveSpaces(notifyKarteikartenAenderung)
                 || isEmptyAndRemoveSpaces(notifyKommentare))
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
         }
@@ -69,7 +69,7 @@ public class ProfilServlet extends ServletController {
             // Andere eMail. Bin ich also Admin?
             if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
             {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return false;
             }
@@ -87,7 +87,7 @@ public class ProfilServlet extends ServletController {
         }
         else
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
         }
@@ -102,7 +102,7 @@ public class ProfilServlet extends ServletController {
         }
         else
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
         }
@@ -114,7 +114,7 @@ public class ProfilServlet extends ServletController {
         } 
         catch (IllegalArgumentException e) 
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
         }
@@ -126,14 +126,14 @@ public class ProfilServlet extends ServletController {
             // Prüfen ob dies ein Admin ist und gegebenfalls alle Parameter holen
             if(aktuellerBenutzer.getNutzerstatus()==Nutzerstatus.ADMIN)
             {
-                String studiengang = request.getParameter(requestStudiengang);
-                String matrikelNrStr = request.getParameter(requestMatrikelNr);
-                String nutzerstatus = request.getParameter(requestNutzerstatus);
+                String studiengang = request.getParameter(ParamDefines.Studiengang);
+                String matrikelNrStr = request.getParameter(ParamDefines.MatrikelNr);
+                String nutzerstatus = request.getParameter(ParamDefines.Nutzerstatus);
 
                 // Alle Parameter angegeben?
                 if(isEmptyAndRemoveSpaces(studiengang) || isEmptyAndRemoveSpaces(matrikelNrStr) || isEmptyAndRemoveSpaces(nutzerstatus))
                 {
-                    jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                     outWriter.print(jo);
                     return false;
                 }
@@ -150,7 +150,7 @@ public class ProfilServlet extends ServletController {
                 }
                 catch (IllegalArgumentException e)
                 {
-                    jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                     outWriter.print(jo);
                     return false;
                 }
@@ -170,17 +170,17 @@ public class ProfilServlet extends ServletController {
         }
         catch(SQLException e)
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         } 
         catch(DbUniqueConstraintException e){
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorEmailAlreadyInUse);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorEmailAlreadyInUse);
             outWriter.print(jo);
             return false;
         }
         
-        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         outWriter.print(jo);
 
 
@@ -194,10 +194,10 @@ public class ProfilServlet extends ServletController {
      * @return
      */
     private boolean passwortAendern(HttpServletRequest request, HttpServletResponse response) {
-        String neuesPasswort = request.getParameter(requestPasswordNew);
-        String altesPasswort = request.getParameter(requestPassword);
+        String neuesPasswort = request.getParameter(ParamDefines.PasswordNew);
+        String altesPasswort = request.getParameter(ParamDefines.Password);
         // Nutze diese Methode auch, wenn ein Admin die Email eines anderen Benutzers aendert
-        String benutzerMail = request.getParameter(requestEmail);
+        String benutzerMail = request.getParameter(ParamDefines.Email);
         
         JSONObject jo = null;
         
@@ -210,7 +210,7 @@ public class ProfilServlet extends ServletController {
                 if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
                 {
                     // wenn nein, dann error
-                    jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                     outWriter.print(jo);
                     return false;
                 }
@@ -226,27 +226,27 @@ public class ProfilServlet extends ServletController {
             // neues Passwort angegeben ?
             if(isEmpty(neuesPasswort))
             {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return false;
             }
             // TODO Vllt weglassen
             if(benutzerMail == null)
             {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
                 return false;
             }
             // Passwort ändern
             if(dbManager.passwortAendern(benutzerMail, neuesPasswort))
             {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
                 outWriter.print(jo);
                 return false;
             }
             else
             {
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
                 return false;
             }
@@ -254,14 +254,14 @@ public class ProfilServlet extends ServletController {
         catch (SQLException e)
         {
             e.printStackTrace();
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }
         catch (DbFalseLoginDataException e)
         {
             e.printStackTrace();
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
             outWriter.print(jo);
             return false;
         }
@@ -291,15 +291,15 @@ public class ProfilServlet extends ServletController {
         if(!doProcessing())
             return;
 
-        if(aktuelleAction.equals(requestActionGetBenutzer))
+        if(aktuelleAction.equals(ParamDefines.ActionGetBenutzer))
         {
             JSONObject jo = JSONConverter.toJson(aktuellerBenutzer,true);
             outWriter.print(jo);
             return;
         }
-        else if(aktuelleAction.equals(requestActionGetOtherBenutzer))
+        else if(aktuelleAction.equals(ParamDefines.ActionGetOtherBenutzer))
         {
-            String eMail = req.getParameter(requestEmail);
+            String eMail = req.getParameter(ParamDefines.Email);
             Benutzer b = dbManager.leseBenutzer(eMail);
 
             
@@ -307,7 +307,7 @@ public class ProfilServlet extends ServletController {
             {
                 JSONObject jo  = null;
                 // TODO Evntl detailliertere Fehlermeldung, z.B. userNotFound einfuehren?
-                jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return;
             }
@@ -319,11 +319,11 @@ public class ProfilServlet extends ServletController {
                 return;
             }
         }
-        else if(aktuelleAction.equals(requestActionAendereProfil))
+        else if(aktuelleAction.equals(ParamDefines.ActionAendereProfil))
         {
             profilBearbeiten(req,resp);
         }
-        else if(aktuelleAction.equals(requestActionAenderePasswort))
+        else if(aktuelleAction.equals(ParamDefines.ActionAenderePasswort))
         {
             passwortAendern(req, resp);
         }
@@ -331,7 +331,7 @@ public class ProfilServlet extends ServletController {
         {
             // Sende Nack mit ErrorText zurück
             JSONObject jo  = null;
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
         }
     }

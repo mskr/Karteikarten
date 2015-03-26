@@ -39,7 +39,7 @@ public class SuchfeldServlet extends ServletController {
      */
     public void sucheBenutzerUndVeranstaltungen(HttpServletRequest req, HttpServletResponse resp)
     {
-        String suchmuster = req.getParameter(requestSuchmuster);
+        String suchmuster = req.getParameter(ParamDefines.Suchmuster);
 
         // Da die Methode durchsucheDatenbank() sehr flexibel ist, muss man angeben nach welchen Feldern man die db
         // durchsuchen will. Ein Feld wird eindeutig durch die Klasse und den Attributnamen bestimmt.
@@ -57,7 +57,7 @@ public class SuchfeldServlet extends ServletController {
 
         if(ergebnisse == null)
         {
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
         } 
         else
@@ -76,7 +76,7 @@ public class SuchfeldServlet extends ServletController {
         if(!doProcessing())
             return;
 
-        if(aktuelleAction.equals(requestActionSucheBenVeranst))
+        if(aktuelleAction.equals(ParamDefines.ActionSucheBenVeranst))
         {
             sucheBenutzerUndVeranstaltungen(req, resp);
         }
@@ -84,7 +84,7 @@ public class SuchfeldServlet extends ServletController {
         {
             // Sende Nack mit ErrorText zurück
             JSONObject jo  = null;
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
         }
     }

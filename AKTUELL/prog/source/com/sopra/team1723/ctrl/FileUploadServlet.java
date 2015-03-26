@@ -38,15 +38,15 @@ public class FileUploadServlet extends ServletController
         if(!doProcessing())
             return;
         
-        if(!aktuelleAction.equals(requestActionUploadProfilBild))
+        if(!aktuelleAction.equals(ParamDefines.ActionUploadProfilBild))
         {
             // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
         
-        Part uploadedFile = req.getPart(requestUploadFile);
+        Part uploadedFile = req.getPart(ParamDefines.UploadFile);
         String fileName = getFileName(uploadedFile);
         InputStream contentStream = uploadedFile.getInputStream();
 
@@ -57,7 +57,7 @@ public class FileUploadServlet extends ServletController
         if(fileExt == null)
         {
             // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
@@ -76,7 +76,7 @@ public class FileUploadServlet extends ServletController
         if(!dbManager.aendereProfilBild(aktuellerBenutzer.geteMail(), aktuellerBenutzer.getId() + ".png"))
         {
             // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return;
         }

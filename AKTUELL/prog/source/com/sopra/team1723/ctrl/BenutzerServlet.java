@@ -42,21 +42,21 @@ public class BenutzerServlet extends ServletController {
      * hinein. Schreibt via Printwriter die Benutzerdaten als JSON in die
      * Response. Gibt "true" zurück, wenn bei diesem Ablauf keine Fehler
      * auftreten, und "false"bei Fehlern.
-     * @param request 
-     * @param response 
+     * @ParamDefines. request 
+     * @ParamDefines. response 
      * @return
      */
     private boolean login(HttpServletRequest request, HttpServletResponse response) 
     {
         JSONObject jo = null;
         
-        String email = request.getParameter(requestEmail);
-        String passwort = request.getParameter(requestPassword);
+        String email = request.getParameter(ParamDefines.Email);
+        String passwort = request.getParameter(ParamDefines.Password);
         
         
         if(isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(passwort))
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
             outWriter.print(jo);
             return false;
         }
@@ -64,7 +64,7 @@ public class BenutzerServlet extends ServletController {
         // Schon eingeloggt ?  Dann ist alles gut
         if(pruefeLogin(aktuelleSession))
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             outWriter.print(jo);
             return true;
         }
@@ -74,17 +74,17 @@ public class BenutzerServlet extends ServletController {
         {
             dbManager.pruefeLogin(email, passwort);
             aktuelleSession.setAttribute(sessionAttributeEMail, email);
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         }
         catch (SQLException e)
         {
             e.printStackTrace();
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
         }
         catch (DbFalseLoginDataException e)
         {
             e.printStackTrace();
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorLoginFailed);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
         }
 
         outWriter.print(jo);
@@ -96,8 +96,8 @@ public class BenutzerServlet extends ServletController {
      * temporär server-seitig gespeicherten Daten und Parameter. Gibt
      * "true" zurück, wenn bei diesem Ablauf keine Fehler auftreten, und
      * "false" bei Fehlern.
-     * @param request 
-     * @param response 
+     * @ParamDefines. request 
+     * @ParamDefines. response 
      * @return
      */
     private boolean logout(HttpServletRequest request, HttpServletResponse response) 
@@ -111,7 +111,7 @@ public class BenutzerServlet extends ServletController {
             aktuelleSession.invalidate();
         }
 
-        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         outWriter.print(jo);
          return true;
     }
@@ -122,25 +122,25 @@ public class BenutzerServlet extends ServletController {
      * Dieses wird an den Datenbankmanager weitergegeben, welcher
      * dann den Benutzer in der DB anlegt. Gibt "true" zurüuck, wenn bei
      * diesem Ablauf keine Fehler auftreten, und "false" bei Fehlern.
-     * @param request 
-     * @param response 
+     * @ParamDefines. request 
+     * @ParamDefines. response 
      * @return
      */
     private boolean registrieren(HttpServletRequest request, HttpServletResponse response) 
     {
         JSONObject jo = null;
         
-        String email = request.getParameter(requestEmail);
-        String passwort = request.getParameter(requestPassword);
-        String vorname = request.getParameter(requestVorname);
-        String nachname = request.getParameter(requestNachname);
-        String studienGang = request.getParameter(requestStudiengang);
-        String matrikelNrStr = request.getParameter(requestMatrikelNr);
+        String email = request.getParameter(ParamDefines.Email);
+        String passwort = request.getParameter(ParamDefines.Password);
+        String vorname = request.getParameter(ParamDefines.Vorname);
+        String nachname = request.getParameter(ParamDefines.Nachname);
+        String studienGang = request.getParameter(ParamDefines.Studiengang);
+        String matrikelNrStr = request.getParameter(ParamDefines.MatrikelNr);
         
         if(isEmptyAndRemoveSpaces(email) || isEmpty(passwort) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
                 || isEmptyAndRemoveSpaces(studienGang) || isEmptyAndRemoveSpaces(matrikelNrStr))
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
         }
@@ -160,7 +160,7 @@ public class BenutzerServlet extends ServletController {
         } 
         catch(NumberFormatException e) 
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
         }
@@ -178,17 +178,17 @@ public class BenutzerServlet extends ServletController {
         }
         catch (DbUniqueConstraintException e)
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorEmailAlreadyInUse);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorEmailAlreadyInUse);
             outWriter.print(jo);
             return false;
         }
         catch (SQLException e)
         {
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }
-        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         outWriter.print(jo);
         return true;
     }
@@ -199,8 +199,8 @@ public class BenutzerServlet extends ServletController {
      * neues Passwort generiert. Dieses wird in die DB geschrieben. Gibt
      * "true" zurück, wenn bei diesem Ablauf keine Fehler auftreten, und
      * "false" bei Fehlern.
-     * @param request 
-     * @param response 
+     * @ParamDefines. request 
+     * @ParamDefines. response 
      * @return
      */
     private boolean passwortReset(HttpServletRequest request, HttpServletResponse response) 
@@ -211,7 +211,7 @@ public class BenutzerServlet extends ServletController {
 //        // TODO Reicht uns wirklich die eMail-Adresse?!
 //        if(eMail == null)
 //        {
-//            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+//            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
 //            outWriter.print(jo);
 //            return false;
 //        }
@@ -226,7 +226,7 @@ public class BenutzerServlet extends ServletController {
 //        // In Datenbank speichern
 //        if(!dbManager.passwortAendern(eMail, generiertesPW))
 //        {
-//            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
+//            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorPwResetFailed);
 //            outWriter.print(jo);
 //            return false;
 //        }
@@ -238,12 +238,12 @@ public class BenutzerServlet extends ServletController {
 //            // Änderung rückgängig machen
 //            user.setKennwort(altesPasswort);
 //            dbManager.bearbeiteBenutzer(user);
-//            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorPwResetFailed);
+//            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorPwResetFailed);
 //            outWriter.print(jo);
 //            return false;
 //        }
 //
-//        jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNoError);
+//        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
 //        outWriter.print(jo);
         return true;
 
@@ -254,7 +254,7 @@ public class BenutzerServlet extends ServletController {
      * die Emailadresse des Benutzers, der sein Passwort zurücksetzen
      * möchte, gesendet. Gibt "true" zurück, wenn bei diesem Ablauf keine
      * Fehler auftreten, und "false" bei Fehlern.
-     * @param generiertesPW 
+     * @ParamDefines. generiertesPW 
      * @return
      */
     private boolean sendePasswortResetMail(String eMail, String generiertesPW) 
@@ -313,8 +313,8 @@ public class BenutzerServlet extends ServletController {
 
     /**
      * Gibt alle gespeicherten Studiengänge zum Client zurück
-     * @param request 
-     * @param response 
+     * @ParamDefines. request 
+     * @ParamDefines. response 
      * @return
      */
     private boolean leseStudiengaenge(HttpServletRequest request, HttpServletResponse response) 
@@ -328,7 +328,7 @@ public class BenutzerServlet extends ServletController {
         }
         else
         {
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }
@@ -348,40 +348,40 @@ public class BenutzerServlet extends ServletController {
         if(dbManager == null)
         {
             // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return;
         }
         
         // Hole die vom client angefragte Aktion
-        String action = req.getParameter(requestAction);
+        String action = req.getParameter(ParamDefines.Action);
         
         if(isEmptyAndRemoveSpaces(action))
         {
             // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
         
         // Anfrage weiterleiten an verantwortliche Funktion               
-        if(action.equals(requestActionLogin))
+        if(action.equals(ParamDefines.ActionLogin))
         {
             login(req, resp);
         }
-        else if(action.equals(requestActionLogout))
+        else if(action.equals(ParamDefines.ActionLogout))
         {
             logout(req, resp);
         }
-        else if(action.equals(requestActionRegister))
+        else if(action.equals(ParamDefines.ActionRegister))
         {
             registrieren(req, resp);
         }
-        else if(action.equals(requestActionResetPasswort))
+        else if(action.equals(ParamDefines.ActionResetPasswort))
         {
             passwortReset(req, resp);
         }
-        else if(action.equals(requestActionGetStudiengaenge))
+        else if(action.equals(ParamDefines.ActionGetStudiengaenge))
         {
             leseStudiengaenge(req, resp);
         }
@@ -389,7 +389,7 @@ public class BenutzerServlet extends ServletController {
         {
             // Sende Nack mit ErrorText zurück
             JSONObject jo  = null;
-            jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             System.out.println("Antwort: " + jo.toJSONString());
             outWriter.print(jo);
         }

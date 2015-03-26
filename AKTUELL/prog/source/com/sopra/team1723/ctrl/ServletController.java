@@ -40,36 +40,6 @@ public class ServletController extends HttpServlet
     public final static String dirFiles = "files/";             
     public final static String dirProfilBilder = dirFiles + "profilBilder/";
     
-    /**
-     *  Request Parameter
-     */
-    protected final static String requestAction = "action";
-    protected final static String requestActionLogin = "login";
-    protected final static String requestActionLogout = "logout";
-    protected final static String requestActionRegister = "registrieren";
-    protected final static String requestActionResetPasswort = "resetPasswort";
-    protected final static String requestActionGetBenutzer = "getBenutzer";
-    protected final static String requestActionGetOtherBenutzer = "getOtherBenutzer";
-    protected final static String requestActionGetStudiengaenge = "getStudiengaenge";
-    protected final static String requestActionAenderePasswort = "aenderePasswort";
-    protected final static String requestActionAendereProfil = "aendereProfil";
-    protected final static String requestActionUploadProfilBild = "uploadProfilBild";
-    protected final static String requestActionSucheBenVeranst = "sucheBenVeranst";
-
-    protected final static String requestEmail = "email";
-    protected final static String requestEmailNew = "emailNew";
-    protected final static String requestPassword = "pass";
-    protected final static String requestPasswordNew = "passNew";
-    protected final static String requestVorname = "vorname";
-    protected final static String requestNachname = "nachname";
-    protected final static String requestMatrikelNr = "matrikelnr";
-    protected final static String requestStudiengang = "studiengang";
-    protected final static String requestNutzerstatus = "nutzerstatus";
-    protected final static String requestNotifyVeranstAenderung = "notifyVeranstAenderung";
-    protected final static String requestNotifyKarteikartenAenderung = "notifyKarteikartenAenderung";
-    protected final static String requestNotifyKommentare = "notifyKommentare";
-    protected final static String requestUploadFile = "file";
-    protected final static String requestSuchmuster = "suchmuster";
 
     private boolean doPorcessing = false;
     
@@ -202,7 +172,7 @@ public class ServletController extends HttpServlet
             // TODO Manchmal wird eine Session als abgelaufen gemeldet, wenn sich der Nutzer normal ausgeloggt hat.
             System.out.println("Session " + req.getRequestedSessionId() + " ist abgelaufen!");
             // Session is expired
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSessionExpired);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSessionExpired);
             outWriter.print(jo);
             
             // Neue Session erzeugen
@@ -220,7 +190,7 @@ public class ServletController extends HttpServlet
         if(dbManager == null)
         {
             // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return;
         }
@@ -233,7 +203,7 @@ public class ServletController extends HttpServlet
             if(aktuellerBenutzer == null)
             {
                 // Sende Nack mit ErrorText zurück
-                JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorSystemError);
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
                 return;
             }
@@ -242,17 +212,17 @@ public class ServletController extends HttpServlet
         else
         {
             // Sende Nack mit ErrorText zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorNotLoggedIn);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotLoggedIn);
             outWriter.print(jo);
             return;
         }
         // Hole die vom client angefragte Aktion
-        aktuelleAction = req.getParameter(requestAction);
+        aktuelleAction = req.getParameter(ParamDefines.Action);
 
         if(isEmptyAndRemoveSpaces(aktuelleAction))
         {
             // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(JSONConverter.jsonErrorInvalidParam);
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
