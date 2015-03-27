@@ -449,7 +449,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(1, semester);
             rs = ps.executeQuery();
             while(rs.next()){
-                veranstaltungen.add(new Veranstaltung(rs.getInt("vID"),rs.getString("Titel"),rs.getString("Beschreibung"),
+                veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         semester,rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
                         rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
