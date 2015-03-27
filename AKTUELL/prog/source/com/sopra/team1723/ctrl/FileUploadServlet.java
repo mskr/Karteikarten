@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,10 +19,13 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONObject;
+
+import com.sopra.team1723.data.Benutzer;
 
 @MultipartConfig
 public class FileUploadServlet extends ServletController
@@ -31,12 +35,13 @@ public class FileUploadServlet extends ServletController
     protected final int profilBildWidth = 112;
     
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
-        super.doPost(req, resp);
-
-        if(!doProcessing())
-            return;
+        HttpSession s = req.getSession();
+        String aktuelleAction = (String) s.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) s.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeaktuelleAction);
         
         if(!aktuelleAction.equals(ParamDefines.ActionUploadProfilBild))
         {
@@ -99,6 +104,6 @@ public class FileUploadServlet extends ServletController
             }
         }
         return null;
-    } 
+    }
 }
 

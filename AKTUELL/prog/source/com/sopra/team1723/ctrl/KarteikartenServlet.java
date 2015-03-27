@@ -2,6 +2,7 @@ package com.sopra.team1723.ctrl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -115,13 +116,14 @@ public class KarteikartenServlet extends ServletController {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	// TODO Auto-generated method stub
-    	super.doPost(req, resp);
-        
-        // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
-        if(!doProcessing())
-            return;
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+            IOException
+    {
+        HttpSession aktuelleSession = req.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
         
     }
 

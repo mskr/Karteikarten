@@ -2,6 +2,7 @@ package com.sopra.team1723.ctrl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,8 +40,15 @@ public class ProfilServlet extends ServletController {
      * @param request 
      * @param response 
      * @return
+     * @throws IOException 
      */
-    private boolean profilBearbeiten(HttpServletRequest request, HttpServletResponse response) {
+    private boolean profilBearbeiten(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        HttpSession aktuelleSession = request.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
         String email = request.getParameter(ParamDefines.Email);
         String emailNew = request.getParameter(ParamDefines.EmailNew);
@@ -64,7 +72,7 @@ public class ProfilServlet extends ServletController {
         email = Jsoup.parse(email).text();
         vorname = Jsoup.parse(vorname).text();
         nachname = Jsoup.parse(nachname).text();
-        
+
         // Eigene eMail oder andere ?
         if(!email.equalsIgnoreCase(aktuellerBenutzer.geteMail()))
         {
@@ -76,7 +84,7 @@ public class ProfilServlet extends ServletController {
                 return false;
             }
         }
-        
+
         // Boolean konvertieren
         boolean bNotifyVeranstAenderung = false;
         if(notifyVeranstAenderung.equals("true"))
@@ -141,7 +149,7 @@ public class ProfilServlet extends ServletController {
                 }
                 studiengang = Jsoup.parse(studiengang).text();
                 matrikelNrStr = Jsoup.parse(matrikelNrStr).text();
-                
+
                 // Matrikelnummer konvertieren
                 int nMatrikelNr = 0;
                 Nutzerstatus eNutzerstatus;
@@ -156,10 +164,10 @@ public class ProfilServlet extends ServletController {
                     outWriter.print(jo);
                     return false;
                 }
-                
+
                 benutzer = new Benutzer(emailNew, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus, 
                         bNotifyVeranstAenderung, bNotifyKarteikartenAenderung, eNotifyKommentare);
-                
+
                 dbManager.bearbeiteBenutzerAdmin(email, benutzer);
             }
             // Normaler benutzer Speichern
@@ -181,7 +189,7 @@ public class ProfilServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-        
+
         jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         outWriter.print(jo);
 
@@ -194,15 +202,23 @@ public class ProfilServlet extends ServletController {
      * @param request 
      * @param response 
      * @return
+     * @throws IOException 
      */
-    private boolean passwortAendern(HttpServletRequest request, HttpServletResponse response) {
+    private boolean passwortAendern(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession aktuelleSession = request.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+
+
         String neuesPasswort = request.getParameter(ParamDefines.PasswordNew);
         String altesPasswort = request.getParameter(ParamDefines.Password);
         // Nutze diese Methode auch, wenn ein Admin die Email eines anderen Benutzers aendert
         String benutzerMail = request.getParameter(ParamDefines.Email);
-        
+
         JSONObject jo = null;
-        
+
         try
         {
             // Eigenes Profil oder nicht ? 
@@ -267,8 +283,8 @@ public class ProfilServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-            
-        
+
+
     }
 
     /**
@@ -286,15 +302,17 @@ public class ProfilServlet extends ServletController {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {       
-        super.doPost(req, resp);
-
-        // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
-        if(!doProcessing())
-            return;
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+    IOException
+    {
+        HttpSession aktuelleSession = req.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
         JSONObject jo  = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-        
+
         if(aktuelleAction.equals(ParamDefines.ActionGetBenutzer))
         {
             jo = JSONConverter.toJson(aktuellerBenutzer,true);
@@ -305,7 +323,7 @@ public class ProfilServlet extends ServletController {
         {
             String eMail = req.getParameter(ParamDefines.Email);
             Benutzer b = null;
-            
+
             if(eMail != null)
                 b = dbManager.leseBenutzer(eMail);
             else
@@ -340,7 +358,7 @@ public class ProfilServlet extends ServletController {
             else
             {
                 // TODO Testen!
-                
+
                 jo = JSONConverter.toJson(b,aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN);
                 outWriter.print(jo);
                 return;
@@ -361,5 +379,6 @@ public class ProfilServlet extends ServletController {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
         }
+
     }
 }
