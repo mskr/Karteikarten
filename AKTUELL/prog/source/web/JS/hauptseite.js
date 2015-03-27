@@ -14,31 +14,108 @@ function fillHauptseite() {
     
     
     // Alle Veranstaltungen holen und anzeigen
-    var resLoadAllVeranst= $.ajax({
-        url: veranstaltungServlet,
-        data: "action="+actionLeseVeranst + "&" + 
-        leseVeranstMode +"=" + leseVeranstModeAlle,
-        success: function(jsonObj) 
-        {
-            var errCode = jsonObj["error"];
-            if(errCode == "noerror") 
-            {
-            	var VeranstList = jsonObj[keyJsonArrResult];
-            	var divAlleVeranst = $("#vn_tabcontent_alle");
-            	for(var i = 0; i < VeranstList.length; i++)
-            	{
-            		displayVeranstaltung(divAlleVeranst, VeranstList[i]);
-            	}
-            }
-            else
-            {
-                message(0, buildMessage(errCode));
-            }
-        }
+    // TODO Refractoring
+    // Ergebniss der ajax calls speichern
+    var ajaxCallResults = [];
+    // Alle Veranstaltungen
+    $.ajax({
+    	url: veranstaltungServlet,
+    	data: "action="+actionLeseVeranst + "&" + 
+    	leseVeranstMode +"=" + leseVeranstModeAlle,
+    	success: function(jsonObj) 
+    	{
+    		var errCode = jsonObj["error"];
+    		if(errCode == "noerror") 
+    		{
+    			var VeranstList = jsonObj[keyJsonArrResult];
+    			var divAlleVeranst = $("#vn_tabcontent_alle");
+    			for(var i = 0; i < VeranstList.length; i++)
+    			{
+    				// Jede Veranstaltung erzeugen und funktion speichern in array
+    				ajaxCallResults.push(displayVeranstaltung(divAlleVeranst, VeranstList[i]));
+    			}
+    		}
+    		else
+    		{
+    			message(0, buildMessage(errCode));
+    		}
+    	}
     });
-    // TODO Erweitern mit dem Laden aller anderen Veranstaltungen
-    $.when(resLoadAllVeranst).done(function() {
-    	// Alle Einblende Felder aktivieren
+	// Meine Veranstaltungen
+    $.ajax({
+         url: veranstaltungServlet,
+         data: "action="+actionLeseVeranst + "&" + 
+         leseVeranstMode +"=" + leseVeranstModeMeine,
+         success: function(jsonObj) 
+         {
+             var errCode = jsonObj["error"];
+             if(errCode == "noerror") 
+             {
+             	var VeranstList = jsonObj[keyJsonArrResult];
+             	var divAlleVeranst = $("#vn_tabcontent_meine");
+             	for(var i = 0; i < VeranstList.length; i++)
+             	{
+             		// Jede Veranstaltung erzeugen und funktion speichern in array
+             		ajaxCallResults.push(displayVeranstaltung(divAlleVeranst, VeranstList[i]));
+             	}
+             }
+             else
+             {
+                 message(0, buildMessage(errCode));
+             }
+         }
+     });
+	// Semester Veranstaltungen
+    $.ajax({
+         url: veranstaltungServlet,
+         data: "action="+actionLeseVeranst + "&" + 
+         leseVeranstMode +"=" + leseVeranstModeSemester,
+         success: function(jsonObj) 
+         {
+             var errCode = jsonObj["error"];
+             if(errCode == "noerror") 
+             {
+             	var VeranstList = jsonObj[keyJsonArrResult];
+             	var divAlleVeranst = $("#vn_tabcontent_semester");
+             	for(var i = 0; i < VeranstList.length; i++)
+             	{
+             		// Jede Veranstaltung erzeugen und funktion speichern in array
+             		ajaxCallResults.push(displayVeranstaltung(divAlleVeranst, VeranstList[i]));
+             	}
+             }
+             else
+             {
+                 message(0, buildMessage(errCode));
+             }
+         }
+     });
+	// Studiengang Veranstaltungen
+    $.ajax({
+         url: veranstaltungServlet,
+         data: "action="+actionLeseVeranst + "&" + 
+         leseVeranstMode +"=" + leseVeranstModeStudiengang,
+         success: function(jsonObj) 
+         {
+             var errCode = jsonObj["error"];
+             if(errCode == "noerror") 
+             {
+             	var VeranstList = jsonObj[keyJsonArrResult];
+             	var divAlleVeranst = $("#vn_tabcontent_studiengang");
+             	for(var i = 0; i < VeranstList.length; i++)
+             	{
+             		// Jede Veranstaltung erzeugen und funktion speichern in array
+             		ajaxCallResults.push(displayVeranstaltung(divAlleVeranst, VeranstList[i]));
+             	}
+             }
+             else
+             {
+                 message(0, buildMessage(errCode));
+             }
+         }
+     });
+
+	// Alle Einblende Felder aktivieren
+    $.when.apply($,ajaxCallResults).done(function() {
     	$(".vn_mehr_einbl").click(function() 
     	    	{
     	    		var parent = $(this).parent();
@@ -46,24 +123,6 @@ function fillHauptseite() {
     	    		wrapper.slideToggle("slow");
     	    	});
 	});
-    
-//    // Code fuer das Ausklappen der Veranstaltungs-Listenelemente
-//    $('.vn_mehr_einbl').html('');
-//    $('.vn_mehr_einbl').click( function() {
-//        var vnmehr_domelem = $(this).next().next().get(0);
-//        console.log('DOM Element class:'+vnmehr_domelem.getAttribute('class'));
-//        var vnmehr_jqueryobj = $(vnmehr_domelem);
-//        console.log('JQuery Object class:'+vnmehr_jqueryobj.attr('class'));
-//        if( vnmehr_jqueryobj.is(':hidden') ) {
-//            console.log('War hidden... Rufe jetzt slideDown() auf...');
-//            vnmehr_jqueryobj.slideDown();
-//            $(this).html('<span class="octicon octicon-three-bars"></span> Weniger');
-//        } else {
-//            console.log('War nicht hidde... Rufe jetzt slideUp() auf');
-//            vnmehr_jqueryobj.slideUp();
-//            $(this).html('<span class="octicon octicon-three-bars"></span> Mehr');
-//        }
-//    });
 }
 
 /**
@@ -73,9 +132,7 @@ function fillHauptseite() {
  */
 function displayVeranstaltung(container, jsonVeranstObj)
 {	
-	var cont = container;
-	var veranst = jsonVeranstObj;
-	$.ajax({
+	return $.ajax({
         url: profilServlet,
         data: "action="+actionGetOtherBenutzer + "&" + 
         paramId +"=" + jsonVeranstObj[paramErsteller],
