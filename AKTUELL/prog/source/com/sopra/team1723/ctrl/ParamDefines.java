@@ -55,6 +55,10 @@ public class ParamDefines
     public final static String Moderatoren = "moderatoren";
     public final static String AnzTeilnehmer = "anzTeilnehmer";
     
+    public final static String SuchfeldErgText = "suchfeldErgText";
+    public final static String SuchfeldErgKlasse= "suchfeldErgKlasse";
+    public final static String SuchfeldErgId = "suchfeldErgId";
+    
     
     /**
      * JSON-Feld-Werte, die nicht schon als Parameter vorkommen
@@ -75,4 +79,14 @@ public class ParamDefines
     public final static String jsonArrResult = "arrResult";
     public final static String jsonStrResult = "strResult";
     public final static String jsonArrSuchfeldResult = "arrSuchfeldResult";
+    
+    public final static int WiSeMonatBeginn = 10;
+    public final static int WiSeTagBeginn = 1;
+    public final static int WiSeMonatEnde = 3;
+    public final static int WiSeTagEnde = 31;
+    public final static int SoSeMonatBeginn = 4;
+    public final static int SoSeTagBeginn = 1;
+    public final static int SoSeMonatEnde = 9;
+    public final static int SoSeTagEnde = 30;
+    
 }
