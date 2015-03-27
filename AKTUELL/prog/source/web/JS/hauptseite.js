@@ -78,7 +78,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 			"<span class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>" +
 			"<span class='vn_details'>" +
 				"<span class='vn_detail'>" + jsonVeranstObj[paramErsteller] + "</span><br>" +
-				"<span class='vn_detail'>" + "TODO AnzahlTeilnehmer" + "</span><br>" +
+				"<span class='vn_detail'>" + jsonVeranstObj[paramAnzTeilnehmer] + "</span><br>" +
 				"<span class='vn_detail'>" + jsonVeranstObj[paramSemester] + "</span>" +
 			"</span>" +
 			"<span class='vn_mehr_einbl'>" +

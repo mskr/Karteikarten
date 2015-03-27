@@ -135,6 +135,7 @@ public class JSONConverter
             o.put(ParamDefines.ModeratorKkBearbeiten, v.isModeratorKarteikartenBearbeiten()); 
             o.put(ParamDefines.KommentareErlauben,v.isKommentareErlaubt());
             o.put(ParamDefines.Ersteller,v.getErsteller());
+            o.put(ParamDefines.AnzTeilnehmer, v.getAnzTeilnehmer());
             
             array.add(o);
         }

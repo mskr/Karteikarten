@@ -52,6 +52,7 @@ public class ParamDefines
     public final static String KommentareErlauben = "kommentareErlauben";
     public final static String Ersteller = "ersteller";
     public final static String Moderatoren = "moderatoren";
+    public final static String AnzTeilnehmer = "anzTeilnehmer";
     
     
     /**

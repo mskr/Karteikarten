@@ -55,36 +55,44 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-        
+
         if(mode.equals(ParamDefines.LeseVeranstModeAlle))
         {
-            // TODO Test
-           List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-           // TODO Vieles Klären!
-           Veranstaltung s = new Veranstaltung(1, "Informatik für Anfänger", "Dies ist ein Beispieltext", "WiSe 15", "1234", true, true, "Max Mustermann", true);
-           Veranstaltung s2 = new Veranstaltung(2,"Informatik für Anfänger", "Dies ist ein Beispieltext", "WiSe 15", "1234", true, true, "Karl-Heinz", true);
-           Veranstaltung s3 = new Veranstaltung(3,"Informatik für Anfänger", "Dies ist ein Beispieltext",  "WiSe 15", "1234", true, true, "Peter Mayer", true);
-           verAnst.add(s);
-           verAnst.add(s2);
-           verAnst.add(s3);
-           jo = JSONConverter.toJsonVeranstList(verAnst);
-           outWriter.print(jo);
-           return true;
+            List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
+            verAnst = dbManager.leseAlleVeranstaltungen();
+            jo = JSONConverter.toJsonVeranstList(verAnst);
+            outWriter.print(jo);
+            return true;
         }
         else if(mode.equals(ParamDefines.LeseVeranstModeMeine))
         {
-            // TODO dbManager.leseVer
-            
+            List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
+            // TODO In der Session sollte noch die ID des Benutzers gespeichert werden !!!
+            verAnst = dbManager.leseVeranstaltungen(1);
+            jo = JSONConverter.toJsonVeranstList(verAnst);
+            outWriter.print(jo);
+            return true;
+
         }
         else if(mode.equals(ParamDefines.LeseVeranstModeSemester))
         {
-            // TODO dbManager.leseVer
-            
+            List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
+            //TODO Wie speichern wir das aktuelle Semester?
+            verAnst = dbManager.leseVeranstaltungenSemester("SoSe2015");
+            jo = JSONConverter.toJsonVeranstList(verAnst);
+            outWriter.print(jo);
+            return true;
+
         }
         else if(mode.equals(ParamDefines.LeseVeranstModeStudiengang))
         {
-            // TODO dbManager.leseVer
-            
+            List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
+            verAnst = dbManager.leseVeranstaltungenStudiengang(dbManager.leseBenutzer(request.getSession().getAttribute
+                    (sessionAttributeEMail).toString()).getStudiengang());
+            jo = JSONConverter.toJsonVeranstList(verAnst);
+            outWriter.print(jo);
+            return true;
+
         }
         else
         {
@@ -92,7 +100,6 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-        return false;
     }
 
     /**
@@ -149,15 +156,15 @@ public class VeranstaltungServlet extends ServletController {
         // TODO implement here
         return false;
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	super.doPost(req, resp);
-        
+        super.doPost(req, resp);
+
         // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
         if(!doProcessing())
             return;
-        
+
         if(aktuelleAction.equals(ParamDefines.ActionLeseVeranst))
         {
             veranstaltungenAnzeigen(req,resp);
@@ -168,6 +175,6 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
             return;
         }
-        
+
     }
 }

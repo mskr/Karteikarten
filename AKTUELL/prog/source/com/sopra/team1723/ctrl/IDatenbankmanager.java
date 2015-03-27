@@ -137,8 +137,16 @@ public interface IDatenbankmanager {
     public List<Veranstaltung> leseVeranstaltungenSemester(String semester);
     
     /**
+     * Holt alle Veranstaltungen des angegebenen Benutzers.
+     * @param benutzer referenziert eindeutig einen Benutzer 
+     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die Methode eine leere Liste zurück.
+     * Bei einem Fehler kommt null zurück.
+     */
+    public List<Veranstaltung> leseVeranstaltungen(int benutzer);
+    
+    /**
      * Holt alle Moderatoren zu der angegebenen Veranstaltung aus der Datenbank.
-     * @param veranstaltung 
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung
      * @return Liste von Moderatoren der Veranstaltung.Hat die Veranstaltung  ine Moderatoren
      * wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
@@ -146,11 +154,12 @@ public interface IDatenbankmanager {
     
     /**
      * Holt alle Studiengaenge zu der angegebenen Veranstaltung aus der Datenbank.
-     * @param veranstaltung 
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung
      * @return Liste der Studiengänge zu dieser Veranstaltung. Wird die Veranstaltung von keinem Studiengang
      * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<String> leseStudiengaenge(int veranstaltung);
+    
     
     /**
      * Fugt neue Veranstaltung in die Datenbank ein. Bei Erfolg wird
