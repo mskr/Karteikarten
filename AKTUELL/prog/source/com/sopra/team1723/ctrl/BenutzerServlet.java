@@ -77,6 +77,7 @@ public class BenutzerServlet extends ServletController {
             if(aktuellerBenutzer != null)
             {
                 aktuelleSession.setAttribute(sessionAttributeUserID, aktuellerBenutzer.getId());
+                aktuelleSession.setAttribute(sessionAttributeGewähltesSemester, leseAktuellesSemester());
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             }
             else{

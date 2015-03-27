@@ -9,6 +9,9 @@ package com.sopra.team1723.ctrl;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
@@ -29,21 +32,23 @@ public class ServletController extends HttpServlet
     /**
      *  Session Attribute, die verwendet werden
      */
-//    protected final String sessionAttributeEMail = "eMail";
+    //    protected final String sessionAttributeEMail = "eMail";
     protected final String sessionAttributeUserID = "UserID";
     // TODO: Alle benutzer attribute speichern oder nur eMail? Was passiert wenn Benutzer geändert wird ?!
+
+    protected final String sessionAttributeGewähltesSemester = "gewähltesSemester";
     
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
-    
+
     /**
      *  DateiPfade
      */
     public final static String dirFiles = "files/";             
     public final static String dirProfilBilder = dirFiles + "profilBilder/";
-    
+
 
     private boolean doProcessing = false;
-    
+
     /**
      * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
      * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
@@ -69,23 +74,28 @@ public class ServletController extends HttpServlet
     /**
      * 
      */
-    protected IDatenbankmanager dbManager = null;
+    protected String gewähltesSemester = null;
     
+    /**
+     * 
+     */
+    protected IDatenbankmanager dbManager = null;
+
     /**
      *  Aktuelle Session.
      */
     protected HttpSession aktuelleSession = null;
-    
+
     /**
      *  Print Writer über den Daten an den Client geschrieben werden können
      */
     protected PrintWriter outWriter = null;
-    
+
     /**
      * Hier steht die vom ServletController ausgelesene Aktion, die der Client ausführen will.
      */
     protected String aktuelleAction = null;
-    
+
 
     /**
      * Prüft, ob die eMail-Adresse des Benutzers in der aktuellen Session vorhanden ist und ob der Benutzer somit eingeloggt ist.
@@ -95,11 +105,11 @@ public class ServletController extends HttpServlet
     {
         if(dbManager == null)
             return false;
-        
+
         // Benutzer nicht eingeloggt?
         if(session.getAttribute(sessionAttributeUserID) == null)
             return false;
-        
+
         // Attribut ist gesetzt, Benutzer muss eingeloggt sein
         return true; 
     }
@@ -112,12 +122,12 @@ public class ServletController extends HttpServlet
     private Benutzer leseBenutzer(HttpSession session) 
     {        
         String userID = (String) session.getAttribute(sessionAttributeUserID);
-        
+
         if(userID == null)
             return null;
-        
+
         int id = Integer.parseInt(userID);
-        
+
         return dbManager.leseBenutzer(id);
     }
     /**
@@ -143,10 +153,29 @@ public class ServletController extends HttpServlet
 
         }
     }
+
+    protected String leseAktuellesSemester(){
+        Calendar aktDatum = Calendar.getInstance();
+        
+        int aktYear = aktDatum.get(Calendar.YEAR);
+        Calendar WiSeBegin = Calendar.getInstance();
+        Calendar WiSeEnde = Calendar.getInstance();
+        WiSeBegin.set(Calendar.MONTH, ParamDefines.WiSeMonatBeginn);
+        WiSeBegin.set(Calendar.DAY_OF_MONTH, ParamDefines.WiSeTagBeginn);
+        WiSeEnde.set(Calendar.MONTH, ParamDefines.WiSeMonatEnde);
+        WiSeEnde.set(Calendar.DAY_OF_MONTH, ParamDefines.WiSeTagEnde);
+        if(aktDatum.after(WiSeBegin))
+            return "WiSe"+aktYear+"/"+String.valueOf(aktYear+1).substring(2);
+        else if (aktDatum.before(WiSeEnde))
+            return "WiSe"+String.valueOf(aktYear-1)+"/"+String.valueOf(aktYear).substring(2);
+        else
+            return "SoSe"+String.valueOf(aktYear);
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
-    	doPost(req, resp);
+        doPost(req, resp);
     }
 
     @Override
@@ -165,7 +194,7 @@ public class ServletController extends HttpServlet
         // Bisschen platz zwischen den Requests
         System.out.println();
         System.out.println();
-        
+
         // Prüfen ob session abgelaufen ist
         if (req.getRequestedSessionId() != null && 
                 !req.isRequestedSessionIdValid() && 
@@ -177,7 +206,7 @@ public class ServletController extends HttpServlet
             // Session is expired
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSessionExpired);
             outWriter.print(jo);
-            
+
             // Neue Session erzeugen
             aktuelleSession = req.getSession();
             aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
@@ -189,7 +218,7 @@ public class ServletController extends HttpServlet
             aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
 
         printAllParameters(req);
-        
+
         if(dbManager == null)
         {
             // Sende Error zurück
@@ -229,6 +258,9 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
+        
+        if(aktuelleSession.getAttribute(sessionAttributeGewähltesSemester)!= null)
+            gewähltesSemester = aktuelleSession.getAttribute(sessionAttributeGewähltesSemester).toString();
         doProcessing = true;
     }
     /**
@@ -251,13 +283,13 @@ public class ServletController extends HttpServlet
     {
         if(txt == null)
             return true;
-        
+
         if(txt.equals(""))
             return true;
-        
+
         // Falls doch inhalt drin ist, trim alle leerzeichen/zeilen weg
         txt.trim();
-        
+
         return false;
     }
     /**
@@ -269,10 +301,10 @@ public class ServletController extends HttpServlet
     {
         if(txt == null)
             return true;
-        
+
         if(txt.equals(""))
             return true;
-        
+
         return false;
     }
 }
