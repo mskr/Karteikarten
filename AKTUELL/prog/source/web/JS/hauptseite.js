@@ -15,8 +15,6 @@ function fillHauptseite() {
     
     // Alle Veranstaltungen holen und anzeigen
     // TODO Refractoring
-    // Ergebniss der ajax calls speichern
-    var ajaxCallResults = [];
     // Alle Veranstaltungen
     var ajax1 = $.ajax({
     	url: veranstaltungServlet,
@@ -32,7 +30,7 @@ function fillHauptseite() {
     			for(var i = 0; i < VeranstList.length; i++)
     			{
     				// Jede Veranstaltung erzeugen und funktion speichern in array
-    				ajaxCallResults.push(displayVeranstaltung(divAlleVeranst, VeranstList[i]));
+    				displayVeranstaltung(divAlleVeranst, VeranstList[i]);
     			}
     		}
     		else
@@ -56,7 +54,7 @@ function fillHauptseite() {
              	for(var i = 0; i < VeranstList.length; i++)
              	{
              		// Jede Veranstaltung erzeugen und funktion speichern in array
-             		ajaxCallResults.push(displayVeranstaltung(divAlleVeranst, VeranstList[i]));
+             		displayVeranstaltung(divAlleVeranst, VeranstList[i]);
              	}
              }
              else
@@ -80,7 +78,7 @@ function fillHauptseite() {
              	for(var i = 0; i < VeranstList.length; i++)
              	{
              		// Jede Veranstaltung erzeugen und funktion speichern in array
-             		ajaxCallResults.push(displayVeranstaltung(divAlleVeranst, VeranstList[i]));
+             		displayVeranstaltung(divAlleVeranst, VeranstList[i]);
              	}
              }
              else
@@ -104,7 +102,7 @@ function fillHauptseite() {
              	for(var i = 0; i < VeranstList.length; i++)
              	{
              		// Jede Veranstaltung erzeugen und funktion speichern in array
-             		ajaxCallResults.push(displayVeranstaltung(divAlleVeranst, VeranstList[i]));
+             		displayVeranstaltung(divAlleVeranst, VeranstList[i]);
              	}
              }
              else
@@ -116,17 +114,13 @@ function fillHauptseite() {
 
 	// Alle Einblende Felder aktivieren
     $.when(ajax1,ajax2,ajax3,ajax4).done(function() {
-	    	$.when.apply($,ajaxCallResults).done(
-        		function() {
-        			$(".vn_mehr_einbl").click(function() 
-        	    	{
-        	    		var parent = $(this).parent();
-        	    		var wrapper = parent.find(".vn_mehr_wrapper");
-        	    		wrapper.slideToggle("slow");
-        	    	});
-        		});
-        }
-    		);
+    	$(".vn_mehr_einbl").click(function() 
+    			{
+    		var parent = $(this).parent();
+    		var wrapper = parent.find(".vn_mehr_wrapper");
+    		wrapper.slideToggle("slow");
+    			});
+    });
 }
 
 /**
@@ -136,32 +130,13 @@ function fillHauptseite() {
  */
 function displayVeranstaltung(container, jsonVeranstObj)
 {	
-	return $.ajax({
-        url: profilServlet,
-        data: "action="+actionGetOtherBenutzer + "&" + 
-        paramId +"=" + jsonVeranstObj[paramErsteller],
-//        dataContainer: container,
-//        dataVeranst: jsonVeranstObj,
-//        success: $.proxy(displayVeranstaltungCallback, container, jsonVeranstObj)
-        success: //function(jsonObj) 
-        
-//        	console.log(this.dataContainer);
-//        	console.log(this.dataVeranst);
-//        	console.log(jsonObj);
-        	displayVeranstaltungCallback(container, jsonVeranstObj)
-    });
-}
-var displayVeranstaltungCallback = function(container, jsonVeranstObj)
-{
-	return function(jsonObj){
-		var errCode = jsonObj["error"];
-		if(errCode == "noerror") 
-		{
-			container.append(
-					"<div class='vn'>" +
+	var errCode = jsonVeranstObj["error"];
+	if(errCode == "noerror") 
+	{
+		var str = "<div class='vn'>" +
 					"<span class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>" +
 					"<span class='vn_details'>" +
-					"<span class='vn_detail'>"  + jsonObj[paramVorname]+ " " + jsonObj[paramNachname] + "</span><br>" +
+					"<span class='vn_detail'><a>"  + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a></span><br>" +
 					"<span class='vn_detail'>" + jsonVeranstObj[paramAnzTeilnehmer] + " Teilnehmer</span><br>" +
 					"<span class='vn_detail'>" + jsonVeranstObj[paramSemester] + "</span>" +
 					"</span>" +
@@ -175,11 +150,20 @@ var displayVeranstaltungCallback = function(container, jsonVeranstObj)
 					"		<span class='mybutton dark'><span class='octicon octicon-sign-out'></span> Ausschreiben</span>" +
 					"	</div>" +
 					"</div>" +
-			"</div>");
-		}
-		else
-		{
-			message(0, buildMessage(errCode));
-		}
+					"</div>";
+		
+		str = $(str);
+		container.append(str);
+		var erstellerLink = str.find("a");
+		erstellerLink.click(function() {
+	        var paramObj = {};
+	        paramObj[urlParamLocation] = ansichtProfilseite;
+	        paramObj[urlParamId] = jsonVeranstObj[paramErsteller][paramId];
+	        buildUrlQuery(paramObj);
+		});
+	}
+	else
+	{
+		message(0, buildMessage(errCode));
 	}
 }

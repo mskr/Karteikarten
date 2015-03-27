@@ -315,6 +315,20 @@ label {
 	position: relative;
 }
 
+.flex_container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-content: stretch;
+	align-items: flex-start;
+}
+
+.flex_elem {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
 .suche_etwas {
 	margin: 0;
 	padding: 1.6em .9em;
@@ -341,6 +355,27 @@ label {
 	box-shadow: 0 .2em .2em black;
 } .suche_bestaetigen {
 	display: none;
+}
+
+.suche_ergebnisse {
+	display: none;
+	position: absolute;
+	z-index: 300;
+	left: 0;
+	margin-left: 21em;
+	width: calc(100% - 21em);
+	background: #e0e0e0;
+	color: #4a4a4a;
+} .sucherg_vn {
+	margin: 1em;
+	padding: 1em;
+	border: 1px solid red;
+	flex-basis: 15em;
+} .sucherg_benutzer {
+	margin: 1em;
+	padding: 1em;
+	border: 1px solid red;
+	flex-basis: 15em;
 }
 
 .vn_erstellen_bt {
@@ -1217,20 +1252,6 @@ label {
 	-webkit-box-shadow: 0px 0px 5px black;
 	-moz-box-shadow: 0px 0px 5px black;
 	box-shadow: 0px 0px 5px black;
-}
-
-.flex_container {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	align-content: stretch;
-	align-items: flex-start;
-}
-
-.flex_elem {
-    flex-grow: 1;
-    flex-shrink: 0;
 }
 
 .profil_head {
