@@ -51,6 +51,7 @@ public class VeranstaltungServlet extends ServletController {
     {
         HttpSession aktuelleSession = request.getSession();
         String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        String aktuellesSemester = (String) aktuelleSession.getAttribute(sessionAttributeGewähltesSemester);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
@@ -90,8 +91,7 @@ public class VeranstaltungServlet extends ServletController {
         else if(mode.equals(ParamDefines.LeseVeranstModeSemester))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            //TODO Wie speichern wir das aktuelle Semester?
-            verAnst = dbManager.leseVeranstaltungenSemester("SoSe2015");
+            verAnst = dbManager.leseVeranstaltungenSemester(aktuellesSemester);
             if(verAnst != null)
                 jo = JSONConverter.toJsonVeranstList(verAnst);
             else
