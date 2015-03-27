@@ -73,7 +73,7 @@ function addBenachrichtigung(text, isNeu, onClickFkt)
 	{
 		divBn.addClass("neu");
 		newBnCount++;
-		$("#bn_anzahl").text("(" + newBnCount+ " neu)");
+		$("#bn_anzahl").text(newBnCount);
 	}
 	else
 		divBn.addClass("gelesen");
@@ -110,6 +110,8 @@ function sortDivByClassName(a,b)
  * falls der Benutzer sich nicht schon auf der Hauptseite befindet.
  */
 function handleReturnLink() {
+    // TODO Wenn aus Fehlerfall heraus auf die Hauptseite weitergeleitet wird
+    // ist der location Parameter auch != hauptseite
     if(getUrlParameterByName(urlParamLocation) != ansichtHauptseite)
     {
         $(".return").show();

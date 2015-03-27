@@ -7,6 +7,8 @@
 <html>
 <head>
 <meta charset="utf-8"/>
+<!-- https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag -->
+<meta name="viewport" content="initial-scale=1.0, user-scalable=yes">
 <title>Sopra</title>
 <!-- Main CSS -->
 <link rel="stylesheet" href="CSS/sopra.css" type="text/css">
@@ -78,15 +80,28 @@ body > div {
 <div class="msg err"></div>
 <div class="msg success"></div>
 
-<!-- Container für die Startseite -->
-<div id="mypersonalbox_startseite" class="mypersonalbox">
+<!-- Elemente fuer kleine Bildschirme -->
+<div class="r-header"></div>
+<input id="r-checkbox" class="r-checkbox" type="checkbox">
+<label class="r-toggle lines-button x" for="r-checkbox" onclick="naviconTransformicon()">
+	<span class="lines"></span>
+</label>
+<label class="r-overlay" for="r-checkbox" onclick="naviconTransformicon()"></label>
+<script>
+function naviconTransformicon() {
+	$(".lines-button").toggleClass("close");
+}
+</script>
 
-	<h3>Start</h3>
-	
+<!-- Container für die Startseite -->
+<div id="mypersonalbox_startseite" class="mypersonalbox card">
+
+	<div class="card_title">Start</div>
+
 	<form id="login_form">
 		<input id="login_email" class="login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
 		<input id="login_pass" class="login_input pw" type="password" name="passwort" placeholder="Passwort" required>
-		<input id="login_submit" class="mybutton_dark loginbutton" type="submit" value="Login">
+		<input id="login_submit" class="mybutton dark loginbutton" type="submit" value="Login">
 	</form>
 	
 	<a class="pwreset">Passwort zurücksetzen</a>
@@ -97,14 +112,14 @@ body > div {
 		<input id="reg_vorname" class="login_input" type="text" name="vorname" placeholder="Vorname" required> <br>
 		<input id="reg_nachname" class="login_input" type="text" name="nachname" placeholder="Nachname" required> <br>
 		<input id="reg_matnr" class="login_input" type="text" name="matrikelnummer" placeholder="Matrikelnummer" required> <br>
-		<select id="reg_studiengang" class="login_select" form="registrieren_form" required></select> <br>
-		<input id="reg_submit" class="mybutton_dark_flat regbutton" type="submit" value="Registrieren">
+		<select id="reg_studiengang" class="login_input" form="registrieren_form" required></select> <br>
+		<input id="reg_submit" class="mybutton dark flat regbutton" type="submit" value="Registrieren">
 		</p>
 	</form>
 	
 </div>
 
-<div id="mypersonalbox_main" class="mypersonalbox">
+<div id="mypersonalbox_main" class="mypersonalbox card">
 
 	<!-- Return Link erscheint nicht auf Hauptseite -->
 	<a class="return tiptrigger tipabove" data-tooltip="Zurück zur Hauptseite"><span class="mega-octicon octicon-chevron-left"></span></a>
@@ -115,7 +130,7 @@ body > div {
 		<a class="username tiptrigger tipabove" data-tooltip="zum Profil gehen"></a>
 		<br>
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
-		<a class="logout" id="logout"><span class="octicon octicon-sign-out"></span> Logout</a>
+		<a id="logout"><span class="octicon octicon-sign-out"></span><span class="logout">Logout</span></a>
 	</div>
 	
 	<!-- TODO Wie soll man das hier machen? Vllt weglassen weil == Meine Veranstaltungen. 
@@ -129,7 +144,10 @@ body > div {
 	</ul>-->
 	
 	<div class="bn_full">
-		<span class="bn_header" id="bn-header" style="cursor: pointer;"><span class="octicon octicon-pulse""></span> Benachrichtigungen <span id="bn_anzahl"></span></span>
+		<span class="bn_header" id="bn-header" style="cursor: pointer;">
+			<span class="octicon octicon-pulse"></span> BENACHRICHTIGUNGEN
+			<span id="bn_anzahl" class="bn_anzahl"></span>
+		</span>
 		<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
 			<div class="bn" id="keine_bn">
 					<span class="bn_text">Keine Benachrichtigungen verfügbar.</span>
@@ -159,18 +177,16 @@ body > div {
 </div>
 
 <div id="mainbox_hauptseite" class="mainbox">
-	<!-- Trick: Suchfeld ist auf autofocus und required gesetzt. So kann der User sofort lostippen und 
-	per CSS wird das Feld hervorgehoben, wann etwas eingegeben wurde (denn das leere required-Field ist invalid). -->
-	<input class="suche_etwas" type="search" placeholder="Veranstaltungen und Personen finden..." required>
-	
-	<span class="mybutton_green vn_erstellen_bt"><span class="octicon octicon-plus"></span> </span>
-	
+	<div class="hauptseite_head">
+		<input class="suche_etwas" type="search" placeholder="Veranstaltungen und Personen finden..." required>
+		<span class="mybutton green vn_erstellen_bt"><span class="octicon octicon-plus"></span> </span>
+	</div>
 	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
 	<div class="vn_container">
 	
 		<div class="vn_tab meine_vn">
 			<input class="vn_tabradio" type="radio" id="tab-1" name="group1" checked>
-			<label for="tab-1">Meine</label>
+			<label class="meine_vn_tablabel" for="tab-1"><span class="octicon octicon-home"></span></label>
 			
 			<div class="vn_tabcontent" id="vn_tabcontent_meine">
 <!-- 				<div class="vn">
@@ -180,7 +196,7 @@ body > div {
 					<div class="vn_mehr_wrapper">
 						<span class="vn_mehr">Die Molekularbiologie befasst sich mit der Struktur, Biosynthese und Funktion von DNA und RNA auf molekularer Ebene und wie diese untereinander und mit Proteinen interagieren. Das Forschungsgebiet der Molekularbiologie überlappt dabei immer mehr mit weiteren Feldern der Biologie und Chemie, insbesondere der Genetik und der Biochemie. Die Grenzen zwischen diesen Fachbereichen sind dabei oft fließend. Der Name für dieses Fach wurde 1952 durch den englischen Physiker und Molekularbiologen William Astbury geprägt.</span>
 						<div class="vn_optionen">
-							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+							<span class="mybutton dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
 						</div>
 					</div>
 				</div>
@@ -192,7 +208,7 @@ body > div {
 					<div class="vn_mehr_wrapper">
 						<span class="vn_mehr">Ein Algorithmus ist eine eindeutige Handlungsvorschrift zur Lösung eines Problems oder einer Klasse von Problemen. Algorithmen bestehen aus endlich vielen, wohldefinierten Einzelschritten.[1] Somit können sie zur Ausführung in einem Computerprogramm implementiert, aber auch in menschlicher Sprache formuliert werden. Bei der Problemlösung wird eine bestimmte Eingabe in eine bestimmte Ausgabe überführt.[2]</span>
 						<div class="vn_optionen">
-							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+							<span class="mybutton dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
 						</div>
 					</div>
 				</div>
@@ -204,7 +220,7 @@ body > div {
 					<div class="vn_mehr_wrapper">
 						<span class="vn_mehr">Die lineare Algebra (auch Vektoralgebra) ist ein Teilgebiet der Mathematik, das sich mit Vektorräumen und linearen Abbildungen zwischen diesen beschäftigt. Dies schließt insbesondere auch die Betrachtung von linearen Gleichungssystemen und Matrizen mit ein. Vektorräume und deren lineare Abbildungen sind ein wichtiges Hilfsmittel in vielen Bereichen der Mathematik. Außerhalb der reinen Mathematik finden sich Anwendungen u. a. in den Naturwissenschaften, in der Informatik und in der Wirtschaftswissenschaft (z. B. in der Optimierung).Die lineare Algebra entstand aus zwei konkreten Anforderungen heraus: einerseits dem Lösen von linearen Gleichungssystemen, andererseits der rechnerischen Beschreibung geometrischer Objekte, der sogenannten analytischen Geometrie (daher bezeichnen manche Autoren lineare Algebra als lineare Geometrie).</span>
 						<div class="vn_optionen">
-							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+							<span class="mybutton dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
 						</div>
 					</div>
 				</div> -->
@@ -215,7 +231,7 @@ body > div {
 		
 		<div class="vn_tab studiengang_vn">
 			<input class="vn_tabradio" type="radio" id="tab-2" name="group1">
-			<label for="tab-2">Studiengang</label>
+			<label class="studiengang_vn_tablabel" for="tab-2"><span class="octicon octicon-package"></span></label>
 			
 			<div class="vn_tabcontent" id="vn_tabcontent_studiengang">
 			
@@ -226,7 +242,7 @@ body > div {
 					<div class="vn_mehr_wrapper">
 						<span class="vn_mehr">Die lineare Algebra (auch Vektoralgebra) ist ein Teilgebiet der Mathematik, das sich mit Vektorräumen und linearen Abbildungen zwischen diesen beschäftigt. Dies schließt insbesondere auch die Betrachtung von linearen Gleichungssystemen und Matrizen mit ein. Vektorräume und deren lineare Abbildungen sind ein wichtiges Hilfsmittel in vielen Bereichen der Mathematik. Außerhalb der reinen Mathematik finden sich Anwendungen u. a. in den Naturwissenschaften, in der Informatik und in der Wirtschaftswissenschaft (z. B. in der Optimierung).Die lineare Algebra entstand aus zwei konkreten Anforderungen heraus: einerseits dem Lösen von linearen Gleichungssystemen, andererseits der rechnerischen Beschreibung geometrischer Objekte, der sogenannten analytischen Geometrie (daher bezeichnen manche Autoren lineare Algebra als lineare Geometrie).</span>
 						<div class="vn_optionen">
-							<span class="mybutton_dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
+							<span class="mybutton dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
 						</div>
 					</div>
 				</div>
@@ -245,7 +261,7 @@ body > div {
 		
 		<div class="vn_tab semester_vn">
 			<input class="vn_tabradio" type="radio" id="tab-3" name="group1">
-			<label for="tab-3">Semester</label>
+			<label class="semester_vn_tablabel" for="tab-3"><span class="octicon octicon-calendar"></span></label>
 			
 			<div class="vn_tabcontent" id="vn_tabcontent_semester">
 				<!-- <div class="vn">Algorithmen</div> -->
@@ -255,7 +271,7 @@ body > div {
 		
 		<div class="vn_tab alle_vn">
 			<input class="vn_tabradio" type="radio" id="tab-4" name="group1">
-			<label for="tab-4">Alle</label>
+			<label class="alle_vn_tablabel" for="tab-4"><span class="octicon octicon-list-unordered"></span></label>
 			
 			<div class="vn_tabcontent" id="vn_tabcontent_alle">
 	<!--			<div class="vn">Molekularbiologie I</div>
@@ -273,24 +289,20 @@ body > div {
 			</div>
 		</div>
 		
-		<span class="mybutton_dark_flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span>
+		<span class="mybutton dark flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span>
 	</div>
 	<div class="impressum">Uni Ulm <br> WiSe 14/15 <br> Informatik <br> Softwaregrundprojekt <br> Team 17: Andreas Rottach, Fabian Schilha, Matthias Englert <br> Team 23: Julius Friedrich, Lorenz Weiß, Marius Kircher</div>
 </div>
 
 <div id="mainbox_profilseite" class="mainbox">
 	<div class="flex_container">
-	
 		<div class="profil_head">
-			<span>
-				<span class="profil_avatar">
-					<img class="profil_avatar_img" alt="profilBild" src="files/profilBilder/default.png">
-				</span>
-				<span class="profil_benutzer"></span>
+			<span class="profil_avatar">
+				<img class="profil_avatar_img" alt="profilBild" src="files/profilBilder/default.png">
 			</span>
-			<span class="profil_loeschen"><span class="mybutton_red">Konto löschen</span></span>
+			<span class="profil_benutzer"></span>
+			<span class="profil_loeschen"><span class="mybutton red">Konto löschen</span></span>
 		</div>
-		
 		<div class="profil_daten card flex_elem">
 			<div class="card_title">Profil</div>
 			
@@ -329,17 +341,17 @@ body > div {
 					</div>
 				</div>
 				
-				<input id="profil_daten_speichern" class="mybutton_dark" type="submit" value="Speichern">
+				<input id="profil_daten_speichern" class="mybutton dark" type="submit" value="Speichern">
 			</form>
 		</div>
 		
 		<div id="profil_passwort" class="profil_passwort card flex_elem">
 			<form id="profil_passwort_form">
 				<div class="card_title">Passwort ändern</div>
-				<div><span id="profil_passwort"><label class="profil_label" for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" class="profil_input" type="password" required></span></div>
-				<div><span id="profil_passwort_wdh"><label class="profil_label" for="profil_passwort_wdh_input">Passwort wiederholen</label><input id="profil_passwort_wdh_input" class="profil_input" type="password" required></span></div>
-				<div><span id="profil_passwort_alt"><label class="profil_label" for="profil_passwort_alt_input">Altes Passwort</label><input id="profil_passwort_alt_input" class="profil_input" type="password" required></span></div>
-				<input id="profil_passwort_speichern" class="mybutton_dark" type="submit" value="Speichern">
+				<div><span><label class="profil_label" for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" class="profil_input" type="password" required></span></div>
+				<div><span><label class="profil_label" for="profil_passwort_wdh_input">Passwort wiederholen</label><input id="profil_passwort_wdh_input" class="profil_input" type="password" required></span></div>
+				<div><span><label class="profil_label" for="profil_passwort_alt_input">Altes Passwort</label><input id="profil_passwort_alt_input" class="profil_input" type="password" required></span></div>
+				<input id="profil_passwort_speichern" class="mybutton dark" type="submit" value="Speichern">
 			</form>
 		</div>
 		
@@ -426,16 +438,16 @@ body > div {
 			</label>
 		</div>
 		<div class="kk_export_bt">
-			<span class="mybutton_dark"><span class="octicon octicon-cloud-download"></span></span>
+			<span class="mybutton dark"><span class="octicon octicon-cloud-download"></span></span>
 		</div>
 		<div class="kk_erstellen_bt">
-			<span class="mybutton_green"><span class="octicon octicon-plus"></span></span>
+			<span class="mybutton green"><span class="octicon octicon-plus"></span></span>
 		</div>
 	</div>
 	<div class="vn_header">
 		<h1>Analysis I</h1>
-		<span class="mybutton_red"><span class="octicon octicon-trashcan"></span></span>
-		<span class="mybutton_dark"><span class="octicon octicon-pencil"></span></span>
+		<span class="mybutton red"><span class="octicon octicon-trashcan"></span></span>
+		<span class="mybutton dark"><span class="octicon octicon-pencil"></span></span>
 		<span>Dr. Liebezeit<br>Wintersemester 2014/15</span>
 	</div>
 	<div class="kk_wrapper">
@@ -680,8 +692,8 @@ body > div {
 		</div>
 	</div>
 	<div class="vn_popup_foot">
-		<input class="mybutton_dark_flat popup_close" type="button" value="Abbrechen">
-		<input class="mybutton_green" type="submit" value="Erstellen">
+		<input class="mybutton dark flat popup_close" type="button" value="Abbrechen">
+		<input class="mybutton green" type="submit" value="Erstellen">
 	</div>
 </div>
 

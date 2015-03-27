@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
-
-import sun.security.pkcs11.Secmod.DbMode;
 
 import com.sopra.team1723.data.*;
 

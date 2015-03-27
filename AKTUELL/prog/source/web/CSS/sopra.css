@@ -1,11 +1,5 @@
 @CHARSET "utf-8";
-
-/* RESPONSIVE WEB DESIGN */
-/* --------------------- */
-/* Media Query fuer Smartphones: */
-/* @media screen and (max-width: 400px), screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi)
-   { *extra-styles* }
-/* --------------------- */
+@import "NaviconTransformicons.css";
 
 /* ABKUERZUNGEN fuer class und id Attribute */
 /* --------------------- */
@@ -15,22 +9,18 @@
 /* kk = Karteikarte */
 /* --------------------- */
 
-
-
 body {
-	margin: 0px;
-	padding: 0px;
-	width: 100%;
-	height: 100%;
+	margin: 0;
 	background: #4a4a4a;
 	color: #e0e0e0;
 	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
 }
 
 a { /* Link Style */
 	color: inherit;
 	text-decoration: none;
-	transition: color 0.1s;
+	transition: color .1s;
 	cursor: pointer;
 } a:hover {
 	color: gray;
@@ -51,7 +41,7 @@ label {
 	padding: 10px;
 	width: calc(100% - 20px);
 	position: fixed;
-	top: 0;
+	bottom: 0;
 	z-index: 101;
 	color: white;
 	font-weight: bold;
@@ -62,20 +52,13 @@ label {
 	background: DarkSeaGreen;
 }
 
-#loading {
-	position: absolute;
-	top: 1%;
-	left: 49%;
-	background: red;
-	color: yellow;
-}
-
 .tiptrigger:after {
 	/* Das eigentliche Tooltip */
 	content: attr(data-tooltip);
 	font-size: 12px;
 	font-weight: 300;
     position: absolute;
+    z-index: 200;
     background: black;
     padding: 5px 15px;
     color: white;
@@ -89,6 +72,7 @@ label {
 	/* Der kleine Pfeil */
 	content: "";
     position: absolute;
+    z-index: 200;
     width: 0;
     height: 0;
     border-left: 5px solid transparent;
@@ -101,7 +85,7 @@ label {
 } .tiptrigger:hover:before {
     left: 50%;
     display: inline;
-} .tiptrigger:hover:after, .username:hover:before {
+} .tiptrigger:hover:after, .tiptrigger:hover:before {
 	opacity: 1;
 } .tipabove:before {
     border-top: 5px solid black;
@@ -112,209 +96,187 @@ label {
 } .tipbelow:before {
     border-bottom: 5px solid black;
 } .tipbelow:hover:after {
-	bottom: -5px;
+	bottom: -33px;
 } .tipbelow:hover:before {
-	bottom: 0;
+	bottom: -6px;
 }
 
-.mypersonalbox {
-	margin: 1%;
-	padding: 15px;
-	width: 300px;
-	min-width: 200px;
-	height: calc(95% - 30px); /* sucks */
-	position: fixed;
-	z-index: 100; /* Sollte immer oben liegen */
-	float: left;
-	vertical-align: middle;
-	overflow: hidden;
+.card {
+	margin-right: 1em;
+	margin-bottom: 1em;
+	padding: 2em;
 	background: #333333;
-	color: #e0e0e0;
-	-webkit-border-radius: 1px;
-	-moz-border-radius: 1px;
-	border-radius: 1px;
+	color: inherit;
+	text-shadow: 0px -1px 0px #000;
 	-webkit-box-shadow: 0px 2px 2px #000;
 	-moz-box-shadow: 0px 2px 2px #000;
 	box-shadow: 0px 2px 2px #000;
-	text-shadow: 0px -1px 0px #000;
-} .mypersonalbox_toggle {
-	display: none;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+} .card_title {
+	margin-bottom: .5em;
+	text-align: left;
+	font-weight: bold;
 }
 
-.mainbox { /* #WTF: WIESO IST AM RECHTEN RAND IMMER EIN STUECK PLATZ!? */
-	position: absolute;
-	margin: 1% 1% 1% calc(330px + 2%); /* top right bottom left */
-	padding: 0;
-/* 	max-width: 90%; responsiveness <- Hatte einen doofen Effekt: In Mobileansicht war mainbox immer kleiner als mypersonalbox */
-	width: calc(99% - 365px);
- 	min-width: 200px; /* responsiveness: Sobald der Screen schmaler als 200px wird, rutscht die Box wegen float:left unter die mypersonalbox */
-	height: auto;
+.mypersonalbox {
+	margin-left: 1em;
+	margin-top: 1em;
+	position: fixed;
+	z-index: 100;
+	left: 0;
+	top: 0;
+	width: 15em;
+	height: calc(100% - 6em);
+	overflow: hidden;
+	transition: all .3s;
+}
+
+.mainbox {
+	position: relative;
 	z-index: 1;
-	float: left;
-	overflow: visible;
-	vertical-align: middle;
+	margin-top: 1em;
+	margin-left: 21em;
+	width: calc(100% - 21em);
 }
 
 .impressum {
-	margin: 20px;
+	margin-right: 1em;
+	margin-bottom: 1em;
 	color: gray;
-	text-shadow: 0px -1px 0px #454545;
+	text-shadow: 0px -1px 0px black;
 	text-align: center;
 }
 
-/* DIESER CODE WAR FUER DIE SVG GRAFIK */
-/* .sleepicon { */
-/* 	padding-top: 70px; */
-/* 	max-width: 400px; */
-/* 	max-height: 400px; */
-/* 	#oldwidth: 80%; */
-/* 	#oldheight: 80%; */
-/* 	min-width: 300px; */
-/* 	min-height: 300px; */
-/* 	#old transform: scale(1.0); */
-/* 	#old-webkit-transform: scale(1.0); */
-/* 	fill: #5f5f5f; */
-/* } */
-/* BENUTZE STATTDESSEN JETZT EINE FONT */
 .sleepicon {
-	padding-top: 100px;
+	padding-top: .5em;
 	text-align: center;
 	display: block;
 	color: #6e6e6e;
-	font-size: 400px;
+	font-size: 10em;
 	text-shadow: 0px -2px 0px #363636;
 }
 
 .login_input { /* Wird auch auf die Felder fuers Registrieren angewendet */
-	margin: 5px 0px;
-	padding: 5px 9px;
-	width: calc(100% - 30px);
-	height: 30px;
+	margin-bottom: .7em;
+	padding: .4em .9em;
+	width: calc(100% - 1.8em - 2px);
+	height: 2.1em;
 	background: #E8E8E8;
-	font-size: 14px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
+	font-size: .9em;
+	-webkit-border-radius: .4em;
+	-moz-border-radius: .4em;
+	border-radius: .4em;
 	border: 1px solid black;
 	outline: 0;
-	box-shadow: inset 0px 5px 10px #c0c0c0;
+	box-shadow: inset 0 .5em 1em #c0c0c0;
 	-webkit-transition: width 0.5s; /* For Safari 3.1 to 6.0 */
 	transition: background 0.5s;
 } .login_input:hover {
 	background: white;
 } .login_input:focus {
 	background: white;
-	-webkit-box-shadow: 0px 2px 2px black;
-	-moz-box-shadow: 0px 2px 2px black;
-	box-shadow: 0px 2px 2px black;
+	-webkit-box-shadow: 0px .2em .2em black;
+	-moz-box-shadow: 0px .2em .2em black;
+	box-shadow: 0px .2em .2em black;
 } .pw {
-	margin-right: 5px;
-	width: calc(50% - 20px);
-} .login_select {
-	margin: 5px 0px;
-	padding: 5px 9px;
-	width: calc(100% - 10px);
-	height: 42px;
-	background: #E8E8E8;
-	font-size: 14px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
+	width: calc(50% - 1.8em - 2px);
+	margin-right: .3em;
+} select.login_input {
+	width: calc(100% + 0.2em - 3px);
+	height: 2.9em;
 	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
 	background-clip: padding-box;
-	border: 1px solid black;
-	outline: 0;
-	box-shadow: inset 0px 5px 10px #c0c0c0;
-	-webkit-transition: width 0.5s; /* For Safari 3.1 to 6.0 */
-	transition: background 0.5s;
-} .login_select:hover {
+} select.login_input:hover {
 	background: white;
 	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
 	background-clip: padding-box;
-} .login_select:focus {
+} select.login_input:focus {
 	background: white;
 	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
 	background-clip: padding-box;
-	-webkit-box-shadow: 0px 2px 2px black;
-	-moz-box-shadow: 0px 2px 2px black;
-	box-shadow: 0px 2px 2px black;
 }
 
 .loginbutton {
-	height: 40px;
-	width: calc(50% - 20px);
+	height: calc(3.1em - 4px);
+	width: calc(50% - .7em);
 }
 
 .pwreset {
-	font-size: 12px;
+	font-size: .75em;
 }
 
 .regbutton {
 	margin: 5px 0px;
 	height: 40px;
-	width: calc(100% - 10px);
+	width: 100%;
 }
 
 .user_container {
-	margin: 16px 0;
 	text-align: center;
+} .username {
 	position: relative;
-	z-index: 103;
-	background: #333333;
-} .usericon {
-	color: white;
-	font-size: 100px;
-}
-.username {
 	color: white;
 	font-weight: bold;
-	display: inline;
-	position: relative;
-	z-index: 103;
 } .rolle {
-	margin: 0 5px;
-	font-size: 12px;
-	font-weight: normal;
+	padding-left: .5em;
+	padding-right: 1em;
+	font-size: .75em;
 } .logout {
-	margin: 0 5px;
-	font-size: 12px;
-	font-weight: normal;
+	padding-left: .5em;
+	font-size: .75em;
+} .user_MyProfilBild {
+	border-radius: 50%;
+	border: 2px solid #e0e0e0;
+	box-shadow: 0 2px 2px black;
+} .return {
+	display: none; /* Initialwert der in JS dynamisch modifiziert wird */
+	width: 4em;
+	position: absolute;
+	top: calc(2em + 43px);
+	left: 0;
+	padding-left: 1em;
+	padding-right: 0;
+	color: white;
+	text-align: right;
+	transition: padding 0.2s;
+} .return:hover {
+	padding-left: 0;
+	padding-right: 1em;
 }
 
 .meinevn_header {
-	position: relative;
-	z-index: 102;
 	font-weight: bold;
-	background: #333333;
-} .meinevn {
-	margin-top: 0;
-	margin-bottom: 16px;
-	position: relative;
-	z-index: 102;
-	background: #333333;
-} .vn_angepinnt {
-	font-size: 14px;
 }
 
 /* Benachrichtigungen als Tabelle aufbauen. */
 .bn_full {
 	position: absolute;
-    bottom: 0px;
-    margin-bottom: 10px;
+    bottom: 0;
+    margin-bottom: 2em;
     width: inherit;
     display: table;
 }
 .bn_header {
 	font-weight: bold;
-	display:table-header-group;
-} 
+	font-size: .8em;
+	display: table-header-group;
+}
+.bn_anzahl {
+	margin-left: .5em;
+	color: yellow;
+} .bn_anzahl:after {
+	content: " neu";
+}
 .bn_container {
 	height: 100%;
 	max-height: 200px;
 	overflow-y: scroll !important;	/* Darf von JQuery beim sliden nicht überschrieben werden.*/
 	display: none;
 } 
-/* Was macht das ?? TODO */
+/* Was macht das ?? TODO
+ * -  Das styled die Scrollbar :) */
 .bn_container::-webkit-scrollbar {
 	width: 5px;
 	background-color: #333333;
@@ -323,8 +285,8 @@ label {
 	background-color: #141414;
 }
 .bn {
-	margin: 2px 0px;
-	padding: 6px 10px;
+	margin: 3px 0;
+	padding: .5em 1em;
 	font-size: 12px;
 	background: #2a2a2a;
 	cursor: pointer;
@@ -335,57 +297,57 @@ label {
 	transition: background 0.2s;
 } .bn:hover {
 	color: white;
-	background: #3b3b3b;
+	background: #242424;
 	-webkit-box-shadow: 0px -1px 0px #242424;
 	-moz-box-shadow: 0px -1px 0px #242424;
 	box-shadow: 0px -1px 0px #242424;
 } .neu {
-	border-left: 3px solid yellow; 
+	border-left: .25em solid yellow; 
 } .gelesen {
-	border-left: 3px solid gray;
+	border-left: .25em solid gray;
 } .bn_text {
 	display: inline-block;
 }
 
-
+.hauptseite_head {
+	margin-right: 1em;
+	margin-bottom: 1em;
+	position: relative;
+}
 
 .suche_etwas {
-	margin: 0px 0px;
-	padding: 5px 9px;
+	margin: 0;
+	padding: 1.6em .9em;
 	width: 35%;
-	min-width: 193px;
-	height: 50px;
+	height: 3.1em;
 	position: relative;
 	z-index: 10; /* Suchfeld Ueberlagert z.B. den Veranstaltung-erstellen-Button, wenn der User tippt */
-	-webkit-appearance: textfield;
 	background: #E8E8E8;
-	font-size: 14px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
+	font-size: .9em;
+	-webkit-border-radius: .4em;
+	-moz-border-radius: .4em;
+	border-radius: .4em;
 	border: 1px solid black;
 	outline: 0;
-	box-shadow: inset 0px 5px 10px #c0c0c0;
-	-webkit-transition: width 0.5s; /* For Safari 3.1 to 6.0 */
-	transition: width 0.5s;
+	box-shadow: inset 0 .5em 1em #c0c0c0;
+	transition: width .5s;
 } .suche_etwas:hover {
 	background: white;
 } .suche_etwas:focus {
+	background: white;
 } .suche_etwas:valid {
 	width: 100%;
 	background: white;
-	-webkit-box-shadow: 0px 2px 2px black;
-	-moz-box-shadow: 0px 2px 2px black;
-	box-shadow: 0px 2px 2px black;
+	box-shadow: 0 .2em .2em black;
 } .suche_bestaetigen {
 	display: none;
 }
 
 .vn_erstellen_bt {
-	z-index: 9;
 	position: absolute;
- 	right: 0;
- 	top: 0;
+	z-index: 9;
+	top: 0;
+	right: 0;
 } .vn_erstellen_bt:after {
 	content: "Veranstaltung erstellen";
 }
@@ -395,16 +357,12 @@ label {
 /* Hat nur ein Problem: Der vorderste Tabinhalt verdeckt immer die hintersten. min-height muss ausreichen um Inhalte auf allen Tabs zu "verdecken". */
 /* -> deshalb: min-height mit JQuery dynamisch einstellen! */
 .vn_container {
-	margin-top: 25px;
+	margin-right: 1em;
+	margin-bottom: 1em;
 	height: 100%;
 	position: relative;   
-	min-height: 3000px; /* This part sucks */
+	min-height: 50em; /* This part sucks */
 	clear: both;
-	color: #e0e0e0;
-	text-shadow: 0px -1px 0px black;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
 	overflow: visible;
 } .vn_tab {
 	margin-top: 10px; /* Damit die Buttons nicht zu weit unten sitzen */
@@ -448,6 +406,26 @@ label {
 	-webkit-box-shadow: 0px 2px 2px black;
 	-moz-box-shadow: 0px 2px 2px black;
 	box-shadow: 0px 2px 2px black;
+}
+
+.meine_vn_tablabel:after {
+	content: "Meine";
+	margin-left: .3em;
+}
+
+.studiengang_vn_tablabel:after {
+	content: "Studiengang";
+	margin-left: .3em;
+}
+
+.semester_vn_tablabel:after {
+	content: "Semester";
+	margin-left: .3em;
+}
+
+.alle_vn_tablabel:after {
+	content: "Alle";
+	margin-left: .3em;
 }
 
 .vn {
@@ -513,25 +491,7 @@ label {
 	text-align: left;
 	font-size: 12px;
 }
-/* Der Return Link sorgt dafuer, dass der User immer wieder zurueck zur Hauptseit (Veranstaltungsliste) gehen kann */
-.return {
-	display: none; /* Initialwert der in JS dynamisch modifiziert wird */
-	width: 90px;
-	position: absolute;
-	top: 65px;
-	left: 0;
-	padding-left: 10px;
-	padding-right: 0px;
-	z-index: 200;
-	display: block;
-	color: white;
-	text-align: right;
-	-webkit-transition: padding 1s;
-	transition: padding 0.2s;
-} .return:hover {
-	padding-left: 0px;
-	padding-right: 10px;
-}
+
 .kk_toolbar {
 	margin-bottom: 30px;
 	width: 100%;
@@ -1259,18 +1219,6 @@ label {
 	box-shadow: 0px 0px 5px black;
 }
 
-.card {
-	margin: 1%;
-	padding: 2%;
-	background: #333333;
-	-webkit-box-shadow: 0px 2px 2px #000;
-	-moz-box-shadow: 0px 2px 2px #000;
-	box-shadow: 0px 2px 2px #000;
-} .card_title {
-	text-align: left;
-	font-weight: bold;
-}
-
 .flex_container {
 	display: flex;
 	flex-direction: row;
@@ -1283,18 +1231,20 @@ label {
 .flex_elem {
     flex-grow: 1;
     flex-shrink: 0;
-    flex-basis: 0;
 }
 
 .profil_head {
-	margin: 1%;
+	margin-right: 1em;
+	margin-bottom: 1em;
 	padding: 0;
 	width: 100%;
 } .profil_avatar {
-	margin-right: 20px;
+	margin-right: 1em;
+} .profil_avatar_img {
+	border-radius: 50%;
+	border: 2px solid #e0e0e0;
+	box-shadow: 0 2px 2px black;
 	vertical-align: middle;
-	text-shadow: 0px -2px 0px #000;
-	font-size: 80px;
 } .profil_benutzer {
 	font-weight: bold;
 } .profil_loeschen {
@@ -1302,60 +1252,167 @@ label {
 }
 
 .profil_daten, .profil_passwort {
-	min-width: 400px;
 	text-align: right;
-} .profil_einstellungen {
-	min-width: 400px;
+    flex-basis: 15em;
 } .profil_einstellungen {
 	text-align: left;
 } .profil_einstellungen input {
 	margin-right: 10px;
 } .profil_notifyKommentare, .profil_notifyAenderungen {
-	margin: 10px 0;
+	margin: 1em 0;
 }
 
 .profil_infotext, .profil_label {
-	font-size: 14px;
+	font-size: .9em;
 }
 
 .profil_input {
-	margin: 0 0 10px 10px;
-	padding: 5px 10px;
+	margin: 0 0 1em 1em;
+	padding: .5em 1em;
 	width: 50%;
-	height: 30px;
+	height: 2em;
 	background: #292929;
 	color: white;
-	font-size: 16px;
+	font-size: 1em;
 	border: none;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
+	-webkit-border-radius: .3em;
+	-moz-border-radius: .3em;
+	border-radius: .3em;
 	outline: 0;
 	position: relative;
 	transition: all .1s;
 } .profil_input:hover {
 	padding-right: 0;
-	padding-left: 20px;
+	padding-left: 2em;
 } .profil_input:focus {
 	padding-right: 0;
-	padding-left: 20px;
+	padding-left: 2em;
 	background: white;
 	color: black;
-	-webkit-box-shadow: 0px 2px 2px black;
-	-moz-box-shadow: 0px 2px 2px black;
-	box-shadow: 0px 2px 2px black;
+	-webkit-box-shadow: 0px .2em .2em black;
+	-moz-box-shadow: 0px .2em .2em black;
+	box-shadow: 0px .2em .2em black;
 } .profil_input:disabled {
 	color: gray;
 } .profil_input:disabled:hover {
-	padding: 5px 10px;
+	padding: .5em 1em;
 }
 
 select.profil_input {
 	/* Fix the different appearance of the select compared to text inputs */
-	width: calc(50% + 20px);
-	height: 40px;
+	width: calc(50% + 2em);
+	height: 3em;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 }
 
+/* STYLE FUER KLEINE BILDSCHIRME START */
 
+.r-header {
+	display: none;
+	position: fixed;
+	z-index: 98;
+	top: 0;
+	width: 100%;
+	height: 4em;
+	background: black;
+}
+
+.r-checkbox {
+	display: none;
+}
+
+.r-toggle {
+	display: none;
+	position: fixed;
+	z-index: 101;
+	top: 0;
+	left: 0;
+}
+
+.r-overlay {
+	display: none;
+	position: fixed;
+	z-index: 99;
+	top: 0;
+	left: 0;
+}
+@media only screen 
+	and (min-width: 18em) 
+	and (max-width: 56em) {
+
+	.r-header {
+		display: block;
+	}
+	.r-toggle {
+		display: block;
+	}
+	.mypersonalbox {
+		top: 4em;
+		margin: 0;
+		padding: 0;
+		width: 0;
+		max-width: 15em;
+		height: calc(100% - 8em);
+		overflow-y: scroll;
+	}
+	.r-checkbox:checked ~ .r-overlay {
+		display: block;
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,.5);
+	}
+	.r-checkbox:checked ~ .mypersonalbox {
+		width: calc(100% - 8em);
+		padding: 2em;
+	}
+	.mainbox {
+		margin-left: 1em;
+		margin-top: 5em;
+		width: calc(100% - 1em);
+	}
+	
+	/* Fixed einen Bug im Android Chrome Browser */
+	.bn_full {
+		margin-bottom: 4em;
+	}
+	
+	.return {
+		display: none !important; /* Soll von jQuery nicht geaendert werden */
+	}
+	
+	.vn_erstellen_bt:after {
+		content: "";
+	}
+	
+	.profil_daten, .profil_passwort {
+		text-align: left;
+	}
+	.profil_input {
+		display: block;
+		margin-left: 0;
+		width: calc(100% - 2em);
+	}
+	select.profil_input {
+		width: 100%;
+	}
+	
+
+	.meine_vn_tablabel:after {
+		content: " ";
+	}
+	
+	.studiengang_vn_tablabel:after {
+		content: " ";
+	}
+	
+	.semester_vn_tablabel:after {
+		content: " ";
+	}
+	
+	.alle_vn_tablabel:after {
+		content: " ";
+	}
+}
+
+/* STYLE FUER KLEINE BILDSCHIRME ENDE */

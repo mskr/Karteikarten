@@ -14,20 +14,34 @@
 
 */
 
-.mybutton_dark {
-	margin: 0px 0px; /* top&bottom(3) right&left */
-	padding: 5px 9px 5px 9px; /* top right bottom left */
+.mybutton {
+	margin: 0;
+	padding: .5em .9em;
 	display: inline-block;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	cursor: default;
 	outline: 0;
-	font-size: 14px;
+	font-size: .9em;
 	font-family: 'Open Sans', sans-serif;
-	font-weight: 700;
-	text-shadow: 0px -1px 0px #454545;
+	font-weight: bold;
+	-webkit-border-radius: .4em;
+	-moz-border-radius: .4em;
+	border-radius: .4em;
+	text-decoration: none;
+} .mybutton:focus {
+	border: 1px solid white;
+} .mybutton:hover {
+	color: #ffffff;
+} .mybutton:active {
+	color: #ffffff;
+}
+
+
+.dark {
 	color: #dfdfdf;
+	text-shadow: 0px -1px 0px #454545;
 	background: #6b6b6b;
 	background-image: -webkit-linear-gradient(top, #6b6b6b, #4f4f4f);
 	background-image: -moz-linear-gradient(top, #6b6b6b, #4f4f4f);
@@ -40,12 +54,7 @@
 	-webkit-box-shadow: 0px 1px 0px #828282;
 	-moz-box-shadow: 0px 1px 0px #828282;
 	box-shadow: 0px 1px 0px #828282;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	text-decoration: none;
-} .mybutton_dark:hover {
-	color: #ffffff;
+} .dark:hover {
 	border-top: 1px solid #bebebe;
 	background: #9e9e9e;
 	background-image: -webkit-linear-gradient(top, #9e9e9e, #707070);
@@ -53,8 +62,7 @@
 	background-image: -ms-linear-gradient(top, #9e9e9e, #707070);
 	background-image: -o-linear-gradient(top, #9e9e9e, #707070);
 	background-image: linear-gradient(to bottom, #9e9e9e, #707070);
-	text-decoration: none;
-} .mybutton_dark:active {
+} .dark:active {
 	background: #333333;
 	background-image: -webkit-linear-gradient(top, #333333, #262626);
 	background-image: -moz-linear-gradient(top, #333333, #262626);
@@ -68,10 +76,7 @@
 	-moz-box-shadow: 0px 0px 0px #828282;
 	box-shadow: 0px 0px 0px #828282;
 	box-shadow: inset 0px 2px 5px #191919;
-	text-decoration: none;
-} .mybutton_dark:focus {
-	border: 1px solid white;
-} .mybutton_dark:disabled {
+} .dark:disabled {
 	background: #4f4f4f;
 	background-image: none;
 	box-shadow: none;
@@ -80,24 +85,13 @@
 	text-shadow: none;
 }
 
-.mybutton_dark_flat {
-	margin: 3px 0px; /* top&bottom right&left */
-	padding: 5px 9px 5px 9px; /* top right bottom left */
-	display: inline-block;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	cursor: default;
-	outline: 0;
-	font-size: 14px;
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 700;
-	text-shadow: 0px -1px 0px #454545;
+.flat {
 	color: #dfdfdf;
-	text-decoration: none;
+	text-shadow: 0px -1px 0px #454545;
 	background: rgba(0,0,0,0);
 	border: solid rgba(0,0,0,0) 1px; /* Die transparente Border verhindert das verrutschen des Buttons bei hover */
-} .mybutton_dark_flat:hover {
+	box-shadow: none;
+} .flat:hover {
 	color: #ffffff;
 	background: #6b6b6b;
 	background-image: -webkit-linear-gradient(top, #6b6b6b, #4f4f4f);
@@ -111,10 +105,7 @@
 	-webkit-box-shadow: 0px 1px 0px #828282;
 	-moz-box-shadow: 0px 1px 0px #828282;
 	box-shadow: 0px 1px 0px #828282;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-} .mybutton_dark_flat:active {
+} .flat:active {
 	background: #333333;
 	background-image: -webkit-linear-gradient(top, #333333, #262626);
 	background-image: -moz-linear-gradient(top, #333333, #262626);
@@ -128,25 +119,11 @@
 	-moz-box-shadow: 0px 0px 0px #828282;
 	box-shadow: 0px 0px 0px #828282;
 	box-shadow: inset 0px 2px 5px #191919;
-	text-decoration: none;
-} .mybutton_dark_flat:focus {
-	border: 1px solid white;
 }
 
 /* GREEN */
 
-.mybutton_green {
-	margin: 0px 0px; /* top&bottom right&left */
-	padding: 5px 9px 5px 9px;
-	display: inline-block;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	cursor: default;
-	outline: 0;
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 700;
-	font-size: 14px;
+.green {
 	text-shadow: 0px -1px 0px #454545;
 	color: #e9e9e9;
 	background: #8fc369;
@@ -161,14 +138,9 @@
 	-webkit-box-shadow: 0px 1px 0px #828282;
 	-moz-box-shadow: 0px 1px 0px #828282;
 	box-shadow: 0px 1px 0px #828282;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	text-decoration: none;
 }
 
-.mybutton_green:hover {
-	color: #ffffff;
+.green:hover {
 	border-top: 1px solid #c2e4b6;
 	background: #a2e465;
 	background-image: -webkit-linear-gradient(top, #a2e465, #66b61f);
@@ -176,10 +148,9 @@
 	background-image: -ms-linear-gradient(top, #a2e465, #66b61f);
 	background-image: -o-linear-gradient(top, #a2e465, #66b61f);
 	background-image: linear-gradient(to bottom, #a2e465, #66b61f);
-	text-decoration: none;
 }
 
-.mybutton_green:active {
+.green:active {
 	background: #236617;
 	background-image: -webkit-linear-gradient(top, #236617, #405731);
 	background-image: -moz-linear-gradient(top, #236617, #405731);
@@ -193,29 +164,13 @@
 	-moz-box-shadow: 0px 0px 0px #828282;
 	box-shadow: 0px 0px 0px #828282;
 	box-shadow: inset 0px 2px 5px #191919;
-	text-decoration: none;
-}
-
-.mybutton_green:focus {
-	border: 1px solid white;
 }
 
 /* RED */
 
-.mybutton_red {
-	margin: 0px 0px; /* top&bottom right&left */
-	padding: 5px 9px 5px 9px;
-	display: inline-block;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	cursor: default;
-	outline: 0;
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 700;
-	font-size: 14px;
-	text-shadow: 0px -1px 0px #454545;
+.red {
 	color: #e9e9e9;
+	text-shadow: 0px -1px 0px #454545;
 	background: #CC0000;
 	background-image: -webkit-linear-gradient(top, #CC0000, #990000);
 	background-image: -moz-linear-gradient(top, #CC0000, #990000);
@@ -231,10 +186,9 @@
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
-	text-decoration: none;
 }
 
-.mybutton_red:hover {
+.red:hover {
 	color: #ffffff;
 	border-top: 1px solid #e07474;
 	background: #ff2b2b;
@@ -243,10 +197,9 @@
 	background-image: -ms-linear-gradient(top, #ff2b2b, #CC0000);
 	background-image: -o-linear-gradient(top, #ff2b2b, #CC0000);
 	background-image: linear-gradient(to bottom, #ff2b2b, #CC0000);
-	text-decoration: none;
 }
 
-.mybutton_red:active {
+.red:active {
 	background: #810000;
 	background-image: -webkit-linear-gradient(top, #810000, #520000);
 	background-image: -moz-linear-gradient(top, #810000, #520000);
@@ -260,11 +213,6 @@
 	-moz-box-shadow: 0px 0px 0px #828282;
 	box-shadow: 0px 0px 0px #828282;
 	box-shadow: inset 0px 2px 5px #191919;
-	text-decoration: none;
-}
-
-.mybutton_red:focus {
-	border: 1px solid white;
 }
 
 /* TOGGLE BUTTON GROUPS */

@@ -88,7 +88,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 			"	<span class='vn_mehr'>" + jsonVeranstObj[paramBeschr] + "</span>" +
 			"	<div class='vn_optionen'>" +
 			// TODO ! Muss unterschiedlich dargestellt werden, wenn Benutzer an Veranstaltung teilnimmt
-			"		<span class='mybutton_dark'><span class='octicon octicon-sign-out'></span> Ausschreiben</span>" +
+			"		<span class='mybutton dark'><span class='octicon octicon-sign-out'></span> Ausschreiben</span>" +
 			"	</div>" +
 			"</div>" +
 	"</div>");
