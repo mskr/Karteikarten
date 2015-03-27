@@ -15,10 +15,10 @@ import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 public interface IDatenbankmanager {
 
     /**
-     * Liest Benutzer mit der angegebenen Email aus. Wird kein Benutzer
-     * gefunden, so gibt die Methode null zurück
-     * @param eMail 
-     * @return
+     * Liest Benutzer mit der angegebenen Email aus der Datenbank.
+     * @param eMail referenziert eindeutig einen Benutzer 
+     * @return Gibt Benutzer zurück. Wird kein Benutzer gefunden oder
+     * tritt ein Fehler auf liefert die Methode null zurück
      */
     public Benutzer leseBenutzer(String eMail);
 
@@ -28,53 +28,52 @@ public interface IDatenbankmanager {
      * Wird versucht einen Benutzer mit einer bereits vorhandenen 
      * eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
      * geworfen
-     * @param benutzer 
-     * @return
+     * @param benutzer-Objket, das in der Datenbnank gespeichert wird 
+     * @throws DbUniqueConstraintException, SQLException
      */
     public void schreibeBenutzer(Benutzer benutzer)  throws DbUniqueConstraintException, SQLException;
 
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Kennwort, Matrikelnummer, 
-     * Studiengang und Nutzerstatus werden nicht gesetzt, da der Benutzer diese nicht selbst ändern kann
-     * Die eMail kann auch geändert werden.Der Datensatz wird dabei mithilfe des Parameters alteMail identifiziert. 
-     * Diese Methode wird aufgerufen,wenn ein Benutzer sein eigenes Profil bearbeiten will. Das Kennwort kann in einer separaten Methode
-     * bearbeitet werden. Matrikelnummer und Studiengang kann ein Benutzer nicht selber bearbeiten.
-     * Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
-     * mit einer bereits vorhandenen eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
-     * geworfen
-     * @param benutzer 
-     * @return
+     * Studiengang und Nutzerstatus werden nicht gesetzt, da der Benutzer diese nicht selbst ändern kann.
+     * Die eMail kann auch geändert werden. Der Datensatz wird dabei mithilfe des Parameters alteMail identifiziert. 
+     * Das Kennwort kann in einer separaten Methode bearbeitet werden{@link #passwortAendern(String, String)}.
+     * Matrikelnummer und Studiengang kann ein Benutzer nicht selber bearbeiten. Tritt ein Fehler in der Datenbank 
+     * auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer mit einer bereits vorhandenen 
+     * eMail Adresse anzulegen, so wird eine DbUniqueConstraintException geworfen
+     * @param alteMail referenziert eindeutig den zu bearbeitenden Benutzer
+     * @param benutzer-Objket, das in der Datenbank geupdatet wird
+     * @throws DbUniqueConstraintException, SQLException
      */
     public void bearbeiteBenutzer(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
     
-
    /**
-    * TODO
-    * @param eMail
-    * @param dateiName
- * @return 
-    * @throws SQLException
+    * Ändert das Profilbild eines Benutzers in der Datenbank.
+    * @param eMail referenziert eindeutig den Benutzer
+    * @param dateiName, Dateiname des neuen Profilbilds
+    * @return true, falls kein Fehler auftritt, false bei einem Fehler
     */
     public boolean aendereProfilBild(String eMail, String dateiName);
     
     /**
-     * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt. Diese Methode wird verwendet, wenn
+     * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt
+     * {@link #passwortAendern(String, String)}. Diese Methode wird verwendet, wenn
      * der Admin die Daten eines Benutzers bearbeiten möchte. Er kann dabei alle Attribute also auch
      * Matrikelnummer und Studiengang ändern. Um den Datensatz zu identifizieren wird der Parameter alteMail
      * verwendet. Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
      * mit einer bereits vorhandenen eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
      * geworfen
-     * @param benutzer 
-     * @return
+     * @param alteMail referenziert eindeutig den zu bearbeitenden Benutzer
+     * @param benutzer-Objket, das in der Datenbank geupdatet wird 
+     * @throws DbUniqueConstraintException, SQLException
      */
     public void bearbeiteBenutzerAdmin(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
 
     /**
-     * Entfernt den Benutzer aus der Datenbank. Tritt ein Fehler auf gibt
-     * die Methode false zurück. Ansonsten true. (Auch wenn der Benutzer
-     * gar nicht in der Datenbank vorhanden war.)
-     * @param eMail 
-     * @return
+     * Entfernt den Benutzer aus der Datenbank. 
+     * @param eMail referenziert eindeutig den zu löschenden Benutzer
+     * @return  Tritt ein Fehler auf gibt die Methode false zurück. Ansonsten true.
+     * (Auch wenn der Benutzer gar nicht in der Datenbank vorhanden war.)
      */
     public boolean loescheBenutzer(String eMail);
 
@@ -83,83 +82,73 @@ public interface IDatenbankmanager {
      * Tritt ein Fehler in der Datenbank auf, dann wird eine
      * SQLException geworfen. Wenn kein Benutzer zu der angegebenen
      * eMail und Passwort gefunden wird, wird eine DbFalseLoginDataException geworfen
-     * @param eMail 
-     * @param passwort 
-     * @return
+     * @param eMail referenziert eindeutig den Benutzer
+     * @param passwort des Benutzers der sich einloggen will.
+     * @throws SQLException, DbFalseLoginDataException
      */
     public void pruefeLogin(String eMail, String passwort) throws SQLException, DbFalseLoginDataException;
     
     /**
-     * Gibt eine Liste aller Studiengänge zurück. Tritt ein Fehler
-     * auf wird null zurückgegeben. Sind keine Studiengänge in der 
+     * Gibt eine Liste aller Studiengänge zurück. 
+     * @return Liste der Studiengaenge. Tritt ein Fehler auf wird null zurückgegeben. Sind keine Studiengänge in der 
      * Datenbnak vorhanden, dann wird eine leere Liste zurückgegeben
-     * @param eMail 
-     * @param passwort 
-     * @return
      */
     public List<String> leseStudiengaenge();
 
     /**
-     * Ändert das Passwort des angegebenen Benutzers. Liefert bei Erfolg
-     * true zurück. (Auch wenn der Benutzer gar nicht in der Datenbank
+     * Ändert das Passwort des angegebenen Benutzers. 
+     * @param eMail referenziert eindeutig den Benutzer
+     * @param neuesPasswort 
+     * @return Liefert bei Erfolg true zurück. (Auch wenn der Benutzer gar nicht in der Datenbank
      * vorhanden ist.) Bei einem Fehler wird false zurückgegeben.
-     * @param eMail String 
-     * @param neuesPasswort String 
-     * @return
      */
     public boolean passwortAendern(String eMail , String neuesPasswort );
 
     /**
-     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
-     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
-     * Fehler auf, wird null zurückgegeben.
-     * @param veranstTitel 
-     * @return
+     * Holt Veranstaltung mit der id des Parameters aus der Datenbank.
+     * @param id referenziert eindeutig eine Veranstaltung 
+     * @return Veranstaltung mit der angegebenen id. Ist keine Veranstaltung mit diesem Titel 
+     * vorhanden oder tritt ein Fehler auf, wird null zurückgegeben.
      */
     public Veranstaltung leseVeranstaltung(int id);
     
     /**
-     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
-     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
-     * Fehler auf, wird null zurückgegeben.
-     * @param veranstTitel 
-     * @return
+     * Holt alle Veranstaltungen aus der Datenbank und packt sie in eine Array List.
+     * @return Liste aller Veranstaltungen. Gibt es keine Veranstaltungen wird eine 
+     * leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
      */
     public List<Veranstaltung> leseAlleVeranstaltungen();
     
     /**
-     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
-     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
-     * Fehler auf, wird null zurückgegeben.
-     * @param veranstTitel 
-     * @return
+     * Holt Veranstaltungen, die von dem angegebenen Studiengang gehört werden können
+     * aus der Datenbank.
+     * @param studiengang
+     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die 
+     * Methode eine leere Liste zurück. Bei einem Fehler kommt null zurück.
      */
     public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang);
 
     /**
-     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
-     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
-     * Fehler auf, wird null zurückgegeben.
-     * @param veranstTitel 
-     * @return
+     * Holt alle Veranstaltungen aus dem angegebenen Semester aus der Datenbank.
+     * @param semester 
+     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die Methode eine leere Liste zurück.
+     * Bei einem Fehler kommt null zurück.
      */
     public List<Veranstaltung> leseVeranstaltungenSemester(String semester);
     
     /**
-     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
-     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
-     * Fehler auf, wird null zurückgegeben.
-     * @param veranstTitel 
-     * @return
+     * Holt alle Moderatoren zu der angegebenen Veranstaltung aus der Datenbank.
+     * @param veranstaltung 
+     * @return Liste von Moderatoren der Veranstaltung.Hat die Veranstaltung  ine Moderatoren
+     * wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<Benutzer> leseModeratoren(int veranstaltung);
     
     /**
-     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
-     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
-     * Fehler auf, wird null zurückgegeben.
-     * @param veranstTitel 
-     * @return
+     * Holt alle Studiengaenge zu der angegebenen Veranstaltung aus der Datenbank.
+     * @param veranstaltung 
+     * @return Liste der Studiengänge zu dieser Veranstaltung. Wird die Veranstaltung von keinem Studiengang
+     * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<String> leseStudiengaenge(int veranstaltung);
     
@@ -203,8 +192,10 @@ public interface IDatenbankmanager {
      * gekapselt. In der Liste werden maximal 5 Einträge gespeichert. Ist der Rückgabewert null, so
      * ist ein Fehler aufgetreten. Gibt es kein ähnliches Feld zu dem Suchmuster, dann liefert die
      * Methode eine leere Liste zurück.
-     * @param  
-     * @return
+     * @param suchmuster nach dem Felder in der Datenbank verglichen werden
+     * @param suchfeld gibt an welche Felder in der Datenbank mit dem Suchmuster verglichen werden.
+     * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
+     * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
      */
     public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster, List<Klassenfeld> suchfeld);
     /**
