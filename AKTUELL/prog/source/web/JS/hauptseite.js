@@ -18,7 +18,7 @@ function fillHauptseite() {
     // Ergebniss der ajax calls speichern
     var ajaxCallResults = [];
     // Alle Veranstaltungen
-    $.ajax({
+    var ajax1 = $.ajax({
     	url: veranstaltungServlet,
     	data: "action="+actionLeseVeranst + "&" + 
     	leseVeranstMode +"=" + leseVeranstModeAlle,
@@ -42,7 +42,7 @@ function fillHauptseite() {
     	}
     });
 	// Meine Veranstaltungen
-    $.ajax({
+    var ajax2 = $.ajax({
          url: veranstaltungServlet,
          data: "action="+actionLeseVeranst + "&" + 
          leseVeranstMode +"=" + leseVeranstModeMeine,
@@ -66,7 +66,7 @@ function fillHauptseite() {
          }
      });
 	// Semester Veranstaltungen
-    $.ajax({
+    var ajax3 = $.ajax({
          url: veranstaltungServlet,
          data: "action="+actionLeseVeranst + "&" + 
          leseVeranstMode +"=" + leseVeranstModeSemester,
@@ -90,7 +90,7 @@ function fillHauptseite() {
          }
      });
 	// Studiengang Veranstaltungen
-    $.ajax({
+    var ajax4 = $.ajax({
          url: veranstaltungServlet,
          data: "action="+actionLeseVeranst + "&" + 
          leseVeranstMode +"=" + leseVeranstModeStudiengang,
@@ -115,14 +115,18 @@ function fillHauptseite() {
      });
 
 	// Alle Einblende Felder aktivieren
-    $.when.apply($,ajaxCallResults).done(function() {
-    	$(".vn_mehr_einbl").click(function() 
-    	    	{
-    	    		var parent = $(this).parent();
-    	    		var wrapper = parent.find(".vn_mehr_wrapper");
-    	    		wrapper.slideToggle("slow");
-    	    	});
-	});
+    $.when(ajax1,ajax2,ajax3,ajax4).done(function() {
+	    	$.when.apply($,ajaxCallResults).done(
+        		function() {
+        			$(".vn_mehr_einbl").click(function() 
+        	    	{
+        	    		var parent = $(this).parent();
+        	    		var wrapper = parent.find(".vn_mehr_wrapper");
+        	    		wrapper.slideToggle("slow");
+        	    	});
+        		});
+        }
+    		);
 }
 
 /**
