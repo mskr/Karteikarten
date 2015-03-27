@@ -355,7 +355,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(rs.next()){
                 veranstaltung = new Veranstaltung(id,rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"));
             }
         } catch (SQLException e) {
@@ -386,7 +386,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next()){
                 veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
             }
         } catch (SQLException e) {
@@ -419,7 +419,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next()){
                 veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
             }
         } catch (SQLException e) {
@@ -451,7 +451,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next()){
                 veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         semester,rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
             }
         } catch (SQLException e) {
@@ -483,7 +483,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next()){
                 veranstaltungen.add(new Veranstaltung(rs.getInt("ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
             }
         } catch (SQLException e) {
@@ -617,7 +617,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setBoolean(5, veranst.isKommentareErlaubt());
             ps.setBoolean(6, veranst.isBewertungenErlaubt());
             ps.setBoolean(7, veranst.isModeratorKarteikartenBearbeiten());
-            ps.setInt(8, veranst.getErsteller());
+            ps.setInt(8, veranst.getErsteller().getId());
 
             ps.executeUpdate();
 
