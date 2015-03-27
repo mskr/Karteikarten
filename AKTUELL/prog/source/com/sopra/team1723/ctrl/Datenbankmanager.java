@@ -345,9 +345,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         ArrayList<Veranstaltung> veranstaltungen = null;
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
-            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer"
-                    + "FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz ON"
+            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer "
+                    + "FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
                     + "v.ID = bvz.Veranstaltung GROUP BY v.ID"); 
             rs = ps.executeQuery();
             while(rs.next()){
@@ -376,10 +376,10 @@ public class Datenbankmanager implements IDatenbankmanager {
         ArrayList<Veranstaltung> veranstaltungen = null;
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
-            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer"
-                    + "FROM benutzer_veranstaltung_zuordnung AS bvz JOIN veranstaltung AS v ON"
-                    + "v.ID = bvz.Veranstaltung JOIN veranstaltung_studiengang_zuordnung AS vsz WHERE vsz.Studiengang =?"
+            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer "
+                    + "FROM benutzer_veranstaltung_zuordnung AS bvz JOIN veranstaltung AS v ON "
+                    + "v.ID = bvz.Veranstaltung JOIN veranstaltung_studiengang_zuordnung AS vsz WHERE vsz.Studiengang =? "
                     + " GROUP BY v.ID"); 
             ps.setString(1, studiengang);
             rs = ps.executeQuery();
@@ -409,9 +409,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         ArrayList<Veranstaltung> veranstaltungen = null;
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
-            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer"
-                    + "FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz ON"
+            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer "
+                    + "FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
                     + "v.ID = bvz.Veranstaltung WHERE Semester =? GROUP BY v.ID"); 
             ps.setString(1, semester);
             rs = ps.executeQuery();
@@ -441,9 +441,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         ArrayList<Veranstaltung> veranstaltungen = null;
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
-            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer"
-                    + "FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz ON"
+            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer "
+                    + "FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
                     + "v.ID = bvz.Veranstaltung WHERE bvz.Benutzer =? GROUP BY v.ID"); 
             ps.setInt(1, benutzer);
             rs = ps.executeQuery();
@@ -474,7 +474,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             moderatoren = new ArrayList<Benutzer>();
             ps = conMysql.prepareStatement("SELECT b.ID, eMail, Vorname, Nachname, Profilbild, Matrikelnummer, Studiengang, "
-                    + "Kennwort, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung,"
+                    + "Kennwort, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, "
                     + "Profilbild FROM benutzer AS b JOIN moderator AS m ON b.ID = m.Benutzer AND m.Veranstaltung =?"); 
             ps.setInt(1, veranstaltung);
             rs = ps.executeQuery();
@@ -505,7 +505,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ArrayList<String> studiengaenge = null;
         try{
             studiengaenge = new ArrayList<String>();
-            ps = conMysql.prepareStatement("SELECT Studiengang FROM veranstaltung_studiengang_zuordnung"
+            ps = conMysql.prepareStatement("SELECT Studiengang FROM veranstaltung_studiengang_zuordnung "
                     + " WHERE Veranstaltung =?"); 
             ps.setInt(1, veranstaltung);
             rs = ps.executeQuery();
@@ -542,7 +542,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                         System.out.println("Angegebenes Klassenfeld konnte nicht auf ein Feld in der db gematcht werden");
                         return null;
                     }
-                    sql = sql + "SELECT "+aktSuchfeld.feld+" AS Text, ID, '"+aktSuchfeld.klasse+"' AS Tabelle,"
+                    sql = sql + "SELECT "+aktSuchfeld.feld+" AS Text, ID, '"+aktSuchfeld.klasse+"' AS Tabelle, "
                             + "levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") AS lev FROM "+aktSuchfeld.klasse+" "
                             + " WHERE levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") BETWEEN 0 and 5 UNION ";
                     aktSuchfeld = it.next();

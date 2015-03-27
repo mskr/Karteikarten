@@ -60,16 +60,21 @@ public class VeranstaltungServlet extends ServletController {
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
             verAnst = dbManager.leseAlleVeranstaltungen();
-            jo = JSONConverter.toJsonVeranstList(verAnst);
+            if(verAnst != null)
+                jo = JSONConverter.toJsonVeranstList(verAnst);
+            else
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return true;
         }
         else if(mode.equals(ParamDefines.LeseVeranstModeMeine))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            // TODO In der Session sollte noch die ID des Benutzers gespeichert werden !!!
-            verAnst = dbManager.leseVeranstaltungen(1);
-            jo = JSONConverter.toJsonVeranstList(verAnst);
+            verAnst = dbManager.leseVeranstaltungen(aktuellerBenutzer.getId());
+            if(verAnst != null)
+                jo = JSONConverter.toJsonVeranstList(verAnst);
+            else
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return true;
 
@@ -79,7 +84,10 @@ public class VeranstaltungServlet extends ServletController {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
             //TODO Wie speichern wir das aktuelle Semester?
             verAnst = dbManager.leseVeranstaltungenSemester("SoSe2015");
-            jo = JSONConverter.toJsonVeranstList(verAnst);
+            if(verAnst != null)
+                jo = JSONConverter.toJsonVeranstList(verAnst);
+            else
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return true;
 
@@ -89,7 +97,10 @@ public class VeranstaltungServlet extends ServletController {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
             verAnst = dbManager.leseVeranstaltungenStudiengang(dbManager.leseBenutzer(request.getSession().getAttribute
                     (sessionAttributeEMail).toString()).getStudiengang());
-            jo = JSONConverter.toJsonVeranstList(verAnst);
+            if(verAnst != null)
+                jo = JSONConverter.toJsonVeranstList(verAnst);
+            else
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return true;
 

@@ -89,7 +89,6 @@ function addBenachrichtigung(text, isNeu, onClickFkt)
 	
 	divBn.slideDown("slow");
 	
-	// TODO Div reordering (neu nach oben)
 	var elem = contentDiv.find('div').sort(sortDivByClassName);
 	contentDiv.append(elem);
 }

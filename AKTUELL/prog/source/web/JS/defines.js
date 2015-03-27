@@ -31,6 +31,7 @@ var leseVeranstModeMeine = "meine";                  // Liefert meine Veranstalt
 
 // GET/POST-Parameter fuer die Servlets
 // Werden auch als Schluesselnamen fuer JSON Objekte verwendet
+var paramId = "id";
 var paramEmail = "email";
 var paramEmailNew = "emailNew";
 var paramPasswort = "pass";
@@ -57,6 +58,7 @@ var paramModeratorKkBearbeiten = "moderatorKkBearbeiten";
 var paramKommentareErlauben = "kommentareErlauben";
 var paramErsteller = "ersteller";
 var paramModeratoren = "moderatoren";
+var paramAnzTeilnehmer = "anzTeilnehmer";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";
