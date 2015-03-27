@@ -1,6 +1,5 @@
 package com.sopra.team1723.data;
 
-import java.util.*;
 
 /**
  * 
@@ -9,28 +8,33 @@ public class Veranstaltung {
 
     
     
-    public Veranstaltung(String titel, String beschreibung, String studiengang, String semester,
+    public Veranstaltung(int id, String titel, String beschreibung, String semester,
             String zugangspasswort, boolean bewertungenErlaubt, boolean moderatorKarteikartenBearbeiten,
-            String ersteller, ArrayList<String> moderatoren, boolean kommentareErlaubt)
+            String ersteller, boolean kommentareErlaubt)
     {
+        this.id = id;
         this.titel = titel;
         this.beschreibung = beschreibung;
-        this.studiengang = studiengang;
         this.semester = semester;
         this.zugangspasswort = zugangspasswort;
         this.bewertungenErlaubt = bewertungenErlaubt;
         this.moderatorKarteikartenBearbeiten = moderatorKarteikartenBearbeiten;
         this.kommentareErlaubt = kommentareErlaubt;
         this.ersteller = ersteller;
-        this.moderatoren = new ArrayList<String>(moderatoren);
     }
+    
+ 
+
 
     /**
      * 
      */
     public Veranstaltung() {
     }
-
+    /**
+     * 
+     */
+    private int id;
     /**
      * 
      */
@@ -40,11 +44,6 @@ public class Veranstaltung {
      * 
      */
     private String beschreibung;
-
-    /**
-     * 
-     */
-    private String studiengang;
 
     /**
      * 
@@ -77,113 +76,147 @@ public class Veranstaltung {
      */
     private String ersteller;
 
-    /**
-     * 
-     */
-    private ArrayList<String> moderatoren;
-
-    public String getBeschreibung()
+    public int getId()
     {
-        return beschreibung;
+        return id;
     }
 
-    public void setBeschreibung(String beschreibung)
+
+
+
+    public void setId(int id)
     {
-        this.beschreibung = beschreibung;
+        this.id = id;
     }
 
-    public String getStudiengang()
-    {
-        return studiengang;
-    }
 
-    public void setStudiengang(String studiengang)
-    {
-        this.studiengang = studiengang;
-    }
 
-    public String getSemester()
-    {
-        return semester;
-    }
-
-    public void setSemester(String semester)
-    {
-        this.semester = semester;
-    }
-
-    public String getZugangspasswort()
-    {
-        return zugangspasswort;
-    }
-
-    public void setZugangspasswort(String zugangspasswort)
-    {
-        this.zugangspasswort = zugangspasswort;
-    }
-    public boolean isBewertungenErlaubt()
-    {
-        return bewertungenErlaubt;
-    }
-
-    public void setTitel(String titel)
-    {
-        this.titel = titel;
-    }
-
-    public void setModeratoren(ArrayList<String> moderatoren)
-    {
-        this.moderatoren = moderatoren;
-    }
-
-    public void setBewertungenErlaubt(boolean bewertungenErlaubt)
-    {
-        this.bewertungenErlaubt = bewertungenErlaubt;
-    }
-
-    public boolean isModeratorKarteikartenBearbeiten()
-    {
-        return moderatorKarteikartenBearbeiten;
-    }
-
-    public void setModeratorKarteikartenBearbeiten(boolean moderatorKarteikartenBearbeiten)
-    {
-        this.moderatorKarteikartenBearbeiten = moderatorKarteikartenBearbeiten;
-    }
-
-    public String getErsteller()
-    {
-        return ersteller;
-    }
-
-    public void setErsteller(String ersteller)
-    {
-        this.ersteller = ersteller;
-    }
-
-    public ArrayList<String> getModeratoren()
-    {
-        return moderatoren;
-    }
-
-    public void setModeratoren(int[] moderatorenIDs)
-    {
-        this.moderatoren = new ArrayList<String>(moderatoren);
-    }
 
     public String getTitel()
     {
         return titel;
     }
 
+
+
+
+    public void setTitel(String titel)
+    {
+        this.titel = titel;
+    }
+
+
+
+
+    public String getBeschreibung()
+    {
+        return beschreibung;
+    }
+
+
+
+
+    public void setBeschreibung(String beschreibung)
+    {
+        this.beschreibung = beschreibung;
+    }
+
+
+
+
+    public String getSemester()
+    {
+        return semester;
+    }
+
+
+
+
+    public void setSemester(String semester)
+    {
+        this.semester = semester;
+    }
+
+
+
+
+    public String getZugangspasswort()
+    {
+        return zugangspasswort;
+    }
+
+
+
+
+    public void setZugangspasswort(String zugangspasswort)
+    {
+        this.zugangspasswort = zugangspasswort;
+    }
+
+
+
+
     public boolean isKommentareErlaubt()
     {
         return kommentareErlaubt;
     }
 
+
+
+
     public void setKommentareErlaubt(boolean kommentareErlaubt)
     {
         this.kommentareErlaubt = kommentareErlaubt;
     }
+
+
+
+
+    public boolean isBewertungenErlaubt()
+    {
+        return bewertungenErlaubt;
+    }
+
+
+
+
+    public void setBewertungenErlaubt(boolean bewertungenErlaubt)
+    {
+        this.bewertungenErlaubt = bewertungenErlaubt;
+    }
+
+
+
+
+    public boolean isModeratorKarteikartenBearbeiten()
+    {
+        return moderatorKarteikartenBearbeiten;
+    }
+
+
+
+
+    public void setModeratorKarteikartenBearbeiten(boolean moderatorKarteikartenBearbeiten)
+    {
+        this.moderatorKarteikartenBearbeiten = moderatorKarteikartenBearbeiten;
+    }
+
+
+
+
+    public String getErsteller()
+    {
+        return ersteller;
+    }
+
+
+
+
+    public void setErsteller(String ersteller)
+    {
+        this.ersteller = ersteller;
+    }
+
+
 
 }

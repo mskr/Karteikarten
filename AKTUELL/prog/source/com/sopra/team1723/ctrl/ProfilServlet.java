@@ -3,6 +3,8 @@ package com.sopra.team1723.ctrl;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.crypto.AEADBadTagException;
 import javax.servlet.ServletContext;
@@ -284,7 +286,7 @@ public class ProfilServlet extends ServletController {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {       
         super.doPost(req, resp);
 
         // Ist beim ServletController schon eine Antowrt zurückgegeben worden?

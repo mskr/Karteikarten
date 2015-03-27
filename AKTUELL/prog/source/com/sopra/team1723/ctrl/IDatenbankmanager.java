@@ -116,8 +116,53 @@ public interface IDatenbankmanager {
      * @param veranstTitel 
      * @return
      */
-    public Veranstaltung leseVeranstaltung(String veranstTitel);
+    public Veranstaltung leseVeranstaltung(int id);
+    
+    /**
+     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
+     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
+     * Fehler auf, wird null zurückgegeben.
+     * @param veranstTitel 
+     * @return
+     */
+    public List<Veranstaltung> leseAlleVeranstaltungen();
+    
+    /**
+     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
+     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
+     * Fehler auf, wird null zurückgegeben.
+     * @param veranstTitel 
+     * @return
+     */
+    public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang);
 
+    /**
+     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
+     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
+     * Fehler auf, wird null zurückgegeben.
+     * @param veranstTitel 
+     * @return
+     */
+    public List<Veranstaltung> leseVeranstaltungenSemester(String semester);
+    
+    /**
+     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
+     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
+     * Fehler auf, wird null zurückgegeben.
+     * @param veranstTitel 
+     * @return
+     */
+    public List<Benutzer> leseModeratoren(int veranstaltung);
+    
+    /**
+     * Holt Veranstaltung mit dem Titel des Parameters aus der Datenbank.
+     * Ist keine Veranstaltung mit diesem Titel vorhanden oder tritt ein
+     * Fehler auf, wird null zurückgegeben.
+     * @param veranstTitel 
+     * @return
+     */
+    public List<String> leseStudiengaenge(int veranstaltung);
+    
     /**
      * Fugt neue Veranstaltung in die Datenbank ein. Bei Erfolg wird
      * true zuruckgegeben. Bei einem Fehler in der Datenbank oder falls

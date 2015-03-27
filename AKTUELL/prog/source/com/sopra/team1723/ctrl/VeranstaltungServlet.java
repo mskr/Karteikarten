@@ -61,9 +61,9 @@ public class VeranstaltungServlet extends ServletController {
             // TODO Test
            List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
            // TODO Vieles Klären!
-           Veranstaltung s = new Veranstaltung("Informatik für Anfänger", "Dies ist ein Beispieltext", "Informatik", "WiSe 15", "1234", true, true, "Max Mustermann", new ArrayList<>(), true);
-           Veranstaltung s2 = new Veranstaltung("Informatik für Anfänger", "Dies ist ein Beispieltext", "Informatik", "WiSe 15", "1234", true, true, "Karl-Heinz", new ArrayList<>(), true);
-           Veranstaltung s3 = new Veranstaltung("Informatik für Anfänger", "Dies ist ein Beispieltext", "Informatik", "WiSe 15", "1234", true, true, "Peter Mayer", new ArrayList<>(), true);
+           Veranstaltung s = new Veranstaltung(1, "Informatik für Anfänger", "Dies ist ein Beispieltext", "WiSe 15", "1234", true, true, "Max Mustermann", true);
+           Veranstaltung s2 = new Veranstaltung(2,"Informatik für Anfänger", "Dies ist ein Beispieltext", "WiSe 15", "1234", true, true, "Karl-Heinz", true);
+           Veranstaltung s3 = new Veranstaltung(3,"Informatik für Anfänger", "Dies ist ein Beispieltext",  "WiSe 15", "1234", true, true, "Peter Mayer", true);
            verAnst.add(s);
            verAnst.add(s2);
            verAnst.add(s3);

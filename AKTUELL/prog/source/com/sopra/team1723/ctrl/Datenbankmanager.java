@@ -17,6 +17,8 @@ import java.util.List;
 
 
 
+
+
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -305,30 +307,20 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public Veranstaltung leseVeranstaltung(String veranstTitel) {
+    public Veranstaltung leseVeranstaltung(int id) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Veranstaltung veranstaltung = null;
         try{
-            ArrayList<String> moderatoren = new ArrayList<String>();
-            ps = conMysql.prepareStatement("SELECT m.Benutzer FROM veranstaltung AS v JOIN moderator AS m WHERE v.Titel=?");
-            ps.setString(1, veranstTitel);
-            rs = ps.executeQuery();
-            while(rs.next()){
-                moderatoren.add(rs.getString("m.Benutzer"));
-            }
-            closeQuietly(ps);
-            closeQuietly(rs);
-
-            ps = conMysql.prepareStatement("SELECT Beschreibung, Studiengang, Semester, Kennwort, BewertungenErlaubt,"
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, Benutzer FROM veranstaltung WHERE Titel = ?");
-            ps.setString(1, veranstTitel);
+            ps = conMysql.prepareStatement("SELECT Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt FROM veranstaltung WHERE ID=?"); 
+            ps.setInt(1, id);
             rs = ps.executeQuery();
             if(rs.next()){
-                veranstaltung = new Veranstaltung(veranstTitel,rs.getString("Beschreibung"),rs.getString("Studiengang"),
+                veranstaltung = new Veranstaltung(id,rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
                         rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
-                        moderatoren, rs.getBoolean("KommentareErlaubt"));
+                        rs.getBoolean("KommentareErlaubt"));
             }
         } catch (SQLException e) {
             veranstaltung = null;
@@ -340,6 +332,155 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
 
         return veranstaltung;
+    }
+    
+    @Override
+    public List<Veranstaltung> leseAlleVeranstaltungen()
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Veranstaltung> veranstaltungen = null;
+        try{
+            veranstaltungen = new ArrayList<Veranstaltung>();
+            ps = conMysql.prepareStatement("SELECT ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt FROM veranstaltung"); 
+            rs = ps.executeQuery();
+            while(rs.next()){
+                veranstaltungen.add(new Veranstaltung(rs.getInt("ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
+                        rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
+                        rs.getBoolean("KommentareErlaubt")));
+            }
+        } catch (SQLException e) {
+            veranstaltungen = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return veranstaltungen;
+    }
+
+    @Override
+    public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Veranstaltung> veranstaltungen = null;
+        try{
+            veranstaltungen = new ArrayList<Veranstaltung>();
+            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt FROM veranstaltung AS v JOIN "
+                    + "veranstaltung_studiengang_zuordnung AS vsz ON v.ID = vsz.Veranstaltung AND vsz.Studiengang =?"); 
+            ps.setString(1, studiengang);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
+                        rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
+                        rs.getBoolean("KommentareErlaubt")));
+            }
+        } catch (SQLException e) {
+            veranstaltungen = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return veranstaltungen;
+    }
+
+    @Override
+    public List<Veranstaltung> leseVeranstaltungenSemester(String semester)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Veranstaltung> veranstaltungen = null;
+        try{
+            veranstaltungen = new ArrayList<Veranstaltung>();
+            ps = conMysql.prepareStatement("SELECT ID, Titel, Beschreibung, Kennwort, BewertungenErlaubt,"
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt FROM veranstaltung WHERE Semester =?"); 
+            ps.setString(1, semester);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                veranstaltungen.add(new Veranstaltung(rs.getInt("ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
+                        semester,rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
+                        rs.getBoolean("KommentareErlaubt")));
+            }
+        } catch (SQLException e) {
+            veranstaltungen = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return veranstaltungen;
+    }
+    
+    @Override
+    public List<Benutzer> leseModeratoren(int veranstaltung)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Benutzer> moderatoren = null;
+        try{
+            moderatoren = new ArrayList<Benutzer>();
+            ps = conMysql.prepareStatement("SELECT b.ID, eMail, Vorname, Nachname, Profilbild, Matrikelnummer, Studiengang, "
+                    + "Kennwort, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung,"
+                    + "Profilbild FROM benutzer AS b JOIN moderator AS m ON b.ID = m.Benutzer AND m.Veranstaltung =?"); 
+            ps.setInt(1, veranstaltung);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                moderatoren.add(new Benutzer(rs.getInt("b.ID"),rs.getString("eMail"),rs.getString("Vorname"),
+                        rs.getString("Nachname"), rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),
+                        rs.getString("Kennwort"),Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
+                        rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
+                        NotifyKommentare.valueOf(rs.getString("NotifyKommentare")),rs.getString("Profilbild")));
+            }
+        } catch (SQLException e) {
+            moderatoren = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return moderatoren;
+    }
+
+    @Override
+    public List<String> leseStudiengaenge(int veranstaltung)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<String> studiengaenge = null;
+        try{
+            studiengaenge = new ArrayList<String>();
+            ps = conMysql.prepareStatement("SELECT Studiengang FROM veranstaltung_studiengang_zuordnung"
+                    + " WHERE Veranstaltung =?"); 
+            ps.setInt(1, veranstaltung);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                studiengaenge.add(rs.getString("Studiengang"));
+            }
+        } catch (SQLException e) {
+            studiengaenge = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return studiengaenge;
     }
 
     @Override
@@ -539,6 +680,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         // TODO Auto-generated method stub
         return false;
     }
+
 
 
 

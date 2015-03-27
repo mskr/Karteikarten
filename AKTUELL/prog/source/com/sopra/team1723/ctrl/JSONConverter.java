@@ -136,12 +136,6 @@ public class JSONConverter
             o.put(ParamDefines.KommentareErlauben,v.isKommentareErlaubt());
             o.put(ParamDefines.Ersteller,v.getErsteller());
             
-            JSONArray arr = new JSONArray();
-            for(String s: v.getModeratoren())
-                arr.add(s);
-            o.put(ParamDefines.Moderatoren,arr);
-            
-            
             array.add(o);
         }
 
@@ -167,10 +161,6 @@ public class JSONConverter
         jo.put(ParamDefines.KommentareErlauben,veranst.isKommentareErlaubt());
         jo.put(ParamDefines.Ersteller,veranst.getErsteller());
         
-        JSONArray arr = new JSONArray();
-        for(String s: veranst.getModeratoren())
-            arr.add(s);
-        jo.put(ParamDefines.Moderatoren,arr);
         
         return jo;
     }
