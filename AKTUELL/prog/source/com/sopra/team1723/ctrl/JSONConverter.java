@@ -90,8 +90,13 @@ public class JSONConverter
         jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
         JSONArray array = new JSONArray();
         
-        for(ErgebnisseSuchfeld ergs: suchtreffer)
-            array.add(ergs.text);
+        for(ErgebnisseSuchfeld ergs: suchtreffer){
+            JSONObject j = new JSONObject();
+            j.put(ParamDefines.SuchfeldErgText, ergs.text);
+            j.put(ParamDefines.SuchfeldErgKlasse, ergs.klasse);
+            j.put(ParamDefines.SuchfeldErgId, ergs.id);
+            array.add(j);
+        }
         
         jo.put(ParamDefines.jsonArrSuchfeldResult, array);
         

@@ -30,7 +30,6 @@ function parseUrlQuery() {
     query  = window.location.search.substring(1),
     urlParams = {};
     while (match = search.exec(query)) {
-        console.log("[urlHandler] jsonBenutzer="+jsonBenutzer);
         urlParams[decode(match[1])] = decode(match[2]);
     }
     return urlParams;
