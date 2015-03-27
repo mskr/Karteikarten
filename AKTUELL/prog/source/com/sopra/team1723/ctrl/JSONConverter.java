@@ -41,6 +41,7 @@ public class JSONConverter
         
         jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
         jo.put(ParamDefines.Email, benutzer.geteMail());
+        jo.put(ParamDefines.Id, benutzer.getId());
         jo.put(ParamDefines.Vorname, benutzer.getVorname());
         jo.put(ParamDefines.Nachname, benutzer.getNachname());
         jo.put(ParamDefines.MatrikelNr, new Integer(benutzer.getMatrikelnummer()).toString());
@@ -128,7 +129,8 @@ public class JSONConverter
             JSONObject o = new JSONObject();
 
             o.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);      
-            o.put(ParamDefines.Titel, v.getTitel()); 
+            o.put(ParamDefines.Titel, v.getTitel());   
+            o.put(ParamDefines.Id, v.getId()); 
             o.put(ParamDefines.Beschr, v.getBeschreibung()); 
             o.put(ParamDefines.Semester, v.getSemester()); 
             o.put(ParamDefines.BewertungenErlauben, v.isBewertungenErlaubt()); 
@@ -153,7 +155,8 @@ public class JSONConverter
     static JSONObject toJson(Veranstaltung veranst) 
     {
         JSONObject jo = new JSONObject();
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);      
+        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);    
+        jo.put(ParamDefines.Id, veranst.getId());   
         jo.put(ParamDefines.Titel, veranst.getTitel()); 
         jo.put(ParamDefines.Beschr, veranst.getBeschreibung()); 
         jo.put(ParamDefines.Semester, veranst.getSemester()); 

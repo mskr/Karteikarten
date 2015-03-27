@@ -293,21 +293,45 @@ public class ProfilServlet extends ServletController {
         if(!doProcessing())
             return;
 
+        JSONObject jo  = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+        
         if(aktuelleAction.equals(ParamDefines.ActionGetBenutzer))
         {
-            JSONObject jo = JSONConverter.toJson(aktuellerBenutzer,true);
+            jo = JSONConverter.toJson(aktuellerBenutzer,true);
             outWriter.print(jo);
             return;
         }
         else if(aktuelleAction.equals(ParamDefines.ActionGetOtherBenutzer))
         {
             String eMail = req.getParameter(ParamDefines.Email);
-            Benutzer b = dbManager.leseBenutzer(eMail);
-
+            Benutzer b = null;
             
+            if(eMail != null)
+                b = dbManager.leseBenutzer(eMail);
+            else
+            {
+                String userID = req.getParameter(ParamDefines.Id);
+                if(userID!= null)
+                {
+                    try
+                    {
+                        int id = Integer.parseInt(userID);
+                        b = dbManager.leseBenutzer(id);
+                    }
+                    catch (NumberFormatException e)
+                    {}
+                }
+                else
+                {
+                    // TODO Evntl detailliertere Fehlermeldung, z.B. userNotFound einfuehren?
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                    outWriter.print(jo);
+                    return;
+                }
+            }
+
             if(b == null)
             {
-                JSONObject jo  = null;
                 // TODO Evntl detailliertere Fehlermeldung, z.B. userNotFound einfuehren?
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
@@ -316,7 +340,8 @@ public class ProfilServlet extends ServletController {
             else
             {
                 // TODO Testen!
-                JSONObject jo = JSONConverter.toJson(b,aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN);
+                
+                jo = JSONConverter.toJson(b,aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN);
                 outWriter.print(jo);
                 return;
             }
@@ -332,7 +357,7 @@ public class ProfilServlet extends ServletController {
         else
         {
             // Sende Nack mit ErrorText zurück
-            JSONObject jo  = null;
+            jo  = null;
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
         }

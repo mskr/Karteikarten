@@ -121,14 +121,11 @@ public class ServletController extends HttpServlet
      */
     private Benutzer leseBenutzer(HttpSession session) 
     {        
-        String userID = (String) session.getAttribute(sessionAttributeUserID);
+        Integer userID = (Integer) session.getAttribute(sessionAttributeUserID);
 
         if(userID == null)
             return null;
-
-        int id = Integer.parseInt(userID);
-
-        return dbManager.leseBenutzer(id);
+		return dbManager.leseBenutzer(userID);
     }
     /**
      * Gibt alle Parameter aus, die am Request hängen
