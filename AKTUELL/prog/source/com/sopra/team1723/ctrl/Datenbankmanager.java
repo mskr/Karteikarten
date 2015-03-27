@@ -603,7 +603,31 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
         return ergebnisse;
     }
+    @Override
+    public boolean angemeldet(int benutzer, int veranstaltung) throws SQLException{
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean angemeldet = false;
+        try{
+            ps = conMysql.prepareStatement("SELECT ID FROM benutzer_veranstaltung_zuordnung WHERE Benutzer =? AND Veranstaltung =?");
+            ps.setInt(1, benutzer);
+            ps.setInt(2, veranstaltung);
+            rs = ps.executeQuery();
+            if(rs.next())
+                angemeldet = true;
+            else
+                angemeldet = false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
 
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+        return angemeldet;
+    }
+    
     @Override
     public void schreibeVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException  {
         PreparedStatement ps = null;

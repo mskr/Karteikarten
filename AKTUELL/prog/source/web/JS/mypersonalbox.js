@@ -17,7 +17,7 @@ function fillMyPersonalBox()
     $(".username").click(function() {
         var paramObj = {};
         paramObj[urlParamLocation] = ansichtProfilseite;
-        paramObj[urlParamBenutzerProfil] = jsonBenutzer[paramEmail];
+        paramObj[urlParamId] = jsonBenutzer[paramId];
         buildUrlQuery(paramObj);
     });
     
@@ -27,10 +27,10 @@ function fillMyPersonalBox()
     
     // TODO Benachrichtigungen laden
     // Hier ein paar Beispiele
-    addBenachrichtigung("Hier werden Benachrichtungen angezeigt. Diese müssen noch geladen werden! Aber wir gehen jetzt mal zum Profil.", true, function() {
+    addBenachrichtigung("Ihr Profil wurde geändert. Klicken sie, um zum eigenen Profil zu wechseln.", true, function() {
         var paramObj = {};
         paramObj[urlParamLocation] = ansichtProfilseite;
-        paramObj[urlParamBenutzerProfil] = jsonBenutzer[paramEmail];
+        paramObj[urlParamId] = jsonBenutzer[paramId];
         buildUrlQuery(paramObj);
     });
     
@@ -49,6 +49,7 @@ function fillUserContainer()
     var nutzerstatus = jsonBenutzer["nutzerstatus"];
     $(".username").html(vorname+" "+nachname);
     $(".rolle").html(" "+nutzerstatus);
+    
     // ProfilBild anzeigen
     $(".user_MyProfilBild").attr("src", jsonBenutzer[paramProfilBild]);
 }
@@ -109,9 +110,7 @@ function sortDivByClassName(a,b)
  * falls der Benutzer sich nicht schon auf der Hauptseite befindet.
  */
 function handleReturnLink() {
-    // TODO Wenn aus Fehlerfall heraus auf die Hauptseite weitergeleitet wird
-    // ist der location Parameter auch != hauptseite
-    if(getUrlParameterByName(urlParamLocation) != ansichtHauptseite)
+    if(getUrlParameterByName(urlParamLocation) != ansichtHauptseite && getUrlParameterByName(urlParamLocation) != "" )
     {
         $(".return").show();
         $(".return").click(function() {

@@ -136,7 +136,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		var str = "<div class='vn'>" +
 					"<span class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>" +
 					"<span class='vn_details'>" +
-					"<span class='vn_detail'><a >"  + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a></span><br>" +
+					"<span class='vn_detail'><a>"  + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a></span><br>" +
 					"<span class='vn_detail'>" + jsonVeranstObj[paramAnzTeilnehmer] + " Teilnehmer</span><br>" +
 					"<span class='vn_detail'>" + jsonVeranstObj[paramSemester] + "</span>" +
 					"</span>" +
@@ -145,21 +145,31 @@ function displayVeranstaltung(container, jsonVeranstObj)
 					"</span><br>" +
 					"<div class='vn_mehr_wrapper'>" +
 					"	<span class='vn_mehr'>" + jsonVeranstObj[paramBeschr] + "</span>" +
-					"	<div class='vn_optionen'>" +
-					// TODO ! Muss unterschiedlich dargestellt werden, wenn Benutzer an Veranstaltung teilnimmt
-					"		<span class='mybutton dark'><span class='octicon octicon-sign-out'></span> Ausschreiben</span>" +
-					"	</div>" +
+					"	<div class='vn_optionen'>";
+		
+		// TODO Button mit Funktionalität versehen
+		if(jsonVeranstObj[paramAngemeldet] == true)
+		{
+			str += "<span class='mybutton dark'><span class='octicon octicon-sign-out'></span> Ausschreiben</span>";
+		}
+		else
+		{
+			str += "<span class='mybutton green'><span class='octicon octicon-rocket'></span> Einschreiben</span>";
+		}
+		
+		str +=		"	</div>" +
 					"</div>" +
 					"</div>";
 		
-		var erstellerLink = $(str).find("a");
+		str = $(str);
+		container.append(str);
+		var erstellerLink = str.find("a");
 		erstellerLink.click(function() {
 	        var paramObj = {};
 	        paramObj[urlParamLocation] = ansichtProfilseite;
-	        paramObj[urlParamId] = jsonVeranstObj[paramErsteller];
+	        paramObj[urlParamId] = jsonVeranstObj[paramErsteller][paramId];
 	        buildUrlQuery(paramObj);
 		});
-		container.append(str);
 	}
 	else
 	{

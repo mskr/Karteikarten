@@ -62,6 +62,7 @@ var paramKommentareErlauben = "kommentareErlauben";
 var paramErsteller = "ersteller";
 var paramModeratoren = "moderatoren";
 var paramAnzTeilnehmer = "anzTeilnehmer";
+var paramAngemeldet = "angemeldet";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";

@@ -21,9 +21,9 @@
 function fillProfilseite() {
     
     // Der Benutzer dessen Profil angezeigt wird
-    var profilBenutzerEmail = getUrlParameterByName(urlParamBenutzerProfil);
+    var profilBenutzerId = getUrlParameterByName(urlParamId);
     
-    if(profilBenutzerEmail == jsonBenutzer[paramEmail])
+    if(profilBenutzerId == jsonBenutzer[paramId])
     {
         // Benutzer zeigt eigenes Profil an
         profilEmail = jsonBenutzer[paramEmail];
@@ -49,7 +49,7 @@ function fillProfilseite() {
         $.ajax({
             url: profilServlet,
             data: "action="+actionGetOtherBenutzer+
-                "&"+paramEmail+"="+getUrlParameterByName(urlParamBenutzerProfil),
+                "&"+paramId+"="+getUrlParameterByName(urlParamId),
             success: function(response)
             {
                 var jsonObj = response;
@@ -74,6 +74,7 @@ function fillProfilseite() {
                         $("#profil_einstellungen").hide();
                         $("#profil_passwort").hide();
                         $("#profil_daten_speichern").hide();
+                        $("#profil_avatar_aendern").hide();
                     }
                     else
                     {
@@ -92,8 +93,9 @@ function fillProfilseite() {
                 {
                     message(0, buildMessage(errCode));
                     // Angefragter Benutzer existiert evntl nicht
-                    // -> Server schickt Invalid Parameter Error
-//                    location.search = ""; // Loesche alle URL Parameter und lade die Seite neu
+                    var paramObj = {};
+                    paramObj[urlParamLocation] = ansichtHauptseite;
+                    buildUrlQuery(paramObj);
                 }
             }
         });
@@ -174,7 +176,7 @@ function registerProfilSpeichernEvents() {
         }
          // Datenstring zusammenbauen
          var dataStr = "action="+actionAendereProfil
-         +"&"+paramEmail+"="+getUrlParameterByName(urlParamBenutzerProfil)
+         +"&"+paramId+"="+getUrlParameterByName(urlParamId)
          +"&"+paramVorname+"="+vorname
          +"&"+paramNachname+"="+nachname
          +"&"+paramNofityVeranstAenderung+"="+notifyVeranst
@@ -274,7 +276,7 @@ function registerProfilSpeichernEvents() {
 }
 
 function registerAvatarAendernEvent() {
-    $("#profil_avatar_aendern").submit(function(event) {
+    $("#profil_avatar_aendern_form").submit(function(event) {
         event.preventDefault();
     	var file = $('#profil_avatar_aendern_file')[0].files[0];
     	
