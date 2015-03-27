@@ -10,18 +10,25 @@ function registerSucheGlobalEvent()
 {
     $("#suche_global_form").submit(function() {
         $("#suche_ergebnisse").show();
+        $("#sucherg_vn").empty();
+        $("#sucherg_benutzer").empty();
         var suchString = $("#suche_global_input").val();
         $.ajax({
             url: suchfeldServlet,
-            data: "action =" + actionSucheBenVeranst + "&" +
-                  suchmuster + "=" + suchString,
-            success: function() {
+            data: "action=" + actionSucheBenVeranst + "&" +
+                  paramSuchmuster + "=" + suchString,
+            success: function(response) {
                 var jsonObj = response;
                 var errCode = jsonObj["error"];
+                console.log(jsonObj);
                 if(errCode == "noerror")
                 {
                     var arrSuchErgebnisse = jsonObj[keyJsonArrSuchfeldResult];
                     fillSuchergebnisse(arrSuchErgebnisse);
+                }
+                else
+                {
+                    message(0, buildMessage(errCode));
                 }
             }
         });
