@@ -29,7 +29,8 @@ public class ServletController extends HttpServlet
     /**
      *  Session Attribute, die verwendet werden
      */
-    protected final String sessionAttributeEMail = "eMail";
+//    protected final String sessionAttributeEMail = "eMail";
+    protected final String sessionAttributeUserID = "UserID";
     // TODO: Alle benutzer attribute speichern oder nur eMail? Was passiert wenn Benutzer geändert wird ?!
     
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
@@ -41,7 +42,7 @@ public class ServletController extends HttpServlet
     public final static String dirProfilBilder = dirFiles + "profilBilder/";
     
 
-    private boolean doPorcessing = false;
+    private boolean doProcessing = false;
     
     /**
      * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
@@ -96,7 +97,7 @@ public class ServletController extends HttpServlet
             return false;
         
         // Benutzer nicht eingeloggt?
-        if(session.getAttribute(sessionAttributeEMail) == null)
+        if(session.getAttribute(sessionAttributeUserID) == null)
             return false;
         
         // Attribut ist gesetzt, Benutzer muss eingeloggt sein
@@ -110,12 +111,14 @@ public class ServletController extends HttpServlet
      */
     private Benutzer leseBenutzer(HttpSession session) 
     {        
-        String eMail = (String) session.getAttribute(sessionAttributeEMail);
+        String userID = (String) session.getAttribute(sessionAttributeUserID);
         
-        if(eMail == null)
+        if(userID == null)
             return null;
         
-        return dbManager.leseBenutzer(eMail);
+        int id = Integer.parseInt(userID);
+        
+        return dbManager.leseBenutzer(id);
     }
     /**
      * Gibt alle Parameter aus, die am Request hängen
@@ -152,7 +155,7 @@ public class ServletController extends HttpServlet
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
-        doPorcessing = false;
+        doProcessing = false;
         aktuelleSession = null;
         aktuelleAction = null;
         aktuellerBenutzer = null;
@@ -226,7 +229,7 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
             return;
         }
-        doPorcessing = true;
+        doProcessing = true;
     }
     /**
      * Gibt "True" zurück, wenn Aufruf von super.doPost(...) keinen Error an den Client zurückgegeben hat.
@@ -235,7 +238,7 @@ public class ServletController extends HttpServlet
      */
     protected boolean doProcessing()
     {
-        return doPorcessing;
+        return doProcessing;
     }
 
     /**

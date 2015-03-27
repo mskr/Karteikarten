@@ -95,8 +95,7 @@ public class VeranstaltungServlet extends ServletController {
         else if(mode.equals(ParamDefines.LeseVeranstModeStudiengang))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            verAnst = dbManager.leseVeranstaltungenStudiengang(dbManager.leseBenutzer(request.getSession().getAttribute
-                    (sessionAttributeEMail).toString()).getStudiengang());
+            verAnst = dbManager.leseVeranstaltungenStudiengang(aktuellerBenutzer.getStudiengang());
             if(verAnst != null)
                 jo = JSONConverter.toJsonVeranstList(verAnst);
             else
