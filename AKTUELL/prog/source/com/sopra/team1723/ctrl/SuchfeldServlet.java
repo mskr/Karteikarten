@@ -40,6 +40,8 @@ public class SuchfeldServlet extends ServletController {
     public void sucheBenutzerUndVeranstaltungen(HttpServletRequest req, HttpServletResponse resp)
     {
         String suchmuster = req.getParameter(ParamDefines.Suchmuster);
+        
+        System.out.println(suchmuster);
 
         // Da die Methode durchsucheDatenbank() sehr flexibel ist, muss man angeben nach welchen Feldern man die db
         // durchsuchen will. Ein Feld wird eindeutig durch die Klasse und den Attributnamen bestimmt.

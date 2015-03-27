@@ -66,6 +66,8 @@
 <script src="JS/hauptseite.js"></script>
 <!-- Veranstaltungseite Skript -->
 <script src="JS/veranstaltungseite.js"></script>
+<!-- Skript fuer die Suchfunktion auf der Hauptseite -->
+<script src="JS/sucheGlobal.js"></script>
 <!-- Initial alle Kind<div>s von <body> verbergen -->
 <style>
 body > div {
@@ -178,7 +180,14 @@ function naviconTransformicon() {
 
 <div id="mainbox_hauptseite" class="mainbox">
 	<div class="hauptseite_head">
-		<input class="suche_etwas" type="search" placeholder="Veranstaltungen und Personen finden..." required>
+		<form id="suche_global_form">
+			<input id="suche_global_input" class="suche_etwas" type="search" placeholder="Veranstaltungen und Personen finden..." required>
+			<input class="suche_bestaetigen" type="submit">
+			<div id="suche_ergebnisse" class="suche_ergebnisse flex_container">
+				<div id="sucherg_vn"class="sucherg_vn flex_elem"></div>
+				<div id="sucherg_benutzer"class="sucherg_benutzer flex_elem"></div>
+			</div>
+		</form>
 		<span class="mybutton green vn_erstellen_bt"><span class="octicon octicon-plus"></span> </span>
 	</div>
 	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->

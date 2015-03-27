@@ -10,6 +10,7 @@ var notizServlet = "NotizServlet";
 var profilServlet = "ProfilServlet";
 var veranstaltungServlet = "VeranstaltungServlet";
 var fileUploadServlet = "FileUploadServlet";
+var suchfeldServlet = "SuchfeldServlet";
 
 var actionLogin = "login";
 var actionLogout = "logout";
@@ -22,6 +23,7 @@ var actionGetStudiengaenge = "getStudiengaenge";
 var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
+var actionSucheBenVeranst = "sucheBenVeranst";
 var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
 var leseVeranstMode = "mode";                        // Liefert Veranstaltungen
 var leseVeranstModeAlle = "alle";                    // Liefert alle Veranstaltungen
@@ -48,6 +50,7 @@ var paramNotifyKommentareValKeine = "KEINE";
 var paramNotifyKommentareValVeranst = "VERANSTALTUNG_TEILGENOMMEN";
 var paramNotifyKommentareValDiskussion = "DISKUSSION_TEILGENOMMEN";
 var paramProfilBild = "profilBildPfad";
+var paramSuchmuster = "suchmuster";
 
 // Veranstaltungen
 var paramTitel = "titel";
@@ -62,6 +65,10 @@ var paramAnzTeilnehmer = "anzTeilnehmer";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";
+var keyJsonArrSuchfeldResult = "arrSuchfeldResult";
+var keyJsonSuchfeldErgText = "suchfeldErgText";
+var keyJsonSuchfeldErgKlasse = "suchfeldErgKlasse";
+var keyJsonSuchfeldErgId = "suchfeldErgId";
 
 // GET-Parameter fuer den urlHandler.js
 var urlParamLocation = "location";
