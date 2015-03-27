@@ -10,7 +10,7 @@ public class Veranstaltung {
     
     public Veranstaltung(int id, String titel, String beschreibung, String semester,
             String zugangspasswort, boolean bewertungenErlaubt, boolean moderatorKarteikartenBearbeiten,
-            String ersteller, boolean kommentareErlaubt, int anzTeilnehmer)
+            int ersteller, boolean kommentareErlaubt, int anzTeilnehmer)
     {
         this.id = id;
         this.titel = titel;
@@ -77,7 +77,7 @@ public class Veranstaltung {
      */
     private int anzTeilnehmer;
     
-    private String ersteller;
+    private int ersteller;
 
     public int getId()
     {
@@ -207,7 +207,7 @@ public class Veranstaltung {
 
 
 
-    public String getErsteller()
+    public int getErsteller()
     {
         return ersteller;
     }
@@ -215,7 +215,7 @@ public class Veranstaltung {
 
 
 
-    public void setErsteller(String ersteller)
+    public void setErsteller(int ersteller)
     {
         this.ersteller = ersteller;
     }

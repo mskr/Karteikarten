@@ -355,7 +355,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(rs.next()){
                 veranstaltung = new Veranstaltung(id,rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"));
             }
         } catch (SQLException e) {
@@ -386,7 +386,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next()){
                 veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
             }
         } catch (SQLException e) {
@@ -419,7 +419,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next()){
                 veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
             }
         } catch (SQLException e) {
@@ -451,7 +451,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next()){
                 veranstaltungen.add(new Veranstaltung(rs.getInt("vID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         semester,rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
             }
         } catch (SQLException e) {
@@ -483,7 +483,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next()){
                 veranstaltungen.add(new Veranstaltung(rs.getInt("ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getString("Ersteller"),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), rs.getInt("Ersteller"),
                         rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
             }
         } catch (SQLException e) {
@@ -605,16 +605,63 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean schreibeVeranstaltung(Veranstaltung veranst) {
+    public void schreibeVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException  {
+        PreparedStatement ps = null;
+        try{
+            ps = conMysql.prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
+                    + "BewertungenErlaubt, ModeratorKarteikartenBearbeiten, Ersteller) VALUES(?,?,?,?,?,?,?,?)");
+            ps.setString(1, veranst.getTitel());
+            ps.setString(2, veranst.getBeschreibung());
+            ps.setString(3, veranst.getSemester());
+            ps.setString(4, veranst.getZugangspasswort());
+            ps.setBoolean(5, veranst.isKommentareErlaubt());
+            ps.setBoolean(6, veranst.isBewertungenErlaubt());
+            ps.setBoolean(7, veranst.isModeratorKarteikartenBearbeiten());
+            ps.setInt(8, veranst.getErsteller());
 
+            ps.executeUpdate();
 
-        return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
+                throw new DbUniqueConstraintException();
+            else
+                throw e;
+        } finally{
+            closeQuietly(ps);
+        }
+
+        
     }
 
     @Override
-    public boolean bearbeiteVeranstaltung(Veranstaltung veranst) {
-        // TODO Auto-generated method stub
-        return false;
+    public void bearbeiteVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException {
+//        PreparedStatement ps = null;
+//        ResultSet rs = null;
+//        try{
+//            ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
+//                    + "Kennwort=?, KommentareErlaubt=?,"
+//                    + "BewertungenErlaubt=?  WHERE eMail = ?");
+//            ps.setString(1, benutzer.geteMail());
+//            ps.setString(2, benutzer.getVorname());
+//            ps.setString(3, benutzer.getNachname());
+//            ps.setString(4, benutzer.getNotifyKommentare().name());
+//            ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
+//            ps.setBoolean(6, benutzer.isNotifyKarteikartenAenderung());
+//            ps.setString(7, alteMail);    
+//            ps.executeUpdate();
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
+//                throw new DbUniqueConstraintException();
+//            else
+//                throw e;
+//
+//        } finally{
+//            closeQuietly(ps);
+//            closeQuietly(rs);
+//        }
     }
 
     @Override
