@@ -50,7 +50,8 @@ public class ProfilServlet extends ServletController {
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
-        String email = request.getParameter(ParamDefines.Email);
+//        String email = request.getParameter(ParamDefines.Email);
+        String idStr = request.getParameter(ParamDefines.Id);
         String emailNew = request.getParameter(ParamDefines.EmailNew);
         String vorname = request.getParameter(ParamDefines.Vorname);
         String nachname = request.getParameter(ParamDefines.Nachname);
@@ -60,7 +61,7 @@ public class ProfilServlet extends ServletController {
 
         JSONObject jo = null;
         // Alle Parameter angegeben?
-        if(isEmptyAndRemoveSpaces(email) || isEmptyAndRemoveSpaces(emailNew) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
+        if(isEmptyAndRemoveSpaces(emailNew) || isEmptyAndRemoveSpaces(idStr) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
                 || isEmptyAndRemoveSpaces(notifyVeranstAenderung) || isEmptyAndRemoveSpaces(notifyKarteikartenAenderung)
                 || isEmptyAndRemoveSpaces(notifyKommentare))
         {
@@ -69,14 +70,26 @@ public class ProfilServlet extends ServletController {
             return false;
         }
         // HTML entfernen!
-        email = Jsoup.parse(email).text();
+        emailNew = Jsoup.parse(emailNew).text();
         vorname = Jsoup.parse(vorname).text();
         nachname = Jsoup.parse(nachname).text();
-
-        // Eigene eMail oder andere ?
-        if(!email.equalsIgnoreCase(aktuellerBenutzer.geteMail()))
+        
+        int id = 0;
+        try
         {
-            // Andere eMail. Bin ich also Admin?
+            id = Integer.parseInt(idStr);
+        }
+        catch (NumberFormatException e)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+
+        // Eigene id oder andere ?
+        if(id!=aktuellerBenutzer.getId())
+        {
+            // Andere id. Bin ich also Admin?
             if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
@@ -131,7 +144,7 @@ public class ProfilServlet extends ServletController {
 
         Benutzer benutzer;
         // Sowohl wenn der Admin ein Profil ändert, als auch der Benutzer sein eigenes, müssen diese Exceptions abgefangen werden
-        try{
+//        try{
 
             // Prüfen ob dies ein Admin ist und gegebenfalls alle Parameter holen
             if(aktuellerBenutzer.getNutzerstatus()==Nutzerstatus.ADMIN)
@@ -167,28 +180,28 @@ public class ProfilServlet extends ServletController {
 
                 benutzer = new Benutzer(emailNew, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus, 
                         bNotifyVeranstAenderung, bNotifyKarteikartenAenderung, eNotifyKommentare);
-
-                dbManager.bearbeiteBenutzerAdmin(email, benutzer);
+                // TODO
+//                dbManager.bearbeiteBenutzerAdmin(id, benutzer);
             }
             // Normaler benutzer Speichern
             else
             {
                 benutzer = new Benutzer(emailNew, vorname, nachname, bNotifyVeranstAenderung, 
                         bNotifyKarteikartenAenderung, eNotifyKommentare);
-                dbManager.bearbeiteBenutzer(email, benutzer);
+//                dbManager.bearbeiteBenutzer(id, benutzer);
             }
-        }
-        catch(SQLException e)
-        {
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-            return false;
-        } 
-        catch(DbUniqueConstraintException e){
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorEmailAlreadyInUse);
-            outWriter.print(jo);
-            return false;
-        }
+//        }
+//        catch(SQLException e)
+//        {
+//            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+//            outWriter.print(jo);
+//            return false;
+//        } 
+//        catch(DbUniqueConstraintException e){
+//            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorEmailAlreadyInUse);
+//            outWriter.print(jo);
+//            return false;
+//        }
 
         jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         outWriter.print(jo);

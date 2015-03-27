@@ -136,7 +136,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		var str = "<div class='vn'>" +
 					"<span class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>" +
 					"<span class='vn_details'>" +
-					"<span class='vn_detail'><a >"  + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a></span><br>" +
+					"<span class='vn_detail'><a>"  + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a></span><br>" +
 					"<span class='vn_detail'>" + jsonVeranstObj[paramAnzTeilnehmer] + " Teilnehmer</span><br>" +
 					"<span class='vn_detail'>" + jsonVeranstObj[paramSemester] + "</span>" +
 					"</span>" +
@@ -152,14 +152,15 @@ function displayVeranstaltung(container, jsonVeranstObj)
 					"</div>" +
 					"</div>";
 		
-		var erstellerLink = $(str).find("a");
+		str = $(str);
+		container.append(str);
+		var erstellerLink = str.find("a");
 		erstellerLink.click(function() {
 	        var paramObj = {};
 	        paramObj[urlParamLocation] = ansichtProfilseite;
-	        paramObj[urlParamId] = jsonVeranstObj[paramErsteller];
+	        paramObj[urlParamId] = jsonVeranstObj[paramErsteller][paramId];
 	        buildUrlQuery(paramObj);
 		});
-		container.append(str);
 	}
 	else
 	{

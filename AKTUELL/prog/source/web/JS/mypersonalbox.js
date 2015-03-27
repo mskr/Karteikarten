@@ -17,7 +17,7 @@ function fillMyPersonalBox()
     $(".username").click(function() {
         var paramObj = {};
         paramObj[urlParamLocation] = ansichtProfilseite;
-        paramObj[urlParamBenutzerProfil] = jsonBenutzer[paramEmail];
+        paramObj[urlParamId] = jsonBenutzer[paramId];
         buildUrlQuery(paramObj);
     });
     
@@ -27,10 +27,10 @@ function fillMyPersonalBox()
     
     // TODO Benachrichtigungen laden
     // Hier ein paar Beispiele
-    addBenachrichtigung("Hier werden Benachrichtungen angezeigt. Diese müssen noch geladen werden! Aber wir gehen jetzt mal zum Profil.", true, function() {
+    addBenachrichtigung("Ihr Profil wurde geändert. Klicken sie, um zum eigenen Profil zu wechseln.", true, function() {
         var paramObj = {};
         paramObj[urlParamLocation] = ansichtProfilseite;
-        paramObj[urlParamBenutzerProfil] = jsonBenutzer[paramEmail];
+        paramObj[urlParamId] = jsonBenutzer[paramId];
         buildUrlQuery(paramObj);
     });
     
