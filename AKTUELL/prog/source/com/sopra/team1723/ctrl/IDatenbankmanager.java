@@ -177,7 +177,7 @@ public interface IDatenbankmanager {
      * @param veranst 
      * @return
      */
-    public boolean schreibeVeranstaltung(Veranstaltung veranst);
+    public void schreibeVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Daten der angegebenen Veranstaltung werden in der Datenbank
@@ -187,7 +187,7 @@ public interface IDatenbankmanager {
      * @param veranst 
      * @return
      */
-    public boolean bearbeiteVeranstaltung(Veranstaltung veranst);
+    public void bearbeiteVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Entfernt die Veranstaltung aus der Datenbank. Tritt ein Fehler auf

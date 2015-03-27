@@ -141,7 +141,7 @@ public class JSONConverter
             o.put(ParamDefines.BewertungenErlauben, v.isBewertungenErlaubt()); 
             o.put(ParamDefines.ModeratorKkBearbeiten, v.isModeratorKarteikartenBearbeiten()); 
             o.put(ParamDefines.KommentareErlauben,v.isKommentareErlaubt());
-            o.put(ParamDefines.Ersteller,v.getErsteller());
+            o.put(ParamDefines.Ersteller,JSONConverter.toJson(v.getErsteller(),true));
             o.put(ParamDefines.AnzTeilnehmer, v.getAnzTeilnehmer());
             
             array.add(o);
@@ -168,7 +168,7 @@ public class JSONConverter
         jo.put(ParamDefines.BewertungenErlauben, veranst.isBewertungenErlaubt()); 
         jo.put(ParamDefines.ModeratorKkBearbeiten, veranst.isModeratorKarteikartenBearbeiten()); 
         jo.put(ParamDefines.KommentareErlauben,veranst.isKommentareErlaubt());
-        jo.put(ParamDefines.Ersteller,veranst.getErsteller());
+        jo.put(ParamDefines.Ersteller,JSONConverter.toJson(veranst.getErsteller(),true));
         
         
         return jo;

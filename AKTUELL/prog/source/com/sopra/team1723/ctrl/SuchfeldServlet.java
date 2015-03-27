@@ -1,6 +1,7 @@
 package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
+
+
 
 
 
@@ -36,9 +39,16 @@ public class SuchfeldServlet extends ServletController {
     /**
      * Diese Methode liest einen Suchstring aus den Request Parametern. Danach veranlasst sie die Datenbank nach Benutzern mit
      * ähnlichen Vornamen oder Nachnamen oder nach Veranstaltungen mit ähnlichem Titel zu suchen.
+     * @throws IOException 
      */
-    public void sucheBenutzerUndVeranstaltungen(HttpServletRequest req, HttpServletResponse resp)
+    public void sucheBenutzerUndVeranstaltungen(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
+        HttpSession aktuelleSession = req.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
         String suchmuster = req.getParameter(ParamDefines.Suchmuster);
         
         System.out.println(suchmuster);
@@ -70,14 +80,15 @@ public class SuchfeldServlet extends ServletController {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+            IOException
     {
-        super.doPost(req, resp);
-
-        // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
-        if(!doProcessing())
-            return;
-
+        HttpSession aktuelleSession = req.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
         if(aktuelleAction.equals(ParamDefines.ActionSucheBenVeranst))
         {
             sucheBenutzerUndVeranstaltungen(req, resp);

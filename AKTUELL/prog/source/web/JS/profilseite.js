@@ -63,7 +63,7 @@ function fillProfilseite() {
                     profilStudiengang = jsonObj[paramStudiengang];
                     profilNutzerstatus = jsonObj[paramNutzerstatus];
                     $(".profil_benutzer").text(profilVorname+" "+profilNachname);
-                    $(".profil_avatar_img").attr("src", jsonBenutzer[paramProfilBild]);
+                    $(".profil_avatar_img").attr("src", jsonObj[paramProfilBild]);
                     fillProfilDaten();
                     if(jsonBenutzer[paramNutzerstatus] != "ADMIN")
                     {

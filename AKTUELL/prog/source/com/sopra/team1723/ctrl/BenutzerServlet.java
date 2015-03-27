@@ -1,6 +1,7 @@
 package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
@@ -45,9 +46,15 @@ public class BenutzerServlet extends ServletController {
      * @ParamDefines. request 
      * @ParamDefines. response 
      * @return
+     * @throws IOException 
      */
-    private boolean login(HttpServletRequest request, HttpServletResponse response) 
+    private boolean login(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
+        HttpSession aktuelleSession = request.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
         JSONObject jo = null;
         
         String email = request.getParameter(ParamDefines.Email);
@@ -78,6 +85,7 @@ public class BenutzerServlet extends ServletController {
             {
                 aktuelleSession.setAttribute(sessionAttributeUserID, aktuellerBenutzer.getId());
                 aktuelleSession.setAttribute(sessionAttributeGewähltesSemester, leseAktuellesSemester());
+                aktuelleSession.setAttribute(sessionAttributeaktuellerBenutzer, aktuellerBenutzer);
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             }
             else{
@@ -107,9 +115,15 @@ public class BenutzerServlet extends ServletController {
      * @ParamDefines. request 
      * @ParamDefines. response 
      * @return
+     * @throws IOException 
      */
-    private boolean logout(HttpServletRequest request, HttpServletResponse response) 
+    private boolean logout(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
+        HttpSession aktuelleSession = request.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
         JSONObject jo = null;
         
         // Noch eingeloggt?
@@ -133,9 +147,17 @@ public class BenutzerServlet extends ServletController {
      * @ParamDefines. request 
      * @ParamDefines. response 
      * @return
+     * @throws IOException 
      */
-    private boolean registrieren(HttpServletRequest request, HttpServletResponse response) 
+    private boolean registrieren(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
+
+        HttpSession s = request.getSession();
+        String aktuelleAction = (String) s.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) s.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeaktuelleAction);
+        
         JSONObject jo = null;
         
         String email = request.getParameter(ParamDefines.Email);
@@ -324,9 +346,14 @@ public class BenutzerServlet extends ServletController {
      * @ParamDefines. request 
      * @ParamDefines. response 
      * @return
+     * @throws IOException 
      */
-    private boolean leseStudiengaenge(HttpServletRequest request, HttpServletResponse response) 
+    private boolean leseStudiengaenge(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
+        IDatenbankmanager dbManager = (IDatenbankmanager) request.getSession().getAttribute(sessionAttributeDbManager);
+        PrintWriter outWriter = null;
+        outWriter = response.getWriter();
+        
         List<String> list = dbManager.leseStudiengaenge();
         if(list != null)
         {
@@ -345,20 +372,27 @@ public class BenutzerServlet extends ServletController {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
-        // TODO hier ist die einzige Ausnahme wo mann nicht die überschriebe Funktion aufruft.
-        // super.doPost(req, resp);
-       
         // aktuelle Session holen
-        aktuelleSession = req.getSession();
+        HttpSession aktuelleSession = req.getSession();
         resp.setContentType("text/json");
-        outWriter = resp.getWriter();
-        
+        PrintWriter outWriter = resp.getWriter();
+
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
         if(dbManager == null)
         {
-            // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-            return;
+            try
+            {
+                dbManager = new Datenbankmanager();
+                aktuelleSession.setAttribute(sessionAttributeDbManager, dbManager);
+            }
+            catch (Exception e)
+            {
+                dbManager = null;
+                System.err.println("Es Konnte keine Verbindung zur Datenbank hergestellt werden oder ein unerwarteter Fehler ist aufgetreten!");
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+                return;
+            }
         }
         
         // Hole die vom client angefragte Aktion
@@ -402,5 +436,10 @@ public class BenutzerServlet extends ServletController {
             outWriter.print(jo);
         }
     }
+
+    @Override
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+            IOException
+    {}
 
 }

@@ -1,6 +1,7 @@
 package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +45,17 @@ public class VeranstaltungServlet extends ServletController {
      * @param request 
      * @param response 
      * @return
+     * @throws IOException 
      */
-    private boolean veranstaltungenAnzeigen(HttpServletRequest request, HttpServletResponse response) 
+    private boolean veranstaltungenAnzeigen(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
+        HttpSession aktuelleSession = request.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        String aktuellesSemester = (String) aktuelleSession.getAttribute(sessionAttributeGewähltesSemester);
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
         JSONObject jo;
         String mode = request.getParameter(ParamDefines.LeseVeranstMode);
         if(isEmpty(mode))
@@ -82,8 +91,7 @@ public class VeranstaltungServlet extends ServletController {
         else if(mode.equals(ParamDefines.LeseVeranstModeSemester))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            //TODO Wie speichern wir das aktuelle Semester?
-            verAnst = dbManager.leseVeranstaltungenSemester("SoSe2015");
+            verAnst = dbManager.leseVeranstaltungenSemester(aktuellesSemester);
             if(verAnst != null)
                 jo = JSONConverter.toJsonVeranstList(verAnst);
             else
@@ -168,12 +176,14 @@ public class VeranstaltungServlet extends ServletController {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-
-        // Ist beim ServletController schon eine Antowrt zurückgegeben worden?
-        if(!doProcessing())
-            return;
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+            IOException
+    { 
+        HttpSession aktuelleSession = req.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
         if(aktuelleAction.equals(ParamDefines.ActionLeseVeranst))
         {

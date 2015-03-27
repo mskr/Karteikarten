@@ -72,7 +72,7 @@ var keyJsonSuchfeldErgId = "suchfeldErgId";
 
 // GET-Parameter fuer den urlHandler.js
 var urlParamLocation = "location";
-var urlParamBenutzerProfil = "user";
+var urlParamId = "id";
 
 var ansichtStartseite = "startseite";
 var ansichtHauptseite = "hauptseite";
