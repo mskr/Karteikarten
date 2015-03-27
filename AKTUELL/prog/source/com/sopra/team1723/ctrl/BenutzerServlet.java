@@ -73,8 +73,15 @@ public class BenutzerServlet extends ServletController {
         try
         {
             dbManager.pruefeLogin(email, passwort);
-            aktuelleSession.setAttribute(sessionAttributeEMail, email);
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            aktuellerBenutzer = dbManager.leseBenutzer(email);
+            if(aktuellerBenutzer != null)
+            {
+                aktuelleSession.setAttribute(sessionAttributeUserID, aktuellerBenutzer.getId());
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            }
+            else{
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            }
         }
         catch (SQLException e)
         {
