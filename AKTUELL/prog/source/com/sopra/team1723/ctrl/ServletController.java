@@ -34,9 +34,10 @@ public class ServletController extends HttpServlet
      */
     //    protected final String sessionAttributeEMail = "eMail";
     protected final String sessionAttributeUserID = "UserID";
-    // TODO: Alle benutzer attribute speichern oder nur eMail? Was passiert wenn Benutzer geändert wird ?!
-
     protected final String sessionAttributeGewähltesSemester = "gewähltesSemester";
+    protected final String sessionAttributeDbManager = "dbManager";
+    protected final String sessionAttributeaktuelleAction = "aktuelleAction";
+    protected final String sessionAttributeaktuellerBenutzer = "aktuellerBenutzer";
     
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
 
@@ -46,55 +47,43 @@ public class ServletController extends HttpServlet
     public final static String dirFiles = "files/";             
     public final static String dirProfilBilder = dirFiles + "profilBilder/";
 
-
-    private boolean doProcessing = false;
-
     /**
      * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
      * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
      */
     public ServletController() 
     {
-        try
-        {
-            dbManager = new Datenbankmanager();
-        }
-        catch (Exception e)
-        {
-            dbManager= null;
-            System.err.println("Es Konnte keine Verbindung zur Datenbank hergestellt werden oder ein unerwarteter Fehler ist aufgetreten!");
-        }
     }
 
-    /**
-     * Aktuell angemeldeter Benutzer. Null, falls Benutzer nicht angemeldet ist.
-     */
-    protected Benutzer aktuellerBenutzer = null;
-
-    /**
-     * 
-     */
-    protected String gewähltesSemester = null;
-    
-    /**
-     * 
-     */
-    protected IDatenbankmanager dbManager = null;
-
-    /**
-     *  Aktuelle Session.
-     */
-    protected HttpSession aktuelleSession = null;
-
-    /**
-     *  Print Writer über den Daten an den Client geschrieben werden können
-     */
-    protected PrintWriter outWriter = null;
-
-    /**
-     * Hier steht die vom ServletController ausgelesene Aktion, die der Client ausführen will.
-     */
-    protected String aktuelleAction = null;
+//    /**
+//     * Aktuell angemeldeter Benutzer. Null, falls Benutzer nicht angemeldet ist.
+//     */
+//    protected Benutzer aktuellerBenutzer = null;
+//
+//    /**
+//     * 
+//     */
+//    protected String gewähltesSemester = null;
+//    
+//    /**
+//     * 
+//     */
+//    protected IDatenbankmanager dbManager = null;
+//
+//    /**
+//     *  Aktuelle Session.
+//     */
+//    protected HttpSession aktuelleSession = null;
+//
+//    /**
+//     *  Print Writer über den Daten an den Client geschrieben werden können
+//     */
+//    protected PrintWriter outWriter = null;
+//
+//    /**
+//     * Hier steht die vom ServletController ausgelesene Aktion, die der Client ausführen will.
+//     */
+//    protected String aktuelleAction = null;
 
 
     /**
@@ -103,6 +92,8 @@ public class ServletController extends HttpServlet
      */
     protected boolean pruefeLogin(HttpSession session) 
     {
+        IDatenbankmanager dbManager = (IDatenbankmanager) session.getAttribute(sessionAttributeDbManager);
+        
         if(dbManager == null)
             return false;
 
@@ -125,6 +116,12 @@ public class ServletController extends HttpServlet
 
         if(userID == null)
             return null;
+
+        IDatenbankmanager dbManager = (IDatenbankmanager) session.getAttribute(sessionAttributeDbManager);
+        
+        if(dbManager == null)
+            return null;
+        
 		return dbManager.leseBenutzer(userID);
     }
     /**
@@ -175,22 +172,22 @@ public class ServletController extends HttpServlet
         doPost(req, resp);
     }
 
-    @Override
-    /**
-     * Login Prüfen und  Benutzerobjet laden
-     */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
-        doProcessing = false;
-        aktuelleSession = null;
-        aktuelleAction = null;
-        aktuellerBenutzer = null;
-        resp.setContentType("text/json");
-        outWriter = resp.getWriter();
+        if(preProcessRequest(req, resp))
+            processRequest(req, resp);
+    }
+    
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {}
 
+    protected boolean preProcessRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    {
         // Bisschen platz zwischen den Requests
         System.out.println();
         System.out.println();
+        
+        PrintWriter outWriter = resp.getWriter();
+        resp.setContentType("text/json");
 
         // Prüfen ob session abgelaufen ist
         if (req.getRequestedSessionId() != null && 
@@ -205,37 +202,49 @@ public class ServletController extends HttpServlet
             outWriter.print(jo);
 
             // Neue Session erzeugen
-            aktuelleSession = req.getSession();
-            aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
-            return;
+            HttpSession s = req.getSession();
+            s.setMaxInactiveInterval(sessionTimeoutSek);
+            return false;
         }
 
-        aktuelleSession = req.getSession();
-        if(aktuelleSession.isNew())
-            aktuelleSession.setMaxInactiveInterval(sessionTimeoutSek);
+        HttpSession s = req.getSession();
+        if(s.isNew())
+            s.setMaxInactiveInterval(sessionTimeoutSek);
 
         printAllParameters(req);
 
+        IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);
         if(dbManager == null)
         {
-            // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-            return;
+            try
+            {
+                dbManager = new Datenbankmanager();
+                System.out.println("Erzeuge neuen Db-Manager.");
+                s.setAttribute(sessionAttributeDbManager, dbManager);
+            }
+            catch (Exception e)
+            {
+                dbManager = null;
+                System.err.println("Es Konnte keine Verbindung zur Datenbank hergestellt werden oder ein unerwarteter Fehler ist aufgetreten!");
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+                return false;
+            }
         }
 
         // Ist der Benutzer eingeloggt ?
-        if(pruefeLogin(aktuelleSession))
+        if(pruefeLogin(s))
         {
             // Wenn ja, dann stelle allen Servlets den Benutzer zur Verfügung
-            aktuellerBenutzer = leseBenutzer(aktuelleSession);
-            if(aktuellerBenutzer == null)
+            Benutzer b = leseBenutzer(s);
+            if(b == null)
             {
                 // Sende Nack mit ErrorText zurück
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
-                return;
+                return false;
             }
+            s.setAttribute(sessionAttributeaktuellerBenutzer, b);
         }
         // wenn nicht eingeloggt fehlermeldung zurückgeben an Aufrufer
         else
@@ -243,31 +252,24 @@ public class ServletController extends HttpServlet
             // Sende Nack mit ErrorText zurück
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotLoggedIn);
             outWriter.print(jo);
-            return;
+            return false;
         }
         // Hole die vom client angefragte Aktion
-        aktuelleAction = req.getParameter(ParamDefines.Action);
+        String action = req.getParameter(ParamDefines.Action);
 
-        if(isEmptyAndRemoveSpaces(aktuelleAction))
+        if(isEmptyAndRemoveSpaces(action))
         {
             // Sende Error zurück
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
-            return;
+            return false;
         }
+        s.setAttribute(sessionAttributeaktuelleAction, action);
         
-        if(aktuelleSession.getAttribute(sessionAttributeGewähltesSemester)!= null)
-            gewähltesSemester = aktuelleSession.getAttribute(sessionAttributeGewähltesSemester).toString();
-        doProcessing = true;
-    }
-    /**
-     * Gibt "True" zurück, wenn Aufruf von super.doPost(...) keinen Error an den Client zurückgegeben hat.
-     * Wenn dies der fall ist, dann sollte der Aufrufer eine Antwort an den Client schicken
-     * @return
-     */
-    protected boolean doProcessing()
-    {
-        return doProcessing;
+        if(s.getAttribute(sessionAttributeGewähltesSemester)== null)
+            s.setAttribute(sessionAttributeGewähltesSemester, leseAktuellesSemester());
+        
+        return true;
     }
 
     /**
