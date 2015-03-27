@@ -21,6 +21,14 @@ public interface IDatenbankmanager {
      * tritt ein Fehler auf liefert die Methode null zurück
      */
     public Benutzer leseBenutzer(String eMail);
+    
+    /**
+     * Liest Benutzer mit der angegebenen id aus der Datenbank.
+     * @param id referenziert eindeutig einen Benutzer 
+     * @return Gibt Benutzer zurück. Wird kein Benutzer gefunden oder
+     * tritt ein Fehler auf liefert die Methode null zurück
+     */
+    public Benutzer leseBenutzer(int id);
 
     /**
      * Legt neuen Benutzer in der Datenbank an. Tritt ein Fehler in der 

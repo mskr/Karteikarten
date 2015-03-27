@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.7.1
+-- version 4.2.11
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 27. Mrz 2015 um 16:10
--- Server Version: 5.6.20
--- PHP-Version: 5.5.15
+-- Erstellungszeit: 27. Mrz 2015 um 16:34
+-- Server Version: 5.6.21
+-- PHP-Version: 5.6.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
   `NotifyKommentare` enum('KEINE','VERANSTALTUNG_TEILGENOMMEN','DISKUSSION_TEILGENOMMEN','') NOT NULL DEFAULT 'KEINE',
   `NotifyVeranstAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `benutzer`
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `bewertung_karteikarte` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` varchar(30) NOT NULL,
   `KommentarID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `einladung_moderator_benachrichtigung` (
   `Erstelldatum` date NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `einladung_moderator_benachrichtigung`
@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
   `Bewertung` int(11) NOT NULL,
   `Aenderungsdatum` date NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `karteikarten_struktur` (
   `Position` int(11) NOT NULL,
   `SohnKarteik` int(11) NOT NULL,
   `VaterKarteik` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL,
   `VaterkommentarID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -227,15 +227,17 @@ CREATE TABLE IF NOT EXISTS `moderator` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `moderator`
 --
 
 INSERT INTO `moderator` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
-(1, 0, 1),
-(2, 0, 4);
+(1, 4, 1),
+(2, 6, 4),
+(3, 1, 1),
+(4, 5, 4);
 
 -- --------------------------------------------------------
 
@@ -248,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `notiz` (
   `Inhalt` text NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -295,7 +297,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `Ersteller` int(11) NOT NULL,
   `Titel` varchar(50) NOT NULL,
   `ErsteKarteik` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `veranstaltung`
@@ -320,7 +322,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltungs_benachrichtigung` (
   `Inhalt` text NOT NULL,
   `Erstelldatum` date NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `veranstaltungs_benachrichtigung`
@@ -339,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
@@ -363,159 +365,159 @@ INSERT INTO `veranstaltung_studiengang_zuordnung` (`ID`, `Veranstaltung`, `Studi
 (17, 3, 'Medizin');
 
 --
--- Indexes for dumped tables
+-- Indizes der exportierten Tabellen
 --
 
 --
--- Indexes for table `benutzer`
+-- Indizes für die Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
  ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `eMail` (`eMail`), ADD KEY `Studiengang` (`Studiengang`);
 
 --
--- Indexes for table `benutzer_veranstaltung_zuordnung`
+-- Indizes für die Tabelle `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
  ADD PRIMARY KEY (`ID`), ADD KEY `BenutzerID` (`Benutzer`), ADD KEY `VeranstaltungID` (`Veranstaltung`), ADD KEY `VeranstaltungID_2` (`Veranstaltung`);
 
 --
--- Indexes for table `bewertung_karteikarte`
+-- Indizes für die Tabelle `bewertung_karteikarte`
 --
 ALTER TABLE `bewertung_karteikarte`
  ADD PRIMARY KEY (`ID`), ADD KEY `BenutzerID` (`Benutzer`), ADD KEY `KarteikarteID` (`KarteikarteID`);
 
 --
--- Indexes for table `bewertung_kommentar`
+-- Indizes für die Tabelle `bewertung_kommentar`
 --
 ALTER TABLE `bewertung_kommentar`
  ADD PRIMARY KEY (`ID`), ADD KEY `BenutzerID` (`Benutzer`), ADD KEY `KommentarID` (`KommentarID`);
 
 --
--- Indexes for table `einladung_moderator_benachrichtigung`
+-- Indizes für die Tabelle `einladung_moderator_benachrichtigung`
 --
 ALTER TABLE `einladung_moderator_benachrichtigung`
  ADD PRIMARY KEY (`ID`), ADD KEY `Benutzer` (`Benutzer`), ADD KEY `Veranstaltung` (`Veranstaltung`);
 
 --
--- Indexes for table `karteikarte`
+-- Indizes für die Tabelle `karteikarte`
 --
 ALTER TABLE `karteikarte`
  ADD PRIMARY KEY (`ID`), ADD KEY `VeranstaltungID` (`Veranstaltung`);
 
 --
--- Indexes for table `karteikarten_struktur`
+-- Indizes für die Tabelle `karteikarten_struktur`
 --
 ALTER TABLE `karteikarten_struktur`
  ADD PRIMARY KEY (`ID`), ADD KEY `SohnKarteik` (`SohnKarteik`), ADD KEY `VaterKarteik` (`VaterKarteik`);
 
 --
--- Indexes for table `kommentar`
+-- Indizes für die Tabelle `kommentar`
 --
 ALTER TABLE `kommentar`
  ADD PRIMARY KEY (`ID`), ADD KEY `ErstellerID` (`Benutzer`), ADD KEY `DiskussionID` (`KarteikarteID`), ADD KEY `VaterkommentarID` (`VaterkommentarID`);
 
 --
--- Indexes for table `moderator`
+-- Indizes für die Tabelle `moderator`
 --
 ALTER TABLE `moderator`
  ADD PRIMARY KEY (`ID`), ADD KEY `Benutzer` (`Benutzer`), ADD KEY `Veranstaltung` (`Veranstaltung`);
 
 --
--- Indexes for table `notiz`
+-- Indizes für die Tabelle `notiz`
 --
 ALTER TABLE `notiz`
  ADD PRIMARY KEY (`ID`), ADD KEY `BenutzerID` (`Benutzer`), ADD KEY `KarteikarteID` (`KarteikarteID`);
 
 --
--- Indexes for table `studiengang`
+-- Indizes für die Tabelle `studiengang`
 --
 ALTER TABLE `studiengang`
  ADD PRIMARY KEY (`Name`);
 
 --
--- Indexes for table `veranstaltung`
+-- Indizes für die Tabelle `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
  ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `Semester` (`Semester`,`Titel`), ADD KEY `Ersteller` (`Ersteller`), ADD KEY `ErsteKarteik` (`ErsteKarteik`);
 
 --
--- Indexes for table `veranstaltungs_benachrichtigung`
+-- Indizes für die Tabelle `veranstaltungs_benachrichtigung`
 --
 ALTER TABLE `veranstaltungs_benachrichtigung`
  ADD PRIMARY KEY (`ID`), ADD KEY `VeranstaltungID` (`Veranstaltung`);
 
 --
--- Indexes for table `veranstaltung_studiengang_zuordnung`
+-- Indizes für die Tabelle `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
  ADD PRIMARY KEY (`ID`), ADD KEY `Veranstaltung` (`Veranstaltung`), ADD KEY `Studiengang` (`Studiengang`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT für exportierte Tabellen
 --
 
 --
--- AUTO_INCREMENT for table `benutzer`
+-- AUTO_INCREMENT für Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
--- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
+-- AUTO_INCREMENT für Tabelle `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
--- AUTO_INCREMENT for table `bewertung_karteikarte`
+-- AUTO_INCREMENT für Tabelle `bewertung_karteikarte`
 --
 ALTER TABLE `bewertung_karteikarte`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `bewertung_kommentar`
+-- AUTO_INCREMENT für Tabelle `bewertung_kommentar`
 --
 ALTER TABLE `bewertung_kommentar`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `einladung_moderator_benachrichtigung`
+-- AUTO_INCREMENT für Tabelle `einladung_moderator_benachrichtigung`
 --
 ALTER TABLE `einladung_moderator_benachrichtigung`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT for table `karteikarte`
+-- AUTO_INCREMENT für Tabelle `karteikarte`
 --
 ALTER TABLE `karteikarte`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `karteikarten_struktur`
+-- AUTO_INCREMENT für Tabelle `karteikarten_struktur`
 --
 ALTER TABLE `karteikarten_struktur`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `kommentar`
+-- AUTO_INCREMENT für Tabelle `kommentar`
 --
 ALTER TABLE `kommentar`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `moderator`
+-- AUTO_INCREMENT für Tabelle `moderator`
 --
 ALTER TABLE `moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
--- AUTO_INCREMENT for table `notiz`
+-- AUTO_INCREMENT für Tabelle `notiz`
 --
 ALTER TABLE `notiz`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `veranstaltung`
+-- AUTO_INCREMENT für Tabelle `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
--- AUTO_INCREMENT for table `veranstaltungs_benachrichtigung`
+-- AUTO_INCREMENT für Tabelle `veranstaltungs_benachrichtigung`
 --
 ALTER TABLE `veranstaltungs_benachrichtigung`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `veranstaltung_studiengang_zuordnung`
+-- AUTO_INCREMENT für Tabelle `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
@@ -577,7 +579,8 @@ ADD CONSTRAINT `kommentar_ibfk_5` FOREIGN KEY (`VaterkommentarID`) REFERENCES `k
 -- Constraints der Tabelle `moderator`
 --
 ALTER TABLE `moderator`
-ADD CONSTRAINT `moderator_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`);
+ADD CONSTRAINT `moderator_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`),
+ADD CONSTRAINT `moderator_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`);
 
 --
 -- Constraints der Tabelle `notiz`
