@@ -2,7 +2,9 @@ package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -37,6 +39,33 @@ public class VeranstaltungServlet extends ServletController {
         return false;
     }
 
+    
+    private ArrayList<Boolean>leseZuWelchenVeranstAngemeldet(List<Veranstaltung> veranstaltungen, 
+            HttpServletRequest request, HttpServletResponse response) throws IOException{
+        HttpSession aktuelleSession = request.getSession();
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        ArrayList<Boolean> angemeldet = new ArrayList<Boolean>();
+        Iterator<Veranstaltung> it = veranstaltungen.iterator();
+        while(it.hasNext()){
+            
+            try
+            {
+                angemeldet.add(dbManager.angemeldet(aktuellerBenutzer.getId(), it.next().getId()));
+            }
+            catch (SQLException e)
+            {
+                JSONObject jo;
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+            }
+        }
+        return angemeldet;
+    }
+    
+    
     /**
      * Aus der Datenbank wird mit Hilfe der VeranstaltungsID die Informationen
      * bezuglich der Veranstaltung gelesen und zuruckgegeben.
@@ -68,8 +97,10 @@ public class VeranstaltungServlet extends ServletController {
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
             verAnst = dbManager.leseAlleVeranstaltungen();
-            if(verAnst != null)
-                jo = JSONConverter.toJsonVeranstList(verAnst);
+            if(verAnst != null){
+                ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
+                jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);
+            }
             else
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
@@ -79,8 +110,10 @@ public class VeranstaltungServlet extends ServletController {
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
             verAnst = dbManager.leseVeranstaltungen(aktuellerBenutzer.getId());
-            if(verAnst != null)
-                jo = JSONConverter.toJsonVeranstList(verAnst);
+            if(verAnst != null){
+                ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
+                jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);
+            }    
             else
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
@@ -92,8 +125,10 @@ public class VeranstaltungServlet extends ServletController {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
             //TODO Wie speichern wir das aktuelle Semester?
             verAnst = dbManager.leseVeranstaltungenSemester("SoSe2015");
-            if(verAnst != null)
-                jo = JSONConverter.toJsonVeranstList(verAnst);
+            if(verAnst != null){
+                ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
+                jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);
+            }
             else
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
@@ -104,8 +139,10 @@ public class VeranstaltungServlet extends ServletController {
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
             verAnst = dbManager.leseVeranstaltungenStudiengang(aktuellerBenutzer.getStudiengang());
-            if(verAnst != null)
-                jo = JSONConverter.toJsonVeranstList(verAnst);
+            if(verAnst != null){
+                ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
+                jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);
+            }
             else
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);

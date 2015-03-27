@@ -54,6 +54,8 @@ public class ParamDefines
     public final static String Ersteller = "ersteller";
     public final static String Moderatoren = "moderatoren";
     public final static String AnzTeilnehmer = "anzTeilnehmer";
+    public final static String Angemeldet = "angemeldet";
+    
     
     public final static String SuchfeldErgText = "suchfeldErgText";
     public final static String SuchfeldErgKlasse= "suchfeldErgKlasse";

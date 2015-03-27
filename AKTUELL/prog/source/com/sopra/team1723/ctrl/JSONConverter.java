@@ -1,6 +1,7 @@
 package com.sopra.team1723.ctrl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.simple.*;
@@ -122,13 +123,14 @@ public class JSONConverter
      * @param strings
      * @return JSONObject mit NoError und einem String
      */
-    static JSONObject toJsonVeranstList(List<Veranstaltung> veranstList) 
+    static JSONObject toJsonVeranstList(List<Veranstaltung> veranstList, List<Boolean> angemeldet) 
     {
         JSONObject jo = new JSONObject();  
         jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
         
         JSONArray array = new JSONArray();
 
+        Iterator<Boolean> it = angemeldet.iterator();
         for(Veranstaltung v: veranstList)
         {
             JSONObject o = new JSONObject();
@@ -143,6 +145,7 @@ public class JSONConverter
             o.put(ParamDefines.KommentareErlauben,v.isKommentareErlaubt());
             o.put(ParamDefines.Ersteller,JSONConverter.toJson(v.getErsteller(),true));
             o.put(ParamDefines.AnzTeilnehmer, v.getAnzTeilnehmer());
+            o.put(ParamDefines.Angemeldet, it.next());
             
             array.add(o);
         }

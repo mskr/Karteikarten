@@ -168,6 +168,13 @@ public interface IDatenbankmanager {
      */
     public List<String> leseStudiengaenge(int veranstaltung);
     
+    /**
+     * Holt alle Studiengaenge zu der angegebenen Veranstaltung aus der Datenbank.
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung
+     * @return Liste der Studiengänge zu dieser Veranstaltung. Wird die Veranstaltung von keinem Studiengang
+     * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
+     */
+    public boolean angemeldet(int benutzer, int veranstaltung) throws SQLException;
     
     /**
      * Fugt neue Veranstaltung in die Datenbank ein. Bei Erfolg wird
