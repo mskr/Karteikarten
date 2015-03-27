@@ -298,20 +298,5 @@ function registerAvatarAendernEvent() {
 		            console.log(response);
 		        },
     	actionUploadProfilBild);
-    	
-//        var formData = new FormData();
-//        formData.append('file', );
-//        formData.append('action', actionUploadProfilBild);
-//        $.ajax({
-//            type: "POST",
-//            url: fileUploadServlet,
-//            enctype: "multipart/form-data",
-//            data: formData,
-//            processData: false,
-//            contentType: false,
-//            success: function(response) {
-//                console.log(response);
-//            }
-//        });
     });
 }
