@@ -49,6 +49,7 @@ function fillUserContainer()
     var nutzerstatus = jsonBenutzer["nutzerstatus"];
     $(".username").html(vorname+" "+nachname);
     $(".rolle").html(" "+nutzerstatus);
+    
     // ProfilBild anzeigen
     $(".user_MyProfilBild").attr("src", jsonBenutzer[paramProfilBild]);
 }
@@ -109,9 +110,7 @@ function sortDivByClassName(a,b)
  * falls der Benutzer sich nicht schon auf der Hauptseite befindet.
  */
 function handleReturnLink() {
-    // TODO Wenn aus Fehlerfall heraus auf die Hauptseite weitergeleitet wird
-    // ist der location Parameter auch != hauptseite
-    if(getUrlParameterByName(urlParamLocation) != ansichtHauptseite)
+    if(getUrlParameterByName(urlParamLocation) != ansichtHauptseite && getUrlParameterByName(urlParamLocation) != "" )
     {
         $(".return").show();
         $(".return").click(function() {
