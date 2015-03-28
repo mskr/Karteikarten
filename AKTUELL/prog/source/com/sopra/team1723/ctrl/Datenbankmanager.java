@@ -346,8 +346,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         Veranstaltung veranstaltung = null;
         try{
             ps = conMysql.prepareStatement("SELECT Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer"
-                    + " FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer"
+                    + " FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz "
                     + "ON v.ID = bvz.Veranstaltung WHERE v.ID=?"); 
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -378,8 +378,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer "
-                    + "FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
+                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
                     + "v.ID = bvz.Veranstaltung GROUP BY v.ID"); 
             rs = ps.executeQuery();
             while(rs.next()){
@@ -409,8 +409,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer "
-                    + "FROM benutzer_veranstaltung_zuordnung AS bvz JOIN veranstaltung AS v ON "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
+                    + "FROM benutzer_veranstaltung_zuordnung AS bvz RIGHT OUTER JOIN veranstaltung AS v ON "
                     + "v.ID = bvz.Veranstaltung JOIN veranstaltung_studiengang_zuordnung AS vsz ON v.ID = vsz.Veranstaltung"
                     + " WHERE vsz.Studiengang =? GROUP BY v.ID"); 
             ps.setString(1, studiengang);
@@ -442,8 +442,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer "
-                    + "FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
+                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
                     + "v.ID = bvz.Veranstaltung WHERE Semester =? GROUP BY v.ID"); 
             ps.setString(1, semester);
             rs = ps.executeQuery();
@@ -474,8 +474,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(*) AS AnzTeilnehmer "
-                    + "FROM veranstaltung AS v JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
+                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
                     + "v.ID = bvz.Veranstaltung WHERE bvz.Benutzer =? GROUP BY v.ID"); 
             ps.setInt(1, benutzer);
             rs = ps.executeQuery();
@@ -1101,7 +1101,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         try{
             ps = conMysql.prepareStatement("SELECT Kennwort FROM veranstaltung WHERE ID =?");
-            ps.setInt(1, benutzer);
+            ps.setInt(1, veranstaltung);
             rs = ps.executeQuery();
             if(rs.next()){
                 if(rs.getString("Kennwort") != null && rs.getString("Kennwort").equals(kennwort) == false)
