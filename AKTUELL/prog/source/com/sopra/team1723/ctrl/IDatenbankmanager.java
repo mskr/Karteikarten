@@ -44,16 +44,15 @@ public interface IDatenbankmanager {
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Kennwort, Matrikelnummer, 
      * Studiengang und Nutzerstatus werden nicht gesetzt, da der Benutzer diese nicht selbst ändern kann.
-     * Die eMail kann auch geändert werden. Der Datensatz wird dabei mithilfe des Parameters benutzerID identifiziert. 
+     * Die eMail kann auch geändert werden. Um den Datensatz zu identifizieren wird die ID im Benutzer Objekt verwendet. 
      * Das Kennwort kann in einer separaten Methode bearbeitet werden{@link #passwortAendern(String, String)}.
      * Matrikelnummer und Studiengang kann ein Benutzer nicht selber bearbeiten. Tritt ein Fehler in der Datenbank 
      * auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer mit einer bereits vorhandenen 
      * eMail Adresse anzulegen, so wird eine DbUniqueConstraintException geworfen
-     * @param benutzerId referenziert eindeutig den zu bearbeitenden Benutzer
      * @param benutzer-Objket, das in der Datenbank geupdatet wird
      * @throws DbUniqueConstraintException, SQLException
      */
-    public void bearbeiteBenutzer(int benutzerId, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzer(Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
     
    /**
     * Ändert das Profilbild eines Benutzers in der Datenbank.
@@ -67,15 +66,14 @@ public interface IDatenbankmanager {
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt
      * {@link #passwortAendern(String, String)}. Diese Methode wird verwendet, wenn
      * der Admin die Daten eines Benutzers bearbeiten möchte. Er kann dabei alle Attribute also auch
-     * Matrikelnummer und Studiengang ändern. Um den Datensatz zu identifizieren wird der Parameter benutzerId
+     * Matrikelnummer und Studiengang ändern. Um den Datensatz zu identifizieren wird die ID im Benutzer Objekt
      * verwendet. Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
      * mit einer bereits vorhandenen eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
      * geworfen
-     * @param benutzerId referenziert eindeutig den zu bearbeitenden Benutzer
      * @param benutzer-Objket, das in der Datenbank geupdatet wird 
      * @throws DbUniqueConstraintException, SQLException
      */
-    public void bearbeiteBenutzerAdmin(int benutzerId, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzerAdmin(Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Entfernt den Benutzer aus der Datenbank. 

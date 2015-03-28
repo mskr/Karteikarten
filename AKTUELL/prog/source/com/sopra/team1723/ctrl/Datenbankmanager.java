@@ -169,7 +169,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void bearbeiteBenutzer(int benutzerId, Benutzer benutzer)
+    public void bearbeiteBenutzer(Benutzer benutzer)
             throws SQLException, DbUniqueConstraintException {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -183,7 +183,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(4, benutzer.getNotifyKommentare().name());
             ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(6, benutzer.isNotifyKarteikartenAenderung());
-            ps.setInt(7, benutzerId);    
+            ps.setInt(7, benutzer.getId());    
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -200,7 +200,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void bearbeiteBenutzerAdmin(int benutzerId, Benutzer benutzer) throws SQLException, DbUniqueConstraintException {
+    public void bearbeiteBenutzerAdmin(Benutzer benutzer) throws SQLException, DbUniqueConstraintException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
@@ -216,7 +216,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(7, benutzer.getNotifyKommentare().name());
             ps.setBoolean(8, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(9, benutzer.isNotifyKarteikartenAenderung());
-            ps.setInt(10, benutzerId);    
+            ps.setInt(10, benutzer.getId());    
             ps.executeUpdate();
 
         } catch (SQLException e) {
