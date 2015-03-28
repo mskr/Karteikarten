@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 28. Mrz 2015 um 13:12
+-- Erstellungszeit: 28. Mrz 2015 um 14:23
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -96,7 +96,7 @@ INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Mat
 (3, 'alber.einstein@uni-ulm.de', 'Albert', 'Einstein', 'default.png', 333333, 'Physik', '1234', 'DOZENT', 'KEINE', 0, 0),
 (4, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', 'default.png', 12345, 'Informatik', '1234', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1),
 (5, 'marius.kircher@uni-ulm.de', 'Marius', 'Kircher', 'default.png', 111111, 'Medieninformatik', '1234', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 0),
-(6, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 828584, 'Informatik', '1234', 'STUDENT', 'KEINE', 0, 0);
+(6, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 828584, 'Informatik', '1234', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -290,13 +290,13 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
 `ID` int(11) NOT NULL,
   `Beschreibung` text NOT NULL,
   `Semester` varchar(30) NOT NULL,
-  `Kennwort` varchar(30) NOT NULL,
+  `Kennwort` varchar(30) DEFAULT NULL,
   `KommentareErlaubt` tinyint(1) NOT NULL,
   `BewertungenErlaubt` tinyint(1) NOT NULL,
   `ModeratorKarteikartenBearbeiten` tinyint(1) NOT NULL,
   `Ersteller` int(11) NOT NULL,
   `Titel` varchar(50) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `veranstaltung`
@@ -308,7 +308,8 @@ INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `Komm
 (3, 'Medizin I', 'SoSe2013', '1234', 1, 0, 0, 2, 'Medizin I'),
 (4, 'Algorithmen und Datenstrukturen Vorlesung', 'WiSe2014/15', '1234', 1, 0, 1, 6, 'Algorithmen und Datenstrukture'),
 (5, 'Physik I für Ingenieure Vorlesung', 'SoSe2015', '1234', 1, 0, 0, 3, 'Physik I für Ingenieure'),
-(6, 'Latex Kurs', 'WiSe2014/15', '1234', 1, 1, 1, 2, 'Latex Kurs');
+(6, 'Latex Kurs', 'WiSe2014/15', '1234', 1, 1, 1, 2, 'Latex Kurs'),
+(7, 'Softwaregrundproekt', 'SoSe2015', NULL, 1, 1, 1, 6, 'Sopra');
 
 -- --------------------------------------------------------
 
@@ -377,7 +378,7 @@ ALTER TABLE `benutzer`
 -- Indizes für die Tabelle `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
- ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `Benutzer` (`Benutzer`,`Veranstaltung`), ADD KEY `BenutzerID` (`Benutzer`), ADD KEY `VeranstaltungID` (`Veranstaltung`), ADD KEY `VeranstaltungID_2` (`Veranstaltung`);
+ ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `Benutzer` (`Benutzer`,`Veranstaltung`), ADD UNIQUE KEY `Benutzer_2` (`Benutzer`,`Veranstaltung`), ADD KEY `BenutzerID` (`Benutzer`), ADD KEY `VeranstaltungID` (`Veranstaltung`), ADD KEY `VeranstaltungID_2` (`Veranstaltung`);
 
 --
 -- Indizes für die Tabelle `bewertung_karteikarte`
@@ -509,7 +510,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT für Tabelle `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT für Tabelle `veranstaltungs_benachrichtigung`
 --

@@ -147,6 +147,14 @@ public class JSONConverter
             o.put(ParamDefines.AnzTeilnehmer, v.getAnzTeilnehmer());
             o.put(ParamDefines.Angemeldet, it.next());
             
+            boolean zugangsPasswortGesetzt;
+            if (v.getZugangspasswort() == null)
+                zugangsPasswortGesetzt = false;
+            else
+                zugangsPasswortGesetzt = true;
+                
+            o.put(ParamDefines.KennwortGesetzt, zugangsPasswortGesetzt);
+            
             array.add(o);
         }
 

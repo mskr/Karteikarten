@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.DbFalseLoginDataException;
+import com.sopra.team1723.exceptions.DbFalsePasswortException;
 import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
@@ -366,13 +367,13 @@ public interface IDatenbankmanager {
      * @param benutzer referenziert eindeutig einen Benutzer 
      * @throws SQLException, DbUniqueConstraintException
      */
-    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer) throws SQLException, DbUniqueConstraintException;
+    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort) throws SQLException, 
+    DbUniqueConstraintException, DbFalsePasswortException;
 
     /**
-     * Meldet Benutzer von der Veranstaltung ab. Tritt ein Fehler auf gibt
-     * die Methode false zurück. Ansonsten true.
-     * @param veranstaltung 
-     * @param benutzer 
+     * Meldet Benutzer von der Veranstaltung ab.
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung
+     * @param benutzer referenziert eindeutig einen Benutzer
      * @return false falls ein Fehler auftritt. Ansonsten true (Auch wenn der Benutzer gar nicht
      * zu der Veranstaltung angemeldet war)
      */

@@ -22,6 +22,7 @@ import java.util.List;
 
 
 
+
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -786,9 +787,19 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer) throws SQLException, DbUniqueConstraintException {
+    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort) throws SQLException, 
+    DbUniqueConstraintException, DbFalsePasswortException {
         PreparedStatement ps = null;
+        ResultSet rs = null;
         try{
+            ps = conMysql.prepareStatement("SELECT Kennwort FROM veranstaltung WHERE ID =?");
+            rs = ps.executeQuery();
+            if(rs.next()){
+                if(rs.getString("Kennwort").equals(kennwort) == false)
+                    throw new DbFalsePasswortException();
+            }
+            closeQuietly(ps);    
+            
             ps = conMysql.prepareStatement("INSERT INTO benutzer_veranstaltung_zuordnung (Benutzer, Veranstaltung)"
                     + "VALUES(?,?)");
             ps.setInt(1, benutzer);
@@ -800,8 +811,12 @@ public class Datenbankmanager implements IDatenbankmanager {
                 throw new DbUniqueConstraintException();
             else
                 throw e;
+        } catch(DbFalsePasswortException e){
+            e.printStackTrace();
+            throw e;
         } finally{
             closeQuietly(ps);
+            closeQuietly(rs);
         }
     }
 
