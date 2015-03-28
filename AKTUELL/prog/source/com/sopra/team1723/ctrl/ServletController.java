@@ -38,7 +38,7 @@ public class ServletController extends HttpServlet
     protected final String sessionAttributeDbManager = "dbManager";
     protected final String sessionAttributeaktuelleAction = "aktuelleAction";
     protected final String sessionAttributeaktuellerBenutzer = "aktuellerBenutzer";
-    
+
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
 
     /**
@@ -55,35 +55,35 @@ public class ServletController extends HttpServlet
     {
     }
 
-//    /**
-//     * Aktuell angemeldeter Benutzer. Null, falls Benutzer nicht angemeldet ist.
-//     */
-//    protected Benutzer aktuellerBenutzer = null;
-//
-//    /**
-//     * 
-//     */
-//    protected String gewähltesSemester = null;
-//    
-//    /**
-//     * 
-//     */
-//    protected IDatenbankmanager dbManager = null;
-//
-//    /**
-//     *  Aktuelle Session.
-//     */
-//    protected HttpSession aktuelleSession = null;
-//
-//    /**
-//     *  Print Writer über den Daten an den Client geschrieben werden können
-//     */
-//    protected PrintWriter outWriter = null;
-//
-//    /**
-//     * Hier steht die vom ServletController ausgelesene Aktion, die der Client ausführen will.
-//     */
-//    protected String aktuelleAction = null;
+    //    /**
+    //     * Aktuell angemeldeter Benutzer. Null, falls Benutzer nicht angemeldet ist.
+    //     */
+    //    protected Benutzer aktuellerBenutzer = null;
+    //
+    //    /**
+    //     * 
+    //     */
+    //    protected String gewähltesSemester = null;
+    //    
+    //    /**
+    //     * 
+    //     */
+    //    protected IDatenbankmanager dbManager = null;
+    //
+    //    /**
+    //     *  Aktuelle Session.
+    //     */
+    //    protected HttpSession aktuelleSession = null;
+    //
+    //    /**
+    //     *  Print Writer über den Daten an den Client geschrieben werden können
+    //     */
+    //    protected PrintWriter outWriter = null;
+    //
+    //    /**
+    //     * Hier steht die vom ServletController ausgelesene Aktion, die der Client ausführen will.
+    //     */
+    //    protected String aktuelleAction = null;
 
 
     /**
@@ -93,7 +93,7 @@ public class ServletController extends HttpServlet
     protected boolean pruefeLogin(HttpSession session) 
     {
         IDatenbankmanager dbManager = (IDatenbankmanager) session.getAttribute(sessionAttributeDbManager);
-        
+
         if(dbManager == null)
             return false;
 
@@ -118,11 +118,11 @@ public class ServletController extends HttpServlet
             return null;
 
         IDatenbankmanager dbManager = (IDatenbankmanager) session.getAttribute(sessionAttributeDbManager);
-        
+
         if(dbManager == null)
             return null;
-        
-		return dbManager.leseBenutzer(userID);
+
+        return dbManager.leseBenutzer(userID);
     }
     /**
      * Gibt alle Parameter aus, die am Request hängen
@@ -150,7 +150,7 @@ public class ServletController extends HttpServlet
 
     protected String leseAktuellesSemester(){
         Calendar aktDatum = Calendar.getInstance();
-        
+
         int aktYear = aktDatum.get(Calendar.YEAR);
         Calendar WiSeBegin = Calendar.getInstance();
         Calendar WiSeEnde = Calendar.getInstance();
@@ -174,10 +174,19 @@ public class ServletController extends HttpServlet
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
-        if(preProcessRequest(req, resp))
-            processRequest(req, resp);
+        try{
+            if(preProcessRequest(req, resp))
+                processRequest(req, resp);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            PrintWriter outWriter = resp.getWriter();
+            outWriter.print(jo);
+        }
     }
-    
+
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {}
 
     protected boolean preProcessRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
@@ -185,7 +194,7 @@ public class ServletController extends HttpServlet
         // Bisschen platz zwischen den Requests
         System.out.println();
         System.out.println();
-        
+
         PrintWriter outWriter = resp.getWriter();
         resp.setContentType("text/json");
 
@@ -265,10 +274,10 @@ public class ServletController extends HttpServlet
             return false;
         }
         s.setAttribute(sessionAttributeaktuelleAction, action);
-        
+
         if(s.getAttribute(sessionAttributeGewähltesSemester)== null)
             s.setAttribute(sessionAttributeGewähltesSemester, leseAktuellesSemester());
-        
+
         return true;
     }
 
