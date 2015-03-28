@@ -59,7 +59,11 @@ public class FileUploadServlet extends ServletController
         String contextPath = servletContext.getRealPath(File.separator);
         String fileExt = FilenameUtils.getExtension(fileName);
         
-        if(fileExt == null)
+        if(fileExt == null || 
+                (!fileExt.equalsIgnoreCase("jpg") && 
+                !fileExt.equalsIgnoreCase("jpeg") &&
+                !fileExt.equalsIgnoreCase("png")  &&
+                !fileExt.equalsIgnoreCase("bmp")))
         {
             // Sende Error zurück
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);

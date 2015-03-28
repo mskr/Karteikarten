@@ -24,7 +24,7 @@ function fillProfilseite() {
     var profilBenutzerId = getUrlParameterByName(urlParamId);
 
     $('#profil_avatar_aendern_file').before("<input id='profil_avatar_aendern_file_name' class='profil_input' disabled/>" +
-    		"<input type='button' id='profil_avatar_aendern_button' class='mybutton dark' value='Profilbild wählen' /><br>");
+    		"<input type='button' id='profil_avatar_aendern_button' class='mybutton dark' value='Profilbild wählen' />");
     $('#profil_avatar_aendern_file').hide();
     $('#profil_avatar_aendern_button').click(function() { 
         $('#profil_avatar_aendern_file').trigger('click');  
@@ -32,6 +32,7 @@ function fillProfilseite() {
     $('#profil_avatar_aendern_file').change(function() {
         var filenameFull = $('#profil_avatar_aendern_file').val();
         var fileName = filenameFull.split(/(\\|\/)/g).pop()
+
         $('#profil_avatar_aendern_file_name').prop("disabled",false);
         $('#profil_avatar_aendern_file_name').val(fileName);
         $('#profil_avatar_aendern_file_name').prop("disabled",true);
@@ -298,26 +299,37 @@ function registerAvatarAendernEvent() {
     $("#profil_avatar_aendern_form").submit(function(event) {
         event.preventDefault();
     	var file = $('#profil_avatar_aendern_file')[0].files[0];
-    	
-    	uploadFile(file, 
-    			function(response) {
-		    		var jsonObj = response;
-		            var errCode = jsonObj["error"];
-		            if(errCode == "noerror") 
-                    {
-                        message(1, "Gespeichert.");
-                        location.reload();
-                    } 
-		            else if(errCode == "invalidparam")
-		            {
-                    	message(0, "Keine gültige Datei angegeben. Versuchen Sie es erneut!");
-                    }
-		            else 
-		            {
-                    	message(0, buildMessage(errCode));
-                    }
-		            console.log(response);
-		        },
-    	actionUploadProfilBild);
+
+    	var filenameFull = $('#profil_avatar_aendern_file').val();
+    	var fileName = filenameFull.split(/(\\|\/)/g).pop();
+    	if(fileName.toLowerCase().indexOf(".jpg") < 0 && 
+    			fileName.toLowerCase().indexOf(".jpeg") < 0 &&
+    			fileName.toLowerCase().indexOf(".bmp") < 0 &&
+    			fileName.toLowerCase().indexOf(".png") < 0)
+    	{
+    		message(0, "Bitte geben Sie ein Bild mit dem Format jpg/jpeg, bmp oder png an!");
+    	}
+    	else{	
+    		uploadFile(file, 
+    				function(response) {
+    			var jsonObj = response;
+    			var errCode = jsonObj["error"];
+    			if(errCode == "noerror") 
+    			{
+    				message(1, "Gespeichert.");
+    				location.reload();
+    			} 
+    			else if(errCode == "invalidparam")
+    			{
+    				message(0, "Keine gültige Datei angegeben. Versuchen Sie es erneut!");
+    			}
+    			else 
+    			{
+    				message(0, buildMessage(errCode));
+    			}
+    			console.log(response);
+    		},
+    		actionUploadProfilBild);
+    	}
     });
 }
