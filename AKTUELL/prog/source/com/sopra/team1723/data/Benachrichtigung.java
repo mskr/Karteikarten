@@ -16,26 +16,37 @@ public abstract class Benachrichtigung {
     /**
      * 
      */
-    private int id;
+    protected int id;
 
     /**
      * 
      */
-    private String inhalt;
+    protected String inhalt;
 
     /**
      * 
      */
-    private Date erstelldaum;
+    protected Calendar erstelldaum;
+
+    /**
+     * Benutzer zu dem diese Benachrichtigung gehört
+     */
+    protected int benutzer;
 
     /**
      * 
      */
-    private int verweisID;
+    protected boolean gelesen;
 
-    /**
-     * 
-     */
-    private BenachrichtigungsTyp verweisTyp;
+    public Benachrichtigung(int id, String inhalt, Calendar erstelldaum, int benutzer, boolean gelesen)
+    {
+        this.id = id;
+        this.inhalt = inhalt;
+        this.erstelldaum = erstelldaum;
+        this.benutzer = benutzer;
+        this.gelesen = gelesen;
+    }
+    
+    
 
 }

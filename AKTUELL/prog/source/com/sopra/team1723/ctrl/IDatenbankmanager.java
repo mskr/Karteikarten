@@ -221,6 +221,55 @@ public interface IDatenbankmanager {
      * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
      */
     public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster, List<Klassenfeld> suchfeld);
+    
+    /**
+     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
+     * return
+     * @param karteikID 
+     * @return
+     */
+    public List<Benachrichtigung> leseBenachrichtigungen(int benutzer);
+    
+    /**
+     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
+     * return
+     * @param karteikID 
+     * @return
+     */
+    public BenachrEinlModerator leseBenachrEinlModerator(int id);
+    
+    /**
+     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
+     * return
+     * @param karteikID 
+     * @return
+     */
+    public BenachrKarteikAenderung leseBenachrKarteikAenderung(int id);
+    
+    /**
+     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
+     * return
+     * @param karteikID 
+     * @return
+     */
+    public BenachrNeuerKommentar leseBenachrNeuerKommentar(int id);
+    
+    /**
+     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
+     * return
+     * @param karteikID 
+     * @return
+     */
+    public BenachrProfilGeaendert leseBenachrProfilGeaendert(int id);
+    
+    /**
+     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
+     * return
+     * @param karteikID 
+     * @return
+     */
+    public BenachrVeranstAenderung leseBenachrVeranstAenderung(int id);
+    
     /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
      * return
@@ -300,6 +349,15 @@ public interface IDatenbankmanager {
      * @return
      */
     public Kommentar[] leseKommentare(int karteikID, int vaterKID);
+    
+    /**
+     * Gibt alle Kommentare zu einer Karteikarte zuruck. Bei einem Fehler
+     * wird null zuruckgegeben
+     * @param karteikID 
+     * @param vaterKID 
+     * @return
+     */
+    public Kommentar leseKommentar(int id);
 
     /**
      * Fugt neuen Kommentar in die Datenbank ein. Bei Erfolg wird
