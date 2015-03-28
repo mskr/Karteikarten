@@ -65,6 +65,7 @@ var paramErsteller = "ersteller";
 var paramModeratoren = "moderatoren";
 var paramAnzTeilnehmer = "anzTeilnehmer";
 var paramAngemeldet = "angemeldet";
+var paramKennwortGesetzt = "kennwortGesetzt";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";

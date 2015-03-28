@@ -10,7 +10,7 @@
  */
 $.ajaxSetup({
     type: "GET",
-	timeout: 1000,
+	timeout: 3000,
 	error: function(jqXHR, textStatus, errorThrown) { 
 	    //status === 'timeout' if it took too long.
 	    //handle that however you want.

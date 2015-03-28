@@ -13,6 +13,8 @@ import javax.servlet.http.*;
 import org.json.simple.JSONObject;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.exceptions.DbFalsePasswortException;
+import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
  * Verwaltet die Verastaltungen
@@ -209,26 +211,9 @@ public class VeranstaltungServlet extends ServletController {
             vId = Integer.parseInt(idStr);
             
             Veranstaltung v = dbManager.leseVeranstaltung(vId);
-            
-            // Existiert ein passwort ?
-            if(!v.getZugangspasswort().equals(""))
-            {
-                String pw = request.getParameter(ParamDefines.Password);
-                if(pw == null)
-                {
-                    JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-                    outWriter.print(jo);
-                    return false;
-                }
 
-                if(!pw.equals(v.getZugangspasswort()))
-                {
-                    JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
-                    outWriter.print(jo);
-                    return false;
-                }
-            }
-//            dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId());
+            String pw = request.getParameter(ParamDefines.Password);
+            dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw);
 
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             outWriter.print(jo);
@@ -236,6 +221,23 @@ public class VeranstaltungServlet extends ServletController {
         catch (NumberFormatException e)
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        catch (SQLException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+        catch (DbUniqueConstraintException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            outWriter.print(jo);
+        }
+        catch (DbFalsePasswortException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
             outWriter.print(jo);
             return false;
         }
@@ -267,7 +269,7 @@ public class VeranstaltungServlet extends ServletController {
         {
             vId = Integer.parseInt(idStr);
             
-//            dbManager.vonVeranstaltungAbmelden(vId, aktuellerBenutzer.getId());
+            dbManager.vonVeranstaltungAbmelden(vId, aktuellerBenutzer.getId());
 
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             outWriter.print(jo);

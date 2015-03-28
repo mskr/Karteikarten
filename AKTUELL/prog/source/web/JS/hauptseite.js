@@ -156,7 +156,14 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		if(jsonVeranstObj[paramAngemeldet] == true)
 			str += "<span class='mybutton dark'><span class='octicon octicon-sign-out'></span> Ausschreiben</span>";
 		else
+		{
 			str += "<span class='mybutton green'><span class='octicon octicon-rocket'></span> Einschreiben</span>";
+			if(jsonVeranstObj[paramKennwortGesetzt] == true)
+			{
+				// TODO Eigene Oberklassen in CSS für alle input felder vom typ text
+				str += "<br><input type='password' placeholder='Kennwort eingeben' class='profil_input kennwort_input'>";
+			}
+		}
 		
 		str +=		"	</div>" +
 					"</div>" +
@@ -191,7 +198,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 									function() 
 									{
 					                    location.reload();
-									}, 3000);
+									}, 2000);
 						}
 						else
 						{
@@ -204,11 +211,23 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		else
 		{
 			button.click(function() {
+				var kennwortFeld = str.find(".kennwort_input");
+				var kennwort = "";
+				
+				if(kennwortFeld != undefined)
+				{
+					kennwort = kennwortFeld.val();
+					if(kennwort == ""){
+						message(0, "Bitte geben sie ein Zugangspasswort ein!");
+						return;
+					}
+				}
+				
 				var ajax1 = $.ajax({
 					url: veranstaltungServlet,
 					data: "action="+actionEinschreiben + "&" + 
 					paramId +"=" + jsonVeranstObj[paramId] + "&" +
-					paramPasswort + "=" + "1111",					// TODO
+					paramPasswort + "=" + kennwort,					// TODO
 					success: function(jsonObj) 
 					{
 						var errCode = jsonObj["error"];
@@ -219,7 +238,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 									function() 
 									{
 					                    location.reload();
-									}, 3000);
+									}, 2000);
 						}
 						else if(errCode == "loginfailed") 
 						{
