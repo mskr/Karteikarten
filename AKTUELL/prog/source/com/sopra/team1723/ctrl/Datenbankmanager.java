@@ -9,17 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-
-
-
-
-
-
-
-
-
 
 
 
@@ -695,6 +689,217 @@ public class Datenbankmanager implements IDatenbankmanager {
         // TODO Auto-generated method stub
         return false;
     }
+    
+    @Override
+    public List<Benachrichtigung> leseBenachrichtigungen(int benutzer)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Benachrichtigung> aktBenachrichtigungen = null;
+        try{
+            aktBenachrichtigungen = new ArrayList<Benachrichtigung>();
+            
+            ps = conMysql.prepareStatement("SELECT bem.ID AS ID, 'benachrichtigung_einladung_moderator' AS Tabelle,"
+                    + " b.Erstelldatum FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtiung AS b ON"
+                    + " bem.Benachrichtigung = b.ID WHERE bem.Gelesen = false UNION"
+                    
+                    + "SELECT bk.ID AS ID, 'benachrichtigung_karteikartenaenderung' AS Tabelle ,"
+                    + " b.Erstelldatum FROM benachrichtigung_karteikartenaenderung AS bk JOIN benachrichtiung AS b ON"
+                    + " bk.Benachrichtigung = b.ID WHERE bk.Gelesen = false UNION"
+                    
+                    + " SELECT bnk.ID AS ID, 'benachrichtigung_neuer_kommentar' AS Tabelle ,"
+                    + " b.Erstelldatum FROM benachrichtigung_neuer_kommentar AS bnk JOIN benachrichtiung AS b ON"
+                    + " bnk.Benachrichtigung = b.ID WHERE bnk.Gelesen = false UNION"
+                    
+                    + "SELECT bpg.ID AS ID, 'benachrichtigung_profil_geaendert' AS Tabelle ,"
+                    + " b.Erstelldatum FROM benachrichtigung_profil_geaendert AS bpg JOIN benachrichtiung AS b ON"
+                    + " bpg.Benachrichtigung = b.ID WHERE bpg.Gelesen = false UNION"
+
+                    + "SELECT bv.ID AS ID, 'benachrichtigung_veranstaltungsaenderung' AS Tabelle ,"
+                    + " b.Erstelldatum FROM benachrichtigung_veranstaltungsaenderung AS bv JOIN benachrichtiung AS b ON"
+                    + " bv.Benachrichtigung = b.ID WHERE bv.Gelesen = false"
+                    + "ORDER BY b.Erstelldatum DESC LIMIT 5");
+            
+            rs = ps.executeQuery();
+            String tabelle;
+            int id;
+            while (rs.next()){
+                tabelle = rs.getString("Tabelle");
+                id = rs.getInt("ID");
+                if(tabelle.equals("benachrichtigung_einladung_moderator"))
+                    aktBenachrichtigungen.add(leseBenachrEinlModerator(id));
+                else if(tabelle.equals("benachrichtigung_karteikartenaenderung"))
+                    aktBenachrichtigungen.add(leseBenachrKarteikAenderung(id));
+                else if(tabelle.equals("benachrichtigung_neuer_kommentar"))
+                    aktBenachrichtigungen.add(leseBenachrNeuerKommentar(id));
+                else if(tabelle.equals("benachrichtigung_profil_geaendert"))
+                    aktBenachrichtigungen.add(leseBenachrProfilGeaendert(id));
+                else
+                    aktBenachrichtigungen.add(leseBenachrVeranstAenderung(id));
+            }
+            
+            
+        } catch(SQLException e){
+            aktBenachrichtigungen = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+        return aktBenachrichtigungen;
+    }
+    
+    @Override
+    public BenachrEinlModerator leseBenachrEinlModerator(int id)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        BenachrEinlModerator benachrichtigung = null;
+        try{
+            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen, Angenommen"
+                    + "FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtigung AS b ON bem.Benachrichtigung"
+                    + "= b.ID WHERE bem.ID =?"); 
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(rs.getDate("Erstelldatum"));
+                benachrichtigung = new BenachrEinlModerator(id, rs.getString("Inhalt"), cal,
+                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseVeranstaltung(rs.getInt("Veranstaltung")),
+                        rs.getBoolean("Angenommen"));
+            }
+        } catch (SQLException e) {
+            benachrichtigung = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return benachrichtigung;
+    }
+
+    @Override
+    public BenachrKarteikAenderung leseBenachrKarteikAenderung(int id)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        BenachrKarteikAenderung benachrichtigung = null;
+        try{
+            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Karteikarte, Gelesen"
+                    + "FROM benachrichtigung_karteikartenaenderung AS bk JOIN benachrichtigung AS b ON bk.Benachrichtigung"
+                    + "= b.ID WHERE bk.ID =?"); 
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(rs.getDate("Erstelldatum"));
+                benachrichtigung = new BenachrKarteikAenderung(id, rs.getString("Inhalt"), cal,
+                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseKarteikarte(rs.getInt("Karteikarte")));
+            }
+        } catch (SQLException e) {
+            benachrichtigung = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return benachrichtigung;
+    }
+
+    @Override
+    public BenachrNeuerKommentar leseBenachrNeuerKommentar(int id)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        BenachrNeuerKommentar benachrichtigung = null;
+        try{
+            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Kommentar, Gelesen"
+                    + "FROM benachrichtigung_neuer_kommentar AS bnk JOIN benachrichtigung AS b ON bnk.Benachrichtigung"
+                    + "= b.ID WHERE bnk.ID =?"); 
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(rs.getDate("Erstelldatum"));
+                benachrichtigung = new BenachrNeuerKommentar(id, rs.getString("Inhalt"), cal,
+                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseKommentar(rs.getInt("Kommentar")));
+            }
+        } catch (SQLException e) {
+            benachrichtigung = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return benachrichtigung;
+    }
+
+    @Override
+    public BenachrProfilGeaendert leseBenachrProfilGeaendert(int id)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        BenachrProfilGeaendert benachrichtigung = null;
+        try{
+            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Admin, Gelesen"
+                    + "FROM benachrichtigung_profil_geaendert AS bpg JOIN benachrichtigung AS b ON bpg.Benachrichtigung"
+                    + "= b.ID WHERE bpg.ID =?"); 
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(rs.getDate("Erstelldatum"));
+                benachrichtigung = new BenachrProfilGeaendert(id, rs.getString("Inhalt"), cal,
+                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseBenutzer(rs.getInt("Admin")));
+            }
+        } catch (SQLException e) {
+            benachrichtigung = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return benachrichtigung;
+    }
+
+    @Override
+    public BenachrVeranstAenderung leseBenachrVeranstAenderung(int id)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        BenachrVeranstAenderung benachrichtigung = null;
+        try{
+            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen"
+                    + "FROM benachrichtigung_veranstaltungsaenderung AS bv JOIN benachrichtigung AS b ON bv.Benachrichtigung"
+                    + "= b.ID WHERE bv.ID =?"); 
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(rs.getDate("Erstelldatum"));
+                benachrichtigung = new BenachrVeranstAenderung(id, rs.getString("Inhalt"), cal,
+                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseVeranstaltung(rs.getInt("Veranstaltung")));
+            }
+        } catch (SQLException e) {
+            benachrichtigung = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return benachrichtigung;
+    }
+
 
     @Override
     public Karteikarte leseKarteikarte(int karteikID) {
@@ -869,6 +1074,14 @@ public class Datenbankmanager implements IDatenbankmanager {
         // TODO Auto-generated method stub
         return false;
     }
+
+    @Override
+    public Kommentar leseKommentar(int id)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 
 
 
