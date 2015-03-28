@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 28. Mrz 2015 um 14:23
+-- Erstellungszeit: 28. Mrz 2015 um 19:21
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -64,6 +64,113 @@ BEGIN
   END$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `benachrichtigung`
+--
+
+CREATE TABLE IF NOT EXISTS `benachrichtigung` (
+`ID` int(11) NOT NULL,
+  `Inhalt` text NOT NULL,
+  `Erstelldatum` date NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `benachrichtigung`
+--
+
+INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
+(1, 'Einladung als Moderator für die Vorlesung Softwaretechnik', '2015-03-21'),
+(2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-03-03'),
+(3, 'Prüfungstermine sind nun in der Beschreibung bekannt gegeben', '2015-03-11');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `benachrichtigung_einladung_moderator`
+--
+
+CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
+`ID` int(11) NOT NULL,
+  `Benachrichtigung` int(11) NOT NULL,
+  `Benutzer` int(11) NOT NULL,
+  `Veranstaltung` int(11) NOT NULL,
+  `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
+  `Angenommen` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `benachrichtigung_einladung_moderator`
+--
+
+INSERT INTO `benachrichtigung_einladung_moderator` (`ID`, `Benachrichtigung`, `Benutzer`, `Veranstaltung`, `Gelesen`, `Angenommen`) VALUES
+(1, 1, 4, 1, 1, 1),
+(2, 2, 6, 4, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `benachrichtigung_karteikartenaenderung`
+--
+
+CREATE TABLE IF NOT EXISTS `benachrichtigung_karteikartenaenderung` (
+`ID` int(11) NOT NULL,
+  `Benachrichtigung` int(11) NOT NULL,
+  `Benutzer` int(11) NOT NULL,
+  `Karteikarte` int(11) NOT NULL,
+  `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `benachrichtigung_neuer_kommentar`
+--
+
+CREATE TABLE IF NOT EXISTS `benachrichtigung_neuer_kommentar` (
+`ID` int(11) NOT NULL,
+  `Benachrichtigung` int(11) NOT NULL,
+  `Benutzer` int(11) NOT NULL,
+  `Kommentar` int(11) NOT NULL,
+  `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `benachrichtigung_profil_geaendert`
+--
+
+CREATE TABLE IF NOT EXISTS `benachrichtigung_profil_geaendert` (
+`ID` int(11) NOT NULL,
+  `Benachrichtigung` int(11) NOT NULL,
+  `Benutzer` int(11) NOT NULL,
+  `Admin` int(11) NOT NULL,
+  `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `benachrichtigung_veranstaltungsaenderung`
+--
+
+CREATE TABLE IF NOT EXISTS `benachrichtigung_veranstaltungsaenderung` (
+`ID` int(11) NOT NULL,
+  `Benachrichtigung` int(11) NOT NULL,
+  `Veranstaltung` int(11) NOT NULL,
+  `Benutzer` int(11) NOT NULL,
+  `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `benachrichtigung_veranstaltungsaenderung`
+--
+
+INSERT INTO `benachrichtigung_veranstaltungsaenderung` (`ID`, `Benachrichtigung`, `Veranstaltung`, `Benutzer`, `Gelesen`) VALUES
+(1, 3, 1, 5, 0);
 
 -- --------------------------------------------------------
 
@@ -150,28 +257,6 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
   `Benutzer` varchar(30) NOT NULL,
   `KommentarID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `einladung_moderator_benachrichtigung`
---
-
-CREATE TABLE IF NOT EXISTS `einladung_moderator_benachrichtigung` (
-`ID` int(11) NOT NULL,
-  `Inhalt` text NOT NULL,
-  `Erstelldatum` date NOT NULL,
-  `Benutzer` int(11) NOT NULL,
-  `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-
---
--- Daten für Tabelle `einladung_moderator_benachrichtigung`
---
-
-INSERT INTO `einladung_moderator_benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`, `Benutzer`, `Veranstaltung`) VALUES
-(1, 'Einladung als Moderator für die Vorlesung Softwaretechnik', '2015-03-21', 4, 1),
-(2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-03-03', 6, 4);
 
 -- --------------------------------------------------------
 
@@ -314,26 +399,6 @@ INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `Komm
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `veranstaltungs_benachrichtigung`
---
-
-CREATE TABLE IF NOT EXISTS `veranstaltungs_benachrichtigung` (
-`ID` int(11) NOT NULL,
-  `Inhalt` text NOT NULL,
-  `Erstelldatum` date NOT NULL,
-  `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-
---
--- Daten für Tabelle `veranstaltungs_benachrichtigung`
---
-
-INSERT INTO `veranstaltungs_benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`, `Veranstaltung`) VALUES
-(1, 'Prüfungstermine sind nun in der Beschreibung bekannt gegeben', '2015-03-11', 1);
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `veranstaltung_studiengang_zuordnung`
 --
 
@@ -369,6 +434,42 @@ INSERT INTO `veranstaltung_studiengang_zuordnung` (`ID`, `Veranstaltung`, `Studi
 --
 
 --
+-- Indizes für die Tabelle `benachrichtigung`
+--
+ALTER TABLE `benachrichtigung`
+ ADD PRIMARY KEY (`ID`);
+
+--
+-- Indizes für die Tabelle `benachrichtigung_einladung_moderator`
+--
+ALTER TABLE `benachrichtigung_einladung_moderator`
+ ADD PRIMARY KEY (`ID`), ADD KEY `Benutzer` (`Benutzer`), ADD KEY `Veranstaltung` (`Veranstaltung`), ADD KEY `Benachrichtigung` (`Benachrichtigung`);
+
+--
+-- Indizes für die Tabelle `benachrichtigung_karteikartenaenderung`
+--
+ALTER TABLE `benachrichtigung_karteikartenaenderung`
+ ADD PRIMARY KEY (`ID`), ADD KEY `Benachrichtigung` (`Benachrichtigung`), ADD KEY `Benutzer` (`Benutzer`);
+
+--
+-- Indizes für die Tabelle `benachrichtigung_neuer_kommentar`
+--
+ALTER TABLE `benachrichtigung_neuer_kommentar`
+ ADD PRIMARY KEY (`ID`), ADD KEY `Kommentar` (`Kommentar`), ADD KEY `Benutzer` (`Benutzer`), ADD KEY `Benachrichtigung` (`Benachrichtigung`);
+
+--
+-- Indizes für die Tabelle `benachrichtigung_profil_geaendert`
+--
+ALTER TABLE `benachrichtigung_profil_geaendert`
+ ADD PRIMARY KEY (`ID`), ADD KEY `Benachrichtigung` (`Benachrichtigung`), ADD KEY `Benutzer` (`Benutzer`), ADD KEY `Admin` (`Admin`);
+
+--
+-- Indizes für die Tabelle `benachrichtigung_veranstaltungsaenderung`
+--
+ALTER TABLE `benachrichtigung_veranstaltungsaenderung`
+ ADD PRIMARY KEY (`ID`), ADD KEY `VeranstaltungID` (`Veranstaltung`), ADD KEY `Benachrichtigung` (`Benachrichtigung`), ADD KEY `Veranstaltung` (`Veranstaltung`), ADD KEY `Benutzer` (`Benutzer`);
+
+--
 -- Indizes für die Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
@@ -391,12 +492,6 @@ ALTER TABLE `bewertung_karteikarte`
 --
 ALTER TABLE `bewertung_kommentar`
  ADD PRIMARY KEY (`ID`), ADD KEY `BenutzerID` (`Benutzer`), ADD KEY `KommentarID` (`KommentarID`);
-
---
--- Indizes für die Tabelle `einladung_moderator_benachrichtigung`
---
-ALTER TABLE `einladung_moderator_benachrichtigung`
- ADD PRIMARY KEY (`ID`), ADD KEY `Benutzer` (`Benutzer`), ADD KEY `Veranstaltung` (`Veranstaltung`);
 
 --
 -- Indizes für die Tabelle `karteikarte`
@@ -441,12 +536,6 @@ ALTER TABLE `veranstaltung`
  ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `Semester` (`Semester`,`Titel`), ADD KEY `Ersteller` (`Ersteller`);
 
 --
--- Indizes für die Tabelle `veranstaltungs_benachrichtigung`
---
-ALTER TABLE `veranstaltungs_benachrichtigung`
- ADD PRIMARY KEY (`ID`), ADD KEY `VeranstaltungID` (`Veranstaltung`);
-
---
 -- Indizes für die Tabelle `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
@@ -456,6 +545,36 @@ ALTER TABLE `veranstaltung_studiengang_zuordnung`
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
+--
+-- AUTO_INCREMENT für Tabelle `benachrichtigung`
+--
+ALTER TABLE `benachrichtigung`
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT für Tabelle `benachrichtigung_einladung_moderator`
+--
+ALTER TABLE `benachrichtigung_einladung_moderator`
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT für Tabelle `benachrichtigung_karteikartenaenderung`
+--
+ALTER TABLE `benachrichtigung_karteikartenaenderung`
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `benachrichtigung_neuer_kommentar`
+--
+ALTER TABLE `benachrichtigung_neuer_kommentar`
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `benachrichtigung_profil_geaendert`
+--
+ALTER TABLE `benachrichtigung_profil_geaendert`
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `benachrichtigung_veranstaltungsaenderung`
+--
+ALTER TABLE `benachrichtigung_veranstaltungsaenderung`
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT für Tabelle `benutzer`
 --
@@ -476,11 +595,6 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
 ALTER TABLE `bewertung_kommentar`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `einladung_moderator_benachrichtigung`
---
-ALTER TABLE `einladung_moderator_benachrichtigung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT für Tabelle `karteikarte`
 --
@@ -512,11 +626,6 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `veranstaltung`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
--- AUTO_INCREMENT für Tabelle `veranstaltungs_benachrichtigung`
---
-ALTER TABLE `veranstaltungs_benachrichtigung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
 -- AUTO_INCREMENT für Tabelle `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
@@ -524,6 +633,45 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- Constraints der exportierten Tabellen
 --
+
+--
+-- Constraints der Tabelle `benachrichtigung_einladung_moderator`
+--
+ALTER TABLE `benachrichtigung_einladung_moderator`
+ADD CONSTRAINT `benachrichtigung_einladung_moderator_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_einladung_moderator_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_einladung_moderator_ibfk_4` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `benachrichtigung_karteikartenaenderung`
+--
+ALTER TABLE `benachrichtigung_karteikartenaenderung`
+ADD CONSTRAINT `benachrichtigung_karteikartenaenderung_ibfk_1` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_karteikartenaenderung_ibfk_2` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `benachrichtigung_neuer_kommentar`
+--
+ALTER TABLE `benachrichtigung_neuer_kommentar`
+ADD CONSTRAINT `benachrichtigung_neuer_kommentar_ibfk_1` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_neuer_kommentar_ibfk_2` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_neuer_kommentar_ibfk_3` FOREIGN KEY (`Kommentar`) REFERENCES `kommentar` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `benachrichtigung_profil_geaendert`
+--
+ALTER TABLE `benachrichtigung_profil_geaendert`
+ADD CONSTRAINT `benachrichtigung_profil_geaendert_ibfk_1` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_profil_geaendert_ibfk_2` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_profil_geaendert_ibfk_3` FOREIGN KEY (`Admin`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `benachrichtigung_veranstaltungsaenderung`
+--
+ALTER TABLE `benachrichtigung_veranstaltungsaenderung`
+ADD CONSTRAINT `benachrichtigung_veranstaltungsaenderung_ibfk_1` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_veranstaltungsaenderung_ibfk_2` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_veranstaltungsaenderung_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `benutzer`
@@ -548,12 +696,6 @@ ADD CONSTRAINT `bewertung_karteikarte_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFE
 --
 ALTER TABLE `bewertung_kommentar`
 ADD CONSTRAINT `bewertung_kommentar_ibfk_2` FOREIGN KEY (`KommentarID`) REFERENCES `kommentar` (`ID`);
-
---
--- Constraints der Tabelle `einladung_moderator_benachrichtigung`
---
-ALTER TABLE `einladung_moderator_benachrichtigung`
-ADD CONSTRAINT `einladung_moderator_benachrichtigung_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`);
 
 --
 -- Constraints der Tabelle `karteikarte`
@@ -587,12 +729,6 @@ ADD CONSTRAINT `moderator_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer`
 --
 ALTER TABLE `notiz`
 ADD CONSTRAINT `notiz_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`);
-
---
--- Constraints der Tabelle `veranstaltungs_benachrichtigung`
---
-ALTER TABLE `veranstaltungs_benachrichtigung`
-ADD CONSTRAINT `veranstaltungs_benachrichtigung_ibfk_1` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`);
 
 --
 -- Constraints der Tabelle `veranstaltung_studiengang_zuordnung`
