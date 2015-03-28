@@ -13,6 +13,14 @@ public class BenachrEinlModerator extends Benachrichtigung{
         this.veranstaltung = veranstaltung;
         this.angenommen = angenommen;
     }
+    public Veranstaltung getVeranstaltung()
+    {
+        return veranstaltung;
+    }
+    public boolean isAngenommen()
+    {
+        return angenommen;
+    }
     
     
 }

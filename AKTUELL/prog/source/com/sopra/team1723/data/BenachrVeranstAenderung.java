@@ -12,4 +12,9 @@ public class BenachrVeranstAenderung extends Benachrichtigung{
         super(id, inhalt, erstelldaum, benutzer, gelesen);
         this.veranstaltung = veranstaltung;
     }
+
+    public Veranstaltung getVeranstaltung()
+    {
+        return veranstaltung;
+    }
 }

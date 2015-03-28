@@ -270,8 +270,6 @@ label {
 .bn_anzahl {
 	margin-left: .5em;
 	color: yellow;
-} .bn_anzahl:after {
-	content: " neu";
 }
 .bn_container {
 	height: 100%;
@@ -1454,3 +1452,8 @@ select.profil_input {
 }
 
 /* STYLE FUER KLEINE BILDSCHIRME ENDE */
+
+
+.bn_zeit{
+	font-size: 0.7em;
+}

@@ -27,7 +27,7 @@ import com.sopra.team1723.data.*;
  * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
  * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
  */
-public class ServletController extends HttpServlet 
+public abstract class ServletController extends HttpServlet 
 {
     /**
      *  Session Attribute, die verwendet werden
@@ -187,7 +187,7 @@ public class ServletController extends HttpServlet
         }
     }
 
-    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {}
+    protected abstract void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
 
     protected boolean preProcessRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {

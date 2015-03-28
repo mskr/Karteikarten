@@ -23,6 +23,31 @@ public abstract class Benachrichtigung {
      */
     protected String inhalt;
 
+    public int getId()
+    {
+        return id;
+    }
+
+    public String getInhalt()
+    {
+        return inhalt;
+    }
+
+    public Calendar getErstelldaum()
+    {
+        return erstelldaum;
+    }
+
+    public int getBenutzer()
+    {
+        return benutzer;
+    }
+
+    public boolean isGelesen()
+    {
+        return gelesen;
+    }
+
     /**
      * 
      */
