@@ -31,8 +31,8 @@ import com.sopra.team1723.data.Benutzer;
 public class FileUploadServlet extends ServletController
 {
     
-    protected final int profilBildHeigth = 112;
-    protected final int profilBildWidth = 112;
+    protected final int profilBildHeigth = 150;             // Pixel
+    protected final int profilBildWidth = profilBildHeigth;
     
     @Override
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -73,16 +73,33 @@ public class FileUploadServlet extends ServletController
         
         // Bild neu Skalieren und speichern
         BufferedImage originalImage = ImageIO.read(contentStream);
+        
+        // Bild zuschneiden
+        if(originalImage.getWidth() > originalImage.getHeight())
+        {
+            int diff = originalImage.getWidth()-originalImage.getHeight();
+            // Links und rechts abschneiden
+            originalImage = originalImage.getSubimage(diff/2, 0, originalImage.getWidth()-diff, originalImage.getHeight());
+        }
+        else  if(originalImage.getWidth() < originalImage.getHeight())
+        {
+            int diff = originalImage.getHeight()-originalImage.getWidth();
+            // oben und unten abschneiden
+            originalImage = originalImage.getSubimage(0, diff/2, originalImage.getWidth(), originalImage.getHeight()-diff);
+        }
+        
+        // Bild skalieren
         BufferedImage scaledImage = new BufferedImage(profilBildWidth, profilBildHeigth, BufferedImage.TYPE_INT_ARGB);
         Graphics g = scaledImage.createGraphics();
         g.drawImage(originalImage, 0, 0, profilBildWidth, profilBildHeigth, null);
         g.dispose();
 
-        String relativerPfad = dirProfilBilder + aktuellerBenutzer.getId() + ".png";
+        String dateiName = System.currentTimeMillis() + ".png";
+        String relativerPfad = dirProfilBilder + dateiName;
         String absolutePath = contextPath + relativerPfad;
         ImageIO.write(scaledImage, "png", new File(absolutePath));
         
-        if(!dbManager.aendereProfilBild(aktuellerBenutzer.getId(), aktuellerBenutzer.getId() + ".png"))
+        if(!dbManager.aendereProfilBild(aktuellerBenutzer.getId(), dateiName))
         {
             // Sende Error zurück
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
@@ -90,8 +107,12 @@ public class FileUploadServlet extends ServletController
             return;
         }
         
+        // Altes Bild löschen
+        File f = new File(contextPath + aktuellerBenutzer.getProfilBildPfad());
+        f.delete();
+        
         System.out.println("File gespeichert: " + absolutePath);
-        System.out.println("relativer Pfad: " + relativerPfad);
+        System.out.println("Web Pfad: " + relativerPfad);
 
         JSONObject jo = JSONConverter.toJson(relativerPfad);
         outWriter.print(jo);
