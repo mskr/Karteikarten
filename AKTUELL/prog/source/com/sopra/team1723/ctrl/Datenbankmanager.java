@@ -1104,7 +1104,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(1, benutzer);
             rs = ps.executeQuery();
             if(rs.next()){
-                if(rs.getString("Kennwort").equals(kennwort) == false)
+                if(rs.getString("Kennwort") != null && rs.getString("Kennwort").equals(kennwort) == false)
                     throw new DbFalsePasswortException();
             }
             closeQuietly(ps);    
