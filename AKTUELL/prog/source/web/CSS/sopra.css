@@ -15,6 +15,7 @@ body {
 	color: #e0e0e0;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 1em;
+	cursor: default;
 }
 
 a { /* Link Style */
@@ -469,13 +470,16 @@ label {
 	overflow: hidden;;
 	background: #2a2a2a;
 	border-left: 3px solid #3b3b3b;
-	cursor: pointer;
 	-webkit-box-shadow: 0px 1px 0px #242424;
 	-moz-box-shadow: 0px 1px 0px #242424;
 	box-shadow: 0px 1px 0px #242424;
 	-webkit-transition: width 0.5s; /* For Safari 3.1 to 6.0 */
 	transition: background 0.2s;
-} .vn:hover {
+}
+.vn_eingeschrieben{	
+	cursor: pointer;
+}
+.vn:hover {
 	color: white;
 	background: #242424;
 /* 	background: #3b3b3b; */
@@ -515,6 +519,7 @@ label {
 	font-size: 15px;
 	display: inline-block;
 	transition: color 0.1s;
+	cursor: pointer;
 } .vn_mehr_einbl:after {
 	content: ""; /* Den Text schreibt jetzt vorruebergehend JQuery*/
 } .vn_mehr_einbl:hover {

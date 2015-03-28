@@ -30,6 +30,8 @@ var leseVeranstModeAlle = "alle";                    // Liefert alle Veranstaltu
 var leseVeranstModeSemester = "semester";            // Liefert alle Veranstaltungen im aktuellen Semester
 var leseVeranstModeStudiengang = "studiengang";      // Liefert alle Veranstaltungen im aktuellen Studiengang (TODO)
 var leseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
+var actionAusschreiben = "ausschreiben";
+var actionEinschreiben = "einschreiben";
 
 // GET/POST-Parameter fuer die Servlets
 // Werden auch als Schluesselnamen fuer JSON Objekte verwendet

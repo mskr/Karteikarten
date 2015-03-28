@@ -133,8 +133,13 @@ function displayVeranstaltung(container, jsonVeranstObj)
 	var errCode = jsonVeranstObj["error"];
 	if(errCode == "noerror") 
 	{
-		var str = "<div class='vn'>" +
-					"<span class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>" +
+		var str = "";
+		if(jsonVeranstObj[paramAngemeldet] == true)
+			str += "<div class='vn vn_eingeschrieben'>";
+		else
+			str += "<div class='vn'>";
+
+		str +=		"<span class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>" +
 					"<span class='vn_details'>" +
 					"<span class='vn_detail'><a>"  + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a></span><br>" +
 					"<span class='vn_detail'>" + jsonVeranstObj[paramAnzTeilnehmer] + " Teilnehmer</span><br>" +
@@ -147,15 +152,10 @@ function displayVeranstaltung(container, jsonVeranstObj)
 					"	<span class='vn_mehr'>" + jsonVeranstObj[paramBeschr] + "</span>" +
 					"	<div class='vn_optionen'>";
 		
-		// TODO Button mit Funktionalität versehen
 		if(jsonVeranstObj[paramAngemeldet] == true)
-		{
 			str += "<span class='mybutton dark'><span class='octicon octicon-sign-out'></span> Ausschreiben</span>";
-		}
 		else
-		{
 			str += "<span class='mybutton green'><span class='octicon octicon-rocket'></span> Einschreiben</span>";
-		}
 		
 		str +=		"	</div>" +
 					"</div>" +
@@ -170,6 +170,71 @@ function displayVeranstaltung(container, jsonVeranstObj)
 	        paramObj[urlParamId] = jsonVeranstObj[paramErsteller][paramId];
 	        buildUrlQuery(paramObj);
 		});
+		
+		// TODO Button mit Funktionalität versehen
+		var button = str.find(".mybutton");
+		if(jsonVeranstObj[paramAngemeldet] == true)
+		{
+			button.click(function() {
+				var ajax1 = $.ajax({
+					url: veranstaltungServlet,
+					data: "action="+actionAusschreiben + "&" + 
+					paramId +"=" + jsonVeranstObj[paramId],
+					success: function(jsonObj) 
+					{
+						var errCode = jsonObj["error"];
+						if(errCode == "noerror") 
+						{
+							message(1, "Sie haben sich erfolgreich abgemeldet.");
+							setTimeout(
+									function() 
+									{
+					                    location.reload();
+									}, 3000);
+						}
+						else
+						{
+							message(0, buildMessage(errCode));
+						}
+					}
+				});
+			});
+		}
+		else
+		{
+			button.click(function() {
+				var ajax1 = $.ajax({
+					url: veranstaltungServlet,
+					data: "action="+actionEinschreiben + "&" + 
+					paramId +"=" + jsonVeranstObj[paramId] + "&" +
+					paramPasswort + "=" + "1111",					// TODO
+					success: function(jsonObj) 
+					{
+						var errCode = jsonObj["error"];
+						if(errCode == "noerror") 
+						{
+							message(1, "Sie haben sich erfolgreich angemeldet.");
+							setTimeout(
+									function() 
+									{
+					                    location.reload();
+									}, 3000);
+						}
+						else if(errCode == "loginfailed") 
+						{
+							message(0, "Ihr Zugangspasswort war falsch!");
+						}
+						else
+						{
+							message(0, buildMessage(errCode));
+						}
+					}
+					
+				});
+			});
+		}
+		
+		
 	}
 	else
 	{
