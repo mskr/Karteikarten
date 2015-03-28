@@ -361,22 +361,24 @@ public interface IDatenbankmanager {
     public boolean istModerator(Veranstaltung veranst, String benutzerMail);
 
     /**
-     * Schreibt Benutzer in die Veranstaltung ein. Tritt ein Fehler auf gibt
-     * die Methode false zuruck. Ansonsten true.
-     * @param veranstTitel 
-     * @param eMail 
-     * @return
+     * Schreibt Benutzer in die Veranstaltung ein. Ist der Benutzer bereits in die Veranstaltung eingetragen,
+     * wird eine DbUniqueConstraintException geworfen. Tritt ein anderer Fehler auf wird eine SQLException
+     * geworfen.
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung 
+     * @param benutzer referenziert eindeutig einen Benutzer 
+     * @throws SQLException, DbUniqueConstraintException
      */
-    public boolean zuVeranstaltungEinschreiben(String veranstTitel, String eMail);
+    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Meldet Benutzer von der Veranstaltung ab. Tritt ein Fehler auf gibt
-     * die Methode false zuruck. Ansonsten true.
-     * @param veranstTitel 
-     * @param eMail 
-     * @return
+     * die Methode false zurück. Ansonsten true.
+     * @param veranstaltung 
+     * @param benutzer 
+     * @return false falls ein Fehler auftritt. Ansonsten true (Auch wenn der Benutzer gar nicht
+     * zu der Veranstaltung angemeldet war)
      */
-    public boolean vonVeranstaltungAbmelden(String veranstTitel, String eMail);
+    public boolean vonVeranstaltungAbmelden(int veranstaltung, int benutzer);
 
     /**
      * @param erstellerEMail 

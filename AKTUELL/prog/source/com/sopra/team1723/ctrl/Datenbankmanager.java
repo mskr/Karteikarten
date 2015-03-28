@@ -21,6 +21,7 @@ import java.util.List;
 
 
 
+
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -103,7 +104,7 @@ public class Datenbankmanager implements IDatenbankmanager {
 
         return benutzer;
     }
-    
+
     @Override
     public Benutzer leseBenutzer(int id)
     {
@@ -166,7 +167,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
         }
     }
-    
+
     @Override
     public void bearbeiteBenutzer(int benutzerId, Benutzer benutzer)
             throws SQLException, DbUniqueConstraintException {
@@ -465,7 +466,7 @@ public class Datenbankmanager implements IDatenbankmanager {
 
         return veranstaltungen;
     }
-    
+
     @Override
     public List<Veranstaltung> leseVeranstaltungen(int benutzer)
     {
@@ -627,7 +628,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
         return angemeldet;
     }
-    
+
     @Override
     public void schreibeVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException  {
         PreparedStatement ps = null;
@@ -655,37 +656,37 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
         }
 
-        
+
     }
 
     @Override
     public void bearbeiteVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException {
-//        PreparedStatement ps = null;
-//        ResultSet rs = null;
-//        try{
-//            ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
-//                    + "Kennwort=?, KommentareErlaubt=?,"
-//                    + "BewertungenErlaubt=?  WHERE eMail = ?");
-//            ps.setString(1, benutzer.geteMail());
-//            ps.setString(2, benutzer.getVorname());
-//            ps.setString(3, benutzer.getNachname());
-//            ps.setString(4, benutzer.getNotifyKommentare().name());
-//            ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
-//            ps.setBoolean(6, benutzer.isNotifyKarteikartenAenderung());
-//            ps.setString(7, alteMail);    
-//            ps.executeUpdate();
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
-//                throw new DbUniqueConstraintException();
-//            else
-//                throw e;
-//
-//        } finally{
-//            closeQuietly(ps);
-//            closeQuietly(rs);
-//        }
+        //        PreparedStatement ps = null;
+        //        ResultSet rs = null;
+        //        try{
+        //            ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
+        //                    + "Kennwort=?, KommentareErlaubt=?,"
+        //                    + "BewertungenErlaubt=?  WHERE eMail = ?");
+        //            ps.setString(1, benutzer.geteMail());
+        //            ps.setString(2, benutzer.getVorname());
+        //            ps.setString(3, benutzer.getNachname());
+        //            ps.setString(4, benutzer.getNotifyKommentare().name());
+        //            ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
+        //            ps.setBoolean(6, benutzer.isNotifyKarteikartenAenderung());
+        //            ps.setString(7, alteMail);    
+        //            ps.executeUpdate();
+        //
+        //        } catch (SQLException e) {
+        //            e.printStackTrace();
+        //            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
+        //                throw new DbUniqueConstraintException();
+        //            else
+        //                throw e;
+        //
+        //        } finally{
+        //            closeQuietly(ps);
+        //            closeQuietly(rs);
+        //        }
     }
 
     @Override
@@ -785,15 +786,42 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean zuVeranstaltungEinschreiben(String veranstTitel, String eMail) {
-        // TODO Auto-generated method stub
-        return false;
+    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer) throws SQLException, DbUniqueConstraintException {
+        PreparedStatement ps = null;
+        try{
+            ps = conMysql.prepareStatement("INSERT INTO benutzer_veranstaltung_zuordnung (Benutzer, Veranstaltung)"
+                    + "VALUES(?,?)");
+            ps.setInt(1, benutzer);
+            ps.setInt(2, veranstaltung);
+            ps.executeUpdate();
+        } catch(SQLException e){
+            e.printStackTrace();
+            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
+                throw new DbUniqueConstraintException();
+            else
+                throw e;
+        } finally{
+            closeQuietly(ps);
+        }
     }
 
     @Override
-    public boolean vonVeranstaltungAbmelden(String veranstTitel, String eMail) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean vonVeranstaltungAbmelden(int veranstaltung, int benutzer) {
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conMysql.prepareStatement("DELETE benutzer_veranstaltung_zuordnung WHERE Benutzer=? AND Veranstaltung=?");
+            ps.setInt(1, benutzer);
+            ps.setInt(2, veranstaltung);
+            if(ps.executeUpdate() != 1)
+                erfolgreich = false;
+        } catch(SQLException e){
+            erfolgreich = false;
+            e.printStackTrace();
+        } finally {
+           closeQuietly(ps);
+        }
+        return erfolgreich;
     }
 
     @Override
