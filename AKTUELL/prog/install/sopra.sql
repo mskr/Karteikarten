@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 28. Mrz 2015 um 19:21
+-- Erstellungszeit: 28. Mrz 2015 um 20:42
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -74,7 +74,7 @@ DELIMITER ;
 CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 `ID` int(11) NOT NULL,
   `Inhalt` text NOT NULL,
-  `Erstelldatum` date NOT NULL
+  `Erstelldatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
@@ -82,9 +82,9 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 --
 
 INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
-(1, 'Einladung als Moderator für die Vorlesung Softwaretechnik', '2015-03-21'),
-(2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-03-03'),
-(3, 'Prüfungstermine sind nun in der Beschreibung bekannt gegeben', '2015-03-11');
+(1, 'Einladung als Moderator für die Vorlesung Softwaretechnik', '2015-03-20 23:00:00'),
+(2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-03-02 23:00:00'),
+(3, 'Prüfungstermine sind nun in der Beschreibung bekannt gegeben', '2015-03-10 23:00:00');
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
-  `Angenommen` tinyint(1) DEFAULT NULL
+  `Angenommen` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
@@ -106,8 +106,8 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
 --
 
 INSERT INTO `benachrichtigung_einladung_moderator` (`ID`, `Benachrichtigung`, `Benutzer`, `Veranstaltung`, `Gelesen`, `Angenommen`) VALUES
-(1, 1, 4, 1, 1, 1),
-(2, 2, 6, 4, 1, 1);
+(1, 1, 4, 1, 0, 0),
+(2, 2, 6, 4, 0, 0);
 
 -- --------------------------------------------------------
 
