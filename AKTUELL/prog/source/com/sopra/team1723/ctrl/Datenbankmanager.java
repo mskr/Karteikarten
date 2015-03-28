@@ -793,6 +793,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         try{
             ps = conMysql.prepareStatement("SELECT Kennwort FROM veranstaltung WHERE ID =?");
+            ps.setInt(1, benutzer);
             rs = ps.executeQuery();
             if(rs.next()){
                 if(rs.getString("Kennwort").equals(kennwort) == false)
@@ -825,7 +826,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try{
-            ps = conMysql.prepareStatement("DELETE benutzer_veranstaltung_zuordnung WHERE Benutzer=? AND Veranstaltung=?");
+            ps = conMysql.prepareStatement("DELETE FROM benutzer_veranstaltung_zuordnung WHERE Benutzer=? AND Veranstaltung=?");
             ps.setInt(1, benutzer);
             ps.setInt(2, veranstaltung);
             if(ps.executeUpdate() != 1)

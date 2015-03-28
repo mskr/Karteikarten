@@ -43,7 +43,7 @@ label {
 	width: calc(100% - 20px);
 	position: fixed;
 	top: 0;
-	z-index: 101;
+	z-index: 500;
 	color: white;
 	font-weight: bold;
 	display: none;
@@ -346,6 +346,8 @@ label {
 	outline: 0;
 	box-shadow: inset 0 .5em 1em #c0c0c0;
 	transition: width .5s;
+	
+	-moz-appearance: none;
 } .suche_etwas:hover {
 	background: white;
 } .suche_etwas:focus {
@@ -362,21 +364,31 @@ label {
 	display: none;
 	position: absolute;
 	z-index: 300;
-	left: 0;
-	margin-left: 21em;
-	width: calc(100% - 21em);
-	background: #e0e0e0;
+	left: .05em;
+	top: 2.8em;
+	width: calc(100% - .1em);
+	background: white;
 	color: #4a4a4a;
-} .sucherg_vn {
-	margin: 1em;
-	padding: 1em;
+	font-size: .9em;
+	border-top: 1px solid lightgray;
+	-webkit-border-radius: 0 0 .4em .4em;
+	-moz-border-radius: 0 0 .4em .4em;
+	border-radius: 0 0 .4em .4em;
+	box-shadow: 0 .2em .2em black;
+	overflow: hidden;
+} .suche_etwas:invalid ~ .suche_ergebnisse {
 	border: 1px solid red;
-	flex-basis: 15em;
-} .sucherg_benutzer {
-	margin: 1em;
-	padding: 1em;
-	border: 1px solid red;
-	flex-basis: 15em;
+	visibility: hidden;
+} .sucherg_vn, .sucherg_benutzer {
+	flex-basis: 100%;
+} .sucherg_vn div, .sucherg_benutzer div {
+	padding: .9em;
+	cursor: pointer;
+} .sucherg_vn div:hover, .sucherg_benutzer div:hover {
+	background: #4a4a4a;
+	color: white;
+} .sucherg_vn span, .sucherg_benutzer span {
+	margin-right: .5em;
 }
 
 .vn_erstellen_bt {
@@ -1279,7 +1291,7 @@ label {
 
 .profil_daten, .profil_passwort {
 	text-align: right;
-    flex-basis: 20em;
+    flex-basis: 15em;
 } .profil_einstellungen {
 	text-align: left;
 } .profil_einstellungen input {
@@ -1380,7 +1392,7 @@ select.profil_input {
 		width: 0;
 		max-width: 15em;
 		height: calc(100% - 8em);
-		overflow-y: scroll;
+		overflow-y: hidden;
 	}
 	.r-checkbox:checked ~ .r-overlay {
 		display: block;
@@ -1398,13 +1410,8 @@ select.profil_input {
 		width: calc(100% - 1em);
 	}
 	
-	/* Fixed einen Bug im Android Chrome Browser */
 	.bn_full {
-		margin-bottom: 4em;
-	}
-	
-	.return {
-		display: none !important; /* Soll von jQuery nicht geaendert werden */
+		width: calc(100% - 4em);
 	}
 	
 	.vn_erstellen_bt:after {
@@ -1425,19 +1432,19 @@ select.profil_input {
 	
 
 	.meine_vn_tablabel:after {
-		content: " ";
+		content: "Meine";
 	}
 	
 	.studiengang_vn_tablabel:after {
-		content: " ";
+		content: "...";
 	}
 	
 	.semester_vn_tablabel:after {
-		content: " ";
+		content: "...";
 	}
 	
 	.alle_vn_tablabel:after {
-		content: " ";
+		content: "...";
 	}
 }
 
