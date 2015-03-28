@@ -361,11 +361,14 @@ public interface IDatenbankmanager {
 
     /**
      * Schreibt Benutzer in die Veranstaltung ein. Ist der Benutzer bereits in die Veranstaltung eingetragen,
-     * wird eine DbUniqueConstraintException geworfen. Tritt ein anderer Fehler auf wird eine SQLException
-     * geworfen.
+     * wird eine DbUniqueConstraintException geworfen. Ist das Passwort für die angegebene Veranstaltung falsch,
+     * wird eine DbFalsePasswortException geworfen. Tritt ein anderer Fehler auf wird eine SQLException
+     * geworfen. Gibt es die Veranstaltung oder den Benutzer nicht, passiert in der Datenbank gar nichts.
+     * Es wird in dem Fall aber auch keine Exception geworfen.
      * @param veranstaltung referenziert eindeutig eine Veranstaltung 
      * @param benutzer referenziert eindeutig einen Benutzer 
-     * @throws SQLException, DbUniqueConstraintException
+     * @param kennwort für den Zugang zur Veranstaltung
+     * @throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
      */
     public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort) throws SQLException, 
     DbUniqueConstraintException, DbFalsePasswortException;
