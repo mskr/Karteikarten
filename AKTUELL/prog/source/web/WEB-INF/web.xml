@@ -66,6 +66,10 @@
         <servlet-name>SuchfeldServlet</servlet-name>
         <servlet-class>com.sopra.team1723.ctrl.SuchfeldServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BenachrichtigungsServlet</servlet-name>
+        <servlet-class>com.sopra.team1723.ctrl.BenachrichtigungsServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
@@ -102,6 +106,10 @@
     <servlet-mapping>
         <servlet-name>SuchfeldServlet</servlet-name>
         <url-pattern>/SuchfeldServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BenachrichtigungsServlet</servlet-name>
+        <url-pattern>/BenachrichtigungsServlet</url-pattern>
     </servlet-mapping>
     
     

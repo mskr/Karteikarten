@@ -1,11 +1,18 @@
 package com.sopra.team1723.ctrl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.json.simple.*;
 
+import com.sopra.team1723.data.BenachrEinlModerator;
+import com.sopra.team1723.data.BenachrKarteikAenderung;
+import com.sopra.team1723.data.BenachrNeuerKommentar;
+import com.sopra.team1723.data.BenachrProfilGeaendert;
+import com.sopra.team1723.data.BenachrVeranstAenderung;
+import com.sopra.team1723.data.Benachrichtigung;
 import com.sopra.team1723.data.Benutzer;
 import com.sopra.team1723.data.ErgebnisseSuchfeld;
 import com.sopra.team1723.data.Veranstaltung;
@@ -181,6 +188,63 @@ public class JSONConverter
         jo.put(ParamDefines.KommentareErlauben,veranst.isKommentareErlaubt());
         jo.put(ParamDefines.Ersteller,JSONConverter.toJson(veranst.getErsteller(),true));
         
+        
+        return jo;
+    }
+    
+    /**
+     * 
+     * @param strings
+     * @return JSONObject mit NoError und einem String
+     */
+    static JSONObject toJsonBenachrichtigungen(List<Benachrichtigung> benachrichtigungen) 
+    {
+        JSONObject jo = new JSONObject();
+        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
+        
+        JSONArray array = new JSONArray();
+        for(Benachrichtigung ben: benachrichtigungen)
+        {
+            JSONObject j = new JSONObject();
+
+            j.put(ParamDefines.benInhalt, ben.getInhalt());
+            j.put(ParamDefines.benGelesen, ben.isGelesen());
+            SimpleDateFormat d = new SimpleDateFormat("hh:mm dd.MM.yyyy");
+            String s = d.format(ben.getErstelldaum().getTime());
+            j.put(ParamDefines.benErstelldaum, s);            
+            
+            if (ben instanceof BenachrProfilGeaendert)
+            {
+                BenachrProfilGeaendert b = (BenachrProfilGeaendert) ben;
+                j.put(ParamDefines.benType, ParamDefines.benTypeProfil);
+            }
+            else  if (ben instanceof BenachrEinlModerator)
+            {
+                BenachrEinlModerator b = (BenachrEinlModerator) ben;
+                j.put(ParamDefines.benType, ParamDefines.benTypeModerator);
+                j.put(ParamDefines.benVeranst, toJson(b.getVeranstaltung()));
+            }
+            else  if (ben instanceof BenachrKarteikAenderung)
+            {
+                BenachrKarteikAenderung b = (BenachrKarteikAenderung) ben;
+                j.put(ParamDefines.benType, ParamDefines.benTypeKarteikarte);
+//                j.put(ParamDefines.benKarteikarte,toJson( b.getKarteikarte()));
+            }
+            else  if (ben instanceof BenachrNeuerKommentar)
+            {
+                BenachrNeuerKommentar b = (BenachrNeuerKommentar) ben;
+                j.put(ParamDefines.benType, ParamDefines.benTypeKommentar);
+//                j.put(ParamDefines.benKommentar, toJson(b.getKommentar()));
+            }
+            else  if (ben instanceof BenachrVeranstAenderung)
+            {
+                BenachrVeranstAenderung b = (BenachrVeranstAenderung) ben;
+                j.put(ParamDefines.benType, ParamDefines.benTypeVeranstaltung);
+                j.put(ParamDefines.benVeranst, toJson(b.getVeranstaltung()));
+            }
+            array.add(j);
+        }
+        jo.put(ParamDefines.jsonArrResult, array);
         
         return jo;
     }

@@ -268,14 +268,11 @@ label {
 .bn_anzahl {
 	margin-left: .5em;
 	color: yellow;
-} .bn_anzahl:after {
-	content: " neu";
 }
 .bn_container {
 	height: 100%;
 	max-height: 200px;
 	overflow-y: scroll !important;	/* Darf von JQuery beim sliden nicht überschrieben werden.*/
-	display: none;
 } 
 /* Was macht das ?? TODO
  * -  Das styled die Scrollbar :) */
@@ -1439,3 +1436,8 @@ select.profil_input {
 }
 
 /* STYLE FUER KLEINE BILDSCHIRME ENDE */
+
+
+.bn_zeit{
+	font-size: 0.7em;
+}

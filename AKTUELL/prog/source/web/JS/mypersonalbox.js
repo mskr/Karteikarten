@@ -26,15 +26,80 @@ function fillMyPersonalBox()
 	});
     
     // TODO Benachrichtigungen laden
-    // Hier ein paar Beispiele
-    addBenachrichtigung("Ihr Profil wurde geändert. Klicken sie, um zum eigenen Profil zu wechseln.", true, function() {
-        var paramObj = {};
-        paramObj[urlParamLocation] = ansichtProfilseite;
-        paramObj[urlParamId] = jsonBenutzer[paramId];
-        buildUrlQuery(paramObj);
-    });
     
-    addBenachrichtigung("Dies ist eine alte Benachrichtigung ohne Funktion.", false, function(){});
+    $.ajax({
+        url: benachrichtungsServlet,
+        data: "action="+actionLeseBenachrichtungen,
+        success: function(response) {
+            var jsonObj = response;
+            var errCode = jsonObj["error"];
+            if(errCode == "noerror") 
+            {
+            	setTimeout(function() {
+            	var bens = jsonObj[keyJsonArrResult];
+            	for (var i in bens)
+            	{
+            		var type = bens[i][paramBenType];
+            		var fkt = function() {
+						
+					};
+					
+					if(type == paramBenTypeKarteikarte)
+					{
+
+					}
+					else if(type == paramBenTypeKommentar)
+					{
+
+					}
+					else if(type == paramBenTypeModerator)
+					{
+						fkt = function() {
+					        var paramObj = {};
+					        paramObj[urlParamLocation] = ansichtVeranstaltungseite;
+					        paramObj[urlParamId] = bens[i][paramBenVeranst][paramId];
+					        buildUrlQuery(paramObj);
+						};
+					}
+					else if(type == paramBenTypeProfil)
+					{
+						fkt = function() {
+					        var paramObj = {};
+					        paramObj[urlParamLocation] = ansichtProfilseite;
+					        paramObj[urlParamId] = jsonBenutzer[paramId];
+					        buildUrlQuery(paramObj);
+						};
+					}
+					else if(type == paramBenTypeVeranstaltung)
+					{
+						fkt = function() {
+					        var paramObj = {};
+					        paramObj[urlParamLocation] = ansichtVeranstaltungseite;
+					        paramObj[urlParamId] = bens[i][paramBenVeranst][paramId];
+					        buildUrlQuery(paramObj);
+						};
+					}
+					setTimeout(function() {
+	            		addBenachrichtigung(bens[i][paramBenInhalt], !bens[i][paramBenGelesen], bens[i][paramBenErstelldaum], fkt);
+					}, 300);
+            	}}, 1000);
+            }
+            else 
+            {
+                message(0, buildMessage(errCode));
+            }
+        }
+     });
+    
+    // Hier ein paar Beispiele
+//    addBenachrichtigung("Ihr Profil wurde geändert. Klicken sie, um zum eigenen Profil zu wechseln.", true, function() {
+//        var paramObj = {};
+//        paramObj[urlParamLocation] = ansichtProfilseite;
+//        paramObj[urlParamId] = jsonBenutzer[paramId];
+//        buildUrlQuery(paramObj);
+//    });
+//    
+//    addBenachrichtigung("Dies ist eine alte Benachrichtigung ohne Funktion.", false, function(){});
     
 }
 
@@ -61,7 +126,7 @@ function fillUserContainer()
  * @param onClickFkt CallBack-Function, die beim click aufgerufen werden soll
  */
 var newBnCount = 0;
-function addBenachrichtigung(text, isNeu, onClickFkt)
+function addBenachrichtigung(text, isNeu, datumTxt, onClickFkt)
 {
 	// Jetzt existieren benachrichtigungen
 	$("#keine_bn").slideUp("slow");
@@ -74,7 +139,7 @@ function addBenachrichtigung(text, isNeu, onClickFkt)
 	{
 		divBn.addClass("neu");
 		newBnCount++;
-		$("#bn_anzahl").text(newBnCount);
+		$("#bn_anzahl").text("(" + newBnCount + " neu)");
 	}
 	else
 		divBn.addClass("gelesen");
@@ -82,6 +147,7 @@ function addBenachrichtigung(text, isNeu, onClickFkt)
 	var spanCntnt = $("<span></span>");
 	spanCntnt.addClass("bn_text");
 	spanCntnt.append(text);
+	spanCntnt.append("<span class='bn_zeit' style='float: right;'>" + datumTxt + "</span>");
 	
 	divBn.append(spanCntnt);
 	$(divBn).click(onClickFkt);

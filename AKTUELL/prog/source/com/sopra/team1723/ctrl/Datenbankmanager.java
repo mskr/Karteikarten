@@ -691,7 +691,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
     
     @Override
-    public List<Benachrichtigung> leseBenachrichtigungen(int benutzer)
+    public List<Benachrichtigung> leseBenachrichtigungen(int benutzer, int limit)
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -700,26 +700,32 @@ public class Datenbankmanager implements IDatenbankmanager {
             aktBenachrichtigungen = new ArrayList<Benachrichtigung>();
             
             ps = conMysql.prepareStatement("SELECT bem.ID AS ID, 'benachrichtigung_einladung_moderator' AS Tabelle,"
-                    + " b.Erstelldatum FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtiung AS b ON"
-                    + " bem.Benachrichtigung = b.ID WHERE bem.Gelesen = false UNION"
+                    + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtigung AS b ON"
+                    + " bem.Benachrichtigung = b.ID WHERE bem.Gelesen = false AND bem.Benutzer =? UNION "
                     
                     + "SELECT bk.ID AS ID, 'benachrichtigung_karteikartenaenderung' AS Tabelle ,"
-                    + " b.Erstelldatum FROM benachrichtigung_karteikartenaenderung AS bk JOIN benachrichtiung AS b ON"
-                    + " bk.Benachrichtigung = b.ID WHERE bk.Gelesen = false UNION"
+                    + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_karteikartenaenderung AS bk JOIN benachrichtigung AS b ON"
+                    + " bk.Benachrichtigung = b.ID WHERE bk.Gelesen = false AND bk.Benutzer =? UNION "
                     
-                    + " SELECT bnk.ID AS ID, 'benachrichtigung_neuer_kommentar' AS Tabelle ,"
-                    + " b.Erstelldatum FROM benachrichtigung_neuer_kommentar AS bnk JOIN benachrichtiung AS b ON"
-                    + " bnk.Benachrichtigung = b.ID WHERE bnk.Gelesen = false UNION"
+                    + "SELECT bnk.ID AS ID, 'benachrichtigung_neuer_kommentar' AS Tabelle ,"
+                    + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_neuer_kommentar AS bnk JOIN benachrichtigung AS b ON"
+                    + " bnk.Benachrichtigung = b.ID WHERE bnk.Gelesen = false AND bnk.Benutzer =? UNION "
                     
                     + "SELECT bpg.ID AS ID, 'benachrichtigung_profil_geaendert' AS Tabelle ,"
-                    + " b.Erstelldatum FROM benachrichtigung_profil_geaendert AS bpg JOIN benachrichtiung AS b ON"
-                    + " bpg.Benachrichtigung = b.ID WHERE bpg.Gelesen = false UNION"
+                    + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_profil_geaendert AS bpg JOIN benachrichtigung AS b ON"
+                    + " bpg.Benachrichtigung = b.ID WHERE bpg.Gelesen = false AND bpg.Benutzer =? UNION "
 
                     + "SELECT bv.ID AS ID, 'benachrichtigung_veranstaltungsaenderung' AS Tabelle ,"
-                    + " b.Erstelldatum FROM benachrichtigung_veranstaltungsaenderung AS bv JOIN benachrichtiung AS b ON"
-                    + " bv.Benachrichtigung = b.ID WHERE bv.Gelesen = false"
-                    + "ORDER BY b.Erstelldatum DESC LIMIT 5");
+                    + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_veranstaltungsaenderung AS bv JOIN benachrichtigung AS b ON"
+                    + " bv.Benachrichtigung = b.ID WHERE bv.Gelesen = false AND bv.Benutzer =? "
+                    + "ORDER BY Erstelldatum DESC LIMIT ?");
             
+            ps.setInt(1, benutzer);
+            ps.setInt(2, benutzer);
+            ps.setInt(3, benutzer);
+            ps.setInt(4, benutzer);
+            ps.setInt(5, benutzer);
+            ps.setInt(6, limit);
             rs = ps.executeQuery();
             String tabelle;
             int id;
@@ -757,13 +763,13 @@ public class Datenbankmanager implements IDatenbankmanager {
         BenachrEinlModerator benachrichtigung = null;
         try{
             ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen, Angenommen"
-                    + "FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtigung AS b ON bem.Benachrichtigung"
+                    + " FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtigung AS b ON bem.Benachrichtigung"
                     + "= b.ID WHERE bem.ID =?"); 
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if(rs.next()){
                 Calendar cal = new GregorianCalendar();
-                cal.setTime(rs.getDate("Erstelldatum"));
+                cal.setTime(rs.getTimestamp("Erstelldatum"));
                 benachrichtigung = new BenachrEinlModerator(id, rs.getString("Inhalt"), cal,
                         rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseVeranstaltung(rs.getInt("Veranstaltung")),
                         rs.getBoolean("Angenommen"));
@@ -788,7 +794,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         BenachrKarteikAenderung benachrichtigung = null;
         try{
             ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Karteikarte, Gelesen"
-                    + "FROM benachrichtigung_karteikartenaenderung AS bk JOIN benachrichtigung AS b ON bk.Benachrichtigung"
+                    + " FROM benachrichtigung_karteikartenaenderung AS bk JOIN benachrichtigung AS b ON bk.Benachrichtigung"
                     + "= b.ID WHERE bk.ID =?"); 
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -818,7 +824,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         BenachrNeuerKommentar benachrichtigung = null;
         try{
             ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Kommentar, Gelesen"
-                    + "FROM benachrichtigung_neuer_kommentar AS bnk JOIN benachrichtigung AS b ON bnk.Benachrichtigung"
+                    + " FROM benachrichtigung_neuer_kommentar AS bnk JOIN benachrichtigung AS b ON bnk.Benachrichtigung"
                     + "= b.ID WHERE bnk.ID =?"); 
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -848,7 +854,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         BenachrProfilGeaendert benachrichtigung = null;
         try{
             ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Admin, Gelesen"
-                    + "FROM benachrichtigung_profil_geaendert AS bpg JOIN benachrichtigung AS b ON bpg.Benachrichtigung"
+                    + " FROM benachrichtigung_profil_geaendert AS bpg JOIN benachrichtigung AS b ON bpg.Benachrichtigung"
                     + "= b.ID WHERE bpg.ID =?"); 
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -878,7 +884,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         BenachrVeranstAenderung benachrichtigung = null;
         try{
             ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen"
-                    + "FROM benachrichtigung_veranstaltungsaenderung AS bv JOIN benachrichtigung AS b ON bv.Benachrichtigung"
+                    + " FROM benachrichtigung_veranstaltungsaenderung AS bv JOIN benachrichtigung AS b ON bv.Benachrichtigung"
                     + "= b.ID WHERE bv.ID =?"); 
             ps.setInt(1, id);
             rs = ps.executeQuery();

@@ -11,6 +11,7 @@ var profilServlet = "ProfilServlet";
 var veranstaltungServlet = "VeranstaltungServlet";
 var fileUploadServlet = "FileUploadServlet";
 var suchfeldServlet = "SuchfeldServlet";
+var benachrichtungsServlet = "BenachrichtigungsServlet";
 
 var actionLogin = "login";
 var actionLogout = "logout";
@@ -32,6 +33,7 @@ var leseVeranstModeStudiengang = "studiengang";      // Liefert alle Veranstaltu
 var leseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
 var actionAusschreiben = "ausschreiben";
 var actionEinschreiben = "einschreiben";
+var actionLeseBenachrichtungen = "leseBen";
 
 // GET/POST-Parameter fuer die Servlets
 // Werden auch als Schluesselnamen fuer JSON Objekte verwendet
@@ -66,6 +68,21 @@ var paramModeratoren = "moderatoren";
 var paramAnzTeilnehmer = "anzTeilnehmer";
 var paramAngemeldet = "angemeldet";
 var paramKennwortGesetzt = "kennwortGesetzt";
+
+// Benachrichtigungen
+var paramBenInhalt = "benInhalt";
+var paramBenGelesen = "benGelesen";
+var paramBenType = "benType";
+var paramBenTypeModerator = "moderator";
+var paramBenTypeVeranstaltung = "veranst";
+var paramBenTypeKarteikarte = "karteikarte";
+var paramBenTypeProfil = "profil";
+var paramBenTypeKommentar = "kommentar";
+var paramBenErstelldaum = "benErstelldaum";
+var paramBenVeranst = "benVeranst";
+var paramBenKarteikarte = "benKarteikarte";
+var paramBenKommentar = "benKommentar";
+var paramBenProfil = "benProfil";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";

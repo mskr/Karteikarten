@@ -30,6 +30,9 @@ public class ParamDefines
     public final static String ActionAusschreiben = "ausschreiben";
     public final static String ActionEinschreiben = "einschreiben";
     
+    
+    public final static String ActionLeseBenachrichtungen = "leseBen";
+    
 
     public final static String Id = "id";
     public final static String Email = "email";
@@ -61,10 +64,23 @@ public class ParamDefines
     public final static String Angemeldet = "angemeldet";
     public final static String KennwortGesetzt = "kennwortGesetzt";
     
-    
     public final static String SuchfeldErgText = "suchfeldErgText";
     public final static String SuchfeldErgKlasse= "suchfeldErgKlasse";
     public final static String SuchfeldErgId = "suchfeldErgId";
+
+    public final static String benInhalt = "benInhalt";
+    public final static String benGelesen = "benGelesen";
+    public final static String benType = "benType";
+    public final static String benTypeModerator = "moderator";
+    public final static String benTypeVeranstaltung = "veranst";
+    public final static String benTypeKarteikarte = "karteikarte";
+    public final static String benTypeProfil = "profil";
+    public final static String benTypeKommentar = "kommentar";
+    public final static String benErstelldaum = "benErstelldaum";
+    public final static String benVeranst = "benVeranst";
+    public final static String benKarteikarte = "benKarteikarte";
+    public final static String benKommentar = "benKommentar";
+    public final static String benProfil = "benProfil";
     
     
     /**

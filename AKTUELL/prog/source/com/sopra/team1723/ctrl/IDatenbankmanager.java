@@ -228,7 +228,7 @@ public interface IDatenbankmanager {
      * @param karteikID 
      * @return
      */
-    public List<Benachrichtigung> leseBenachrichtigungen(int benutzer);
+    public List<Benachrichtigung> leseBenachrichtigungen(int benutzer, int limit);
     
     /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank und

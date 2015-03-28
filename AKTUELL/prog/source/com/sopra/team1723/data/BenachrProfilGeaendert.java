@@ -11,4 +11,8 @@ public class BenachrProfilGeaendert extends Benachrichtigung{
         super(id, inhalt, erstelldaum, benutzer, gelesen);
         this.admin = admin;
     }
+    public Benutzer getAdmin()
+    {
+        return admin;
+    }
 }

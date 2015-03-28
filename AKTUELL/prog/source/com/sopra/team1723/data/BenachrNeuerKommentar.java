@@ -12,4 +12,9 @@ public class BenachrNeuerKommentar extends Benachrichtigung{
         super(id, inhalt, erstelldaum, benutzer, gelesen);
         this.kommentar = kommentar;
     }
+
+    public Kommentar getKommentar()
+    {
+        return kommentar;
+    }
 }

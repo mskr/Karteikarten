@@ -12,4 +12,9 @@ public class BenachrKarteikAenderung extends Benachrichtigung{
         super(id, inhalt, erstelldaum, benutzer, gelesen);
         this.karteikarte = karteikarte;
     }
+
+    public Karteikarte getKarteikarte()
+    {
+        return karteikarte;
+    }
 }
