@@ -223,52 +223,61 @@ public interface IDatenbankmanager {
     public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster, List<Klassenfeld> suchfeld);
     
     /**
-     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
-     * return
-     * @param karteikID 
-     * @return
+     * Liest die aktuellsten Benachrichtigungen für einen Benutzer aus der Datenbank
+     * @param benutzer referenziert eindeutig einen Benuter
+     * @param limit gibt an wie viele Benachrichtiungen für den Benutzer maximal ausgelesen werden 
+     * @return Liste der aktuellsten Benachrichtigungen. Gibt es für den Benutzer keine Benachrichtigungen
+     * wird eine leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
      */
     public List<Benachrichtigung> leseBenachrichtigungen(int benutzer, int limit);
     
     /**
-     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
-     * return
-     * @param karteikID 
-     * @return
+     * Holt eine Benachrichtigung für eine Einladung als Moderator aus der Datenbank
+     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
+     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrEinlModerator leseBenachrEinlModerator(int id);
     
     /**
-     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
-     * return
-     * @param karteikID 
-     * @return
+     * Holt eine Benachrichtigung für eine Karteikartenänderung aus der Datenbank
+     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
+     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrKarteikAenderung leseBenachrKarteikAenderung(int id);
     
     /**
-     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
-     * return
-     * @param karteikID 
-     * @return
+     * Holt eine Benachrichtigung für einen neuen Kommentar aus der Datenbank
+     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
+     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrNeuerKommentar leseBenachrNeuerKommentar(int id);
     
     /**
-     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
-     * return
-     * @param karteikID 
-     * @return
+     * Holt eine Benachrichtigung für ein geändertes Profil aus der Datenbank
+     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
+     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrProfilGeaendert leseBenachrProfilGeaendert(int id);
     
     /**
-     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
-     * return
-     * @param karteikID 
-     * @return
+     * Holt eine Benachrichtigung für eine Veranstaltungsänderung aus der Datenbank
+     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
+     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrVeranstAenderung leseBenachrVeranstAenderung(int id);
+    
+    /**
+     * Holt eine Benachrichtigung für eine Veranstaltungsänderung aus der Datenbank
+     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
+     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * Benachrichtigung gefunden wird kommt null zurück.
+     */
+    public boolean schreibeBenachrichtigung(Benachrichtigung benachrichtigung);
     
     /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank und

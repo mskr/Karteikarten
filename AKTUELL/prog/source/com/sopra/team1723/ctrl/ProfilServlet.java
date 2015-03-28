@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -182,6 +184,9 @@ public class ProfilServlet extends ServletController {
                         bNotifyVeranstAenderung, bNotifyKarteikartenAenderung, eNotifyKommentare);
 
                 dbManager.bearbeiteBenutzerAdmin(benutzer);
+                
+                if(id!=aktuellerBenutzer.getId())
+                    dbManager.schreibeBenachrichtigung(new BenachrProfilGeaendert(new GregorianCalendar(), id, aktuellerBenutzer));
             }
             // Normaler benutzer Speichern
             else

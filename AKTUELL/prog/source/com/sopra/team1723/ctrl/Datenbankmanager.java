@@ -14,6 +14,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.sql.Timestamp;
+
+
 
 
 
@@ -905,6 +908,100 @@ public class Datenbankmanager implements IDatenbankmanager {
 
         return benachrichtigung;
     }
+    
+    @Override
+    public boolean schreibeBenachrichtigung(Benachrichtigung benachrichtigung)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean erfolgreich = true;
+        try{
+            conMysql.setAutoCommit(false);
+            ps = conMysql.prepareStatement("INSERT INTO benachrichtigung (Inhalt, Erstelldatum) VALUES (?,?); ");
+            ps.setString(1, benachrichtigung.getInhalt());
+            ps.setTimestamp(2, new Timestamp(benachrichtigung.getErstelldaum().getTimeInMillis()));
+            ps.executeUpdate();
+            closeQuietly(ps);
+            
+            ps = conMysql.prepareStatement("SELECT LAST_INSERT_ID();");
+            rs = ps.executeQuery();
+            if(!rs.next())
+                return false;
+            int id = rs.getInt(1);
+            closeQuietly(ps);
+            
+            if(benachrichtigung instanceof BenachrEinlModerator){
+                BenachrEinlModerator bem = (BenachrEinlModerator) benachrichtigung;
+                ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_einladung_moderator (Benachrichtigung, Benutzer,"
+                        + "Veranstaltung, Gelesen, Angenommen) VALUES (?,?,?,?,?)");
+                ps.setInt(1, id);
+                ps.setInt(2, bem.getBenutzer());
+                ps.setInt(3, bem.getVeranstaltung().getId());
+                ps.setBoolean(4, bem.isGelesen());
+                ps.setBoolean(5, bem.isAngenommen());
+                
+            } else if (benachrichtigung instanceof BenachrKarteikAenderung){
+                BenachrKarteikAenderung bk = (BenachrKarteikAenderung) benachrichtigung;
+                ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_karteikartenaenderung (Benachrichtigung, Benutzer,"
+                        + "Karteikarte, Gelesen) VALUES (?,?,?,?)");
+                ps.setInt(1, id);
+                ps.setInt(2, bk.getId());
+                ps.setInt(3, bk.getKarteikarte().getId());
+                ps.setBoolean(4, bk.isGelesen());
+                
+            } else if (benachrichtigung instanceof BenachrNeuerKommentar){
+                BenachrNeuerKommentar bnk = (BenachrNeuerKommentar) benachrichtigung;
+                ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_neuer_kommentar (Benachrichtigung, Benutzer,"
+                        + "Kommentar, Gelesen) VALUES (?,?,?,?)");
+                ps.setInt(1, id);
+                ps.setInt(2, bnk.getBenutzer());
+                ps.setInt(3, bnk.getKommentar().getId());
+                ps.setBoolean(4, bnk.isGelesen());   
+                
+            } else if (benachrichtigung instanceof BenachrProfilGeaendert){
+                BenachrProfilGeaendert bpg = (BenachrProfilGeaendert) benachrichtigung;
+                ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_profil_geaendert (Benachrichtigung, Benutzer,"
+                        + "Admin, Gelesen) VALUES (?,?,?,?)");
+                ps.setInt(1, id);
+                ps.setInt(2, bpg.getBenutzer());
+                ps.setInt(3, bpg.getAdmin().getId());
+                ps.setBoolean(4, bpg.isGelesen()); 
+                
+            } else {
+                BenachrVeranstAenderung bv = (BenachrVeranstAenderung) benachrichtigung;
+                ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_veranstaltungsaenderung (Benachrichtigung, Benutzer,"
+                        + "Veranstaltung, Gelesen) VALUES (?,?,?,?)");
+                ps.setInt(1, id);
+                ps.setInt(2, bv.getBenutzer());
+                ps.setInt(3, bv.getVeranstaltung().getId());
+                ps.setBoolean(4, bv.isGelesen());  
+            }           
+            
+            if(ps.executeUpdate() != 1)                
+                erfolgreich = false;
+            
+            conMysql.commit();
+                
+                
+        } catch (SQLException e) {
+            try
+            {
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {
+                e1.printStackTrace();
+            }
+            erfolgreich = false;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return erfolgreich;
+    }
 
 
     @Override
@@ -1087,11 +1184,6 @@ public class Datenbankmanager implements IDatenbankmanager {
         // TODO Auto-generated method stub
         return null;
     }
-
-
-
-
-
 
 
 }
