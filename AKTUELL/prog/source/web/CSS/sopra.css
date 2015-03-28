@@ -38,6 +38,39 @@ label {
 	cursor: pointer;
 }
 
+.input_std {
+	margin: .3em 0;
+	padding: .4em .9em;
+	height: 1.9em;
+	background: #E8E8E8;
+	font-size: .9em;
+	box-shadow: inset 0 .5em 1em #c0c0c0;
+	-webkit-border-radius: .3em;
+	-moz-border-radius: .3em;
+	border-radius: .3em;
+	outline: 0;
+	transition: all .5s;
+	border: 1px solid black;
+} .input_std:hover {
+	background: white;
+} .input_std:focus {
+	background: white;
+	-webkit-box-shadow: 0px .2em .2em black;
+	-moz-box-shadow: 0px .2em .2em black;
+	box-shadow: 0px .2em .2em black;
+} select.input_std {
+	/* Passt die Dimensionen von select denen von Textinput an */
+	width: calc(100% + 0.2em - 3px);
+	height: calc(2.9em - 1px);
+	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
+	background-clip: padding-box;
+} select.input_std:hover {
+	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
+	background-clip: padding-box;
+} select.login_input:focus {
+	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
+	background-clip: padding-box;
+}
 
 .msg {
 	padding: 10px;
@@ -160,59 +193,24 @@ label {
 	text-shadow: 0px -2px 0px #363636;
 }
 
-.login_input { /* Wird auch auf die Felder fuers Registrieren angewendet */
-	margin-bottom: .7em;
-	padding: .4em .9em;
-	width: calc(100% - 1.8em - 2px);
-	height: 2.1em;
-	background: #E8E8E8;
+.login_input, .login_pass {
 	font-size: .9em;
-	-webkit-border-radius: .4em;
-	-moz-border-radius: .4em;
-	border-radius: .4em;
-	border: 1px solid black;
-	outline: 0;
-	box-shadow: inset 0 .5em 1em #c0c0c0;
-	-webkit-transition: width 0.5s; /* For Safari 3.1 to 6.0 */
-	transition: background 0.5s;
-} .login_input:hover {
-	background: white;
-} .login_input:focus {
-	background: white;
-	-webkit-box-shadow: 0px .2em .2em black;
-	-moz-box-shadow: 0px .2em .2em black;
-	box-shadow: 0px .2em .2em black;
-} .pw {
+} .login_input { /* Wird auch auf die Felder fuers Registrieren angewendet */
+	width: calc(100% - 1.8em - 2px);
+} .login_pass {
 	width: calc(50% - 1.8em - 2px);
 	margin-right: .3em;
-} select.login_input {
-	width: calc(100% + 0.2em - 3px);
-	height: 2.9em;
-	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
-	background-clip: padding-box;
-} select.login_input:hover {
-	background: white;
-	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
-	background-clip: padding-box;
-} select.login_input:focus {
-	background: white;
-	/* see http://tumble.sneak.co.nz/post/928998513/fixing-the-background-bleed */
-	background-clip: padding-box;
 }
 
-.loginbutton {
-	height: calc(3.1em - 4px);
-	width: calc(50% - .7em);
-}
-
-.pwreset {
-	font-size: .75em;
-}
-
-.regbutton {
-	margin: 5px 0px;
-	height: 40px;
+.loginbutton, .regbutton {
+	height: calc(3em - 4px);
+} .loginbutton {
+	width: calc(50% - .6em);
+} .regbutton {
+	margin: .3em 0;
 	width: 100%;
+} .pwreset {
+	font-size: .75em;
 }
 
 .user_container {
@@ -335,24 +333,10 @@ label {
 
 .suche_etwas {
 	margin: 0;
-	padding: 1.6em .9em;
 	width: 35%;
-	height: 3.1em;
+	height: 3.2em;
 	position: relative;
 	z-index: 10; /* Suchfeld Ueberlagert z.B. den Veranstaltung-erstellen-Button, wenn der User tippt */
-	background: #E8E8E8;
-	font-size: .9em;
-	-webkit-border-radius: .4em;
-	-moz-border-radius: .4em;
-	border-radius: .4em;
-	border: 1px solid black;
-	outline: 0;
-	box-shadow: inset 0 .5em 1em #c0c0c0;
-	transition: width .5s;
-	
-	-moz-appearance: none;
-} .suche_etwas:hover {
-	background: white;
 } .suche_etwas:focus {
 	background: white;
 } .suche_etwas:valid {
@@ -379,6 +363,7 @@ label {
 	border-radius: 0 0 .4em .4em;
 	box-shadow: 0 .2em .2em black;
 	overflow: hidden;
+	background-clip: padding-box;
 } .suche_etwas:invalid ~ .suche_ergebnisse {
 	border: 1px solid red;
 	visibility: hidden;
@@ -1313,7 +1298,7 @@ label {
 	margin: 0 0 .7em .7em;
 	padding: .5em .7em;
 	width: 50%;
-	height: 2em;
+	height: 1.8em;
 	background: #292929;
 	color: white;
 	font-size: 1em;

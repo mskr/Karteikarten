@@ -61,6 +61,7 @@ function fillSuchergebnisse(arrSuchErgebnisse)
 
 function registerSuchergebnisClickEvent(klasse, id)
 {
+    
     //TODO
     // 1) Alle Elemente mit class "sucherg_..._item" selektieren
     // 2) Mit for each durch die Elemente iterieren und id abfragen.
