@@ -78,7 +78,7 @@ public class FileUploadServlet extends ServletController
         String absolutePath = contextPath + relativerPfad;
         ImageIO.write(scaledImage, "png", new File(absolutePath));
         
-        if(!dbManager.aendereProfilBild(aktuellerBenutzer.geteMail(), aktuellerBenutzer.getId() + ".png"))
+        if(!dbManager.aendereProfilBild(aktuellerBenutzer.getId(), aktuellerBenutzer.getId() + ".png"))
         {
             // Sende Error zurück
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);

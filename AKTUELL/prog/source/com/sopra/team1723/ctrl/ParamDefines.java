@@ -27,6 +27,10 @@ public class ParamDefines
     public final static String LeseVeranstModeStudiengang = "studiengang";      // Liefert alle Veranstaltungen im aktuellen Studiengang (TODO)
     public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
 
+    public final static String ActionAusschreiben = "ausschreiben";
+    public final static String ActionEinschreiben = "einschreiben";
+    
+
     public final static String Id = "id";
     public final static String Email = "email";
     public final static String EmailNew = "emailNew";
@@ -55,6 +59,7 @@ public class ParamDefines
     public final static String Moderatoren = "moderatoren";
     public final static String AnzTeilnehmer = "anzTeilnehmer";
     public final static String Angemeldet = "angemeldet";
+    public final static String KennwortGesetzt = "kennwortGesetzt";
     
     
     public final static String SuchfeldErgText = "suchfeldErgText";

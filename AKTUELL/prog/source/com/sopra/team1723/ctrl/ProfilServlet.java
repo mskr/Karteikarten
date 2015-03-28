@@ -144,7 +144,7 @@ public class ProfilServlet extends ServletController {
 
         Benutzer benutzer;
         // Sowohl wenn der Admin ein Profil ändert, als auch der Benutzer sein eigenes, müssen diese Exceptions abgefangen werden
-//        try{
+        try{
 
             // Prüfen ob dies ein Admin ist und gegebenfalls alle Parameter holen
             if(aktuellerBenutzer.getNutzerstatus()==Nutzerstatus.ADMIN)
@@ -178,30 +178,30 @@ public class ProfilServlet extends ServletController {
                     return false;
                 }
 
-                benutzer = new Benutzer(emailNew, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus, 
+                benutzer = new Benutzer(id, emailNew, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus, 
                         bNotifyVeranstAenderung, bNotifyKarteikartenAenderung, eNotifyKommentare);
-                // TODO
-//                dbManager.bearbeiteBenutzerAdmin(id, benutzer);
+
+                dbManager.bearbeiteBenutzerAdmin(benutzer);
             }
             // Normaler benutzer Speichern
             else
             {
-                benutzer = new Benutzer(emailNew, vorname, nachname, bNotifyVeranstAenderung, 
+                benutzer = new Benutzer(id, emailNew, vorname, nachname, bNotifyVeranstAenderung, 
                         bNotifyKarteikartenAenderung, eNotifyKommentare);
-//                dbManager.bearbeiteBenutzer(id, benutzer);
+                dbManager.bearbeiteBenutzer(benutzer);
             }
-//        }
-//        catch(SQLException e)
-//        {
-//            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-//            outWriter.print(jo);
-//            return false;
-//        } 
-//        catch(DbUniqueConstraintException e){
-//            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorEmailAlreadyInUse);
-//            outWriter.print(jo);
-//            return false;
-//        }
+        }
+        catch(SQLException e)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        } 
+        catch(DbUniqueConstraintException e){
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorEmailAlreadyInUse);
+            outWriter.print(jo);
+            return false;
+        }
 
         jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         outWriter.print(jo);

@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.DbFalseLoginDataException;
+import com.sopra.team1723.exceptions.DbFalsePasswortException;
 import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
@@ -40,50 +41,48 @@ public interface IDatenbankmanager {
      * @throws DbUniqueConstraintException, SQLException
      */
     public void schreibeBenutzer(Benutzer benutzer)  throws DbUniqueConstraintException, SQLException;
-
+    
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Kennwort, Matrikelnummer, 
      * Studiengang und Nutzerstatus werden nicht gesetzt, da der Benutzer diese nicht selbst ändern kann.
-     * Die eMail kann auch geändert werden. Der Datensatz wird dabei mithilfe des Parameters alteMail identifiziert. 
+     * Die eMail kann auch geändert werden. Um den Datensatz zu identifizieren wird die ID im Benutzer Objekt verwendet. 
      * Das Kennwort kann in einer separaten Methode bearbeitet werden{@link #passwortAendern(String, String)}.
      * Matrikelnummer und Studiengang kann ein Benutzer nicht selber bearbeiten. Tritt ein Fehler in der Datenbank 
      * auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer mit einer bereits vorhandenen 
      * eMail Adresse anzulegen, so wird eine DbUniqueConstraintException geworfen
-     * @param alteMail referenziert eindeutig den zu bearbeitenden Benutzer
      * @param benutzer-Objket, das in der Datenbank geupdatet wird
      * @throws DbUniqueConstraintException, SQLException
      */
-    public void bearbeiteBenutzer(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzer(Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
     
    /**
     * Ändert das Profilbild eines Benutzers in der Datenbank.
-    * @param eMail referenziert eindeutig den Benutzer
+    * @param benutzerId referenziert eindeutig den Benutzer
     * @param dateiName, Dateiname des neuen Profilbilds
     * @return true, falls kein Fehler auftritt, false bei einem Fehler
     */
-    public boolean aendereProfilBild(String eMail, String dateiName);
+    public boolean aendereProfilBild(int benutzerId, String dateiName);
     
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt
      * {@link #passwortAendern(String, String)}. Diese Methode wird verwendet, wenn
      * der Admin die Daten eines Benutzers bearbeiten möchte. Er kann dabei alle Attribute also auch
-     * Matrikelnummer und Studiengang ändern. Um den Datensatz zu identifizieren wird der Parameter alteMail
+     * Matrikelnummer und Studiengang ändern. Um den Datensatz zu identifizieren wird die ID im Benutzer Objekt
      * verwendet. Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
      * mit einer bereits vorhandenen eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
      * geworfen
-     * @param alteMail referenziert eindeutig den zu bearbeitenden Benutzer
      * @param benutzer-Objket, das in der Datenbank geupdatet wird 
      * @throws DbUniqueConstraintException, SQLException
      */
-    public void bearbeiteBenutzerAdmin(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzerAdmin(Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Entfernt den Benutzer aus der Datenbank. 
-     * @param eMail referenziert eindeutig den zu löschenden Benutzer
+     * @param benutzerId referenziert eindeutig den zu löschenden Benutzer
      * @return  Tritt ein Fehler auf gibt die Methode false zurück. Ansonsten true.
      * (Auch wenn der Benutzer gar nicht in der Datenbank vorhanden war.)
      */
-    public boolean loescheBenutzer(String eMail);
+    public boolean loescheBenutzer(int benutzerId);
 
     /**
      * Überprüft, ob eMail und Passwort zusammenpassen. 
@@ -361,22 +360,24 @@ public interface IDatenbankmanager {
     public boolean istModerator(Veranstaltung veranst, String benutzerMail);
 
     /**
-     * Schreibt Benutzer in die Veranstaltung ein. Tritt ein Fehler auf gibt
-     * die Methode false zuruck. Ansonsten true.
-     * @param veranstTitel 
-     * @param eMail 
-     * @return
+     * Schreibt Benutzer in die Veranstaltung ein. Ist der Benutzer bereits in die Veranstaltung eingetragen,
+     * wird eine DbUniqueConstraintException geworfen. Tritt ein anderer Fehler auf wird eine SQLException
+     * geworfen.
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung 
+     * @param benutzer referenziert eindeutig einen Benutzer 
+     * @throws SQLException, DbUniqueConstraintException
      */
-    public boolean zuVeranstaltungEinschreiben(String veranstTitel, String eMail);
+    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort) throws SQLException, 
+    DbUniqueConstraintException, DbFalsePasswortException;
 
     /**
-     * Meldet Benutzer von der Veranstaltung ab. Tritt ein Fehler auf gibt
-     * die Methode false zuruck. Ansonsten true.
-     * @param veranstTitel 
-     * @param eMail 
-     * @return
+     * Meldet Benutzer von der Veranstaltung ab.
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung
+     * @param benutzer referenziert eindeutig einen Benutzer
+     * @return false falls ein Fehler auftritt. Ansonsten true (Auch wenn der Benutzer gar nicht
+     * zu der Veranstaltung angemeldet war)
      */
-    public boolean vonVeranstaltungAbmelden(String veranstTitel, String eMail);
+    public boolean vonVeranstaltungAbmelden(int veranstaltung, int benutzer);
 
     /**
      * @param erstellerEMail 

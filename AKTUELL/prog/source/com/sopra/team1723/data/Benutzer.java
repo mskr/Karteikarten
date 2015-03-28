@@ -38,9 +38,10 @@ public class Benutzer {
     
     // Konstruktur ohne Kennwort, Matrikelnummer, Studiengang, Nutzerstatus (Die letzten 3 können vom Benutzer
     // selbst nicht geändert werden
-    public Benutzer(String eMail, String vorname, String nachname, boolean notifyVeranstAenderung,
+    public Benutzer(int id, String eMail, String vorname, String nachname, boolean notifyVeranstAenderung,
             boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare)
     {
+        this.id = id;
         this.eMail = eMail;
         this.vorname = vorname;
         this.nachname = nachname;
@@ -50,10 +51,11 @@ public class Benutzer {
     }
 
     // Konstruktor ohne Kennwort
-    public Benutzer(String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
+    public Benutzer(int id, String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
             Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung, boolean notifyKarteikartenAenderung,
             NotifyKommentare notifyKommentare)
     {
+        this.id = id;
         this.eMail = eMail;
         this.vorname = vorname;
         this.nachname = nachname;

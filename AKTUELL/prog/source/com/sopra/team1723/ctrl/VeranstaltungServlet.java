@@ -192,10 +192,55 @@ public class VeranstaltungServlet extends ServletController {
      * @param request 
      * @param response 
      * @return
+     * @throws IOException 
      */
-    private boolean veranstaltungEinschreiben(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+    private boolean veranstaltungEinschreiben(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession aktuelleSession = request.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        String idStr = request.getParameter(ParamDefines.Id);
+
+        int vId ;
+        try
+        {
+            vId = Integer.parseInt(idStr);
+            
+            Veranstaltung v = dbManager.leseVeranstaltung(vId);
+            
+            // Existiert ein passwort ?
+            if(!v.getZugangspasswort().equals(""))
+            {
+                String pw = request.getParameter(ParamDefines.Password);
+                if(pw == null)
+                {
+                    JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                    outWriter.print(jo);
+                    return false;
+                }
+
+                if(!pw.equals(v.getZugangspasswort()))
+                {
+                    JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
+                    outWriter.print(jo);
+                    return false;
+                }
+            }
+//            dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId());
+
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            outWriter.print(jo);
+        }
+        catch (NumberFormatException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        return true;
     }
 
     /**
@@ -206,10 +251,35 @@ public class VeranstaltungServlet extends ServletController {
      * @param request 
      * @param response 
      * @return
+     * @throws IOException 
      */
-    private boolean veranstaltungAuschreiben(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+    private boolean veranstaltungAuschreiben(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession aktuelleSession = request.getSession();
+        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        String idStr = request.getParameter(ParamDefines.Id);
+
+        int vId;
+        try
+        {
+            vId = Integer.parseInt(idStr);
+            
+//            dbManager.vonVeranstaltungAbmelden(vId, aktuellerBenutzer.getId());
+
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            outWriter.print(jo);
+        }
+        catch (NumberFormatException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        return true;
     }
 
     @Override
@@ -225,6 +295,14 @@ public class VeranstaltungServlet extends ServletController {
         if(aktuelleAction.equals(ParamDefines.ActionLeseVeranst))
         {
             veranstaltungenAnzeigen(req,resp);
+        } 
+        else if(aktuelleAction.equals(ParamDefines.ActionEinschreiben))
+        {
+            veranstaltungEinschreiben(req, resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionAusschreiben))
+        {
+            veranstaltungAuschreiben(req,resp);
         }
         else
         {
