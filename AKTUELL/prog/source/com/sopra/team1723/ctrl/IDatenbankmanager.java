@@ -40,50 +40,50 @@ public interface IDatenbankmanager {
      * @throws DbUniqueConstraintException, SQLException
      */
     public void schreibeBenutzer(Benutzer benutzer)  throws DbUniqueConstraintException, SQLException;
-
+    
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Kennwort, Matrikelnummer, 
      * Studiengang und Nutzerstatus werden nicht gesetzt, da der Benutzer diese nicht selbst ändern kann.
-     * Die eMail kann auch geändert werden. Der Datensatz wird dabei mithilfe des Parameters alteMail identifiziert. 
+     * Die eMail kann auch geändert werden. Der Datensatz wird dabei mithilfe des Parameters benutzerID identifiziert. 
      * Das Kennwort kann in einer separaten Methode bearbeitet werden{@link #passwortAendern(String, String)}.
      * Matrikelnummer und Studiengang kann ein Benutzer nicht selber bearbeiten. Tritt ein Fehler in der Datenbank 
      * auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer mit einer bereits vorhandenen 
      * eMail Adresse anzulegen, so wird eine DbUniqueConstraintException geworfen
-     * @param alteMail referenziert eindeutig den zu bearbeitenden Benutzer
+     * @param benutzerId referenziert eindeutig den zu bearbeitenden Benutzer
      * @param benutzer-Objket, das in der Datenbank geupdatet wird
      * @throws DbUniqueConstraintException, SQLException
      */
-    public void bearbeiteBenutzer(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzer(int benutzerId, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
     
    /**
     * Ändert das Profilbild eines Benutzers in der Datenbank.
-    * @param eMail referenziert eindeutig den Benutzer
+    * @param benutzerId referenziert eindeutig den Benutzer
     * @param dateiName, Dateiname des neuen Profilbilds
     * @return true, falls kein Fehler auftritt, false bei einem Fehler
     */
-    public boolean aendereProfilBild(String eMail, String dateiName);
+    public boolean aendereProfilBild(int benutzerId, String dateiName);
     
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt
      * {@link #passwortAendern(String, String)}. Diese Methode wird verwendet, wenn
      * der Admin die Daten eines Benutzers bearbeiten möchte. Er kann dabei alle Attribute also auch
-     * Matrikelnummer und Studiengang ändern. Um den Datensatz zu identifizieren wird der Parameter alteMail
+     * Matrikelnummer und Studiengang ändern. Um den Datensatz zu identifizieren wird der Parameter benutzerId
      * verwendet. Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
      * mit einer bereits vorhandenen eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
      * geworfen
-     * @param alteMail referenziert eindeutig den zu bearbeitenden Benutzer
+     * @param benutzerId referenziert eindeutig den zu bearbeitenden Benutzer
      * @param benutzer-Objket, das in der Datenbank geupdatet wird 
      * @throws DbUniqueConstraintException, SQLException
      */
-    public void bearbeiteBenutzerAdmin(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzerAdmin(int benutzerId, Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Entfernt den Benutzer aus der Datenbank. 
-     * @param eMail referenziert eindeutig den zu löschenden Benutzer
+     * @param benutzerId referenziert eindeutig den zu löschenden Benutzer
      * @return  Tritt ein Fehler auf gibt die Methode false zurück. Ansonsten true.
      * (Auch wenn der Benutzer gar nicht in der Datenbank vorhanden war.)
      */
-    public boolean loescheBenutzer(String eMail);
+    public boolean loescheBenutzer(int benutzerId);
 
     /**
      * Überprüft, ob eMail und Passwort zusammenpassen. 

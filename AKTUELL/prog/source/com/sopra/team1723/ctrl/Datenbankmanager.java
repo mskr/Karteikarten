@@ -166,23 +166,23 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
         }
     }
-
+    
     @Override
-    public void bearbeiteBenutzer(String alteMail, Benutzer benutzer)
+    public void bearbeiteBenutzer(int benutzerId, Benutzer benutzer)
             throws SQLException, DbUniqueConstraintException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
             ps = conMysql.prepareStatement("UPDATE benutzer SET eMail=?, Vorname=?,Nachname=?,"
                     + "NotifyKommentare=?, NotifyVeranstAenderung=?,"
-                    + "NotifyKarteikartenAenderung=?  WHERE eMail = ?");
+                    + "NotifyKarteikartenAenderung=?  WHERE ID = ?");
             ps.setString(1, benutzer.geteMail());
             ps.setString(2, benutzer.getVorname());
             ps.setString(3, benutzer.getNachname());
             ps.setString(4, benutzer.getNotifyKommentare().name());
             ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(6, benutzer.isNotifyKarteikartenAenderung());
-            ps.setString(7, alteMail);    
+            ps.setInt(7, benutzerId);    
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -199,13 +199,13 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void bearbeiteBenutzerAdmin(String alteMail, Benutzer benutzer) throws SQLException, DbUniqueConstraintException {
+    public void bearbeiteBenutzerAdmin(int benutzerId, Benutzer benutzer) throws SQLException, DbUniqueConstraintException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
             ps = conMysql.prepareStatement("UPDATE benutzer SET eMail=?, Vorname=?,Nachname=?,Matrikelnummer=?,Studiengang=?,"
                     + "Nutzerstatus=?, NotifyKommentare=?, NotifyVeranstAenderung=?,"
-                    + "NotifyKarteikartenAenderung=?  WHERE eMail = ?");
+                    + "NotifyKarteikartenAenderung=?  WHERE ID = ?");
             ps.setString(1, benutzer.geteMail());
             ps.setString(2, benutzer.getVorname());
             ps.setString(3, benutzer.getNachname());
@@ -215,7 +215,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(7, benutzer.getNotifyKommentare().name());
             ps.setBoolean(8, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(9, benutzer.isNotifyKarteikartenAenderung());
-            ps.setString(10, alteMail);    
+            ps.setInt(10, benutzerId);    
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -232,12 +232,12 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean loescheBenutzer(String eMail) {
+    public boolean loescheBenutzer(int benutzerId) {
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try{
-            ps = conMysql.prepareStatement("DELETE FROM benutzer WHERE eMail=?");
-            ps.setString(1, eMail);    
+            ps = conMysql.prepareStatement("DELETE FROM benutzer WHERE ID=?");
+            ps.setInt(1, benutzerId);    
             if(ps.executeUpdate()!= 1)
                 return false;
         } catch(SQLException e){
@@ -318,15 +318,15 @@ public class Datenbankmanager implements IDatenbankmanager {
         return erfolgreich;
     }
     @Override
-    public boolean aendereProfilBild(String eMail, String dateiName)
+    public boolean aendereProfilBild(int benutzerId, String dateiName)
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean erfolgreich = true;
         try{
-            ps = conMysql.prepareStatement("UPDATE benutzer SET Profilbild=? WHERE eMail=?");
+            ps = conMysql.prepareStatement("UPDATE benutzer SET Profilbild=? WHERE ID=?");
             ps.setString(1, dateiName);
-            ps.setString(2, eMail);
+            ps.setInt(2, benutzerId);
             if(ps.executeUpdate()!= 1)
                 return false;
         } catch (SQLException e) {
