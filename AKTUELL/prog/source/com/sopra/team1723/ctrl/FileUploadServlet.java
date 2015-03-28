@@ -108,9 +108,11 @@ public class FileUploadServlet extends ServletController
         }
         
         // Altes Bild löschen
-        File f = new File(contextPath + aktuellerBenutzer.getProfilBildPfad());
-        f.delete();
-        
+        if(!aktuellerBenutzer.getProfilBildPfad().equals("default.png"))
+        {
+            File f = new File(contextPath + aktuellerBenutzer.getProfilBildPfad());
+            f.delete();
+        }
         System.out.println("File gespeichert: " + absolutePath);
         System.out.println("Web Pfad: " + relativerPfad);
 

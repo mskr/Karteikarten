@@ -82,7 +82,7 @@ function fillMyPersonalBox()
 					setTimeout(function() {
 	            		addBenachrichtigung(bens[i][paramBenInhalt], !bens[i][paramBenGelesen], bens[i][paramBenErstelldaum], fkt);
 					}, 300);
-            	}}, 3000);
+            	}}, 1000);
             }
             else 
             {
@@ -138,8 +138,6 @@ function addBenachrichtigung(text, isNeu, datumTxt, onClickFkt)
 	if(isNeu == true)
 	{
 		divBn.addClass("neu");
-		if(newBnCount == 0)
-			contentDiv.slideDown("slow");
 		newBnCount++;
 		$("#bn_anzahl").text("(" + newBnCount + " neu)");
 	}
