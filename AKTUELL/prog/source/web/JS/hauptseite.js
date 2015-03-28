@@ -3,6 +3,7 @@
  */
 
 function fillHauptseite() {
+    
     // Code fuer das Veranstaltung erstellen Popup
     $('#vn_erstellen_popup').popup({
         openelement: '.vn_erstellen_bt',
