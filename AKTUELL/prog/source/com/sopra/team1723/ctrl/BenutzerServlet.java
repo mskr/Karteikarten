@@ -156,7 +156,7 @@ public class BenutzerServlet extends ServletController {
         String aktuelleAction = (String) s.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) s.getAttribute(sessionAttributeaktuellerBenutzer);
-        IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeaktuelleAction);
+        IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);
         
         JSONObject jo = null;
         

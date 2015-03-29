@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
 <!-- JQuery -->
 <script src="JS/jquery-latest.min.js"></script>
-<!-- JQuery Popup Overlay -->
+<!-- JQuery Popup Overlay, Doc: http://dev.vast.com/jquery-popup-overlay/ -->
 <script src="JS/jquery.popupoverlay.js"></script>
 <!-- CKEditor Core -->
 <script src="ckeditor/ckeditor.js"></script>
@@ -66,8 +66,6 @@
 <script src="JS/hauptseite.js"></script>
 <!-- Veranstaltungseite Skript -->
 <script src="JS/veranstaltungseite.js"></script>
-<!-- Skript fuer die Suchfunktion auf der Hauptseite -->
-<script src="JS/sucheGlobal.js"></script>
 <!-- Initial alle Kind<div>s von <body> verbergen -->
 <style>
 body > div {
@@ -81,6 +79,19 @@ body > div {
 <!-- Div-Container für messages -->
 <div class="msg err"></div>
 <div class="msg success"></div>
+
+<!-- Sind Sie Sicher Dialog -->
+<div id="dialog_sicher" class="bigtooltip">
+	<div class="bigtooltip_head">
+		<span class="dialog_sicher_titel"><span class="octicon octicon-question"></span> Sind Sie sicher?</span>
+	</div>
+	<div class="bigtooltip_body">
+		<span class="dialog_sicher_frage"></span>
+	</div>
+	<div class="bigtooltip_foot">
+		<span class="dialog_sicher_ja mybutton red"><span class="octicon octicon-check"></span> Ja, weiter</span>
+	</div>
+</div>
 
 <!-- Elemente fuer kleine Bildschirme -->
 <div class="r-header"></div>
@@ -180,124 +191,48 @@ function naviconTransformicon() {
 
 <div id="mainbox_hauptseite" class="mainbox">
 	<div class="hauptseite_head">
-		<form id="suche_global_form">
+		<!-- <form id="suche_global_form"> -->
 			<input id="suche_global_input" class="suche_etwas input_std" type="search" placeholder="Veranstaltungen und Personen finden..." required>
-			<input class="suche_bestaetigen" type="submit">
+			<!-- <input class="suche_bestaetigen" type="submit"> -->
 			<div id="suche_ergebnisse" class="suche_ergebnisse flex_container">
-				<div id="sucherg_vn"class="sucherg_vn flex_elem"></div>
-				<div id="sucherg_benutzer"class="sucherg_benutzer flex_elem"></div>
+				<div class="sucherg_vn_titel">VERANSTALTUNGEN</div>
+				<div id="sucherg_vn" class="sucherg_vn flex_elem"></div>
+				<div class="sucherg_benutzer_titel">PERSONEN</div>
+				<div id="sucherg_benutzer" class="sucherg_benutzer flex_elem"></div>
 			</div>
-		</form>
+		<!-- </form> -->
 		<span class="mybutton green vn_erstellen_bt"><span class="octicon octicon-plus"></span> </span>
 	</div>
 	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
 	<div class="vn_container">
-	
 		<div class="vn_tab meine_vn">
 			<input class="vn_tabradio" type="radio" id="tab-1" name="group1" checked>
 			<label class="meine_vn_tablabel" for="tab-1"><span class="octicon octicon-home"></span></label>
-			
 			<div class="vn_tabcontent" id="vn_tabcontent_meine">
-<!-- 				<div class="vn">
-					<span class="vn_titel">Molekularbiologie I</span>
-					<span class="vn_details"><span class="vn_detail">Prof. Dr. Oberhuber</span><br><span class="vn_detail">60 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
-					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
-					<div class="vn_mehr_wrapper">
-						<span class="vn_mehr">Die Molekularbiologie befasst sich mit der Struktur, Biosynthese und Funktion von DNA und RNA auf molekularer Ebene und wie diese untereinander und mit Proteinen interagieren. Das Forschungsgebiet der Molekularbiologie überlappt dabei immer mehr mit weiteren Feldern der Biologie und Chemie, insbesondere der Genetik und der Biochemie. Die Grenzen zwischen diesen Fachbereichen sind dabei oft fließend. Der Name für dieses Fach wurde 1952 durch den englischen Physiker und Molekularbiologen William Astbury geprägt.</span>
-						<div class="vn_optionen">
-							<span class="mybutton dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
-						</div>
-					</div>
-				</div>
-				
-				<div class="vn">
-					<span class="vn_titel">Algorithmen</span>
-					<span class="vn_details"><span class="vn_detail">Prof. Dr. Schöning</span><br><span class="vn_detail">40 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
-					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
-					<div class="vn_mehr_wrapper">
-						<span class="vn_mehr">Ein Algorithmus ist eine eindeutige Handlungsvorschrift zur Lösung eines Problems oder einer Klasse von Problemen. Algorithmen bestehen aus endlich vielen, wohldefinierten Einzelschritten.[1] Somit können sie zur Ausführung in einem Computerprogramm implementiert, aber auch in menschlicher Sprache formuliert werden. Bei der Problemlösung wird eine bestimmte Eingabe in eine bestimmte Ausgabe überführt.[2]</span>
-						<div class="vn_optionen">
-							<span class="mybutton dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
-						</div>
-					</div>
-				</div>
-				
-				<div class="vn">
-					<span class="vn_titel">Lineare Algebra</span>
-					<span class="vn_details"><span class="vn_detail">Dr. Liebezeit</span><br><span class="vn_detail">30 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
-					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
-					<div class="vn_mehr_wrapper">
-						<span class="vn_mehr">Die lineare Algebra (auch Vektoralgebra) ist ein Teilgebiet der Mathematik, das sich mit Vektorräumen und linearen Abbildungen zwischen diesen beschäftigt. Dies schließt insbesondere auch die Betrachtung von linearen Gleichungssystemen und Matrizen mit ein. Vektorräume und deren lineare Abbildungen sind ein wichtiges Hilfsmittel in vielen Bereichen der Mathematik. Außerhalb der reinen Mathematik finden sich Anwendungen u. a. in den Naturwissenschaften, in der Informatik und in der Wirtschaftswissenschaft (z. B. in der Optimierung).Die lineare Algebra entstand aus zwei konkreten Anforderungen heraus: einerseits dem Lösen von linearen Gleichungssystemen, andererseits der rechnerischen Beschreibung geometrischer Objekte, der sogenannten analytischen Geometrie (daher bezeichnen manche Autoren lineare Algebra als lineare Geometrie).</span>
-						<div class="vn_optionen">
-							<span class="mybutton dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
-						</div>
-					</div>
-				</div> -->
-				
+				<div class="vn_toolbar">Veranstaltungen, in die Sie eingeschrieben sind</div>
 			</div>
 		</div>
-		
-		
 		<div class="vn_tab studiengang_vn">
 			<input class="vn_tabradio" type="radio" id="tab-2" name="group1">
 			<label class="studiengang_vn_tablabel" for="tab-2"><span class="octicon octicon-package"></span></label>
-			
 			<div class="vn_tabcontent" id="vn_tabcontent_studiengang">
-			
-				<!-- <div class="vn">
-					<span class="vn_titel">Algorithmen</span>
-					<span class="vn_details"><span class="vn_detail">Prof. Dr. Schöning</span><br><span class="vn_detail">30 Teilnehmer</span><br><span class="vn_detail">WiSe 14/15</span></span>
-					<span class="vn_mehr_einbl"><span class="octicon octicon-three-bars"></span> </span> <br>
-					<div class="vn_mehr_wrapper">
-						<span class="vn_mehr">Die lineare Algebra (auch Vektoralgebra) ist ein Teilgebiet der Mathematik, das sich mit Vektorräumen und linearen Abbildungen zwischen diesen beschäftigt. Dies schließt insbesondere auch die Betrachtung von linearen Gleichungssystemen und Matrizen mit ein. Vektorräume und deren lineare Abbildungen sind ein wichtiges Hilfsmittel in vielen Bereichen der Mathematik. Außerhalb der reinen Mathematik finden sich Anwendungen u. a. in den Naturwissenschaften, in der Informatik und in der Wirtschaftswissenschaft (z. B. in der Optimierung).Die lineare Algebra entstand aus zwei konkreten Anforderungen heraus: einerseits dem Lösen von linearen Gleichungssystemen, andererseits der rechnerischen Beschreibung geometrischer Objekte, der sogenannten analytischen Geometrie (daher bezeichnen manche Autoren lineare Algebra als lineare Geometrie).</span>
-						<div class="vn_optionen">
-							<span class="mybutton dark"><span class="octicon octicon-sign-out"></span> Ausschreiben</span>
-						</div>
-					</div>
-				</div>
-				
-				<div class="vn">
-					<span class="vn_titel">Lineare Algebra</span>
-				</div>
-				
-				<div class="vn">
-					<span class="vn_titel">Grundlagen Interaktiver Systeme</span>
-				</div> -->
-				
+				<div class="vn_toolbar">Veranstaltungen aus Ihrem Studiengang</div>
 			</div>
 		</div>
-		
-		
 		<div class="vn_tab semester_vn">
 			<input class="vn_tabradio" type="radio" id="tab-3" name="group1">
 			<label class="semester_vn_tablabel" for="tab-3"><span class="octicon octicon-calendar"></span></label>
-			
 			<div class="vn_tabcontent" id="vn_tabcontent_semester">
-				<!-- <div class="vn">Algorithmen</div> -->
+				<div class="vn_toolbar">Veranstaltungen aus diesem Semester</div>
 			</div>
 		</div>
-		
-		
 		<div class="vn_tab alle_vn">
 			<input class="vn_tabradio" type="radio" id="tab-4" name="group1">
 			<label class="alle_vn_tablabel" for="tab-4"><span class="octicon octicon-list-unordered"></span></label>
-			
 			<div class="vn_tabcontent" id="vn_tabcontent_alle">
-	<!--			<div class="vn">Molekularbiologie I</div>
-	 			<div class="vn">Algorithmen</div>
-				<div class="vn">Lineare Algebra</div>
-				<div class="vn">Grundlagen Interaktiver Systeme</div>
-				<div class="vn">Grundlagen der Rechnernetze</div>
-				<div class="vn">Grundlagen der Betriebssysteme</div>
-				<div class="vn">English in Science and Technology I</div>
-				<div class="vn">Formale Grundlagen</div>
-				<div class="vn">Analysis I</div>
-				<div class="vn">Analysis II</div>
-				<div class="vn">Einführung in die Informatik</div> -->
-				
+				<div class="vn_toolbar">Alle Veranstaltungen im System</div>
 			</div>
 		</div>
-		
 		<span class="mybutton dark flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span>
 	</div>
 	<div class="impressum">Uni Ulm <br> WiSe 14/15 <br> Informatik <br> Softwaregrundprojekt <br> Team 17: Andreas Rottach, Fabian Schilha, Matthias Englert <br> Team 23: Julius Friedrich, Lorenz Weiß, Marius Kircher</div>
@@ -707,12 +642,12 @@ function naviconTransformicon() {
 	</div>
 </div>
 
-<div id="attr_popup">
-	<div class="attr_popup_pfeil"></div>
-	<div class="attr_popup_head">
+<div id="attr_popup" class="bigtooltip">
+	<div class="bigtooltip_pfeil"></div>
+	<div class="bigtooltip_head">
 		<span class="octicon octicon-checklist"></span><span> Attribute ändern</span>
 	</div>
-	<div class="attr_popup_body">
+	<div class="bigtooltip_body">
 		<span><input id="attr_satz" type="checkbox" name="attr"><label for="attr_satz">Satz</label></span>
 		<span><input id="attr_beweis" type="checkbox" name="attr"><label for="attr_beweis">Beweis</label></span>
 		<span><input id="attr_def" type="checkbox" name="attr"><label for="attr_def">Definition</label></span>
@@ -720,7 +655,7 @@ function naviconTransformicon() {
 		<span><input id="attr_grundl" type="checkbox" name="attr"><label for="attr_grundl">Grundlagen</label></span>
 		<span><input id="attr_ueberschr" type="checkbox" name="attr"><label for="attr_ueberschr">Überschrift</label></span>
 	</div>
-	<div class="attr_popup_foot"></div>
+	<div class="bigtooltip_foot"></div>
 </div>
 
 </body>

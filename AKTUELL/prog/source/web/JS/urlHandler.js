@@ -115,7 +115,7 @@ function interpreteUrlQuery(paramObj) {
  * Enthaelt den Ajax Call mit der getBenutzer action.
  * @returns when Ajax Call is finished
  */
-function getBenutzer() 
+function getBenutzer()
 {
     return $.ajax({
         url: profilServlet,
@@ -128,7 +128,6 @@ function getBenutzer()
             {
                 // Ein Benutzer ist eingeloggt
                 jsonBenutzer = jsonObj;
-                
             } 
             else 
             {
@@ -136,7 +135,7 @@ function getBenutzer()
                 jsonBenutzer = undefined;
                 if(errCode == "notloggedin") 
                 {
-                    message(1, "Bitte loggen Sie sich ein um fortzufahren.");
+                    // TODO Koennte ein Session Timeout gewesen sein
                 } 
                 else 
                 {

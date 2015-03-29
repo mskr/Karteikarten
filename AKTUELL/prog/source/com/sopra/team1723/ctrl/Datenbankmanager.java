@@ -1104,6 +1104,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(1, veranstaltung);
             rs = ps.executeQuery();
             if(rs.next()){
+                // TODO rs.getString("Kennwort") kann null sein obwohl die Veranstaltung ein Kennwort hat.
                 if(rs.getString("Kennwort") != null && rs.getString("Kennwort").equals(kennwort) == false)
                     throw new DbFalsePasswortException();
             }

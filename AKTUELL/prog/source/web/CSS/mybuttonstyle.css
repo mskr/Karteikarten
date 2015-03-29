@@ -35,6 +35,13 @@
 	color: #ffffff;
 } .mybutton:active {
 	color: #ffffff;
+} .mybutton:disabled {
+	background: #4f4f4f;
+	background-image: none;
+	box-shadow: none;
+	border: 1px solid #262626;
+	color: gray;
+	text-shadow: none;
 }
 
 
@@ -75,13 +82,6 @@
 	-moz-box-shadow: 0px 0px 0px #828282;
 	box-shadow: 0px 0px 0px #828282;
 	box-shadow: inset 0px 2px 5px #191919;
-} .dark:disabled {
-	background: #4f4f4f;
-	background-image: none;
-	box-shadow: none;
-	border: 1px solid #262626;
-	color: grey;
-	text-shadow: none;
 }
 
 .flat {
@@ -431,7 +431,7 @@
 		border-radius: 0;
 		text-shadow: 0 0;
 	} .mybuttongroup .groupelem:hover {
-		background: lightgrey;
+		background: LightGray;
 		-webkit-box-shadow: 0 0;
 		-moz-box-shadow: 0 0;
 		box-shadow: 0 0;
@@ -452,7 +452,7 @@
 	} .mybuttongroup .groupelem:after {
 		content: attr(data-tooltip);
 		font-size: 12px;
-		color: grey;
+		color: gray;
 		text-shadow: 0 0;
 		background: none;
 		display: inline;
