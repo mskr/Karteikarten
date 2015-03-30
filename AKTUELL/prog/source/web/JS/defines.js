@@ -20,7 +20,7 @@ var actionResetPasswort = "resetPasswort";
 var actionGetBenutzer = "getBenutzer";
 var actionGetStudiengaenge = "getStudiengaenge";
 var actionGetOtherBenutzer = "getOtherBenutzer";
-var actionGetStudiengaenge = "getStudiengaenge";
+var actionGetSemester = "getSemester";
 var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
@@ -68,6 +68,10 @@ var paramModeratoren = "moderatoren";
 var paramAnzTeilnehmer = "anzTeilnehmer";
 var paramAngemeldet = "angemeldet";
 var paramKennwortGesetzt = "kennwortGesetzt";
+
+var paramAktSemester = "aktSemester";
+var paramGewaehltesStudiengang = "gewaehlterStudiengang";
+var paramGewaehltesSemester = "gewaehltesSemester";
 
 // Benachrichtigungen
 var paramBenInhalt = "benInhalt";

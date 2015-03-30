@@ -32,6 +32,7 @@ $(document).ready(function() {
             	}
             	
             	$("#vn_studiengaenge_auswahl option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
+        		leseVeranstaltungenStudiengang($("#vn_studiengaenge_auswahl").val());  
             	$("#vn_studiengaenge_auswahl").change(function() {
             		leseVeranstaltungenStudiengang($("#vn_studiengaenge_auswahl").val());  
             	});
@@ -55,12 +56,13 @@ $(document).ready(function() {
     			$("#vn_semester_auswahl").empty();
     			var studgArr = jsonObj[keyJsonArrResult];
     			for(var i in studgArr) {
-    				$("#vn_semester_auswahl").append("<option>"+studgArr[i]+"</option>");
+    				$("#vn_semester_auswahl").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
     			}
 
-            	$("#vn_studiengaenge_auswahl option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
+            	$("#vn_semester_auswahl option[value='"+ jsonObj[paramAktSemester] +"']").prop('selected', true);
+            	leseVeranstaltungenSemester($("#vn_semester_auswahl").val());
     			$("#vn_semester_auswahl").change(function() {
-    				leseVeranstaltungenStudiengang($("#vn_semester_auswahl").val());  
+    				leseVeranstaltungenSemester($("#vn_semester_auswahl").val());  
     			});
     		}
     		else
@@ -69,10 +71,6 @@ $(document).ready(function() {
     		}
     	}
     });
-    
- 
-
-    
 });
 
 function fillHauptseite() 
@@ -115,7 +113,7 @@ function leseVeranstaltungenSemester(semesterName)
 		url: veranstaltungServlet,
 		data: "action="+actionLeseVeranst + "&" + 
 		leseVeranstMode +"=" + leseVeranstModeSemester + "&" +
-		"TODO" + "=" + semesterName,
+		paramGewaehltesSemester + "=" + semesterName,
 		success: function(jsonObj) 
 		{
 			var divSemesterVeranst = $("#vn_tabcontent_semester");
@@ -131,14 +129,13 @@ function leseVeranstaltungenStudiengang(studiengangName)
 		url: veranstaltungServlet,
 		data: "action="+actionLeseVeranst + "&" + 
 		leseVeranstMode +"=" + leseVeranstModeStudiengang + "&" +
-		"TODO" + "=" + studiengangName,
+		paramGewaehltesStudiengang + "=" + studiengangName,
 		success: function(jsonObj) 
 		{
 			var divStudiengangVeranst = $("#vn_tabcontent_studiengang");
 			displayVeranstaltungen(divStudiengangVeranst, jsonObj);
 		}
 	});	
-
 }
 function displayVeranstaltungen(container,ajaxResult )
 {
