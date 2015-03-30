@@ -13,6 +13,12 @@ $(document).ready(function() {
     $.when(getBenutzer()).done(function(a1) {
         interpreteUrlQuery(urlQuery);
     });
+    
+    // Auf zurück und vorwärts im browser reagieren
+    History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
+        var urlQuery = parseUrlQuery(undefined);
+        interpreteUrlQuery(urlQuery);
+    });
 });
 
 //Der aktuell eingeloggte Benutzer als JSON Objekt.
