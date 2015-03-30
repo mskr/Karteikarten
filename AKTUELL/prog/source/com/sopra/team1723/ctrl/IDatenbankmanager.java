@@ -126,12 +126,12 @@ public interface IDatenbankmanager {
      */
     public Veranstaltung leseVeranstaltung(int id);
     
-    /**
-     * Holt alle Veranstaltungen aus der Datenbank und packt sie in eine Array List.
-     * @return Liste aller Veranstaltungen. Gibt es keine Veranstaltungen wird eine 
-     * leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
-     */
-    public List<Veranstaltung> leseAlleVeranstaltungen();
+//    /**
+//     * Holt alle Veranstaltungen aus der Datenbank und packt sie in eine Array List.
+//     * @return Liste aller Veranstaltungen. Gibt es keine Veranstaltungen wird eine 
+//     * leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
+//     */
+//    public List<Veranstaltung> leseAlleVeranstaltungen();
     
     /**
      * Holt Veranstaltungen, die von dem angegebenen Studiengang gehört werden können
@@ -173,6 +173,15 @@ public interface IDatenbankmanager {
      * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<String> leseStudiengaenge(int veranstaltung);
+    
+    /**
+     * Prüft ob der Benutzer Moderator dieser Veranstaltung ist.
+     * @param benutzer referenziert eindeutig einen Benutzer
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung
+     * @return Gibt true zurück, wenn der Benutzer Moderator der Veranstaltung ist und false falls nicht.
+     * Tritt ein Fehler auf wird null zurückgegeben
+     */
+    public Boolean istModerator(int benutzer, int veranstaltung);
     
     /**
      * Holt alle Studiengaenge zu der angegebenen Veranstaltung aus der Datenbank.

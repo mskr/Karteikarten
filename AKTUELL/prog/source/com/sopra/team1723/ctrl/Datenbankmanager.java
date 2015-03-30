@@ -21,6 +21,8 @@ import java.sql.Timestamp;
 
 
 
+
+
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -393,36 +395,36 @@ public class Datenbankmanager implements IDatenbankmanager {
         return veranstaltung;
     }
 
-    @Override
-    public List<Veranstaltung> leseAlleVeranstaltungen()
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        ArrayList<Veranstaltung> veranstaltungen = null;
-        try{
-            veranstaltungen = new ArrayList<Veranstaltung>();
-            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
-                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
-                    + "v.ID = bvz.Veranstaltung GROUP BY v.ID"); 
-            rs = ps.executeQuery();
-            while(rs.next()){
-                veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
-                        rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
-            }
-        } catch (SQLException e) {
-            veranstaltungen = null;
-            e.printStackTrace();
-
-        } finally{
-            closeQuietly(ps);
-            closeQuietly(rs);
-        }
-
-        return veranstaltungen;
-    }
+//    @Override
+//    public List<Veranstaltung> leseAlleVeranstaltungen()
+//    {
+//        PreparedStatement ps = null;
+//        ResultSet rs = null;
+//        ArrayList<Veranstaltung> veranstaltungen = null;
+//        try{
+//            veranstaltungen = new ArrayList<Veranstaltung>();
+//            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
+//                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
+//                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
+//                    + "v.ID = bvz.Veranstaltung GROUP BY v.ID"); 
+//            rs = ps.executeQuery();
+//            while(rs.next()){
+//                veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
+//                        rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
+//                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
+//                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
+//            }
+//        } catch (SQLException e) {
+//            veranstaltungen = null;
+//            e.printStackTrace();
+//
+//        } finally{
+//            closeQuietly(ps);
+//            closeQuietly(rs);
+//        }
+//
+//        return veranstaltungen;
+//    }
 
     @Override
     public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang)
@@ -578,6 +580,13 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
 
         return studiengaenge;
+    }
+    
+    @Override
+    public Boolean istModerator(int benutzer, int veranstaltung)
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -1209,6 +1218,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         // TODO Auto-generated method stub
         return null;
     }
+
 
 
 

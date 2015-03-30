@@ -85,8 +85,7 @@ public class VeranstaltungServlet extends ServletController {
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
-        
-        String gewaheltesSemester = request.getParameter(ParamDefines.GewaehltesSemester);
+       
         
         JSONObject jo;
         String mode = request.getParameter(ParamDefines.LeseVeranstMode);
@@ -97,19 +96,6 @@ public class VeranstaltungServlet extends ServletController {
             return false;
         }
 
-        if(mode.equals(ParamDefines.LeseVeranstModeAlle))
-        {
-            List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            verAnst = dbManager.leseAlleVeranstaltungen();
-            if(verAnst != null){
-                ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
-                jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);
-            }
-            else
-                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-            return true;
-        }
         else if(mode.equals(ParamDefines.LeseVeranstModeMeine))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
@@ -127,7 +113,7 @@ public class VeranstaltungServlet extends ServletController {
         else if(mode.equals(ParamDefines.LeseVeranstModeSemester))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            verAnst = dbManager.leseVeranstaltungenSemester(gewaheltesSemester);
+            verAnst = dbManager.leseVeranstaltungenSemester(request.getParameter(ParamDefines.GewaehltesSemester));
             if(verAnst != null){
                 ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
                 jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);
@@ -141,7 +127,7 @@ public class VeranstaltungServlet extends ServletController {
         else if(mode.equals(ParamDefines.LeseVeranstModeStudiengang))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            verAnst = dbManager.leseVeranstaltungenStudiengang(aktuellerBenutzer.getStudiengang());
+            verAnst = dbManager.leseVeranstaltungenStudiengang(request.getParameter(ParamDefines.GewaehlterStudiengang));
             if(verAnst != null){
                 ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
                 jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);

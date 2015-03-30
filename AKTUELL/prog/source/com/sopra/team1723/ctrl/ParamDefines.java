@@ -23,7 +23,6 @@ public class ParamDefines
     
     public final static String ActionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
     public final static String LeseVeranstMode = "mode";                        // Liefert Veranstaltungen
-    public final static String LeseVeranstModeAlle = "alle";                    // Liefert alle Veranstaltungen
     public final static String LeseVeranstModeSemester = "semester";            // Liefert alle Veranstaltungen im aktuellen Semester
     public final static String LeseVeranstModeStudiengang = "studiengang";      // Liefert alle Veranstaltungen im aktuellen Studiengang (TODO)
     public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
@@ -88,6 +87,7 @@ public class ParamDefines
     
     
     public final static String GewaehltesSemester = "gewaehltesSemester";
+    public final static String GewaehlterStudiengang = "gewaehlterStudiengang";
     
     
     /**
