@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 30. Mrz 2015 um 17:14
+-- Erstellungszeit: 30. Mrz 2015 um 17:25
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -363,7 +363,6 @@ CREATE TABLE IF NOT EXISTS `semester` (
 --
 
 INSERT INTO `semester` (`Name`) VALUES
-(''),
 ('SoSe2013'),
 ('SoSe2014'),
 ('SoSe2015'),

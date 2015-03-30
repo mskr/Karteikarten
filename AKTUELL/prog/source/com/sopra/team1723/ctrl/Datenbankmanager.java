@@ -585,8 +585,27 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public Boolean istModerator(int benutzer, int veranstaltung)
     {
-        // TODO Auto-generated method stub
-        return null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Boolean istModerator = false;
+        try{
+            ps = conMysql.prepareStatement("SELECT ID FROM moderator WHERE Benutzer =? AND Veranstaltung =?"); 
+            ps.setInt(1, benutzer);
+            ps.setInt(2, veranstaltung);
+            rs = ps.executeQuery();
+            if(rs.next())
+                istModerator = true;
+            
+        } catch (SQLException e) {
+            istModerator = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+
+        return istModerator;
     }
 
     @Override
