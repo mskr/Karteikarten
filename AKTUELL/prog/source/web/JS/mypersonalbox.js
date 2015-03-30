@@ -2,6 +2,23 @@
  * @author mk
  */
 
+// Statische Handler einmal registrieren
+$(document).ready(function() {
+	
+	$(".username").click(function() {
+		var paramObj = {};
+		paramObj[urlParamLocation] = ansichtProfilseite;
+		paramObj[urlParamId] = jsonBenutzer[paramId];
+		buildUrlQuery(paramObj);
+	});
+
+	$(".bn_header").click(function() {
+		$(".bn_container").slideToggle("slow");
+	});
+
+});
+
+
 /**
  * Fuellt die mypersonalbox mit den benoetigten Informationen.
  */
@@ -14,19 +31,6 @@ function fillMyPersonalBox()
     fillUserContainer();
     handleReturnLink();
     
-    $(".username").click(function() {
-        var paramObj = {};
-        paramObj[urlParamLocation] = ansichtProfilseite;
-        paramObj[urlParamId] = jsonBenutzer[paramId];
-        buildUrlQuery(paramObj);
-    });
-    
-    $(".bn_header").click(function() {
-		$(".bn_container").slideToggle("slow");
-	});
-    
-    // TODO Benachrichtigungen laden
-    
     $.ajax({
         url: benachrichtungsServlet,
         data: "action="+actionLeseBenachrichtungen,
@@ -36,8 +40,10 @@ function fillMyPersonalBox()
             if(errCode == "noerror") 
             {
             	var bens = jsonObj[keyJsonArrResult];
+            	
             	for (var i in bens)
             	{
+            	    // TODO Vllt direkt in anzeigeBenachrichtigung packen
             		var type = bens[i][paramBenType];
             		var fkt = function() {
 						
@@ -89,17 +95,6 @@ function fillMyPersonalBox()
             }
         }
      });
-    
-    // Hier ein paar Beispiele
-//    addBenachrichtigung("Ihr Profil wurde geändert. Klicken sie, um zum eigenen Profil zu wechseln.", true, function() {
-//        var paramObj = {};
-//        paramObj[urlParamLocation] = ansichtProfilseite;
-//        paramObj[urlParamId] = jsonBenutzer[paramId];
-//        buildUrlQuery(paramObj);
-//    });
-//    
-//    addBenachrichtigung("Dies ist eine alte Benachrichtigung ohne Funktion.", false, function(){});
-    
 }
 
 /**
@@ -108,9 +103,9 @@ function fillMyPersonalBox()
  */
 function fillUserContainer()
 {
-    var vorname = jsonBenutzer["vorname"];
-    var nachname = jsonBenutzer["nachname"];
-    var nutzerstatus = jsonBenutzer["nutzerstatus"];
+    var vorname = jsonBenutzer[paramVorname];
+    var nachname = jsonBenutzer[paramNachname];
+    var nutzerstatus = jsonBenutzer[paramNutzerstatus];
     $(".username").html(vorname+" "+nachname);
     $(".rolle").html(" "+nutzerstatus);
     

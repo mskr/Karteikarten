@@ -85,7 +85,7 @@ function buildUrlQuery(paramObj)
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
     // Test mit History
     History.pushState(null,"SopraProjekt Team23/17", locationSearchTmp);
-    interpreteUrlQuery(parseUrlQuery(locationSearchTmp));
+    interpreteUrlQuery(parseUrlQuery(locationSearchTmp.substring(1)));
 }
 
 /**

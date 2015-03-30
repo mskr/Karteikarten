@@ -2,18 +2,42 @@
  * @author mk
  */
 
-    // Temporaere Variablen fuer die vom Server geladenen Daten.
-    // TODO Evntl in defines.js auslagern
-    var profilEmail;
-    var profilVorname;
-    var profilNachname;
-    var profilMatrikelNr;
-    var profilStudiengang;
-    var profilNutzerstatus;
-    var profilNotifyKommentare;
-    var profilNotifyVeranstAenderung;
-    var profilNotifyKarteikartenAenderung;
+// Temporaere Variablen fuer die vom Server geladenen Daten.
+// TODO Evntl in defines.js auslagern
+var profilEmail;
+var profilVorname;
+var profilNachname;
+var profilMatrikelNr;
+var profilStudiengang;
+var profilNutzerstatus;
+var profilNotifyKommentare;
+var profilNotifyVeranstAenderung;
+var profilNotifyKarteikartenAenderung;
 
+// Statische Handler einmal registrieren
+$(document).ready(function() {
+	$('#profil_avatar_aendern_file').before("<input id='profil_avatar_aendern_file_name' class='profil_input' disabled/>" +
+	"<input type='button' id='profil_avatar_aendern_button' class='mybutton dark' value='Profilbild wählen' />");
+	$('#profil_avatar_aendern_file').hide();
+	$('#profil_avatar_aendern_button').click(function() { 
+		$('#profil_avatar_aendern_file').trigger('click');  
+	});
+	$('#profil_avatar_aendern_file').change(function() {
+		var filenameFull = $('#profil_avatar_aendern_file').val();
+		var fileName = filenameFull.split(/(\\|\/)/g).pop()
+
+		$('#profil_avatar_aendern_file_name').prop("disabled",false);
+		$('#profil_avatar_aendern_file_name').val(fileName);
+		$('#profil_avatar_aendern_file_name').prop("disabled",true);
+
+		if(fileName != "")
+			$("#profil_avatar_submit").slideDown();
+		else
+			$("#profil_avatar_submit").slideUp();
+	});
+    registerProfilSpeichernEvents();
+    registerAvatarAendernEvent();
+});
 /**
  * Zeigt die Daten des Benutzers im Profil an
  * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
@@ -22,26 +46,6 @@ function fillProfilseite() {
     
     // Der Benutzer dessen Profil angezeigt wird
     var profilBenutzerId = getUrlParameterByName(urlParamId);
-
-    $('#profil_avatar_aendern_file').before("<input id='profil_avatar_aendern_file_name' class='profil_input' disabled/>" +
-    		"<input type='button' id='profil_avatar_aendern_button' class='mybutton dark' value='Profilbild wählen' />");
-    $('#profil_avatar_aendern_file').hide();
-    $('#profil_avatar_aendern_button').click(function() { 
-        $('#profil_avatar_aendern_file').trigger('click');  
-    });
-    $('#profil_avatar_aendern_file').change(function() {
-        var filenameFull = $('#profil_avatar_aendern_file').val();
-        var fileName = filenameFull.split(/(\\|\/)/g).pop()
-
-        $('#profil_avatar_aendern_file_name').prop("disabled",false);
-        $('#profil_avatar_aendern_file_name').val(fileName);
-        $('#profil_avatar_aendern_file_name').prop("disabled",true);
-        
-        if(fileName != "")
-        	$("#profil_avatar_submit").slideDown();
-        else
-        	$("#profil_avatar_submit").slideUp();
-    });
     
     if(profilBenutzerId == jsonBenutzer[paramId])
     {
@@ -60,8 +64,6 @@ function fillProfilseite() {
         
         fillProfilDaten();
         fillProfilEinstellungen();
-        registerProfilSpeichernEvents();
-        registerAvatarAendernEvent();
     }
     else
     {
@@ -102,8 +104,6 @@ function fillProfilseite() {
                         profilNotifyKommentare = jsonObj[paramNotifyKommentare];
                         profilNotifyVeranstAenderung = jsonObj[paramNofityVeranstAenderung];
                         profilNotifyKarteikartenAenderung = jsonObj[paramNotifyKarteikartenAenderung];
-                        fillProfilEinstellungen();
-                        registerProfilSpeichernEvents();
                         // Ein eingeloggter Admin kann auf dem Profil eines anderen Benutzers das Passwort aendern
                         // OHNE das alte Passwort einzugeben.
                         $("#profil_passwort_alt").remove();
