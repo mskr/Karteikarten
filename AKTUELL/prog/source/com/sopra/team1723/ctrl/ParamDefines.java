@@ -87,6 +87,9 @@ public class ParamDefines
     public final static String AktSemester = "aktSemester";
     
     
+    public final static String GewaehltesSemester = "gewaehltesSemester";
+    
+    
     /**
      * JSON-Feld-Werte, die nicht schon als Parameter vorkommen
      */
