@@ -5,126 +5,177 @@
 $(document).ready(function() {
 	
     registerSuchEvent();
+    
     // Code fuer das Veranstaltung erstellen Popup
     $('#vn_erstellen_popup').popup({
-        openelement: '.vn_erstellen_bt',
-        closeelement: '.vn_popup_close',
-        focuselement: '#vn_titel_input',
-        blur: false,
-        transition: 'all 0.3s'
+    	openelement: '.vn_erstellen_bt',
+    	closeelement: '.vn_popup_close',
+    	focuselement: '#vn_titel_input',
+    	blur: false,
+    	transition: 'all 0.3s'
     });
+
+    // Studiengänge in auswahlliste anzeigen
+    var ajax1 = $.ajax({
+    	url: benutzerServlet,
+    	data: "action="+actionGetStudiengaenge + "&",
+    	success: function(jsonObj) 
+    	{
+    		var errCode = jsonObj["error"];
+    		if(errCode == "noerror") 
+    		{
+                $("#vn_studiengaenge_auswahl").empty();
+                var studgArr = jsonObj[keyJsonArrResult];
+            	for(var i in studgArr) 
+            	{
+            		$("#vn_studiengaenge_auswahl").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
+            	}
+            	
+            	$("#vn_studiengaenge_auswahl option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
+            	$("#vn_studiengaenge_auswahl").change(function() {
+            		leseVeranstaltungenStudiengang($("#vn_studiengaenge_auswahl").val());  
+            	});
+    		}
+    		else
+    		{
+    			message(0, buildMessage(errCode));
+    		}
+    	}
+    });  
+    
+    // Semester in auswahlliste anzeigen
+    var ajax2 = $.ajax({
+    	url: benutzerServlet,
+    	data: "action="+actionGetSemester + "&",
+    	success: function(jsonObj) 
+    	{
+    		var errCode = jsonObj["error"];
+    		if(errCode == "noerror") 
+    		{
+    			$("#vn_semester_auswahl").empty();
+    			var studgArr = jsonObj[keyJsonArrResult];
+    			for(var i in studgArr) {
+    				$("#vn_semester_auswahl").append("<option>"+studgArr[i]+"</option>");
+    			}
+
+            	$("#vn_studiengaenge_auswahl option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
+    			$("#vn_semester_auswahl").change(function() {
+    				leseVeranstaltungenStudiengang($("#vn_semester_auswahl").val());  
+    			});
+    		}
+    		else
+    		{
+    			message(0, buildMessage(errCode));
+    		}
+    	}
+    });
+    
+ 
+
+    
 });
 
-function fillHauptseite() {
-    
+function fillHauptseite() 
+{
     fillVeranstaltungsliste();
-
 }
 
 /**
  * Holt alle Veranstaltungen vom Server,
  * ordnet sie in die Tabs ein und zeigt sie an.
  */
-
-var veranstCount = 0;
-var veranstArray = [];
-function fillVeranstaltungsliste() {
-    // TODO Refractoring
-    // Alle Veranstaltungen
-    var ajax1 = $.ajax({
-        url: veranstaltungServlet,
-        data: "action="+actionLeseVeranst + "&" + 
-        leseVeranstMode +"=" + leseVeranstModeAlle,
-        success: function(jsonObj) 
-        {
-            var errCode = jsonObj["error"];
-            if(errCode == "noerror") 
-            {
-                var VeranstList = jsonObj[keyJsonArrResult];
-                var divAlleVeranst = $("#vn_tabcontent_alle");
-                var divMeineVeranst = $("#vn_tabcontent_meine");
-                for(var i = 0; i < VeranstList.length; i++)
-                {
-                	var newV = true;
-            		for(var j in veranstArray)
-            		{
-            			// Veranstaltung schon gepeichert
-            			if(veranstArray[j][paramId] == VeranstList[i][paramId])
-            			{
-            				newV = false;
-            				break;
-            			}
-            		}
-            		if(newV)
-            		{
-            			// Veranstaltung speichern
-            			veranstArray[veranstCount++] = VeranstList[i];
-
-            			// Jede Veranstaltung erzeugen
-            			displayVeranstaltung(divAlleVeranst, VeranstList[i]);
-            			if(VeranstList[i][paramAngemeldet] == true)
-            			{
-            				displayVeranstaltung(divMeineVeranst, VeranstList[i]);
-            			}
-            		}
-                }
-            }
-            else
-            {
-                message(0, buildMessage(errCode));
-            }
-        }
-    });
-//    // Semester Veranstaltungen
-//    var ajax3 = $.ajax({
-//         url: veranstaltungServlet,
-//         data: "action="+actionLeseVeranst + "&" + 
-//         leseVeranstMode +"=" + leseVeranstModeSemester,
-//         success: function(jsonObj) 
-//         {
-//             var errCode = jsonObj["error"];
-//             if(errCode == "noerror") 
-//             {
-//                var VeranstList = jsonObj[keyJsonArrResult];
-//                var divAlleVeranst = $("#vn_tabcontent_semester");
-//                for(var i = 0; i < VeranstList.length; i++)
-//                {
-//                    // Jede Veranstaltung erzeugen und funktion speichern in array
-//                    displayVeranstaltung(divAlleVeranst, VeranstList[i]);
-//                }
-//             }
-//             else
-//             {
-//                 message(0, buildMessage(errCode));
-//             }
-//         }
-//     });
-//    // Studiengang Veranstaltungen
-//    var ajax4 = $.ajax({
-//         url: veranstaltungServlet,
-//         data: "action="+actionLeseVeranst + "&" + 
-//         leseVeranstMode +"=" + leseVeranstModeStudiengang,
-//         success: function(jsonObj) 
-//         {
-//             var errCode = jsonObj["error"];
-//             if(errCode == "noerror") 
-//             {
-//                var VeranstList = jsonObj[keyJsonArrResult];
-//                var divAlleVeranst = $("#vn_tabcontent_studiengang");
-//                for(var i = 0; i < VeranstList.length; i++)
-//                {
-//                    // Jede Veranstaltung erzeugen und funktion speichern in array
-//                    displayVeranstaltung(divAlleVeranst, VeranstList[i]);
-//                }
-//             }
-//             else
-//             {
-//                 message(0, buildMessage(errCode));
-//             }
-//         }
-//     });
+var globalContainerVeranstCount = 0;
+var globalContainerVeranstArray = [];
+function fillVeranstaltungsliste() 
+{
+    leseVeranstaltungenMeine();
+    leseVeranstaltungenSemester($("#vn_semester_auswahl").val());
+    leseVeranstaltungenStudiengang($("#vn_studiengaenge_auswahl").val());  
 }
 
+function leseVeranstaltungenMeine()
+{
+	// Meine Veranstaltungen
+	return $.ajax({
+		url: veranstaltungServlet,
+		data: "action="+actionLeseVeranst + "&" + 
+		leseVeranstMode +"=" + leseVeranstModeMeine,
+		success: function(jsonObj) 
+		{
+			var divMeineVeranst = $("#vn_tabcontent_meine");
+			displayVeranstaltungen(divMeineVeranst, jsonObj);
+		}
+	});
+}
+
+function leseVeranstaltungenSemester(semesterName)
+{
+	// Semester Veranstaltungen
+	return $.ajax({
+		url: veranstaltungServlet,
+		data: "action="+actionLeseVeranst + "&" + 
+		leseVeranstMode +"=" + leseVeranstModeSemester + "&" +
+		"TODO" + "=" + semesterName,
+		success: function(jsonObj) 
+		{
+			var divSemesterVeranst = $("#vn_tabcontent_semester");
+			displayVeranstaltungen(divSemesterVeranst, jsonObj);
+		}
+	});
+}
+
+function leseVeranstaltungenStudiengang(studiengangName)
+{
+	// Studiengang Veranstaltungen
+	return $.ajax({
+		url: veranstaltungServlet,
+		data: "action="+actionLeseVeranst + "&" + 
+		leseVeranstMode +"=" + leseVeranstModeStudiengang + "&" +
+		"TODO" + "=" + studiengangName,
+		success: function(jsonObj) 
+		{
+			var divStudiengangVeranst = $("#vn_tabcontent_studiengang");
+			displayVeranstaltungen(divStudiengangVeranst, jsonObj);
+		}
+	});	
+
+}
+function displayVeranstaltungen(container,ajaxResult )
+{
+	var errCode = ajaxResult["error"];
+	if(errCode == "noerror") 
+	{
+		var veranstObjekte = ajaxResult[keyJsonArrResult];
+		// Alle Veranstaltungen entfernen
+		container.children().not(".vn_toolbar").remove();
+		globalContainerVeranstArray = [];
+		globalContainerVeranstCount = 0;
+		
+		for(var i in veranstObjekte)
+		{
+			var newV = true;
+			for(var j in globalContainerVeranstArray)
+			{
+				// Veranstaltung schon gepeichert
+				if(globalContainerVeranstArray[j][paramId] == veranstObjekte[i][paramId])
+				{
+					newV = false;
+					break;
+				}
+			}
+			if(newV)
+			{
+				// Veranstaltung speichern
+				globalContainerVeranstArray[globalContainerVeranstCount++] = veranstObjekte[i];
+			}
+			displayVeranstaltung(container, veranstObjekte[i]);
+		}
+	}
+	else
+	{
+		message(0, buildMessage(errCode));
+	}
+}
 /**
  * Zeigt eine Veranstaltung im angegeben Container an.
  * @param container Übergeordneter Container
@@ -178,6 +229,13 @@ function displayVeranstaltung(container, jsonVeranstObj)
             var wrapper = parent.find(".vn_mehr_wrapper");
             wrapper.slideToggle("slow");
         });
+
+//		str.click(function() {
+//            var paramObj = {};
+//            paramObj[urlParamLocation] = ansichtVeranstaltungseite;
+//            paramObj[urlParamId] = jsonVeranstObj[paramId];
+//            buildUrlQuery(paramObj);
+//        });
 		
 		registerErstellerClickFunction(str,jsonVeranstObj);
 		registerEinAusschreibenClickEvent(str, jsonVeranstObj);

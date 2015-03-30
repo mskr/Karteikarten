@@ -148,6 +148,7 @@ function addBenachrichtigung(ben, onClickFkt)
 		divBn.addClass("neu");
 		newBnCount++;
 		$("#bn_anzahl").text("(" + newBnCount + " neu)");
+		contentDiv.slideDown("slow");
 	}
 	else
 		divBn.addClass("gelesen");
@@ -177,6 +178,25 @@ function sortDivByClassName(a,b)
 		return 1;
 	else 
 		return 0;
+}
+
+/**
+ * Entfernt alle benachrichtigungen
+ */
+function clearBenachrichtigungen()
+{
+	aktuelleBenArr = [];
+	newBnCount = 0;
+	benCount = 0;
+	
+	$("#bn_anzahl").text("");
+	var contentDiv = $("#bn_container");
+	
+	// Alle Benachrichtiugngen einklappen und "keine"-span anzeigen
+	contentDiv.children().slideToggle();
+	
+	// Alle benachrichtigungen entfernen
+	contentDiv.children().not('#keine_bn').remove();
 }
 
 /**

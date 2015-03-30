@@ -8,9 +8,11 @@
  */
 
 $(document).ready(function() {
-    var urlQuery = parseUrlQuery(undefined);
-    console.log("[urlHandler] location="+urlQuery[urlParamLocation]);
+	
+    // TODO So wird das Benutzerobjekt nur einmal initial zu beginn geladen
+    // Was passiert aber, wenn sich das profil geändert hat?
     $.when(getBenutzer()).done(function(a1) {
+        var urlQuery = parseUrlQuery(undefined);    
         interpreteUrlQuery(urlQuery);
     });
     
