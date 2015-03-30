@@ -368,6 +368,30 @@ public class BenutzerServlet extends ServletController {
             return false;
         }
     }
+    
+    private boolean leseSemester(HttpServletRequest request, HttpServletResponse response) throws IOException 
+    {
+        HttpSession aktuelleSession = request.getSession();
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        String aktuellesSemester = (String) aktuelleSession.getAttribute(sessionAttributeGewähltesSemester);
+        PrintWriter outWriter = null;
+        outWriter = response.getWriter();
+        
+        List<String> semester = dbManager.leseSemester();
+        if(semester != null)
+        {
+            JSONObject jo = JSONConverter.toJson(semester);
+            jo.put(ParamDefines.AktSemester, aktuellesSemester);
+            outWriter.print(jo);
+            return true;
+        }
+        else
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+    }
   
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
@@ -426,6 +450,10 @@ public class BenutzerServlet extends ServletController {
         else if(action.equals(ParamDefines.ActionGetStudiengaenge))
         {
             leseStudiengaenge(req, resp);
+        }
+        else if(action.equals(ParamDefines.ActionGetSemester))
+        {
+            leseSemester(req, resp);
         }
         else
         {

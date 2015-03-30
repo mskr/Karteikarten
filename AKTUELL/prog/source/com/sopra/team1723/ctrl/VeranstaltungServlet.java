@@ -43,7 +43,7 @@ public class VeranstaltungServlet extends ServletController {
 
     
     private ArrayList<Boolean>leseZuWelchenVeranstAngemeldet(List<Veranstaltung> veranstaltungen, 
-            HttpServletRequest request, HttpServletResponse response) throws IOException{
+        HttpServletRequest request, HttpServletResponse response) throws IOException{
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -82,10 +82,11 @@ public class VeranstaltungServlet extends ServletController {
     {
         HttpSession aktuelleSession = request.getSession();
         String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
-        String aktuellesSemester = (String) aktuelleSession.getAttribute(sessionAttributeGewähltesSemester);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        String gewaheltesSemester = request.getParameter(ParamDefines.GewaehltesSemester);
         
         JSONObject jo;
         String mode = request.getParameter(ParamDefines.LeseVeranstMode);
@@ -126,7 +127,7 @@ public class VeranstaltungServlet extends ServletController {
         else if(mode.equals(ParamDefines.LeseVeranstModeSemester))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            verAnst = dbManager.leseVeranstaltungenSemester(aktuellesSemester);
+            verAnst = dbManager.leseVeranstaltungenSemester(gewaheltesSemester);
             if(verAnst != null){
                 ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
                 jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);

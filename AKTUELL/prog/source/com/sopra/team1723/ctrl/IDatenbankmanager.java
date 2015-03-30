@@ -98,9 +98,16 @@ public interface IDatenbankmanager {
     /**
      * Gibt eine Liste aller Studiengänge zurück. 
      * @return Liste der Studiengaenge. Tritt ein Fehler auf wird null zurückgegeben. Sind keine Studiengänge in der 
-     * Datenbnak vorhanden, dann wird eine leere Liste zurückgegeben
+     * Datenbank vorhanden, dann wird eine leere Liste zurückgegeben
      */
     public List<String> leseStudiengaenge();
+    
+    /**
+     * Gibt eine Liste aller Semester zurück. 
+     * @return Liste der Semester. Tritt ein Fehler auf wird null zurückgegeben. Werden keine Semester in der 
+     * Datenbank gefunden, dann wird eine leere Liste zurückgegeben
+     */
+    public List<String> leseSemester();
 
     /**
      * Ändert das Passwort des angegebenen Benutzers. 

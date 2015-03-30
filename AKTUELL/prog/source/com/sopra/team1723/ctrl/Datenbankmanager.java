@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 
 
 
+
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -293,6 +294,29 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(rs);
         }
         return studiengaenge;
+    }
+    
+    @Override
+    public List<String> leseSemester()
+    {
+        ArrayList<String> semester = new ArrayList<String>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            ps = conMysql.prepareStatement("SELECT Name FROM Semester");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                semester.add(rs.getString("Name"));
+            }
+        } catch (SQLException e){
+            semester = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+        return semester;
     }
 
     @Override
@@ -1185,6 +1209,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         // TODO Auto-generated method stub
         return null;
     }
+
 
 
 }
