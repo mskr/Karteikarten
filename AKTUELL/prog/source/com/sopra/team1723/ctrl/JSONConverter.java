@@ -207,6 +207,7 @@ public class JSONConverter
         {
             JSONObject j = new JSONObject();
 
+            j.put(ParamDefines.Id, ben.getId());
             j.put(ParamDefines.benInhalt, ben.getInhalt());
             j.put(ParamDefines.benGelesen, ben.isGelesen());
             SimpleDateFormat d = new SimpleDateFormat("hh:mm dd.MM.yyyy");

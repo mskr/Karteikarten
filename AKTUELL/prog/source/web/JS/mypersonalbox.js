@@ -35,7 +35,6 @@ function fillMyPersonalBox()
             var errCode = jsonObj["error"];
             if(errCode == "noerror") 
             {
-            	setTimeout(function() {
             	var bens = jsonObj[keyJsonArrResult];
             	for (var i in bens)
             	{
@@ -80,9 +79,9 @@ function fillMyPersonalBox()
 						};
 					}
 					setTimeout(function() {
-	            		addBenachrichtigung(bens[i][paramBenInhalt], !bens[i][paramBenGelesen], bens[i][paramBenErstelldaum], fkt);
-					}, 300);
-            	}}, 1000);
+	            		addBenachrichtigung(bens[i], fkt);
+					}, 100);
+            	}
             }
             else 
             {
@@ -120,22 +119,36 @@ function fillUserContainer()
 }
 
 /**
- * Fügt eine Benachrichtung hinzu.
+ * Fügt eine Benachrichtung hinzu, wenn sie nicht schon hinzugefügt wurde.
  * @param text Inhalt der angezeigt werden soll
  * @param isNeu Als neu markieren
  * @param onClickFkt CallBack-Function, die beim click aufgerufen werden soll
  */
 var newBnCount = 0;
-function addBenachrichtigung(text, isNeu, datumTxt, onClickFkt)
+var benCount = 0;
+var aktuelleBenArr = [];
+function addBenachrichtigung(ben, onClickFkt)
 {
-	// Jetzt existieren benachrichtigungen
-	$("#keine_bn").slideUp("slow");
+	for(var i in aktuelleBenArr)
+	{
+		// Benachrichtigung schon gepeichert
+		if(aktuelleBenArr[i][paramId] == ben[paramId])
+			return;
+	}
 	
+	if(benCount == 0)
+	{
+		// Jetzt existieren Benachrichtigungen
+		$("#keine_bn").slideUp("slow");
+	}
+	// Benachrichtigung speichern
+	aktuelleBenArr[benCount++] = ben;
+		
 	var contentDiv = $("#bn_container");
 	var divBn = $("<div></div>");
 	divBn.addClass("bn");
 	
-	if(isNeu == true)
+	if(ben[paramBenGelesen] != true)
 	{
 		divBn.addClass("neu");
 		newBnCount++;
@@ -146,8 +159,8 @@ function addBenachrichtigung(text, isNeu, datumTxt, onClickFkt)
 	
 	var spanCntnt = $("<span></span>");
 	spanCntnt.addClass("bn_text");
-	spanCntnt.append(text);
-	spanCntnt.append("<span class='bn_zeit' style='float: right;'>" + datumTxt + "</span>");
+	spanCntnt.append(ben[paramBenInhalt]);
+	spanCntnt.append("<span class='bn_zeit' style='float: right;'>" + ben[paramBenErstelldaum] + "</span>");
 	
 	divBn.append(spanCntnt);
 	$(divBn).click(onClickFkt);

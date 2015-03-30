@@ -8,7 +8,7 @@
  */
 
 $(document).ready(function() {
-    var urlQuery = parseUrlQuery();
+    var urlQuery = parseUrlQuery(undefined);
     console.log("[urlHandler] location="+urlQuery[urlParamLocation]);
     $.when(getBenutzer()).done(function(a1) {
         interpreteUrlQuery(urlQuery);
@@ -22,13 +22,17 @@ var jsonBenutzer;
  * Packt alle Parameter aus der URL in ein Objekt.
  * @returns 
  */
-function parseUrlQuery() {
+function parseUrlQuery(qry) {
     var match,
     pl     = /\+/g,  // Regex for replacing addition symbol with a space
     search = /([^&=]+)=?([^&]*)/g,
     decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
     query  = window.location.search.substring(1),
     urlParams = {};
+    
+    if(qry != undefined)
+    	query = qry;
+    
     while (match = search.exec(query)) {
         urlParams[decode(match[1])] = decode(match[2]);
     }
@@ -76,7 +80,12 @@ function buildUrlQuery(paramObj)
         
         i++;
     }
-    location.search = locationSearchTmp; // Dies laedt auch die Seite neu
+    
+    // TODO
+    //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
+    // Test mit History
+    History.pushState(null,"SopraProjekt Team23/17", locationSearchTmp);
+    interpreteUrlQuery(parseUrlQuery(locationSearchTmp));
 }
 
 /**
