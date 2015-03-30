@@ -15,6 +15,7 @@ public class ParamDefines
     public final static String ActionGetBenutzer = "getBenutzer";
     public final static String ActionGetOtherBenutzer = "getOtherBenutzer";
     public final static String ActionGetStudiengaenge = "getStudiengaenge";
+    public final static String ActionGetSemester = "getSemester";
     public final static String ActionAenderePasswort = "aenderePasswort";
     public final static String ActionAendereProfil = "aendereProfil";
     public final static String ActionUploadProfilBild = "uploadProfilBild";
@@ -81,6 +82,9 @@ public class ParamDefines
     public final static String benKarteikarte = "benKarteikarte";
     public final static String benKommentar = "benKommentar";
     public final static String benProfil = "benProfil";
+    
+    
+    public final static String AktSemester = "aktSemester";
     
     
     /**

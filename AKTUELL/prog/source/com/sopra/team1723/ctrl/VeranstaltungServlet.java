@@ -43,7 +43,7 @@ public class VeranstaltungServlet extends ServletController {
 
     
     private ArrayList<Boolean>leseZuWelchenVeranstAngemeldet(List<Veranstaltung> veranstaltungen, 
-            HttpServletRequest request, HttpServletResponse response) throws IOException{
+        HttpServletRequest request, HttpServletResponse response) throws IOException{
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
