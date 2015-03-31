@@ -1,5 +1,6 @@
 @CHARSET "utf-8";
 @import "NaviconTransformicons.css";
+@import "animate.css";
 
 /* ABKUERZUNGEN fuer class und id Attribute */
 /* --------------------- */
@@ -43,7 +44,7 @@ label {
 
 .input_std {
 	margin: .3em 0;
-	padding: .4em .9em;
+	padding: 0 .9em;
 	height: 1.9em;
 	background: #E8E8E8;
 	font-size: .9em;
@@ -245,6 +246,8 @@ label {
 	font-size: .9em;
 } .login_input { /* Wird auch auf die Felder fuers Registrieren angewendet */
 	width: calc(100% - 1.8em - 2px);
+	padding-top: .4em;
+	padding-bottom: .4em;
 } .login_pass {
 	width: calc(50% - 1.8em - 2px);
 	margin-right: .3em;
@@ -380,24 +383,20 @@ label {
 	width: 35%;
 	height: 3.2em;
 	position: relative;
-	z-index: 10; /* Suchfeld Ueberlagert z.B. den Veranstaltung-erstellen-Button, wenn der User tippt */
-} .suche_etwas:focus {
-	background: white;
+	z-index: 10; /* Suchfeld Ueberlagert den Veranstaltung-erstellen-Button, wenn der User tippt */
 } .suche_etwas:valid {
-	width: 100%;
+	width: calc(100% - 1.8em); /* 100% - 2x0.9em padding */
 	background: white;
-	box-shadow: 0 .2em .2em black;
-} .suche_bestaetigen {
-	display: none;
+	box-shadow: none;
 }
 
 .suche_ergebnisse {
 	display: none;
 	position: absolute;
 	z-index: 300;
-	left: .05em;
-	top: 2.8em;
-	width: calc(100% - .1em);
+	left: 1px;
+	top: 3em;
+	width: 100%;
 	background: white;
 	color: #4a4a4a;
 	font-size: .9em;
@@ -411,21 +410,25 @@ label {
 } .suche_etwas:invalid ~ .suche_ergebnisse {
 	border: 1px solid red;
 	visibility: hidden;
-} .sucherg_vn, .sucherg_benutzer {
-	flex-basis: 100%;
-} .sucherg_vn div, .sucherg_benutzer div {
-	padding: .9em;
+} .sucherg_x {
+	width: 100%;
+	text-align: right;
+	padding-right: .5em;
+} .sucherg_x span {
 	cursor: pointer;
-} .sucherg_vn div:hover, .sucherg_benutzer div:hover {
-	background: #4a4a4a;
-	color: white;
-} .sucherg_vn span, .sucherg_benutzer span {
-	margin-right: .5em;
-} .sucherg_vn_titel, .sucherg_benutzer_titel {
+} .sucherg_titel {
+	width: 100%;
 	margin-left: 1em;
 	font-size: .8em;
 	font-weight: bold;
 	color: lightgray;
+} .sucherg_vn, .sucherg_benutzer {
+	width: 100%;
+} .sucherg_vn_item, .sucherg_benutzer_item {
+	padding: .9em;
+	cursor: pointer;
+} .sucherg_vn_item span, .sucherg_benutzer_item span {
+	margin-right: .5em;
 }
 
 .vn_erstellen_bt {
@@ -445,7 +448,7 @@ label {
 	margin-right: 1em;
 	margin-bottom: 1em;
 	position: relative;   
-	min-height: 100em; /* TODO This part sucks */
+	min-height: 50em; /* TODO This part sucks */
 	clear: both;
 	overflow: visible;
 } .vn_tab {
@@ -476,7 +479,6 @@ label {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
-	overflow: visible;
  	overflow: auto; /* Scrollbar */
 } .vn_tabradio:checked ~ label {
 	font-weight: bold;

@@ -209,9 +209,10 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     var button = vnHtmlString.find(".vn_einausschreiben");
     if(jsonVeranstObj[paramAngemeldet] == true)
     {
+        // AUSSCHREIBEN
         button.click(function() {
             sindSieSicher((this), "", function() {
-                var ajax1 = $.ajax({
+                $.ajax({
                     url: veranstaltungServlet,
                     data: "action="+actionAusschreiben + "&" + 
                           paramId +"=" + jsonVeranstObj[paramId],
@@ -233,28 +234,24 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     }
     else
     {
+        // EINSCHREIBEN
         button.click(function() {
-            var kennwortForm = vnHtmlString.find(".vn_zugangspasswort_form");
-            var kennwortFeld = vnHtmlString.find(".vn_zugangspasswort_input");
-            var kennwort = "";
-            if(kennwortFeld != undefined)
+            if(jsonVeranstObj[paramKennwortGesetzt])
             {
-                // Einschreibung benoetigt ein Kennwort
+                // Einschreiben mit Kennwort
+                var kennwortForm = vnHtmlString.find(".vn_zugangspasswort_form");
+                var kennwortFeld = kennwortForm.find(".vn_zugangspasswort_input");
+                var kennwort = "";
                 button.hide();
                 kennwortForm.show();
                 kennwortFeld.focus();
                 kennwortForm.submit(function(event) {
                     kennwort = kennwortFeld.val();
-                    var ajax1 = $.ajax({
+                    $.ajax({
                         url: veranstaltungServlet,
                         data: "action="+actionEinschreiben + "&" + 
                               paramId +"=" + jsonVeranstObj[paramId] + "&" +
                               paramPasswort + "=" + kennwort,                 // TODO
-                        beforeSend: function() {
-//                            button.text("Lädt...");
-//                            button.css("color","gray");
-//                            button.off();
-                        },
                         success: function(jsonObj) 
                         {
                             var errCode = jsonObj["error"];
@@ -266,22 +263,46 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
                             else if(errCode == "loginfailed") 
                             {
                                 message(0, "Ihr Zugangspasswort war falsch.");
-                                kennwortFeld.css("border","1px solid IndianRed");
+                                kennwortFeld.toggleClass("shake2");
                             }
                             else
                             {
                                 message(0, buildMessage(errCode));
                             }
-                        }, complete: function() {
-//                            button.val("Einschreiben");
                         }
                     });
                     event.preventDefault();
                 });
             }
+            else
+            {
+                // Einschreiben ohne Kennwort
+                $.ajax({
+                    url: veranstaltungServlet,
+                    data: "action="+actionEinschreiben + "&" + 
+                          paramId +"=" + jsonVeranstObj[paramId],
+                    success: function(jsonObj) 
+                    {
+                        var errCode = jsonObj["error"];
+                        if(errCode == "noerror") 
+                        {
+                            location.reload();
+                        }
+                        else
+                        {
+                            message(0, buildMessage(errCode));
+                        }
+                    }
+                });
+            }
         });
     }
 }
+
+
+
+
+
 
 /**
  * Triggert einen Sind-Sicher-Dialog.
@@ -289,7 +310,8 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
  * @param message ist die Nachricht, die der Benutzer bestaetigen soll.
  * @param doCriticalThing ist eine Funktion, die nach Bestaetigung mit Ok ausgefuehrt wird.
  */
-function sindSieSicher(anchorElem, message, doCriticalThing) {
+function sindSieSicher(anchorElem, message, doCriticalThing)
+{
     $("#dialog_sicher").popup({
         type: 'tooltip',
         vertical: 'center',
@@ -312,11 +334,16 @@ function sindSieSicher(anchorElem, message, doCriticalThing) {
 
 function registerSuchEvent()
 {
+    // TODO Bei jedem keyup-event 1 sec warten, ob noch ein event kommt.
+    // Reagiere dann nur auf das event, was zuletzt aufgetreten ist.
     $("#suche_global_input").keyup(function(event) {
         console.log("keycode="+event.keyCode);
-        if(event.keyCode == 40 || event.keyCode == 38 || event.keyCode == 13)
+        if(event.keyCode == 40 || 
+           event.keyCode == 38 || 
+           event.keyCode == 13 || 
+           event.keyCode == 27)
         {
-            // 40 = Pfeil runter, 38 = Pfeil hoch, 13 = ENTER
+            // 40 = Pfeil runter, 38 = Pfeil hoch, 13 = ENTER, 27 = ESC
             // Sende bei diesen Eingaben keinen Ajax Call
             // sondern navigiere in den Suchergebnissen
             handlePfeiltastenEvents(event.keyCode);
@@ -339,7 +366,7 @@ function registerSuchEvent()
                 if(errCode == "noerror")
                 {
                     var arrSuchErgebnisse = jsonObj[keyJsonArrSuchfeldResult];
-                    fillSuchergebnisse(arrSuchErgebnisse, event.keyCode);
+                    fillSuchergebnisse(arrSuchErgebnisse);
                     suchErgIterator = -1;
                 }
                 else
@@ -351,7 +378,7 @@ function registerSuchEvent()
     });
 }
 
-function fillSuchergebnisse(arrSuchErgebnisse, pressedKey)
+function fillSuchergebnisse(arrSuchErgebnisse)
 {
     for(var i in arrSuchErgebnisse)
     {
@@ -367,10 +394,10 @@ function fillSuchergebnisse(arrSuchErgebnisse, pressedKey)
                     "<div id='sucherg_vn_"+id+"' class='sucherg_vn_item'><span class='octicon octicon-podium'></span>" + text + " (#"+id+")</div>");
         }
     }
-    registerSuchergebnisClickEvent(klasse, id);
+    registerSucheClickEvent(id);
 }
 
-function registerSuchergebnisClickEvent(klasse, id)
+function registerSucheClickEvent(id)
 {
     // 1) Alle Elemente mit class "sucherg_..._item" selektieren
     // 2) Mit for each durch die Elemente iterieren und id abfragen.
@@ -393,30 +420,35 @@ function registerSuchergebnisClickEvent(klasse, id)
             buildUrlQuery(paramObj);
         });
     });
+    // Das kleine x zum schliessen
+    $("#sucherg_x").click(function() {
+        $("#suche_global_input").val("");
+    });
 }
 
 var suchErgIterator = -1;
 
 function handlePfeiltastenEvents(pressedKey) {
     var arr = $("#suche_ergebnisse").find(".sucherg_benutzer_item, .sucherg_vn_item");
-    if(pressedKey == 40) 
+    if(pressedKey == 40) // Pfeil runter
     {
-        // Pfeil runter
         $(arr[suchErgIterator]).css({"background":"none", "color":"#4a4a4a"});
         if(suchErgIterator+1 < arr.length)
             suchErgIterator++;
     }
-    else if(pressedKey == 38) 
+    else if(pressedKey == 38) // Pfeil hoch
     {
-        // Pfeil hoch
         $(arr[suchErgIterator]).css({"background":"none", "color":"#4a4a4a"});
         if(suchErgIterator-1 >= 0)
             suchErgIterator--;
     }
-    $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
-    if(pressedKey == 13) 
+    else if(pressedKey == 13) // ENTER
     {
-        // ENTER
         $(arr[suchErgIterator]).trigger("click");
     }
+    else if(pressedKey == 27) // ESC
+    {
+        $("#sucherg_x").trigger("click");
+    }
+    $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
 }

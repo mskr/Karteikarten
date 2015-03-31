@@ -210,7 +210,7 @@ public class VeranstaltungServlet extends ServletController {
         {
             vId = Integer.parseInt(idStr);
             
-            Veranstaltung v = dbManager.leseVeranstaltung(vId);
+            Veranstaltung v = dbManager.leseVeranstaltung(vId); // TODO Kann das weg?
 
             String pw = request.getParameter(ParamDefines.Password);
             dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw);

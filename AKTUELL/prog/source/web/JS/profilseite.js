@@ -2,17 +2,17 @@
  * @author mk
  */
 
-    // Temporaere Variablen fuer die vom Server geladenen Daten.
-    // TODO Evntl in defines.js auslagern
-    var profilEmail;
-    var profilVorname;
-    var profilNachname;
-    var profilMatrikelNr;
-    var profilStudiengang;
-    var profilNutzerstatus;
-    var profilNotifyKommentare;
-    var profilNotifyVeranstAenderung;
-    var profilNotifyKarteikartenAenderung;
+// Temporaere Variablen fuer die vom Server geladenen Daten.
+// TODO Evntl in defines.js auslagern
+var profilEmail;
+var profilVorname;
+var profilNachname;
+var profilMatrikelNr;
+var profilStudiengang;
+var profilNutzerstatus;
+var profilNotifyKommentare;
+var profilNotifyVeranstAenderung;
+var profilNotifyKarteikartenAenderung;
 
 /**
  * Zeigt die Daten des Benutzers im Profil an
