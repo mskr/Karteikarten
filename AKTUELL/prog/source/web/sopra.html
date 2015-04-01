@@ -146,8 +146,10 @@ function naviconTransformicon() {
 		<a id="logout"><span class="octicon octicon-sign-out"></span><span class="logout">Logout</span></a>
 	</div>
 	
-	<!-- TODO Wie soll man das hier machen? Vllt weglassen weil == Meine Veranstaltungen. 
-	Dann aber so leer.-->
+<!-- TODO Wie soll man das hier machen? Vllt weglassen weil == Meine Veranstaltungen. 
+Dann aber so leer.
+ - Ich würde sagen, man kann nochmal aus Meine Veranstaltungen welche auswaehlen, die man anpinnen moechte 
+(wenn man in sehr viele eingeschrieben ist) - Marius -->
 <!--	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
 	<br>
 	<ul class="meinevn">
@@ -205,44 +207,63 @@ function naviconTransformicon() {
 	<div class="vn_container">
 		<div class="vn_tab meine_vn">
 			<input class="vn_tabradio" type="radio" id="tab-1" name="group1" checked>
-			<label class="meine_vn_tablabel" for="tab-1"><span class="octicon octicon-home"></span></label>
+			<label class="meine_vn_tablabel vn_tablabel" for="tab-1"><span class="octicon octicon-home"></span></label>
 			<div class="vn_tabcontent" id="vn_tabcontent_meine">
 				<div class="vn_toolbar">Veranstaltungen, in die Sie eingeschrieben sind</div>
+				<!-- Veranstaltungen hier -->
 			</div>
 		</div>
 		<div class="vn_tab studiengang_vn">
 			<input class="vn_tabradio" type="radio" id="tab-2" name="group1">
-			<label class="studiengang_vn_tablabel" for="tab-2"><span class="octicon octicon-package"></span></label>
+			<label class="studiengang_vn_tablabel vn_tablabel" for="tab-2"><span class="octicon octicon-package"></span></label>
 			<div class="vn_tabcontent" id="vn_tabcontent_studiengang">
 				<div class="vn_toolbar">Veranstaltungen aus Ihrem Studiengang</div>
+				<!-- Veranstaltungen hier -->
 			</div>
 		</div>
 		<div class="vn_tab semester_vn">
 			<input class="vn_tabradio" type="radio" id="tab-3" name="group1">
-			<label class="semester_vn_tablabel" for="tab-3"><span class="octicon octicon-calendar"></span></label>
+			<label class="semester_vn_tablabel vn_tablabel" for="tab-3"><span class="octicon octicon-calendar"></span></label>
 			<div class="vn_tabcontent" id="vn_tabcontent_semester">
 				<div class="vn_toolbar">Veranstaltungen aus diesem Semester</div>
+				<!-- Veranstaltungen hier -->
 			</div>
 		</div>
 		<div class="vn_tab alle_vn">
 			<input class="vn_tabradio" type="radio" id="tab-4" name="group1">
-			<label class="alle_vn_tablabel" for="tab-4"><span class="octicon octicon-list-unordered"></span></label>
+			<label class="alle_vn_tablabel vn_tablabel" for="tab-4"><span class="octicon octicon-list-unordered"></span></label>
 			<div class="vn_tabcontent" id="vn_tabcontent_alle">
 				<div class="vn_toolbar">Alle Veranstaltungen im System</div>
+				<!-- Veranstaltungen hier -->
 			</div>
 		</div>
 		<span class="mybutton dark flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span>
 	</div>
-	<div class="impressum">Uni Ulm <br> WiSe 14/15 <br> Informatik <br> Softwaregrundprojekt <br> Team 17: Andreas Rottach, Fabian Schilha, Matthias Englert <br> Team 23: Julius Friedrich, Lorenz Weiß, Marius Kircher</div>
+	<div class="impressum">
+		Uni Ulm <br> 
+		WiSe 14/15 <br> 
+		Informatik <br> 
+		Softwaregrundprojekt <br> 
+		Team 17: Andreas Rottach, Fabian Schilha, Matthias Englert <br> 
+		Team 23: Julius Friedrich, Lorenz Weiß, Marius Kircher
+	</div>
 </div>
 
 <div id="mainbox_profilseite" class="mainbox">
 	<div class="flex_container">
 		<div class="profil_head">
-			<span class="profil_avatar">
-				<img class="profil_avatar_img" alt="profilBild" src="files/profilBilder/default.png">
-			</span>
-			<span class="profil_benutzer"></span>
+			<div class="profil_avatar">
+				<form id="profil_avatar_aendern_form">
+					<img class="profil_avatar_img" alt="profilBild" src="files/profilBilder/default.png">
+					<div class="profil_kurzinfo">
+						<label for="profil_avatar_aendern_file" class="profil_avatar_overlay"><span class="mega-octicon octicon-pencil"></span></label>
+						<input id="profil_avatar_aendern_file" type="file" name="file" style="display:none">
+						<span class="profil_benutzername"></span><br>
+						<span id="profil_avatar_aendern_file_name"><a><label for="profil_avatar_aendern_file">Neuen Avatar auswählen</label></a></span><br>
+						<input id="profil_avatar_submit" type="submit" value="Avatar ändern" class="mybutton dark" style="display:none">
+					</div>
+				</form>
+			</div>
 			<span class="profil_loeschen"><span class="mybutton red">Konto löschen</span></span>
 		</div>
 		<div class="profil_daten card flex_elem">
@@ -283,7 +304,7 @@ function naviconTransformicon() {
 					</div>
 				</div>
 				
-				<input id="profil_daten_speichern" class="mybutton green" type="submit" value="Speichern">
+				<input id="profil_daten_speichern" class="mybutton dark" type="submit" value="Speichern">
 			</form>
 		</div>
 		
@@ -293,17 +314,10 @@ function naviconTransformicon() {
 				<div><span><label class="profil_label" for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" class="profil_input" type="password" required></span></div>
 				<div><span><label class="profil_label" for="profil_passwort_wdh_input">Passwort wiederholen</label><input id="profil_passwort_wdh_input" class="profil_input" type="password" required></span></div>
 				<div><span><label class="profil_label" for="profil_passwort_alt_input">Altes Passwort</label><input id="profil_passwort_alt_input" class="profil_input" type="password" required></span></div>
-				<input id="profil_passwort_speichern" class="mybutton green" type="submit" value="Speichern">
+				<input id="profil_passwort_speichern" class="mybutton dark" type="submit" value="Speichern">
 			</form>
 		</div>
-		
-		<div id="profil_avatar_aendern" class="card flex_elem">
-			<form id="profil_avatar_aendern_form">
-				<input id="profil_avatar_aendern_file" type="file" name="file">
-				<input id="profil_avatar_submit" type="submit" value="Upload" class = "mybutton green" style= "display:none">
-			</form>
-		</div>
-		
+
 	</div>
 </div>
 

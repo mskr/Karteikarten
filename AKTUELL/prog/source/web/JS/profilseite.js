@@ -22,26 +22,10 @@ function fillProfilseite() {
     
     // Der Benutzer dessen Profil angezeigt wird
     var profilBenutzerId = getUrlParameterByName(urlParamId);
-
-    $('#profil_avatar_aendern_file').before("<input id='profil_avatar_aendern_file_name' class='profil_input' disabled/>" +
-    		"<input type='button' id='profil_avatar_aendern_button' class='mybutton dark' value='Profilbild wählen' />");
-    $('#profil_avatar_aendern_file').hide();
-    $('#profil_avatar_aendern_button').click(function() { 
-        $('#profil_avatar_aendern_file').trigger('click');  
-    });
-    $('#profil_avatar_aendern_file').change(function() {
-        var filenameFull = $('#profil_avatar_aendern_file').val();
-        var fileName = filenameFull.split(/(\\|\/)/g).pop()
-
-        $('#profil_avatar_aendern_file_name').prop("disabled",false);
-        $('#profil_avatar_aendern_file_name').val(fileName);
-        $('#profil_avatar_aendern_file_name').prop("disabled",true);
-        
-        if(fileName != "")
-        	$("#profil_avatar_submit").slideDown();
-        else
-        	$("#profil_avatar_submit").slideUp();
-    });
+    
+    $("#profil_avatar_aendern_file_name").hide();
+    $(".profil_avatar_overlay").hide();
+    $(".profil_loeschen").hide();
     
     if(profilBenutzerId == jsonBenutzer[paramId])
     {
@@ -55,9 +39,10 @@ function fillProfilseite() {
         profilNotifyKommentare = jsonBenutzer[paramNotifyKommentare];
         profilNotifyVeranstAenderung = jsonBenutzer[paramNofityVeranstAenderung];
         profilNotifyKarteikartenAenderung = jsonBenutzer[paramNotifyKarteikartenAenderung];
-        $(".profil_benutzer").text(profilVorname+" "+profilNachname);
+        $(".profil_benutzername").text(profilVorname+" "+profilNachname);
         $(".profil_avatar_img").attr("src", jsonBenutzer[paramProfilBild]);
         
+        fillProfilHead();
         fillProfilDaten();
         fillProfilEinstellungen();
         registerProfilSpeichernEvents();
@@ -82,7 +67,7 @@ function fillProfilseite() {
                     profilMatrikelNr = jsonObj[paramMatrikelNr];
                     profilStudiengang = jsonObj[paramStudiengang];
                     profilNutzerstatus = jsonObj[paramNutzerstatus];
-                    $(".profil_benutzer").text(profilVorname+" "+profilNachname);
+                    $(".profil_benutzername").text(profilVorname+" "+profilNachname);
                     $(".profil_avatar_img").attr("src", jsonObj[paramProfilBild]);
                     fillProfilDaten();
                     if(jsonBenutzer[paramNutzerstatus] != "ADMIN")
@@ -102,6 +87,7 @@ function fillProfilseite() {
                         profilNotifyKommentare = jsonObj[paramNotifyKommentare];
                         profilNotifyVeranstAenderung = jsonObj[paramNofityVeranstAenderung];
                         profilNotifyKarteikartenAenderung = jsonObj[paramNotifyKarteikartenAenderung];
+                        fillProfilHead();
                         fillProfilEinstellungen();
                         registerProfilSpeichernEvents();
                         // Ein eingeloggter Admin kann auf dem Profil eines anderen Benutzers das Passwort aendern
@@ -130,6 +116,35 @@ function fillProfilseite() {
     }
 }
 
+/**
+ * Zeigt Elemente im Profilkopf an.
+ * Dazu gehoeren aktuell:
+ * - Avatar aendern Trigger
+ * - Konto loeschen Button
+ */
+function fillProfilHead() {
+    // Zeige Avatar aendern Trigger
+    $("#profil_avatar_aendern_file_name").show();
+    $(".profil_avatar_overlay").show();
+    // Reagiere auf die Auswahl einer Datei
+    $('#profil_avatar_aendern_file').change(function() {
+        var filenameFull = $('#profil_avatar_aendern_file').val();
+        var fileName = filenameFull.split(/(\\|\/)/g).pop();
+        $("#profil_avatar_aendern_file_name").html(fileName);
+        $("#profil_avatar_aendern_file_name").css("color","yellow");
+        if(fileName != "")
+            $("#profil_avatar_submit").fadeIn();
+        else
+            $("#profil_avatar_submit").fadeOut();
+    });
+    
+    $(".profil_loeschen").show();
+    // TODO Konto loeschen Funktion implementieren
+}
+
+/**
+ * Zeigt die Stammdaten des Benutzers an.
+ */
 function fillProfilDaten() {
     $("#profil_email_input").val(profilEmail);
     $("#profil_vorname_input").val(profilVorname);
@@ -139,6 +154,9 @@ function fillProfilDaten() {
     $("#profil_rolle_input").val(profilNutzerstatus);
 }
 
+/**
+ * Holt die Studiengaenge und traegt sie in das select Element ein.
+ */
 function fillProfilStudiengaenge() {
     $.ajax({
         url: benutzerServlet,
@@ -160,6 +178,9 @@ function fillProfilStudiengaenge() {
     });
 }
 
+/**
+ * Zeigt die persoenlichen Einstellungen des Benutzers an.
+ */
 function fillProfilEinstellungen() {
     switch(profilNotifyKommentare)
     {
@@ -177,6 +198,9 @@ function fillProfilEinstellungen() {
     
 }
 
+/**
+ * Liest die Daten aus den Feldern aus und uebertraegt Sie zum Server.
+ */
 function registerProfilSpeichernEvents() {
     
     $("#profil_daten_form").submit(function(event) 
@@ -295,11 +319,13 @@ function registerProfilSpeichernEvents() {
     });
 }
 
+/**
+ * Laedt ein neues Profilbild hoch.
+ */
 function registerAvatarAendernEvent() {
     $("#profil_avatar_aendern_form").submit(function(event) {
         event.preventDefault();
     	var file = $('#profil_avatar_aendern_file')[0].files[0];
-
     	var filenameFull = $('#profil_avatar_aendern_file').val();
     	var fileName = filenameFull.split(/(\\|\/)/g).pop();
     	if(fileName.toLowerCase().indexOf(".jpg") < 0 && 
@@ -307,11 +333,11 @@ function registerAvatarAendernEvent() {
     			fileName.toLowerCase().indexOf(".bmp") < 0 &&
     			fileName.toLowerCase().indexOf(".png") < 0)
     	{
-    		message(0, "Bitte geben Sie ein Bild mit dem Format jpg/jpeg, bmp oder png an!");
+    		message(0, "Leider werden nur die Formate jpg/jpeg, bmp oder png unterstützt.");
     	}
-    	else{	
-    		uploadFile(file, 
-    				function(response) {
+    	else
+    	{
+    		uploadFile(file, function(response) {
     			var jsonObj = response;
     			var errCode = jsonObj["error"];
     			if(errCode == "noerror") 
@@ -321,15 +347,26 @@ function registerAvatarAendernEvent() {
     			} 
     			else if(errCode == "invalidparam")
     			{
-    				message(0, "Keine gültige Datei angegeben. Versuchen Sie es erneut!");
+    				message(0, "Bitte geben Sie eine gültige Datei an.");
     			}
     			else 
     			{
     				message(0, buildMessage(errCode));
     			}
-    			console.log(response);
+    			console.log("uploadFile meldet: "+response);
     		},
-    		actionUploadProfilBild);
+    		actionUploadProfilBild,
+    		function() {
+    		    // beforeSend
+    		    $("#profil_avatar_submit").val("Lädt...");
+    		    $("#profil_avatar_submit").prop("disabled", true);
+    		},
+    		function() {
+    		    // complete
+    		    $("#profil_avatar_submit").val("Avatar ändern");
+                $("#profil_avatar_submit").prop("disabled", false);
+    		});
     	}
+        event.preventDefault();
     });
 }

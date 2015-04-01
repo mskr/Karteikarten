@@ -11,6 +11,10 @@ $(document).ready(function() {
             data: "action="+actionLogin+
             	"&"+paramEmail+"="+email+
             	"&"+paramPasswort+"="+pass,
+            beforeSend: function() {
+                $("#login_submit").val("Lädt...");
+                $("#login_submit").prop("disabled", true);
+            },
             success: function(response) {
                 var jsonObj = response;
                 var errCode = jsonObj["error"];
@@ -19,6 +23,10 @@ $(document).ready(function() {
                 } else {
                     message(0, buildMessage(errCode));
                 }
+            },
+            complete: function() {
+                $("#login_submit").val("Login");
+                $("#login_submit").prop("disabled", false);
             }
         });
         // Verhindert das normale Absenden des Formulars

@@ -42,6 +42,10 @@
 	border: 1px solid #262626;
 	color: gray;
 	text-shadow: none;
+} .mybutton:disabled:hover {
+	background: #4f4f4f;
+	background-image: none;
+	border: 1px solid #262626;
 }
 
 

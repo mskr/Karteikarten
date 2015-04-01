@@ -23,6 +23,9 @@ function fillHauptseite() {
  */
 function fillVeranstaltungsliste() {
     // TODO Refractoring
+    // TODO Laden der Veranstaltungen nach Bedarf 
+    //      (wenn der Benutzer auf einen Tab klickt).
+    //      Spaeter koennen ja theoretisch unendlich viele Veranstaltungen drin sein.
     // Alle Veranstaltungen
     var ajax1 = $.ajax({
         url: veranstaltungServlet,
@@ -119,15 +122,36 @@ function fillVeranstaltungsliste() {
              }
          }
      });
-    
-    // Alle Einblende Felder aktivieren
-    $.when(ajax1,ajax2,ajax3,ajax4).done(function() {
-        $(".vn_mehr_einbl").click(function() {
-            var parent = $(this).parent();
-            var wrapper = parent.find(".vn_mehr_wrapper");
-            wrapper.slideToggle("slow");
+
+    $.when(ajax1, ajax2, ajax3, ajax4).done(function() {
+        // Folgendes erlaubt checked Radio-Buttons zu unchecken
+        // @see http://stackoverflow.com/questions/17120576
+        var checkedRadio; // DOM Object
+        $(".vn_mehr_einbl_toggle").each(function(i) {
+            // Achtung: $(this) holt das jQuery-, und this das DOM-Object.
+            $(this).click(function() {
+                // Hole die ID der zugehoerigen Veranstaltungen, um deren Farbe aendern zu koennen
+                var vnIDaktuell = "vn_"+this.id.split("_")[1]+"_"+this.id.split("_")[2];
+                if(checkedRadio != undefined)
+                {
+                    var vnIDdavor = "vn_"+checkedRadio.id.split("_")[1]+"_"+checkedRadio.id.split("_")[2];
+                }
+                if( checkedRadio == this )
+                {
+                    this.checked = false;
+                    checkedRadio = undefined;
+                    $("#"+vnIDaktuell).toggleClass("hovered");
+                }
+                else
+                {
+                    $("#"+vnIDdavor).toggleClass("hovered");
+                    checkedRadio = this;
+                    $("#"+vnIDaktuell).toggleClass("hovered");
+                }
+            });
         });
     });
+    
 }
 
 /**
@@ -136,27 +160,31 @@ function fillVeranstaltungsliste() {
  * @param jsonVeranstObj Objekt, dass die Veranstaltung enthält
  */
 function displayVeranstaltung(container, jsonVeranstObj)
-{	
+{
 	var errCode = jsonVeranstObj["error"];
 	if(errCode == "noerror") 
 	{
+	    // Baue zuerst eine eindeutige id fuer die jetzt einzutragende Veranstaltung
+	    // id hat die Form "vn_<tab>_<DatenbankID>"
+	    var id = "vn_"+container.attr("id").split("_")[2]+"_"+jsonVeranstObj[paramId];
 		var str = "";
 		if(jsonVeranstObj[paramAngemeldet] == true)
-			str += "<div class='vn vn_eingeschrieben'>";
+			str += "<div id='"+id+"' class='vn vn_eingeschrieben'>";
 		else
-			str += "<div class='vn'>";
+			str += "<div id='"+id+"' class='vn'>";
 
-		str +=		"<span class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>" +
+		str +=		"<input id='"+id+"_radio' type='radio' class='vn_mehr_einbl_toggle' name='vn_"+container.attr("id").split("_")[2]+"' style='display:none'>" +
+		            "<label for='"+id+"_radio' class='vn_mehr_einbl'>" +
+		                "<span class='octicon'></span>" +
+		            "</label>" +
+		            "<span class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>" +
 					"<span class='vn_details'>" +
-					"<span class='vn_detail'><a class='vn_dozent'>" + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a></span><br>" +
-					"<span class='vn_detail'>" + jsonVeranstObj[paramAnzTeilnehmer] + " Teilnehmer</span><br>" +
-					"<span class='vn_detail'>" + jsonVeranstObj[paramSemester] + "</span>" +
+					    "<a class='vn_dozent'>" + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a><br>" +
+					    "<a class='vn_detail'>" + jsonVeranstObj[paramAnzTeilnehmer] + " Teilnehmer</a><br>" +
+					    "<a class='vn_detail'>" + jsonVeranstObj[paramSemester] + "</a>" +
 					"</span>" +
-					"<span class='vn_mehr_einbl'>" +
-					"<span class='octicon octicon-three-bars'></span> Beschreibung" +
-					"</span><br>" +
 					"<div class='vn_mehr_wrapper'>" +
-					"	<span class='vn_mehr'>" + jsonVeranstObj[paramBeschr] + "</span>" +
+					"	<span class='vn_beschreibung'>" + jsonVeranstObj[paramBeschr] + "</span>" +
 					"	<div class='vn_optionen'>";
 		
 		if(jsonVeranstObj[paramAngemeldet] == true)
@@ -314,10 +342,10 @@ function sindSieSicher(anchorElem, message, doCriticalThing)
 {
     $("#dialog_sicher").popup({
         type: 'tooltip',
-        vertical: 'center',
-        horizontal: 'left',
+        vertical: 'top',
+        horizontal: 'center',
         tooltipanchor: anchorElem,
-        transition: 'all 0.3s'
+        transition: 'none'
     });
     $("#dialog_sicher").popup("show");
     $(".dialog_sicher_frage").text(message);

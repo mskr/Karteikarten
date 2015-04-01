@@ -1,5 +1,5 @@
 
-function uploadFile(file, successFkt, uploadAction) 
+function uploadFile(file, successFkt, uploadAction, beforeFkt, completeFkt) 
 {
 	var formData = new FormData();
 	formData.append('file', file);
@@ -11,6 +11,8 @@ function uploadFile(file, successFkt, uploadAction)
 		data: formData,
 		processData: false,
 		contentType: false,
-		success: successFkt
+		beforeSend: beforeFkt,
+		success: successFkt,
+		complete: completeFkt
 	});
 }
