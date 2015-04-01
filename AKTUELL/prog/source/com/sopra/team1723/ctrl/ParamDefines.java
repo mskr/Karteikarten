@@ -15,6 +15,7 @@ public class ParamDefines
     public final static String ActionGetBenutzer = "getBenutzer";
     public final static String ActionGetOtherBenutzer = "getOtherBenutzer";
     public final static String ActionGetStudiengaenge = "getStudiengaenge";
+    public final static String ActionGetSemester = "getSemester";
     public final static String ActionAenderePasswort = "aenderePasswort";
     public final static String ActionAendereProfil = "aendereProfil";
     public final static String ActionUploadProfilBild = "uploadProfilBild";
@@ -22,7 +23,6 @@ public class ParamDefines
     
     public final static String ActionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
     public final static String LeseVeranstMode = "mode";                        // Liefert Veranstaltungen
-    public final static String LeseVeranstModeAlle = "alle";                    // Liefert alle Veranstaltungen
     public final static String LeseVeranstModeSemester = "semester";            // Liefert alle Veranstaltungen im aktuellen Semester
     public final static String LeseVeranstModeStudiengang = "studiengang";      // Liefert alle Veranstaltungen im aktuellen Studiengang (TODO)
     public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
@@ -81,6 +81,13 @@ public class ParamDefines
     public final static String benKarteikarte = "benKarteikarte";
     public final static String benKommentar = "benKommentar";
     public final static String benProfil = "benProfil";
+    
+    
+    public final static String AktSemester = "aktSemester";
+    
+    
+    public final static String GewaehltesSemester = "gewaehltesSemester";
+    public final static String GewaehlterStudiengang = "gewaehlterStudiengang";
     
     
     /**

@@ -98,9 +98,16 @@ public interface IDatenbankmanager {
     /**
      * Gibt eine Liste aller Studiengänge zurück. 
      * @return Liste der Studiengaenge. Tritt ein Fehler auf wird null zurückgegeben. Sind keine Studiengänge in der 
-     * Datenbnak vorhanden, dann wird eine leere Liste zurückgegeben
+     * Datenbank vorhanden, dann wird eine leere Liste zurückgegeben
      */
     public List<String> leseStudiengaenge();
+    
+    /**
+     * Gibt eine Liste aller Semester zurück. 
+     * @return Liste der Semester. Tritt ein Fehler auf wird null zurückgegeben. Werden keine Semester in der 
+     * Datenbank gefunden, dann wird eine leere Liste zurückgegeben
+     */
+    public List<String> leseSemester();
 
     /**
      * Ändert das Passwort des angegebenen Benutzers. 
@@ -119,12 +126,12 @@ public interface IDatenbankmanager {
      */
     public Veranstaltung leseVeranstaltung(int id);
     
-    /**
-     * Holt alle Veranstaltungen aus der Datenbank und packt sie in eine Array List.
-     * @return Liste aller Veranstaltungen. Gibt es keine Veranstaltungen wird eine 
-     * leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
-     */
-    public List<Veranstaltung> leseAlleVeranstaltungen();
+//    /**
+//     * Holt alle Veranstaltungen aus der Datenbank und packt sie in eine Array List.
+//     * @return Liste aller Veranstaltungen. Gibt es keine Veranstaltungen wird eine 
+//     * leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
+//     */
+//    public List<Veranstaltung> leseAlleVeranstaltungen();
     
     /**
      * Holt Veranstaltungen, die von dem angegebenen Studiengang gehört werden können
@@ -166,6 +173,15 @@ public interface IDatenbankmanager {
      * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<String> leseStudiengaenge(int veranstaltung);
+    
+    /**
+     * Prüft ob der Benutzer Moderator dieser Veranstaltung ist.
+     * @param benutzer referenziert eindeutig einen Benutzer
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung
+     * @return Gibt true zurück, wenn der Benutzer Moderator der Veranstaltung ist und false falls nicht.
+     * Tritt ein Fehler auf wird null zurückgegeben
+     */
+    public Boolean istModerator(int benutzer, int veranstaltung);
     
     /**
      * Holt alle Studiengaenge zu der angegebenen Veranstaltung aus der Datenbank.

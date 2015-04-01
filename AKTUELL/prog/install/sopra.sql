@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 28. Mrz 2015 um 20:42
+-- Erstellungszeit: 30. Mrz 2015 um 17:25
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 `ID` int(11) NOT NULL,
   `Inhalt` text NOT NULL,
   `Erstelldatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `benachrichtigung`
@@ -84,7 +84,8 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
 (1, 'Einladung als Moderator für die Vorlesung Softwaretechnik', '2015-03-20 23:00:00'),
 (2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-03-02 23:00:00'),
-(3, 'Prüfungstermine sind nun in der Beschreibung bekannt gegeben', '2015-03-10 23:00:00');
+(3, 'Prüfungstermine sind nun in der Beschreibung bekannt gegeben', '2015-03-10 23:00:00'),
+(40, '', '2015-03-28 22:39:30');
 
 -- --------------------------------------------------------
 
@@ -149,7 +150,14 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_profil_geaendert` (
   `Benutzer` int(11) NOT NULL,
   `Admin` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `benachrichtigung_profil_geaendert`
+--
+
+INSERT INTO `benachrichtigung_profil_geaendert` (`ID`, `Benachrichtigung`, `Benutzer`, `Admin`, `Gelesen`) VALUES
+(3, 40, 6, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -191,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
   `NotifyKommentare` enum('KEINE','VERANSTALTUNG_TEILGENOMMEN','DISKUSSION_TEILGENOMMEN','') NOT NULL DEFAULT 'KEINE',
   `NotifyVeranstAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `benutzer`
@@ -203,7 +211,8 @@ INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Mat
 (3, 'alber.einstein@uni-ulm.de', 'Albert', 'Einstein', 'default.png', 333333, 'Physik', '1234', 'DOZENT', 'KEINE', 0, 0),
 (4, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', 'default.png', 12345, 'Informatik', '1234', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1),
 (5, 'marius.kircher@uni-ulm.de', 'Marius', 'Kircher', 'default.png', 111111, 'Medieninformatik', '1234', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 0),
-(6, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 828584, 'Informatik', '1234', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 0, 0);
+(6, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 828584, 'Informatik', '1234', 'STUDENT', 'KEINE', 0, 0),
+(7, 'heinz.harald@uni-ulm.de', 'Heinz Harald', 'Haraldson', 'default.png', 123456, 'Chemie', '1234', 'STUDENT', 'KEINE', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -215,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -230,7 +239,9 @@ INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung
 (8, 4, 6),
 (2, 5, 1),
 (3, 6, 1),
-(6, 6, 4);
+(10, 6, 2),
+(6, 6, 4),
+(12, 6, 7);
 
 -- --------------------------------------------------------
 
@@ -340,6 +351,31 @@ CREATE TABLE IF NOT EXISTS `notiz` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `semester`
+--
+
+CREATE TABLE IF NOT EXISTS `semester` (
+  `Name` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `semester`
+--
+
+INSERT INTO `semester` (`Name`) VALUES
+('SoSe2013'),
+('SoSe2014'),
+('SoSe2015'),
+('SoSe2016'),
+('SoSe2017'),
+('WiSe2013/14'),
+('WiSe2014/15'),
+('WiSe2015/16'),
+('WiSe2016/17');
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `studiengang`
 --
 
@@ -354,6 +390,7 @@ CREATE TABLE IF NOT EXISTS `studiengang` (
 INSERT INTO `studiengang` (`Name`) VALUES
 ('Biologie'),
 ('Chemie'),
+('Chemie Ingenieure'),
 ('Elektrotechnik'),
 ('Informatik'),
 ('Informationssystemtechnik'),
@@ -381,7 +418,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `ModeratorKarteikartenBearbeiten` tinyint(1) NOT NULL,
   `Ersteller` int(11) NOT NULL,
   `Titel` varchar(50) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `veranstaltung`
@@ -394,7 +431,8 @@ INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `Komm
 (4, 'Algorithmen und Datenstrukturen Vorlesung', 'WiSe2014/15', '1234', 1, 0, 1, 6, 'Algorithmen und Datenstrukture'),
 (5, 'Physik I für Ingenieure Vorlesung', 'SoSe2015', '1234', 1, 0, 0, 3, 'Physik I für Ingenieure'),
 (6, 'Latex Kurs', 'WiSe2014/15', '1234', 1, 1, 1, 2, 'Latex Kurs'),
-(7, 'Softwaregrundproekt', 'SoSe2015', NULL, 1, 1, 1, 6, 'Sopra');
+(7, 'Softwaregrundproekt', 'SoSe2015', NULL, 1, 1, 1, 6, 'Sopra'),
+(8, 'Grundlagen der Betriebssysteme Vorlesung', 'WiSe2014/15', NULL, 1, 0, 0, 5, 'Grundlagen der Betriebssysteme');
 
 -- --------------------------------------------------------
 
@@ -406,7 +444,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
@@ -427,7 +465,12 @@ INSERT INTO `veranstaltung_studiengang_zuordnung` (`ID`, `Veranstaltung`, `Studi
 (14, 5, 'Informationssystemtechnik'),
 (15, 6, 'Sonstiges'),
 (16, 3, 'Biologie'),
-(17, 3, 'Medizin');
+(17, 3, 'Medizin'),
+(18, 7, 'Informatik'),
+(19, 7, 'Medieninformatik'),
+(20, 7, 'Softwareengeneering'),
+(21, 8, 'Informatik'),
+(22, 8, 'Medieninformatik');
 
 --
 -- Indizes der exportierten Tabellen
@@ -524,6 +567,12 @@ ALTER TABLE `notiz`
  ADD PRIMARY KEY (`ID`), ADD KEY `BenutzerID` (`Benutzer`), ADD KEY `KarteikarteID` (`KarteikarteID`);
 
 --
+-- Indizes für die Tabelle `semester`
+--
+ALTER TABLE `semester`
+ ADD PRIMARY KEY (`Name`);
+
+--
 -- Indizes für die Tabelle `studiengang`
 --
 ALTER TABLE `studiengang`
@@ -533,7 +582,7 @@ ALTER TABLE `studiengang`
 -- Indizes für die Tabelle `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
- ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `Semester` (`Semester`,`Titel`), ADD KEY `Ersteller` (`Ersteller`);
+ ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `Semester` (`Semester`,`Titel`), ADD KEY `Ersteller` (`Ersteller`), ADD KEY `Semester_2` (`Semester`);
 
 --
 -- Indizes für die Tabelle `veranstaltung_studiengang_zuordnung`
@@ -549,7 +598,7 @@ ALTER TABLE `veranstaltung_studiengang_zuordnung`
 -- AUTO_INCREMENT für Tabelle `benachrichtigung`
 --
 ALTER TABLE `benachrichtigung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=41;
 --
 -- AUTO_INCREMENT für Tabelle `benachrichtigung_einladung_moderator`
 --
@@ -569,7 +618,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT für Tabelle `benachrichtigung_profil_geaendert`
 --
 ALTER TABLE `benachrichtigung_profil_geaendert`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT für Tabelle `benachrichtigung_veranstaltungsaenderung`
 --
@@ -579,12 +628,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT für Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT für Tabelle `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT für Tabelle `bewertung_karteikarte`
 --
@@ -624,12 +673,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT für Tabelle `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT für Tabelle `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 --
 -- Constraints der exportierten Tabellen
 --
@@ -729,6 +778,12 @@ ADD CONSTRAINT `moderator_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer`
 --
 ALTER TABLE `notiz`
 ADD CONSTRAINT `notiz_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`);
+
+--
+-- Constraints der Tabelle `veranstaltung`
+--
+ALTER TABLE `veranstaltung`
+ADD CONSTRAINT `veranstaltung_ibfk_1` FOREIGN KEY (`Semester`) REFERENCES `semester` (`Name`);
 
 --
 -- Constraints der Tabelle `veranstaltung_studiengang_zuordnung`
