@@ -225,14 +225,13 @@ function displayVeranstaltung(container, jsonVeranstObj)
             var parent = $(this).parent();
             var wrapper = parent.find(".vn_mehr_wrapper");
             wrapper.slideToggle("slow");
+            event.stopPropagation();
         });
 
-//		str.click(function() {
-//            var paramObj = {};
-//            paramObj[urlParamLocation] = ansichtVeranstaltungseite;
-//            paramObj[urlParamId] = jsonVeranstObj[paramId];
-//            buildUrlQuery(paramObj);
-//        });
+		if(jsonVeranstObj[paramAngemeldet] == true)
+			str.click(function(event ) {
+				gotoVeranstaltung(jsonVeranstObj[paramId]);
+			});
 		
 		registerErstellerClickFunction(str,jsonVeranstObj);
 		registerEinAusschreibenClickEvent(str, jsonVeranstObj);
@@ -252,6 +251,7 @@ function registerErstellerClickFunction(vnHtmlString, jsonVeranstObj) {
     var erstellerLink = vnHtmlString.find(".vn_dozent");
     erstellerLink.click(function() {
         gotoProfil(jsonVeranstObj[paramErsteller][paramId]);
+        event.stopPropagation();
     });
 }
 
@@ -266,6 +266,7 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     {
         // AUSSCHREIBEN
         button.click(function() {
+            event.stopPropagation();
             sindSieSicher((this), "", function() {
                 $.ajax({
                     url: veranstaltungServlet,
@@ -291,6 +292,7 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     {
         // EINSCHREIBEN
         button.click(function() {
+            event.stopPropagation();
             if(jsonVeranstObj[paramKennwortGesetzt])
             {
                 // Einschreiben mit Kennwort
