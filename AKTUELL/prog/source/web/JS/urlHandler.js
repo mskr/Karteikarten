@@ -8,9 +8,17 @@
  */
 
 $(document).ready(function() {
-    var urlQuery = parseUrlQuery();
-    console.log("[urlHandler] location="+urlQuery[urlParamLocation]);
+	
+    // TODO So wird das Benutzerobjekt nur einmal initial zu beginn geladen
+    // Was passiert aber, wenn sich das profil geändert hat?
     $.when(getBenutzer()).done(function(a1) {
+        var urlQuery = parseUrlQuery(undefined);    
+        interpreteUrlQuery(urlQuery);
+    });
+    
+    // Auf zurück und vorwärts im browser reagieren
+    History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
+        var urlQuery = parseUrlQuery(undefined);
         interpreteUrlQuery(urlQuery);
     });
 });
@@ -22,13 +30,17 @@ var jsonBenutzer;
  * Packt alle Parameter aus der URL in ein Objekt.
  * @returns 
  */
-function parseUrlQuery() {
+function parseUrlQuery(qry) {
     var match,
     pl     = /\+/g,  // Regex for replacing addition symbol with a space
     search = /([^&=]+)=?([^&]*)/g,
     decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
     query  = window.location.search.substring(1),
     urlParams = {};
+    
+    if(qry != undefined)
+    	query = qry;
+    
     while (match = search.exec(query)) {
         urlParams[decode(match[1])] = decode(match[2]);
     }
@@ -76,7 +88,12 @@ function buildUrlQuery(paramObj)
         
         i++;
     }
-    location.search = locationSearchTmp; // Dies laedt auch die Seite neu
+    
+    // TODO
+    //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
+    // Test mit History
+    History.pushState(null,null, locationSearchTmp);
+    interpreteUrlQuery(parseUrlQuery(locationSearchTmp.substring(1)));
 }
 
 /**
@@ -178,4 +195,47 @@ function display(ansicht)
     {
         console.log("[urlHandler] Ungueltige Ansicht: "+ansicht);
     }
+}
+/**
+ * Diese Funktion setzt die URL und wechselt zum angegebenen Profil
+ * @param benutzerID
+ */
+function gotoProfil(benutzerID)
+{
+	var paramObj = {};
+	paramObj[urlParamLocation] = ansichtProfilseite;
+	paramObj[urlParamId] = benutzerID;
+	buildUrlQuery(paramObj);
+}
+/**
+ * Diese Funktion setzt die URL und wechselt zur angegebenen Veranstaltung
+ * @param veranstId
+ */
+function gotoVeranstaltung(veranstId)
+{
+	var paramObj = {};
+	paramObj[urlParamLocation] = ansichtVeranstaltungseite;
+	paramObj[urlParamId] = veranstId;
+	buildUrlQuery(paramObj);
+}
+/**
+ * Diese Funktion setzt die URL und wechselt zur Hautseite
+ * @param veranstId
+ */
+function gotoHauptseite()
+{
+	var paramObj = {};
+	paramObj[urlParamLocation] = ansichtHauptseite;
+	buildUrlQuery(paramObj);
+}
+
+/**
+ * Diese Funktion wechselt zur Startseite
+ * @param veranstId
+ */
+function gotoStartseite()
+{
+	var paramObj = {};
+	paramObj[urlParamLocation] = ansichtStartseite;
+	buildUrlQuery(paramObj);
 }

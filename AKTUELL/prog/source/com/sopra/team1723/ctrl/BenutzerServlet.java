@@ -51,7 +51,6 @@ public class BenutzerServlet extends ServletController {
     private boolean login(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
         HttpSession aktuelleSession = request.getSession();
-        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
@@ -120,7 +119,6 @@ public class BenutzerServlet extends ServletController {
     private boolean logout(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
         HttpSession aktuelleSession = request.getSession();
-        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
@@ -153,7 +151,6 @@ public class BenutzerServlet extends ServletController {
     {
 
         HttpSession s = request.getSession();
-        String aktuelleAction = (String) s.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) s.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);
@@ -368,6 +365,30 @@ public class BenutzerServlet extends ServletController {
             return false;
         }
     }
+    
+    private boolean leseSemester(HttpServletRequest request, HttpServletResponse response) throws IOException 
+    {
+        HttpSession aktuelleSession = request.getSession();
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        String aktuellesSemester = (String) aktuelleSession.getAttribute(sessionAttributeGewähltesSemester);
+        PrintWriter outWriter = null;
+        outWriter = response.getWriter();
+        
+        List<String> semester = dbManager.leseSemester();
+        if(semester != null)
+        {
+            JSONObject jo = JSONConverter.toJson(semester);
+            jo.put(ParamDefines.AktSemester, aktuellesSemester);
+            outWriter.print(jo);
+            return true;
+        }
+        else
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+    }
   
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
@@ -427,6 +448,10 @@ public class BenutzerServlet extends ServletController {
         {
             leseStudiengaenge(req, resp);
         }
+        else if(action.equals(ParamDefines.ActionGetSemester))
+        {
+            leseSemester(req, resp);
+        }
         else
         {
             // Sende Nack mit ErrorText zurück
@@ -438,7 +463,7 @@ public class BenutzerServlet extends ServletController {
     }
 
     @Override
-    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+    protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
             IOException
     {}
 

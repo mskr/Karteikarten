@@ -36,7 +36,6 @@ public abstract class ServletController extends HttpServlet
     protected final String sessionAttributeUserID = "UserID";
     protected final String sessionAttributeGewähltesSemester = "gewähltesSemester";
     protected final String sessionAttributeDbManager = "dbManager";
-    protected final String sessionAttributeaktuelleAction = "aktuelleAction";
     protected final String sessionAttributeaktuellerBenutzer = "aktuellerBenutzer";
 
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
@@ -175,8 +174,20 @@ public abstract class ServletController extends HttpServlet
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
         try{
-            if(preProcessRequest(req, resp))
-                processRequest(req, resp);
+            if(preProcessRequest(req, resp)){
+                // Hole die vom client angefragte Aktion
+                String action = req.getParameter(ParamDefines.Action);
+
+                if(isEmptyAndRemoveSpaces(action))
+                {
+                    // Sende Error zurück
+                    PrintWriter outWriter = resp.getWriter();
+                    JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                    outWriter.print(jo);
+                    return;
+                }
+                processRequest(action, req, resp);
+            }
         }
         catch(Exception e)
         {
@@ -187,7 +198,7 @@ public abstract class ServletController extends HttpServlet
         }
     }
 
-    protected abstract void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
+    protected abstract void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
 
     protected boolean preProcessRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
@@ -263,17 +274,8 @@ public abstract class ServletController extends HttpServlet
             outWriter.print(jo);
             return false;
         }
-        // Hole die vom client angefragte Aktion
-        String action = req.getParameter(ParamDefines.Action);
-
-        if(isEmptyAndRemoveSpaces(action))
-        {
-            // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            outWriter.print(jo);
-            return false;
-        }
-        s.setAttribute(sessionAttributeaktuelleAction, action);
+       
+//        req.setAttribute(sessionAttributeaktuelleAction, action);
 
         if(s.getAttribute(sessionAttributeGewähltesSemester)== null)
             s.setAttribute(sessionAttributeGewähltesSemester, leseAktuellesSemester());

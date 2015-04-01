@@ -43,7 +43,7 @@ public class VeranstaltungServlet extends ServletController {
 
     
     private ArrayList<Boolean>leseZuWelchenVeranstAngemeldet(List<Veranstaltung> veranstaltungen, 
-            HttpServletRequest request, HttpServletResponse response) throws IOException{
+        HttpServletRequest request, HttpServletResponse response) throws IOException{
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -81,11 +81,10 @@ public class VeranstaltungServlet extends ServletController {
     private boolean veranstaltungenAnzeigen(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
         HttpSession aktuelleSession = request.getSession();
-        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
-        String aktuellesSemester = (String) aktuelleSession.getAttribute(sessionAttributeGewähltesSemester);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+       
         
         JSONObject jo;
         String mode = request.getParameter(ParamDefines.LeseVeranstMode);
@@ -96,19 +95,6 @@ public class VeranstaltungServlet extends ServletController {
             return false;
         }
 
-        if(mode.equals(ParamDefines.LeseVeranstModeAlle))
-        {
-            List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            verAnst = dbManager.leseAlleVeranstaltungen();
-            if(verAnst != null){
-                ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
-                jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);
-            }
-            else
-                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-            return true;
-        }
         else if(mode.equals(ParamDefines.LeseVeranstModeMeine))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
@@ -126,7 +112,7 @@ public class VeranstaltungServlet extends ServletController {
         else if(mode.equals(ParamDefines.LeseVeranstModeSemester))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            verAnst = dbManager.leseVeranstaltungenSemester(aktuellesSemester);
+            verAnst = dbManager.leseVeranstaltungenSemester(request.getParameter(ParamDefines.GewaehltesSemester));
             if(verAnst != null){
                 ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
                 jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);
@@ -140,7 +126,7 @@ public class VeranstaltungServlet extends ServletController {
         else if(mode.equals(ParamDefines.LeseVeranstModeStudiengang))
         {
             List<Veranstaltung> verAnst = new ArrayList<Veranstaltung>();
-            verAnst = dbManager.leseVeranstaltungenStudiengang(aktuellerBenutzer.getStudiengang());
+            verAnst = dbManager.leseVeranstaltungenStudiengang(request.getParameter(ParamDefines.GewaehlterStudiengang));
             if(verAnst != null){
                 ArrayList<Boolean> angemeldet = leseZuWelchenVeranstAngemeldet(verAnst, request, response);
                 jo = JSONConverter.toJsonVeranstList(verAnst, angemeldet);
@@ -198,7 +184,6 @@ public class VeranstaltungServlet extends ServletController {
      */
     private boolean veranstaltungEinschreiben(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession aktuelleSession = request.getSession();
-        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
@@ -257,7 +242,6 @@ public class VeranstaltungServlet extends ServletController {
      */
     private boolean veranstaltungAuschreiben(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession aktuelleSession = request.getSession();
-        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
@@ -285,11 +269,10 @@ public class VeranstaltungServlet extends ServletController {
     }
 
     @Override
-    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+    protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
             IOException
     { 
         HttpSession aktuelleSession = req.getSession();
-        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);

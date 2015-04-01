@@ -14,6 +14,30 @@ var profilNotifyKommentare;
 var profilNotifyVeranstAenderung;
 var profilNotifyKarteikartenAenderung;
 
+// Statische Handler einmal registrieren
+$(document).ready(function() {
+//	$('#profil_avatar_aendern_file').before("<input id='profil_avatar_aendern_file_name' class='profil_input' disabled/>" +
+//	"<input type='button' id='profil_avatar_aendern_button' class='mybutton dark' value='Profilbild wählen' />");
+//	$('#profil_avatar_aendern_file').hide();
+//	$('#profil_avatar_aendern_button').click(function() { 
+//		$('#profil_avatar_aendern_file').trigger('click');  
+//	});
+//	$('#profil_avatar_aendern_file').change(function() {
+//		var filenameFull = $('#profil_avatar_aendern_file').val();
+//		var fileName = filenameFull.split(/(\\|\/)/g).pop()
+//
+//		$('#profil_avatar_aendern_file_name').prop("disabled",false);
+//		$('#profil_avatar_aendern_file_name').val(fileName);
+//		$('#profil_avatar_aendern_file_name').prop("disabled",true);
+//
+//		if(fileName != "")
+//			$("#profil_avatar_submit").slideDown();
+//		else
+//			$("#profil_avatar_submit").slideUp();
+//	});
+    registerProfilSpeichernEvents();
+    registerAvatarAendernEvent();
+});
 /**
  * Zeigt die Daten des Benutzers im Profil an
  * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
@@ -45,8 +69,6 @@ function fillProfilseite() {
         fillProfilHead();
         fillProfilDaten();
         fillProfilEinstellungen();
-        registerProfilSpeichernEvents();
-        registerAvatarAendernEvent();
     }
     else
     {
@@ -89,7 +111,6 @@ function fillProfilseite() {
                         profilNotifyKarteikartenAenderung = jsonObj[paramNotifyKarteikartenAenderung];
                         fillProfilHead();
                         fillProfilEinstellungen();
-                        registerProfilSpeichernEvents();
                         // Ein eingeloggter Admin kann auf dem Profil eines anderen Benutzers das Passwort aendern
                         // OHNE das alte Passwort einzugeben.
                         $("#profil_passwort_alt").remove();
@@ -99,9 +120,7 @@ function fillProfilseite() {
                 {
                     message(0, buildMessage(errCode));
                     // Angefragter Benutzer existiert evntl nicht
-                    var paramObj = {};
-                    paramObj[urlParamLocation] = ansichtHauptseite;
-                    buildUrlQuery(paramObj);
+                    gotoHauptseite();
                 }
             }
         });

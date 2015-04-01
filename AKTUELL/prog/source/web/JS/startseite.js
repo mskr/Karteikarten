@@ -2,6 +2,11 @@
  * @author mk
  */
 
+// Statische Handler einmal registrieren
+$(document).ready(function() {
+    
+});
+
 /**
  * Wird von urlHandler.js aufgerufen,
  * nachdem die <div> Container fuer die Startseite angezeigt wurden.
