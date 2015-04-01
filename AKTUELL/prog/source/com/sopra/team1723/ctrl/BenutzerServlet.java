@@ -51,7 +51,6 @@ public class BenutzerServlet extends ServletController {
     private boolean login(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
         HttpSession aktuelleSession = request.getSession();
-        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
@@ -120,7 +119,6 @@ public class BenutzerServlet extends ServletController {
     private boolean logout(HttpServletRequest request, HttpServletResponse response) throws IOException 
     {
         HttpSession aktuelleSession = request.getSession();
-        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
@@ -153,7 +151,6 @@ public class BenutzerServlet extends ServletController {
     {
 
         HttpSession s = request.getSession();
-        String aktuelleAction = (String) s.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) s.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);
@@ -466,7 +463,7 @@ public class BenutzerServlet extends ServletController {
     }
 
     @Override
-    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+    protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
             IOException
     {}
 

@@ -35,7 +35,7 @@ public class AdminServlet extends ServletController {
     }
 
     @Override
-    protected void processRequest(HttpServletRequest req, javax.servlet.http.HttpServletResponse resp)
+    protected void processRequest(String aktuelleAction, HttpServletRequest req, javax.servlet.http.HttpServletResponse resp)
             throws ServletException, IOException
     {
         // TODO Auto-generated method stub

@@ -35,10 +35,9 @@ public class FileUploadServlet extends ServletController
     protected final int profilBildWidth = profilBildHeigth;
     
     @Override
-    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
         HttpSession s = req.getSession();
-        String aktuelleAction = (String) s.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) s.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);

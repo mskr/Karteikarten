@@ -74,11 +74,10 @@ public class KommentarServlet extends ServletController {
     }
 
     @Override
-    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+    protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
             IOException
     {
         HttpSession aktuelleSession = req.getSession();
-        String aktuelleAction = (String) aktuelleSession.getAttribute(sessionAttributeaktuelleAction);
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
