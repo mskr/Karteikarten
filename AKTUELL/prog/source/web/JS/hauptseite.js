@@ -251,10 +251,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 function registerErstellerClickFunction(vnHtmlString, jsonVeranstObj) {
     var erstellerLink = vnHtmlString.find(".vn_dozent");
     erstellerLink.click(function() {
-        var paramObj = {};
-        paramObj[urlParamLocation] = ansichtProfilseite;
-        paramObj[urlParamId] = jsonVeranstObj[paramErsteller][paramId];
-        buildUrlQuery(paramObj);
+        gotoProfil(jsonVeranstObj[paramErsteller][paramId]);
     });
 }
 
@@ -463,19 +460,13 @@ function registerSucheClickEvent(id)
     $(".sucherg_benutzer_item").each(function(index) {
         $(this).click(function() {
             var benutzerId = $(this).attr("id").split("_")[2];
-            var paramObj = {};
-            paramObj[urlParamLocation] = ansichtProfilseite;
-            paramObj[urlParamId] = benutzerId;
-            buildUrlQuery(paramObj);
+            gotoProfil(benutzerId);
         });
     });
     $(".sucherg_vn_item").each(function(index) {
         $(this).click(function() {
             var vnId = $(this).attr("id").split("_")[2];
-            var paramObj = {};
-            paramObj[urlParamLocation] = ansichtVeranstaltungseite;
-            paramObj[urlParamId] = vnId;
-            buildUrlQuery(paramObj);
+            gotoVeranstaltung(vnId)
         });
     });
     // Das kleine x zum schliessen

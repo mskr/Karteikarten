@@ -92,7 +92,7 @@ function buildUrlQuery(paramObj)
     // TODO
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
     // Test mit History
-    History.pushState(null,"SopraProjekt Team23/17", locationSearchTmp);
+    History.pushState(null,null, locationSearchTmp);
     interpreteUrlQuery(parseUrlQuery(locationSearchTmp.substring(1)));
 }
 
@@ -195,4 +195,47 @@ function display(ansicht)
     {
         console.log("[urlHandler] Ungueltige Ansicht: "+ansicht);
     }
+}
+/**
+ * Diese Funktion setzt die URL und wechselt zum angegebenen Profil
+ * @param benutzerID
+ */
+function gotoProfil(benutzerID)
+{
+	var paramObj = {};
+	paramObj[urlParamLocation] = ansichtProfilseite;
+	paramObj[urlParamId] = benutzerID;
+	buildUrlQuery(paramObj);
+}
+/**
+ * Diese Funktion setzt die URL und wechselt zur angegebenen Veranstaltung
+ * @param veranstId
+ */
+function gotoVeranstaltung(veranstId)
+{
+	var paramObj = {};
+	paramObj[urlParamLocation] = ansichtVeranstaltungseite;
+	paramObj[urlParamId] = veranstId;
+	buildUrlQuery(paramObj);
+}
+/**
+ * Diese Funktion setzt die URL und wechselt zur Hautseite
+ * @param veranstId
+ */
+function gotoHauptseite()
+{
+	var paramObj = {};
+	paramObj[urlParamLocation] = ansichtHauptseite;
+	buildUrlQuery(paramObj);
+}
+
+/**
+ * Diese Funktion wechselt zur Startseite
+ * @param veranstId
+ */
+function gotoStartseite()
+{
+	var paramObj = {};
+	paramObj[urlParamLocation] = ansichtStartseite;
+	buildUrlQuery(paramObj);
 }

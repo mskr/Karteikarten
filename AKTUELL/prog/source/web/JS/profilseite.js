@@ -113,9 +113,7 @@ function fillProfilseite() {
                 {
                     message(0, buildMessage(errCode));
                     // Angefragter Benutzer existiert evntl nicht
-                    var paramObj = {};
-                    paramObj[urlParamLocation] = ansichtHauptseite;
-                    buildUrlQuery(paramObj);
+                    gotoHauptseite();
                 }
             }
         });

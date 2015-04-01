@@ -6,10 +6,7 @@
 $(document).ready(function() {
 	
 	$(".username").click(function() {
-		var paramObj = {};
-		paramObj[urlParamLocation] = ansichtProfilseite;
-		paramObj[urlParamId] = jsonBenutzer[paramId];
-		buildUrlQuery(paramObj);
+		gotoProfil(jsonBenutzer[paramId]);
 	});
 
 	$(".bn_header").click(function() {
@@ -60,28 +57,19 @@ function fillMyPersonalBox()
 					else if(type == paramBenTypeModerator)
 					{
 						fkt = function() {
-					        var paramObj = {};
-					        paramObj[urlParamLocation] = ansichtVeranstaltungseite;
-					        paramObj[urlParamId] = bens[i][paramBenVeranst][paramId];
-					        buildUrlQuery(paramObj);
+					        gotoVeranstaltung(bens[i][paramBenVeranst][paramId]);
 						};
 					}
 					else if(type == paramBenTypeProfil)
 					{
 						fkt = function() {
-					        var paramObj = {};
-					        paramObj[urlParamLocation] = ansichtProfilseite;
-					        paramObj[urlParamId] = jsonBenutzer[paramId];
-					        buildUrlQuery(paramObj);
+					        gotoProfil(jsonBenutzer[paramId]);
 						};
 					}
 					else if(type == paramBenTypeVeranstaltung)
 					{
 						fkt = function() {
-					        var paramObj = {};
-					        paramObj[urlParamLocation] = ansichtVeranstaltungseite;
-					        paramObj[urlParamId] = bens[i][paramBenVeranst][paramId];
-					        buildUrlQuery(paramObj);
+					        gotoVeranstaltung(bens[i][paramBenVeranst][paramId]);
 						};
 					}
 					setTimeout(function() {
@@ -208,9 +196,7 @@ function handleReturnLink() {
     {
         $(".return").show();
         $(".return").click(function() {
-            var paramObj = {};
-            paramObj[urlParamLocation] = ansichtHauptseite;
-            buildUrlQuery(paramObj);
+        	gotoHauptseite();
         });
     }
     else
