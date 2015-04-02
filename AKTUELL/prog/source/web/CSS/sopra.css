@@ -516,27 +516,26 @@ label {
 	overflow: hidden;;
 	background: #2a2a2a;
 	border-left: 3px solid #3b3b3b;
+	border-bottom: 1px solid transparent;
 	-webkit-box-shadow: 0px 1px 0px #242424;
 	-moz-box-shadow: 0px 1px 0px #242424;
 	box-shadow: 0px 1px 0px #242424;
-} .vn:hover, .vn.hovered {
-	/* Benutze .hovered um mit jQuery Hoverstatus simulieren zu koennen */
+} .vn:hover, .vn.focused {
 	color: white;
 	background: #242424;
+	border-bottom: 1px solid #3f3f3f;
 	box-shadow: inset 0px 1px 0px #1c1c1c;
 } .vn_eingeschrieben {
-	cursor: pointer;
 	border-left: 3px solid gray;
 } .vn_titel {
 	margin: 1em 1em 0 1em;
 	display: inline-block;
-	min-width: 10em;
+	width: 50%;
 } .vn_details {
 	margin: 1em;
 	font-size: .75em;
 	display: inline-block;
 	vertical-align: top;
-	min-width: 15em;
 } .vn_mehr_einbl {
 	padding: 1em;
 	width: 1em;
@@ -545,18 +544,17 @@ label {
 	float: right;
 } .vn_mehr_einbl:hover {
 	color: gray;
-} .vn_mehr_einbl span:before {
-	content: "\f05b"; /* Octicon triangle-right */
-} .vn_mehr_einbl_toggle:checked + .vn_mehr_einbl span:before {
-	content: "\f0aa"; /* Octicon triangle-down */
+} .vn_mehr_einbl span {
+	transition: all .4s;
+} .vn_mehr_einbl_toggle:checked + .vn_mehr_einbl span {
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
 } .vn_mehr_wrapper {
-	display: none;
+	display: none; /* wird durch jQuery sichtbar gemacht */
 	margin: 0 1em 1em 1em;
 	padding-top: 1em;
 	border-top: 1px dashed #3b3b3b;
 	box-shadow: inset 0 1px #1c1c1c;
-} .vn_mehr_einbl_toggle:checked ~ .vn_mehr_wrapper {
-	display: block;
 } .vn_beschreibung {
 	font-size: .75em;
 } .vn_optionen {
@@ -1441,10 +1439,6 @@ select.profil_input {
 		width: 100%;
 	}
 	
-
-	.meine_vn_tablabel:after {
-		content: "Meine";
-	}
 	
 	.studiengang_vn_tablabel:after {
 		content: "...";

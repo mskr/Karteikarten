@@ -3237,31 +3237,3 @@ Copyright (c) 2015 Daniel Eden
         transform: translateX(0);
     }
 }
-
-
-/* Jetzt kommt eine Animation von mir */
-
-@-webkit-keyframes drehe180 {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(180deg);
-  }
-}
-@-moz-keyframes drehe180 {
-  from {
-    -moz-transform: rotate(0deg);
-  }
-  to {
-    -moz-transform: rotate(180deg);
-  }
-}
-@keyframes drehe180 {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(180deg);
-  }
-}

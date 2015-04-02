@@ -86,34 +86,6 @@ function fillVeranstaltungsliste()
     var ajax1 = leseVeranstaltungenMeine();
     var ajax2 = leseVeranstaltungenSemester($("#vn_semester_auswahl").val());
     var ajax3 = leseVeranstaltungenStudiengang($("#vn_studiengaenge_auswahl").val());
-    $.when(ajax1, ajax2, ajax3).done(function() {
-        // Folgendes erlaubt checked Radio-Buttons zu unchecken
-        // @see http://stackoverflow.com/questions/17120576
-        var checkedRadio; // DOM Object
-        $(".vn_mehr_einbl_toggle").each(function(i) {
-            // Achtung: $(this) holt das jQuery-, und this das DOM-Object.
-            $(this).click(function() {
-                // Hole die ID der zugehoerigen Veranstaltungen, um deren Farbe aendern zu koennen
-                var vnIDaktuell = "vn_"+this.id.split("_")[1]+"_"+this.id.split("_")[2];
-                if(checkedRadio != undefined)
-                {
-                    var vnIDdavor = "vn_"+checkedRadio.id.split("_")[1]+"_"+checkedRadio.id.split("_")[2];
-                }
-                if( checkedRadio == this )
-                {
-                    this.checked = false;
-                    checkedRadio = undefined;
-                    $("#"+vnIDaktuell).toggleClass("hovered");
-                }
-                else
-                {
-                    $("#"+vnIDdavor).toggleClass("hovered");
-                    checkedRadio = this;
-                    $("#"+vnIDaktuell).toggleClass("hovered");
-                }
-            });
-        });
-    });
 }
 
 function leseVeranstaltungenMeine()
@@ -200,6 +172,8 @@ function displayVeranstaltungen(container, ajaxResult)
 	}
 }
 
+var checkedRadio; // Der Radio Button zur derzeit ausgeklappten Veranstaltung
+
 /**
  * Zeigt eine Veranstaltung im angegeben Container an.
  * @param container Übergeordneter Container
@@ -219,17 +193,17 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		else
 			str += "<div id='"+id+"' class='vn'>";
 
-		str +=		"<input id='"+id+"_radio' type='radio' class='vn_mehr_einbl_toggle' name='vn_"+container.attr("id").split("_")[2]+"' style='display:none'>" +
+		str +=		"<input id='"+id+"_radio' type='radio' class='vn_mehr_einbl_toggle' name='vn' style='display:none'>" +
 		            "<label for='"+id+"_radio' class='vn_mehr_einbl'>" +
-		                "<span class='octicon'></span>" +
+		                "<span class='octicon octicon-triangle-down'></span>" +
 		            "</label>" +
-		            "<span class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>" +
+		            "<a id='"+id+"_titel' class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</a>" +
 					"<span class='vn_details'>" +
 					    "<a class='vn_dozent'>" + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a><br>" +
 					    "<a class='vn_detail'>" + jsonVeranstObj[paramAnzTeilnehmer] + " Teilnehmer</a><br>" +
 					    "<a class='vn_detail'>" + jsonVeranstObj[paramSemester] + "</a>" +
 					"</span>" +
-					"<div class='vn_mehr_wrapper'>" +
+					"<div id='"+id+"_mehr_wrapper' class='vn_mehr_wrapper'>" +
 					"	<span class='vn_beschreibung'>" + jsonVeranstObj[paramBeschr] + "</span>" +
 					"	<div class='vn_optionen'>";
 		
@@ -250,10 +224,35 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		
 		str = $(str);
 		container.append(str);
+		
+        // Ein-/Ausklappen
+		// (jetzt in CSS mit versteckten Radiobuttons realisiert, sodass nur 1 Veranstaltung gleichzeitig aufgeklappt sein kann)
+        $("#"+id+"_radio").click(function() {
+            var vnIDaktuell = "vn_"+this.id.split("_")[1]+"_"+this.id.split("_")[2];
+            var vnIDdavor = "";
+            if(checkedRadio != undefined)
+                vnIDdavor = "vn_"+checkedRadio.id.split("_")[1]+"_"+checkedRadio.id.split("_")[2];
+            if( checkedRadio == this )
+            {
+                this.checked = false;
+                checkedRadio = undefined;
+                $("#"+vnIDaktuell).toggleClass("focused");
+                $("#"+vnIDaktuell+"_mehr_wrapper").slideUp();
+            }
+            else
+            {
+                $("#"+vnIDdavor+"_mehr_wrapper").slideUp();
+                $("#"+vnIDdavor).toggleClass("focused");
+                checkedRadio = this;
+                $("#"+vnIDaktuell).toggleClass("focused");
+                $("#"+vnIDaktuell+"_mehr_wrapper").slideDown();
+            }
+        });
 
+        // Titel Click Handler
 		if(jsonVeranstObj[paramAngemeldet] == true)
 		{
-			str.click(function(event) {
+			$("#"+id+"_titel").click(function(event) {
 				gotoVeranstaltung(jsonVeranstObj[paramId]);
 			});
 		}
@@ -386,18 +385,19 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
 function registerSuchEvent()
 {
     // TODO Bei jedem keyup-event 1 sec warten, ob noch ein event kommt.
-    // Reagiere dann nur auf das event, was zuletzt aufgetreten ist.
-    $("#suche_global_input").keyup(function(event) {
+    // Reagiere dann nur auf das event, was zuletzt aufgetreten ist,
+    // Um Datenbankabfragen zu reduzieren. Wie macht man das am besten?
+    $("#suche_global_input").keydown(function(event) {
         console.log("keycode="+event.keyCode);
-        if(event.keyCode == 40 || 
-           event.keyCode == 38 || 
-           event.keyCode == 13 || 
-           event.keyCode == 27)
+        if(event.keyCode == 40 || // Pfeil runter
+           event.keyCode == 38 || // Pfeil hoch
+           event.keyCode == 13 || // ENTER
+           event.keyCode == 27)   // ESC
         {
-            // 40 = Pfeil runter, 38 = Pfeil hoch, 13 = ENTER, 27 = ESC
             // Sende bei diesen Eingaben keinen Ajax Call
             // sondern navigiere in den Suchergebnissen
             handlePfeiltastenEvents(event.keyCode);
+            event.preventDefault();
             return;
         }
         if($("#suche_ergebnisse").is(":hidden"))
