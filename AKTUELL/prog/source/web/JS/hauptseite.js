@@ -188,17 +188,25 @@ function displayVeranstaltung(container, jsonVeranstObj)
 	    // id hat die Form "vn_<tab>_<DatenbankID>"
 	    var id = "vn_"+container.attr("id").split("_")[2]+"_"+jsonVeranstObj[paramId];
 		var str = "";
+		
 		if(jsonVeranstObj[paramAngemeldet] == true)
 			str += "<div id='"+id+"' class='vn vn_eingeschrieben'>";
 		else
 			str += "<div id='"+id+"' class='vn'>";
 
+		
 		str +=		"<input id='"+id+"_radio' type='radio' class='vn_mehr_einbl_toggle' name='vn' style='display:none'>" +
 		            "<label for='"+id+"_radio' class='vn_mehr_einbl'>" +
 		                "<span class='octicon octicon-triangle-down'></span>" +
-		            "</label>" +
-		            "<a id='"+id+"_titel' class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</a>" +
-					"<span class='vn_details'>" +
+		            "</label>";
+
+		if(jsonVeranstObj[paramAngemeldet] == true)
+			str +=    "<a id='"+id+"_titel' class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</a>";
+		else
+			str += "<span id='"+id+"_titel' class='vn_titel'>" + jsonVeranstObj[paramTitel] + "</span>";
+		
+		
+		str +=		"<span class='vn_details'>" +
 					    "<a class='vn_dozent'>" + jsonVeranstObj[paramErsteller][paramVorname]+ " " + jsonVeranstObj[paramErsteller][paramNachname] + "</a><br>" +
 					    "<a class='vn_detail'>" + jsonVeranstObj[paramAnzTeilnehmer] + " Teilnehmer</a><br>" +
 					    "<a class='vn_detail'>" + jsonVeranstObj[paramSemester] + "</a>" +
@@ -206,6 +214,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 					"<div id='"+id+"_mehr_wrapper' class='vn_mehr_wrapper'>" +
 					"	<span class='vn_beschreibung'>" + jsonVeranstObj[paramBeschr] + "</span>" +
 					"	<div class='vn_optionen'>";
+		
 		
 		if(jsonVeranstObj[paramAngemeldet] == true)
 			str += "<a class='vn_einausschreiben '><span class='octicon octicon-x'></span> Ausschreiben</a>";
@@ -252,7 +261,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
         // Titel Click Handler
 		if(jsonVeranstObj[paramAngemeldet] == true)
 		{
-			$("#"+id+"_titel").click(function(event) {
+			$("#"+id+"_titel").click(function() {
 				gotoVeranstaltung(jsonVeranstObj[paramId]);
 			});
 		}
@@ -275,7 +284,6 @@ function registerErstellerClickFunction(vnHtmlString, jsonVeranstObj) {
     var erstellerLink = vnHtmlString.find(".vn_dozent");
     erstellerLink.click(function() {
         gotoProfil(jsonVeranstObj[paramErsteller][paramId]);
-        event.stopPropagation();
     });
 }
 
@@ -290,7 +298,6 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     {
         // AUSSCHREIBEN
         button.click(function() {
-            event.stopPropagation();
             sindSieSicher((this), "", function() {
                 $.ajax({
                     url: veranstaltungServlet,
@@ -316,7 +323,6 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     {
         // EINSCHREIBEN
         button.click(function() {
-            event.stopPropagation();
             if(jsonVeranstObj[paramKennwortGesetzt])
             {
                 // Einschreiben mit Kennwort
