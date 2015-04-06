@@ -241,6 +241,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(ps.executeUpdate()!= 1)
                 return false;
         } catch(SQLException e){
+            e.printStackTrace();
             erfolgreich = false;
         } finally{
             closeQuietly(ps);
