@@ -46,7 +46,7 @@ public class VeranstaltungServlet extends ServletController {
 
         JSONObject jo;
         
-        if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.DOZENT)
+        if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.DOZENT && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);

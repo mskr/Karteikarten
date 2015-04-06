@@ -28,12 +28,12 @@ function fillSelectWithOptions(select, optArray, selectedOptName, clearFirst)
  * @param message ist die Nachricht, die der Benutzer bestaetigen soll.
  * @param doCriticalThing ist eine Funktion, die nach Bestaetigung mit Ok ausgefuehrt wird.
  */
-function sindSieSicher(anchorElem, message, doCriticalThing)
-{
+function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
+{	
     $("#dialog_sicher").popup({
         type: 'tooltip',
-        vertical: 'top',
-        horizontal: 'center',
+        vertical: locV,
+        horizontal: locH,
         tooltipanchor: anchorElem,
         transition: 'none'
     });

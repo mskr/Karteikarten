@@ -110,6 +110,16 @@ function fillHauptseite()
 			}
 		}
 	});
+
+	if(jsonBenutzer[paramNutzerstatus] == "ADMIN" || jsonBenutzer[paramNutzerstatus] == "DOZENT")
+	{
+		$("#vn_erstellen_bt").show();
+	}
+	else
+	{
+		$("#vn_erstellen_bt").hide();
+	}
+
 	
     $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
 }
@@ -557,7 +567,7 @@ function handlePfeiltastenEvents(pressedKey) {
 
 function registerVeranstErzeugeHandler() {
 	
-	$("#").click(function() {
+	$("#vn_erzeugen_cancel").click(function() {
 		$("#vn_erstellen_popup").popup("hide");
 	});
 	

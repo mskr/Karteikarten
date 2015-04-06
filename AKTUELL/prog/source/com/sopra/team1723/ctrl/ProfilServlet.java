@@ -311,10 +311,55 @@ public class ProfilServlet extends ServletController {
      * @param request 
      * @param response 
      * @return
+     * @throws IOException 
      */
-    private boolean benutzerLoeschen(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+    private boolean benutzerLoeschen(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession aktuelleSession = request.getSession();
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+
+        JSONObject jo;
+        
+        
+        String userId = request.getParameter(ParamDefines.Id);
+        int id = 0;
+        try
+        {
+            id = Integer.parseInt(userId);
+        }
+        catch (NumberFormatException e)
+        {
+
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        if(id != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        if(dbManager.loescheBenutzer(id))
+        {
+            // Eigenes profil? dann ausloggen
+            if(id == aktuellerBenutzer.getId())
+                aktuelleSession.invalidate();
+            
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            outWriter.print(jo);
+            return true;
+        }
+        else
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+        
     }
 
     @Override
@@ -386,6 +431,10 @@ public class ProfilServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionAenderePasswort))
         {
             passwortAendern(req, resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionDeleteBenutzer))
+        {
+            benutzerLoeschen(req, resp);
         }
         else
         {
