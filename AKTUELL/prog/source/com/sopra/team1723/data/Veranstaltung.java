@@ -1,10 +1,16 @@
 package com.sopra.team1723.data;
 
+import org.json.simple.JSONObject;
+
+import com.sopra.team1723.ctrl.IjsonObject;
+import com.sopra.team1723.ctrl.JSONConverter;
+import com.sopra.team1723.ctrl.ParamDefines;
+
 
 /**
  * 
  */
-public class Veranstaltung {
+public class Veranstaltung implements IjsonObject {
 
     
     
@@ -234,6 +240,26 @@ public class Veranstaltung {
     public void setAnzTeilnehmer(int anzTeilnehmer)
     {
         this.anzTeilnehmer = anzTeilnehmer;
+    }
+
+
+
+
+    @Override
+    public JSONObject toJSON(boolean full)
+    {
+        // Ignore parameter full
+        JSONObject jo = new JSONObject();
+        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);    
+        jo.put(ParamDefines.Id, this.getId());   
+        jo.put(ParamDefines.Titel, this.getTitel()); 
+        jo.put(ParamDefines.Beschr, this.getBeschreibung()); 
+        jo.put(ParamDefines.Semester, this.getSemester()); 
+        jo.put(ParamDefines.BewertungenErlauben, this.isBewertungenErlaubt()); 
+        jo.put(ParamDefines.ModeratorKkBearbeiten, this.isModeratorKarteikartenBearbeiten()); 
+        jo.put(ParamDefines.KommentareErlauben,this.isKommentareErlaubt());
+        jo.put(ParamDefines.Ersteller,this.getErsteller().toJSON(true));
+        return jo;
     }
 
 

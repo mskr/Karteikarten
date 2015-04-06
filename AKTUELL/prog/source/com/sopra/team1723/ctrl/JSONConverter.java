@@ -42,29 +42,12 @@ public class JSONConverter
      * Das Passwort wird aus Sicherheitsgruenden 
      * nicht in das JSON Objekt gepackt.
      * @param benutzer
+     * @param full gibt an ob auch die pers. Einstellungen eingepackt werden sollen
      * @return JSONObject mit den Benutzerdaten
      */
     static JSONObject toJson(Benutzer benutzer, boolean full) 
     {
-        JSONObject jo = new JSONObject();
-        
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
-        jo.put(ParamDefines.Email, benutzer.geteMail());
-        jo.put(ParamDefines.Id, benutzer.getId());
-        jo.put(ParamDefines.Vorname, benutzer.getVorname());
-        jo.put(ParamDefines.Nachname, benutzer.getNachname());
-        jo.put(ParamDefines.MatrikelNr, new Integer(benutzer.getMatrikelnummer()).toString());
-        jo.put(ParamDefines.Nutzerstatus, benutzer.getNutzerstatus().name());
-        jo.put(ParamDefines.Studiengang, benutzer.getStudiengang());
-        jo.put(ParamDefines.ProfilBildPfad, benutzer.getProfilBildPfad());
-        
-        if(full)
-        {
-            jo.put(ParamDefines.NotifyVeranstAenderung, benutzer.isNotifyVeranstAenderung());
-            jo.put(ParamDefines.NotifyKarteikartenAenderung, benutzer.isNotifyKarteikartenAenderung());
-            jo.put(ParamDefines.NotifyKommentare, benutzer.getNotifyKommentare().name());
-        }
-        return jo;
+        return benutzer.toJSON(full);
     }
     /**
      * 
@@ -133,7 +116,8 @@ public class JSONConverter
      */
     static JSONObject toJsonVeranstList(List<Veranstaltung> veranstList, List<Boolean> angemeldet) 
     {
-        JSONObject jo = new JSONObject();  
+        // TODO Interface benutzen!!
+        JSONObject jo = new JSONObject();
         jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
         
         JSONArray array = new JSONArray();
@@ -178,19 +162,7 @@ public class JSONConverter
      */
     static JSONObject toJson(Veranstaltung veranst) 
     {
-        JSONObject jo = new JSONObject();
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);    
-        jo.put(ParamDefines.Id, veranst.getId());   
-        jo.put(ParamDefines.Titel, veranst.getTitel()); 
-        jo.put(ParamDefines.Beschr, veranst.getBeschreibung()); 
-        jo.put(ParamDefines.Semester, veranst.getSemester()); 
-        jo.put(ParamDefines.BewertungenErlauben, veranst.isBewertungenErlaubt()); 
-        jo.put(ParamDefines.ModeratorKkBearbeiten, veranst.isModeratorKarteikartenBearbeiten()); 
-        jo.put(ParamDefines.KommentareErlauben,veranst.isKommentareErlaubt());
-        jo.put(ParamDefines.Ersteller,JSONConverter.toJson(veranst.getErsteller(),true));
-        
-        
-        return jo;
+        return veranst.toJSON(true); // Boolean in diesem Fall egal
     }
     
     /**

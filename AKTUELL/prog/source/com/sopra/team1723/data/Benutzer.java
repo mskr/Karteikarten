@@ -1,10 +1,15 @@
 package com.sopra.team1723.data;
 
+import org.json.simple.JSONObject;
+
+import com.sopra.team1723.ctrl.IjsonObject;
+import com.sopra.team1723.ctrl.ParamDefines;
+
 
 /**
  * 
  */
-public class Benutzer {
+public class Benutzer implements IjsonObject {
 
     /**
      * 
@@ -276,5 +281,27 @@ public class Benutzer {
      * 
      */
     private String profilBild;
+
+    @Override
+    public JSONObject toJSON(boolean full)
+    {
+        JSONObject jo = new JSONObject();
+        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
+        jo.put(ParamDefines.Email, this.geteMail());
+        jo.put(ParamDefines.Id, this.getId());
+        jo.put(ParamDefines.Vorname, this.getVorname());
+        jo.put(ParamDefines.Nachname, this.getNachname());
+        jo.put(ParamDefines.MatrikelNr, new Integer(this.getMatrikelnummer()).toString());
+        jo.put(ParamDefines.Nutzerstatus, this.getNutzerstatus().name());
+        jo.put(ParamDefines.Studiengang, this.getStudiengang());
+        jo.put(ParamDefines.ProfilBildPfad, this.getProfilBildPfad());
+        if(full)
+        {
+            jo.put(ParamDefines.NotifyVeranstAenderung, this.isNotifyVeranstAenderung());
+            jo.put(ParamDefines.NotifyKarteikartenAenderung, this.isNotifyKarteikartenAenderung());
+            jo.put(ParamDefines.NotifyKommentare, this.getNotifyKommentare().name());
+        }
+        return jo;
+    }
 
 }
