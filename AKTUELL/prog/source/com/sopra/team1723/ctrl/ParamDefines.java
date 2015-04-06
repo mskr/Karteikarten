@@ -23,8 +23,8 @@ public class ParamDefines
     
     public final static String ActionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
     public final static String LeseVeranstMode = "mode";                        // Liefert Veranstaltungen
-    public final static String LeseVeranstModeSemester = "semester";            // Liefert alle Veranstaltungen im aktuellen Semester
-    public final static String LeseVeranstModeStudiengang = "studiengang";      // Liefert alle Veranstaltungen im aktuellen Studiengang (TODO)
+    public final static String LeseVeranstModeStudiengangSemester =             // Liefert alle Veranstaltungen
+            "studiengangSemester";                                              // für das gewählte Semester und Studiengang
     public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
 
     public final static String ActionAusschreiben = "ausschreiben";
@@ -110,6 +110,7 @@ public class ParamDefines
     public final static String jsonStrResult = "strResult";
     public final static String jsonArrSuchfeldResult = "arrSuchfeldResult";
     
+        
     public final static int WiSeMonatBeginn = 10;
     public final static int WiSeTagBeginn = 1;
     public final static int WiSeMonatEnde = 3;
