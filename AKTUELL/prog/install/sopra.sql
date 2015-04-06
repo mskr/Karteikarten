@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 30. Mrz 2015 um 17:25
+-- Erstellungszeit: 06. Apr 2015 um 08:40
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -355,23 +355,24 @@ CREATE TABLE IF NOT EXISTS `notiz` (
 --
 
 CREATE TABLE IF NOT EXISTS `semester` (
+`ID` int(11) NOT NULL,
   `Name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `semester`
 --
 
-INSERT INTO `semester` (`Name`) VALUES
-('SoSe2013'),
-('SoSe2014'),
-('SoSe2015'),
-('SoSe2016'),
-('SoSe2017'),
-('WiSe2013/14'),
-('WiSe2014/15'),
-('WiSe2015/16'),
-('WiSe2016/17');
+INSERT INTO `semester` (`ID`, `Name`) VALUES
+(1, 'SoSe2013'),
+(2, 'WiSe2013/14'),
+(3, 'SoSe2014'),
+(4, 'WiSe2014/15'),
+(5, 'SoSe2015'),
+(6, 'WiSe2015/16'),
+(7, 'SoSe2016'),
+(8, 'WiSe2016/17'),
+(9, 'SoSe2017');
 
 -- --------------------------------------------------------
 
@@ -570,7 +571,7 @@ ALTER TABLE `notiz`
 -- Indizes für die Tabelle `semester`
 --
 ALTER TABLE `semester`
- ADD PRIMARY KEY (`Name`);
+ ADD PRIMARY KEY (`Name`), ADD UNIQUE KEY `ID` (`ID`);
 
 --
 -- Indizes für die Tabelle `studiengang`
@@ -669,6 +670,11 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 ALTER TABLE `notiz`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `semester`
+--
+ALTER TABLE `semester`
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT für Tabelle `veranstaltung`
 --

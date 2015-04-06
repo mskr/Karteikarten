@@ -1,7 +1,9 @@
 package com.sopra.team1723.ctrl;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.*;
 
@@ -107,7 +109,7 @@ public interface IDatenbankmanager {
      * @return Liste der Semester. Tritt ein Fehler auf wird null zurückgegeben. Werden keine Semester in der 
      * Datenbank gefunden, dann wird eine leere Liste zurückgegeben
      */
-    public List<String> leseSemester();
+    public Map<Integer,String> leseSemester();
 
     /**
      * Ändert das Passwort des angegebenen Benutzers. 
@@ -132,23 +134,25 @@ public interface IDatenbankmanager {
 //     * leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
 //     */
 //    public List<Veranstaltung> leseAlleVeranstaltungen();
+//    
+//    /**
+//     * Holt Veranstaltungen, die von dem angegebenen Studiengang gehört werden können
+//     * aus der Datenbank.
+//     * @param studiengang
+//     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die 
+//     * Methode eine leere Liste zurück. Bei einem Fehler kommt null zurück.
+//     */
+//    public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang);
+//
+//    /**
+//     * Holt alle Veranstaltungen aus dem angegebenen Semester aus der Datenbank.
+//     * @param semester 
+//     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die Methode eine leere Liste zurück.
+//     * Bei einem Fehler kommt null zurück.
+//     */
+//    public List<Veranstaltung> leseVeranstaltungenSemester(String semester);
     
-    /**
-     * Holt Veranstaltungen, die von dem angegebenen Studiengang gehört werden können
-     * aus der Datenbank.
-     * @param studiengang
-     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die 
-     * Methode eine leere Liste zurück. Bei einem Fehler kommt null zurück.
-     */
-    public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang);
-
-    /**
-     * Holt alle Veranstaltungen aus dem angegebenen Semester aus der Datenbank.
-     * @param semester 
-     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die Methode eine leere Liste zurück.
-     * Bei einem Fehler kommt null zurück.
-     */
-    public List<Veranstaltung> leseVeranstaltungenSemester(String semester);
+    public List<Veranstaltung> leseVeranstaltungen(String semester, String studiengang);
     
     /**
      * Holt alle Veranstaltungen des angegebenen Benutzers.
