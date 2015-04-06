@@ -246,7 +246,43 @@ public interface IDatenbankmanager {
      * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
      * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
      */
-    public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster, List<Klassenfeld> suchfeld);
+    public List<Veranstaltung> durchsucheDatenbank(String suchmuster);
+    
+    /**
+     * 
+     * Diese Methode durchsucht die Datenbank nach dem suchmuster. Die Methode ist flexibel gebaut.
+     * Das heißt, dass man in einer Liste angeben kann nach welchen Feldern in der Datenbank gesucht
+     * werden soll. Die Namen der Felder sind eindeutig durch den Klassennamen und den Attributnamen bestimmt.
+     * Die beiden Werte sind in der Klasse Klassenfeld gekapselt. Die Methode liefert die zum suchmuster
+     * ähnlichen Ergebnisse in einer Liste zurück. In der Klasse ErgebnisseSuchfeld sind dabei 
+     * der ähnliche Text, der Klassenname und die ID des Objekts zu dem der ähnliche Text gehört
+     * gekapselt. In der Liste werden maximal 5 Einträge gespeichert. Ist der Rückgabewert null, so
+     * ist ein Fehler aufgetreten. Gibt es kein ähnliches Feld zu dem Suchmuster, dann liefert die
+     * Methode eine leere Liste zurück.
+     * @param suchmuster nach dem Felder in der Datenbank verglichen werden
+     * @param suchfeld gibt an welche Felder in der Datenbank mit dem Suchmuster verglichen werden.
+     * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
+     * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
+     */
+    public List<Map<Veranstaltung, Integer>>  durchsucheDatenbankVeranstaltung(String suchmuster);
+    
+    /**
+     * 
+     * Diese Methode durchsucht die Datenbank nach dem suchmuster. Die Methode ist flexibel gebaut.
+     * Das heißt, dass man in einer Liste angeben kann nach welchen Feldern in der Datenbank gesucht
+     * werden soll. Die Namen der Felder sind eindeutig durch den Klassennamen und den Attributnamen bestimmt.
+     * Die beiden Werte sind in der Klasse Klassenfeld gekapselt. Die Methode liefert die zum suchmuster
+     * ähnlichen Ergebnisse in einer Liste zurück. In der Klasse ErgebnisseSuchfeld sind dabei 
+     * der ähnliche Text, der Klassenname und die ID des Objekts zu dem der ähnliche Text gehört
+     * gekapselt. In der Liste werden maximal 5 Einträge gespeichert. Ist der Rückgabewert null, so
+     * ist ein Fehler aufgetreten. Gibt es kein ähnliches Feld zu dem Suchmuster, dann liefert die
+     * Methode eine leere Liste zurück.
+     * @param suchmuster nach dem Felder in der Datenbank verglichen werden
+     * @param suchfeld gibt an welche Felder in der Datenbank mit dem Suchmuster verglichen werden.
+     * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
+     * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
+     */
+    public List<Map<Benutzer, Integer>>  durchsucheDatenbankBenutzer(String suchmuster);
 
     /**
      * Liest die aktuellsten Benachrichtigungen für einen Benutzer aus der Datenbank
