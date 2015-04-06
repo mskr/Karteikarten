@@ -620,7 +620,7 @@ Dann aber so leer.
 	</div>
 </div>
 
-<div id="vn_erstellen_popup">
+<form id="vn_erstellen_popup">
 	<div class="vn_popup_titel">
 		<h3>Veranstaltung erstellen</h3>
 	</div>
@@ -628,16 +628,15 @@ Dann aber so leer.
 		<span class="octicon octicon-x"></span>
 	</div>
 	<div class="vn_popup_form">
-		<input class="input_std" id="vn_titel_input" type="text" placeholder="Titel">
+		<input class="input_std" id="vn_titel_input" type="text" placeholder="Titel" required>
 		<select class="input_std" id="vn_erstellen_auswahl_semester"></select>
 		<select class="input_std" id="vn_erstellen_auswahl_studiengang"></select>
-		<input class="input_std" id="vn_mod_input" type="text" placeholder="Moderatoren">
-		<input class="input_std" id="vn_mehr_input" type="text" placeholder="Beschreibung">
-		<div class="popup_spalte">
+		<textarea class="input_std" id="vn_mod_input" placeholder="Moderatoren"></textarea>
+		<textarea class="input_std" id="vn_beschr_input" placeholder="Beschreibung" required></textarea>
+		<div class="popup_spalte" id="vn_bearbeiten_mode">
 			<span>Wer darf bearbeiten?</span>
-			<span><input id="vn_jeder_bearb" type="radio" name="wer_darf_bearb"><label for="vn_jeder_bearb">Jeder</label></span>
-			<span><input id="vn_mod_bearb" type="radio" name="wer_darf_bearb"><label for="vn_mod_bearb">Nur Moderatoren</label></span>
-			<span><input id="vn_keiner_bearb" type="radio" name="wer_darf_bearb" checked><label for="vn_keiner_bearb">Nur ich</label></span>
+			<span><input name="vn_bearbeitenMode_radiogb" id="vn_keiner_bearb" value = "Nur ich" type="radio"checked><label for="vn_keiner_bearb">Nur ich</label></span>
+			<span><input name="vn_bearbeitenMode_radiogb" id="vn_mod_bearb" value = "Ich und Moderatoren"type="radio"><label for="vn_mod_bearb">Ich und Moderatoren</label></span>
 		</div>
 		<div class="popup_spalte">
 			<span><input id="vn_komm_erlaubt" type="checkbox" checked><label for="vn_komm_erlaubt">Kommentare erlaubt</label></span>
@@ -646,9 +645,9 @@ Dann aber so leer.
 	</div>
 	<div class="vn_popup_foot">
 		<input class="mybutton dark flat popup_close" type="button" value="Abbrechen">
-		<input class="mybutton green" type="submit" value="Erstellen">
+		<input class="mybutton green" id="vn_erzeugen_submit" type="submit" value="Erstellen">
 	</div>
-</div>
+</form>
 
 <div id="attr_popup" class="bigtooltip">
 	<div class="bigtooltip_pfeil"></div>

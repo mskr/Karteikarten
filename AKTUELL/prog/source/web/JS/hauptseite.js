@@ -24,6 +24,8 @@ $(document).ready(function() {
 		leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
 				   $("#vn_alle_auswahl_studiengang").val());
 	});
+	
+	registerVeranstErzeugeHandler();
 });
 
 function fillHauptseite() 
@@ -99,9 +101,6 @@ function fillHauptseite()
     $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
 }
 
-var globalContainerVeranstCount = 0;
-var globalContainerVeranstArray = [];
-
 function fillVeranstaltungsliste() 
 {
     leseVeranstaltungenMeine();
@@ -165,26 +164,9 @@ function displayVeranstaltungen(container, ajaxResult)
 		var veranstObjekte = ajaxResult[keyJsonArrResult];
 		// Alle Veranstaltungen entfernen
 		container.children().not(".vn_toolbar").remove();
-		globalContainerVeranstArray = [];
-		globalContainerVeranstCount = 0;
 		
 		for(var i in veranstObjekte)
 		{
-			var newV = true;
-			for(var j in globalContainerVeranstArray)
-			{
-				// Veranstaltung schon gepeichert
-				if(globalContainerVeranstArray[j][paramId] == veranstObjekte[i][paramId])
-				{
-					newV = false;
-					break;
-				}
-			}
-			if(newV)
-			{
-				// Veranstaltung speichern
-				globalContainerVeranstArray[globalContainerVeranstCount++] = veranstObjekte[i];
-			}
 			displayVeranstaltung(container, veranstObjekte[i]);
 		}
 	}
@@ -546,4 +528,46 @@ function handlePfeiltastenEvents(pressedKey) {
         $("#sucherg_x").trigger("click");
     }
     $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
+}
+
+
+function registerVeranstErzeugeHandler() {
+	$("#vn_erzeugen_submit").click(function(event) {
+		event.preventDefault();
+		
+		var popup = $("#vn_erstellen_popup");
+		var titel = popup.find("#vn_titel_input").val(),
+			semester = popup.find("#vn_erstellen_auswahl_semester").val(),
+			studiengang = popup.find("#vn_erstellen_auswahl_studiengang").val(),
+			beschr = popup.find("#vn_beschr_input").val(),
+			moderatorenKkBearbeiten = popup.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
+			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
+			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
+	
+		var ajax = $.ajax({
+			url: veranstaltungServlet,
+			data: "action=" + actionErstelleVeranst + "&" + 
+				  paramTitel + "=" + titel + "&" +
+				  paramSemester + "=" + semester + "&" + 
+				  paramStudiengang + "=" + studiengang + "&" +
+				  paramBeschr + "=" + beschr + "&" + 
+				  paramModeratorKkBearbeiten + "=" +moderatorenKkBearbeiten + "&"+
+				  paramKommentareErlauben + "=" + kommentareErlaubt + "&" + 
+				  paramBewertungenErlauben + "=" + bewertungenErlaubt,
+				  
+			success: function(response) {
+				var jsonObj = response;
+				var errCode = jsonObj["error"];
+				if(errCode == "noerror")
+				{
+					popup.popup('hide');
+					fillVeranstaltungsliste();	
+				}
+				else
+				{
+					message(0, buildMessage(errCode));
+				}		
+			}
+		});
+	});
 }
