@@ -15,66 +15,87 @@ $(document).ready(function() {
     	transition: 'all 0.3s'
     });
 
-    // Studiengänge in auswahlliste anzeigen
-    var ajax1 = $.ajax({
-    	url: benutzerServlet,
-    	data: "action="+actionGetStudiengaenge + "&",
-    	success: function(jsonObj) 
-    	{
-    		var errCode = jsonObj["error"];
-    		if(errCode == "noerror") 
-    		{
-                $("#vn_studiengaenge_auswahl").empty();
-                var studgArr = jsonObj[keyJsonArrResult];
-            	for(var i in studgArr) 
-            	{
-            		$("#vn_studiengaenge_auswahl").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
-            	}
-            	
-            	$("#vn_studiengaenge_auswahl option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
-        		leseVeranstaltungenStudiengang($("#vn_studiengaenge_auswahl").val());  
-            	$("#vn_studiengaenge_auswahl").change(function() {
-            		leseVeranstaltungenStudiengang($("#vn_studiengaenge_auswahl").val());  
-            	});
-    		}
-    		else
-    		{
-    			message(0, buildMessage(errCode));
-    		}
-    	}
-    });  
-    
-    // Semester in auswahlliste anzeigen
-    var ajax2 = $.ajax({
-    	url: benutzerServlet,
-    	data: "action="+actionGetSemester + "&",
-    	success: function(jsonObj) 
-    	{
-    		var errCode = jsonObj["error"];
-    		if(errCode == "noerror") 
-    		{
-    			$("#vn_semester_auswahl").empty();
-    			var studgArr = jsonObj[keyJsonArrResult];
-    			for(var i in studgArr) {
-    				$("#vn_semester_auswahl").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
-    			}
+	$("#vn_alle_auswahl_studiengang").change(function() {
+		leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
+				   $("#vn_alle_auswahl_studiengang").val());
+	});
+ 
 
-            	$("#vn_semester_auswahl option[value='"+ jsonObj[paramAktSemester] +"']").prop('selected', true);
-            	leseVeranstaltungenSemester($("#vn_semester_auswahl").val());
-    			$("#vn_semester_auswahl").change(function() {
-    				leseVeranstaltungenSemester($("#vn_semester_auswahl").val());  
-    			});
-    		}
-    		else
-    		{
-    			message(0, buildMessage(errCode));
-    		}
-    	}
-    });
+	$("#vn_alle_auswahl_semester").change(function() {
+		leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
+				   $("#vn_alle_auswahl_studiengang").val());
+	});
+	
+	
+   
 });
 
 function fillHauptseite() 
 {
+	// Studiengänge in auswahlliste anzeigen
+	var ajax1 = $.ajax({
+		url: benutzerServlet,
+		data: "action="+actionGetStudiengaenge,
+		success: function(jsonObj) 
+		{
+			var errCode = jsonObj["error"];
+			if(errCode == "noerror") 
+			{
+				$("#vn_alle_auswahl_studiengang").empty();
+				var studgArr = jsonObj[keyJsonArrResult];
+				for(var i in studgArr) 
+				{
+					$("#vn_alle_auswahl_studiengang").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
+				}
+
+				$("#vn_alle_auswahl_studiengang option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
+
+				leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
+						$("#vn_alle_auswahl_studiengang").val());
+
+			}
+			else
+			{
+				message(0, buildMessage(errCode));
+			}
+		}
+	}); 
+
+	// Semester in auswahlliste anzeigen
+	var ajax2 = $.ajax({
+		url: benutzerServlet,
+		data: "action="+actionGetSemester,
+		success: function(jsonObj) 
+		{
+			var errCode = jsonObj["error"];
+			if(errCode == "noerror") 
+			{
+				$("#vn_alle_auswahl_semester").empty();
+
+				var studgArr = jsonObj[keyJsonArrResult];
+
+				for(var i in studgArr) {
+					$("#vn_alle_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
+				}
+
+				$("#vn_alle_auswahl_semester option[value='"+ jsonObj[paramAktSemester] +"']").prop('selected', true);
+
+				$("#vn_alle_auswahl_semester").find("option").sort(function(a,b) {
+					return $(a).data('semesterid') > $(b).data('semesterid');
+				}).appendTo('#vn_alle_auswahl_semester');
+
+
+				leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
+						$("#vn_alle_auswahl_studiengang").val());
+
+			}
+			else
+			{
+				message(0, buildMessage(errCode));
+			}
+		}
+	});
+    
     fillVeranstaltungsliste();
 }
 
@@ -84,8 +105,8 @@ var globalContainerVeranstArray = [];
 function fillVeranstaltungsliste() 
 {
     var ajax1 = leseVeranstaltungenMeine();
-    var ajax2 = leseVeranstaltungenSemester($("#vn_semester_auswahl").val());
-    var ajax3 = leseVeranstaltungenStudiengang($("#vn_studiengaenge_auswahl").val());
+    var ajax2 = leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
+    												   $("#vn_alle_auswahl_studiengang").val());
 }
 
 function leseVeranstaltungenMeine()
@@ -103,37 +124,38 @@ function leseVeranstaltungenMeine()
 	});
 }
 
-function leseVeranstaltungenSemester(semesterName)
+function leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName)
 {
 	// Semester Veranstaltungen
 	return $.ajax({
 		url: veranstaltungServlet,
 		data: "action="+actionLeseVeranst + "&" + 
-		leseVeranstMode +"=" + leseVeranstModeSemester + "&" +
-		paramGewaehltesSemester + "=" + semesterName,
+		leseVeranstMode +"=" + leseVeranstModeStudiengangSemester + "&" +
+		paramGewaehltesSemester + "=" + semesterName + "&" +
+		paramGewaehltesStudiengang + "=" + studiengangName,
 		success: function(jsonObj) 
 		{
-			var divSemesterVeranst = $("#vn_tabcontent_semester");
+			var divSemesterVeranst = $("#vn_tabcontent_alle");
 			displayVeranstaltungen(divSemesterVeranst, jsonObj);
 		}
 	});
 }
 
-function leseVeranstaltungenStudiengang(studiengangName)
-{
-	// Studiengang Veranstaltungen
-	return $.ajax({
-		url: veranstaltungServlet,
-		data: "action="+actionLeseVeranst + "&" + 
-		leseVeranstMode +"=" + leseVeranstModeStudiengang + "&" +
-		paramGewaehltesStudiengang + "=" + studiengangName,
-		success: function(jsonObj) 
-		{
-			var divStudiengangVeranst = $("#vn_tabcontent_studiengang");
-			displayVeranstaltungen(divStudiengangVeranst, jsonObj);
-		}
-	});	
-}
+//function leseVeranstaltungenStudiengang(studiengangName)
+//{
+//	// Studiengang Veranstaltungen
+//	return $.ajax({
+//		url: veranstaltungServlet,
+//		data: "action="+actionLeseVeranst + "&" + 
+//		leseVeranstMode +"=" + leseVeranstModeStudiengang + "&" +
+//		paramGewaehltesStudiengang + "=" + studiengangName,
+//		success: function(jsonObj) 
+//		{
+//			var divStudiengangVeranst = $("#vn_tabcontent_studiengang");
+//			displayVeranstaltungen(divStudiengangVeranst, jsonObj);
+//		}
+//	});	
+//}
 
 function displayVeranstaltungen(container, ajaxResult)
 {
@@ -388,11 +410,13 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
 
 
 
+
 function registerSuchEvent()
 {
     // TODO Bei jedem keyup-event 1 sec warten, ob noch ein event kommt.
     // Reagiere dann nur auf das event, was zuletzt aufgetreten ist,
     // Um Datenbankabfragen zu reduzieren. Wie macht man das am besten?
+    // TODO Wenn man sehr schnell tippt werden mehr als 5 Ergebnisse angezeigt.
     $("#suche_global_input").keydown(function(event) {
         console.log("keycode="+event.keyCode);
         if(event.keyCode == 40 || // Pfeil runter
@@ -408,12 +432,12 @@ function registerSuchEvent()
         }
         if($("#suche_ergebnisse").is(":hidden"))
         {
-            $("#suche_ergebnisse").css("display","flex"); // Anstatt  von show()
+            $("#suche_ergebnisse").show();
         }
         $("#sucherg_vn").empty();
         $("#sucherg_benutzer").empty();
-        var suchString = $("#suche_global_input").val();
-        var ajax = $.ajax({
+        var suchString = $("#suche_global_input").val() + String.fromCharCode(event.keyCode);
+        ajax = $.ajax({
             url: suchfeldServlet,
             data: "action=" + actionSucheBenVeranst + "&" +
                   paramSuchmuster + "=" + suchString,
@@ -446,9 +470,11 @@ function fillSuchergebnisse(arrSuchErgebnisse)
         if(klasse == "Benutzer") {
             $("#sucherg_benutzer").append(
                     "<div id='sucherg_benutzer_"+id+"' class='sucherg_benutzer_item'><span class='octicon octicon-person'></span>" + text + " (#"+id+")</div>");
+            $("#sucherg_benutzer_"+id).slideDown();
         } else if(klasse == "Veranstaltung") {
             $("#sucherg_vn").append(
                     "<div id='sucherg_vn_"+id+"' class='sucherg_vn_item'><span class='octicon octicon-podium'></span>" + text + " (#"+id+")</div>");
+            $("#sucherg_vn_"+id).slideDown();
         }
     }
     registerSucheClickEvent(id);

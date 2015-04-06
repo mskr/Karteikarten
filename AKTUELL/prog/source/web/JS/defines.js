@@ -25,12 +25,12 @@ var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
 var actionSucheBenVeranst = "sucheBenVeranst";
+
 var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
 var leseVeranstMode = "mode";                        // Liefert Veranstaltungen
-var leseVeranstModeAlle = "alle";                    // Liefert alle Veranstaltungen
-var leseVeranstModeSemester = "semester";            // Liefert alle Veranstaltungen im aktuellen Semester
-var leseVeranstModeStudiengang = "studiengang";      // Liefert alle Veranstaltungen im aktuellen Studiengang (TODO)
+var leseVeranstModeStudiengangSemester = "studiengangSemester";            // Liefert alle Veranstaltungen im aktuellen Semester und studiengang
 var leseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
+
 var actionAusschreiben = "ausschreiben";
 var actionEinschreiben = "einschreiben";
 var actionLeseBenachrichtungen = "leseBen";
