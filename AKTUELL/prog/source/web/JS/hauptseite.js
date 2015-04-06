@@ -29,37 +29,33 @@ $(document).ready(function() {
 function fillHauptseite() 
 {
 	// Studiengänge in auswahlliste anzeigen
-	var dfd1 = $.Deferred();
-	var dfd2 = $.Deferred();
-	var f1 = function() {
-		$.ajax({
-			url: benutzerServlet,
-			data: "action="+actionGetStudiengaenge,
-			success: function(jsonObj) 
+	var ajax1 =  $.ajax({
+		url: benutzerServlet,
+		data: "action="+actionGetStudiengaenge,
+		success: function(jsonObj) 
+		{
+			var errCode = jsonObj["error"];
+			if(errCode == "noerror") 
 			{
-				var errCode = jsonObj["error"];
-				if(errCode == "noerror") 
+				$("#vn_alle_auswahl_studiengang").empty();
+				var studgArr = jsonObj[keyJsonArrResult];
+				for(var i in studgArr) 
 				{
-					$("#vn_alle_auswahl_studiengang").empty();
-					var studgArr = jsonObj[keyJsonArrResult];
-					for(var i in studgArr) 
-					{
-						$("#vn_alle_auswahl_studiengang").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
-					}
+					$("#vn_alle_auswahl_studiengang").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
+				}
 
-					$("#vn_alle_auswahl_studiengang option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
-				}
-				else
-				{
-					message(0, buildMessage(errCode));
-				}
+				$("#vn_alle_auswahl_studiengang option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
 			}
-		}); 
-	}
+			else
+			{
+				message(0, buildMessage(errCode));
+			}
+		}
+	}); 
+	
 
 	// Semester in auswahlliste anzeigen
-	var f2 = function() {
-		$.ajax({
+	var ajax2 =  $.ajax({
 		url: benutzerServlet,
 		data: "action="+actionGetSemester,
 		success: function(jsonObj) 
@@ -87,8 +83,8 @@ function fillHauptseite()
 			}
 		}
 	});
-	}
-    $.when(f1,f2).done(fillVeranstaltungsliste());
+	
+    $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
 }
 
 var globalContainerVeranstCount = 0;
