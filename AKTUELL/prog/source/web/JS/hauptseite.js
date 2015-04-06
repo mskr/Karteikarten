@@ -426,11 +426,11 @@ var suchTimer = function(){
     time = 15,
     timer;
     that.set = function() {
-    	timer = setInterval(function(){
-    		
-    		$("#sucherg_vn").empty();
-    		$("#sucherg_benutzer").empty();
-    		var suchString = $("#suche_global_input").val() + String.fromCharCode(event.keyCode);
+    	timer = setTimeout(function(){
+
+            $("#sucherg_vn").slideUp("fast").empty();
+            $("#sucherg_benutzer").slideUp("fast").empty();
+    		var suchString = $("#suche_global_input").val();
     		var ajax = $.ajax({
     			url: suchfeldServlet,
     			data: "action=" + actionSucheBenVeranst + "&" +
@@ -443,6 +443,7 @@ var suchTimer = function(){
     					var arrSuchErgebnisse = jsonObj[keyJsonArrSuchfeldResult];
     					fillSuchergebnisse(arrSuchErgebnisse);
     					suchErgIterator = -1;
+    					$("#sucherg_vn, #sucherg_benutzer").slideDown("fast");
     				}
     				else
     				{
@@ -451,16 +452,18 @@ var suchTimer = function(){
     			}
     		});
     		
-        },1000);
+        },400);
     }
     that.reset = function(){
-        clearInterval(timer);
+        clearTimeout(timer);
     }
     return that;
 }();
 
 function fillSuchergebnisse(arrSuchErgebnisse)
 {
+    var isBenutzerLeer = true;
+    var isVeranstLeer = true;
     for(var i in arrSuchErgebnisse)
     {
         var jsonSuchErgebnis = arrSuchErgebnisse[i];
@@ -470,12 +473,20 @@ function fillSuchergebnisse(arrSuchErgebnisse)
         if(klasse == "Benutzer") {
             $("#sucherg_benutzer").append(
                     "<div id='sucherg_benutzer_"+id+"' class='sucherg_benutzer_item'><span class='octicon octicon-person'></span>" + text + " (#"+id+")</div>");
-            $("#sucherg_benutzer_"+id).slideDown();
+            isBenutzerLeer = false;
         } else if(klasse == "Veranstaltung") {
             $("#sucherg_vn").append(
                     "<div id='sucherg_vn_"+id+"' class='sucherg_vn_item'><span class='octicon octicon-podium'></span>" + text + " (#"+id+")</div>");
-            $("#sucherg_vn_"+id).slideDown();
+            isVeranstLeer = false;
         }
+    }
+    if(isBenutzerLeer)
+    {
+        $("#sucherg_benutzer").append("<div class='sucherg_vn_leer'>Keine Benutzer gefunden.</div>");
+    }
+    if(isVeranstLeer)
+    {
+        $("#sucherg_vn").append("<div class='sucherg_vn_leer'>Keine Veranstaltungen gefunden.</div>");
     }
     registerSucheClickEvent(id);
 }

@@ -27,6 +27,10 @@ import java.sql.Timestamp;
 
 
 
+
+
+import org.codehaus.jackson.map.AnnotationIntrospector.Pair;
+
 //import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
@@ -649,40 +653,28 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster, List<Klassenfeld> suchfelder)
+    public List<Veranstaltung> durchsucheDatenbank(String suchmuster){
+        return null;
+    }
+    
+    @Override
+    public List<Map<Veranstaltung, Integer>>  durchsucheDatenbankVeranstaltung(String suchmuster)
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        ArrayList<ErgebnisseSuchfeld> ergebnisse = null;
+        ArrayList<Map<Veranstaltung,Integer>> ergebnisse = null;
         try{
-            ergebnisse = new ArrayList<ErgebnisseSuchfeld>();
-            if(suchfelder != null && suchfelder.size() > 0){
-                Iterator<Klassenfeld> it = suchfelder.iterator();
-                Klassenfeld aktSuchfeld = it.next();
-                String sql = new String("");
-                while(it.hasNext()){
-                    aktSuchfeld = DatenbankKlassenNamenMapping.matching.get(aktSuchfeld);
-                    if (aktSuchfeld == null){
-                        System.out.println("Angegebenes Klassenfeld konnte nicht auf ein Feld in der db gematcht werden");
-                        return null;
-                    }
-                    sql = sql + "SELECT "+aktSuchfeld.feld+" AS Text, ID, '"+aktSuchfeld.klasse+"' AS Tabelle, "
-                            + "levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") AS lev FROM "+aktSuchfeld.klasse+" "
-                            + " WHERE levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") BETWEEN 0 and 5 UNION ";
-                    aktSuchfeld = it.next();
-                }
-                aktSuchfeld = DatenbankKlassenNamenMapping.matching.get(aktSuchfeld);
-                sql = sql + "SELECT "+aktSuchfeld.feld+" AS Text, ID, '"+aktSuchfeld.klasse+"' AS Tabelle,"
-                        + "levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") AS lev FROM "+aktSuchfeld.klasse+" "
-                        + "WHERE levenshtein('"+suchmuster+"',"+aktSuchfeld.feld+") BETWEEN 0 and 5 ORDER BY lev LIMIT 5";
-
-                ps = conMysql.prepareStatement(sql);
-                rs = ps.executeQuery();
-                while(rs.next()){         
-                    ergebnisse.add(new ErgebnisseSuchfeld(rs.getString("Text"),rs.getInt("ID"),
-                            DatenbankKlassenNamenMapping.matchTabelleKlasse.get(rs.getString("Tabelle"))));
-                }
+            ergebnisse = new ArrayList<Map<Veranstaltung,Integer>>();
+            ps = conMysql.prepareStatement("SELECT ID, levenshtein(?,Titel) AS lev FROM Veranstaltung WHERE levenshtein(?,Titel)"
+                    + " BETWEEN 0 AND 5 ORDER BY lev LIMIT 5");
+            ps.setString(1, suchmuster);
+            rs = ps.executeQuery();
+            while(rs.next()){         
+                Map<Veranstaltung, Integer> map = new HashMap<Veranstaltung, Integer>();
+                map.put(leseVeranstaltung(rs.getInt("ID")), rs.getInt("lev"));
+                ergebnisse.add(map);
             }
+
 
         } catch (SQLException e) {
             ergebnisse = null;
@@ -694,6 +686,39 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
         return ergebnisse;
     }
+    
+    @Override
+    public List<Map<Benutzer,Integer>> durchsucheDatenbankBenutzer(String suchmuster)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Map<Benutzer,Integer>> ergebnisse = null;
+        try{
+            ergebnisse = new ArrayList<Map<Benutzer,Integer>>();
+            ps = conMysql.prepareStatement("SELECT id,min(lev) FROM( SELECT ID, levenshtein(?,Vorname) AS lev, Vorname"
+                    + " FROM Benutzer WHERE levenshtein(?,Vorname) BETWEEN 0 AND 50 UNION SELECT ID, "
+                    + "levenshtein(?,Nachname) AS lev, Nachname FROM Benutzer WHERE levenshtein(?,Nachname) BETWEEN 0 AND 50)"
+                    + " AS T group by ID ORDER BY lev LIMIT 50 ");
+            ps.setString(1, suchmuster);
+            rs = ps.executeQuery();
+            while(rs.next()){         
+                Map<Benutzer, Integer> map = new HashMap<Benutzer, Integer>();
+                map.put(leseBenutzer(rs.getInt("ID")), rs.getInt("lev"));
+                ergebnisse.add(map);
+            }
+
+
+        } catch (SQLException e) {
+            ergebnisse = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+        }
+        return ergebnisse;
+    }
+    
     @Override
     public boolean angemeldet(int benutzer, int veranstaltung) throws SQLException{
         PreparedStatement ps = null;
