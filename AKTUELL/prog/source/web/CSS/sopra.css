@@ -237,6 +237,43 @@ label {
 	font-size: 10em;
 	text-shadow: 0px -2px 0px #363636;
 }
+/*
+#sleepicon {
+	margin-left: 30%;
+	margin-top: 5%;
+	width: 40%;
+	fill: DimGray;
+	font-size: 0;
+	font-weight: bold;
+}
+.sleepiconText {
+	-webkit-animation-name: zzz;
+	-webkit-animation-duration: 12s;
+	-webkit-animation-timing-function: ease-in;
+	-webkit-animation-iteration-count: infinite;
+}
+#z {
+	-webkit-animation-delay: 0;
+}
+#zz {
+	-webkit-animation-delay: 4s;
+}
+#zzz {
+	-webkit-animation-delay: 8s;
+}
+@-webkit-keyframes zzz {
+	0% {
+		opacity: 1;
+		font-size: 0;
+		transform: none;
+	}
+	100% {
+		opacity: 0;
+		font-size: 100px;
+		transform: translate(60%,20%);
+	}
+}
+*/
 
 .login_input, .login_pass {
 	font-size: .9em;
@@ -247,9 +284,7 @@ label {
 } .login_pass {
 	width: calc(50% - 1.8em - 2px);
 	margin-right: .3em;
-}
-
-.loginbutton, .regbutton {
+} .loginbutton, .regbutton {
 	height: calc(3em - 4px);
 } .loginbutton {
 	width: calc(50% - .6em);
@@ -320,17 +355,13 @@ label {
 	height: 100%;
 	max-height: 200px;
 	overflow-y: scroll !important;	/* Darf von JQuery beim sliden nicht überschrieben werden.*/
-} 
-/* Was macht das ?? TODO
- * -  Das styled die Scrollbar :) */
-.bn_container::-webkit-scrollbar {
+} .bn_container::-webkit-scrollbar {
 	width: 5px;
 	background-color: #333333;
 } 
 .bn_container::-webkit-scrollbar-thumb {
 	background-color: #141414;
-}
-.bn {
+} .bn {
 	margin: 3px 0;
 	padding: .5em 1em;
 	font-size: 12px;
@@ -404,10 +435,8 @@ label {
 	overflow: hidden;
 	background-clip: padding-box;
 } .suche_etwas:invalid ~ .suche_ergebnisse {
-	border: 1px solid red;
 	visibility: hidden;
 } .sucherg_x {
-	width: 100%;
 	color: lightgray;
 	text-align: right;
 	padding-right: .5em;
@@ -422,6 +451,7 @@ label {
 } .sucherg_vn, .sucherg_benutzer {
 	width: 100%;
 } .sucherg_vn_item, .sucherg_benutzer_item {
+	display: none;
 	padding: .9em;
 	cursor: pointer;
 } .sucherg_vn_item span, .sucherg_benutzer_item span {

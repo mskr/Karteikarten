@@ -402,11 +402,13 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
 
 
 
+
 function registerSuchEvent()
 {
     // TODO Bei jedem keyup-event 1 sec warten, ob noch ein event kommt.
     // Reagiere dann nur auf das event, was zuletzt aufgetreten ist,
     // Um Datenbankabfragen zu reduzieren. Wie macht man das am besten?
+    // TODO Wenn man sehr schnell tippt werden mehr als 5 Ergebnisse angezeigt.
     $("#suche_global_input").keydown(function(event) {
         console.log("keycode="+event.keyCode);
         if(event.keyCode == 40 || // Pfeil runter
@@ -422,11 +424,10 @@ function registerSuchEvent()
         }
         if($("#suche_ergebnisse").is(":hidden"))
         {
-            $("#suche_ergebnisse").css("display","flex"); // Anstatt  von show()
+            $("#suche_ergebnisse").show();
         }
         suchTimer.reset();
         suchTimer.set();
-        
     });
 }
 
@@ -439,7 +440,7 @@ var suchTimer = function(){
     		
     		$("#sucherg_vn").empty();
     		$("#sucherg_benutzer").empty();
-    		var suchString = $("#suche_global_input").val();
+    		var suchString = $("#suche_global_input").val() + String.fromCharCode(event.keyCode);
     		var ajax = $.ajax({
     			url: suchfeldServlet,
     			data: "action=" + actionSucheBenVeranst + "&" +
@@ -479,9 +480,11 @@ function fillSuchergebnisse(arrSuchErgebnisse)
         if(klasse == "Benutzer") {
             $("#sucherg_benutzer").append(
                     "<div id='sucherg_benutzer_"+id+"' class='sucherg_benutzer_item'><span class='octicon octicon-person'></span>" + text + " (#"+id+")</div>");
+            $("#sucherg_benutzer_"+id).slideDown();
         } else if(klasse == "Veranstaltung") {
             $("#sucherg_vn").append(
                     "<div id='sucherg_vn_"+id+"' class='sucherg_vn_item'><span class='octicon octicon-podium'></span>" + text + " (#"+id+")</div>");
+            $("#sucherg_vn_"+id).slideDown();
         }
     }
     registerSucheClickEvent(id);

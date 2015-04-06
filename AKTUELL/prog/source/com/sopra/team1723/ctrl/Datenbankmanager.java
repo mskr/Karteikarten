@@ -541,7 +541,8 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
                     + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
                     + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
-                    + "v.ID = bvz.Veranstaltung WHERE bvz.Benutzer =? GROUP BY v.ID"); 
+                    + "v.ID = bvz.Veranstaltung WHERE ? IN (SELECT Benutzer FROM benutzer_veranstaltung_zuordnung WHERE"
+                    + " Veranstaltung = v.ID) GROUP BY v.ID"); 
             ps.setInt(1, benutzer);
             rs = ps.executeQuery();
             while(rs.next()){
