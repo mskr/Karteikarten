@@ -15,7 +15,6 @@ import com.sopra.team1723.data.BenachrProfilGeaendert;
 import com.sopra.team1723.data.BenachrVeranstAenderung;
 import com.sopra.team1723.data.Benachrichtigung;
 import com.sopra.team1723.data.Benutzer;
-import com.sopra.team1723.data.ErgebnisseSuchfeld;
 import com.sopra.team1723.data.Veranstaltung;
 
 @SuppressWarnings("unchecked")
@@ -75,22 +74,18 @@ public class JSONConverter
      * nur die ähnlichen Texte gegeben
      * @return JSONObject mit einer Liste von Strings
      */
-    static JSONObject toJsonSuchfeld(List<ErgebnisseSuchfeld> suchtreffer) 
+    static JSONObject toJsonSuchfeld(List<IjsonObject> suchtreffer) 
     {
         JSONObject jo = new JSONObject();
         
         jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
         JSONArray array = new JSONArray();
         
-        for(ErgebnisseSuchfeld ergs: suchtreffer){
-            JSONObject j = new JSONObject();
-            j.put(ParamDefines.SuchfeldErgText, ergs.text);
-            j.put(ParamDefines.SuchfeldErgKlasse, ergs.klasse);
-            j.put(ParamDefines.SuchfeldErgId, ergs.id);
-            array.add(j);
+        for(IjsonObject ergs: suchtreffer){
+            array.add(ergs.toJSON(true));
         }
         
-        jo.put(ParamDefines.jsonArrSuchfeldResult, array);
+        jo.put(ParamDefines.jsonArrResult, array);
         
         return jo;
     }

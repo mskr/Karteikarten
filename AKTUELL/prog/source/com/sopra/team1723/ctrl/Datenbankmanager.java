@@ -670,7 +670,10 @@ public class Datenbankmanager implements IDatenbankmanager {
         alleErgebnisse.putAll(durchsucheDatenbankVeranstaltung(suchmuster));
         alleErgebnisse.putAll(durchsucheDatenbankBenutzer(suchmuster));
         
-        return new ArrayList<IjsonObject>(sortByValue(alleErgebnisse).keySet()).subList(0, 4);
+        ArrayList<IjsonObject> ergebnisse = new ArrayList<IjsonObject>(sortByValue(alleErgebnisse).keySet());
+        if(ergebnisse.size() >= 5)
+            ergebnisse = (ArrayList<IjsonObject>) ergebnisse.subList(0, 4);
+        return ergebnisse;
     }
 
     @Override
@@ -1146,6 +1149,14 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            try
+            {
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return erfolgreich;
