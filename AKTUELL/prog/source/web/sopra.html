@@ -296,13 +296,13 @@ Dann aber so leer.
 				<div id="profil_einstellungen" class="profil_einstellungen">
 					<div class="card_title">Einstellungen</div>
 					<div class="profil_notifyKommentare">
-						<div class="profil_infotext">Benachrichtigungen über Kommentare...</div>
+						<div class="form_infotext">Benachrichtigungen über Kommentare...</div>
 						<div><input id="notifyKommentare_input_teilgenommen" name="profil_notifyKommentareRb" type="radio" value="VERANSTALTUNG_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_teilgenommen">immer.</label></div>
 						<div><input id="notifyKommentare_input_diskussionen" name="profil_notifyKommentareRb" type="radio" value="DISKUSSION_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_diskussionen">nur bei Disussionen, an denen ich teilgenommen habe.</label></div>
 						<div><input id="notifyKommentare_input_nie" name="profil_notifyKommentareRb" type="radio" value="KEINE"><label class="profil_label" for="notifyKommentare_input_nie">niemals.</label></div>
 					</div>
 					<div class="profil_notifyAenderungen">
-						<div class="profil_infotext">Benachrichtigungen über Änderungen in...</div>
+						<div class="form_infotext">Benachrichtigungen über Änderungen in...</div>
 						<div><input id="notifyVeranstAenderung_input" type="checkbox"><label class="profil_label" for="notifyVeranstAenderung_input">Veranstaltungen.</label></div>
 						<div><input id="notifyKarteikartenAenderung_input" type="checkbox"><label class="profil_label" for="notifyKarteikartenAenderung_input">Karteikarten.</label></div>
 					</div>
@@ -633,14 +633,14 @@ Dann aber so leer.
 		<span class="octicon octicon-x"></span>
 	</div>
 	<div class="popup_fenster_body">
-		<input class="input_std" id="vn_titel_input" type="text" placeholder="Titel" required>
-		<select class="input_std" id="vn_erstellen_auswahl_semester"></select>
-		<select class="input_std" id="vn_erstellen_auswahl_studiengang" multiple></select>
-		<input class="input_std" id="vn_pass_input" type="password" placeholder="Passwort" required>
-		<textarea class="input_std" id="vn_mod_input" placeholder="Moderatoren"></textarea>
-		<textarea class="input_std" id="vn_beschr_input" placeholder="Beschreibung" required></textarea>
+		<input class="input_std vn_erstellen_input" id="vn_titel_input" type="text" placeholder="Titel" required>
+		<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_semester"></select>
+		<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_studiengang" multiple></select>
+		<input class="input_std vn_erstellen_input" id="vn_pass_input" type="password" placeholder="Passwort" required>
+		<textarea class="input_std vn_erstellen_input" id="vn_mod_input" placeholder="Moderatoren"></textarea>
+		<textarea class="input_std vn_erstellen_input" id="vn_beschr_input" placeholder="Beschreibung" required></textarea>
 		<div class="popup_fenster_spalte" id="vn_bearbeiten_mode">
-			<span>Wer darf bearbeiten?</span>
+			<span class="form_infotext">Wer darf bearbeiten?</span>
 			<span><input name="vn_bearbeitenMode_radiogb" id="vn_keiner_bearb" value = "Nur ich" type="radio"checked><label for="vn_keiner_bearb">Nur ich</label></span>
 			<span><input name="vn_bearbeitenMode_radiogb" id="vn_mod_bearb" value = "Ich und Moderatoren"type="radio"><label for="vn_mod_bearb">Ich und Moderatoren</label></span>
 		</div>
