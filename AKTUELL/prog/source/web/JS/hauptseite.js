@@ -570,6 +570,7 @@ function registerVeranstErzeugeHandler() {
 			studiengang = popup.find("#vn_erstellen_auswahl_studiengang").val(),
 			beschr = popup.find("#vn_beschr_input").val(),
 			moderatorenKkBearbeiten = popup.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
+			passw = popup.find("#vn_pass_input").val(),
 			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
 			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
 	
@@ -582,7 +583,8 @@ function registerVeranstErzeugeHandler() {
 				  paramBeschr + "=" + beschr + "&" + 
 				  paramModeratorKkBearbeiten + "=" +moderatorenKkBearbeiten + "&"+
 				  paramKommentareErlauben + "=" + kommentareErlaubt + "&" + 
-				  paramBewertungenErlauben + "=" + bewertungenErlaubt,
+				  paramBewertungenErlauben + "=" + bewertungenErlaubt + "&"+
+				  paramPasswort + "=" + passw,
 				  
 			success: function(response) {
 				var jsonObj = response;

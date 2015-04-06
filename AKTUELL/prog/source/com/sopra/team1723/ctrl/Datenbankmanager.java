@@ -766,6 +766,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException  {
         PreparedStatement ps = null;
+        conMysql.setAutoCommit(false);
         try{
             ps = conMysql.prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
                     + "BewertungenErlaubt, ModeratorKarteikartenBearbeiten, Ersteller) VALUES(?,?,?,?,?,?,?,?)");
@@ -779,14 +780,28 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(8, veranst.getErsteller().getId());
 
             ps.executeUpdate();
+            
+            for(String stg: studiengaenge){
+                ps.close();
+
+                ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES((SELECT id FROM veranstaltung WHERE Titel=? AND Semester=?),?)");   
+                ps.setString(1, veranst.getTitel());
+                ps.setString(2, veranst.getSemester());
+                ps.setString(3, stg);
+                ps.executeUpdate();         
+            }
+            
+            conMysql.commit();
 
         } catch (SQLException e) {
+            conMysql.rollback();
             e.printStackTrace();
             if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
             else
                 throw e;
         } finally{
+            conMysql.setAutoCommit(true);
             closeQuietly(ps);
         }
 
