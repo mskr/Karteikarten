@@ -29,11 +29,17 @@ public class ParamDefines
 
     public final static String ActionAusschreiben = "ausschreiben";
     public final static String ActionEinschreiben = "einschreiben";
+    public final static String ActionVeranstErstellen = "erstelleVeranst";
     
     
     public final static String ActionLeseBenachrichtungen = "leseBen";
     
 
+    public final static String Klasse = "klasse";
+    public final static String KlasseBenutzer = "klasseBenutzer";
+    public final static String KlasseVeranst = "klasseVeranst";
+    
+    
     public final static String Id = "id";
     public final static String Email = "email";
     public final static String EmailNew = "emailNew";
@@ -64,9 +70,6 @@ public class ParamDefines
     public final static String Angemeldet = "angemeldet";
     public final static String KennwortGesetzt = "kennwortGesetzt";
     
-    public final static String SuchfeldErgText = "suchfeldErgText";
-    public final static String SuchfeldErgKlasse= "suchfeldErgKlasse";
-    public final static String SuchfeldErgId = "suchfeldErgId";
 
     public final static String benInhalt = "benInhalt";
     public final static String benGelesen = "benGelesen";
@@ -104,6 +107,7 @@ public class ParamDefines
     public final static String jsonErrorEmailAlreadyInUse = "emailalreadyinuse";    // Fehler beim Registieren. Email-Adresse schon vergeben
     public final static String jsonErrorPwResetFailed = "pwresetfailed";            // Fehler beim Zurücksetzen des Passworts
     public final static String jsonErrorSessionExpired = "sessionexpired";          // Fehler beim Zurücksetzen des Passworts
+    public final static String jsonErrorNotAllowed = "notallowed";                  // Fehler unerlaubte aktion
     
     // ArrayResults
     public final static String jsonArrResult = "arrResult";

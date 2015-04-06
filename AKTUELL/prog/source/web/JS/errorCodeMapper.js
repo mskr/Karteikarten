@@ -18,6 +18,7 @@ function buildMessage(errCode) {
         case "emailalreadyinuse": return "Entschuldigung, diese E-Mail Adresse ist bereits vergeben.";
         case "pwresetfailed": return "Ihr Passwort konnte nicht zurueckgesetzt werden. Bitte versuchen Sie es erneut.";
         case "sessionexpired": return "Ihre Login Session ist abgelaufen. Bitte loggen Sie sich erneut ein.";
+        case "notallowed": return "Diese Aktion ist nicht erlaubt. Sie haben womöglich nicht die nötigen Berechtigungen.";
         default: return "Ein unbekannter Fehler ist aufgetreten (Error Code nicht bekannt).";
     }
 }

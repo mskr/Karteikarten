@@ -10,15 +10,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.sql.Timestamp;
 
-//import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.*;
 
@@ -639,27 +642,55 @@ public class Datenbankmanager implements IDatenbankmanager {
         return istModerator;
     }
 
-    @Override
-    public List<Veranstaltung> durchsucheDatenbank(String suchmuster){
-        return null;
+    public static <K, V extends Comparable<? super V>> Map<K, V> 
+    sortByValue( Map<K, V> map )
+    {
+        List<Map.Entry<K, V>> list =
+                new LinkedList<>( map.entrySet() );
+        Collections.sort( list, new Comparator<Map.Entry<K, V>>()
+                {
+            @Override
+            public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
+            {
+                return (o1.getValue()).compareTo( o2.getValue() );
+            }
+                } );
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list)
+        {
+            result.put( entry.getKey(), entry.getValue() );
+        }
+        return result;
     }
-    
+
     @Override
-    public List<Map<Veranstaltung, Integer>>  durchsucheDatenbankVeranstaltung(String suchmuster)
+    public List<IjsonObject> durchsucheDatenbank(String suchmuster){
+        Map<IjsonObject,Integer> alleErgebnisse = new HashMap<IjsonObject, Integer>();
+        alleErgebnisse.putAll(durchsucheDatenbankVeranstaltung(suchmuster));
+        alleErgebnisse.putAll(durchsucheDatenbankBenutzer(suchmuster));
+        
+        ArrayList<IjsonObject> ergebnisse = new ArrayList<IjsonObject>(sortByValue(alleErgebnisse).keySet());
+        if(ergebnisse.size() >= 5)
+            ergebnisse = (ArrayList<IjsonObject>) ergebnisse.subList(0, 4);
+        return ergebnisse;
+    }
+
+    @Override
+    public Map<IjsonObject, Integer>  durchsucheDatenbankVeranstaltung(String suchmuster)
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        ArrayList<Map<Veranstaltung,Integer>> ergebnisse = null;
+        Map<IjsonObject,Integer> ergebnisse = null;
         try{
-            ergebnisse = new ArrayList<Map<Veranstaltung,Integer>>();
+            ergebnisse = new HashMap<IjsonObject,Integer>();
             ps = conMysql.prepareStatement("SELECT ID, levenshtein(?,Titel) AS lev FROM Veranstaltung WHERE levenshtein(?,Titel)"
                     + " BETWEEN 0 AND 5 ORDER BY lev LIMIT 5");
             ps.setString(1, suchmuster);
+            ps.setString(2, suchmuster);
             rs = ps.executeQuery();
             while(rs.next()){         
-                Map<Veranstaltung, Integer> map = new HashMap<Veranstaltung, Integer>();
-                map.put(leseVeranstaltung(rs.getInt("ID")), rs.getInt("lev"));
-                ergebnisse.add(map);
+                ergebnisse.put(leseVeranstaltung(rs.getInt("ID")), rs.getInt("lev"));
             }
 
 
@@ -673,25 +704,26 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
         return ergebnisse;
     }
-    
+
     @Override
-    public List<Map<Benutzer,Integer>> durchsucheDatenbankBenutzer(String suchmuster)
+    public Map<IjsonObject, Integer> durchsucheDatenbankBenutzer(String suchmuster)
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        ArrayList<Map<Benutzer,Integer>> ergebnisse = null;
+        Map<IjsonObject,Integer> ergebnisse = null;
         try{
-            ergebnisse = new ArrayList<Map<Benutzer,Integer>>();
-            ps = conMysql.prepareStatement("SELECT id,min(lev) FROM( SELECT ID, levenshtein(?,Vorname) AS lev, Vorname"
-                    + " FROM Benutzer WHERE levenshtein(?,Vorname) BETWEEN 0 AND 50 UNION SELECT ID, "
-                    + "levenshtein(?,Nachname) AS lev, Nachname FROM Benutzer WHERE levenshtein(?,Nachname) BETWEEN 0 AND 50)"
-                    + " AS T group by ID ORDER BY lev LIMIT 50 ");
+            ergebnisse = new HashMap<IjsonObject,Integer>();
+            ps = conMysql.prepareStatement("SELECT id,min(lev) AS lev FROM( SELECT ID, levenshtein(?,Vorname) AS lev, Vorname"
+                    + " FROM Benutzer WHERE levenshtein(?,Vorname) BETWEEN 0 AND 5 UNION SELECT ID, "
+                    + "levenshtein(?,Nachname) AS lev, Nachname FROM Benutzer WHERE levenshtein(?,Nachname) BETWEEN 0 AND 5)"
+                    + " AS T group by ID ORDER BY lev LIMIT 5 ");
             ps.setString(1, suchmuster);
+            ps.setString(2, suchmuster);
+            ps.setString(3, suchmuster);
+            ps.setString(4, suchmuster);
             rs = ps.executeQuery();
             while(rs.next()){         
-                Map<Benutzer, Integer> map = new HashMap<Benutzer, Integer>();
-                map.put(leseBenutzer(rs.getInt("ID")), rs.getInt("lev"));
-                ergebnisse.add(map);
+                ergebnisse.put(leseBenutzer(rs.getInt("ID")), rs.getInt("lev"));
             }
 
 
@@ -705,7 +737,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
         return ergebnisse;
     }
-    
+
     @Override
     public boolean angemeldet(int benutzer, int veranstaltung) throws SQLException{
         PreparedStatement ps = null;
@@ -732,8 +764,9 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void schreibeVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException  {
+    public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException  {
         PreparedStatement ps = null;
+        conMysql.setAutoCommit(false);
         try{
             ps = conMysql.prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
                     + "BewertungenErlaubt, ModeratorKarteikartenBearbeiten, Ersteller) VALUES(?,?,?,?,?,?,?,?)");
@@ -747,14 +780,28 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(8, veranst.getErsteller().getId());
 
             ps.executeUpdate();
+            
+            for(String stg: studiengaenge){
+                ps.close();
+
+                ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES((SELECT id FROM veranstaltung WHERE Titel=? AND Semester=?),?)");   
+                ps.setString(1, veranst.getTitel());
+                ps.setString(2, veranst.getSemester());
+                ps.setString(3, stg);
+                ps.executeUpdate();         
+            }
+            
+            conMysql.commit();
 
         } catch (SQLException e) {
+            conMysql.rollback();
             e.printStackTrace();
             if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
             else
                 throw e;
         } finally{
+            conMysql.setAutoCommit(true);
             closeQuietly(ps);
         }
 
@@ -1102,6 +1149,14 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            try
+            {
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return erfolgreich;

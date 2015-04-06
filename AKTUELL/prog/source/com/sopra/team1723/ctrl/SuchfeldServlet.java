@@ -51,30 +51,7 @@ public class SuchfeldServlet extends ServletController {
         
         String suchmuster = req.getParameter(ParamDefines.Suchmuster);
 
-        // Da die Methode durchsucheDatenbank() sehr flexibel ist, muss man angeben nach welchen Feldern man die db
-        // durchsuchen will. Ein Feld wird eindeutig durch die Klasse und den Attributnamen bestimmt.
-        // Zur Kapselung dieser beiden Werte dient die Klasse Klassenfeld. Da die Tabellen und Felder in der db
-        // anders heißen werden die Klassenfeldobjekte in durchsucheDatenbank() auf die entsprechenden Bezeichnungen
-        // in der db gemapped. Dafür ist die Klasse DatenbankKlassenNamenMapping zuständig.
-        ArrayList<Klassenfeld> zuDurchsuchendeFelder = new ArrayList<Klassenfeld>();
-        zuDurchsuchendeFelder.add(new Klassenfeld("Benutzer","vorname"));
-        zuDurchsuchendeFelder.add(new Klassenfeld("Benutzer","nachname"));
-        zuDurchsuchendeFelder.add(new Klassenfeld("Veranstaltung","titel"));
-
-        // Das Ergebnis der Suche wird in einer Liste gespeichert. Die Liste enthält Objekte vom Typ ErgebnisseSuchfeld.
-        // Mit diesen Objekten kann auf den konkreten Benutzer bzw. Veranstaltung geschlossen werden
-        List<ErgebnisseSuchfeld> ergebnisse = dbManager.durchsucheDatenbank(suchmuster, zuDurchsuchendeFelder);
-
-        if(ergebnisse == null)
-        {
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-        } 
-        else
-        {
-            JSONObject jo = JSONConverter.toJsonSuchfeld(ergebnisse);
-            outWriter.print(jo);
-        }
+        JSONObject jo = JSONConverter.toJsonSuchfeld(dbManager.durchsucheDatenbank(suchmuster));
     }
 
     @Override

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.*;
 
+import org.json.simple.JSONObject;
+
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.DbFalseLoginDataException;
 import com.sopra.team1723.exceptions.DbFalsePasswortException;
@@ -209,7 +211,7 @@ public interface IDatenbankmanager {
      * @param veranst 
      * @return
      */
-    public void schreibeVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException;
+    public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Daten der angegebenen Veranstaltung werden in der Datenbank
@@ -246,7 +248,7 @@ public interface IDatenbankmanager {
      * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
      * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
      */
-    public List<Veranstaltung> durchsucheDatenbank(String suchmuster);
+    public List<IjsonObject> durchsucheDatenbank(String suchmuster);
     
     /**
      * 
@@ -264,7 +266,7 @@ public interface IDatenbankmanager {
      * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
      * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
      */
-    public List<Map<Veranstaltung, Integer>>  durchsucheDatenbankVeranstaltung(String suchmuster);
+    public Map<IjsonObject, Integer>  durchsucheDatenbankVeranstaltung(String suchmuster);
     
     /**
      * 
@@ -282,7 +284,7 @@ public interface IDatenbankmanager {
      * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
      * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
      */
-    public List<Map<Benutzer, Integer>>  durchsucheDatenbankBenutzer(String suchmuster);
+    public Map<IjsonObject, Integer>  durchsucheDatenbankBenutzer(String suchmuster);
 
     /**
      * Liest die aktuellsten Benachrichtigungen für einen Benutzer aus der Datenbank

@@ -286,6 +286,7 @@ public class Benutzer implements IjsonObject {
     public JSONObject toJSON(boolean full)
     {
         JSONObject jo = new JSONObject();
+        jo.put(ParamDefines.Klasse, ParamDefines.KlasseBenutzer);
         jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
         jo.put(ParamDefines.Email, this.geteMail());
         jo.put(ParamDefines.Id, this.getId());

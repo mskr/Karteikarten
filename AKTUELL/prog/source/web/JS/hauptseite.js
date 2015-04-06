@@ -12,8 +12,21 @@ $(document).ready(function() {
     	closeelement: '#vn_popup_close',
     	focuselement: '#vn_titel_input',
     	blur: false,
-    	transition: 'all 0.3s'
+    	transition: 'all 0.3s',
+    	onclose : function() {
+    		$("#vn_titel_input").val("");
+    		// TODO
+//  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
+    		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
+
+    		$("#vn_mod_input").val("");
+    		$("#vn_beschr_input").val("");
+    		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
+    		$("#vn_komm_erlaubt").prop("checked", true);
+    		$("#vn_bew_erlaubt").prop("checked", true);
+    	}
     });
+
 
 	$("#vn_alle_auswahl_studiengang").change(function() {
 		leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
@@ -97,6 +110,16 @@ function fillHauptseite()
 			}
 		}
 	});
+
+	if(jsonBenutzer[paramNutzerstatus] == "ADMIN" || jsonBenutzer[paramNutzerstatus] == "DOZENT")
+	{
+		$("#vn_erstellen_bt").show();
+	}
+	else
+	{
+		$("#vn_erstellen_bt").hide();
+	}
+
 	
     $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
 }
@@ -543,6 +566,11 @@ function handlePfeiltastenEvents(pressedKey) {
 
 
 function registerVeranstErzeugeHandler() {
+	
+	$("#vn_erzeugen_cancel").click(function() {
+		$("#vn_erstellen_popup").popup("hide");
+	});
+	
 	$("#vn_erzeugen_submit").click(function(event) {
 		event.preventDefault();
 		
@@ -552,6 +580,7 @@ function registerVeranstErzeugeHandler() {
 			studiengang = popup.find("#vn_erstellen_auswahl_studiengang").val(),
 			beschr = popup.find("#vn_beschr_input").val(),
 			moderatorenKkBearbeiten = popup.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
+			passw = popup.find("#vn_pass_input").val(),
 			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
 			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
 	
@@ -564,7 +593,8 @@ function registerVeranstErzeugeHandler() {
 				  paramBeschr + "=" + beschr + "&" + 
 				  paramModeratorKkBearbeiten + "=" +moderatorenKkBearbeiten + "&"+
 				  paramKommentareErlauben + "=" + kommentareErlaubt + "&" + 
-				  paramBewertungenErlauben + "=" + bewertungenErlaubt,
+				  paramBewertungenErlauben + "=" + bewertungenErlaubt + "&"+
+				  paramPasswort + "=" + passw,
 				  
 			success: function(response) {
 				var jsonObj = response;
