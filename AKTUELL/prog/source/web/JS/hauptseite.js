@@ -8,8 +8,8 @@ $(document).ready(function() {
     
     // Code fuer das Veranstaltung erstellen Popup
     $('#vn_erstellen_popup').popup({
-    	openelement: '.vn_erstellen_bt',
-    	closeelement: '.vn_popup_close',
+    	openelement: '#vn_erstellen_bt',
+    	closeelement: '#vn_popup_close',
     	focuselement: '#vn_titel_input',
     	blur: false,
     	transition: 'all 0.3s',
