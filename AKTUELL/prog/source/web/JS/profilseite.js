@@ -5,6 +5,7 @@
 // Temporaere Variablen fuer die vom Server geladenen Daten.
 // TODO Evntl in defines.js auslagern
 var profilEmail;
+var profilId;
 var profilVorname;
 var profilNachname;
 var profilMatrikelNr;
@@ -35,6 +36,27 @@ $(document).ready(function() {
 //		else
 //			$("#profil_avatar_submit").slideUp();
 //	});
+	
+	$("#profil_loeschen_bt").click(function() {
+		sindSieSicher($("#profil_loeschen_bt"), "Wollen sie das Profil wirklich löschen?",function(){
+			$.ajax({
+				url: profilServlet,
+				data: "action="+actionDeleteBenutzer + "&" +
+				paramId + "=" + profilId,
+				success: function(response) {
+					var jsonObj = response;
+					var errCode = jsonObj["error"];
+					if(errCode == "noerror") {
+						message(1, "Profil wurde erfolgreich gelöscht!");
+					} 
+					else {
+						message(0, buildMessage(errCode));
+					}
+				}
+			});
+		}, "bottom","left");
+	});
+
     registerProfilSpeichernEvents();
     registerAvatarAendernEvent();
 });
@@ -55,6 +77,7 @@ function fillProfilseite() {
     {
         // Benutzer zeigt eigenes Profil an
         profilEmail = jsonBenutzer[paramEmail];
+        profilId = jsonBenutzer[paramId];
         profilVorname = jsonBenutzer[paramVorname];
         profilNachname = jsonBenutzer[paramNachname];
         profilMatrikelNr = jsonBenutzer[paramMatrikelNr];
@@ -84,6 +107,7 @@ function fillProfilseite() {
                 if(errCode == "noerror")
                 {
                     profilEmail = jsonObj[paramEmail];
+                    profilId = jsonObj[paramId];
                     profilVorname = jsonObj[paramVorname];
                     profilNachname = jsonObj[paramNachname];
                     profilMatrikelNr = jsonObj[paramMatrikelNr];
