@@ -251,6 +251,9 @@ public class JSONConverter
         return jo;
     }
     
+    // Um die Semester sortieren zu können, wird die ID noch mitgeliefert. Es werden IDs und Name des Semesters
+    // in einer Map gespeichert. Die Methode übergibt an JavaScript keine Map sondern ein Array, bei dem
+    // in jedem Eintrag sich das Paar aus ID und Name des Semesters befinden.
     static JSONObject toJsonSemesterMap(Map<Integer, String> semester) 
     {
         JSONObject jo = new JSONObject();  
