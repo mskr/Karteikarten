@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.*;
 
@@ -247,6 +248,29 @@ public class JSONConverter
         }
         jo.put(ParamDefines.jsonArrResult, array);
         
+        return jo;
+    }
+    
+    static JSONObject toJsonSemesterMap(Map<Integer, String> semester) 
+    {
+        JSONObject jo = new JSONObject();  
+        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
+        
+        JSONArray array = new JSONArray();
+
+        for(Integer key : semester.keySet())
+        {
+            JSONObject o = new JSONObject();
+
+            o.put(ParamDefines.Id, key);
+            o.put(ParamDefines.Semester, semester.get(key));
+            
+            
+            array.add(o);
+        }
+
+        jo.put(ParamDefines.jsonArrResult, array);
+
         return jo;
     }
 }
