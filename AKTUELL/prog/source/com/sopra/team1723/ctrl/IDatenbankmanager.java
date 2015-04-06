@@ -211,7 +211,7 @@ public interface IDatenbankmanager {
      * @param veranst 
      * @return
      */
-    public void schreibeVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException;
+    public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Daten der angegebenen Veranstaltung werden in der Datenbank

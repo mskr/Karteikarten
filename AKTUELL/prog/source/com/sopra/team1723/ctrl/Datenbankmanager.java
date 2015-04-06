@@ -761,7 +761,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void schreibeVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException  {
+    public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException  {
         PreparedStatement ps = null;
         try{
             ps = conMysql.prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
