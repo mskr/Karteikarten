@@ -40,6 +40,11 @@ h1 {
 
 label {
 	cursor: pointer;
+	font-size: .9em;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    margin-right: 10px;
 }
 
 .input_std {
@@ -187,12 +192,8 @@ label {
 	padding: 2em;
 	background: #333333;
 	color: inherit;
-	text-shadow: 0px -1px 0px #000;
-	-webkit-box-shadow: 0px 2px 2px #000;
-	-moz-box-shadow: 0px 2px 2px #000;
-	box-shadow: 0px 2px 2px #000;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
+	text-shadow: 0px -1px 0 black;
+	box-shadow: 0 2px 2px black;
 	border-radius: 2px;
 } .card_title {
 	margin-bottom: .5em;
@@ -1115,7 +1116,7 @@ label {
     position: absolute; 
     top: 0; 
     right: -2px; 
-    border-top: 50px solid #4A4A4A;
+    border-top: 50px solid #4a4a4a;
     border-left: 50px solid #242424;
 	-webkit-box-shadow: 0px 1px 0px #000;
 	-moz-box-shadow: 0px 1px 0px #000;
@@ -1190,79 +1191,64 @@ label {
 	width: calc(100% - 20px);
 }
 
-.vn_popup_titel {
-	padding: 20px;
-	height: 20px;
-	width: calc(100% - 101px);
+.popup_fenster {
+	box-shadow: 0 0 5em black;
+	width: 100%;
+	max-width: 30em;
+} .popup_fenster_titel {
+	padding: 1em;
+	height: 1em;
+	width: calc(100% - 5em);
 	background: #333333;
 	border-top: 1px solid #828282;
 	border-bottom: 1px solid black;
-	-webkit-border-radius: 2px 0 0 0;
-	-moz-border-radius: 2px 0 0 0;
-	border-radius: 2px 0 0 0;
-	-webkit-box-shadow: 0px 2px 2px #000;
-	-moz-box-shadow: 0px 2px 2px #000;
-	box-shadow: 0px 2px 2px #000;
-} .vn_popup_titel * {
-	display: inline;
-} .vn_popup_titel h3 {
+	border-radius: 2px 0 0 0; /* Nur links oben */
+	text-shadow: 0px -1px 0 black;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+} .popup_fenster_ueberschrift {
+	font-weight: bold;
+	white-space: nowrap;
+} .popup_fenster_close {
 	margin: 0;
-	text-shadow: 0px -1px 0px #454545;
-	cursor: default;
-} .vn_popup_close {
-	margin: 0;
-	padding: 20px;
-	height: 20px;
-	width: 20px;
+	padding: 1em;
+	height: 1em;
+	width: 1em;
 	background: #333333;
 	position: absolute;
-	z-index: 0;
 	top: 0;
 	right: 0;
 	border-top: 1px solid #828282;
 	border-bottom: 1px solid black;
 	border-left: 1px solid #828282;
 	box-shadow: inset 1px 0 0 black;
-	-webkit-border-radius: 0 2px 0 0;
-	-moz-border-radius: 0 2px 0 0;
-	border-radius: 0 2px 0 0;
-	-webkit-box-shadow: 0px 2px 2px #000;
-	-moz-box-shadow: 0px 2px 2px #000;
-	box-shadow: 0px 2px 2px #000;
+	border-radius: 0 2px 0 0; /* Nur rechts oben */
 	text-align: center;
-	transition: all .2s;
-} .vn_popup_close:hover {
+	transition: all .1s;
+} .popup_fenster_close:hover {
 	color: red;
 	background: #464646;
-} .vn_popup_close:active {
+} .popup_fenster_close:active {
+	color: red;
+	background: #464646;
 	border-top: 1px solid black;
 	border-left: 1px solid black;
-	background: #242424;
-	-webkit-box-shadow: inset 0 1px 6px #000;
-	-moz-box-shadow: inset 0 1px 6px #000;
-	box-shadow: inset 0 1px 6px #000;
-} .vn_popup_form {
-	padding: 20px;
-	min-width: 500px;
-	max-width: 700px;
-	position: relative;
-	z-index: 1;
-	background: #4A4A4A;
+	box-shadow: inset 0 0 2em black;
+} .popup_fenster_body {
+	padding: 1em;
+	background: #4a4a4a;
 	border-top: 1px solid #828282;
 	border-bottom: 1px solid black;
-	-webkit-box-shadow: 0px 2px 2px #000;
-	-moz-box-shadow: 0px 2px 2px #000;
-	box-shadow: 0px 2px 2px #000;
 	overflow: hidden;
-} .vn_popup_form * {
+} .popup_fenster_body * {
 	display: block;
-} .vn_popup_form span * {
+} .popup_fenster_body span * {
 	display: inline;
-} .popup_spalte {
-	margin-top: 20px;
+} .popup_fenster_spalte {
+	margin-top: 2em;
 	width: 50%;
 	float: left;
-} .vn_popup_foot {
+} .popup_fenster_foot {
 	padding: 20px;
 	position: relative;
 	z-index: 1;
@@ -1282,6 +1268,7 @@ label {
 	margin-bottom: 1em;
 	padding: 0;
 	width: 100%;
+	text-shadow: 0px -1px 0 black;
 } .profil_avatar {
 	display: inline-block;
 } .profil_avatar_overlay {
@@ -1336,14 +1323,13 @@ label {
     flex-basis: 15em;
 } .profil_einstellungen {
 	text-align: left;
-} .profil_einstellungen input {
-	margin-right: 10px;
 } .profil_notifyKommentare, .profil_notifyAenderungen {
 	margin: 1em 0;
 }
 
-.profil_infotext, .profil_label {
+.profil_infotext {
 	font-size: .9em;
+	color: gray;
 }
 
 .profil_input {
