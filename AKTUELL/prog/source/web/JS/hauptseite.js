@@ -12,8 +12,21 @@ $(document).ready(function() {
     	closeelement: '.vn_popup_close',
     	focuselement: '#vn_titel_input',
     	blur: false,
-    	transition: 'all 0.3s'
+    	transition: 'all 0.3s',
+    	onclose : function() {
+    		$("#vn_titel_input").val("");
+    		// TODO
+//  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
+    		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
+
+    		$("#vn_mod_input").val("");
+    		$("#vn_beschr_input").val("");
+    		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
+    		$("#vn_komm_erlaubt").prop("checked", true);
+    		$("#vn_bew_erlaubt").prop("checked", true);
+    	}
     });
+
 
 	$("#vn_alle_auswahl_studiengang").change(function() {
 		leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
@@ -543,6 +556,11 @@ function handlePfeiltastenEvents(pressedKey) {
 
 
 function registerVeranstErzeugeHandler() {
+	
+	$("#").click(function() {
+		$("#vn_erstellen_popup").popup("hide");
+	});
+	
 	$("#vn_erzeugen_submit").click(function(event) {
 		event.preventDefault();
 		

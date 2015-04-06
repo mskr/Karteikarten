@@ -35,10 +35,85 @@ public class VeranstaltungServlet extends ServletController {
      * @param request 
      * @param response 
      * @return
+     * @throws IOException 
      */
-    private boolean veranstaltungErstellen(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+    private boolean veranstaltungErstellen(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        HttpSession aktuelleSession = request.getSession();
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+
+        JSONObject jo;
+        
+        if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.DOZENT)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return false;
+        }
+
+        String[] studiengaenge = request.getParameter(ParamDefines.Studiengang).split(",");
+        String semester = request.getParameter(ParamDefines.Semester);
+        String titel = request.getParameter(ParamDefines.Titel);
+        String beschr = request.getParameter(ParamDefines.Beschr);
+        String zugangspasswort = request.getParameter(ParamDefines.Password);
+        boolean kommentareErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.KommentareErlauben));
+        boolean bewertungenErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.BewertungenErlauben));
+        boolean moderatorKkBearbeiten = Boolean.parseBoolean(request.getParameter(ParamDefines.ModeratorKkBearbeiten));
+//        String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren);
+//        
+//        int[] mIds = new int[moderatorIds.length];
+//        try
+//        {
+//            for(int i = 0; i < moderatorIds.length;i++)
+//                mIds[i] = Integer.parseInt(moderatorIds[i]);
+//        }
+//        catch(NumberFormatException e)
+//        {
+//            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+//            outWriter.print(jo);
+//            return false;
+//        }
+
+        // TODO Moderatoren
+        if(studiengaenge == null || studiengaenge.length == 0||isEmptyAndRemoveSpaces(semester)||isEmptyAndRemoveSpaces("pw")||isEmptyAndRemoveSpaces(titel)||
+                isEmptyAndRemoveSpaces(beschr))// ||moderatorIds == null)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        Veranstaltung veranst = new Veranstaltung();
+        veranst.setBeschreibung(beschr);
+        veranst.setTitel(titel);
+        veranst.setKommentareErlaubt(kommentareErlaubt);
+        veranst.setModeratorKarteikartenBearbeiten(moderatorKkBearbeiten);
+        veranst.setBewertungenErlaubt(bewertungenErlaubt);
+        veranst.setSemester(semester);
+        veranst.setAnzTeilnehmer(0);
+        veranst.setErsteller(aktuellerBenutzer);
+        veranst.setZugangspasswort(zugangspasswort);
+        
+        try
+        {
+            dbManager.schreibeVeranstaltung(veranst,studiengaenge, null);
+        }
+        catch (SQLException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (DbUniqueConstraintException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+        outWriter.print(jo);
+        return true;
     }
 
     
@@ -215,6 +290,8 @@ public class VeranstaltungServlet extends ServletController {
         
         return true;
     }
+    
+    
 
     /**
      * Ein Benutzer kann sich in die gewunschte Veranstaltung ausschreiben.
@@ -226,7 +303,7 @@ public class VeranstaltungServlet extends ServletController {
      * @return
      * @throws IOException 
      */
-    private boolean veranstaltungAuschreiben(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private boolean veranstaltungAusschreiben(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -273,7 +350,11 @@ public class VeranstaltungServlet extends ServletController {
         }
         else if(aktuelleAction.equals(ParamDefines.ActionAusschreiben))
         {
-            veranstaltungAuschreiben(req,resp);
+            veranstaltungAusschreiben(req,resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionVeranstErstellen))
+        {
+            veranstaltungErstellen(req,resp);
         }
         else
         {
