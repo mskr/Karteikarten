@@ -38,13 +38,17 @@ function fillHauptseite()
 			if(errCode == "noerror") 
 			{
 				$("#vn_alle_auswahl_studiengang").empty();
+				$("#vn_erstellen_auswahl_studiengang").empty();
+				
 				var studgArr = jsonObj[keyJsonArrResult];
 				for(var i in studgArr) 
 				{
 					$("#vn_alle_auswahl_studiengang").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
+					$("#vn_erstellen_auswahl_studiengang").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
 				}
 
 				$("#vn_alle_auswahl_studiengang option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
+				$("#vn_erstellen_auswahl_studiengang option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
 			}
 			else
 			{
@@ -64,18 +68,26 @@ function fillHauptseite()
 			if(errCode == "noerror") 
 			{
 				$("#vn_alle_auswahl_semester").empty();
+				$("#vn_erstellen_auswahl_semester").empty();
 
 				var studgArr = jsonObj[keyJsonArrResult];
 
 				for(var i in studgArr) {
 					$("#vn_alle_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
-				}
+					$("#vn_erstellen_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
+					}
 
 				$("#vn_alle_auswahl_semester option[value='"+ jsonObj[paramAktSemester] +"']").prop('selected', true);
+				$("#vn_erstellen_auswahl_semester option[value='"+ jsonObj[paramAktSemester] +"']").prop('selected', true);
 
 				$("#vn_alle_auswahl_semester").find("option").sort(function(a,b) {
 					return $(a).data('semesterid') > $(b).data('semesterid');
 				}).appendTo('#vn_alle_auswahl_semester');
+				
+
+				$("#vn_erstellen_auswahl_semester").find("option").sort(function(a,b) {
+					return $(a).data('semesterid') > $(b).data('semesterid');
+				}).appendTo('#vn_erstellen_auswahl_semester');
 			}
 			else
 			{
