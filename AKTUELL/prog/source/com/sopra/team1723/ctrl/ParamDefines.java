@@ -35,6 +35,11 @@ public class ParamDefines
     public final static String ActionLeseBenachrichtungen = "leseBen";
     
 
+    public final static String Klasse = "klasse";
+    public final static String KlasseBenutzer = "klasseBenutzer";
+    public final static String KlasseVeranst = "klasseVeranst";
+    
+    
     public final static String Id = "id";
     public final static String Email = "email";
     public final static String EmailNew = "emailNew";
@@ -65,9 +70,6 @@ public class ParamDefines
     public final static String Angemeldet = "angemeldet";
     public final static String KennwortGesetzt = "kennwortGesetzt";
     
-    public final static String SuchfeldErgText = "suchfeldErgText";
-    public final static String SuchfeldErgKlasse= "suchfeldErgKlasse";
-    public final static String SuchfeldErgId = "suchfeldErgId";
 
     public final static String benInhalt = "benInhalt";
     public final static String benGelesen = "benGelesen";
