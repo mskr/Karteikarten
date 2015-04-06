@@ -127,7 +127,7 @@ public abstract class ServletController extends HttpServlet
      * Gibt alle Parameter aus, die am Request hängen
      * @param req
      */
-    private void printAllParameters(HttpServletRequest req)
+    protected void printAllParameters(HttpServletRequest req)
     {
         Enumeration<String> parameterNames = req.getParameterNames();
         System.out.println("URL: " + req.getRequestURI());

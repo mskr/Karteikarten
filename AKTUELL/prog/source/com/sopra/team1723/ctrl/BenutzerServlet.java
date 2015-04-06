@@ -417,6 +417,8 @@ public class BenutzerServlet extends ServletController {
             }
         }
         
+        printAllParameters(req);
+        
         // Hole die vom client angefragte Aktion
         String action = req.getParameter(ParamDefines.Action);
         
