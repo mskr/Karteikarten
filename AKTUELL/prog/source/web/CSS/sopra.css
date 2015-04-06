@@ -451,11 +451,14 @@ label {
 } .sucherg_vn, .sucherg_benutzer {
 	width: 100%;
 } .sucherg_vn_item, .sucherg_benutzer_item {
-	display: none;
 	padding: .9em;
 	cursor: pointer;
 } .sucherg_vn_item span, .sucherg_benutzer_item span {
 	margin-right: .5em;
+} .sucherg_vn_leer {
+	padding: .9em;
+	color: gray;
+	font-style: italic;
 }
 
 .vn_erstellen_bt {
