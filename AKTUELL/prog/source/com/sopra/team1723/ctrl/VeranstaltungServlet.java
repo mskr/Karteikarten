@@ -77,7 +77,7 @@ public class VeranstaltungServlet extends ServletController {
 //        }
 
         // TODO Moderatoren
-        if(studiengaenge == null || studiengaenge.length == 0||isEmptyAndRemoveSpaces(semester)||isEmptyAndRemoveSpaces("pw")||isEmptyAndRemoveSpaces(titel)||
+        if(studiengaenge == null || studiengaenge.length == 0||isEmptyAndRemoveSpaces(semester)||isEmptyAndRemoveSpaces(zugangspasswort)||isEmptyAndRemoveSpaces(titel)||
                 isEmptyAndRemoveSpaces(beschr))// ||moderatorIds == null)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
