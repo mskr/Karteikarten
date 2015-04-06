@@ -25,6 +25,7 @@ var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
 var actionSucheBenVeranst = "sucheBenVeranst";
+var actionErstelleVeranst = "erstelleVeranst";
 
 var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
 var leseVeranstMode = "mode";                        // Liefert Veranstaltungen

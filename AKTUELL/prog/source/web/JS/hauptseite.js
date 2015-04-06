@@ -8,8 +8,8 @@ $(document).ready(function() {
     
     // Code fuer das Veranstaltung erstellen Popup
     $('#vn_erstellen_popup').popup({
-    	openelement: '.vn_erstellen_bt',
-    	closeelement: '.vn_popup_close',
+    	openelement: '#vn_erstellen_bt',
+    	closeelement: '#vn_popup_close',
     	focuselement: '#vn_titel_input',
     	blur: false,
     	transition: 'all 0.3s'
@@ -24,6 +24,8 @@ $(document).ready(function() {
 		leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
 				   $("#vn_alle_auswahl_studiengang").val());
 	});
+	
+	registerVeranstErzeugeHandler();
 });
 
 function fillHauptseite() 
@@ -99,9 +101,6 @@ function fillHauptseite()
     $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
 }
 
-var globalContainerVeranstCount = 0;
-var globalContainerVeranstArray = [];
-
 function fillVeranstaltungsliste() 
 {
     leseVeranstaltungenMeine();
@@ -165,26 +164,9 @@ function displayVeranstaltungen(container, ajaxResult)
 		var veranstObjekte = ajaxResult[keyJsonArrResult];
 		// Alle Veranstaltungen entfernen
 		container.children().not(".vn_toolbar").remove();
-		globalContainerVeranstArray = [];
-		globalContainerVeranstCount = 0;
 		
 		for(var i in veranstObjekte)
 		{
-			var newV = true;
-			for(var j in globalContainerVeranstArray)
-			{
-				// Veranstaltung schon gepeichert
-				if(globalContainerVeranstArray[j][paramId] == veranstObjekte[i][paramId])
-				{
-					newV = false;
-					break;
-				}
-			}
-			if(newV)
-			{
-				// Veranstaltung speichern
-				globalContainerVeranstArray[globalContainerVeranstCount++] = veranstObjekte[i];
-			}
 			displayVeranstaltung(container, veranstObjekte[i]);
 		}
 	}
@@ -444,11 +426,11 @@ var suchTimer = function(){
     time = 15,
     timer;
     that.set = function() {
-    	timer = setInterval(function(){
-    		
-    		$("#sucherg_vn").empty();
-    		$("#sucherg_benutzer").empty();
-    		var suchString = $("#suche_global_input").val() + String.fromCharCode(event.keyCode);
+    	timer = setTimeout(function(){
+
+            $("#sucherg_vn").slideUp("fast").empty();
+            $("#sucherg_benutzer").slideUp("fast").empty();
+    		var suchString = $("#suche_global_input").val();
     		var ajax = $.ajax({
     			url: suchfeldServlet,
     			data: "action=" + actionSucheBenVeranst + "&" +
@@ -461,6 +443,7 @@ var suchTimer = function(){
     					var arrSuchErgebnisse = jsonObj[keyJsonArrSuchfeldResult];
     					fillSuchergebnisse(arrSuchErgebnisse);
     					suchErgIterator = -1;
+    					$("#sucherg_vn, #sucherg_benutzer").slideDown("fast");
     				}
     				else
     				{
@@ -469,16 +452,18 @@ var suchTimer = function(){
     			}
     		});
     		
-        },1000);
+        },400);
     }
     that.reset = function(){
-        clearInterval(timer);
+        clearTimeout(timer);
     }
     return that;
 }();
 
 function fillSuchergebnisse(arrSuchErgebnisse)
 {
+    var isBenutzerLeer = true;
+    var isVeranstLeer = true;
     for(var i in arrSuchErgebnisse)
     {
         var jsonSuchErgebnis = arrSuchErgebnisse[i];
@@ -488,12 +473,20 @@ function fillSuchergebnisse(arrSuchErgebnisse)
         if(klasse == "Benutzer") {
             $("#sucherg_benutzer").append(
                     "<div id='sucherg_benutzer_"+id+"' class='sucherg_benutzer_item'><span class='octicon octicon-person'></span>" + text + " (#"+id+")</div>");
-            $("#sucherg_benutzer_"+id).slideDown();
+            isBenutzerLeer = false;
         } else if(klasse == "Veranstaltung") {
             $("#sucherg_vn").append(
                     "<div id='sucherg_vn_"+id+"' class='sucherg_vn_item'><span class='octicon octicon-podium'></span>" + text + " (#"+id+")</div>");
-            $("#sucherg_vn_"+id).slideDown();
+            isVeranstLeer = false;
         }
+    }
+    if(isBenutzerLeer)
+    {
+        $("#sucherg_benutzer").append("<div class='sucherg_vn_leer'>Keine Benutzer gefunden.</div>");
+    }
+    if(isVeranstLeer)
+    {
+        $("#sucherg_vn").append("<div class='sucherg_vn_leer'>Keine Veranstaltungen gefunden.</div>");
     }
     registerSucheClickEvent(id);
 }
@@ -546,4 +539,46 @@ function handlePfeiltastenEvents(pressedKey) {
         $("#sucherg_x").trigger("click");
     }
     $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
+}
+
+
+function registerVeranstErzeugeHandler() {
+	$("#vn_erzeugen_submit").click(function(event) {
+		event.preventDefault();
+		
+		var popup = $("#vn_erstellen_popup");
+		var titel = popup.find("#vn_titel_input").val(),
+			semester = popup.find("#vn_erstellen_auswahl_semester").val(),
+			studiengang = popup.find("#vn_erstellen_auswahl_studiengang").val(),
+			beschr = popup.find("#vn_beschr_input").val(),
+			moderatorenKkBearbeiten = popup.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
+			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
+			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
+	
+		var ajax = $.ajax({
+			url: veranstaltungServlet,
+			data: "action=" + actionErstelleVeranst + "&" + 
+				  paramTitel + "=" + titel + "&" +
+				  paramSemester + "=" + semester + "&" + 
+				  paramStudiengang + "=" + studiengang + "&" +
+				  paramBeschr + "=" + beschr + "&" + 
+				  paramModeratorKkBearbeiten + "=" +moderatorenKkBearbeiten + "&"+
+				  paramKommentareErlauben + "=" + kommentareErlaubt + "&" + 
+				  paramBewertungenErlauben + "=" + bewertungenErlaubt,
+				  
+			success: function(response) {
+				var jsonObj = response;
+				var errCode = jsonObj["error"];
+				if(errCode == "noerror")
+				{
+					popup.popup('hide');
+					fillVeranstaltungsliste();	
+				}
+				else
+				{
+					message(0, buildMessage(errCode));
+				}		
+			}
+		});
+	});
 }
