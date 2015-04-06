@@ -107,7 +107,7 @@ public class FileUploadServlet extends ServletController
         }
         
         // Altes Bild löschen
-        if(!aktuellerBenutzer.getProfilBildPfad().equals("default.png"))
+        if(!aktuellerBenutzer.getProfilBildPfad().contains("default.png"))
         {
             File f = new File(contextPath + aktuellerBenutzer.getProfilBildPfad());
             f.delete();

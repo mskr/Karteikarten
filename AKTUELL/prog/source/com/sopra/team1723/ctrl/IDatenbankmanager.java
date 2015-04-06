@@ -1,7 +1,9 @@
 package com.sopra.team1723.ctrl;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.*;
 
@@ -22,7 +24,7 @@ public interface IDatenbankmanager {
      * tritt ein Fehler auf liefert die Methode null zurück
      */
     public Benutzer leseBenutzer(String eMail);
-    
+
     /**
      * Liest Benutzer mit der angegebenen id aus der Datenbank.
      * @param id referenziert eindeutig einen Benutzer 
@@ -41,7 +43,7 @@ public interface IDatenbankmanager {
      * @throws DbUniqueConstraintException, SQLException
      */
     public void schreibeBenutzer(Benutzer benutzer)  throws DbUniqueConstraintException, SQLException;
-    
+
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Kennwort, Matrikelnummer, 
      * Studiengang und Nutzerstatus werden nicht gesetzt, da der Benutzer diese nicht selbst ändern kann.
@@ -54,15 +56,15 @@ public interface IDatenbankmanager {
      * @throws DbUniqueConstraintException, SQLException
      */
     public void bearbeiteBenutzer(Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
-    
-   /**
-    * Ändert das Profilbild eines Benutzers in der Datenbank.
-    * @param benutzerId referenziert eindeutig den Benutzer
-    * @param dateiName, Dateiname des neuen Profilbilds
-    * @return true, falls kein Fehler auftritt, false bei einem Fehler
-    */
+
+    /**
+     * Ändert das Profilbild eines Benutzers in der Datenbank.
+     * @param benutzerId referenziert eindeutig den Benutzer
+     * @param dateiName, Dateiname des neuen Profilbilds
+     * @return true, falls kein Fehler auftritt, false bei einem Fehler
+     */
     public boolean aendereProfilBild(int benutzerId, String dateiName);
-    
+
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt
      * {@link #passwortAendern(String, String)}. Diese Methode wird verwendet, wenn
@@ -94,20 +96,20 @@ public interface IDatenbankmanager {
      * @throws SQLException, DbFalseLoginDataException
      */
     public void pruefeLogin(String eMail, String passwort) throws SQLException, DbFalseLoginDataException;
-    
+
     /**
      * Gibt eine Liste aller Studiengänge zurück. 
      * @return Liste der Studiengaenge. Tritt ein Fehler auf wird null zurückgegeben. Sind keine Studiengänge in der 
      * Datenbank vorhanden, dann wird eine leere Liste zurückgegeben
      */
     public List<String> leseStudiengaenge();
-    
+
     /**
      * Gibt eine Liste aller Semester zurück. 
      * @return Liste der Semester. Tritt ein Fehler auf wird null zurückgegeben. Werden keine Semester in der 
      * Datenbank gefunden, dann wird eine leere Liste zurückgegeben
      */
-    public List<String> leseSemester();
+    public Map<Integer,String> leseSemester();
 
     /**
      * Ändert das Passwort des angegebenen Benutzers. 
@@ -125,31 +127,39 @@ public interface IDatenbankmanager {
      * vorhanden oder tritt ein Fehler auf, wird null zurückgegeben.
      */
     public Veranstaltung leseVeranstaltung(int id);
-    
-//    /**
-//     * Holt alle Veranstaltungen aus der Datenbank und packt sie in eine Array List.
-//     * @return Liste aller Veranstaltungen. Gibt es keine Veranstaltungen wird eine 
-//     * leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
-//     */
-//    public List<Veranstaltung> leseAlleVeranstaltungen();
-    
-    /**
-     * Holt Veranstaltungen, die von dem angegebenen Studiengang gehört werden können
-     * aus der Datenbank.
-     * @param studiengang
-     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die 
-     * Methode eine leere Liste zurück. Bei einem Fehler kommt null zurück.
-     */
-    public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang);
+
+    //    /**
+    //     * Holt alle Veranstaltungen aus der Datenbank und packt sie in eine Array List.
+    //     * @return Liste aller Veranstaltungen. Gibt es keine Veranstaltungen wird eine 
+    //     * leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
+    //     */
+    //    public List<Veranstaltung> leseAlleVeranstaltungen();
+    //    
+    //    /**
+    //     * Holt Veranstaltungen, die von dem angegebenen Studiengang gehört werden können
+    //     * aus der Datenbank.
+    //     * @param studiengang
+    //     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die 
+    //     * Methode eine leere Liste zurück. Bei einem Fehler kommt null zurück.
+    //     */
+    //    public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang);
+    //
+    //    /**
+    //     * Holt alle Veranstaltungen aus dem angegebenen Semester aus der Datenbank.
+    //     * @param semester 
+    //     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die Methode eine leere Liste zurück.
+    //     * Bei einem Fehler kommt null zurück.
+    //     */
+    //    public List<Veranstaltung> leseVeranstaltungenSemester(String semester);
 
     /**
-     * Holt alle Veranstaltungen aus dem angegebenen Semester aus der Datenbank.
-     * @param semester 
+     * Holt alle Veranstaltungen zu dem angegebenen Semester und Studiengang aus der Datenbank.
+     * @param semester, studiengang 
      * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die Methode eine leere Liste zurück.
-     * Bei einem Fehler kommt null zurück.
-     */
-    public List<Veranstaltung> leseVeranstaltungenSemester(String semester);
-    
+     * Bei einem Fehler kommt null zurück.    
+    */
+    public List<Veranstaltung> leseVeranstaltungen(String semester, String studiengang);
+
     /**
      * Holt alle Veranstaltungen des angegebenen Benutzers.
      * @param benutzer referenziert eindeutig einen Benutzer 
@@ -157,7 +167,7 @@ public interface IDatenbankmanager {
      * Bei einem Fehler kommt null zurück.
      */
     public List<Veranstaltung> leseVeranstaltungen(int benutzer);
-    
+
     /**
      * Holt alle Moderatoren zu der angegebenen Veranstaltung aus der Datenbank.
      * @param veranstaltung referenziert eindeutig eine Veranstaltung
@@ -165,7 +175,7 @@ public interface IDatenbankmanager {
      * wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<Benutzer> leseModeratoren(int veranstaltung);
-    
+
     /**
      * Holt alle Studiengaenge zu der angegebenen Veranstaltung aus der Datenbank.
      * @param veranstaltung referenziert eindeutig eine Veranstaltung
@@ -173,7 +183,7 @@ public interface IDatenbankmanager {
      * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<String> leseStudiengaenge(int veranstaltung);
-    
+
     /**
      * Prüft ob der Benutzer Moderator dieser Veranstaltung ist.
      * @param benutzer referenziert eindeutig einen Benutzer
@@ -182,7 +192,7 @@ public interface IDatenbankmanager {
      * Tritt ein Fehler auf wird null zurückgegeben
      */
     public Boolean istModerator(int benutzer, int veranstaltung);
-    
+
     /**
      * Holt alle Studiengaenge zu der angegebenen Veranstaltung aus der Datenbank.
      * @param veranstaltung referenziert eindeutig eine Veranstaltung
@@ -190,7 +200,7 @@ public interface IDatenbankmanager {
      * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public boolean angemeldet(int benutzer, int veranstaltung) throws SQLException;
-    
+
     /**
      * Fugt neue Veranstaltung in die Datenbank ein. Bei Erfolg wird
      * true zuruckgegeben. Bei einem Fehler in der Datenbank oder falls
@@ -237,7 +247,7 @@ public interface IDatenbankmanager {
      * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
      */
     public List<ErgebnisseSuchfeld> durchsucheDatenbank(String suchmuster, List<Klassenfeld> suchfeld);
-    
+
     /**
      * Liest die aktuellsten Benachrichtigungen für einen Benutzer aus der Datenbank
      * @param benutzer referenziert eindeutig einen Benuter
@@ -246,7 +256,7 @@ public interface IDatenbankmanager {
      * wird eine leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
      */
     public List<Benachrichtigung> leseBenachrichtigungen(int benutzer, int limit);
-    
+
     /**
      * Holt eine Benachrichtigung für eine Einladung als Moderator aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
@@ -254,7 +264,7 @@ public interface IDatenbankmanager {
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrEinlModerator leseBenachrEinlModerator(int id);
-    
+
     /**
      * Holt eine Benachrichtigung für eine Karteikartenänderung aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
@@ -262,7 +272,7 @@ public interface IDatenbankmanager {
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrKarteikAenderung leseBenachrKarteikAenderung(int id);
-    
+
     /**
      * Holt eine Benachrichtigung für einen neuen Kommentar aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
@@ -270,7 +280,7 @@ public interface IDatenbankmanager {
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrNeuerKommentar leseBenachrNeuerKommentar(int id);
-    
+
     /**
      * Holt eine Benachrichtigung für ein geändertes Profil aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
@@ -278,7 +288,7 @@ public interface IDatenbankmanager {
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrProfilGeaendert leseBenachrProfilGeaendert(int id);
-    
+
     /**
      * Holt eine Benachrichtigung für eine Veranstaltungsänderung aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
@@ -286,7 +296,7 @@ public interface IDatenbankmanager {
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrVeranstAenderung leseBenachrVeranstAenderung(int id);
-    
+
     /**
      * Holt eine Benachrichtigung für eine Veranstaltungsänderung aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
@@ -294,7 +304,7 @@ public interface IDatenbankmanager {
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public boolean schreibeBenachrichtigung(Benachrichtigung benachrichtigung);
-    
+
     /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
      * return
@@ -374,7 +384,7 @@ public interface IDatenbankmanager {
      * @return
      */
     public Kommentar[] leseKommentare(int karteikID, int vaterKID);
-    
+
     /**
      * Gibt alle Kommentare zu einer Karteikarte zuruck. Bei einem Fehler
      * wird null zuruckgegeben

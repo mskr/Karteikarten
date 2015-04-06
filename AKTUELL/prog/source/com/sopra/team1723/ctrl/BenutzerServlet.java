@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -374,10 +375,10 @@ public class BenutzerServlet extends ServletController {
         PrintWriter outWriter = null;
         outWriter = response.getWriter();
         
-        List<String> semester = dbManager.leseSemester();
+        Map<Integer, String> semester = dbManager.leseSemester();
         if(semester != null)
         {
-            JSONObject jo = JSONConverter.toJson(semester);
+            JSONObject jo = JSONConverter.toJsonSemesterMap(semester);
             jo.put(ParamDefines.AktSemester, aktuellesSemester);
             outWriter.print(jo);
             return true;
@@ -415,6 +416,8 @@ public class BenutzerServlet extends ServletController {
                 return;
             }
         }
+        
+        printAllParameters(req);
         
         // Hole die vom client angefragte Aktion
         String action = req.getParameter(ParamDefines.Action);
