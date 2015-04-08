@@ -104,6 +104,11 @@ function buildUrlQuery(paramObj)
  * @param paramObj enthaehlt die Parameter als Map
  */
 function interpreteUrlQuery(paramObj) {
+	// TODO Übler hack ! 
+	// Versteck alle Popupfenster. Wo wäre das besser ?
+	$(".popup_fenster").popup('hide');
+	
+	
     var ziel = paramObj[urlParamLocation];
     if(jsonBenutzer != undefined)
     { // Benutzer eingeloggt

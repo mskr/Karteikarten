@@ -582,7 +582,7 @@ function registerVeranstErzeugeHandler() {
 				{
 					popup.popup('hide');
 					fillVeranstaltungsliste();	
-				}	
+				}
 			}
 		});
 	});
