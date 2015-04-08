@@ -37,6 +37,11 @@ $(document).ready(function() {
 		leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
 				   $("#vn_alle_auswahl_studiengang").val());
 	});
+
+    // Globaler Handler fuer das x zum Schliessen des Suchergebnis-Containers
+    $("#sucherg_x").click(function() {
+        $("#suche_global_input").val("");
+    });
 	
 	registerVeranstErzeugeHandler();
 });
@@ -419,7 +424,6 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
 function registerSuchEvent()
 {
     $("#suche_global_input").keydown(function(event) {
-        console.log("keycode="+event.keyCode);
         if(event.keyCode == 40 || // Pfeil runter
            event.keyCode == 38 || // Pfeil hoch
            event.keyCode == 13 || // ENTER
@@ -486,18 +490,19 @@ function fillSuchergebnisse(arrSuchErgebnisse)
     for(var i in arrSuchErgebnisse)
     {
         var jsonSuchErgebnis = arrSuchErgebnisse[i];
-        var text = jsonSuchErgebnis[keyJsonSuchfeldErgText];
-        var klasse = jsonSuchErgebnis[keyJsonSuchfeldErgKlasse];
-        var id = jsonSuchErgebnis[keyJsonSuchfeldErgId];
-        if(klasse == "Benutzer") {
+        console.log(jsonSuchErgebnis);
+        var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
+        var id = jsonSuchErgebnis[paramId];
+        if(klasse == keyJsonObjKlasseBenutzer) {
             $("#sucherg_benutzer").append(
-                    "<div id='sucherg_benutzer_"+id+"' class='sucherg_benutzer_item'><span class='octicon octicon-person'></span>" + text + " (#"+id+")</div>");
+                    "<div id='sucherg_benutzer_"+id+"' class='sucherg_benutzer_item'><span class='octicon octicon-person'></span>" + jsonSuchErgebnis[paramVorname] + " " + jsonSuchErgebnis[paramNachname] + "</div>");
             isBenutzerLeer = false;
-        } else if(klasse == "Veranstaltung") {
+        } else if(klasse == keyJsonObjKlasseVeranst) {
             $("#sucherg_vn").append(
-                    "<div id='sucherg_vn_"+id+"' class='sucherg_vn_item'><span class='octicon octicon-podium'></span>" + text + " (#"+id+")</div>");
+                    "<div id='sucherg_vn_"+id+"' class='sucherg_vn_item'><span class='octicon octicon-podium'></span>" + jsonSuchErgebnis[paramTitel] + "</div>");
             isVeranstLeer = false;
         }
+        registerSucheClickEvent(jsonSuchErgebnis);
     }
     if(isBenutzerLeer)
     {
@@ -507,30 +512,34 @@ function fillSuchergebnisse(arrSuchErgebnisse)
     {
         $("#sucherg_vn").append("<div class='sucherg_vn_leer'>Keine Veranstaltungen gefunden.</div>");
     }
-    registerSucheClickEvent(id);
 }
 
-function registerSucheClickEvent(id)
+function registerSucheClickEvent(jsonSuchErgebnis)
 {
-    // 1) Alle Elemente mit class "sucherg_..._item" selektieren
-    // 2) Mit for each durch die Elemente iterieren und id abfragen.
-    // 3) Fuer jede id eine URL zusammenbauen
-    $(".sucherg_benutzer_item").each(function(index) {
-        $(this).click(function() {
-            var benutzerId = $(this).attr("id").split("_")[2];
-            gotoProfil(benutzerId);
+    var id = jsonSuchErgebnis[paramId];
+    var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
+    if(klasse = keyJsonObjKlasseBenutzer) {
+        $("#sucherg_benutzer_"+id).click(function() {
+            gotoProfil(id);
         });
-    });
-    $(".sucherg_vn_item").each(function(index) {
-        $(this).click(function() {
-            var vnId = $(this).attr("id").split("_")[2];
-            gotoVeranstaltung(vnId)
+    }
+    else if(klasse = keyJsonObjKlasseBenutzer) {
+        $("#sucherg_vn_"+id).click(function() {
+            // Gehe zum Semester und zum Studiengang der VN
+            var semesterName = jsonSuchErgebnis[paramSemester];
+            var studiengangName = jsonSuchErgebnis[paramStudiengang];
+            console.log("schicke ajax ab");
+            var ajax = leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName);
+            $.when(ajax).done(function() {
+                // Verberge die Suchergebnisse
+                $("#sucherg_x").trigger("click");
+                // Aktiviere den Alle-Tab
+                $("#tab-2").prop("checked",true);
+                // Klappe die entsprechende VN aus
+                $("#vn_alle_"+id+"_radio").trigger("click").prop("checked",true);
+            });
         });
-    });
-    // Das kleine x zum schliessen
-    $("#sucherg_x").click(function() {
-        $("#suche_global_input").val("");
-    });
+    }
 }
 
 var suchErgIterator = -1;
