@@ -306,7 +306,7 @@ function registerProfilSpeichernEvents() {
             $("#profil_passwort_wdh_input").val("");
             $("#profil_passwort_wdh_input").focus();
             $("#profil_passwort_wdh_input").css("border","4px solid IndianRed");
-            message(0, "Bitte prüfen Sie Ihre Eingaben.");
+            showError("Bitte prüfen Sie Ihre Eingaben.");
         }
         else
         {
@@ -324,7 +324,7 @@ function registerProfilSpeichernEvents() {
                     $("#profil_passwort_speichern").prop('disabled', true);
                 },
                 success: function(response) {
-                	var errFkt = function() 
+                	var errFkt = function(errCode) 
                 	{
                 		if(errCode == "loginfailed") 
                         {
@@ -368,14 +368,14 @@ function registerAvatarAendernEvent() {
     			fileName.toLowerCase().indexOf(".bmp") < 0 &&
     			fileName.toLowerCase().indexOf(".png") < 0)
     	{
-    		message(0, "Leider werden nur die Formate jpg/jpeg, bmp oder png unterstützt.");
+    		showError("Leider werden nur die Formate jpg/jpeg, bmp oder png unterstützt.");
     	}
     	else
     	{
     		uploadFile(file, function(response) {
     			
 
-            	var errFkt = function() 
+            	var errFkt = function(errCode) 
             	{
             		if(errCode == "invalidparam") 
                     {

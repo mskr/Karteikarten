@@ -509,6 +509,30 @@ textarea.input_std {
 	content: "Veranstaltung erstellen";
 }
 
+.itemlist {
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	overflow: hidden;
+	min-height: 2em;
+}
+.itemListItem {
+	background: #2a2a2a;
+	padding: 0.2em;
+	margin: 0.2em;
+ 	display: inline-block	!important; 
+	border-radius: 0.5em;
+	white-space: nowrap;
+}
+.itemListItemName
+{
+	margin: 0.3em;
+}
+.itemListItemClose
+{
+	margin: 0.3em;
+}
+
+
 /* Tabs erstellt nach dieser Anleitung: */
 /* http://css-tricks.com/functional-css-tabs-revisited/ */
 /* Hat nur ein Problem: Der vorderste Tabinhalt verdeckt immer die hintersten. min-height muss ausreichen um Inhalte auf allen Tabs zu "verdecken". */

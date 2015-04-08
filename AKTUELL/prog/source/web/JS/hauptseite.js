@@ -24,6 +24,7 @@ $(document).ready(function() {
     		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
     		$("#vn_komm_erlaubt").prop("checked", true);
     		$("#vn_bew_erlaubt").prop("checked", true);
+    		$("#vn_mod_list").children().remove();
     	}
     });
 
@@ -527,7 +528,7 @@ function handlePfeiltastenEvents(pressedKey) {
     $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
 }
 
-
+var selectedModList = {};
 function registerVeranstErzeugeHandler() {
 	
 	$("#vn_erzeugen_cancel").click(function() {
@@ -567,5 +568,18 @@ function registerVeranstErzeugeHandler() {
 				}	
 			}
 		});
+	});
+	
+	$("#vn_mod_input").keyup(function(e){
+	    if(e.keyCode == 13)
+	    {
+	        $(this).trigger("enterKey");
+	    }
+	});
+	
+	$('#vn_mod_input').bind("enterKey",function(e){
+		var txt = $('#vn_mod_input').val();
+		$('#vn_mod_input').val("");
+		addItemToList(selectedModList, $("#vn_mod_list"), txt, {}, function(){});
 	});
 }

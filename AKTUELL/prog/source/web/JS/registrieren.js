@@ -41,14 +41,14 @@ $(document).ready(function() {
                 $("#reg_pass").focus();
                 $("#reg_pass").val("");
                 $("#reg_pass").css("border","4px solid IndianRed");
-                message(0, "Bitte wiederholen Sie Ihr Passwort erneut.");
+                showError("Bitte wiederholen Sie Ihr Passwort erneut.");
             }
         }
         else
         {
             $("#login_email").focus();
             $("#login_email").css("border","4px solid IndianRed");
-            message(0, "Bitte prüfen Sie Ihre Email-Adresse.");
+            showError("Bitte prüfen Sie Ihre Email-Adresse.");
         }
         // Verhindert das normale Absenden des Formulars
         event.preventDefault();
