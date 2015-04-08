@@ -220,7 +220,6 @@ function gotoVeranstaltung(veranstId)
 }
 /**
  * Diese Funktion setzt die URL und wechselt zur Hautseite
- * @param veranstId
  */
 function gotoHauptseite()
 {
@@ -231,7 +230,6 @@ function gotoHauptseite()
 
 /**
  * Diese Funktion wechselt zur Startseite
- * @param veranstId
  */
 function gotoStartseite()
 {

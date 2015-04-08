@@ -17,3 +17,12 @@ $.ajaxSetup({
 	    alert("Ajax Call returned error. Debug Info: "+jqXHR.status+", "+textStatus+", "+errorThrown);
 	}
 });
+
+
+$( document ).ajaxStart(function() {
+	  $("#loadingDiv").fadeIn();
+	});
+
+$( document ).ajaxStop(function() {
+	  $("#loadingDiv").fadeOut();
+	});
