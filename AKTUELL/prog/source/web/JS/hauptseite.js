@@ -418,10 +418,6 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
 
 function registerSuchEvent()
 {
-    // TODO Bei jedem keyup-event 1 sec warten, ob noch ein event kommt.
-    // Reagiere dann nur auf das event, was zuletzt aufgetreten ist,
-    // Um Datenbankabfragen zu reduzieren. Wie macht man das am besten?
-    // TODO Wenn man sehr schnell tippt werden mehr als 5 Ergebnisse angezeigt.
     $("#suche_global_input").keydown(function(event) {
         console.log("keycode="+event.keyCode);
         if(event.keyCode == 40 || // Pfeil runter
@@ -463,7 +459,7 @@ var suchTimer = function(){
     				var errCode = jsonObj["error"];
     				if(errCode == "noerror")
     				{
-    					var arrSuchErgebnisse = jsonObj[keyJsonArrSuchfeldResult];
+    					var arrSuchErgebnisse = jsonObj[keyJsonArrResult];
     					fillSuchergebnisse(arrSuchErgebnisse);
     					suchErgIterator = -1;
     					$("#sucherg_vn, #sucherg_benutzer").slideDown("fast");

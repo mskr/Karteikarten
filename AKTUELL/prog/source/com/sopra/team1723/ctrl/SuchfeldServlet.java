@@ -52,6 +52,8 @@ public class SuchfeldServlet extends ServletController {
         String suchmuster = req.getParameter(ParamDefines.Suchmuster);
 
         JSONObject jo = JSONConverter.toJsonSuchfeld(dbManager.durchsucheDatenbank(suchmuster));
+        System.out.println("Suchmuster="+suchmuster+", JSONObject="+jo);
+        outWriter.print(jo);
     }
 
     @Override

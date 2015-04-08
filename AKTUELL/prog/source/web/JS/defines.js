@@ -91,10 +91,9 @@ var paramBenProfil = "benProfil";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";
-var keyJsonArrSuchfeldResult = "arrSuchfeldResult";
-var keyJsonSuchfeldErgText = "suchfeldErgText";
-var keyJsonSuchfeldErgKlasse = "suchfeldErgKlasse";
-var keyJsonSuchfeldErgId = "suchfeldErgId";
+var keyJsonObjKlasse = "klasse";
+var keyJsonObjKlasseBenutzer = "klasseBenutzer";
+var keyJsonObjKlasseVeranst = "klasseVeranst";
 
 // GET-Parameter fuer den urlHandler.js
 var urlParamLocation = "location";
