@@ -113,7 +113,6 @@ public class ParamDefines
     // ArrayResults
     public final static String jsonArrResult = "arrResult";
     public final static String jsonStrResult = "strResult";
-    public final static String jsonArrSuchfeldResult = "arrSuchfeldResult";
     
         
     public final static int WiSeMonatBeginn = 10;
