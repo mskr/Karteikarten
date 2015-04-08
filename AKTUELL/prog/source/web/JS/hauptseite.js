@@ -597,6 +597,6 @@ function registerVeranstErzeugeHandler() {
 	$('#vn_mod_input').bind("enterKey",function(e){
 		var txt = $('#vn_mod_input').val();
 		$('#vn_mod_input').val("");
-		addItemToList(selectedModList, $("#vn_mod_list"), txt, {}, function(){});
+		addItemToList(selectedModList, $("#vn_mod_list"), txt, {});
 	});
 }
