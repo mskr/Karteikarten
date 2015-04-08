@@ -98,3 +98,33 @@ function toUrlParamString(paramObj)
     }
     return locationSearchTmp;
 }
+
+
+function addItemToList(itemMap, container, displayName, data, removeFkt) 
+{
+	if(itemMap[displayName])
+		return false;
+	
+	var html = $("<span class='itemListItem'>" + 
+				"<span class='itemListItemName'>" + displayName + "</span>" +
+				"<a class='octicon octicon-x itemListItemClose'></a>" +
+				"</span>");
+	
+	container.append(html);
+	
+	// Map hinzufügen
+	itemMap[displayName] = data;
+	
+	html.find(".itemListItemClose").click(function() 
+	{
+		html.remove();
+		
+		// Aus map löschen
+		itemMap[displayName] = undefined;
+		
+		if(removeFkt != undefined)
+				removeFkt();
+	});
+	
+	return true;
+}
