@@ -100,31 +100,46 @@ function toUrlParamString(paramObj)
 }
 
 
-function addItemToList(itemMap, container, displayName, data, removeFkt) 
+function addItemToList(itemMap, container, displayName, data, removeFkt, clickFkt) 
 {
 	if(itemMap[displayName])
 		return false;
 	
-	var html = $("<span class='itemListItem'>" + 
-				"<span class='itemListItemName'>" + displayName + "</span>" +
-				"<a class='octicon octicon-x itemListItemClose'></a>" +
-				"</span>");
+	var html = "<span class='itemListItem'>"; 
 	
+	if(clickFkt != undefined)
+		html += "<a class='itemListItemName'>" + displayName + "</a>";
+	else
+		html += "<span class='itemListItemName'>" + displayName + "</span>";
+	
+	html += "<a class='octicon octicon-x itemListItemClose'></a>" +
+				"</span>"
+	
+	// Zu jquery konvertieren
+	html = $(html);
 	container.append(html);
 	
 	// Map hinzufügen
 	itemMap[displayName] = data;
 	
+	html.find(".itemListItemName").click(function() 
+	{
+		if(clickFkt != undefined)
+			clickFkt(data,displayName);
+	});
+
 	html.find(".itemListItemClose").click(function() 
 	{
 		html.remove();
-		
-		// Aus map löschen
-		itemMap[displayName] = undefined;
-		
+
 		if(removeFkt != undefined)
-				removeFkt();
+			removeFkt(itemMap[displayName]);
+
+		// Aus map löschen
+		delete itemMap[displayName];
 	});
+	
+	
 	
 	return true;
 }
