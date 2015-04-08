@@ -457,7 +457,6 @@ function fillSuchergebnisse(arrSuchErgebnisse)
     for(var i in arrSuchErgebnisse)
     {
         var jsonSuchErgebnis = arrSuchErgebnisse[i];
-        console.log(jsonSuchErgebnis);
         var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
         var id = jsonSuchErgebnis[paramId];
         if(klasse == keyJsonObjKlasseBenutzer) {
@@ -485,19 +484,23 @@ function registerSucheClickEvent(jsonSuchErgebnis)
 {
     var id = jsonSuchErgebnis[paramId];
     var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
-    if(klasse = keyJsonObjKlasseBenutzer) {
+    if(klasse == keyJsonObjKlasseBenutzer) {
         $("#sucherg_benutzer_"+id).click(function() {
             gotoProfil(id);
         });
     }
-    else if(klasse = keyJsonObjKlasseBenutzer) {
+    else if(klasse == keyJsonObjKlasseVeranst) {
         $("#sucherg_vn_"+id).click(function() {
             // Gehe zum Semester und zum Studiengang der VN
             var semesterName = jsonSuchErgebnis[paramSemester];
-            var studiengangName = jsonSuchErgebnis[paramStudiengang];
+            var studiengangName = getFirstStudiengangOfVeranstaltung(id);
+            console.log(jsonSuchErgebnis);
+            console.log(semesterName);
+            console.log(studiengangName);
             console.log("schicke ajax ab");
             var ajax = leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName);
             $.when(ajax).done(function() {
+                console.log("bin fertig");
                 // Verberge die Suchergebnisse
                 $("#sucherg_x").trigger("click");
                 // Aktiviere den Alle-Tab
@@ -534,6 +537,10 @@ function handlePfeiltastenEvents(pressedKey) {
         $("#sucherg_x").trigger("click");
     }
     $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
+}
+
+function getFirstStudiengangOfVeranstaltung(id) {
+    
 }
 
 
