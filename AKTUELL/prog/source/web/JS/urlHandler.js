@@ -91,7 +91,7 @@ function buildUrlQuery(paramObj)
     
     // TODO
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
-    // Test mit History
+    
     History.pushState(null,null, locationSearchTmp);
     interpreteUrlQuery(parseUrlQuery(locationSearchTmp.substring(1)));
 }
@@ -103,12 +103,10 @@ function buildUrlQuery(paramObj)
  * die entsprechende Seite angezeigt.
  * @param paramObj enthaehlt die Parameter als Map
  */
-function interpreteUrlQuery(paramObj) {
+function interpreteUrlQuery(paramObj) {	
 	// TODO Übler hack ! 
 	// Versteck alle Popupfenster. Wo wäre das besser ?
 	$(".popup_fenster").popup('hide');
-	
-	
     var ziel = paramObj[urlParamLocation];
     if(jsonBenutzer != undefined)
     { // Benutzer eingeloggt

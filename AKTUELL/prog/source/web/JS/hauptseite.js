@@ -14,6 +14,8 @@ $(document).ready(function() {
     	blur: false,
     	transition: 'all 0.3s',
     	onclose : function() {
+    		if(jsonBenutzer == undefined)
+    			return;
     		$("#vn_titel_input").val("");
     		// TODO
 //  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
