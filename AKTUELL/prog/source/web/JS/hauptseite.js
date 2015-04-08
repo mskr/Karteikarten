@@ -487,23 +487,22 @@ function registerSucheClickEvent(jsonSuchErgebnis)
     var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
     if(klasse == keyJsonObjKlasseBenutzer) {
         $("#sucherg_benutzer_"+id).click(function() {
+            // Verberge die Suchergebnisse
+            $("#sucherg_x").trigger("click");
             gotoProfil(id);
         });
     }
     else if(klasse == keyJsonObjKlasseVeranst) {
         $("#sucherg_vn_"+id).click(function() {
+            // Verberge die Suchergebnisse
+            $("#sucherg_x").trigger("click");
             // Gehe zum Semester und zum Studiengang der VN
             var semesterName = jsonSuchErgebnis[paramSemester];
-            var studiengangName = getFirstStudiengangOfVeranstaltung(id);
-            console.log(jsonSuchErgebnis);
-            console.log(semesterName);
-            console.log(studiengangName);
-            console.log("schicke ajax ab");
+            var studiengangName = "Informatik"; //TODO Wir muessen die Studiengaenge im Veranstaltungs-Objekt speichern!
+            $("#vn_alle_auswahl_studiengang").val(studiengangName);
+            $("#vn_alle_auswahl_semester").val(semesterName);
             var ajax = leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName);
             $.when(ajax).done(function() {
-                console.log("bin fertig");
-                // Verberge die Suchergebnisse
-                $("#sucherg_x").trigger("click");
                 // Aktiviere den Alle-Tab
                 $("#tab-2").prop("checked",true);
                 // Klappe die entsprechende VN aus
@@ -538,10 +537,6 @@ function handlePfeiltastenEvents(pressedKey) {
         $("#sucherg_x").trigger("click");
     }
     $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
-}
-
-function getFirstStudiengangOfVeranstaltung(id) {
-    
 }
 
 
