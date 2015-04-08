@@ -10,7 +10,7 @@
 */
 function buildMessage(errCode) {
     switch(errCode) {
-        case "systemerror": return "Etwas scheint mit dem Server nicht zu stimmen. Läuft die Datenbank?";
+        case "systemerror": return "Ein interner Fehler ist aufgetreten. Versuchen Sie es erneut. Wenn der Fehler weiterhin besteht, wenden Sie sich an den Administrator.";
         case "invalidparam": return "Der Server hat ungueltige oder fehlende Parameter erhalten. Bitte machen Sie andere Eingaben!";
         case "notloggedin": return "Sie sind nicht eingeloggt.";
         case "loginfailed": return "Dieser Eintrag wurde in der Datenbank nicht gefunden.";
