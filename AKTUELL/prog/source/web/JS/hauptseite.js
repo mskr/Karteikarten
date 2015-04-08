@@ -113,7 +113,7 @@ function fillHauptseite()
 	}
 	else
 	{
-		$("#vn_erstellen_bt").hide();
+		$("#vn_erstellen_bt").hide(); // TODO Hier vielleicht besser remove(), dann kann ein Hacker ihn nicht mehr einblenden
 	}
 
 	
