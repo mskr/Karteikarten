@@ -32,55 +32,50 @@ function fillMyPersonalBox()
         url: benachrichtungsServlet,
         data: "action="+actionLeseBenachrichtungen,
         success: function(response) {
-            var jsonObj = response;
-            var errCode = jsonObj["error"];
-            if(errCode == "noerror") 
-            {
-            	var bens = jsonObj[keyJsonArrResult];
-            	
-            	for (var i in bens)
-            	{
-            	    // TODO Vllt direkt in anzeigeBenachrichtigung packen
-            		var type = bens[i][paramBenType];
-            		var fkt = function() {
-						
-					};
-					
-					if(type == paramBenTypeKarteikarte)
-					{
 
-					}
-					else if(type == paramBenTypeKommentar)
-					{
+        	if(verifyResponse(response))
+        	{
+        		var bens = response[keyJsonArrResult];
 
-					}
-					else if(type == paramBenTypeModerator)
-					{
-						fkt = function() {
-					        gotoVeranstaltung(bens[i][paramBenVeranst][paramId]);
-						};
-					}
-					else if(type == paramBenTypeProfil)
-					{
-						fkt = function() {
-					        gotoProfil(jsonBenutzer[paramId]);
-						};
-					}
-					else if(type == paramBenTypeVeranstaltung)
-					{
-						fkt = function() {
-					        gotoVeranstaltung(bens[i][paramBenVeranst][paramId]);
-						};
-					}
-					setTimeout(function() {
-	            		addBenachrichtigung(bens[i], fkt);
-					}, 100);
-            	}
-            }
-            else 
-            {
-                message(0, buildMessage(errCode));
-            }
+        		for (var i in bens)
+        		{
+        			// TODO Vllt direkt in anzeigeBenachrichtigung packen
+        			var type = bens[i][paramBenType];
+        			var fkt = function() {
+
+        			};
+
+        			if(type == paramBenTypeKarteikarte)
+        			{
+
+        			}
+        			else if(type == paramBenTypeKommentar)
+        			{
+
+        			}
+        			else if(type == paramBenTypeModerator)
+        			{
+        				fkt = function() {
+        					gotoVeranstaltung(bens[i][paramBenVeranst][paramId]);
+        				};
+        			}
+        			else if(type == paramBenTypeProfil)
+        			{
+        				fkt = function() {
+        					gotoProfil(jsonBenutzer[paramId]);
+        				};
+        			}
+        			else if(type == paramBenTypeVeranstaltung)
+        			{
+        				fkt = function() {
+        					gotoVeranstaltung(bens[i][paramBenVeranst][paramId]);
+        				};
+        			}
+        			setTimeout(function() {
+        				addBenachrichtigung(bens[i], fkt);
+        			}, 100);
+        		}
+        	}
         }
      });
 }

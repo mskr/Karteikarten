@@ -16,12 +16,9 @@ $(document).ready(function() {
                 $("#login_submit").prop("disabled", true);
             },
             success: function(response) {
-                var jsonObj = response;
-                var errCode = jsonObj["error"];
-                if(errCode == "noerror") {
-                    location.reload();
-                } else {
-                    message(0, buildMessage(errCode));
+            	if(verifyResponse(response))
+                {
+            		$.when(getBenutzer()).done(gotoHauptseite);
                 }
             },
             complete: function() {

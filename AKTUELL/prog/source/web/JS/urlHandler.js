@@ -139,25 +139,14 @@ function getBenutzer()
         data: "action="+actionGetBenutzer,
         success: function(response) 
         {
-            var jsonObj = response;
-            var errCode = jsonObj["error"];
-            if(errCode == "noerror") 
+            if(verifyResponse(response))
             {
                 // Ein Benutzer ist eingeloggt
-                jsonBenutzer = jsonObj;
-            } 
-            else 
+                jsonBenutzer = response;
+            }
+            else
             {
-                // Niemand ist eingeloggt.
-                jsonBenutzer = undefined;
-                if(errCode == "notloggedin") 
-                {
-                    // TODO Koennte ein Session Timeout gewesen sein
-                } 
-                else 
-                {
-                    message(0, buildMessage(errCode));
-                }
+            	jsonBenutzer = undefined;
             }
         }
     });
@@ -220,7 +209,6 @@ function gotoVeranstaltung(veranstId)
 }
 /**
  * Diese Funktion setzt die URL und wechselt zur Hautseite
- * @param veranstId
  */
 function gotoHauptseite()
 {
@@ -231,7 +219,6 @@ function gotoHauptseite()
 
 /**
  * Diese Funktion wechselt zur Startseite
- * @param veranstId
  */
 function gotoStartseite()
 {

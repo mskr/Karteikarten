@@ -20,16 +20,13 @@ function fillStartseite() {
     	url: benutzerServlet,
     	data: "action="+actionGetStudiengaenge,
     	success: function(response) {
-            var jsonObj = response;
-            var errCode = jsonObj["error"];
-            if(errCode == "noerror") {
-                $("#reg_studiengang").empty();
-                var studgArr = jsonObj[keyJsonArrResult];
+            if(verifyResponse(response))
+            { 
+            	$("#reg_studiengang").empty();
+            	var studgArr = response[keyJsonArrResult];
             	for(var i in studgArr) {
             		$("#reg_studiengang").append("<option>"+studgArr[i]+"</option>");
             	}
-            } else {
-            	message(0, buildMessage(errCode));
             }
     	}
     });

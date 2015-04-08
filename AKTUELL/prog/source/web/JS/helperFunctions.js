@@ -53,29 +53,19 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
  * @param servletUrl ist ein String
  * @param action ist ein String
  * @param params ist ein Objekt mit Parameternamen und jeweiligem Wert
- * @param noerrorFunc ist eine Funktion, die bei "noerror"-Antwort ausgefuehrt wird.
+ * @param sucessFunc ist eine Funktion, die bei einer Antwort ausgefuehrt wird.
  * @param beforeFunc ist eine Funktion, die beforeSend ausgefuehrt wird.
  * @param completeFunc ist eine Funktion, die bei complete ausgefuehrt wird.
  * @returns Ajax Objekt, das Informatioen ueber den Antwortstatus enthaelt.
  */
-function ajaxCall(servletUrl, action, params, noerrorFunc, beforeFunc, completeFunc)
+function ajaxCall(servletUrl, action, params, sucessFunc, beforeFunc, completeFunc)
 {
     return $.ajax({
         url: servletUrl,
         data: "action="+action+"&"+toUrlParamString(params),
-        beforeSend: beforeFunc(),
-        success: function(responseJson) {
-            var errCode = responseJson["error"];
-            if(errCode == "noerror") 
-            {
-                noerrorFunc();
-            }
-            else
-            {
-                message(0, buildMessage(errCode));
-            }
-        },
-        complete: completeFunc()
+        beforeSend: beforeFunc,
+        success: sucessFunc,
+        complete: completeFunc
     });
 }
 
