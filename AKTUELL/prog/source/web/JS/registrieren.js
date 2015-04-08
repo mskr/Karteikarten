@@ -27,12 +27,10 @@ $(document).ready(function() {
                        +"&"+paramStudiengang+"="+studiengang
                        +"&"+paramMatrikelNr+"="+matnr,
                    success: function(response) {
-                       var jsonObj = response;
-                       var errCode = jsonObj["error"];
-                       if(errCode == "noerror") {
-                           message(1, "Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.");
-                       } else {
-                           message(0, buildMessage(errCode));
+                	   
+                       if(verifyResponse(response))
+                       {
+                    	   showInfo("Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.")
                        }
                    }
                 });

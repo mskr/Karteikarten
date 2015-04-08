@@ -18,13 +18,11 @@ $(document).ready(function() {
                 $("#logout").text("Lädt...");
                 $("#logout").css({"color":"gray","font-size":".75em"});
             },
-            success: function(response) {
-                var jsonObj = response;
-                var errCode = jsonObj["error"];
-                if(errCode == "noerror") {
+            success: function(response) 
+            {
+                if(verifyResponse(response))
+                {
                     location.search = "";
-                } else {
-                    message(0, buildMessage(errCode));
                 }
             }
         });

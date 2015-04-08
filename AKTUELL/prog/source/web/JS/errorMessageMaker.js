@@ -78,11 +78,18 @@ function handleError(errorCode) {
 	}
 }
 
-function verifyResponse(jsonResponse) 
+function verifyResponse(jsonResponse, specialErrorHandlingFkt) 
 {
-	if(jsonResponse["error"] == "noerror")
+	if(jsonResponse["error"] != "noerror")
 	{
-		handleError(jsonResponse["error"]);
+		var processed = false;
+		
+		if(specialErrorHandlingFkt!= undefined)
+			processed = specialErrorHandlingFkt(jsonResponse["error"]);
+		
+		if(!processed)
+			handleError(jsonResponse["error"]);	
+		
 		return false;
 	}
 	
