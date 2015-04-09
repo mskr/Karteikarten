@@ -41,6 +41,7 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
     $(".dialog_sicher_frage").text(message);
     $(".dialog_sicher_ja").click(function() {
         doCriticalThing();
+        $("#dialog_sicher").popup("hide");
     });
 }
 

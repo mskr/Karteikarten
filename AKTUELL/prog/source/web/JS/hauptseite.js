@@ -122,11 +122,10 @@ function fillHauptseite()
     $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
 }
 
-function fillVeranstaltungsliste() 
+function fillVeranstaltungsliste(doneFkt) 
 {
-    leseVeranstaltungenMeine();
-    leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
-    												   $("#vn_alle_auswahl_studiengang").val());
+    $when(leseVeranstaltungenMeine(),leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
+    												   $("#vn_alle_auswahl_studiengang").val()).done(doneFkt));
 }
 
 function leseVeranstaltungenMeine()
@@ -320,8 +319,10 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
                           paramId +"=" + jsonVeranstObj[paramId],
                     success: function(response) 
                     {
-                    	if(verifyResponse(response))
-                            location.reload();	// TODO
+                    	if(verifyResponse(response)){
+                    		showInfo("Sie haben sich abgemeldet von der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
+                    		fillVeranstaltungsliste();
+                    	}
                     }
                 });
             });
@@ -360,8 +361,9 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
 							}
                         	if(verifyResponse(response,errorFkt))
                         	{
-                        		kennwortForm.html("<div style='color:GreenYellow'><span class='octicon octicon-check'></span> Ok</div>");
-                                location.reload();	// TODO
+//                        		kennwortForm.html("<div style='color:GreenYellow'><span class='octicon octicon-check'></span> Ok</div>");
+                        		showInfo("Sie sind nun eingeschrieben in der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
+                        		fillVeranstaltungsliste();
                         	}
                         }
                     });
@@ -379,7 +381,8 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
                     {
                     	if(verifyResponse(response))
                     	{
-                            location.reload();	// TODO
+                    		showInfo("Sie sind nun eingeschrieben in der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
+                    		fillVeranstaltungsliste();
                     	}
                     }
                 });

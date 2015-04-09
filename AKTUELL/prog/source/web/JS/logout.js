@@ -13,16 +13,12 @@ $(document).ready(function() {
         $.ajax({
             url: benutzerServlet,
             data: "action="+actionLogout,
-            beforeSend: function() {
-                $("#logout").off();
-                $("#logout").text("Lädt...");
-                $("#logout").css({"color":"gray","font-size":".75em"});
-            },
             success: function(response) 
             {
                 if(verifyResponse(response))
                 {
-                    location.search = "";
+                    jsonBenutzer = undefined;
+                    gotoStartseite();
                 }
             }
         });

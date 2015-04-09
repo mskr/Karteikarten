@@ -93,7 +93,6 @@ function buildUrlQuery(paramObj)
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
     
     History.pushState(null,null, locationSearchTmp);
-    interpreteUrlQuery(parseUrlQuery(locationSearchTmp.substring(1)));
 }
 
 /**
@@ -164,12 +163,12 @@ function display(ansicht)
     if(ansicht == ansichtStartseite)
     {
         $("#mypersonalbox_startseite").show();
-        $("mypersonalbox_main").hide();
+        $("#mypersonalbox_main").hide();
     }
     else
     {
         $("#mypersonalbox_main").show();
-        $("mypersonalbox_startseite").hide();
+        $("#mypersonalbox_startseite").hide();
     }
     // mainbox
     var isValid = false;
