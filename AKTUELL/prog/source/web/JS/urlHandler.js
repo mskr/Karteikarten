@@ -160,6 +160,9 @@ function getBenutzer()
  */
 function display(ansicht) 
 {
+    // TODO 1) Warum wird das immer mehrmals hintereinander aufgerufen?
+    // TODO 2) Beim Wechsel von Startseite zu Hauptseite wird die mypersonalbox_startseite nicht mehr versteckt
+    console.log("GEHE ZU "+ansicht);
     // mypersonalbox
     if(ansicht == ansichtStartseite)
     {
