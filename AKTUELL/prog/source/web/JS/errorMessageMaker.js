@@ -51,7 +51,11 @@ function handleError(errorCode) {
 			showError("Der Server hat ungueltige oder fehlende Parameter erhalten. Bitte machen Sie andere Eingaben!");
 			break;
 		case "notloggedin": 
-			showError("Bitte loggen sie sich ein");
+			
+			if(getUrlParameterByName(urlParamLocation) != ansichtStartseite)
+				showError("Bitte loggen Sie sich ein!");
+			
+			jsonBenutzer = undefined;			// Benutzer objekt ungültig
 			gotoStartseite();
 			break;
 		case "loginfailed": 
