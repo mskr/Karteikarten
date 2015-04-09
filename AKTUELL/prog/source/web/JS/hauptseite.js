@@ -124,7 +124,7 @@ function fillHauptseite()
 
 function fillVeranstaltungsliste(doneFkt) 
 {
-    $when(leseVeranstaltungenMeine(),leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
+    $.when(leseVeranstaltungenMeine(),leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
     												   $("#vn_alle_auswahl_studiengang").val()).done(doneFkt));
 }
 
@@ -363,7 +363,14 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
                         	{
 //                        		kennwortForm.html("<div style='color:GreenYellow'><span class='octicon octicon-check'></span> Ok</div>");
                         		showInfo("Sie sind nun eingeschrieben in der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
-                        		fillVeranstaltungsliste();
+                        		
+                        		fillVeranstaltungsliste(function() {
+                            		// Aktiviere den Alle-Tab
+                                    $("#tab-2").prop("checked",true);
+                                    // Klappe die entsprechende VN aus
+                                    $("#vn_alle_"+jsonVeranstObj[paramId]+"_radio").trigger("click").prop("checked",true);
+								});
+
                         	}
                         }
                     });
@@ -382,7 +389,12 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
                     	if(verifyResponse(response))
                     	{
                     		showInfo("Sie sind nun eingeschrieben in der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
-                    		fillVeranstaltungsliste();
+                    		fillVeranstaltungsliste(function() {
+                        		// Aktiviere den Alle-Tab
+                                $("#tab-2").prop("checked",true);
+                                // Klappe die entsprechende VN aus
+                                $("#vn_alle_"+jsonVeranstObj[paramId]+"_radio").trigger("click").prop("checked",true);
+							});
                     	}
                     }
                 });
