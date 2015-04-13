@@ -26,6 +26,7 @@ var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
 var actionSucheBenVeranst = "sucheBenVeranst";
 var actionErstelleVeranst = "erstelleVeranst";
+var actionDeleteBenutzer = "deleteBenutzer";
 
 var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
 var leseVeranstMode = "mode";                        // Liefert Veranstaltungen

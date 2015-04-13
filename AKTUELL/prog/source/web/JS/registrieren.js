@@ -27,12 +27,10 @@ $(document).ready(function() {
                        +"&"+paramStudiengang+"="+studiengang
                        +"&"+paramMatrikelNr+"="+matnr,
                    success: function(response) {
-                       var jsonObj = response;
-                       var errCode = jsonObj["error"];
-                       if(errCode == "noerror") {
-                           message(1, "Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.");
-                       } else {
-                           message(0, buildMessage(errCode));
+                	   
+                       if(verifyResponse(response))
+                       {
+                    	   showInfo("Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.")
                        }
                    }
                 });
@@ -43,14 +41,14 @@ $(document).ready(function() {
                 $("#reg_pass").focus();
                 $("#reg_pass").val("");
                 $("#reg_pass").css("border","4px solid IndianRed");
-                message(0, "Bitte wiederholen Sie Ihr Passwort erneut.");
+                showError("Bitte wiederholen Sie Ihr Passwort erneut.");
             }
         }
         else
         {
             $("#login_email").focus();
             $("#login_email").css("border","4px solid IndianRed");
-            message(0, "Bitte prüfen Sie Ihre Email-Adresse.");
+            showError("Bitte prüfen Sie Ihre Email-Adresse.");
         }
         // Verhindert das normale Absenden des Formulars
         event.preventDefault();

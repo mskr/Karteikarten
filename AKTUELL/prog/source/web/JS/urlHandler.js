@@ -91,9 +91,8 @@ function buildUrlQuery(paramObj)
     
     // TODO
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
-    // Test mit History
+    
     History.pushState(null,null, locationSearchTmp);
-    interpreteUrlQuery(parseUrlQuery(locationSearchTmp.substring(1)));
 }
 
 /**
@@ -103,7 +102,10 @@ function buildUrlQuery(paramObj)
  * die entsprechende Seite angezeigt.
  * @param paramObj enthaehlt die Parameter als Map
  */
-function interpreteUrlQuery(paramObj) {
+function interpreteUrlQuery(paramObj) {	
+	// TODO Übler hack ! 
+	// Versteck alle Popupfenster. Wo wäre das besser ?
+	$(".popup_fenster").popup('hide');
     var ziel = paramObj[urlParamLocation];
     if(jsonBenutzer != undefined)
     { // Benutzer eingeloggt
@@ -139,25 +141,14 @@ function getBenutzer()
         data: "action="+actionGetBenutzer,
         success: function(response) 
         {
-            var jsonObj = response;
-            var errCode = jsonObj["error"];
-            if(errCode == "noerror") 
+            if(verifyResponse(response))
             {
                 // Ein Benutzer ist eingeloggt
-                jsonBenutzer = jsonObj;
-            } 
-            else 
+                jsonBenutzer = response;
+            }
+            else
             {
-                // Niemand ist eingeloggt.
-                jsonBenutzer = undefined;
-                if(errCode == "notloggedin") 
-                {
-                    // TODO Koennte ein Session Timeout gewesen sein
-                } 
-                else 
-                {
-                    message(0, buildMessage(errCode));
-                }
+            	jsonBenutzer = undefined;
             }
         }
     });
@@ -172,12 +163,12 @@ function display(ansicht)
     if(ansicht == ansichtStartseite)
     {
         $("#mypersonalbox_startseite").show();
-        $("mypersonalbox_main").hide();
+        $("#mypersonalbox_main").hide();
     }
     else
     {
         $("#mypersonalbox_main").show();
-        $("mypersonalbox_startseite").hide();
+        $("#mypersonalbox_startseite").hide();
     }
     // mainbox
     var isValid = false;
@@ -220,7 +211,6 @@ function gotoVeranstaltung(veranstId)
 }
 /**
  * Diese Funktion setzt die URL und wechselt zur Hautseite
- * @param veranstId
  */
 function gotoHauptseite()
 {
@@ -231,7 +221,6 @@ function gotoHauptseite()
 
 /**
  * Diese Funktion wechselt zur Startseite
- * @param veranstId
  */
 function gotoStartseite()
 {

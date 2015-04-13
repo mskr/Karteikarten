@@ -13,18 +13,12 @@ $(document).ready(function() {
         $.ajax({
             url: benutzerServlet,
             data: "action="+actionLogout,
-            beforeSend: function() {
-                $("#logout").off();
-                $("#logout").text("Lädt...");
-                $("#logout").css({"color":"gray","font-size":".75em"});
-            },
-            success: function(response) {
-                var jsonObj = response;
-                var errCode = jsonObj["error"];
-                if(errCode == "noerror") {
-                    location.search = "";
-                } else {
-                    message(0, buildMessage(errCode));
+            success: function(response) 
+            {
+                if(verifyResponse(response))
+                {
+                    jsonBenutzer = undefined;
+                    gotoStartseite();
                 }
             }
         });

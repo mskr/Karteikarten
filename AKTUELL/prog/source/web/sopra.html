@@ -133,10 +133,11 @@ function naviconTransformicon() {
 		<input id="reg_submit" class="mybutton dark flat regbutton" type="submit" value="Registrieren">
 		</p>
 	</form>
-	
 </div>
 
 <div id="mypersonalbox_main" class="mypersonalbox card">
+
+	<img id="loadingDiv" src="files/general/ajaxLoader.gif" style="position: absolute;top: 0.5em;left: 0.5em;" />
 
 	<!-- Return Link erscheint nicht auf Hauptseite -->
 	<a class="return tiptrigger tipabove" data-tooltip="Zurück zur Hauptseite"><span class="mega-octicon octicon-chevron-left"></span></a>
@@ -226,21 +227,6 @@ Dann aber so leer.
 				<!-- Veranstaltungen hier -->
 			</div>
 		</div>
-<!-- 		<div class="vn_tab semester_vn">
-			<input class="vn_tabradio" type="radio" id="tab-3" name="group1">
-			<label class="semester_vn_tablabel vn_tablabel" for="tab-3"><span class="octicon octicon-calendar"></span></label>
-			<div class="vn_tabcontent" id="vn_tabcontent_semester">
-				<div class="vn_toolbar">Veranstaltungen aus folgendem Semester: <select id="vn_semester_auswahl"></select></div>
-				Veranstaltungen hier
-			</div>
-		</div> -->
-		<!-- <div class="vn_tab alle_vn">
-			<input class="vn_tabradio" type="radio" id="tab-4" name="group1">
-			<label class="alle_vn_tablabel vn_tablabel" for="tab-4"><span class="octicon octicon-list-unordered"></span></label>
-			<div class="vn_tabcontent" id="vn_tabcontent_alle">
-				<div class="vn_toolbar">Alle Veranstaltungen im System</div>
-			</div>
-		</div> -->
 		<span class="mybutton dark flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span>
 	</div>
 	<div class="impressum">
@@ -268,7 +254,7 @@ Dann aber so leer.
 					</div>
 				</form>
 			</div>
-			<span class="profil_loeschen"><span class="mybutton red">Konto löschen</span></span>
+			<span class="profil_loeschen" id="profil_loeschen_bt"><span class="mybutton red">Konto löschen</span></span>
 		</div>
 		<div class="profil_daten card flex_elem">
 			<div class="card_title">Profil</div>
@@ -637,7 +623,8 @@ Dann aber so leer.
 		<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_semester"></select>
 		<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_studiengang" multiple></select>
 		<input class="input_std vn_erstellen_input" id="vn_pass_input" type="password" placeholder="Passwort" required>
-		<textarea class="input_std vn_erstellen_input" id="vn_mod_input" placeholder="Moderatoren"></textarea>
+		<div class="itemlist" id="vn_mod_list"></div>
+		<input class="input_std vn_erstellen_input" id="vn_mod_input" type="text" placeholder="Moderator hinzufügen"></input>
 		<textarea class="input_std vn_erstellen_input" id="vn_beschr_input" placeholder="Beschreibung" required></textarea>
 		<div class="popup_fenster_spalte" id="vn_bearbeiten_mode">
 			<span class="form_infotext">Wer darf bearbeiten?</span>

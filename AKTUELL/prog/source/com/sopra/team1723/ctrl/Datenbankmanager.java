@@ -241,6 +241,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(ps.executeUpdate()!= 1)
                 return false;
         } catch(SQLException e){
+            e.printStackTrace();
             erfolgreich = false;
         } finally{
             closeQuietly(ps);
@@ -671,8 +672,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         alleErgebnisse.putAll(durchsucheDatenbankBenutzer(suchmuster));
         
         ArrayList<IjsonObject> ergebnisse = new ArrayList<IjsonObject>(sortByValue(alleErgebnisse).keySet());
-        if(ergebnisse.size() >= 5)
-            ergebnisse = (ArrayList<IjsonObject>) ergebnisse.subList(0, 4);
+        if(ergebnisse.size() > 5)
+            ergebnisse = new ArrayList<IjsonObject>(ergebnisse.subList(0, 4));
         return ergebnisse;
     }
 
