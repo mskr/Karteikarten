@@ -463,7 +463,7 @@ var suchTimer = function(){
     				var errCode = jsonObj["error"];
     				if(errCode == "noerror")
     				{
-    					var arrSuchErgebnisse = jsonObj[keyJsonArrSuchfeldResult];
+    					var arrSuchErgebnisse = jsonObj[keyJsonArrResult];
     					fillSuchergebnisse(arrSuchErgebnisse);
     					suchErgIterator = -1;
     					$("#sucherg_vn, #sucherg_benutzer").slideDown("fast");
