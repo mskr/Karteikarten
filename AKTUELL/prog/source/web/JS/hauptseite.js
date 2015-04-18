@@ -59,18 +59,10 @@ function fillHauptseite()
 		{
 			if(verifyResponse(response))
 			{
-				$("#vn_alle_auswahl_studiengang").empty();
-				$("#vn_erstellen_auswahl_studiengang").empty();
-
 				var studgArr = response[keyJsonArrResult];
-				for(var i in studgArr) 
-				{
-					$("#vn_alle_auswahl_studiengang").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
-					$("#vn_erstellen_auswahl_studiengang").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
-				}
 
-				$("#vn_alle_auswahl_studiengang option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
-				$("#vn_erstellen_auswahl_studiengang option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
+				fillSelectWithOptions($("#vn_alle_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
+				fillSelectWithOptions($("#vn_erstellen_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
 			}
 		}
 	}); 
@@ -118,7 +110,6 @@ function fillHauptseite()
 		$("#vn_erstellen_bt").hide();
 	}
 
-	
     $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
 }
 
@@ -562,6 +553,8 @@ function registerVeranstErzeugeHandler() {
 	
 	$("#vn_erzeugen_cancel").click(function() {
 		$("#vn_erstellen_popup").popup("hide");
+		// Liste der Moderatoren schließen
+		selectedModList = {};
 	});
 	
 	$("#vn_erzeugen_submit").click(function(event) {
@@ -592,6 +585,7 @@ function registerVeranstErzeugeHandler() {
 			success: function(response) {
 				if(verifyResponse(response))
 				{
+					showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich erzeugt.");
 					popup.popup('hide');
 					fillVeranstaltungsliste();	
 				}
@@ -599,6 +593,7 @@ function registerVeranstErzeugeHandler() {
 		});
 	});
 	
+	// Triggert das eigene Enter-Event wenn key 13 gedrückt wurde
 	$("#vn_mod_input").keyup(function(e){
 	    if(e.keyCode == 13)
 	    {
@@ -606,9 +601,16 @@ function registerVeranstErzeugeHandler() {
 	    }
 	});
 	
+	// Handler für das enterKey event
 	$('#vn_mod_input').bind("enterKey",function(e){
+		// Wert im Eingabefeld holen und das Feld leeren
 		var txt = $('#vn_mod_input').val();
 		$('#vn_mod_input').val("");
-		addItemToList(selectedModList, $("#vn_mod_list"), txt, {});
+		
+		// HIer muss das ModeratorObjekt rein
+		var data = {};
+		data["id"] = 7;	// TODO
+		data["name"] = txt;	// TODO 
+		addItemToList(selectedModList, $("#vn_mod_list"), txt, data, undefined,undefined);
 	});
 }

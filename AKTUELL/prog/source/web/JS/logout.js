@@ -18,6 +18,7 @@ $(document).ready(function() {
                 if(verifyResponse(response))
                 {
                     jsonBenutzer = undefined;
+                    showInfo("Sie haben sich erfolgreich abgemeldet");
                     gotoStartseite();
                 }
             }
