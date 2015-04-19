@@ -569,6 +569,12 @@ function registerVeranstErzeugeHandler() {
 			passw = popup.find("#vn_pass_input").val(),
 			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
 			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
+		var moderatorenIDs = "";
+		
+		for( var key in selectedModList)
+		{
+			moderatorenIDs += paramModeratoren +"=" + selectedModList[key][paramId] + "&";
+		}
 	
 		var ajax = $.ajax({
 			url: veranstaltungServlet,
@@ -580,7 +586,8 @@ function registerVeranstErzeugeHandler() {
 				  paramModeratorKkBearbeiten + "=" +moderatorenKkBearbeiten + "&"+
 				  paramKommentareErlauben + "=" + kommentareErlaubt + "&" + 
 				  paramBewertungenErlauben + "=" + bewertungenErlaubt + "&"+
-				  paramPasswort + "=" + passw,
+				  paramPasswort + "=" + passw + "&" +
+				  moderatorenIDs,
 				  
 			success: function(response) {
 				if(verifyResponse(response))
@@ -595,22 +602,70 @@ function registerVeranstErzeugeHandler() {
 	
 	// Triggert das eigene Enter-Event wenn key 13 gedrückt wurde
 	$("#vn_mod_input").keyup(function(e){
-	    if(e.keyCode == 13)
-	    {
-	        $(this).trigger("enterKey");
-	    }
+//	    if(e.keyCode == 13)
+//	    {
+//	        $(this).trigger("enterKey");
+//	        return;
+//	    }
+//	    else
+//	    {
+		if($("#vn_mod_input").val() != ""){
+			var ajax = $.ajax({
+				url: suchfeldServlet,
+				data: "action=" + actionSucheBenutzer + "&" +
+				paramSuchmuster + "=" + $("#vn_mod_input").val(),
+				success: function(response) {
+					if(verifyResponse(response))
+					{
+						console.log(response);
+						$("#vn_mod_vorschlag").children().remove();
+
+						var res = response[keyJsonArrResult];
+						if(res.length>0){
+							for(var i in res)
+							{
+								var x = $("<a>" + res[i][paramVorname] + " " + res[i][paramNachname] + "</a>");
+
+								(function(benutzer) 
+								{
+									x.click(function()
+									{
+										addItemToList(selectedModList, $("#vn_mod_list"), 
+												benutzer[paramVorname] + " " + benutzer[paramNachname], 
+												benutzer, undefined,undefined);
+
+										$("#vn_mod_input").val("");
+										$("#vn_mod_vorschlag").slideUp(100);
+
+									});
+								})(res[i]);
+								
+
+								$("#vn_mod_vorschlag").append(x);
+							}
+							$("#vn_mod_vorschlag").slideDown(100);
+						}
+						else
+							$("#vn_mod_vorschlag").slideUp(100);
+					}
+				}
+			});
+		}
+		else
+			$("#vn_mod_vorschlag").fadeOut();
+//		}
 	});
 	
-	// Handler für das enterKey event
-	$('#vn_mod_input').bind("enterKey",function(e){
-		// Wert im Eingabefeld holen und das Feld leeren
-		var txt = $('#vn_mod_input').val();
-		$('#vn_mod_input').val("");
-		
-		// HIer muss das ModeratorObjekt rein
-		var data = {};
-		data["id"] = 7;	// TODO
-		data["name"] = txt;	// TODO 
-		addItemToList(selectedModList, $("#vn_mod_list"), txt, data, undefined,undefined);
-	});
+//	// Handler für das enterKey event
+//	$('#vn_mod_input').bind("enterKey",function(e){
+//		// Wert im Eingabefeld holen und das Feld leeren
+//		var txt = $('#vn_mod_input').val();
+//		$('#vn_mod_input').val("");
+//		
+//		// HIer muss das ModeratorObjekt rein
+//		var data = {};
+//		data["id"] = 7;	// TODO
+//		data["name"] = txt;	// TODO 
+//		addItemToList(selectedModList, $("#vn_mod_list"), txt, data, undefined,undefined);
+//	});
 }
