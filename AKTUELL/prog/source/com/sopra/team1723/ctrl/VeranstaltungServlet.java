@@ -61,24 +61,31 @@ public class VeranstaltungServlet extends ServletController {
         boolean kommentareErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.KommentareErlauben));
         boolean bewertungenErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.BewertungenErlauben));
         boolean moderatorKkBearbeiten = Boolean.parseBoolean(request.getParameter(ParamDefines.ModeratorKkBearbeiten));
-//        String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren);
-//        
-//        int[] mIds = new int[moderatorIds.length];
-//        try
-//        {
-//            for(int i = 0; i < moderatorIds.length;i++)
-//                mIds[i] = Integer.parseInt(moderatorIds[i]);
-//        }
-//        catch(NumberFormatException e)
-//        {
-//            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-//            outWriter.print(jo);
-//            return false;
-//        }
-
+        
+        String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren);
+        int[] mIds = null;
+        
+        if(moderatorIds != null)
+        {
+            mIds = new int[moderatorIds.length];
+            try
+            {
+                for(int i = 0; i < moderatorIds.length;i++)
+                    mIds[i] = Integer.parseInt(moderatorIds[i]);
+            }
+            catch(NumberFormatException e)
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return false;
+            }
+        }
         // TODO Moderatoren
-        if(studiengaenge == null || studiengaenge.length == 0||isEmptyAndRemoveSpaces(semester)||isEmptyAndRemoveSpaces(zugangspasswort)||isEmptyAndRemoveSpaces(titel)||
-                isEmptyAndRemoveSpaces(beschr))// ||moderatorIds == null)
+        if(studiengaenge == null || studiengaenge.length == 0||
+                isEmptyAndRemoveSpaces(semester)||
+                zugangspasswort == null||
+                isEmptyAndRemoveSpaces(titel)||
+                isEmpty(beschr))// ||moderatorIds == null)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
@@ -98,7 +105,7 @@ public class VeranstaltungServlet extends ServletController {
         
         try
         {
-            dbManager.schreibeVeranstaltung(veranst,studiengaenge, null);
+            dbManager.schreibeVeranstaltung(veranst,studiengaenge, mIds);
         }
         catch (SQLException e)
         {

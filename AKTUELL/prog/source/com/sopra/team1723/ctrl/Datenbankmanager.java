@@ -774,6 +774,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(1, veranst.getTitel());
             ps.setString(2, veranst.getBeschreibung());
             ps.setString(3, veranst.getSemester());
+            // TODO Wenn leerstring, dann muss passwort NULL sein
             ps.setString(4, veranst.getZugangspasswort());
             ps.setBoolean(5, veranst.isKommentareErlaubt());
             ps.setBoolean(6, veranst.isBewertungenErlaubt());

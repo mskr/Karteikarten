@@ -21,12 +21,14 @@ $(document).ready(function() {
 //  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
     		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
 
-    		$("#vn_mod_input").val("");
     		$("#vn_beschr_input").val("");
     		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
     		$("#vn_komm_erlaubt").prop("checked", true);
     		$("#vn_bew_erlaubt").prop("checked", true);
     		$("#vn_mod_list").children().remove();
+			$("#vn_mod_input").val("");
+			$("#vn_mod_vorschlag").slideUp(100);
+    		selectedModList = {};
     	}
     });
 
@@ -553,8 +555,6 @@ function registerVeranstErzeugeHandler() {
 	
 	$("#vn_erzeugen_cancel").click(function() {
 		$("#vn_erstellen_popup").popup("hide");
-		// Liste der Moderatoren schließen
-		selectedModList = {};
 	});
 	
 	$("#vn_erzeugen_submit").click(function(event) {
