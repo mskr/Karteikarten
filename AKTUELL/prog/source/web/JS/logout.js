@@ -11,7 +11,7 @@ $(document).ready(function() {
      */
     $(".logout").click(function() {
         $.ajax({
-            url: benutzerServlet,
+            url: startseitenServlet,
             data: "action="+actionLogout,
             success: function(response) 
             {

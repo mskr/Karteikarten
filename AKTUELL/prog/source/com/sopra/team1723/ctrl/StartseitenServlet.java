@@ -27,12 +27,12 @@ import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 /**
  * Steuert den Login-/Logout- und den Registrierungsvorgang. Ausserdem steuert dieses Servlet den Reset des Passworts.
  */
-public class BenutzerServlet extends ServletController {
+public class StartseitenServlet extends ServletController {
 
     /**
      * Steuert den Login-/Logout- und den Registrierungsvorgang. Ausserdem steuert dieses Servlet den Reset des Passworts.
      */
-    public BenutzerServlet() {
+    public StartseitenServlet() {
     }
     
     /**

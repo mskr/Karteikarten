@@ -55,7 +55,7 @@ function fillHauptseite()
 {
 	// Studiengänge in auswahlliste anzeigen
 	var ajax1 =  $.ajax({
-		url: benutzerServlet,
+		url: startseitenServlet,
 		data: "action="+actionGetStudiengaenge,
 		success: function(response) 
 		{
@@ -72,7 +72,7 @@ function fillHauptseite()
 
 	// Semester in auswahlliste anzeigen
 	var ajax2 =  $.ajax({
-		url: benutzerServlet,
+		url: startseitenServlet,
 		data: "action="+actionGetSemester,
 		success: function(response) 
 		{

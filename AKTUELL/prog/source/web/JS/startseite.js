@@ -17,7 +17,7 @@ $(document).ready(function() {
  */
 function fillStartseite() {
     $.ajax({
-    	url: benutzerServlet,
+    	url: startseitenServlet,
     	data: "action="+actionGetStudiengaenge,
     	success: function(response) {
             if(verifyResponse(response))

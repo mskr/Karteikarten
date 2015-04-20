@@ -195,7 +195,7 @@ function fillProfilDaten() {
  */
 function fillProfilStudiengaenge() {
     $.ajax({
-        url: benutzerServlet,
+        url: startseitenServlet,
         data: "action="+actionGetStudiengaenge,
         success: function(response) {
         	if(verifyResponse(response))
