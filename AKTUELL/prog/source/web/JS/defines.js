@@ -25,6 +25,7 @@ var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
 var actionSucheBenVeranst = "sucheBenVeranst";
+var actionSucheBenutzer = "sucheBenutzer";
 var actionErstelleVeranst = "erstelleVeranst";
 var actionDeleteBenutzer = "deleteBenutzer";
 
