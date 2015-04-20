@@ -1194,7 +1194,7 @@ textarea.input_std {
 	max-width: 30em;
 } .popup_fenster_titel {
 	padding: 1em;
-	height: 1em;
+	height: 1.3em;
 	width: calc(100% - 5em);
 	background: #333333;
 	border-top: 1px solid DimGray;
@@ -1209,8 +1209,8 @@ textarea.input_std {
 } .popup_fenster_close {
 	margin: 0;
 	padding: 1em;
-	height: 1em;
-	width: 1em;
+	height: 1.3em;
+	width: 1.3em;
 	background: #333333;
 	position: absolute;
 	top: 0;
@@ -1221,16 +1221,15 @@ textarea.input_std {
 	box-shadow: inset 1px 0 0 black;
 	border-radius: 0 2px 0 0; /* Nur rechts oben */
 	text-align: center;
-	transition: all .1s;
 } .popup_fenster_close:hover {
 	color: red;
-	background: #464646;
+	background: #222222;
 } .popup_fenster_close:active {
 	color: red;
-	background: #464646;
+	background: #222222;
 	border-top: 1px solid black;
 	border-left: 1px solid black;
-	box-shadow: inset 0 0 2em black;
+	box-shadow: inset 0 .2em .5em black;
 } .popup_fenster_body {
 	padding: 1em;
 	background: #4a4a4a;
@@ -1253,6 +1252,10 @@ textarea.input_std {
 	border-top: 1px solid DimGray;
 	border-radius: 0 0 2px 2px;
 	box-shadow: 0 1px 1px black;
+}
+
+#vn_erstellen_popup_wrapper {
+	background: rgba(0,0,0,.5);
 }
 
 .profil_head {
