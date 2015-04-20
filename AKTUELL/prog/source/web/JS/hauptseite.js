@@ -336,12 +336,12 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
                 kennwortForm.show();
                 kennwortFeld.focus();
                 kennwortForm.submit(function(event) {
-                    kennwort = escape(kennwortFeld.val());
+                    kennwort = kennwortFeld.val();
                     $.ajax({
                         url: veranstaltungServlet,
                         data: "action="+actionEinschreiben + "&" + 
                               paramId +"=" + jsonVeranstObj[paramId] + "&" +
-                              paramPasswort + "=" + kennwort,                 // TODO
+                              paramPasswort + "=" + escape(kennwort),                 // TODO
                         success: function(response) 
                         {
                         	var errorFkt = function(errorTxt) {
@@ -552,6 +552,7 @@ function handlePfeiltastenEvents(pressedKey) {
 
 
 var selectedModList = {};
+var modSuchTimer;
 function registerVeranstErzeugeHandler() {
 	
 	$("#vn_erzeugen_cancel").click(function() {
@@ -567,7 +568,7 @@ function registerVeranstErzeugeHandler() {
 			studiengang = popup.find("#vn_erstellen_auswahl_studiengang").val(),
 			beschr = popup.find("#vn_beschr_input").val(),
 			moderatorenKkBearbeiten = popup.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
-			passw = escape(popup.find("#vn_pass_input").val()),
+			passw = popup.find("#vn_pass_input").val(),
 			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
 			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
 		var moderatorenIDs = "";
@@ -580,14 +581,14 @@ function registerVeranstErzeugeHandler() {
 		var ajax = $.ajax({
 			url: veranstaltungServlet,
 			data: "action=" + actionErstelleVeranst + "&" + 
-				  paramTitel + "=" + titel + "&" +
-				  paramSemester + "=" + semester + "&" + 
-				  paramStudiengang + "=" + studiengang + "&" +
-				  paramBeschr + "=" + beschr + "&" + 
-				  paramModeratorKkBearbeiten + "=" +moderatorenKkBearbeiten + "&"+
+				  paramTitel + "=" + escape(titel) + "&" +
+				  paramSemester + "=" + escape(semester) + "&" + 
+				  paramStudiengang + "=" + escape(studiengang) + "&" +
+				  paramBeschr + "=" + escape(beschr) + "&" + 
+				  paramModeratorKkBearbeiten + "=" + moderatorenKkBearbeiten + "&"+
 				  paramKommentareErlauben + "=" + kommentareErlaubt + "&" + 
 				  paramBewertungenErlauben + "=" + bewertungenErlaubt + "&"+
-				  paramPasswort + "=" + passw + "&" +
+				  paramPasswort + "=" + escape(passw) + "&" +
 				  moderatorenIDs,
 				  
 			success: function(response) {
@@ -607,53 +608,58 @@ function registerVeranstErzeugeHandler() {
 		// Falls etwas eingegeben wurde suchen, sonst Feld leeren
 		if($("#vn_mod_input").val() != "")
 		{
-			var ajax = $.ajax({
-				url: suchfeldServlet,
-				data: "action=" + actionSucheBenutzer + "&" +
-				paramSuchmuster + "=" + $("#vn_mod_input").val(),
-				
-				success: function(response) 
-				{
-					if(verifyResponse(response))
+			clearTimeout(modSuchTimer);
+			modSuchTimer = setTimeout(function(){
+				var ajax = $.ajax({
+					url: suchfeldServlet,
+					data: "action=" + actionSucheBenutzer + "&" +
+					paramSuchmuster + "=" + $("#vn_mod_input").val(),
+
+					success: function(response) 
 					{
-						// Alle Suchergebnisse entfernen
-						$("#vn_mod_vorschlag").children().remove();
-						// Neue Suchergebnisse holen
-						var res = response[keyJsonArrResult];
-						// Falls welche existieren
-						if(res.length>0)
+						if(verifyResponse(response))
 						{
-							for(var i in res)
+							// Alle Suchergebnisse entfernen
+							$("#vn_mod_vorschlag").children().remove();
+							// Neue Suchergebnisse holen
+							var res = response[keyJsonArrResult];
+							// Falls welche existieren
+							if(res.length>0)
 							{
-								var x = $("<a>" + res[i][paramVorname] + " " + res[i][paramNachname] + "</a>");
-
-								(function(benutzer) 
+								for(var i in res)
 								{
-									// Click handler für den Sucheintrag
-									x.click(function()
-									{
-										addItemToList(selectedModList, $("#vn_mod_list"), 
-												benutzer[paramVorname] + " " + benutzer[paramNachname], 
-												benutzer, undefined,undefined);
+									var x = $("<a>" + res[i][paramVorname] + " " + res[i][paramNachname] + "</a>");
 
-										$("#vn_mod_input").val("");
-										$("#vn_mod_vorschlag").slideUp(100);
+									(function(benutzer) 
+											{
+										// Click handler für den Sucheintrag
+										x.click(function()
+												{
+											addItemToList(selectedModList, $("#vn_mod_list"), 
+													benutzer[paramVorname] + " " + benutzer[paramNachname], 
+													benutzer, undefined,undefined);
 
-									});
-								})(res[i]);
-								
+											$("#vn_mod_input").val("");
+											$("#vn_mod_vorschlag").slideUp(100);
 
-								$("#vn_mod_vorschlag").append(x);
+												});
+											})(res[i]);
+
+
+									$("#vn_mod_vorschlag").append(x);
+								}
+								$("#vn_mod_vorschlag").slideDown(100);
 							}
-							$("#vn_mod_vorschlag").slideDown(100);
+							else
+								$("#vn_mod_vorschlag").slideUp(100);
 						}
-						else
-							$("#vn_mod_vorschlag").slideUp(100);
 					}
-				}
-			});
+				});
+
+			},400);
 		}
 		else
 			$("#vn_mod_vorschlag").fadeOut();
 	});
 }
+

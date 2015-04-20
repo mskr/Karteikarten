@@ -296,9 +296,9 @@ function registerProfilSpeichernEvents() {
     $("#profil_passwort_form").submit(function(event) 
     {
         // Felder auslesen
-        var pwNeu = escape($("#profil_passwort_input").val());
-        var pwNeuWdh = escape($("#profil_passwort_wdh_input").val());
-        var pwAlt = escape($("#profil_passwort_alt_input").val());
+        var pwNeu = $("#profil_passwort_input").val();
+        var pwNeuWdh = $("#profil_passwort_wdh_input").val();
+        var pwAlt = $("#profil_passwort_alt_input").val();
         // Fehleingaben abfangen
         if(pwNeu != pwNeuWdh)
         {
@@ -312,9 +312,9 @@ function registerProfilSpeichernEvents() {
         {
             // Datenstring zusammenbauen
             var dataStr = "action="+actionAenderePasswort
-                                    +"&"+paramPasswortNew+"="+pwNeu
-                                    +"&"+paramPasswort+"="+pwAlt
-                                    +"&"+paramEmail+"="+profilEmail;
+                                    +"&"+paramPasswortNew+"="+escape(pwNeu)
+                                    +"&"+paramPasswort+"="+escape(pwAlt)
+                                    +"&"+paramEmail+"="+escape(profilEmail);
             // Daten via Ajax an Server senden
             $.ajax({
                 url: profilServlet,
