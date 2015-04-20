@@ -195,7 +195,7 @@ function fillProfilDaten() {
  */
 function fillProfilStudiengaenge() {
     $.ajax({
-        url: benutzerServlet,
+        url: startseitenServlet,
         data: "action="+actionGetStudiengaenge,
         success: function(response) {
         	if(verifyResponse(response))
@@ -312,9 +312,9 @@ function registerProfilSpeichernEvents() {
         {
             // Datenstring zusammenbauen
             var dataStr = "action="+actionAenderePasswort
-                                    +"&"+paramPasswortNew+"="+pwNeu
-                                    +"&"+paramPasswort+"="+pwAlt
-                                    +"&"+paramEmail+"="+profilEmail;
+                                    +"&"+paramPasswortNew+"="+escape(pwNeu)
+                                    +"&"+paramPasswort+"="+escape(pwAlt)
+                                    +"&"+paramEmail+"="+escape(profilEmail);
             // Daten via Ajax an Server senden
             $.ajax({
                 url: profilServlet,

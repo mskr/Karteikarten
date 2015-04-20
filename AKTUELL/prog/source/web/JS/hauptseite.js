@@ -20,13 +20,16 @@ $(document).ready(function() {
     		// TODO
 //  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
     		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
-
-    		$("#vn_mod_input").val("");
+    		
+    		$("#vn_pass_input").val("");
     		$("#vn_beschr_input").val("");
     		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
     		$("#vn_komm_erlaubt").prop("checked", true);
     		$("#vn_bew_erlaubt").prop("checked", true);
     		$("#vn_mod_list").children().remove();
+			$("#vn_mod_input").val("");
+			$("#vn_mod_vorschlag").slideUp(100);
+    		selectedModList = {};
     	}
     });
 
@@ -53,24 +56,16 @@ function fillHauptseite()
 {
 	// Studiengänge in auswahlliste anzeigen
 	var ajax1 =  $.ajax({
-		url: benutzerServlet,
+		url: startseitenServlet,
 		data: "action="+actionGetStudiengaenge,
 		success: function(response) 
 		{
 			if(verifyResponse(response))
 			{
-				$("#vn_alle_auswahl_studiengang").empty();
-				$("#vn_erstellen_auswahl_studiengang").empty();
-
 				var studgArr = response[keyJsonArrResult];
-				for(var i in studgArr) 
-				{
-					$("#vn_alle_auswahl_studiengang").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
-					$("#vn_erstellen_auswahl_studiengang").append("<option value='"+studgArr[i]+"'>"+studgArr[i]+"</option>");
-				}
 
-				$("#vn_alle_auswahl_studiengang option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
-				$("#vn_erstellen_auswahl_studiengang option[value="+ jsonBenutzer[paramStudiengang] +"]").prop('selected', true);
+				fillSelectWithOptions($("#vn_alle_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
+				fillSelectWithOptions($("#vn_erstellen_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
 			}
 		}
 	}); 
@@ -78,7 +73,7 @@ function fillHauptseite()
 
 	// Semester in auswahlliste anzeigen
 	var ajax2 =  $.ajax({
-		url: benutzerServlet,
+		url: startseitenServlet,
 		data: "action="+actionGetSemester,
 		success: function(response) 
 		{
@@ -118,7 +113,6 @@ function fillHauptseite()
 		$("#vn_erstellen_bt").hide(); // TODO Hier vielleicht besser remove(), dann kann ein Hacker ihn nicht mehr einblenden
 	}
 
-	
     $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
 }
 
@@ -347,7 +341,7 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
                         url: veranstaltungServlet,
                         data: "action="+actionEinschreiben + "&" + 
                               paramId +"=" + jsonVeranstObj[paramId] + "&" +
-                              paramPasswort + "=" + kennwort,                 // TODO
+                              paramPasswort + "=" + escape(kennwort),                 // TODO
                         success: function(response) 
                         {
                         	var errorFkt = function(errorTxt) {
@@ -558,6 +552,7 @@ function handlePfeiltastenEvents(pressedKey) {
 
 
 var selectedModList = {};
+var modSuchTimer;
 function registerVeranstErzeugeHandler() {
 	
 	$("#vn_erzeugen_cancel").click(function() {
@@ -576,22 +571,30 @@ function registerVeranstErzeugeHandler() {
 			passw = popup.find("#vn_pass_input").val(),
 			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
 			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
+		var moderatorenIDs = "";
+		
+		for( var key in selectedModList)
+		{
+			moderatorenIDs += paramModeratoren +"=" + selectedModList[key][paramId] + "&";
+		}
 	
 		var ajax = $.ajax({
 			url: veranstaltungServlet,
 			data: "action=" + actionErstelleVeranst + "&" + 
-				  paramTitel + "=" + titel + "&" +
-				  paramSemester + "=" + semester + "&" + 
-				  paramStudiengang + "=" + studiengang + "&" +
-				  paramBeschr + "=" + beschr + "&" + 
-				  paramModeratorKkBearbeiten + "=" +moderatorenKkBearbeiten + "&"+
+				  paramTitel + "=" + escape(titel) + "&" +
+				  paramSemester + "=" + escape(semester) + "&" + 
+				  paramStudiengang + "=" + escape(studiengang) + "&" +
+				  paramBeschr + "=" + escape(beschr) + "&" + 
+				  paramModeratorKkBearbeiten + "=" + moderatorenKkBearbeiten + "&"+
 				  paramKommentareErlauben + "=" + kommentareErlaubt + "&" + 
 				  paramBewertungenErlauben + "=" + bewertungenErlaubt + "&"+
-				  paramPasswort + "=" + passw,
+				  paramPasswort + "=" + escape(passw) + "&" +
+				  moderatorenIDs,
 				  
 			success: function(response) {
 				if(verifyResponse(response))
 				{
+					showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich erzeugt.");
 					popup.popup('hide');
 					fillVeranstaltungsliste();	
 				}
@@ -599,16 +602,64 @@ function registerVeranstErzeugeHandler() {
 		});
 	});
 	
-	$("#vn_mod_input").keyup(function(e){
-	    if(e.keyCode == 13)
-	    {
-	        $(this).trigger("enterKey");
-	    }
-	});
-	
-	$('#vn_mod_input').bind("enterKey",function(e){
-		var txt = $('#vn_mod_input').val();
-		$('#vn_mod_input').val("");
-		addItemToList(selectedModList, $("#vn_mod_list"), txt, {});
+	// Triggert das eigene Enter-Event wenn key 13 gedrückt wurde
+	$("#vn_mod_input").keyup(function(e)
+	{
+		// Falls etwas eingegeben wurde suchen, sonst Feld leeren
+		if($("#vn_mod_input").val() != "")
+		{
+			clearTimeout(modSuchTimer);
+			modSuchTimer = setTimeout(function(){
+				var ajax = $.ajax({
+					url: suchfeldServlet,
+					data: "action=" + actionSucheBenutzer + "&" +
+					paramSuchmuster + "=" + $("#vn_mod_input").val(),
+
+					success: function(response) 
+					{
+						if(verifyResponse(response))
+						{
+							// Alle Suchergebnisse entfernen
+							$("#vn_mod_vorschlag").children().remove();
+							// Neue Suchergebnisse holen
+							var res = response[keyJsonArrResult];
+							// Falls welche existieren
+							if(res.length>0)
+							{
+								for(var i in res)
+								{
+									var x = $("<a>" + res[i][paramVorname] + " " + res[i][paramNachname] + "</a>");
+
+									(function(benutzer) 
+											{
+										// Click handler für den Sucheintrag
+										x.click(function()
+												{
+											addItemToList(selectedModList, $("#vn_mod_list"), 
+													benutzer[paramVorname] + " " + benutzer[paramNachname], 
+													benutzer, undefined,undefined);
+
+											$("#vn_mod_input").val("");
+											$("#vn_mod_vorschlag").slideUp(100);
+
+												});
+											})(res[i]);
+
+
+									$("#vn_mod_vorschlag").append(x);
+								}
+								$("#vn_mod_vorschlag").slideDown(100);
+							}
+							else
+								$("#vn_mod_vorschlag").slideUp(100);
+						}
+					}
+				});
+
+			},400);
+		}
+		else
+			$("#vn_mod_vorschlag").fadeOut();
 	});
 }
+

@@ -18,7 +18,7 @@ $(document).ready(function() {
                 var matnr = $("#reg_matnr").val();
                 var studiengang = $("#reg_studiengang").val();
                 $.ajax({
-                   url: benutzerServlet,
+                   url: startseitenServlet,
                    data: "action="+actionRegister
                        +"&"+paramEmail+"="+email
                        +"&"+paramPasswort+"="+pass

@@ -12,7 +12,7 @@
 function fillSelectWithOptions(select, optArray, selectedOptName, clearFirst) 
 {
 	if(clearFirst == true)
-		$(select).find('option').remove();
+		$(select).empty();
 
     for(var i in optArray) 
     {

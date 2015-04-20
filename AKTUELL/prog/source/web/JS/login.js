@@ -7,10 +7,10 @@ $(document).ready(function() {
         var email = $("#login_email").val();
         var pass = $("#login_pass").val();
         $.ajax({
-            url: benutzerServlet,
+            url: startseitenServlet,
             data: "action="+actionLogin+
-            	"&"+paramEmail+"="+email+
-            	"&"+paramPasswort+"="+pass,
+            	"&"+paramEmail+"="+escape(email)+
+            	"&"+paramPasswort+"="+escape(pass),
             beforeSend: function() {
                 $("#login_submit").val("Lädt...");
                 $("#login_submit").prop("disabled", true);

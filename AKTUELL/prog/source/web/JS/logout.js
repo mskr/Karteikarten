@@ -11,13 +11,14 @@ $(document).ready(function() {
      */
     $(".logout").click(function() {
         $.ajax({
-            url: benutzerServlet,
+            url: startseitenServlet,
             data: "action="+actionLogout,
             success: function(response) 
             {
                 if(verifyResponse(response))
                 {
                     jsonBenutzer = undefined;
+                    showInfo("Sie haben sich erfolgreich abgemeldet");
                     gotoStartseite();
                 }
             }
