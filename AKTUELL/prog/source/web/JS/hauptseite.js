@@ -20,7 +20,8 @@ $(document).ready(function() {
     		// TODO
 //  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
     		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
-
+    		
+    		$("#vn_pass_input").val("");
     		$("#vn_beschr_input").val("");
     		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
     		$("#vn_komm_erlaubt").prop("checked", true);
@@ -335,7 +336,7 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
                 kennwortForm.show();
                 kennwortFeld.focus();
                 kennwortForm.submit(function(event) {
-                    kennwort = kennwortFeld.val();
+                    kennwort = escape(kennwortFeld.val());
                     $.ajax({
                         url: veranstaltungServlet,
                         data: "action="+actionEinschreiben + "&" + 
@@ -566,7 +567,7 @@ function registerVeranstErzeugeHandler() {
 			studiengang = popup.find("#vn_erstellen_auswahl_studiengang").val(),
 			beschr = popup.find("#vn_beschr_input").val(),
 			moderatorenKkBearbeiten = popup.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
-			passw = popup.find("#vn_pass_input").val(),
+			passw = escape(popup.find("#vn_pass_input").val()),
 			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
 			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
 		var moderatorenIDs = "";
@@ -601,33 +602,34 @@ function registerVeranstErzeugeHandler() {
 	});
 	
 	// Triggert das eigene Enter-Event wenn key 13 gedrückt wurde
-	$("#vn_mod_input").keyup(function(e){
-//	    if(e.keyCode == 13)
-//	    {
-//	        $(this).trigger("enterKey");
-//	        return;
-//	    }
-//	    else
-//	    {
-		if($("#vn_mod_input").val() != ""){
+	$("#vn_mod_input").keyup(function(e)
+	{
+		// Falls etwas eingegeben wurde suchen, sonst Feld leeren
+		if($("#vn_mod_input").val() != "")
+		{
 			var ajax = $.ajax({
 				url: suchfeldServlet,
 				data: "action=" + actionSucheBenutzer + "&" +
 				paramSuchmuster + "=" + $("#vn_mod_input").val(),
-				success: function(response) {
+				
+				success: function(response) 
+				{
 					if(verifyResponse(response))
 					{
-						console.log(response);
+						// Alle Suchergebnisse entfernen
 						$("#vn_mod_vorschlag").children().remove();
-
+						// Neue Suchergebnisse holen
 						var res = response[keyJsonArrResult];
-						if(res.length>0){
+						// Falls welche existieren
+						if(res.length>0)
+						{
 							for(var i in res)
 							{
 								var x = $("<a>" + res[i][paramVorname] + " " + res[i][paramNachname] + "</a>");
 
 								(function(benutzer) 
 								{
+									// Click handler für den Sucheintrag
 									x.click(function()
 									{
 										addItemToList(selectedModList, $("#vn_mod_list"), 
@@ -653,19 +655,5 @@ function registerVeranstErzeugeHandler() {
 		}
 		else
 			$("#vn_mod_vorschlag").fadeOut();
-//		}
 	});
-	
-//	// Handler für das enterKey event
-//	$('#vn_mod_input').bind("enterKey",function(e){
-//		// Wert im Eingabefeld holen und das Feld leeren
-//		var txt = $('#vn_mod_input').val();
-//		$('#vn_mod_input').val("");
-//		
-//		// HIer muss das ModeratorObjekt rein
-//		var data = {};
-//		data["id"] = 7;	// TODO
-//		data["name"] = txt;	// TODO 
-//		addItemToList(selectedModList, $("#vn_mod_list"), txt, data, undefined,undefined);
-//	});
 }

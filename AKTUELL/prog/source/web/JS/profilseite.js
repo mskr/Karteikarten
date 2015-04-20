@@ -296,9 +296,9 @@ function registerProfilSpeichernEvents() {
     $("#profil_passwort_form").submit(function(event) 
     {
         // Felder auslesen
-        var pwNeu = $("#profil_passwort_input").val();
-        var pwNeuWdh = $("#profil_passwort_wdh_input").val();
-        var pwAlt = $("#profil_passwort_alt_input").val();
+        var pwNeu = escape($("#profil_passwort_input").val());
+        var pwNeuWdh = escape($("#profil_passwort_wdh_input").val());
+        var pwAlt = escape($("#profil_passwort_alt_input").val());
         // Fehleingaben abfangen
         if(pwNeu != pwNeuWdh)
         {

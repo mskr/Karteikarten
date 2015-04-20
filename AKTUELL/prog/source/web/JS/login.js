@@ -5,7 +5,7 @@
 $(document).ready(function() {
     $("#login_form").submit(function(event) {
         var email = $("#login_email").val();
-        var pass = $("#login_pass").val();
+        var pass = escape($("#login_pass").val());
         $.ajax({
             url: startseitenServlet,
             data: "action="+actionLogin+
