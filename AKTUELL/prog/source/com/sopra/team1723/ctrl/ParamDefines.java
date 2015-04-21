@@ -21,6 +21,7 @@ public class ParamDefines
     public final static String ActionAendereProfil = "aendereProfil";
     public final static String ActionUploadProfilBild = "uploadProfilBild";
     public final static String ActionSucheBenVeranst = "sucheBenVeranst";
+    public final static String ActionSucheBenutzer = "sucheBenutzer";
     
     public final static String ActionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
     public final static String LeseVeranstMode = "mode";                        // Liefert Veranstaltungen

@@ -39,8 +39,8 @@
     	<servlet-class>com.sopra.team1723.ctrl.FileUploadServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>BenutzerServlet</servlet-name>
-        <servlet-class>com.sopra.team1723.ctrl.BenutzerServlet</servlet-class>
+        <servlet-name>StartseitenServlet</servlet-name>
+        <servlet-class>com.sopra.team1723.ctrl.StartseitenServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>KarteikartenServlet</servlet-name>
@@ -80,8 +80,8 @@
     	<url-pattern>/FileUploadServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>BenutzerServlet</servlet-name>
-        <url-pattern>/BenutzerServlet</url-pattern>
+        <servlet-name>StartseitenServlet</servlet-name>
+        <url-pattern>/StartseitenServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>KarteikartenServlet</servlet-name>

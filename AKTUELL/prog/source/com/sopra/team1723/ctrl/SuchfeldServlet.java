@@ -54,6 +54,25 @@ public class SuchfeldServlet extends ServletController {
         JSONObject jo = JSONConverter.toJsonSuchfeld(dbManager.durchsucheDatenbank(suchmuster));
         outWriter.print(jo);
     }
+    
+    /**
+     * @throws IOException 
+     */
+    public void sucheBenutzer(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        String suchmuster = req.getParameter(ParamDefines.Suchmuster);
+
+        JSONObject jo = JSONConverter.toJsonSuchfeld(
+                new ArrayList<IjsonObject>(
+                        Datenbankmanager.sortByValue(dbManager.durchsucheDatenbankBenutzer(suchmuster)).keySet())
+                );
+        outWriter.print(jo);
+    }
 
     @Override
     protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -67,6 +86,10 @@ public class SuchfeldServlet extends ServletController {
         if(aktuelleAction.equals(ParamDefines.ActionSucheBenVeranst))
         {
             sucheBenutzerUndVeranstaltungen(req, resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionSucheBenutzer))
+        {
+            sucheBenutzer(req, resp);
         }
         else
         {
