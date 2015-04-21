@@ -3,7 +3,7 @@
  */
 
 var adminServlet = "AdminServlet";
-var benutzerServlet = "BenutzerServlet";
+var startseitenServlet = "StartseitenServlet";
 var karteikartenServlet = "KarteikartenServlet";
 var kommentarServlet = "KommentarServlet";
 var notizServlet = "NotizServlet";

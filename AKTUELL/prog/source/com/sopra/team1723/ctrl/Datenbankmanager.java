@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -20,6 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.locks.ReentrantLock;
 import java.sql.Timestamp;
 
 import com.sopra.team1723.data.*;
@@ -32,14 +35,38 @@ public class Datenbankmanager implements IDatenbankmanager {
     final int UNIQUE_CONSTRAINT_ERROR = 1062;
     private Connection conMysql = null;
     private Connection conNeo4j = null;
+    private HashMap<Connection,ReentrantLock> connections = null;
+    private final static int AnzConnections = 5;  
     /**
-     * Implementiert die Methoden des @ref IDatenbankmanager. Bietet eine Schnittstelle zur Datenbank.
+     * Implementiert die Methoden des    private ArrayList<Connection> connections = null;
+    private ArrayList<ReentrantLock> locks = null; @ref IDatenbankmanager. Bietet eine Schnittstelle zur Datenbank.
      * @throws Exception 
      */
     public Datenbankmanager() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
         conMysql = DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root","");
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
+        connections = new HashMap<Connection, ReentrantLock>();
+        for(int i=0; i<AnzConnections; ++i)
+            connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root",""), new ReentrantLock());
+
+    }
+
+    public Entry<Connection, ReentrantLock> getConnection(){
+        Iterator<Entry<Connection,ReentrantLock>> it = connections.entrySet().iterator();
+        Entry<Connection, ReentrantLock> defaultConnection = null;
+        while(it.hasNext()){
+            Entry<Connection, ReentrantLock> connection = it.next();
+            if(!connection.getValue().isLocked()){
+                connection.getValue().lock();
+                return connection;
+            }
+
+            if(defaultConnection == null || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
+                defaultConnection = connection;
+        }
+        defaultConnection.getValue().lock();
+        return defaultConnection;
     }
 
     public void closeQuietly(Connection connection){
@@ -75,6 +102,8 @@ public class Datenbankmanager implements IDatenbankmanager {
 
     @Override
     public Benutzer leseBenutzer(String eMail) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Benutzer benutzer = null;
@@ -99,6 +128,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return benutzer;
@@ -670,7 +700,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> alleErgebnisse = new HashMap<IjsonObject, Integer>();
         alleErgebnisse.putAll(durchsucheDatenbankVeranstaltung(suchmuster));
         alleErgebnisse.putAll(durchsucheDatenbankBenutzer(suchmuster));
-        
+
         ArrayList<IjsonObject> ergebnisse = new ArrayList<IjsonObject>(sortByValue(alleErgebnisse).keySet());
         if(ergebnisse.size() > 5)
             ergebnisse = new ArrayList<IjsonObject>(ergebnisse.subList(0, 4));
@@ -767,6 +797,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException  {
         PreparedStatement ps = null;
+        ResultSet rs = null;
         conMysql.setAutoCommit(false);
         try{
             ps = conMysql.prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
@@ -774,25 +805,44 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(1, veranst.getTitel());
             ps.setString(2, veranst.getBeschreibung());
             ps.setString(3, veranst.getSemester());
-            // TODO Wenn leerstring, dann muss passwort NULL sein
-            ps.setString(4, veranst.getZugangspasswort());
+            if(veranst.getZugangspasswort().equals(""))
+                ps.setNull(4, Types.INTEGER);
+            else
+                ps.setString(4, veranst.getZugangspasswort());
             ps.setBoolean(5, veranst.isKommentareErlaubt());
             ps.setBoolean(6, veranst.isBewertungenErlaubt());
             ps.setBoolean(7, veranst.isModeratorKarteikartenBearbeiten());
             ps.setInt(8, veranst.getErsteller().getId());
 
             ps.executeUpdate();
-            
+
+            ps.close();
+            ps = conMysql.prepareStatement("SELECT LAST_INSERT_ID();");
+            rs = ps.executeQuery();
+            if(!rs.next())
+                throw new SQLException();
+            int VeranstID = rs.getInt(1);
+            closeQuietly(ps);
+
+
             for(String stg: studiengaenge){
                 ps.close();
 
-                ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES((SELECT id FROM veranstaltung WHERE Titel=? AND Semester=?),?)");   
-                ps.setString(1, veranst.getTitel());
-                ps.setString(2, veranst.getSemester());
-                ps.setString(3, stg);
+                ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");   
+                ps.setInt(1, VeranstID);
+                ps.setString(2, stg);
                 ps.executeUpdate();         
             }
-            
+
+            for(int mod : moderatorenIds){
+                ps.close();
+
+                ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
+                ps.setInt(1, mod);
+                ps.setInt(2, VeranstID);
+                ps.executeUpdate();
+            }
+
             conMysql.commit();
 
         } catch (SQLException e) {
@@ -805,6 +855,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             conMysql.setAutoCommit(true);
             closeQuietly(ps);
+            closeQuietly(rs);
         }
 
 
