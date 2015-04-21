@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -48,9 +49,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         connections = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)
             connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root",""), new ReentrantLock());
-           
+
     }
-    
+
     public Entry<Connection, ReentrantLock> getConnection(){
         Iterator<Entry<Connection,ReentrantLock>> it = connections.entrySet().iterator();
         Entry<Connection, ReentrantLock> defaultConnection = null;
@@ -60,7 +61,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                 connection.getValue().lock();
                 return connection;
             }
-            
+
             if(defaultConnection == null || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
                 defaultConnection = connection;
         }
@@ -699,7 +700,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> alleErgebnisse = new HashMap<IjsonObject, Integer>();
         alleErgebnisse.putAll(durchsucheDatenbankVeranstaltung(suchmuster));
         alleErgebnisse.putAll(durchsucheDatenbankBenutzer(suchmuster));
-        
+
         ArrayList<IjsonObject> ergebnisse = new ArrayList<IjsonObject>(sortByValue(alleErgebnisse).keySet());
         if(ergebnisse.size() > 5)
             ergebnisse = new ArrayList<IjsonObject>(ergebnisse.subList(0, 4));
@@ -804,15 +805,17 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setString(1, veranst.getTitel());
             ps.setString(2, veranst.getBeschreibung());
             ps.setString(3, veranst.getSemester());
-            // TODO Wenn leerstring, dann muss passwort NULL sein
-            ps.setString(4, veranst.getZugangspasswort());
+            if(veranst.getZugangspasswort().equals(""))
+                ps.setNull(4, Types.INTEGER);
+            else
+                ps.setString(4, veranst.getZugangspasswort());
             ps.setBoolean(5, veranst.isKommentareErlaubt());
             ps.setBoolean(6, veranst.isBewertungenErlaubt());
             ps.setBoolean(7, veranst.isModeratorKarteikartenBearbeiten());
             ps.setInt(8, veranst.getErsteller().getId());
 
             ps.executeUpdate();
-            
+
             ps.close();
             ps = conMysql.prepareStatement("SELECT LAST_INSERT_ID();");
             rs = ps.executeQuery();
@@ -821,7 +824,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             int VeranstID = rs.getInt(1);
             closeQuietly(ps);
 
-            
+
             for(String stg: studiengaenge){
                 ps.close();
 
@@ -830,16 +833,16 @@ public class Datenbankmanager implements IDatenbankmanager {
                 ps.setString(2, stg);
                 ps.executeUpdate();         
             }
-            
+
             for(int mod : moderatorenIds){
                 ps.close();
-                
-                ps = conMysql.prepareStatement("INSERT INTO moderatoren (Benutzer, Veranstaltung) VALUES(?,?)");
+
+                ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
                 ps.setInt(1, mod);
                 ps.setInt(2, VeranstID);
                 ps.executeUpdate();
             }
-            
+
             conMysql.commit();
 
         } catch (SQLException e) {
