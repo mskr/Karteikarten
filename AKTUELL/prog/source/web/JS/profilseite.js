@@ -3,7 +3,7 @@
  */
     
 // Halte hier den Benutzer dessen Profil angezeigt wird
-var profilBenutzerId = getUrlParameterByName(urlParamId);
+var profilBenutzerId;
 
 // Temporaere Variablen fuer die vom Server geladenen Daten.
 // TODO Evntl in defines.js auslagern
@@ -23,18 +23,8 @@ $(document).ready(function() {
     
 	$("#profil_loeschen_bt").click(function() {
 		sindSieSicher($("#profil_loeschen_bt"), "Wollen sie das Profil wirklich löschen?",function(){
-			$.ajax({
-				url: profilServlet,
-				data: "action="+actionDeleteBenutzer + "&" +
-				paramId + "=" + profilId,
-				success: function(response) {
-					if(verifyResponse(response))
-					{
-						showInfo("Profil wurde erfolgreich gelöscht!");
-						gotoStartseite();
-					}
-				}
-			});
+		    var params = {};
+		    params[paramId] = profilId;
 			ajaxCall(
 			    profilServlet,
 			    actionDeleteBenutzer,
@@ -51,7 +41,8 @@ $(document).ready(function() {
 			        {
 			            gotoHauptseite();
 			        }
-			    }
+			    },
+			    params
 			);
 		}, "bottom","left");
 	});
@@ -64,6 +55,8 @@ $(document).ready(function() {
  * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
  */
 function fillProfilseite() {
+    
+    profilBenutzerId = getUrlParameterByName(urlParamId);
     
     $("#profil_avatar_aendern_file_name").hide();
     $(".profil_avatar_overlay").hide();

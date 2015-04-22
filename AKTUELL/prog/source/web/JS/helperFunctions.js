@@ -70,7 +70,7 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
         beforeSend: beforeFunc,
         success: function(jsonResponse) {
             if(verifyResponse(jsonResponse,errorHandlingFunc)) {
-                noerrorFunc;
+                noerrorFunc(jsonResponse);
             }
         },
         complete: completeFunc
@@ -93,21 +93,20 @@ function toUrlParamString(paramObj)
         return "";
     }
     var locationSearchTmp = "";
-    var i = 0;
-    // Anzahl elemente Bestimmen
-    var maxI = 0;
-    for(var param in paramObj) 
-    {
-        maxI++;
-    }
     
-    for(var param in paramObj) 
+    for(var param in paramObj)
     {
-        locationSearchTmp += param + "=" + paramObj[param]
-        if(i < maxI-1)
-            locationSearchTmp += "&";
-        
-        i++;
+    	if($.isArray(paramObj[param]))
+    	{
+    		for( var i in paramObj[param])
+    		{
+                locationSearchTmp += param + "=" + paramObj[param][i] + "&";
+    		}
+    	}
+    	else
+    	{
+            locationSearchTmp += param + "=" + paramObj[param] + "&";
+    	}
     }
     return locationSearchTmp;
 }
