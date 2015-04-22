@@ -64,13 +64,14 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
  */
 function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, beforeFunc, completeFunc)
 {
+    console.log(toUrlParamString(params));
     return $.ajax({
         url: servletUrl,
         data: "action="+action+"&"+toUrlParamString(params),
         beforeSend: beforeFunc,
         success: function(jsonResponse) {
             if(verifyResponse(jsonResponse,errorHandlingFunc)) {
-                noerrorFunc;
+                noerrorFunc(jsonResponse);
             }
         },
         complete: completeFunc
@@ -101,7 +102,7 @@ function toUrlParamString(paramObj)
         maxI++;
     }
     
-    for(var param in paramObj) 
+    for(var param in paramObj)
     {
         locationSearchTmp += param + "=" + paramObj[param]
         if(i < maxI-1)
