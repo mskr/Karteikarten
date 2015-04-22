@@ -64,7 +64,6 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
  */
 function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, beforeFunc, completeFunc)
 {
-    console.log(toUrlParamString(params));
     return $.ajax({
         url: servletUrl,
         data: "action="+action+"&"+toUrlParamString(params),
@@ -94,21 +93,20 @@ function toUrlParamString(paramObj)
         return "";
     }
     var locationSearchTmp = "";
-    var i = 0;
-    // Anzahl elemente Bestimmen
-    var maxI = 0;
-    for(var param in paramObj) 
-    {
-        maxI++;
-    }
     
     for(var param in paramObj)
     {
-        locationSearchTmp += param + "=" + paramObj[param]
-        if(i < maxI-1)
-            locationSearchTmp += "&";
-        
-        i++;
+    	if($.isArray(paramObj[param]))
+    	{
+    		for( var i in paramObj[param])
+    		{
+                locationSearchTmp += param + "=" + paramObj[param][i] + "&";
+    		}
+    	}
+    	else
+    	{
+            locationSearchTmp += param + "=" + paramObj[param] + "&";
+    	}
     }
     return locationSearchTmp;
 }
