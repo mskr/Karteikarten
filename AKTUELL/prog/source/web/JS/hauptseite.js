@@ -540,11 +540,11 @@ function registerVeranstErzeugeHandler() {
 			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
 			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
 		
-		var moderatorenIDs = "";
+		var moderatorenIDs = [];
 		
 		for( var key in selectedModList)
 		{
-			moderatorenIDs += selectedModList[key][paramId] + "_";
+			moderatorenIDs.push(selectedModList[key][paramId]);
 		}
 	
 		var params = {};
@@ -554,7 +554,7 @@ function registerVeranstErzeugeHandler() {
 		params[paramBeschr] = escape(beschr);
 		params[paramModeratorKkBearbeiten] = moderatorenKkBearbeiten;
 		params[paramKommentareErlauben] = kommentareErlaubt;
-		params[paramBewertungenErlauben] = bewertungenErlaub;
+		params[paramBewertungenErlauben] = bewertungenErlaubt;
 		params[paramPasswort] = escape(passw);
 		params[paramModeratoren] = moderatorenIDs;
 		
