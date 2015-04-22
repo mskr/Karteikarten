@@ -82,13 +82,19 @@ function handleError(errorCode) {
 	}
 }
 
+/**
+ * 
+ * @param jsonResponse
+ * @param specialErrorHandlingFkt
+ * @returns true, falls kein Error, false andernfalls
+ */
 function verifyResponse(jsonResponse, specialErrorHandlingFkt) 
 {
 	if(jsonResponse["error"] != "noerror")
 	{
 		var processed = false;
 		
-		if(specialErrorHandlingFkt!= undefined)
+		if(specialErrorHandlingFkt != undefined)
 			processed = specialErrorHandlingFkt(jsonResponse["error"]);
 		
 		if(!processed)
