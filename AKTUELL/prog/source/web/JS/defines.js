@@ -37,6 +37,7 @@ var leseVeranstModeMeine = "meine";                  // Liefert meine Veranstalt
 var actionAusschreiben = "ausschreiben";
 var actionEinschreiben = "einschreiben";
 var actionLeseBenachrichtungen = "leseBen";
+var actionMarkiereBenGelesen = "benGelesen";
 
 // GET/POST-Parameter fuer die Servlets
 // Werden auch als Schluesselnamen fuer JSON Objekte verwendet

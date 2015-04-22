@@ -56,10 +56,8 @@
 <script src="JS/urlHandler.js"></script>
 <!-- Registrieren Script -->
 <script src="JS/registrieren.js"></script>
-<!-- Login Script -->
-<script src="JS/login.js"></script>
-<!-- Logout Script -->
-<script src="JS/logout.js"></script>
+<!-- Login and Logout Script -->
+<script src="JS/loginLogout.js"></script>
 <!-- Startseite Skript -->
 <script src="JS/startseite.js"></script>
 <!-- mypersonalbox Skript -->
@@ -71,6 +69,8 @@
 <!-- Veranstaltungseite Skript -->
 <script src="JS/veranstaltungseite.js"></script>
 <!-- Initial alle Kind<div>s von <body> verbergen -->
+<!-- md5 hash function -->
+<script src="JS/md5.js"></script>
 <style>
 body > div {
 	display: none;
@@ -191,6 +191,9 @@ Dann aber so leer.
 	</svg>
 	-->
 </div>
+<div id="mainbox_loadScreen" class = "mainbox" >
+	<img alt="load icon" src="files/general/ajaxLoader.gif" style="width: 200px;height:  200px; top: 200px; position:absolute;">
+</div>
 
 <div id="mainbox_hauptseite" class="mainbox">
 	<div class="hauptseite_head">
@@ -249,7 +252,7 @@ Dann aber so leer.
 						<label for="profil_avatar_aendern_file" class="profil_avatar_overlay"><span class="mega-octicon octicon-pencil"></span></label>
 						<input id="profil_avatar_aendern_file" type="file" name="file" style="display:none">
 						<span class="profil_benutzername"></span><br>
-						<span id="profil_avatar_aendern_file_name"><a><label for="profil_avatar_aendern_file">Neuen Avatar auswählen</label></a></span><br>
+						<span id="profil_avatar_aendern_file_name"></span><br>
 						<input id="profil_avatar_submit" type="submit" value="Avatar ändern" class="mybutton dark" style="display:none">
 					</div>
 				</form>

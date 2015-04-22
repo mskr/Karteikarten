@@ -230,6 +230,7 @@ textarea.input_std {
 	text-shadow: 0px -1px 0 black;
 	box-shadow: 0 2px 2px black;
 	border-radius: 2px;
+	max-width: 30em;
 } .card_title {
 	margin-bottom: .5em;
 	text-align: left;
@@ -250,11 +251,15 @@ textarea.input_std {
 }
 
 .mainbox {
-	position: relative;
+	position: absolute;
 	z-index: 1;
 	margin-top: 1em;
 	margin-left: 21em;
 	width: calc(100% - 21em);
+}
+
+#mainbox_loadScreen {
+	text-align: center;
 }
 
 .impressum {
@@ -618,7 +623,7 @@ textarea.input_std {
 	display: inline-block;
 	width: 50%;
 } .vn_details {
-	margin: 1em;
+	margin: 1rem;
 	font-size: .75em;
 	display: inline-block;
 	vertical-align: top;
@@ -1191,7 +1196,7 @@ textarea.input_std {
 .popup_fenster {
 	box-shadow: 0 0 5em black;
 	width: 100%;
-	max-width: 30em;
+	max-width: 50em;
 } .popup_fenster_titel {
 	padding: 1em;
 	height: 1.3em;

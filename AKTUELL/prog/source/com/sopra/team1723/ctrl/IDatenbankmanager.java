@@ -343,6 +343,7 @@ public interface IDatenbankmanager {
      */
     public boolean schreibeBenachrichtigung(Benachrichtigung benachrichtigung);
 
+    public boolean markiereBenAlsGelesen(int benID, int benutzerID);
     /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
      * return

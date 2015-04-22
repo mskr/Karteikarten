@@ -10,13 +10,17 @@ $(document).ready(function() {
         {
             var pass = $("#login_pass").val();
             var passwdh = $("#reg_pass").val();
+            
             // Passwortwiederholung ueberpruefen
             if(pass == passwdh)
             {
+            	// pass wird vor verschicken mit md5 gehasht
+                pass = CryptoJS.MD5(pass);
                 var vorname = $("#reg_vorname").val();
                 var nachname = $("#reg_nachname").val();
                 var matnr = $("#reg_matnr").val();
                 var studiengang = $("#reg_studiengang").val();
+                
                 $.ajax({
                    url: startseitenServlet,
                    data: "action="+actionRegister
@@ -27,7 +31,7 @@ $(document).ready(function() {
                        +"&"+paramStudiengang+"="+studiengang
                        +"&"+paramMatrikelNr+"="+matnr,
                    success: function(response) {
-                	   
+
                        if(verifyResponse(response))
                        {
                     	   showInfo("Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.")
