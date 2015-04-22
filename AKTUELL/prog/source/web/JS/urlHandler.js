@@ -150,22 +150,17 @@ function interpreteUrlQuery(paramObj)
  */
 function getBenutzer()
 {
-    return $.ajax({
-        url: profilServlet,
-        data: "action="+actionGetBenutzer,
-        success: function(response) 
-        {
-            if(verifyResponse(response))
-            {
-                // Ein Benutzer ist eingeloggt
-                jsonBenutzer = response;
-            }
-            else
-            {
-            	jsonBenutzer = undefined;
-            }
+    return ajaxCall(
+        profilServlet,
+        actionGetBenutzer,
+        function(response) {
+            jsonBenutzer = response;
+        },
+        undefined,
+        function(errCode) {
+            jsonBenutzer = undefined;
         }
-    });
+    );
 }
 
 /**

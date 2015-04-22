@@ -20,24 +20,21 @@ $(document).ready(function() {
                 var nachname = $("#reg_nachname").val();
                 var matnr = $("#reg_matnr").val();
                 var studiengang = $("#reg_studiengang").val();
-                
-                $.ajax({
-                   url: startseitenServlet,
-                   data: "action="+actionRegister
-                       +"&"+paramEmail+"="+email
-                       +"&"+paramPasswort+"="+pass
-                       +"&"+paramVorname+"="+vorname
-                       +"&"+paramNachname+"="+nachname
-                       +"&"+paramStudiengang+"="+studiengang
-                       +"&"+paramMatrikelNr+"="+matnr,
-                   success: function(response) {
-
-                       if(verifyResponse(response))
-                       {
-                    	   showInfo("Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.")
-                       }
-                   }
-                });
+                var params = {};
+                params[paramEmail] = email;
+                params[paramPasswort] = pass;
+                params[paramVorname] = vorname;
+                params[paramNachname] = nachname;
+                params[paramStudiengang] = studiengang;
+                params[paramMatrikelNr] = matnr;
+                ajaxCall(
+                    startseitenServlet,
+                    actionRegister,
+                    function() {
+                        showInfo("Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.");
+                    },
+                    params
+                );
             }
             else
             {

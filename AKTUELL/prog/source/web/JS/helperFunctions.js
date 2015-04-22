@@ -56,8 +56,10 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
  * @param servletUrl ist ein String, der das richtige Servlet adressiert.
  * @param action ist ein String, der als Kommando fuer den Server fungiert.
  * @param params ist ein Objekt mit Parameternamen und jeweiligem Wert, die vom Server ausgelesen werden.
- * @param noerrorFunc ist eine Funktion, die bei einer Antwort mit errCode 'noerror' ausgefuehrt wird.
+ * @param noerrorFunc ist eine Funktion, die bei einer Antwort mit errCode == 'noerror' ausgefuehrt wird.
  * @param errorHandlingFunc ist eine Funktion, die bei einer Antwort mit errCode != 'noerror' ausgefuehrt wird (kann optional uebergeben werden).
+ * Achtung: Die errorHandlingFunc muss true zurueckgeben, falls der Error behandelt werden konnte und false andernfalls 
+ * (dann wird der Default-Error-Text fuer den jeweiligen Code auf der GUI angezeigt).
  * @param beforeFunc ist eine Funktion, die beforeSend ausgefuehrt wird (kann optional uebergeben werden).
  * @param completeFunc ist eine Funktion, die bei complete ausgefuehrt wird (kann optional uebergeben werden).
  * @returns Ajax Objekt, das Informatioen ueber den Antwortstatus enthaelt.

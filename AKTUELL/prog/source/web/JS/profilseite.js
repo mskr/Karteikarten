@@ -103,6 +103,10 @@ function fillProfilStudiengaenge(benutzer) {
 
 function fillMyProfil(isAdmin)
 {
+    $("#profil_email_input").attr("disabled",false);
+    $("#profil_vorname_input").attr("disabled",false);
+    $("#profil_nachname_input").attr("disabled",false);
+    
 	$("#profil_avatar_aendern_file_name").show();
 	$(".profil_avatar_overlay").show();
 	$(".profil_loeschen").show();
@@ -233,46 +237,43 @@ function registerProfilSpeichernEvents() {
             var studiengang = $("#profil_studiengang_input").val();
             var rolle = $("#profil_rolle_input").val();
         }
-         // Datenstring zusammenbauen
-         var dataStr = "action="+actionAendereProfil
-         +"&"+paramId+"="+getUrlParameterByName(urlParamId)
-         +"&"+paramVorname+"="+vorname
-         +"&"+paramNachname+"="+nachname
-         +"&"+paramNofityVeranstAenderung+"="+notifyVeranst
-         +"&"+paramNotifyKarteikartenAenderung+"="+notifyKarteikarten
-         +"&"+paramNotifyKommentare+"="+notifyKommentare
-         +"&"+paramEmailNew+"="+email;
-         if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
-         {
-             dataStr+= "&"+paramNutzerstatus+"="+rolle
-                        +"&"+paramStudiengang+"="+studiengang
-                        +"&"+paramMatrikelNr+"="+matnr;
-         }
-         // Daten via Ajax an Server senden
-         $.ajax({
-             url: profilServlet,
-             data: dataStr,
-             beforeSend: function() {
-                 $("#profil_daten_speichern").val("Lädt...");
-                 $("#profil_daten_speichern").prop("disabled", true);
-             },
-             success: function(response) {
-             	if(verifyResponse(response))
-             	{
-             		showInfo("Änderungen gespeichert.");
-             		$.when(getBenutzer()).done(function() {
-                 		fillProfilseite();
-                 		fillMyPersonalBox();
-					});
-             	}
-             },
-             complete: function() {
-                 $("#profil_daten_speichern").val("Speichern");
-                 $("#profil_daten_speichern").prop('disabled', false);
-             }
-          }); 
-         // Verhindert das normale Absenden des Formulars
-         event.preventDefault();         
+        var params = {};
+        params[paramId] = getUrlParameterByName(urlParamId);
+        params[paramVorname] = vorname;
+        params[paramNachname] = nachname;
+        params[paramNofityVeranstAenderung] = notifyVeranst;
+        params[paramNotifyKarteikartenAenderung] = notifyKarteikarten;
+        params[paramNotifyKommentare] = notifyKommentare;
+        params[paramEmailNew] = email;
+        if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
+        {
+            params[paramNutzerstatus] = rolle;
+            params[paramStudiengang] = studiengang;
+            params[paramMatrikelNr] = matnr;
+        }
+        ajaxCall(
+            profilServlet,
+            actionAendereProfil,
+            function(response) {
+                showInfo("Änderungen gespeichert.");
+                $.when(getBenutzer()).done(function() {
+                    fillProfilseite();
+                    fillMyPersonalBox();
+                });
+            },
+            params,
+            undefined,
+            function() {
+                $("#profil_daten_speichern").val("Lädt...");
+                $("#profil_daten_speichern").prop("disabled", true);
+            },
+            function() {
+                $("#profil_daten_speichern").val("Speichern");
+                $("#profil_daten_speichern").prop('disabled', false);
+            }
+        );
+        // Verhindert das normale Absenden des Formulars
+        event.preventDefault();         
     });
             
     $("#profil_passwort_form").submit(function(event) 
@@ -294,44 +295,42 @@ function registerProfilSpeichernEvents() {
         {
         	pwNeu = CryptoJS.MD5(pwNeu);
         	pwAlt = CryptoJS.MD5(pwAlt);
-            // Datenstring zusammenbauen
-            var dataStr = "action="+actionAenderePasswort
-                                    +"&"+paramPasswortNew+"="+escape(pwNeu)
-                                    +"&"+paramPasswort+"="+escape(pwAlt)
-                                    +"&"+paramId+"="+escape(currentProfilID);
-            // Daten via Ajax an Server senden
-            $.ajax({
-                url: profilServlet,
-                data: dataStr,
-                beforeSend: function() {
+        	
+            var params = {};
+            params[paramPasswortNew] = escape(pwNeu);
+            params[paramPasswort] = escape(pwAlt);
+            params[paramId] = escape(currentProfilID);
+            ajaxCall(
+                profilServlet,
+                actionAenderePasswort,
+                function(response) {
+                    showInfo("Änderungen gespeichert.");
+                    fillProfilseite();
+                },
+                params,
+                function(errCode) {
+                    if(errCode == "loginfailed") 
+                    {
+                        $("#profil_passwort_alt_input").css("border","4px solid IndianRed");
+                        $("#profil_passwort_alt_input").val("");
+                        $("#profil_passwort_alt_input").focus();
+                        showError("Bitte prüfen Sie Ihre Eingaben.");
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                },
+                function() {
                     $("#profil_passwort_speichern").val("Lädt...");
                     $("#profil_passwort_speichern").prop('disabled', true);
                 },
-                success: function(response) {
-                	var errFkt = function(errCode) 
-                	{
-                		if(errCode == "loginfailed") 
-                        {
-                			$("#profil_passwort_alt_input").css("border","4px solid IndianRed");
-                            $("#profil_passwort_alt_input").val("");
-                            $("#profil_passwort_alt_input").focus();
-                            showError("Bitte prüfen Sie Ihre Eingaben.");
-                            return true;
-                        }
-                		return false;
-					};
-					
-                	if(verifyResponse(response,errFkt))
-                	{
-                		showInfo("Änerungen gespeichert.");
-                		fillProfilseite();
-                	}
-                },
-                complete: function() {
+                function() {
                     $("#profil_passwort_speichern").val("Speichern");
                     $("#profil_passwort_speichern").prop('disabled', false);
                 }
-            });
+            );
         }
         // Verhindert das normale Absenden des Formulars
         event.preventDefault();
