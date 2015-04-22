@@ -110,6 +110,7 @@ function interpreteUrlQuery(paramObj)
 	$(".popup_fenster").popup('hide');
 	
 	$(".mainbox").fadeOut("fast");
+	$("#mainbox_loadScreen").fadeIn("fast");
 	
     var ziel = paramObj[urlParamLocation];
 	// Benutzer eingeloggt
@@ -130,12 +131,16 @@ function interpreteUrlQuery(paramObj)
         }
         
         $.when(ajax1, ajax2).done(function() {
+        	$("#mainbox_loadScreen").fadeOut("fast");
         	display(ziel);
 		});
     } 
     else 
     { // Benutzer nicht eingeloggt
-        $.when(fillStartseite()).done(display(ansichtStartseite));
+        $.when(fillStartseite()).done(function() {
+        	$("#mainbox_loadScreen").fadeOut("fast");
+        	display(ansichtStartseite);
+		});
     }
 }
 
@@ -171,13 +176,13 @@ function display(ansicht)
     // mypersonalbox
     if(ansicht == ansichtStartseite)
     {
-        $("#mypersonalbox_startseite").show();
-        $("#mypersonalbox_main").hide();
+        $("#mypersonalbox_startseite").fadeIn();
+        $("#mypersonalbox_main").fadeOut();
     }
     else
     {
-        $("#mypersonalbox_main").show();
-        $("#mypersonalbox_startseite").hide();
+        $("#mypersonalbox_main").fadeIn();
+        $("#mypersonalbox_startseite").fadeOut();
     }
     // mainbox
     var isValid = false;
@@ -185,10 +190,10 @@ function display(ansicht)
     {
         if(alleAnsichten[i] == ansicht) 
         {
-            $("#mainbox_"+alleAnsichten[i]).show();
+            $("#mainbox_"+alleAnsichten[i]).fadeIn();
             isValid = true;
         } else {
-            $("#mainbox_"+alleAnsichten[i]).hide();
+            $("#mainbox_"+alleAnsichten[i]).fadeOut();
         }
     }
     if(!isValid) 

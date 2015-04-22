@@ -30,7 +30,7 @@ function fillMyPersonalBox()
     ajaxCall(
         benachrichtungsServlet,
         actionLeseBenachrichtungen,
-        function() {
+        function(response) {
             var bens = response[keyJsonArrResult];
             updateBenachrichtigungen(bens);
         }

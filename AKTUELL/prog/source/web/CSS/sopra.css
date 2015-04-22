@@ -257,6 +257,10 @@ textarea.input_std {
 	width: calc(100% - 21em);
 }
 
+#mainbox_loadScreen {
+	text-align: center;
+}
+
 .impressum {
 	margin-right: 1em;
 	margin-bottom: 1em;
