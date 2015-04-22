@@ -1,6 +1,9 @@
 /**
  * @author mk
  */
+    
+// Halte hier den Benutzer dessen Profil angezeigt wird
+var profilBenutzerId = getUrlParameterByName(urlParamId);
 
 // Temporaere Variablen fuer die vom Server geladenen Daten.
 // TODO Evntl in defines.js auslagern
@@ -17,26 +20,7 @@ var profilNotifyKarteikartenAenderung;
 
 // Statische Handler einmal registrieren
 $(document).ready(function() {
-//	$('#profil_avatar_aendern_file').before("<input id='profil_avatar_aendern_file_name' class='profil_input' disabled/>" +
-//	"<input type='button' id='profil_avatar_aendern_button' class='mybutton dark' value='Profilbild wählen' />");
-//	$('#profil_avatar_aendern_file').hide();
-//	$('#profil_avatar_aendern_button').click(function() { 
-//		$('#profil_avatar_aendern_file').trigger('click');  
-//	});
-//	$('#profil_avatar_aendern_file').change(function() {
-//		var filenameFull = $('#profil_avatar_aendern_file').val();
-//		var fileName = filenameFull.split(/(\\|\/)/g).pop()
-//
-//		$('#profil_avatar_aendern_file_name').prop("disabled",false);
-//		$('#profil_avatar_aendern_file_name').val(fileName);
-//		$('#profil_avatar_aendern_file_name').prop("disabled",true);
-//
-//		if(fileName != "")
-//			$("#profil_avatar_submit").slideDown();
-//		else
-//			$("#profil_avatar_submit").slideUp();
-//	});
-	
+    
 	$("#profil_loeschen_bt").click(function() {
 		sindSieSicher($("#profil_loeschen_bt"), "Wollen sie das Profil wirklich löschen?",function(){
 			$.ajax({
@@ -51,6 +35,24 @@ $(document).ready(function() {
 					}
 				}
 			});
+			ajaxCall(
+			    profilServlet,
+			    actionDeleteBenutzer,
+			    function() {
+			        showInfo("Profil wurde erfolgreich gelöscht!");
+			        // Hat sich der Benutzer selbst geloescht oder war das
+			        // ein Admin, der jmd anders geloescht hat.
+			        if(profilBenutzerId == jsonBenutzer[paramId])
+			        {
+			            jsonBenutzer = undefined;
+	                    gotoStartseite();
+			        }
+			        else
+			        {
+			            gotoHauptseite();
+			        }
+			    }
+			);
 		}, "bottom","left");
 	});
 
@@ -62,9 +64,6 @@ $(document).ready(function() {
  * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
  */
 function fillProfilseite() {
-    
-    // Der Benutzer dessen Profil angezeigt wird
-    var profilBenutzerId = getUrlParameterByName(urlParamId);
     
     $("#profil_avatar_aendern_file_name").hide();
     $(".profil_avatar_overlay").hide();

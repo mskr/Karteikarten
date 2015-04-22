@@ -48,9 +48,9 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
 /**
  * Bequeme Funktion um einen Ajax Call an ein Servlet zu senden.
  * Antwortet das Servlet mit dem Code "noerror" dann wird eine Funktion ausgefuehrt,
- * die als dieser Funktion uebergeben wird.
- * Andernfalls wird kann eine spezielle Funktion zum Errorhandling uebergeben werden,
- * zum Beispiel eine, die die entsprechende Fehlermeldung auf der GUI angezeigt.
+ * die dieser Funktion uebergeben wird.
+ * Andernfalls wird standardmaessig der Default-Error-Text auf der GUI angezeigt,
+ * aber man kann auch eine errorHandlingFunc uebergeben, die eine Spezialbehandlung erlaubt.
  * Zusaetzlich koennen Funktionen uebergeben werden, die bei beforeSend und complete ausgefuehrt werden,
  * um etwa eine Lade-Meldung auf der GUI anzuzeigen.
  * @param servletUrl ist ein String, der das richtige Servlet adressiert.
@@ -67,13 +67,13 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
     return $.ajax({
         url: servletUrl,
         data: "action="+action+"&"+toUrlParamString(params),
-        beforeSend: beforeFunc(),
+        beforeSend: beforeFunc,
         success: function(jsonResponse) {
             if(verifyResponse(jsonResponse,errorHandlingFunc)) {
-                noerrorFunc();
+                noerrorFunc;
             }
         },
-        complete: completeFunc()
+        complete: completeFunc
     });
 }
 
