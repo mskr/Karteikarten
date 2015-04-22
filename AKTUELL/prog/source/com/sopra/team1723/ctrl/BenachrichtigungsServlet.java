@@ -34,13 +34,35 @@ public class BenachrichtigungsServlet extends ServletController
             jo = JSONConverter.toJsonBenachrichtigungen(benachrichtigungen);
             outWriter.print(jo);
         }
+        else if(aktuelleAction.equals(ParamDefines.ActionMarkiereBenGelesen))
+        {
+            String benIDStr = req.getParameter(ParamDefines.Id);
+            if(isEmpty(benIDStr))
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                outWriter.print(jo);
+            }
+            else{
+                int benID = 0;
+                try
+                {
+                    benID = Integer.parseInt(benIDStr);
+                }
+                catch (NumberFormatException e)
+                {
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                    outWriter.print(jo);
+                    return;
+                }
+                dbManager.markiereBenAlsGelesen(benID, aktuellerBenutzer.getId());
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+                outWriter.print(jo);
+            }
+        }
         else
         {
-            // Sende Nack mit ErrorText zurück
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
         }
-        
     }
-
 }
