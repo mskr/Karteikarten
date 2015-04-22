@@ -164,7 +164,6 @@ public class StartseitenServlet extends ServletController {
         String nachname = request.getParameter(ParamDefines.Nachname);
         String studienGang = request.getParameter(ParamDefines.Studiengang);
         String matrikelNrStr = request.getParameter(ParamDefines.MatrikelNr);
-        
         if(isEmptyAndRemoveSpaces(email) || isEmpty(passwort) || isEmptyAndRemoveSpaces(vorname)||isEmptyAndRemoveSpaces(nachname)
                 || isEmptyAndRemoveSpaces(studienGang) || isEmptyAndRemoveSpaces(matrikelNrStr))
         {

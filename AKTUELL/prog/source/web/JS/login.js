@@ -6,6 +6,7 @@ $(document).ready(function() {
     $("#login_form").submit(function(event) {
         var email = $("#login_email").val();
         var pass = $("#login_pass").val();
+        pass = CryptoJS.MD5(pass);
         $.ajax({
             url: startseitenServlet,
             data: "action="+actionLogin+
