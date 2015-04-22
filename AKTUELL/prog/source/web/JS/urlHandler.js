@@ -102,31 +102,40 @@ function buildUrlQuery(paramObj)
  * die entsprechende Seite angezeigt.
  * @param paramObj enthaehlt die Parameter als Map
  */
-function interpreteUrlQuery(paramObj) {	
+function interpreteUrlQuery(paramObj) 
+{	
+	
 	// TODO Übler hack ! 
 	// Versteck alle Popupfenster. Wo wäre das besser ?
 	$(".popup_fenster").popup('hide');
+	
+	$(".mainbox").fadeOut("fast");
+	
     var ziel = paramObj[urlParamLocation];
+	// Benutzer eingeloggt
     if(jsonBenutzer != undefined)
-    { // Benutzer eingeloggt
-        fillMyPersonalBox();
+    { 
+        var ajax1 = fillMyPersonalBox();
+        var ajax2;
         if(ziel == undefined ||                         // Kein location Parameter
            $.inArray(ziel, alleAnsichten) == -1 ||      // Kein bekannter location Parameter
            ziel == ansichtStartseite ||                 // location ist Startseite
            ziel == ansichtHauptseite)                   // location ist Hauptseite
         {
             ziel = ansichtHauptseite;                   // Dann gehe zu Hauptseite
-            fillHauptseite();
+            ajax2 = fillHauptseite();
         } else if(ziel == ansichtProfilseite) 
         {
-            fillProfilseite();
+        	ajax2 = fillProfilseite();
         }
-        display(ziel);
+        
+        $.when(ajax1, ajax2).done(function() {
+        	display(ziel);
+		});
     } 
     else 
     { // Benutzer nicht eingeloggt
-        fillStartseite();
-        display(ansichtStartseite);
+        $.when(fillStartseite()).done(display(ansichtStartseite));
     }
 }
 

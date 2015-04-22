@@ -28,7 +28,7 @@ function fillMyPersonalBox()
     fillUserContainer();
     handleReturnLink();
     
-    $.ajax({
+    return $.ajax({
         url: benachrichtungsServlet,
         data: "action="+actionLeseBenachrichtungen,
         success: function(response) {
