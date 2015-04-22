@@ -70,7 +70,7 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
         beforeSend: beforeFunc,
         success: function(jsonResponse) {
             if(verifyResponse(jsonResponse,errorHandlingFunc)) {
-                noerrorFunc;
+                noerrorFunc(jsonResponse);
             }
         },
         complete: completeFunc
