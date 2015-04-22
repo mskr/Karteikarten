@@ -106,13 +106,13 @@ function fillHauptseite()
 		$("#vn_erstellen_bt").hide();
 	}
 
-    $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
+    return $.when(ajax1,ajax2).done(fillVeranstaltungsliste);
 }
 
-function fillVeranstaltungsliste(doneFkt) 
+function fillVeranstaltungsliste() 
 {
-    $.when(leseVeranstaltungenMeine(),leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
-    												   $("#vn_alle_auswahl_studiengang").val()).done(doneFkt));
+    return $.when(leseVeranstaltungenMeine(),leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
+    												   $("#vn_alle_auswahl_studiengang").val()));
 }
 
 function leseVeranstaltungenMeine()

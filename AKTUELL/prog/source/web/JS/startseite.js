@@ -45,7 +45,7 @@ $(document).ready(function() {
  * geholt und in das <select> Element eingeordnet.
  */
 function fillStartseite() {
-    $.ajax({
+    return $.ajax({
     	url: startseitenServlet,
     	data: "action="+actionGetStudiengaenge,
     	success: function(response) {
