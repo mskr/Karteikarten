@@ -27,19 +27,14 @@ function fillMyPersonalBox()
     }
     fillUserContainer();
     handleReturnLink();
-    
-    return $.ajax({
-        url: benachrichtungsServlet,
-        data: "action="+actionLeseBenachrichtungen,
-        success: function(response) {
-
-        	if(verifyResponse(response))
-        	{
-        		var bens = response[keyJsonArrResult];
-        		updateBenachrichtigungen(bens);
-        	}
+    ajaxCall(
+        benachrichtungsServlet,
+        actionLeseBenachrichtungen,
+        function(response) {
+            var bens = response[keyJsonArrResult];
+            updateBenachrichtigungen(bens);
         }
-     });
+    )
 }
 
 /**
@@ -53,8 +48,6 @@ function fillUserContainer()
     var nutzerstatus = jsonBenutzer[paramNutzerstatus];
     $(".username").html(vorname+" "+nachname);
     $(".rolle").html(" "+nutzerstatus);
-    
-    // ProfilBild anzeigen
     $(".user_MyProfilBild").attr("src", jsonBenutzer[paramProfilBild]);
 }
 
@@ -113,19 +106,14 @@ function addBenachrichtigung(ben)
 
 	$(divBn).click(function() {
 		// Markiert benachrichtigung als gelesen
-		$.when(
-			$.ajax({
-			url: benachrichtungsServlet,
-			data: "action="+actionMarkiereBenGelesen + "&" +
-			paramId+ "=" + ben[paramId] ,
-			success: function(response) {
-				if(verifyResponse(response))
-				{
-					
-				}
-			}
-			// Individueller Click Handler
-		})).done(onClickfkt);
+	    var params = {};
+	    params[paramId] = ben[paramId]
+		$.when(ajaxCall(
+		    benachrichtungsServlet,
+		    actionMarkiereBenGelesen,
+		    undefined,
+		    params
+		)).done(onClickfkt);
 	});
 
 	divBn.hide();

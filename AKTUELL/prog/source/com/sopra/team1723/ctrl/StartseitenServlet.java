@@ -1,5 +1,7 @@
 package com.sopra.team1723.ctrl;
 
+import java.security.*;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -250,49 +252,65 @@ public class StartseitenServlet extends ServletController {
         }
         
         String generiertesPW = generiertePasswort(10,true);
-        
-        Benutzer user = dbManager.leseBenutzer(eMail);
-        if(user == null)
-        {
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
-            outWriter.print(jo);
-            return false;
+        try{
+        	//Serverseitig MD5 von Passwort erstellen:
+	        MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(generiertesPW.getBytes());
+			byte[] digest = md.digest();
+			StringBuffer sb = new StringBuffer();
+			for (byte b : digest) {
+				sb.append(String.format("%02x", b & 0xff));
+			}
+			String generatedMD5 = sb.toString();
+			//md5 crypten:
+	        String CryptedGeneratedPW = BCrypt.hashpw(generatedMD5, BCrypt.gensalt());
+	        
+	        Benutzer user = dbManager.leseBenutzer(eMail);
+	        if(user == null)
+	        {
+	            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
+	            outWriter.print(jo);
+	            return false;
+	        }
+	        String altesPasswort =  user.getKennwort();
+	        
+	        System.out.println("Update Benutzer("+ user.geteMail() +") mit geändertem CryptedPW (" + CryptedGeneratedPW + ") in der DB.");
+	        // In Datenbank speichern
+	        if(!dbManager.passwortAendern(eMail, CryptedGeneratedPW))
+	        {
+	            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorPwResetFailed);
+	            outWriter.print(jo);
+	            return false;
+	        }
+	
+	        System.out.println("Sende Mail an Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ").");
+	        // Sende Bestätigungs-EMail
+	        if(!sendePasswortResetMail(user.geteMail(), generiertesPW, user))
+	        {
+	            // Änderung rückgängig machen
+	            user.setKennwort(altesPasswort);
+	            try
+	            {
+	                dbManager.bearbeiteBenutzer(user);
+	            }
+	            catch (SQLException e)
+	            {
+	                e.printStackTrace();
+	                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+	                outWriter.print(jo);
+	                return false;
+	            }
+	            catch (DbUniqueConstraintException e)
+	            {
+	                e.printStackTrace();
+	                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorPwResetFailed);
+	                outWriter.print(jo);
+	                return false;
+	            }
+	        }
         }
-        String altesPasswort =  user.getKennwort();
-        
-        System.out.println("Update Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ") in der DB.");
-        // In Datenbank speichern
-        if(!dbManager.passwortAendern(eMail, generiertesPW))
-        {
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorPwResetFailed);
-            outWriter.print(jo);
-            return false;
-        }
-
-        System.out.println("Sende Mail an Benutzer("+ user.geteMail() +") mit geändertem Paswort (" + generiertesPW + ").");
-        // Sende Bestätigungs-EMail
-        if(!sendePasswortResetMail(user.geteMail(), generiertesPW, user))
-        {
-            // Änderung rückgängig machen
-            user.setKennwort(altesPasswort);
-            try
-            {
-                dbManager.bearbeiteBenutzer(user);
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-                outWriter.print(jo);
-                return false;
-            }
-            catch (DbUniqueConstraintException e)
-            {
-                e.printStackTrace();
-                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorPwResetFailed);
-                outWriter.print(jo);
-                return false;
-            }
+        catch(NoSuchAlgorithmException e){
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
         }
 
         jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);

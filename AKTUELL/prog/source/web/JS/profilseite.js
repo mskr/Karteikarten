@@ -292,11 +292,13 @@ function registerProfilSpeichernEvents() {
         }
         else
         {
+        	pwNeu = CryptoJS.MD5(pwNeu);
+        	pwAlt = CryptoJS.MD5(pwAlt);
             // Datenstring zusammenbauen
             var dataStr = "action="+actionAenderePasswort
                                     +"&"+paramPasswortNew+"="+escape(pwNeu)
                                     +"&"+paramPasswort+"="+escape(pwAlt)
-                                    +"&"+paramEmail+"="+escape(profilEmail);
+                                    +"&"+paramId+"="+escape(currentProfilID);
             // Daten via Ajax an Server senden
             $.ajax({
                 url: profilServlet,

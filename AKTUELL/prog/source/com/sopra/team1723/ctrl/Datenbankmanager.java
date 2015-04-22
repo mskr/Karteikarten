@@ -368,7 +368,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         boolean erfolgreich = true;
         try{
-            ps = conMysql.prepareStatement("UPDATE benutzer SET Kennwort=? WHERE eMail=?");
+            ps = conMysql.prepareStatement("UPDATE benutzer SET CryptedPW=? WHERE eMail=?");
             ps.setString(1, neuesPasswort);
             ps.setString(2, eMail);
             if(ps.executeUpdate()!= 1)

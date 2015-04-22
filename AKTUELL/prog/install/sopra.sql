@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
+-- version 4.2.7.1
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 22, 2015 at 10:21 AM
--- Server version: 5.6.21
--- PHP Version: 5.6.3
+-- Erstellungszeit: 22. Apr 2015 um 15:42
+-- Server Version: 5.6.20
+-- PHP-Version: 5.5.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,12 +17,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `sopra`
+-- Datenbank: `sopra`
 --
 
 DELIMITER $$
 --
--- Functions
+-- Funktionen
 --
 CREATE DEFINER=`root`@`localhost` FUNCTION `levenshtein`( s1 VARCHAR(255), s2 VARCHAR(255) ) RETURNS int(11)
     DETERMINISTIC
@@ -68,29 +68,29 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `benachrichtigung`
+-- Tabellenstruktur für Tabelle `benachrichtigung`
 --
 
 CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 `ID` int(11) NOT NULL,
   `Inhalt` text NOT NULL,
   `Erstelldatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
 
 --
--- Dumping data for table `benachrichtigung`
+-- Daten für Tabelle `benachrichtigung`
 --
 
 INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
-(1, 'Einladung als Moderator für die Vorlesung Softwaretechnik', '2015-03-20 23:00:00'),
-(2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-03-02 23:00:00'),
-(3, 'Prüfungstermine sind nun in der Beschreibung bekannt gegeben', '2015-03-10 23:00:00'),
+(1, 'Einladung als Moderator fÃ¼r die Vorlesung Softwaretechnik', '2015-03-20 23:00:00'),
+(2, 'Einladung als Moderator fÃ¼r die Vorlesung Algorithmen und Datenstrukturen', '2015-03-02 23:00:00'),
+(3, 'PrÃ¼fungstermine sind nun in der Beschreibung bekannt gegeben', '2015-03-10 23:00:00'),
 (40, '', '2015-03-28 22:39:30');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `benachrichtigung_einladung_moderator`
+-- Tabellenstruktur für Tabelle `benachrichtigung_einladung_moderator`
 --
 
 CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
@@ -100,10 +100,10 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
   `Veranstaltung` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
   `Angenommen` tinyint(1) DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `benachrichtigung_einladung_moderator`
+-- Daten für Tabelle `benachrichtigung_einladung_moderator`
 --
 
 INSERT INTO `benachrichtigung_einladung_moderator` (`ID`, `Benachrichtigung`, `Benutzer`, `Veranstaltung`, `Gelesen`, `Angenommen`) VALUES
@@ -113,7 +113,7 @@ INSERT INTO `benachrichtigung_einladung_moderator` (`ID`, `Benachrichtigung`, `B
 -- --------------------------------------------------------
 
 --
--- Table structure for table `benachrichtigung_karteikartenaenderung`
+-- Tabellenstruktur für Tabelle `benachrichtigung_karteikartenaenderung`
 --
 
 CREATE TABLE IF NOT EXISTS `benachrichtigung_karteikartenaenderung` (
@@ -122,12 +122,12 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_karteikartenaenderung` (
   `Benutzer` int(11) NOT NULL,
   `Karteikarte` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `benachrichtigung_neuer_kommentar`
+-- Tabellenstruktur für Tabelle `benachrichtigung_neuer_kommentar`
 --
 
 CREATE TABLE IF NOT EXISTS `benachrichtigung_neuer_kommentar` (
@@ -136,12 +136,12 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_neuer_kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Kommentar` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `benachrichtigung_profil_geaendert`
+-- Tabellenstruktur für Tabelle `benachrichtigung_profil_geaendert`
 --
 
 CREATE TABLE IF NOT EXISTS `benachrichtigung_profil_geaendert` (
@@ -150,10 +150,10 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_profil_geaendert` (
   `Benutzer` int(11) NOT NULL,
   `Admin` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `benachrichtigung_profil_geaendert`
+-- Daten für Tabelle `benachrichtigung_profil_geaendert`
 --
 
 INSERT INTO `benachrichtigung_profil_geaendert` (`ID`, `Benachrichtigung`, `Benutzer`, `Admin`, `Gelesen`) VALUES
@@ -162,7 +162,7 @@ INSERT INTO `benachrichtigung_profil_geaendert` (`ID`, `Benachrichtigung`, `Benu
 -- --------------------------------------------------------
 
 --
--- Table structure for table `benachrichtigung_veranstaltungsaenderung`
+-- Tabellenstruktur für Tabelle `benachrichtigung_veranstaltungsaenderung`
 --
 
 CREATE TABLE IF NOT EXISTS `benachrichtigung_veranstaltungsaenderung` (
@@ -171,10 +171,10 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_veranstaltungsaenderung` (
   `Veranstaltung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `benachrichtigung_veranstaltungsaenderung`
+-- Daten für Tabelle `benachrichtigung_veranstaltungsaenderung`
 --
 
 INSERT INTO `benachrichtigung_veranstaltungsaenderung` (`ID`, `Benachrichtigung`, `Veranstaltung`, `Benutzer`, `Gelesen`) VALUES
@@ -183,7 +183,7 @@ INSERT INTO `benachrichtigung_veranstaltungsaenderung` (`ID`, `Benachrichtigung`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `benutzer`
+-- Tabellenstruktur für Tabelle `benutzer`
 --
 
 CREATE TABLE IF NOT EXISTS `benutzer` (
@@ -194,40 +194,43 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
   `Profilbild` varchar(30) NOT NULL DEFAULT 'default.png',
   `Matrikelnummer` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL,
-  `Kennwort` varchar(30) NOT NULL,
   `Nutzerstatus` enum('STUDENT','DOZENT','ADMIN','') NOT NULL DEFAULT 'STUDENT',
   `NotifyKommentare` enum('KEINE','VERANSTALTUNG_TEILGENOMMEN','DISKUSSION_TEILGENOMMEN','') NOT NULL DEFAULT 'KEINE',
   `NotifyVeranstAenderung` tinyint(1) NOT NULL DEFAULT '0',
-  `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+  `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0',
+  `CryptedPW` varchar(60) CHARACTER SET utf8 NOT NULL COMMENT 'hash = salt(29 Zeichen) + crypted (Rest)'
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
--- Dumping data for table `benutzer`
+-- Daten für Tabelle `benutzer`
 --
 
-INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Matrikelnummer`, `Studiengang`, `Kennwort`, `Nutzerstatus`, `NotifyKommentare`, `NotifyVeranstAenderung`, `NotifyKarteikartenAenderung`) VALUES
-(1, 'abc@def.de', 'abc', 'def', 'default.png', 123, 'Informatik', '1234', 'STUDENT', 'KEINE', 0, 0),
-(2, 'admin@blablub.de', 'Der', 'Admin', 'default.png', 222222, 'Sonstiges', '1234', 'ADMIN', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1),
-(3, 'alber.einstein@uni-ulm.de', 'Albert', 'Einstein', 'default.png', 333333, 'Physik', '1234', 'DOZENT', 'KEINE', 0, 0),
-(4, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', 'default.png', 12345, 'Informatik', '1234', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1),
-(5, 'marius.kircher@uni-ulm.de', 'Marius', 'Kircher', 'default.png', 111111, 'Medieninformatik', '1234', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 0),
-(6, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 828584, 'Informatik', '1234', 'STUDENT', 'KEINE', 0, 0),
-(7, 'heinz.harald@uni-ulm.de', 'Heinz Harald', 'Haraldson', 'default.png', 123456, 'Chemie', '1234', 'STUDENT', 'KEINE', 0, 0);
+INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Matrikelnummer`, `Studiengang`, `Nutzerstatus`, `NotifyKommentare`, `NotifyVeranstAenderung`, `NotifyKarteikartenAenderung`, `CryptedPW`) VALUES
+(1, 'abc@def.de', 'abc', 'def', 'default.png', 123, 'Informatik', 'STUDENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(2, 'admin@blablub.de', 'Der', 'Admin', 'default.png', 222222, 'Sonstiges', 'ADMIN', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(3, 'alber.einstein@uni-ulm.de', 'Albert', 'Einstein', 'default.png', 333333, 'Physik', 'DOZENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(4, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', 'default.png', 12345, 'Informatik', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(5, 'marius.kircher@uni-ulm.de', 'Marius', 'Kircher', 'default.png', 111111, 'Medieninformatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(6, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 828584, 'Informatik', 'STUDENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(7, 'heinz.harald@uni-ulm.de', 'Heinz Harald', 'Haraldson', 'default.png', 123456, 'Chemie', 'STUDENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(8, 'julius.friedrich@uni-ulm.de', 'Julius', 'Friedrich', 'default.png', 841963, 'Informatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(12, 'jhdazw3jio@euhw.de', 'ejwahuwdi', 'juwia', 'default.png', 187372, 'Biologie', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(13, 'felixrottler@gmx.de', 'Felix', 'Rottler', 'default.png', 193182, 'Medieninformatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `benutzer_veranstaltung_zuordnung`
+-- Tabellenstruktur für Tabelle `benutzer_veranstaltung_zuordnung`
 --
 
 CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 --
--- Dumping data for table `benutzer_veranstaltung_zuordnung`
+-- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
 --
 
 INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
@@ -241,12 +244,14 @@ INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung
 (3, 6, 1),
 (10, 6, 2),
 (6, 6, 4),
-(12, 6, 7);
+(12, 6, 7),
+(14, 8, 5),
+(13, 8, 7);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bewertung_karteikarte`
+-- Tabellenstruktur für Tabelle `bewertung_karteikarte`
 --
 
 CREATE TABLE IF NOT EXISTS `bewertung_karteikarte` (
@@ -254,12 +259,12 @@ CREATE TABLE IF NOT EXISTS `bewertung_karteikarte` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bewertung_kommentar`
+-- Tabellenstruktur für Tabelle `bewertung_kommentar`
 --
 
 CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
@@ -267,12 +272,12 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` varchar(30) NOT NULL,
   `KommentarID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `karteikarte`
+-- Tabellenstruktur für Tabelle `karteikarte`
 --
 
 CREATE TABLE IF NOT EXISTS `karteikarte` (
@@ -282,12 +287,12 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
   `Bewertung` int(11) NOT NULL,
   `Aenderungsdatum` date NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `karteikarten_struktur`
+-- Tabellenstruktur für Tabelle `karteikarten_struktur`
 --
 
 CREATE TABLE IF NOT EXISTS `karteikarten_struktur` (
@@ -295,12 +300,12 @@ CREATE TABLE IF NOT EXISTS `karteikarten_struktur` (
   `Position` int(11) NOT NULL,
   `SohnKarteik` int(11) NOT NULL,
   `VaterKarteik` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kommentar`
+-- Tabellenstruktur für Tabelle `kommentar`
 --
 
 CREATE TABLE IF NOT EXISTS `kommentar` (
@@ -311,22 +316,22 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL,
   `VaterkommentarID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `moderator`
+-- Tabellenstruktur für Tabelle `moderator`
 --
 
 CREATE TABLE IF NOT EXISTS `moderator` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `moderator`
+-- Daten für Tabelle `moderator`
 --
 
 INSERT INTO `moderator` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
@@ -338,7 +343,7 @@ INSERT INTO `moderator` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notiz`
+-- Tabellenstruktur für Tabelle `notiz`
 --
 
 CREATE TABLE IF NOT EXISTS `notiz` (
@@ -346,21 +351,21 @@ CREATE TABLE IF NOT EXISTS `notiz` (
   `Inhalt` text NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `semester`
+-- Tabellenstruktur für Tabelle `semester`
 --
 
 CREATE TABLE IF NOT EXISTS `semester` (
 `ID` int(11) NOT NULL,
   `Name` varchar(30) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
--- Dumping data for table `semester`
+-- Daten für Tabelle `semester`
 --
 
 INSERT INTO `semester` (`ID`, `Name`) VALUES
@@ -377,7 +382,7 @@ INSERT INTO `semester` (`ID`, `Name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `studiengang`
+-- Tabellenstruktur für Tabelle `studiengang`
 --
 
 CREATE TABLE IF NOT EXISTS `studiengang` (
@@ -385,7 +390,7 @@ CREATE TABLE IF NOT EXISTS `studiengang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `studiengang`
+-- Daten für Tabelle `studiengang`
 --
 
 INSERT INTO `studiengang` (`Name`) VALUES
@@ -406,7 +411,7 @@ INSERT INTO `studiengang` (`Name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `veranstaltung`
+-- Tabellenstruktur für Tabelle `veranstaltung`
 --
 
 CREATE TABLE IF NOT EXISTS `veranstaltung` (
@@ -419,10 +424,10 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `ModeratorKarteikartenBearbeiten` tinyint(1) NOT NULL,
   `Ersteller` int(11) NOT NULL,
   `Titel` varchar(50) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
--- Dumping data for table `veranstaltung`
+-- Daten für Tabelle `veranstaltung`
 --
 
 INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `KommentareErlaubt`, `BewertungenErlaubt`, `ModeratorKarteikartenBearbeiten`, `Ersteller`, `Titel`) VALUES
@@ -430,25 +435,26 @@ INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `Komm
 (2, 'Softwaretechnik Vorlesung', 'WiSe2015/16', '1234', 1, 1, 1, 4, 'Softwaretechnik'),
 (3, 'Medizin I', 'SoSe2013', '1234', 1, 0, 0, 2, 'Medizin I'),
 (4, 'Algorithmen und Datenstrukturen Vorlesung', 'WiSe2014/15', '1234', 1, 0, 1, 6, 'Algorithmen und Datenstrukture'),
-(5, 'Physik I für Ingenieure Vorlesung', 'SoSe2015', '1234', 1, 0, 0, 3, 'Physik I für Ingenieure'),
+(5, 'Physik I fÃ¼r Ingenieure Vorlesung', 'SoSe2015', '1234', 1, 0, 0, 3, 'Physik I fÃ¼r Ingenieure'),
 (6, 'Latex Kurs', 'WiSe2014/15', '1234', 1, 1, 1, 2, 'Latex Kurs'),
 (7, 'Softwaregrundproekt', 'SoSe2015', NULL, 1, 1, 1, 6, 'Sopra'),
-(8, 'Grundlagen der Betriebssysteme Vorlesung', 'WiSe2014/15', NULL, 1, 0, 0, 5, 'Grundlagen der Betriebssysteme');
+(8, 'Grundlagen der Betriebssysteme Vorlesung', 'WiSe2014/15', NULL, 1, 0, 0, 5, 'Grundlagen der Betriebssysteme'),
+(9, 'nur fÃ¼r pimmelberger', 'SoSe2015', 'pimmelberger', 1, 1, 1, 8, 'Digitale Medien');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `veranstaltung_studiengang_zuordnung`
+-- Tabellenstruktur für Tabelle `veranstaltung_studiengang_zuordnung`
 --
 
 CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
 
 --
--- Dumping data for table `veranstaltung_studiengang_zuordnung`
+-- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
 --
 
 INSERT INTO `veranstaltung_studiengang_zuordnung` (`ID`, `Veranstaltung`, `Studiengang`) VALUES
@@ -471,7 +477,8 @@ INSERT INTO `veranstaltung_studiengang_zuordnung` (`ID`, `Veranstaltung`, `Studi
 (19, 7, 'Medieninformatik'),
 (20, 7, 'Softwareengeneering'),
 (21, 8, 'Informatik'),
-(22, 8, 'Medieninformatik');
+(22, 8, 'Medieninformatik'),
+(23, 9, 'Medieninformatik');
 
 --
 -- Indexes for dumped tables
@@ -629,12 +636,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `benutzer`
 --
 ALTER TABLE `benutzer`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
@@ -679,18 +686,18 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 -- AUTO_INCREMENT for table `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
 --
--- Constraints for dumped tables
+-- Constraints der exportierten Tabellen
 --
 
 --
--- Constraints for table `benachrichtigung_einladung_moderator`
+-- Constraints der Tabelle `benachrichtigung_einladung_moderator`
 --
 ALTER TABLE `benachrichtigung_einladung_moderator`
 ADD CONSTRAINT `benachrichtigung_einladung_moderator_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -698,14 +705,14 @@ ADD CONSTRAINT `benachrichtigung_einladung_moderator_ibfk_3` FOREIGN KEY (`Benut
 ADD CONSTRAINT `benachrichtigung_einladung_moderator_ibfk_4` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `benachrichtigung_karteikartenaenderung`
+-- Constraints der Tabelle `benachrichtigung_karteikartenaenderung`
 --
 ALTER TABLE `benachrichtigung_karteikartenaenderung`
 ADD CONSTRAINT `benachrichtigung_karteikartenaenderung_ibfk_1` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `benachrichtigung_karteikartenaenderung_ibfk_2` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `benachrichtigung_neuer_kommentar`
+-- Constraints der Tabelle `benachrichtigung_neuer_kommentar`
 --
 ALTER TABLE `benachrichtigung_neuer_kommentar`
 ADD CONSTRAINT `benachrichtigung_neuer_kommentar_ibfk_1` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -713,7 +720,7 @@ ADD CONSTRAINT `benachrichtigung_neuer_kommentar_ibfk_2` FOREIGN KEY (`Benutzer`
 ADD CONSTRAINT `benachrichtigung_neuer_kommentar_ibfk_3` FOREIGN KEY (`Kommentar`) REFERENCES `kommentar` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `benachrichtigung_profil_geaendert`
+-- Constraints der Tabelle `benachrichtigung_profil_geaendert`
 --
 ALTER TABLE `benachrichtigung_profil_geaendert`
 ADD CONSTRAINT `benachrichtigung_profil_geaendert_ibfk_1` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -721,7 +728,7 @@ ADD CONSTRAINT `benachrichtigung_profil_geaendert_ibfk_2` FOREIGN KEY (`Benutzer
 ADD CONSTRAINT `benachrichtigung_profil_geaendert_ibfk_3` FOREIGN KEY (`Admin`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `benachrichtigung_veranstaltungsaenderung`
+-- Constraints der Tabelle `benachrichtigung_veranstaltungsaenderung`
 --
 ALTER TABLE `benachrichtigung_veranstaltungsaenderung`
 ADD CONSTRAINT `benachrichtigung_veranstaltungsaenderung_ibfk_1` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -729,76 +736,76 @@ ADD CONSTRAINT `benachrichtigung_veranstaltungsaenderung_ibfk_2` FOREIGN KEY (`B
 ADD CONSTRAINT `benachrichtigung_veranstaltungsaenderung_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `benutzer`
+-- Constraints der Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
 ADD CONSTRAINT `benutzer_ibfk_1` FOREIGN KEY (`Studiengang`) REFERENCES `studiengang` (`Name`);
 
 --
--- Constraints for table `benutzer_veranstaltung_zuordnung`
+-- Constraints der Tabelle `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
 ADD CONSTRAINT `benutzer_veranstaltung_zuordnung_ibfk_3` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `benutzer_veranstaltung_zuordnung_ibfk_4` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `bewertung_karteikarte`
+-- Constraints der Tabelle `bewertung_karteikarte`
 --
 ALTER TABLE `bewertung_karteikarte`
-ADD CONSTRAINT `bewertung_karteikarte_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `bewertung_karteikarte_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`);
 
 --
--- Constraints for table `bewertung_kommentar`
+-- Constraints der Tabelle `bewertung_kommentar`
 --
 ALTER TABLE `bewertung_kommentar`
-ADD CONSTRAINT `bewertung_kommentar_ibfk_2` FOREIGN KEY (`KommentarID`) REFERENCES `kommentar` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `bewertung_kommentar_ibfk_2` FOREIGN KEY (`KommentarID`) REFERENCES `kommentar` (`ID`);
 
 --
--- Constraints for table `karteikarte`
+-- Constraints der Tabelle `karteikarte`
 --
 ALTER TABLE `karteikarte`
 ADD CONSTRAINT `karteikarte_ibfk_1` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`);
 
 --
--- Constraints for table `karteikarten_struktur`
+-- Constraints der Tabelle `karteikarten_struktur`
 --
 ALTER TABLE `karteikarten_struktur`
 ADD CONSTRAINT `karteikarten_struktur_ibfk_1` FOREIGN KEY (`SohnKarteik`) REFERENCES `karteikarte` (`ID`),
 ADD CONSTRAINT `karteikarten_struktur_ibfk_2` FOREIGN KEY (`VaterKarteik`) REFERENCES `karteikarte` (`ID`);
 
 --
--- Constraints for table `kommentar`
+-- Constraints der Tabelle `kommentar`
 --
 ALTER TABLE `kommentar`
 ADD CONSTRAINT `kommentar_ibfk_4` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`),
 ADD CONSTRAINT `kommentar_ibfk_5` FOREIGN KEY (`VaterkommentarID`) REFERENCES `kommentar` (`ID`) ON DELETE CASCADE;
 
 --
--- Constraints for table `moderator`
+-- Constraints der Tabelle `moderator`
 --
 ALTER TABLE `moderator`
 ADD CONSTRAINT `moderator_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `moderator_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `notiz`
+-- Constraints der Tabelle `notiz`
 --
 ALTER TABLE `notiz`
 ADD CONSTRAINT `notiz_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`);
 
 --
--- Constraints for table `veranstaltung`
+-- Constraints der Tabelle `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
 ADD CONSTRAINT `veranstaltung_ibfk_1` FOREIGN KEY (`Semester`) REFERENCES `semester` (`Name`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `veranstaltung_ibfk_2` FOREIGN KEY (`Ersteller`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `veranstaltung_studiengang_zuordnung`
+-- Constraints der Tabelle `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-ADD CONSTRAINT `veranstaltung_studiengang_zuordnung_ibfk_1` FOREIGN KEY (`Studiengang`) REFERENCES `studiengang` (`Name`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD CONSTRAINT `veranstaltung_studiengang_zuordnung_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `veranstaltung_studiengang_zuordnung_ibfk_1` FOREIGN KEY (`Studiengang`) REFERENCES `studiengang` (`Name`),
+ADD CONSTRAINT `veranstaltung_studiengang_zuordnung_ibfk_2` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
