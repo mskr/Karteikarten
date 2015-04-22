@@ -605,8 +605,34 @@ function registerVeranstErzeugeHandler() {
 	// Triggert das eigene Enter-Event wenn key 13 gedrückt wurde
 	$("#vn_mod_input").keyup(function(e)
 	{
+		if(e.keyCode == 37) // Pfeil links
+		{
+			// TODO 
+		}
+		else if(e.keyCode == 38) // Pfeil hoch
+		{
+			// TODO
+		}
+		else if(e.keyCode == 39) // Pfeil rechts
+		{
+			// TODO
+		}
+		else if(e.keyCode == 40) // Pfeil runter
+		{
+			// TODO
+		}
+		else if(e.keyCode == 13) // ENTER
+		{
+			// TODO
+			$("#vn_mod_vorschlag").children().first().trigger("click");
+		}
+		else if(e.keyCode == 27) // ESC
+		{
+			$("#vn_mod_input").val("");
+			$("#vn_mod_input").trigger("keyup");
+		}
 		// Falls etwas eingegeben wurde suchen, sonst Feld leeren
-		if($("#vn_mod_input").val() != "")
+		else if($("#vn_mod_input").val() != "")
 		{
 			clearTimeout(modSuchTimer);
 			modSuchTimer = setTimeout(function(){
