@@ -108,13 +108,13 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         Benutzer benutzer = null;
         try{
-            ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
+            ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,CryptedPW,Nutzerstatus,"
                     + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
             if(rs.next()){
                 benutzer = new Benutzer(rs.getInt("ID"), eMail,rs.getString("Vorname"),rs.getString("Nachname"),
-                        rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
+                        rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("CryptedPW"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
                         NotifyKommentare.valueOf(rs.getString("NotifyKommentare")),rs.getString("Profilbild"));
@@ -141,13 +141,13 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         Benutzer benutzer = null;
         try{
-            ps = conMysql.prepareStatement("SELECT eMail,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
+            ps = conMysql.prepareStatement("SELECT eMail,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,CryptedPW,Nutzerstatus,"
                     + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild FROM benutzer WHERE ID = ?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if(rs.next()){
                 benutzer = new Benutzer(id, rs.getString("eMail"),rs.getString("Vorname"),rs.getString("Nachname"),
-                        rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
+                        rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("CryptedPW"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
                         NotifyKommentare.valueOf(rs.getString("NotifyKommentare")),rs.getString("Profilbild"));
@@ -169,16 +169,22 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public void schreibeBenutzer(Benutzer benutzer) throws DbUniqueConstraintException, SQLException{
         PreparedStatement ps = null;
+        System.out.println("------");
+        String md5pwd = benutzer.getKennwort();
+        String CryptedPW = BCrypt.hashpw(md5pwd, BCrypt.gensalt());
+        System.out.println("------");
+        System.out.println("md5: "+ md5pwd + "crypted: " + CryptedPW);
+        System.out.println("------");
         try{
             ps = conMysql.prepareStatement("INSERT INTO benutzer (Vorname,Nachname,Matrikelnummer,eMail,Studiengang,"
-                    + "Kennwort, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, "
+                    + "CryptedPW, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, "
                     + "NotifyKarteikartenAenderung) VALUES(?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, benutzer.getVorname());
             ps.setString(2, benutzer.getNachname());
             ps.setInt(3, benutzer.getMatrikelnummer());
             ps.setString(4, benutzer.geteMail());
             ps.setString(5, benutzer.getStudiengang());
-            ps.setString(6,benutzer.getKennwort());
+            ps.setString(6,CryptedPW);
             ps.setString(7,benutzer.getNutzerstatus().name());
             ps.setString(8, benutzer.getNotifyKommentare().name());
             ps.setBoolean(9, benutzer.isNotifyVeranstAenderung());
@@ -285,12 +291,17 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         try{
             System.out.println("DB prueft: email="+eMail+", passwort="+passwort);
-            ps = conMysql.prepareStatement("SELECT * FROM benutzer WHERE eMail = ? AND Kennwort = ?");
+            ps = conMysql.prepareStatement("SELECT * FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
-            ps.setString(2, passwort);
             rs = ps.executeQuery();
             if(!rs.next()){
                 throw new DbFalseLoginDataException();
+            }		
+            else{
+            	String Crypted = rs.getString("CryptedPW");
+            	if(BCrypt.checkpw(passwort, Crypted)==false){
+            		throw new DbFalseLoginDataException();
+            	}
             }
 
 
@@ -357,7 +368,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         boolean erfolgreich = true;
         try{
-            ps = conMysql.prepareStatement("UPDATE benutzer SET Kennwort=? WHERE eMail=?");
+            ps = conMysql.prepareStatement("UPDATE benutzer SET CryptedPW=? WHERE eMail=?");
             ps.setString(1, neuesPasswort);
             ps.setString(2, eMail);
             if(ps.executeUpdate()!= 1)
@@ -365,7 +376,6 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
-
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
