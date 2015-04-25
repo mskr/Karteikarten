@@ -72,7 +72,8 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
         beforeSend: beforeFunc,
         success: function(jsonResponse) {
             if(verifyResponse(jsonResponse,errorHandlingFunc)) {
-                noerrorFunc(jsonResponse);
+            	if(noerrorFunc!= undefined)
+            		noerrorFunc(jsonResponse);
             }
         },
         complete: completeFunc

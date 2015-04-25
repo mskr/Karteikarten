@@ -260,6 +260,8 @@ textarea.input_std {
 
 #mainbox_loadScreen {
 	text-align: center;
+	margin-left:auto;
+	margin-right:auto;
 }
 
 .impressum {
