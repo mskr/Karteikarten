@@ -9,14 +9,18 @@
 
 $(document).ready(function() {
 	
+	// Initial alles unsichtbar machen
+	$(".mainbox").hide();
+	$(".mypersonalbox").hide();
+	
     // TODO So wird das Benutzerobjekt nur einmal initial zu beginn geladen
-    // Was passiert aber, wenn sich das profil geändert hat?
+    // Was passiert aber, wenn sich das profil geÃ¤ndert hat?
     $.when(getBenutzer()).done(function(a1) {
         var urlQuery = parseUrlQuery(undefined);    
         interpreteUrlQuery(urlQuery);
     });
     
-    // Auf zurück und vorwärts im browser reagieren
+    // Auf zurÃ¼ck und vorwÃ¤rts im browser reagieren
     History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
         var urlQuery = parseUrlQuery(undefined);
         interpreteUrlQuery(urlQuery);
@@ -65,7 +69,7 @@ function getUrlParameterByName(name) {
  * Wird aufgerufen wenn die Ansicht gewechselt wird.
  * Das erste Element in paramObj muss immer location sein.
  * Dieses gibt den Index der Ansicht im Array alleAnsichten an.
- * Hängt den Query String an die URL an.
+ * HÃ¤ngt den Query String an die URL an.
  * Danach wird die Seite automatisch neu geladen.
  * @param paramObj enthaelt alle Query Parameter
  */
@@ -105,12 +109,12 @@ function buildUrlQuery(paramObj)
 function interpreteUrlQuery(paramObj) 
 {	
 	
-	// TODO Übler hack ! 
-	// Versteck alle Popupfenster. Wo wäre das besser ?
+	// TODO Ãœbler hack ! 
+	// Versteck alle Popupfenster. Wo wÃ¤re das besser ?
 	$(".popup_fenster").popup('hide');
-	
-	$(".mainbox").fadeOut("fast");
-	$("#mainbox_loadScreen").fadeIn("fast");
+
+//	$(".mainbox").fadeOut("slow");
+//	$("#mainbox_loadScreen").fadeIn("slow");
 	
     var ziel = paramObj[urlParamLocation];
 	// Benutzer eingeloggt
@@ -131,14 +135,14 @@ function interpreteUrlQuery(paramObj)
         }
         
         $.when(ajax1, ajax2).done(function() {
-        	$("#mainbox_loadScreen").fadeOut("fast");
+//        	$("#mainbox_loadScreen").fadeOut("slow");
         	display(ziel);
 		});
     } 
     else 
     { // Benutzer nicht eingeloggt
         $.when(fillStartseite()).done(function() {
-        	$("#mainbox_loadScreen").fadeOut("fast");
+//        	$("#mainbox_loadScreen").fadeOut("slow");
         	display(ansichtStartseite);
 		});
     }
@@ -171,30 +175,32 @@ function display(ansicht)
     // TODO 1) Warum wird das immer mehrmals hintereinander aufgerufen?
     // TODO 2) Beim Wechsel von Startseite zu Hauptseite wird die mypersonalbox_startseite nicht mehr versteckt
     console.log("GEHE ZU "+ansicht);
+    
     // mypersonalbox
     if(ansicht == ansichtStartseite)
     {
-        $("#mypersonalbox_startseite").fadeIn();
-        $("#mypersonalbox_main").fadeOut();
+        $("#mypersonalbox_main").fadeOut("slow",function(){
+            $("#mypersonalbox_startseite").fadeIn("slow");
+        });
     }
     else
     {
-        $("#mypersonalbox_main").fadeIn();
-        $("#mypersonalbox_startseite").fadeOut();
+        $("#mypersonalbox_startseite").fadeOut("slow",function(){
+            $("#mypersonalbox_main").fadeIn("slow");
+        });
+        
     }
     // mainbox
-    var isValid = false;
-    for(var i=0; i<alleAnsichten.length; i++)
+    var ansichtIdx = alleAnsichten.indexOf(ansicht);
+    
+    if(ansichtIdx != -1)
     {
-        if(alleAnsichten[i] == ansicht) 
-        {
-            $("#mainbox_"+alleAnsichten[i]).fadeIn();
-            isValid = true;
-        } else {
-            $("#mainbox_"+alleAnsichten[i]).fadeOut();
-        }
+    	// Alles auÃŸer das neue Ausblenden
+        $(".mainbox").not("#mainbox_"+alleAnsichten[ansichtIdx]).fadeOut("slow", function(){
+            $("#mainbox_"+alleAnsichten[ansichtIdx]).fadeIn("slow");
+        });
     }
-    if(!isValid) 
+    else 
     {
         console.log("[urlHandler] Ungueltige Ansicht: "+ansicht);
     }

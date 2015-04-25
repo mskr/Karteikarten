@@ -101,7 +101,6 @@ public class StartseitenServlet extends ServletController {
         }
         catch (DbFalseLoginDataException e)
         {
-            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
         }
 
