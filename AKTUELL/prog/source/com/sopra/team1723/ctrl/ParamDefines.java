@@ -1,5 +1,7 @@
 package com.sopra.team1723.ctrl;
 
+import java.util.Calendar;
+
 /**
  * Diese Klasse enthält alle Parameter die übertragen werden sowie die JSON-Objekte
  * @author Andreas
@@ -22,7 +24,7 @@ public class ParamDefines
     public final static String ActionUploadProfilBild = "uploadProfilBild";
     public final static String ActionSucheBenVeranst = "sucheBenVeranst";
     public final static String ActionSucheBenutzer = "sucheBenutzer";
-    
+
     public final static String ActionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
     public final static String LeseVeranstMode = "mode";                        // Liefert Veranstaltungen
     public final static String LeseVeranstModeStudiengangSemester =             // Liefert alle Veranstaltungen
@@ -32,16 +34,16 @@ public class ParamDefines
     public final static String ActionAusschreiben = "ausschreiben";
     public final static String ActionEinschreiben = "einschreiben";
     public final static String ActionVeranstErstellen = "erstelleVeranst";
-    
-    
+
+
     public final static String ActionLeseBenachrichtungen = "leseBen";
-    
+
 
     public final static String Klasse = "klasse";
     public final static String KlasseBenutzer = "klasseBenutzer";
     public final static String KlasseVeranst = "klasseVeranst";
-    
-    
+
+
     public final static String Id = "id";
     public final static String Email = "email";
     public final static String EmailNew = "emailNew";
@@ -58,7 +60,7 @@ public class ParamDefines
     public final static String ProfilBildPfad = "profilBildPfad";
     public final static String UploadFile = "file";
     public final static String Suchmuster = "suchmuster";
-    
+
 
     public final static String Titel = "titel";
     public final static String Beschr = "beschr";
@@ -71,7 +73,7 @@ public class ParamDefines
     public final static String AnzTeilnehmer = "anzTeilnehmer";
     public final static String Angemeldet = "angemeldet";
     public final static String KennwortGesetzt = "kennwortGesetzt";
-    
+
 
     public final static String benInhalt = "benInhalt";
     public final static String benGelesen = "benGelesen";
@@ -86,15 +88,15 @@ public class ParamDefines
     public final static String benKarteikarte = "benKarteikarte";
     public final static String benKommentar = "benKommentar";
     public final static String benProfil = "benProfil";
-    
-    
+
+
     public final static String AktSemester = "aktSemester";
-    
-    
+
+
     public final static String GewaehltesSemester = "gewaehltesSemester";
     public final static String GewaehlterStudiengang = "gewaehlterStudiengang";
-    
-    
+
+
     /**
      * JSON-Feld-Werte, die nicht schon als Parameter vorkommen
      */
@@ -110,19 +112,23 @@ public class ParamDefines
     public final static String jsonErrorPwResetFailed = "pwresetfailed";            // Fehler beim Zurücksetzen des Passworts
     public final static String jsonErrorSessionExpired = "sessionexpired";          // Fehler beim Zurücksetzen des Passworts
     public final static String jsonErrorNotAllowed = "notallowed";                  // Fehler unerlaubte aktion
-    
+
     // ArrayResults
     public final static String jsonArrResult = "arrResult";
     public final static String jsonStrResult = "strResult";
-    
-        
-    public final static int WiSeMonatBeginn = 10;
-    public final static int WiSeTagBeginn = 1;
-    public final static int WiSeMonatEnde = 3;
-    public final static int WiSeTagEnde = 31;
-    public final static int SoSeMonatBeginn = 4;
-    public final static int SoSeTagBeginn = 1;
-    public final static int SoSeMonatEnde = 9;
-    public final static int SoSeTagEnde = 30;
-    
+
+
+
+    public static Calendar WiSeBeginn = Calendar.getInstance();
+    public static Calendar WiSeEnde = Calendar.getInstance();
+    static{
+        WiSeBeginn.set(Calendar.MONTH, 9);
+        WiSeBeginn.set(Calendar.DAY_OF_MONTH, 1);
+        System.out.println(WiSeBeginn.get(Calendar.DAY_OF_MONTH));
+        WiSeEnde.set(Calendar.MONTH, 2);
+        WiSeEnde.set(Calendar.DAY_OF_MONTH, 31); 
+        System.out.println(WiSeEnde.get(Calendar.DAY_OF_MONTH));
+    }
+
+
 }

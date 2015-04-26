@@ -346,8 +346,10 @@ public class ProfilServlet extends ServletController {
         if(dbManager.loescheBenutzer(id))
         {
             // Eigenes profil? dann ausloggen
-            if(id == aktuellerBenutzer.getId())
+            if(id == aktuellerBenutzer.getId()){
                 aktuelleSession.invalidate();
+                System.out.println("test");
+            }
             
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             outWriter.print(jo);

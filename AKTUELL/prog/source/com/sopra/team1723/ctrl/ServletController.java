@@ -151,15 +151,11 @@ public abstract class ServletController extends HttpServlet
         Calendar aktDatum = Calendar.getInstance();
 
         int aktYear = aktDatum.get(Calendar.YEAR);
-        Calendar WiSeBegin = Calendar.getInstance();
-        Calendar WiSeEnde = Calendar.getInstance();
-        WiSeBegin.set(Calendar.MONTH, ParamDefines.WiSeMonatBeginn);
-        WiSeBegin.set(Calendar.DAY_OF_MONTH, ParamDefines.WiSeTagBeginn);
-        WiSeEnde.set(Calendar.MONTH, ParamDefines.WiSeMonatEnde);
-        WiSeEnde.set(Calendar.DAY_OF_MONTH, ParamDefines.WiSeTagEnde);
-        if(aktDatum.after(WiSeBegin))
+        ParamDefines.WiSeBeginn.set(Calendar.YEAR, aktYear);
+        ParamDefines.WiSeEnde.set(Calendar.YEAR, aktYear);
+        if(aktDatum.after(ParamDefines.WiSeBeginn))
             return "WiSe"+aktYear+"/"+String.valueOf(aktYear+1).substring(2);
-        else if (aktDatum.before(WiSeEnde))
+        else if (aktDatum.before(ParamDefines.WiSeEnde))
             return "WiSe"+String.valueOf(aktYear-1)+"/"+String.valueOf(aktYear).substring(2);
         else
             return "SoSe"+String.valueOf(aktYear);
