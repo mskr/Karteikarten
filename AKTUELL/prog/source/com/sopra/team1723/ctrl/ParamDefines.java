@@ -36,7 +36,10 @@ public class ParamDefines
     public final static String ActionVeranstErstellen = "erstelleVeranst";
 
 
+    
+
     public final static String ActionLeseBenachrichtungen = "leseBen";
+    public final static String ActionMarkiereBenGelesen = "benGelesen";
 
 
     public final static String Klasse = "klasse";

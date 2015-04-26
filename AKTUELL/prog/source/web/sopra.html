@@ -24,6 +24,8 @@
 <link rel="stylesheet" href="octicons/octicons.css">
 <!-- MySopraIcons -->
 <link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
+<!-- Verhindert favIcon Error -->
+<link rel="shortcut icon" href="files/general/icon.png">
 <!-- JQuery -->
 <script src="JS/jquery-latest.min.js"></script>
 <!-- JQuery Popup Overlay, Doc: http://dev.vast.com/jquery-popup-overlay/ -->
@@ -33,11 +35,11 @@
 <!-- CKEditor Core -->
 <script src="ckeditor/ckeditor.js"></script>
 <!-- CKEditor Config -->
-<script src="ckeditor/build-config.js"></script>
+<script src="ckeditor/config.js"></script>
 <!-- CKEditor JQuery Adapter -->
 <script src="ckeditor/adapters/jquery.js"></script>
 <!-- CKEditor Code Snippet Syntax Highlighting CSS -->
-<link href="ckeditor/plugins/codesnippet/lib/highlight/styles/zenburn.css" rel="stylesheet">
+<!-- <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/zenburn.css" rel="stylesheet"> -->
 <!-- HTML5-Videoplayer -->
 <script src="JS/videoPlayer.js"></script>
 <!-- Zentrale Variablen -->
@@ -56,10 +58,8 @@
 <script src="JS/urlHandler.js"></script>
 <!-- Registrieren Script -->
 <script src="JS/registrieren.js"></script>
-<!-- Login Script -->
-<script src="JS/login.js"></script>
-<!-- Logout Script -->
-<script src="JS/logout.js"></script>
+<!-- Login and Logout Script -->
+<script src="JS/loginLogout.js"></script>
 <!-- Startseite Skript -->
 <script src="JS/startseite.js"></script>
 <!-- mypersonalbox Skript -->
@@ -71,6 +71,8 @@
 <!-- Veranstaltungseite Skript -->
 <script src="JS/veranstaltungseite.js"></script>
 <!-- Initial alle Kind<div>s von <body> verbergen -->
+<!-- md5 hash function -->
+<script src="JS/md5.js"></script>
 <style>
 body > div {
 	display: none;
@@ -137,7 +139,7 @@ function naviconTransformicon() {
 
 <div id="mypersonalbox_main" class="mypersonalbox card">
 
-	<img id="loadingDiv" src="files/general/ajaxLoader.gif" style="position: absolute;top: 0.5em;left: 0.5em;" />
+	<img id="loadingDiv" src="files/general/ajaxLoader.gif" style="width:50px;position: absolute;top: 0.5em;left: 0.5em;" />
 
 	<!-- Return Link erscheint nicht auf Hauptseite -->
 	<a class="return tiptrigger tipabove" data-tooltip="Zurück zur Hauptseite"><span class="mega-octicon octicon-chevron-left"></span></a>
@@ -190,6 +192,9 @@ Dann aber so leer.
 		<path d="M138,99.636c-11.06,0-21.068-4.486-28.309-11.738c1.619,14.202,13.674,25.238,28.309,25.238  c14.637,0,26.689-11.036,28.309-25.238C159.068,95.149,149.06,99.636,138,99.636z"/>
 	</svg>
 	-->
+</div>
+<div id="mainbox_loadScreen" class = "mainbox" >
+	<img alt="load icon" src="files/general/ajaxLoader.gif" style="width: 200px;height:  200px; top: 200px; position:absolute;">
 </div>
 
 <div id="mainbox_hauptseite" class="mainbox">
@@ -249,7 +254,7 @@ Dann aber so leer.
 						<label for="profil_avatar_aendern_file" class="profil_avatar_overlay"><span class="mega-octicon octicon-pencil"></span></label>
 						<input id="profil_avatar_aendern_file" type="file" name="file" style="display:none">
 						<span class="profil_benutzername"></span><br>
-						<span id="profil_avatar_aendern_file_name"><a><label for="profil_avatar_aendern_file">Neuen Avatar auswählen</label></a></span><br>
+						<span id="profil_avatar_aendern_file_name"></span><br>
 						<input id="profil_avatar_submit" type="submit" value="Avatar ändern" class="mybutton dark" style="display:none">
 					</div>
 				</form>
@@ -284,7 +289,7 @@ Dann aber so leer.
 					<div class="profil_notifyKommentare">
 						<div class="form_infotext">Benachrichtigungen über Kommentare...</div>
 						<div><input id="notifyKommentare_input_teilgenommen" name="profil_notifyKommentareRb" type="radio" value="VERANSTALTUNG_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_teilgenommen">immer.</label></div>
-						<div><input id="notifyKommentare_input_diskussionen" name="profil_notifyKommentareRb" type="radio" value="DISKUSSION_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_diskussionen">nur bei Disussionen, an denen ich teilgenommen habe.</label></div>
+						<div><input id="notifyKommentare_input_diskussionen" name="profil_notifyKommentareRb" type="radio" value="DISKUSSION_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_diskussionen">nur bei Diskussionen, an denen ich teilgenommen habe.</label></div>
 						<div><input id="notifyKommentare_input_nie" name="profil_notifyKommentareRb" type="radio" value="KEINE"><label class="profil_label" for="notifyKommentare_input_nie">niemals.</label></div>
 					</div>
 					<div class="profil_notifyAenderungen">
@@ -633,15 +638,15 @@ Dann aber so leer.
 		    width: calc(100% - 4.2em);
 		    height: auto;
 		"></div>
-		<textarea class="input_std vn_erstellen_input" id="vn_beschr_input" placeholder="Beschreibung" required></textarea>
+		<textarea class="input_std vn_erstellen_input" id="vn_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
 		<div class="popup_fenster_spalte" id="vn_bearbeiten_mode">
 			<span class="form_infotext">Wer darf bearbeiten?</span>
-			<span><input name="vn_bearbeitenMode_radiogb" id="vn_keiner_bearb" value = "Nur ich" type="radio"checked><label for="vn_keiner_bearb">Nur ich</label></span>
-			<span><input name="vn_bearbeitenMode_radiogb" id="vn_mod_bearb" value = "Ich und Moderatoren"type="radio"><label for="vn_mod_bearb">Ich und Moderatoren</label></span>
+			<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_keiner_bearb" value = "Nur ich" type="radio"checked>Nur ich</label></span>
+			<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_mod_bearb" value = "Ich und Moderatoren"type="radio">Ich und Moderatoren</label></span>
 		</div>
 		<div class="popup_fenster_spalte">
-			<span><input id="vn_komm_erlaubt" type="checkbox" checked><label for="vn_komm_erlaubt">Kommentare erlaubt</label></span>
-			<span><input id="vn_bew_erlaubt" type="checkbox" checked><label for="vn_bew_erlaubt">Bewertungen erlaubt</label></span>
+			<span><label><input id="vn_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
+			<span><label><input id="vn_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
 		</div>
 	</div>
 	<div class="popup_fenster_foot">

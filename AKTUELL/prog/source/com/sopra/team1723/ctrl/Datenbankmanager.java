@@ -108,13 +108,13 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         Benutzer benutzer = null;
         try{
-            ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
+            ps = conMysql.prepareStatement("SELECT ID,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,CryptedPW,Nutzerstatus,"
                     + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
             if(rs.next()){
                 benutzer = new Benutzer(rs.getInt("ID"), eMail,rs.getString("Vorname"),rs.getString("Nachname"),
-                        rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
+                        rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("CryptedPW"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
                         NotifyKommentare.valueOf(rs.getString("NotifyKommentare")),rs.getString("Profilbild"));
@@ -141,13 +141,13 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         Benutzer benutzer = null;
         try{
-            ps = conMysql.prepareStatement("SELECT eMail,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,Kennwort,Nutzerstatus,"
+            ps = conMysql.prepareStatement("SELECT eMail,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,CryptedPW,Nutzerstatus,"
                     + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild FROM benutzer WHERE ID = ?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if(rs.next()){
                 benutzer = new Benutzer(id, rs.getString("eMail"),rs.getString("Vorname"),rs.getString("Nachname"),
-                        rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("Kennwort"),
+                        rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),rs.getString("CryptedPW"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
                         NotifyKommentare.valueOf(rs.getString("NotifyKommentare")),rs.getString("Profilbild"));
@@ -169,16 +169,22 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public void schreibeBenutzer(Benutzer benutzer) throws DbUniqueConstraintException, SQLException{
         PreparedStatement ps = null;
+        System.out.println("------");
+        String md5pwd = benutzer.getKennwort();
+        String CryptedPW = BCrypt.hashpw(md5pwd, BCrypt.gensalt());
+        System.out.println("------");
+        System.out.println("md5: "+ md5pwd + "crypted: " + CryptedPW);
+        System.out.println("------");
         try{
             ps = conMysql.prepareStatement("INSERT INTO benutzer (Vorname,Nachname,Matrikelnummer,eMail,Studiengang,"
-                    + "Kennwort, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, "
+                    + "CryptedPW, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, "
                     + "NotifyKarteikartenAenderung) VALUES(?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, benutzer.getVorname());
             ps.setString(2, benutzer.getNachname());
             ps.setInt(3, benutzer.getMatrikelnummer());
             ps.setString(4, benutzer.geteMail());
             ps.setString(5, benutzer.getStudiengang());
-            ps.setString(6,benutzer.getKennwort());
+            ps.setString(6,CryptedPW);
             ps.setString(7,benutzer.getNutzerstatus().name());
             ps.setString(8, benutzer.getNotifyKommentare().name());
             ps.setBoolean(9, benutzer.isNotifyVeranstAenderung());
@@ -285,12 +291,17 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         try{
             System.out.println("DB prueft: email="+eMail+", passwort="+passwort);
-            ps = conMysql.prepareStatement("SELECT * FROM benutzer WHERE eMail = ? AND Kennwort = ?");
+            ps = conMysql.prepareStatement("SELECT * FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
-            ps.setString(2, passwort);
             rs = ps.executeQuery();
             if(!rs.next()){
                 throw new DbFalseLoginDataException();
+            }		
+            else{
+            	String Crypted = rs.getString("CryptedPW");
+            	if(BCrypt.checkpw(passwort, Crypted)==false){
+            		throw new DbFalseLoginDataException();
+            	}
             }
 
 
@@ -357,7 +368,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         boolean erfolgreich = true;
         try{
-            ps = conMysql.prepareStatement("UPDATE benutzer SET Kennwort=? WHERE eMail=?");
+            ps = conMysql.prepareStatement("UPDATE benutzer SET CryptedPW=? WHERE eMail=?");
             ps.setString(1, neuesPasswort);
             ps.setString(2, eMail);
             if(ps.executeUpdate()!= 1)
@@ -365,7 +376,6 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
-
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
@@ -969,7 +979,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         BenachrEinlModerator benachrichtigung = null;
         try{
-            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen, Angenommen"
+            ps = conMysql.prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen, Angenommen"
                     + " FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtigung AS b ON bem.Benachrichtigung"
                     + "= b.ID WHERE bem.ID =?"); 
             ps.setInt(1, id);
@@ -977,7 +987,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(rs.next()){
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getTimestamp("Erstelldatum"));
-                benachrichtigung = new BenachrEinlModerator(id, rs.getString("Inhalt"), cal,
+                benachrichtigung = new BenachrEinlModerator(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"), cal,
                         rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseVeranstaltung(rs.getInt("Veranstaltung")),
                         rs.getBoolean("Angenommen"));
             }
@@ -1000,7 +1010,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         BenachrKarteikAenderung benachrichtigung = null;
         try{
-            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Karteikarte, Gelesen"
+            ps = conMysql.prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Karteikarte, Gelesen"
                     + " FROM benachrichtigung_karteikartenaenderung AS bk JOIN benachrichtigung AS b ON bk.Benachrichtigung"
                     + "= b.ID WHERE bk.ID =?"); 
             ps.setInt(1, id);
@@ -1008,7 +1018,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(rs.next()){
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
-                benachrichtigung = new BenachrKarteikAenderung(id, rs.getString("Inhalt"), cal,
+                benachrichtigung = new BenachrKarteikAenderung(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"), cal,
                         rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseKarteikarte(rs.getInt("Karteikarte")));
             }
         } catch (SQLException e) {
@@ -1030,7 +1040,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         BenachrNeuerKommentar benachrichtigung = null;
         try{
-            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Kommentar, Gelesen"
+            ps = conMysql.prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Kommentar, Gelesen"
                     + " FROM benachrichtigung_neuer_kommentar AS bnk JOIN benachrichtigung AS b ON bnk.Benachrichtigung"
                     + "= b.ID WHERE bnk.ID =?"); 
             ps.setInt(1, id);
@@ -1038,7 +1048,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(rs.next()){
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
-                benachrichtigung = new BenachrNeuerKommentar(id, rs.getString("Inhalt"), cal,
+                benachrichtigung = new BenachrNeuerKommentar(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"), cal,
                         rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseKommentar(rs.getInt("Kommentar")));
             }
         } catch (SQLException e) {
@@ -1060,7 +1070,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         BenachrProfilGeaendert benachrichtigung = null;
         try{
-            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Admin, Gelesen"
+            ps = conMysql.prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Admin, Gelesen"
                     + " FROM benachrichtigung_profil_geaendert AS bpg JOIN benachrichtigung AS b ON bpg.Benachrichtigung"
                     + "= b.ID WHERE bpg.ID =?"); 
             ps.setInt(1, id);
@@ -1068,7 +1078,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(rs.next()){
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
-                benachrichtigung = new BenachrProfilGeaendert(id, rs.getString("Inhalt"), cal,
+                benachrichtigung = new BenachrProfilGeaendert(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"), cal,
                         rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseBenutzer(rs.getInt("Admin")));
             }
         } catch (SQLException e) {
@@ -1090,7 +1100,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         BenachrVeranstAenderung benachrichtigung = null;
         try{
-            ps = conMysql.prepareStatement("SELECT Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen"
+            ps = conMysql.prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen"
                     + " FROM benachrichtigung_veranstaltungsaenderung AS bv JOIN benachrichtigung AS b ON bv.Benachrichtigung"
                     + "= b.ID WHERE bv.ID =?"); 
             ps.setInt(1, id);
@@ -1098,7 +1108,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(rs.next()){
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
-                benachrichtigung = new BenachrVeranstAenderung(id, rs.getString("Inhalt"), cal,
+                benachrichtigung = new BenachrVeranstAenderung(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"), cal,
                         rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseVeranstaltung(rs.getInt("Veranstaltung")));
             }
         } catch (SQLException e) {
@@ -1215,6 +1225,74 @@ public class Datenbankmanager implements IDatenbankmanager {
         return erfolgreich;
     }
 
+    public boolean markiereBenAlsGelesen(int benID, int benutzerID)
+    {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        int updates = 0;
+        try{
+            String sql =
+                    "UPDATE benachrichtigung_veranstaltungsaenderung "
+                    + "SET Gelesen = 1 "
+                    + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, benID);
+            ps.setInt(2, benutzerID);
+            updates += ps.executeUpdate();
+
+            sql =   "UPDATE benachrichtigung_profil_geaendert "
+                    + "SET Gelesen = 1 "
+                    + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            closeQuietly(ps);
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, benID);
+            ps.setInt(2, benutzerID);
+            updates += ps.executeUpdate();
+
+            sql =   "UPDATE benachrichtigung_neuer_kommentar "
+                    + "SET Gelesen = 1 "
+                    + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            closeQuietly(ps);
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, benID);
+            ps.setInt(2, benutzerID);
+            updates += ps.executeUpdate();
+
+            sql =   "UPDATE benachrichtigung_karteikartenaenderung "
+                    + "SET Gelesen = 1 "
+                    + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            closeQuietly(ps);
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, benID);
+            ps.setInt(2, benutzerID);
+            updates += ps.executeUpdate();
+
+            sql =   "UPDATE benachrichtigung_einladung_moderator "
+                    + "SET Gelesen = 1 "
+                    + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            closeQuietly(ps);
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, benID);
+            ps.setInt(2, benutzerID);
+            updates += ps.executeUpdate();
+
+            
+            if(updates != 1)
+            {
+                System.err.println("[Benachrichtigung gelesen] Es wurden " + updates + " anstatt einem Eintrag in der Tabelle geändert.");
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return true;
+    }
 
     @Override
     public Karteikarte leseKarteikarte(int karteikID) {

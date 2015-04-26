@@ -11,26 +11,28 @@ $(document).ready(function() {
 		}
 		else
 		{
-			 $.ajax({
-				 url: startseitenServlet,
-				 data: "action="+actionResetPasswort + "&" +
-				 paramEmail + "=" + $("#login_email").val(),
-				 success: function(response) {
-					 var errorFkt = function(errorTxt) {
-						 if(errorTxt == "loginfailed") 
-						 {
-							 showError("Diese eMail-Adresse existiert nicht im System.");
-							 return true;
-						 }
-						 return false;
-					 }
-					 if(verifyResponse(response,errorFkt))
-					 { 
-						 showInfo("Ihr Passwort wurde erfolgreich zurückgesetzt. " +
-						 		"Sie haben eine eMail mit ihrem neuen Passwort erhalten.");
-					 }
-				 }
-			 });
+			 var params = {};
+			 params[paramEmail] = $("#login_email").val();
+			 ajaxCall(
+			     startseitenServlet,
+			     actionResetPasswort,
+			     function(response) {
+			         showInfo("Ihr Passwort wurde erfolgreich zurückgesetzt. " +
+                              "Sie haben eine eMail mit ihrem neuen Passwort erhalten.");
+			     },
+			     params,
+			     function(errCode) {
+			         if(errCode == "loginfailed") 
+                     {
+                         showError("Diese eMail-Adresse existiert nicht im System.");
+                         return true;
+                     }
+			         else
+			         {
+			             return false;
+			         }
+			     }
+			 );
 		}
 		
 	});
@@ -38,25 +40,20 @@ $(document).ready(function() {
 
 /**
  * Wird von urlHandler.js aufgerufen,
- * nachdem die <div> Container fuer die Startseite angezeigt wurden.
+ * nachdem die div-Container fuer die Startseite angezeigt wurden.
  * Holt die benoetigten Daten per Ajax Call vom Server
  * und traegt sie in die richtigen HTML Elemente ein.
  * Im Falle der Startseite werden die verfuegbaren Studiengaenge
- * geholt und in das <select> Element eingeordnet.
+ * geholt und in das select-Element eingeordnet.
  */
 function fillStartseite() {
-    $.ajax({
-    	url: startseitenServlet,
-    	data: "action="+actionGetStudiengaenge,
-    	success: function(response) {
-            if(verifyResponse(response))
-            { 
-            	$("#reg_studiengang").empty();
-            	var studgArr = response[keyJsonArrResult];
-            	for(var i in studgArr) {
-            		$("#reg_studiengang").append("<option>"+studgArr[i]+"</option>");
-            	}
-            }
-    	}
-    });
+    return ajaxCall(
+        startseitenServlet,
+        actionGetStudiengaenge,
+        function(response) {
+            $("#reg_studiengang").empty();
+            var studgArr = response[keyJsonArrResult];
+            fillSelectWithOptions($("#reg_studiengang"), studgArr, "", true);
+        }
+    );
 }

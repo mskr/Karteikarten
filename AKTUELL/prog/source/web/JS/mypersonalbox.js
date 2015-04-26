@@ -27,57 +27,14 @@ function fillMyPersonalBox()
     }
     fillUserContainer();
     handleReturnLink();
-    
-    $.ajax({
-        url: benachrichtungsServlet,
-        data: "action="+actionLeseBenachrichtungen,
-        success: function(response) {
-
-        	if(verifyResponse(response))
-        	{
-        		var bens = response[keyJsonArrResult];
-
-        		for (var i in bens)
-        		{
-        			// TODO Vllt direkt in anzeigeBenachrichtigung packen
-        			var type = bens[i][paramBenType];
-        			var fkt = function() {
-
-        			};
-
-        			if(type == paramBenTypeKarteikarte)
-        			{
-
-        			}
-        			else if(type == paramBenTypeKommentar)
-        			{
-
-        			}
-        			else if(type == paramBenTypeModerator)
-        			{
-        				fkt = function() {
-        					gotoVeranstaltung(bens[i][paramBenVeranst][paramId]);
-        				};
-        			}
-        			else if(type == paramBenTypeProfil)
-        			{
-        				fkt = function() {
-        					gotoProfil(jsonBenutzer[paramId]);
-        				};
-        			}
-        			else if(type == paramBenTypeVeranstaltung)
-        			{
-        				fkt = function() {
-        					gotoVeranstaltung(bens[i][paramBenVeranst][paramId]);
-        				};
-        			}
-        			setTimeout(function() {
-        				addBenachrichtigung(bens[i], fkt);
-        			}, 100);
-        		}
-        	}
+    ajaxCall(
+        benachrichtungsServlet,
+        actionLeseBenachrichtungen,
+        function(response) {
+            var bens = response[keyJsonArrResult];
+            updateBenachrichtigungen(bens);
         }
-     });
+    )
 }
 
 /**
@@ -91,47 +48,51 @@ function fillUserContainer()
     var nutzerstatus = jsonBenutzer[paramNutzerstatus];
     $(".username").html(vorname+" "+nachname);
     $(".rolle").html(" "+nutzerstatus);
-    
-    // ProfilBild anzeigen
     $(".user_MyProfilBild").attr("src", jsonBenutzer[paramProfilBild]);
 }
 
 /**
- * Fügt eine Benachrichtung hinzu, wenn sie nicht schon hinzugefügt wurde.
- * @param text Inhalt der angezeigt werden soll
- * @param isNeu Als neu markieren
- * @param onClickFkt CallBack-Function, die beim click aufgerufen werden soll
+ * Fügt eine neue Benachrichtung hinzu.
  */
-var newBnCount = 0;
-var benCount = 0;
-var aktuelleBenArr = [];
-function addBenachrichtigung(ben, onClickFkt)
+function addBenachrichtigung(ben)
 {
-	for(var i in aktuelleBenArr)
+	var type = ben[paramBenType];
+	var onClickfkt = function() {};
+	if(type == paramBenTypeKarteikarte)
 	{
-		// Benachrichtigung schon gepeichert
-		if(aktuelleBenArr[i][paramId] == ben[paramId])
-			return;
+
 	}
-	
-	if(benCount == 0)
+	else if(type == paramBenTypeKommentar)
 	{
-		// Jetzt existieren Benachrichtigungen
-		$("#keine_bn").slideUp("slow");
+
 	}
-	// Benachrichtigung speichern
-	aktuelleBenArr[benCount++] = ben;
-		
+	else if(type == paramBenTypeModerator)
+	{
+		onClickfkt = function() {
+			gotoVeranstaltung(ben[paramBenVeranst][paramId]);
+		};
+	}
+	else if(type == paramBenTypeProfil)
+	{
+		onClickfkt = function() {
+			gotoProfil(jsonBenutzer[paramId]);
+		};
+	}
+	else if(type == paramBenTypeVeranstaltung)
+	{
+		onClickfkt = function() {
+			gotoVeranstaltung(ben[paramBenVeranst][paramId]);
+		};
+	}
+
 	var contentDiv = $("#bn_container");
 	var divBn = $("<div></div>");
 	divBn.addClass("bn");
+	divBn.attr("data-id",ben[paramId]);
 	
 	if(ben[paramBenGelesen] != true)
 	{
 		divBn.addClass("neu");
-		newBnCount++;
-		$("#bn_anzahl").text("(" + newBnCount + " neu)");
-		contentDiv.slideDown("slow");
 	}
 	else
 		divBn.addClass("gelesen");
@@ -142,19 +103,30 @@ function addBenachrichtigung(ben, onClickFkt)
 	spanCntnt.append("<span class='bn_zeit' style='float: right;'>" + ben[paramBenErstelldaum] + "</span>");
 	
 	divBn.append(spanCntnt);
-	$(divBn).click(onClickFkt);
+
+	$(divBn).click(function() {
+		// Markiert benachrichtigung als gelesen
+	    var params = {};
+	    params[paramId] = ben[paramId]
+		$.when(ajaxCall(
+		    benachrichtungsServlet,
+		    actionMarkiereBenGelesen,
+		    undefined,
+		    params
+		)).done(onClickfkt);
+	});
+
 	divBn.hide();
 	contentDiv.append(divBn);
 	
 	divBn.slideDown("slow");
-	
-	var elem = contentDiv.find('div').sort(sortDivByClassName);
-	contentDiv.append(elem);
 }
 function sortDivByClassName(a,b)
 {
 	if($(a).hasClass("neu") && $(b).hasClass("neu"))
-		return 1;
+	{
+		return $(b).attr("data-id") - $(a).attr("data-id");
+	}
 	if($(a).hasClass("neu"))
 		return -1;
 	if($(b).hasClass("neu"))
@@ -162,6 +134,95 @@ function sortDivByClassName(a,b)
 	else 
 		return 0;
 }
+
+var aktuelleBenArr = [];
+function updateBenachrichtigungen(newBens)
+{
+	var contentDiv = $("#bn_container");
+	var ungelesenCount = 0;
+	
+	
+	var initalArrSize = aktuelleBenArr.length;
+	
+	for(var i in newBens)
+	{
+		if(newBens[i][paramBenGelesen] != true)
+			ungelesenCount++;
+		
+		var isNew = true;
+		for(var j in aktuelleBenArr)
+		{
+			// Wenn Benachrichtigung schon vorhanden, dann Objekt überschreiben,
+			// aber keinen neuen Container erzeugen
+			if(aktuelleBenArr[j][paramId] == newBens[i][paramId])
+			{
+				aktuelleBenArr[j][paramId] = newBens[i][paramId];
+				isNew = false;
+				break;
+			}
+		}
+		
+		if(isNew)
+		{
+			// Benachrichtigung speichern
+			aktuelleBenArr.push(newBens[i]);
+			
+			// Benachrichtigung anzeigen
+			addBenachrichtigung(newBens[i]);
+			
+			if(initalArrSize == 0)
+			{
+				// Jetzt existieren Benachrichtigungen
+				$("#keine_bn").slideUp("slow");
+			}			
+		}
+		// Sollte nicht auftreten. WEnn eine benachrichtigung von gelesen zu neu wird z.b.
+		else
+		{
+			// TODO
+			var benDiv = contentDiv.find("[data-id="+newBens[i][paramId]+"]");
+			benDiv.addClass("neu");
+			benDiv.removeClass("gelesen");
+		}
+	}
+	
+	// Prüfen, welche Benachrichtigngen verschwunden sind.
+	// Diese auf gelesen setzen
+	for(var j in aktuelleBenArr)
+	{
+		var verschwunden = true;
+		for(var i in newBens)
+		{
+			if(aktuelleBenArr[j][paramId] == newBens[i][paramId])
+			{
+				verschwunden = false;
+				break;
+			}
+		}
+		
+		if(verschwunden)
+		{
+			var benDiv = contentDiv.find("[data-id="+aktuelleBenArr[j][paramId]+"]");
+			benDiv.addClass("gelesen");
+			benDiv.removeClass("neu");
+		}
+	}
+	
+	if(ungelesenCount > 0)
+	{
+		$("#bn_anzahl").text("(" + ungelesenCount + " neu)");
+		contentDiv.slideDown("slow");
+	}
+	else
+	{
+		$("#bn_anzahl").text("");
+	}
+
+	// Neu Sortieren
+	var elem = contentDiv.find('div').sort(sortDivByClassName);
+	contentDiv.append(elem);
+}
+
 
 /**
  * Entfernt alle benachrichtigungen

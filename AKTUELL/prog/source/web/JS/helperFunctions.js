@@ -23,7 +23,7 @@ function fillSelectWithOptions(select, optArray, selectedOptName, clearFirst)
 }
 
 /**
- * Triggert einen Sind-Sicher-Dialog.
+ * Triggert einen Sind-Sicher-Dialog auf der GUI.
  * @param anchorElem ist das Triggerelement (jQuery- oder DOM-Element).
  * @param message ist die Nachricht, die der Benutzer bestaetigen soll.
  * @param doCriticalThing ist eine Funktion, die nach Bestaetigung mit Ok ausgefuehrt wird.
@@ -48,24 +48,34 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
 /**
  * Bequeme Funktion um einen Ajax Call an ein Servlet zu senden.
  * Antwortet das Servlet mit dem Code "noerror" dann wird eine Funktion ausgefuehrt,
- * andernfalls wird die entsprechende Fehlermeldung auf der GUI angezeigt.
+ * die dieser Funktion uebergeben wird.
+ * Andernfalls wird standardmaessig der Default-Error-Text auf der GUI angezeigt,
+ * aber man kann auch eine errorHandlingFunc uebergeben, die eine Spezialbehandlung erlaubt.
  * Zusaetzlich koennen Funktionen uebergeben werden, die bei beforeSend und complete ausgefuehrt werden,
  * um etwa eine Lade-Meldung auf der GUI anzuzeigen.
- * @param servletUrl ist ein String
- * @param action ist ein String
- * @param params ist ein Objekt mit Parameternamen und jeweiligem Wert
- * @param sucessFunc ist eine Funktion, die bei einer Antwort ausgefuehrt wird.
- * @param beforeFunc ist eine Funktion, die beforeSend ausgefuehrt wird.
- * @param completeFunc ist eine Funktion, die bei complete ausgefuehrt wird.
+ * @param servletUrl ist ein String, der das richtige Servlet adressiert.
+ * @param action ist ein String, der als Kommando fuer den Server fungiert.
+ * @param params ist ein Objekt mit Parameternamen und jeweiligem Wert, die vom Server ausgelesen werden.
+ * @param noerrorFunc ist eine Funktion, die bei einer Antwort mit errCode == 'noerror' ausgefuehrt wird.
+ * @param errorHandlingFunc ist eine Funktion, die bei einer Antwort mit errCode != 'noerror' ausgefuehrt wird (kann optional uebergeben werden).
+ * Achtung: Die errorHandlingFunc muss true zurueckgeben, falls der Error behandelt werden konnte und false andernfalls 
+ * (dann wird der Default-Error-Text fuer den jeweiligen Code auf der GUI angezeigt).
+ * @param beforeFunc ist eine Funktion, die beforeSend ausgefuehrt wird (kann optional uebergeben werden).
+ * @param completeFunc ist eine Funktion, die bei complete ausgefuehrt wird (kann optional uebergeben werden).
  * @returns Ajax Objekt, das Informatioen ueber den Antwortstatus enthaelt.
  */
-function ajaxCall(servletUrl, action, params, sucessFunc, beforeFunc, completeFunc)
+function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, beforeFunc, completeFunc)
 {
     return $.ajax({
         url: servletUrl,
         data: "action="+action+"&"+toUrlParamString(params),
         beforeSend: beforeFunc,
-        success: sucessFunc,
+        success: function(jsonResponse) {
+            if(verifyResponse(jsonResponse,errorHandlingFunc)) {
+            	if(noerrorFunc!= undefined)
+            		noerrorFunc(jsonResponse);
+            }
+        },
         complete: completeFunc
     });
 }
@@ -76,26 +86,30 @@ function ajaxCall(servletUrl, action, params, sucessFunc, beforeFunc, completeFu
  * zurueck.
  * Im Unterschied zu buildUrlQuery(paramObj)
  * steht hier kein ? vorne.
- * @param paramObj
+ * Wird undefined uebergeben kommt ein leerer String zurueck!
+ * @param paramObj enthaelt die schoen verpackten Parameter.
  */
 function toUrlParamString(paramObj) 
 {
-    var locationSearchTmp = "";
-    var i = 0;
-    // Anzahl elemente Bestimmen
-    var maxI = 0;
-    for(var param in paramObj) 
+    if(paramObj == undefined)
     {
-        maxI++;
+        return "";
     }
+    var locationSearchTmp = "";
     
-    for(var param in paramObj) 
+    for(var param in paramObj)
     {
-        locationSearchTmp += param + "=" + paramObj[param]
-        if(i < maxI-1)
-            locationSearchTmp += "&";
-        
-        i++;
+    	if($.isArray(paramObj[param]))
+    	{
+    		for( var i in paramObj[param])
+    		{
+                locationSearchTmp += param + "=" + paramObj[param][i] + "&";
+    		}
+    	}
+    	else
+    	{
+            locationSearchTmp += param + "=" + paramObj[param] + "&";
+    	}
     }
     return locationSearchTmp;
 }

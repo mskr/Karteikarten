@@ -226,19 +226,31 @@ public class ProfilServlet extends ServletController {
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        JSONObject jo = null;
 
 
         String neuesPasswort = request.getParameter(ParamDefines.PasswordNew);
+        //Crypte neues Passwort:
+        
+        String cryptedNewPW = BCrypt.hashpw(neuesPasswort, BCrypt.gensalt());
+        
         String altesPasswort = request.getParameter(ParamDefines.Password);
         // Nutze diese Methode auch, wenn ein Admin die Email eines anderen Benutzers aendert
-        String benutzerMail = request.getParameter(ParamDefines.Email);
-
-        JSONObject jo = null;
+        int benutzerId;
+        try{
+        	benutzerId = Integer.parseInt(request.getParameter(ParamDefines.Id));
+        }
+        catch(NumberFormatException e){
+        	jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        String benutzerMail = aktuellerBenutzer.geteMail();
 
         try
         {
             // Eigenes Profil oder nicht ? 
-            if(!benutzerMail.equalsIgnoreCase(aktuellerBenutzer.geteMail()))
+            if(benutzerId!=aktuellerBenutzer.getId())
             {
                 // Nicht eigenes Profil. Ist der Benuzer als Admin ?
                 if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
@@ -253,7 +265,7 @@ public class ProfilServlet extends ServletController {
             else
             {
                 // Nochmal mit richtiger groß und kleinschreibung holen
-                benutzerMail = aktuellerBenutzer.geteMail();
+               
                 // Prüfen ob altes Passwort richtig
                 dbManager.pruefeLogin(benutzerMail, altesPasswort);
             }
@@ -272,7 +284,7 @@ public class ProfilServlet extends ServletController {
                 return false;
             }
             // Passwort ändern
-            if(dbManager.passwortAendern(benutzerMail, neuesPasswort))
+            if(dbManager.passwortAendern(benutzerMail, cryptedNewPW))
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
                 outWriter.print(jo);

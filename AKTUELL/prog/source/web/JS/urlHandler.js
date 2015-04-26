@@ -9,14 +9,18 @@
 
 $(document).ready(function() {
 	
+	// Initial alles unsichtbar machen
+	$(".mainbox").hide();
+	$(".mypersonalbox").hide();
+	
     // TODO So wird das Benutzerobjekt nur einmal initial zu beginn geladen
-    // Was passiert aber, wenn sich das profil geändert hat?
+    // Was passiert aber, wenn sich das profil geÃ¤ndert hat?
     $.when(getBenutzer()).done(function(a1) {
         var urlQuery = parseUrlQuery(undefined);    
         interpreteUrlQuery(urlQuery);
     });
     
-    // Auf zurück und vorwärts im browser reagieren
+    // Auf zurÃ¼ck und vorwÃ¤rts im browser reagieren
     History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
         var urlQuery = parseUrlQuery(undefined);
         interpreteUrlQuery(urlQuery);
@@ -65,7 +69,7 @@ function getUrlParameterByName(name) {
  * Wird aufgerufen wenn die Ansicht gewechselt wird.
  * Das erste Element in paramObj muss immer location sein.
  * Dieses gibt den Index der Ansicht im Array alleAnsichten an.
- * Hängt den Query String an die URL an.
+ * HÃ¤ngt den Query String an die URL an.
  * Danach wird die Seite automatisch neu geladen.
  * @param paramObj enthaelt alle Query Parameter
  */
@@ -102,31 +106,45 @@ function buildUrlQuery(paramObj)
  * die entsprechende Seite angezeigt.
  * @param paramObj enthaehlt die Parameter als Map
  */
-function interpreteUrlQuery(paramObj) {	
-	// TODO Übler hack ! 
-	// Versteck alle Popupfenster. Wo wäre das besser ?
+function interpreteUrlQuery(paramObj) 
+{	
+	
+	// TODO Ãœbler hack ! 
+	// Versteck alle Popupfenster. Wo wÃ¤re das besser ?
 	$(".popup_fenster").popup('hide');
+
+//	$(".mainbox").fadeOut("slow");
+//	$("#mainbox_loadScreen").fadeIn("slow");
+	
     var ziel = paramObj[urlParamLocation];
+	// Benutzer eingeloggt
     if(jsonBenutzer != undefined)
-    { // Benutzer eingeloggt
-        fillMyPersonalBox();
+    { 
+        var ajax1 = fillMyPersonalBox();
+        var ajax2;
         if(ziel == undefined ||                         // Kein location Parameter
            $.inArray(ziel, alleAnsichten) == -1 ||      // Kein bekannter location Parameter
            ziel == ansichtStartseite ||                 // location ist Startseite
            ziel == ansichtHauptseite)                   // location ist Hauptseite
         {
             ziel = ansichtHauptseite;                   // Dann gehe zu Hauptseite
-            fillHauptseite();
+            ajax2 = fillHauptseite();
         } else if(ziel == ansichtProfilseite) 
         {
-            fillProfilseite();
+        	ajax2 = fillProfilseite();
         }
-        display(ziel);
+        
+        $.when(ajax1, ajax2).done(function() {
+//        	$("#mainbox_loadScreen").fadeOut("slow");
+        	display(ziel);
+		});
     } 
     else 
     { // Benutzer nicht eingeloggt
-        fillStartseite();
-        display(ansichtStartseite);
+        $.when(fillStartseite()).done(function() {
+//        	$("#mainbox_loadScreen").fadeOut("slow");
+        	display(ansichtStartseite);
+		});
     }
 }
 
@@ -136,22 +154,17 @@ function interpreteUrlQuery(paramObj) {
  */
 function getBenutzer()
 {
-    return $.ajax({
-        url: profilServlet,
-        data: "action="+actionGetBenutzer,
-        success: function(response) 
-        {
-            if(verifyResponse(response))
-            {
-                // Ein Benutzer ist eingeloggt
-                jsonBenutzer = response;
-            }
-            else
-            {
-            	jsonBenutzer = undefined;
-            }
+    return ajaxCall(
+        profilServlet,
+        actionGetBenutzer,
+        function(response) {
+            jsonBenutzer = response;
+        },
+        undefined,
+        function(errCode) {
+            jsonBenutzer = undefined;
         }
-    });
+    );
 }
 
 /**
@@ -159,30 +172,35 @@ function getBenutzer()
  */
 function display(ansicht) 
 {
+    // TODO 1) Warum wird das immer mehrmals hintereinander aufgerufen?
+    // TODO 2) Beim Wechsel von Startseite zu Hauptseite wird die mypersonalbox_startseite nicht mehr versteckt
+    console.log("GEHE ZU "+ansicht);
+    
     // mypersonalbox
     if(ansicht == ansichtStartseite)
     {
-        $("#mypersonalbox_startseite").show();
-        $("#mypersonalbox_main").hide();
+        $("#mypersonalbox_main").fadeOut("slow",function(){
+            $("#mypersonalbox_startseite").fadeIn("slow");
+        });
     }
     else
     {
-        $("#mypersonalbox_main").show();
-        $("#mypersonalbox_startseite").hide();
+        $("#mypersonalbox_startseite").fadeOut("slow",function(){
+            $("#mypersonalbox_main").fadeIn("slow");
+        });
+        
     }
     // mainbox
-    var isValid = false;
-    for(var i=0; i<alleAnsichten.length; i++)
+    var ansichtIdx = alleAnsichten.indexOf(ansicht);
+    
+    if(ansichtIdx != -1)
     {
-        if(alleAnsichten[i] == ansicht) 
-        {
-            $("#mainbox_"+alleAnsichten[i]).show();
-            isValid = true;
-        } else {
-            $("#mainbox_"+alleAnsichten[i]).hide();
-        }
+    	// Alles auÃŸer das neue Ausblenden
+        $(".mainbox").not("#mainbox_"+alleAnsichten[ansichtIdx]).fadeOut("slow", function(){
+            $("#mainbox_"+alleAnsichten[ansichtIdx]).fadeIn("slow");
+        });
     }
-    if(!isValid) 
+    else 
     {
         console.log("[urlHandler] Ungueltige Ansicht: "+ansicht);
     }

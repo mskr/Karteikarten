@@ -6,16 +6,20 @@ $(document).ready(function() {
 	
     registerSuchEvent();
     
+    // Aktiviert den CK-Editor
+    //$("#vn_beschr_input").ckeditor();
+    
     // Code fuer das Veranstaltung erstellen Popup
     $('#vn_erstellen_popup').popup({
     	openelement: '#vn_erstellen_bt',
     	closeelement: '#vn_popup_close',
     	focuselement: '#vn_titel_input',
-    	blur: false,
+        blur: false,
     	transition: 'all 0.3s',
     	onclose : function() {
     		if(jsonBenutzer == undefined)
     			return;
+    		
     		$("#vn_titel_input").val("");
     		// TODO
 //  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
@@ -55,54 +59,46 @@ $(document).ready(function() {
 function fillHauptseite() 
 {
 	// Studiengänge in auswahlliste anzeigen
-	var ajax1 =  $.ajax({
-		url: startseitenServlet,
-		data: "action="+actionGetStudiengaenge,
-		success: function(response) 
+	var ajax1 = ajaxCall(startseitenServlet,
+		actionGetStudiengaenge,
+		function(response) 
 		{
-			if(verifyResponse(response))
-			{
-				var studgArr = response[keyJsonArrResult];
-
-				fillSelectWithOptions($("#vn_alle_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
-				fillSelectWithOptions($("#vn_erstellen_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
-			}
+			var studgArr = response[keyJsonArrResult];
+			fillSelectWithOptions($("#vn_alle_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
+			fillSelectWithOptions($("#vn_erstellen_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
 		}
-	}); 
-	
+	); 
+
 
 	// Semester in auswahlliste anzeigen
-	var ajax2 =  $.ajax({
-		url: startseitenServlet,
-		data: "action="+actionGetSemester,
-		success: function(response) 
+	var ajax2 =  ajaxCall(startseitenServlet,
+		actionGetSemester,
+		function(response) 
 		{
-			if(verifyResponse(response))
-			{
-				$("#vn_alle_auswahl_semester").empty();
-				$("#vn_erstellen_auswahl_semester").empty();
-
-				var studgArr = response[keyJsonArrResult];
-
-				for(var i in studgArr) {
-					$("#vn_alle_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
-					$("#vn_erstellen_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
-				}
-
-				$("#vn_alle_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
-				$("#vn_erstellen_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
-
-				$("#vn_alle_auswahl_semester").find("option").sort(function(a,b) {
-					return $(a).data('semesterid') > $(b).data('semesterid');
-				}).appendTo('#vn_alle_auswahl_semester');
-
-
-				$("#vn_erstellen_auswahl_semester").find("option").sort(function(a,b) {
-					return $(a).data('semesterid') > $(b).data('semesterid');
-				}).appendTo('#vn_erstellen_auswahl_semester');
+			$("#vn_alle_auswahl_semester").empty();
+			$("#vn_erstellen_auswahl_semester").empty();
+	
+			var studgArr = response[keyJsonArrResult];
+	
+			for(var i in studgArr) {
+				$("#vn_alle_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
+				$("#vn_erstellen_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
 			}
+	
+			$("#vn_alle_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
+			$("#vn_erstellen_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
+	
+			$("#vn_alle_auswahl_semester").find("option").sort(function(a,b) {
+				return $(a).data('semesterid') > $(b).data('semesterid');
+			}).appendTo('#vn_alle_auswahl_semester');
+	
+	
+			$("#vn_erstellen_auswahl_semester").find("option").sort(function(a,b) {
+				return $(a).data('semesterid') > $(b).data('semesterid');
+			}).appendTo('#vn_erstellen_auswahl_semester');
+			
 		}
-	});
+	);
 
 	if(jsonBenutzer[paramNutzerstatus] == "ADMIN" || jsonBenutzer[paramNutzerstatus] == "DOZENT")
 	{
@@ -110,66 +106,52 @@ function fillHauptseite()
 	}
 	else
 	{
-		$("#vn_erstellen_bt").hide();
+		$("#vn_erstellen_bt").hide(); // TODO Hier vielleicht besser remove(), dann kann ein Hacker ihn nicht mehr einblenden
 	}
 
-    $.when(ajax1,ajax2).then(fillVeranstaltungsliste);
+    return $.when(ajax1,ajax2).done(fillVeranstaltungsliste);
 }
 
-function fillVeranstaltungsliste(doneFkt) 
+function fillVeranstaltungsliste() 
 {
-    $.when(leseVeranstaltungenMeine(),leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
-    												   $("#vn_alle_auswahl_studiengang").val()).done(doneFkt));
+    return $.when(leseVeranstaltungenMeine(),leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
+    												   $("#vn_alle_auswahl_studiengang").val()));
 }
 
 function leseVeranstaltungenMeine()
 {
 	// Meine Veranstaltungen
-	return $.ajax({
-		url: veranstaltungServlet,
-		data: "action="+actionLeseVeranst + "&" + 
-		leseVeranstMode +"=" + leseVeranstModeMeine,
-		success: function(response) 
+	var params = {};
+	params[leseVeranstMode] = leseVeranstModeMeine;
+	return ajaxCall(veranstaltungServlet,
+		actionLeseVeranst,
+		function(response) 
 		{
 			var divMeineVeranst = $("#vn_tabcontent_meine");
 			displayVeranstaltungen(divMeineVeranst, response);
-		}
-	});
+		},
+		params
+	);
 }
 
 function leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName)
 {
 	// Semester Veranstaltungen
-	return $.ajax({
-		url: veranstaltungServlet,
-		data: "action="+actionLeseVeranst + "&" + 
-		leseVeranstMode +"=" + leseVeranstModeStudiengangSemester + "&" +
-		paramGewaehltesSemester + "=" + semesterName + "&" +
-		paramGewaehltesStudiengang + "=" + studiengangName,
-		success: function(response) 
+	var params = {};
+	params[leseVeranstMode] = leseVeranstModeStudiengangSemester;
+	params[paramGewaehltesSemester] = semesterName;
+	params[paramGewaehltesStudiengang] = studiengangName;
+	
+	return ajaxCall(veranstaltungServlet,
+		actionLeseVeranst,
+		function(response) 
 		{
 			var divSemesterVeranst = $("#vn_tabcontent_alle");
 			displayVeranstaltungen(divSemesterVeranst, response);
-		}
-	});
+		},
+		params
+	);
 }
-
-//function leseVeranstaltungenStudiengang(studiengangName)
-//{
-//	// Studiengang Veranstaltungen
-//	return $.ajax({
-//		url: veranstaltungServlet,
-//		data: "action="+actionLeseVeranst + "&" + 
-//		leseVeranstMode +"=" + leseVeranstModeStudiengang + "&" +
-//		paramGewaehltesStudiengang + "=" + studiengangName,
-//		success: function(response) 
-//		{
-//			var divStudiengangVeranst = $("#vn_tabcontent_studiengang");
-//			displayVeranstaltungen(divStudiengangVeranst, response);
-//		}
-//	});	
-//}
-
 function displayVeranstaltungen(container, ajaxResult)
 {
 	if(verifyResponse(ajaxResult))
@@ -307,18 +289,18 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
         // AUSSCHREIBEN
         button.click(function() {
             sindSieSicher((this), "", function() {
-                $.ajax({
-                    url: veranstaltungServlet,
-                    data: "action="+actionAusschreiben + "&" + 
-                          paramId +"=" + jsonVeranstObj[paramId],
-                    success: function(response) 
+            	var params = {};
+            	params[paramId] = jsonVeranstObj[paramId];
+            	
+            	ajaxCall(veranstaltungServlet,
+                    actionAusschreiben, 
+                    function(response) 
                     {
-                    	if(verifyResponse(response)){
-                    		showInfo("Sie haben sich abgemeldet von der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
-                    		fillVeranstaltungsliste();
-                    	}
-                    }
-                });
+	            		showInfo("Sie haben sich abgemeldet von der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
+	            		fillVeranstaltungsliste();
+                    },
+                    params
+                );
             });
         });
     }
@@ -337,68 +319,65 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
                 kennwortFeld.focus();
                 kennwortForm.submit(function(event) {
                     kennwort = kennwortFeld.val();
-                    $.ajax({
-                        url: veranstaltungServlet,
-                        data: "action="+actionEinschreiben + "&" + 
-                              paramId +"=" + jsonVeranstObj[paramId] + "&" +
-                              paramPasswort + "=" + escape(kennwort),                 // TODO
-                        success: function(response) 
+                    
+                    var errorFkt = function(errorTxt) {
+                		if(errorTxt == "loginfailed") 
                         {
-                        	var errorFkt = function(errorTxt) {
-                        		if(errorTxt == "loginfailed") 
-                                {
-                                    showError("Ihr Zugangspasswort war falsch.");
-                                    kennwortFeld.toggleClass("shake2");
-                                    return true;
-                                }
-                        		return false;
-							}
-                        	if(verifyResponse(response,errorFkt))
-                        	{
+                            showError("Ihr Zugangspasswort war falsch.");
+                            kennwortFeld.toggleClass("shake2");
+                            return true;
+                        }
+                		return false;
+					}
+                    var params = {};
+                    params[paramId] = jsonVeranstObj[paramId];
+                    params[paramPasswort] = escape(kennwort);
+                    
+                    ajaxCall(veranstaltungServlet,
+                        actionEinschreiben, 
+                        function(response) 
+                        {
 //                        		kennwortForm.html("<div style='color:GreenYellow'><span class='octicon octicon-check'></span> Ok</div>");
                         		showInfo("Sie sind nun eingeschrieben in der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
                         		
-                        		fillVeranstaltungsliste(function() {
+                        		fillVeranstaltungsliste(function()
+                        		{
                             		// Aktiviere den Alle-Tab
                                     $("#tab-2").prop("checked",true);
                                     // Klappe die entsprechende VN aus
                                     $("#vn_alle_"+jsonVeranstObj[paramId]+"_radio").trigger("click").prop("checked",true);
 								});
 
-                        	}
-                        }
-                    });
+                        },
+                        params,
+                        errorFkt
+                    );
                     event.preventDefault();
                 });
             }
             else
             {
                 // Einschreiben ohne Kennwort
-                $.ajax({
-                    url: veranstaltungServlet,
-                    data: "action="+actionEinschreiben + "&" + 
-                          paramId +"=" + jsonVeranstObj[paramId],
-                    success: function(response) 
+            	var params = {};
+            	params[paramId] = jsonVeranstObj[paramId];
+                ajaxCall(veranstaltungServlet,
+                    actionEinschreiben, 
+                    function(response) 
                     {
-                    	if(verifyResponse(response))
-                    	{
-                    		showInfo("Sie sind nun eingeschrieben in der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
-                    		fillVeranstaltungsliste(function() {
-                        		// Aktiviere den Alle-Tab
-                                $("#tab-2").prop("checked",true);
-                                // Klappe die entsprechende VN aus
-                                $("#vn_alle_"+jsonVeranstObj[paramId]+"_radio").trigger("click").prop("checked",true);
-							});
-                    	}
-                    }
-                });
+                		showInfo("Sie sind nun eingeschrieben in der Veranstaltung \"" + jsonVeranstObj[paramTitel] + "\".");
+                		fillVeranstaltungsliste(function() {
+                    		// Aktiviere den Alle-Tab
+                            $("#tab-2").prop("checked",true);
+                            // Klappe die entsprechende VN aus
+                            $("#vn_alle_"+jsonVeranstObj[paramId]+"_radio").trigger("click").prop("checked",true);
+						});
+                    },
+                    params
+                );
             }
         });
     }
 }
-
-
-
 
 function registerSuchEvent()
 {
@@ -433,26 +412,18 @@ var suchTimer = function(){
             $("#sucherg_vn").slideUp("fast").empty();
             $("#sucherg_benutzer").slideUp("fast").empty();
     		var suchString = $("#suche_global_input").val();
-    		var ajax = $.ajax({
-    			url: suchfeldServlet,
-    			data: "action=" + actionSucheBenVeranst + "&" +
-    			paramSuchmuster + "=" + suchString,
-    			success: function(response) {
-    				var jsonObj = response;
-    				var errCode = jsonObj["error"];
-    				if(errCode == "noerror")
-    				{
-    					var arrSuchErgebnisse = jsonObj[keyJsonArrResult];
-    					fillSuchergebnisse(arrSuchErgebnisse);
-    					suchErgIterator = -1;
-    					$("#sucherg_vn, #sucherg_benutzer").slideDown("fast");
-    				}
-    				else
-    				{
-    					message(0, buildMessage(errCode));
-    				}
-    			}
-    		});
+    		var params = {};
+    		params[paramSuchmuster] = suchString;
+    		ajaxCall(suchfeldServlet,
+    			actionSucheBenVeranst,
+    			function(response) {
+					var arrSuchErgebnisse = response[keyJsonArrResult];
+					fillSuchergebnisse(arrSuchErgebnisse);
+					suchErgIterator = -1;
+					$("#sucherg_vn, #sucherg_benutzer").slideDown("fast");
+    			},
+    			params
+    		);
     		
         },400);
     }
@@ -571,90 +542,113 @@ function registerVeranstErzeugeHandler() {
 			passw = popup.find("#vn_pass_input").val(),
 			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
 			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
-		var moderatorenIDs = "";
+		
+		var moderatorenIDs = [];
 		
 		for( var key in selectedModList)
 		{
-			moderatorenIDs += paramModeratoren +"=" + selectedModList[key][paramId] + "&";
+			moderatorenIDs.push(selectedModList[key][paramId]);
 		}
 	
-		var ajax = $.ajax({
-			url: veranstaltungServlet,
-			data: "action=" + actionErstelleVeranst + "&" + 
-				  paramTitel + "=" + escape(titel) + "&" +
-				  paramSemester + "=" + escape(semester) + "&" + 
-				  paramStudiengang + "=" + escape(studiengang) + "&" +
-				  paramBeschr + "=" + escape(beschr) + "&" + 
-				  paramModeratorKkBearbeiten + "=" + moderatorenKkBearbeiten + "&"+
-				  paramKommentareErlauben + "=" + kommentareErlaubt + "&" + 
-				  paramBewertungenErlauben + "=" + bewertungenErlaubt + "&"+
-				  paramPasswort + "=" + escape(passw) + "&" +
-				  moderatorenIDs,
-				  
-			success: function(response) {
-				if(verifyResponse(response))
-				{
+		var params = {};
+		params[paramTitel] = escape(titel);
+		params[paramSemester] = escape(semester);
+		params[paramStudiengang] = escape(studiengang);
+		params[paramBeschr] = escape(beschr);
+		params[paramModeratorKkBearbeiten] = moderatorenKkBearbeiten;
+		params[paramKommentareErlauben] = kommentareErlaubt;
+		params[paramBewertungenErlauben] = bewertungenErlaubt;
+		params[paramPasswort] = escape(passw);
+		params[paramModeratoren] = moderatorenIDs;
+		
+		var ajax = ajaxCall(veranstaltungServlet,
+				actionErstelleVeranst,
+				function(response) {
 					showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich erzeugt.");
 					popup.popup('hide');
 					fillVeranstaltungsliste();	
-				}
-			}
-		});
+				},
+				params
+			);
 	});
 	
 	// Triggert das eigene Enter-Event wenn key 13 gedrückt wurde
 	$("#vn_mod_input").keyup(function(e)
 	{
+		if(e.keyCode == 37) // Pfeil links
+		{
+			// TODO 
+		}
+		else if(e.keyCode == 38) // Pfeil hoch
+		{
+			// TODO
+		}
+		else if(e.keyCode == 39) // Pfeil rechts
+		{
+			// TODO
+		}
+		else if(e.keyCode == 40) // Pfeil runter
+		{
+			// TODO
+		}
+		else if(e.keyCode == 13) // ENTER
+		{
+			// TODO
+			$("#vn_mod_vorschlag").children().first().trigger("click");
+		}
+		else if(e.keyCode == 27) // ESC
+		{
+			$("#vn_mod_input").val("");
+			$("#vn_mod_input").trigger("keyup");
+		}
 		// Falls etwas eingegeben wurde suchen, sonst Feld leeren
-		if($("#vn_mod_input").val() != "")
+		else if($("#vn_mod_input").val() != "")
 		{
 			clearTimeout(modSuchTimer);
 			modSuchTimer = setTimeout(function(){
-				var ajax = $.ajax({
-					url: suchfeldServlet,
-					data: "action=" + actionSucheBenutzer + "&" +
-					paramSuchmuster + "=" + $("#vn_mod_input").val(),
-
-					success: function(response) 
+				var params = {};
+				params[paramSuchmuster] = $("#vn_mod_input").val();
+				ajaxCall(suchfeldServlet,
+					actionSucheBenutzer,
+					function(response) 
 					{
-						if(verifyResponse(response))
+						// Alle Suchergebnisse entfernen
+						$("#vn_mod_vorschlag").children().remove();
+						// Neue Suchergebnisse holen
+						var res = response[keyJsonArrResult];
+						// Falls welche existieren
+						if(res.length>0)
 						{
-							// Alle Suchergebnisse entfernen
-							$("#vn_mod_vorschlag").children().remove();
-							// Neue Suchergebnisse holen
-							var res = response[keyJsonArrResult];
-							// Falls welche existieren
-							if(res.length>0)
+							for(var i in res)
 							{
-								for(var i in res)
-								{
-									var x = $("<a>" + res[i][paramVorname] + " " + res[i][paramNachname] + "</a>");
-
-									(function(benutzer) 
+								var x = $("<a>" + res[i][paramVorname] + " " + res[i][paramNachname] + "</a>");
+	
+								(function(benutzer) 
+										{
+									// Click handler für den Sucheintrag
+									x.click(function()
 											{
-										// Click handler für den Sucheintrag
-										x.click(function()
-												{
-											addItemToList(selectedModList, $("#vn_mod_list"), 
-													benutzer[paramVorname] + " " + benutzer[paramNachname], 
-													benutzer, undefined,undefined);
-
-											$("#vn_mod_input").val("");
-											$("#vn_mod_vorschlag").slideUp(100);
-
-												});
-											})(res[i]);
-
-
-									$("#vn_mod_vorschlag").append(x);
-								}
-								$("#vn_mod_vorschlag").slideDown(100);
+										addItemToList(selectedModList, $("#vn_mod_list"), 
+												benutzer[paramVorname] + " " + benutzer[paramNachname], 
+												benutzer, undefined,undefined);
+	
+										$("#vn_mod_input").val("");
+										$("#vn_mod_vorschlag").slideUp(100);
+	
+											});
+										})(res[i]);
+	
+	
+								$("#vn_mod_vorschlag").append(x);
 							}
-							else
-								$("#vn_mod_vorschlag").slideUp(100);
+							$("#vn_mod_vorschlag").slideDown(100);
 						}
-					}
-				});
+						else
+							$("#vn_mod_vorschlag").slideUp(100);
+
+					},
+					params
+				);
 
 			},400);
 		}
