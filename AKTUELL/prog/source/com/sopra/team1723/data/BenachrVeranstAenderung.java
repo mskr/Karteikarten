@@ -12,6 +12,16 @@ public class BenachrVeranstAenderung extends Benachrichtigung{
         super(id, inhalt, erstelldaum, benutzer, gelesen);
         this.veranstaltung = veranstaltung;
     }
+    
+    public BenachrVeranstAenderung(String inhalt, Calendar erstelldatum, Veranstaltung veranstaltung){
+        this.inhalt = inhalt;
+        this.erstelldaum = erstelldatum;
+        this.veranstaltung = veranstaltung;
+        this.id = -1;
+        this.benutzer = -1;
+        this.gelesen = false;
+    }
+    
 
     public Veranstaltung getVeranstaltung()
     {

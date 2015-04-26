@@ -13,6 +13,18 @@ public class BenachrEinlModerator extends Benachrichtigung{
         this.veranstaltung = veranstaltung;
         this.angenommen = angenommen;
     }
+    
+    public BenachrEinlModerator(String inhalt, Calendar erstelldatum, int benutzer,
+            Veranstaltung veranstaltung){
+        this.inhalt = inhalt;
+        this.erstelldaum = erstelldatum;
+        this.benutzer = benutzer;
+        this.veranstaltung = veranstaltung;
+        this.id = -1;
+        this.gelesen = false;
+        this.angenommen = false;
+    }
+    
     public Veranstaltung getVeranstaltung()
     {
         return veranstaltung;

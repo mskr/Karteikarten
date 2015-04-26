@@ -1147,51 +1147,50 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(benachrichtigung instanceof BenachrEinlModerator){
                 BenachrEinlModerator bem = (BenachrEinlModerator) benachrichtigung;
                 ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_einladung_moderator (Benachrichtigung, Benutzer,"
-                        + "Veranstaltung, Gelesen, Angenommen) VALUES (?,?,?,?,?)");
+                        + "Veranstaltung) VALUES (?,?,?)");
                 ps.setInt(1, id);
                 ps.setInt(2, bem.getBenutzer());
                 ps.setInt(3, bem.getVeranstaltung().getId());
-                ps.setBoolean(4, bem.isGelesen());
-                ps.setBoolean(5, bem.isAngenommen());
 
+            
+            // todo karteikarten und kommentar Benachrichtigungen müssen noch angepasst werden
             } else if (benachrichtigung instanceof BenachrKarteikAenderung){
                 BenachrKarteikAenderung bk = (BenachrKarteikAenderung) benachrichtigung;
                 ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_karteikartenaenderung (Benachrichtigung, Benutzer,"
-                        + "Karteikarte, Gelesen) VALUES (?,?,?,?)");
+                        + "Karteikarte) VALUES (?,?,?);");
                 ps.setInt(1, id);
                 ps.setInt(2, bk.getId());
                 ps.setInt(3, bk.getKarteikarte().getId());
-                ps.setBoolean(4, bk.isGelesen());
 
             } else if (benachrichtigung instanceof BenachrNeuerKommentar){
                 BenachrNeuerKommentar bnk = (BenachrNeuerKommentar) benachrichtigung;
                 ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_neuer_kommentar (Benachrichtigung, Benutzer,"
-                        + "Kommentar, Gelesen) VALUES (?,?,?,?)");
+                        + "Kommentar) VALUES (?,?,?);");
                 ps.setInt(1, id);
                 ps.setInt(2, bnk.getBenutzer());
                 ps.setInt(3, bnk.getKommentar().getId());
-                ps.setBoolean(4, bnk.isGelesen());   
 
             } else if (benachrichtigung instanceof BenachrProfilGeaendert){
                 BenachrProfilGeaendert bpg = (BenachrProfilGeaendert) benachrichtigung;
                 ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_profil_geaendert (Benachrichtigung, Benutzer,"
-                        + "Admin, Gelesen) VALUES (?,?,?,?)");
+                        + "Admin) VALUES (?,?,?);");
                 ps.setInt(1, id);
                 ps.setInt(2, bpg.getBenutzer());
-                ps.setInt(3, bpg.getAdmin().getId());
-                ps.setBoolean(4, bpg.isGelesen()); 
+                ps.setInt(3, bpg.getAdmin().getId()); 
 
             } else {
                 BenachrVeranstAenderung bv = (BenachrVeranstAenderung) benachrichtigung;
-                ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_veranstaltungsaenderung (Benachrichtigung, Benutzer,"
-                        + "Veranstaltung, Gelesen) VALUES (?,?,?,?)");
+                ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_veranstaltungsaenderung"
+                        + " (Benachrichtigung, Veranstaltung, Benutzer)"
+                        + " SELECT ?,?,Benutzer FROM benutzer_veranstaltung_zuordnung AS bvz "
+                        + "JOIN Benutzer AS b ON bvz.Benutzer = b.ID WHERE bvz.Veranstaltung = 1 "
+                        + "AND b.NotifyVeranstAenderung = ?;");
                 ps.setInt(1, id);
-                ps.setInt(2, bv.getBenutzer());
+                ps.setInt(2, bv.getVeranstaltung().getId());
                 ps.setInt(3, bv.getVeranstaltung().getId());
-                ps.setBoolean(4, bv.isGelesen());  
             }           
 
-            if(ps.executeUpdate() != 1)                
+            if(ps.executeUpdate() == 0)                
                 erfolgreich = false;
 
             conMysql.commit();
