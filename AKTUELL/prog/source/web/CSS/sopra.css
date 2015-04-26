@@ -1246,9 +1246,9 @@ textarea.input_std {
 	overflow: hidden;
 } .popup_fenster_body * {
 	display: block;
-} .popup_fenster_body span * {
-	display: inline;
-} .popup_fenster_spalte {
+}  .popup_fenster_body * input {
+	display: inline-block;
+}  .popup_fenster_spalte {
 	margin-top: 1em;
 	width: 50%;
 	float: left;

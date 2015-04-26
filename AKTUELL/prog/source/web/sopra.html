@@ -33,11 +33,11 @@
 <!-- JQuery History-State-API -->
 <script src="history/scripts/bundled/html4+html5/jquery.history.js"></script>
 <!-- CKEditor Core -->
-<!-- <script src="ckeditor/ckeditor.js"></script> -->
+<script src="ckeditor/ckeditor.js"></script>
 <!-- CKEditor Config -->
-<!-- <script src="ckeditor/build-config.js"></script> -->
+<script src="ckeditor/config.js"></script>
 <!-- CKEditor JQuery Adapter -->
-<!-- <script src="ckeditor/adapters/jquery.js"></script> -->
+<script src="ckeditor/adapters/jquery.js"></script>
 <!-- CKEditor Code Snippet Syntax Highlighting CSS -->
 <!-- <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/zenburn.css" rel="stylesheet"> -->
 <!-- HTML5-Videoplayer -->
@@ -638,15 +638,15 @@ Dann aber so leer.
 		    width: calc(100% - 4.2em);
 		    height: auto;
 		"></div>
-		<textarea class="input_std vn_erstellen_input" id="vn_beschr_input" placeholder="Beschreibung" required></textarea>
+		<textarea class="input_std vn_erstellen_input" id="vn_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
 		<div class="popup_fenster_spalte" id="vn_bearbeiten_mode">
 			<span class="form_infotext">Wer darf bearbeiten?</span>
-			<span><input name="vn_bearbeitenMode_radiogb" id="vn_keiner_bearb" value = "Nur ich" type="radio"checked><label for="vn_keiner_bearb">Nur ich</label></span>
-			<span><input name="vn_bearbeitenMode_radiogb" id="vn_mod_bearb" value = "Ich und Moderatoren"type="radio"><label for="vn_mod_bearb">Ich und Moderatoren</label></span>
+			<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_keiner_bearb" value = "Nur ich" type="radio"checked>Nur ich</label></span>
+			<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_mod_bearb" value = "Ich und Moderatoren"type="radio">Ich und Moderatoren</label></span>
 		</div>
 		<div class="popup_fenster_spalte">
-			<span><input id="vn_komm_erlaubt" type="checkbox" checked><label for="vn_komm_erlaubt">Kommentare erlaubt</label></span>
-			<span><input id="vn_bew_erlaubt" type="checkbox" checked><label for="vn_bew_erlaubt">Bewertungen erlaubt</label></span>
+			<span><label><input id="vn_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
+			<span><label><input id="vn_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
 		</div>
 	</div>
 	<div class="popup_fenster_foot">
