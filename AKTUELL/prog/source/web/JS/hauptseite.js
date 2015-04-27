@@ -1,41 +1,98 @@
 /**
  * @author mk
  */
+/***
+ * Pacth for dialog-fix ckeditor problem [ by ticket #4727 ]
+ * 	http://dev.jqueryui.com/ticket/4727
+ */
+
 // Statische Handler einmal registrieren
 $(document).ready(function() {
 	
     registerSuchEvent();
     
-    // Aktiviert den CK-Editor
-    $("#vn_beschr_input").ckeditor();
-    
-    // Code fuer das Veranstaltung erstellen Popup
-    $('#vn_erstellen_popup').popup({
-    	openelement: '#vn_erstellen_bt',
-    	closeelement: '#vn_popup_close',
-    	focuselement: '#vn_titel_input',
-        blur: false,
-    	transition: 'all 0.3s',
-    	onclose : function() {
-    		if(jsonBenutzer == undefined)
-    			return;
-    		
-    		$("#vn_titel_input").val("");
-    		// TODO
-//  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
-    		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
-    		
-    		$("#vn_pass_input").val("");
-    		$("#vn_beschr_input").val("");
-    		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
-    		$("#vn_komm_erlaubt").prop("checked", true);
-    		$("#vn_bew_erlaubt").prop("checked", true);
-    		$("#vn_mod_list").children().remove();
-			$("#vn_mod_input").val("");
-			$("#vn_mod_vorschlag").slideUp(100);
-    		selectedModList = {};
+    $.widget("ui.dialog", $.ui.dialog, {
+    	_allowInteraction: function(event) {
+    		return !!$(event.target).closest(".cke").length || this._super(event);
     	}
     });
+    
+    // Code fuer das Veranstaltung erstellen Popup
+    $('#vn_erstellen_bt').click(function() {
+    	$('#vn_erstellen_popup').dialog({
+    	    show: "fold",   //  the animation on show
+    	    hide: "fold",    // the animation on close
+    	    resizable: false,   // prevents user from resizing
+    	    closeOnEscape: true,    //  esc key will close dlg
+    	    modal: true,
+    	    width: '40em',
+    	    title: "<div class='popup_fenster_titel'>" + 
+		"<span class='octicon octicon-podium'></span>" +
+		"<span class='popup_fenster_ueberschrift'> Veranstaltung erstellen</span>" +
+		"</div>", // dlg title in ttl bar
+    	    buttons: {},
+    	    open: function(event, ui) { 
+    	        //hide close button.
+    	        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+    	    },
+    	    close: function(e) {
+    	    	if(jsonBenutzer == undefined)
+    	    		return;
+
+    	    	$("#vn_titel_input").val("");
+    	    	// TODO
+//  	    	$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
+    	    	$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
+
+    	    	$("#vn_pass_input").val("");
+    	    	$("#vn_beschr_input").val("");
+    	    	$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
+    	    	$("#vn_komm_erlaubt").prop("checked", true);
+    	    	$("#vn_bew_erlaubt").prop("checked", true);
+    	    	$("#vn_mod_list").children().remove();
+    	    	$("#vn_mod_input").val("");
+    	    	$("#vn_mod_vorschlag").slideUp(100);
+    	    	selectedModList = {};
+    	    }
+    	});
+        // Aktiviert den CK-Editor
+        $("#vn_beschr_input").ckeditor();
+        
+	})
+	
+	$('#vn_popup_close').click(function() {
+		$('#vn_erstellen_popup').dialog("close");
+		var editor = $('#vn_beschr_input').ckeditorGet();
+        editor.destroy();
+	});
+    
+	
+//    $('#vn_erstellen_popup').popup({
+//    	openelement: '#vn_erstellen_bt',
+//    	closeelement: '#vn_popup_close',
+//    	focuselement: '#vn_titel_input',
+//        blur: false,
+//    	transition: 'all 0.3s',
+//    	onclose : function() {
+//    		if(jsonBenutzer == undefined)
+//    			return;
+//    		
+//    		$("#vn_titel_input").val("");
+//    		// TODO
+////  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
+//    		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
+//    		
+//    		$("#vn_pass_input").val("");
+//    		$("#vn_beschr_input").val("");
+//    		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
+//    		$("#vn_komm_erlaubt").prop("checked", true);
+//    		$("#vn_bew_erlaubt").prop("checked", true);
+//    		$("#vn_mod_list").children().remove();
+//			$("#vn_mod_input").val("");
+//			$("#vn_mod_vorschlag").slideUp(100);
+//    		selectedModList = {};
+//    	}
+//    });
 
 
 	$("#vn_alle_auswahl_studiengang").change(function() {
@@ -527,21 +584,21 @@ var modSuchTimer;
 function registerVeranstErzeugeHandler() {
 	
 	$("#vn_erzeugen_cancel").click(function() {
-		$("#vn_erstellen_popup").popup("hide");
+		$("#vn_erstellen_popup").dialog('close');
 	});
 	
 	$("#vn_erzeugen_submit").click(function(event) {
 		event.preventDefault();
 		
-		var popup = $("#vn_erstellen_popup");
-		var titel = popup.find("#vn_titel_input").val(),
-			semester = popup.find("#vn_erstellen_auswahl_semester").val(),
-			studiengang = popup.find("#vn_erstellen_auswahl_studiengang").val(),
-			beschr = popup.find("#vn_beschr_input").val(),
-			moderatorenKkBearbeiten = popup.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
-			passw = popup.find("#vn_pass_input").val(),
-			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
-			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
+		var dialog = $("#vn_erstellen_popup");
+		var titel = dialog.find("#vn_titel_input").val(),
+			semester = dialog.find("#vn_erstellen_auswahl_semester").val(),
+			studiengang = dialog.find("#vn_erstellen_auswahl_studiengang").val(),
+			beschr = dialog.find("#vn_beschr_input").val(),
+			moderatorenKkBearbeiten = dialog.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
+			passw = dialog.find("#vn_pass_input").val(),
+			kommentareErlaubt = dialog.find("#vn_komm_erlaubt").is(':checked'),
+			bewertungenErlaubt = dialog.find("#vn_bew_erlaubt").is(':checked');
 		
 		var moderatorenIDs = [];
 		
@@ -565,7 +622,7 @@ function registerVeranstErzeugeHandler() {
 				actionErstelleVeranst,
 				function(response) {
 					showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich erzeugt.");
-					popup.popup('hide');
+					dialog.dialog('close');
 					fillVeranstaltungsliste();	
 				},
 				params
