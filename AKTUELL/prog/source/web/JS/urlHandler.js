@@ -97,7 +97,7 @@ function buildUrlQuery(paramObj)
     // TODO
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
     
-    History.pushState(null,"test1", locationSearchTmp);
+    History.pushState(null,null, locationSearchTmp);
 }
 
 /**
@@ -116,7 +116,6 @@ function interpreteUrlQuery(paramObj)
 
 //	$(".mainbox").fadeOut("slow");
 //	$("#mainbox_loadScreen").fadeIn("slow");
-	
     var ziel = paramObj[urlParamLocation];
 	// Benutzer eingeloggt
     if(jsonBenutzer != undefined)

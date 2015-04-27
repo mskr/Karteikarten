@@ -47,6 +47,7 @@ $(document).ready(function() {
  * geholt und in das select-Element eingeordnet.
  */
 function fillStartseite() {
+	document.title = "Startseite";
     return ajaxCall(
         startseitenServlet,
         actionGetStudiengaenge,
