@@ -348,6 +348,7 @@ function registerAvatarAendernEvent() {
     			fileName.toLowerCase().indexOf(".png") < 0)
     	{
     		showError("Leider werden nur die Formate jpg/jpeg, bmp oder png unterstützt.");
+    		$("#profil_avatar_submit").hide(0);
     	}
     	else
     	{

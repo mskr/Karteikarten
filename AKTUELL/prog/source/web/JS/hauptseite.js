@@ -77,17 +77,19 @@ function fillHauptseite()
 		{
 			$("#vn_alle_auswahl_semester").empty();
 			$("#vn_erstellen_auswahl_semester").empty();
-	
+			
 			var studgArr = response[keyJsonArrResult];
-	
+			var aktSemesterString = response[paramAktSemester];
+			var aktSemesterDI = 1; //default, falls kein match
+			
 			for(var i in studgArr) {
 				$("#vn_alle_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
 				$("#vn_erstellen_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
+				if(aktSemesterString==studgArr[i][paramSemester]){
+					aktSemesterDI = Number(i)+1;
+				}
 			}
-	
-			$("#vn_alle_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
-			$("#vn_erstellen_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
-	
+			
 			$("#vn_alle_auswahl_semester").find("option").sort(function(a,b) {
 				return $(a).data('semesterid') > $(b).data('semesterid');
 			}).appendTo('#vn_alle_auswahl_semester');
@@ -97,6 +99,9 @@ function fillHauptseite()
 				return $(a).data('semesterid') > $(b).data('semesterid');
 			}).appendTo('#vn_erstellen_auswahl_semester');
 			
+			$("[data-semesterid='"+aktSemesterDI+"']").prop('selected', true);
+			$("#vn_erstellen_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
+	
 		}
 	);
 
