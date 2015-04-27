@@ -327,10 +327,10 @@ function registerProfilSpeichernEvents() {
                     $("#profil_passwort_speichern").prop('disabled', false);
                 }
             );
+            $("#profil_passwort_input").val("");
+            $("#profil_passwort_wdh_input").val("");
+            $("#profil_passwort_alt_input").val("");
         }
-        $("#profil_passwort_input").val("");
-        $("#profil_passwort_wdh_input").val("");
-        $("#profil_passwort_alt_input").val("");
         // Verhindert das normale Absenden des Formulars
         event.preventDefault();
     });
