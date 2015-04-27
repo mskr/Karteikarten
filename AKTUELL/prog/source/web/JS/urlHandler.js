@@ -87,6 +87,7 @@ function buildUrlQuery(paramObj)
     for(var param in paramObj) 
     {
         locationSearchTmp += param + "=" + paramObj[param]
+
         if(i < maxI-1)
         	locationSearchTmp += "&";
         
@@ -96,7 +97,7 @@ function buildUrlQuery(paramObj)
     // TODO
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
     
-    History.pushState(null,null, locationSearchTmp);
+    History.pushState(null,"test1", locationSearchTmp);
 }
 
 /**

@@ -59,6 +59,8 @@ function fillProfilseite() {
     
     if(currentProfilID == jsonBenutzer[paramId])
     {
+    	UserName = jsonBenutzer[paramVorname]+" "+jsonBenutzer[paramNachname];
+    	document.title = UserName;
     	fillMyProfil(jsonBenutzer[paramNutzerstatus] == "ADMIN");
     }
     else
@@ -156,6 +158,13 @@ function fillMyProfil(isAdmin)
 
 function fillOtherProfil(benutzer, isAdmin)
 {
+	//aktualisiere Titel
+	console.log(benutzer);
+	UserName = benutzer[paramVorname]+" "+benutzer[paramNachname];
+	console.log(UserName);
+	document.title = UserName;
+
+	
 	$(".profil_benutzername").text(benutzer[paramVorname] +" "+benutzer[paramNachname]);
 	$(".profil_avatar_img").attr("src", benutzer[paramProfilBild]);
 
@@ -351,6 +360,7 @@ function registerAvatarAendernEvent() {
     			fileName.toLowerCase().indexOf(".png") < 0)
     	{
     		showError("Leider werden nur die Formate jpg/jpeg, bmp oder png unterstützt.");
+    		$("#profil_avatar_submit").hide(0);
     	}
     	else
     	{
