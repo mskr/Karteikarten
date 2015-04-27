@@ -97,7 +97,7 @@ function buildUrlQuery(paramObj)
     // TODO
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
     
-    History.pushState(null,"test1", locationSearchTmp);
+    History.pushState(null,null, locationSearchTmp);
 }
 
 /**
