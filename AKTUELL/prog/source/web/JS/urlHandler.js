@@ -111,7 +111,7 @@ function interpreteUrlQuery(paramObj)
 	
 	// TODO Ãœbler hack ! 
 	// Versteck alle Popupfenster. Wo wÃ¤re das besser ?
-	$(".popup_fenster").popup('hide');
+//	$(".popup_fenster").popup('hide');
 
 //	$(".mainbox").fadeOut("slow");
 //	$("#mainbox_loadScreen").fadeIn("slow");
