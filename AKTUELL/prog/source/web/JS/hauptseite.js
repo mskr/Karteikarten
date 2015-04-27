@@ -466,29 +466,62 @@ function fillSuchergebnisse(arrSuchErgebnisse)
 function registerSucheClickEvent(jsonSuchErgebnis)
 {
     var id = jsonSuchErgebnis[paramId];
+    // klasse gibt an, ob es sich um einen Benutzer oder eine Veranstaltung handelt
     var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
-    if(klasse == keyJsonObjKlasseBenutzer) {
+    if(klasse == keyJsonObjKlasseBenutzer)
+    {
+        // Bei Klick auf einen Benutzer, gehe zum Profil
         $("#sucherg_benutzer_"+id).click(function() {
             // Verberge die Suchergebnisse
             $("#sucherg_x").trigger("click");
             gotoProfil(id);
         });
     }
-    else if(klasse == keyJsonObjKlasseVeranst) {
+    else if(klasse == keyJsonObjKlasseVeranst)
+    {
+        // Bei Klick auf Veranstaltung, klappe entsprechende Veranstaltung in der Liste aus
         $("#sucherg_vn_"+id).click(function() {
             // Verberge die Suchergebnisse
             $("#sucherg_x").trigger("click");
-            // Gehe zum Semester und zum Studiengang der VN
+            // Gehe zum Semester und zum Studiengang der Veranstaltung
             var semesterName = jsonSuchErgebnis[paramSemester];
-            var studiengangName = "Informatik"; //TODO Wir muessen die Studiengaenge im Veranstaltungs-Objekt speichern!
-            $("#vn_alle_auswahl_studiengang").val(studiengangName);
-            $("#vn_alle_auswahl_semester").val(semesterName);
-            var ajax = leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName);
-            $.when(ajax).done(function() {
-                // Aktiviere den Alle-Tab
-                $("#tab-2").prop("checked",true);
-                // Klappe die entsprechende VN aus
-                $("#vn_alle_"+id+"_radio").trigger("click").prop("checked",true);
+            //TODO
+            // 1. Hole die zu dieser Veranstaltung gehoerenden Studiengaenge
+            // 2. Schaue, ob der Studiengang des angemeldeten Benutzers dabei ist
+            // 3. Wenn ja, waehle diesen in der select Liste im Alle Tab und klappe die Veranstaltung aus
+            // 4. Wenn nein, nehme den ersten Studiengang und waehle diesen in der select Liste
+            var studiengangName;
+            var params = {};
+            params[paramId] = id;
+            var studgAjax = ajaxCall(
+                veranstaltungServlet, 
+                actionGetStudgVn, 
+                function(response) {
+                    var studgArr = response[keyJsonArrResult];
+                    studiengangName = studgArr[0];
+                    for(var i in studgArr)
+                    {
+                        if(studgArr[i] == jsonBenutzer[paramStudiengang])
+                        {
+                            studiengangName = studgArr[i];
+                        }
+                    }
+                    console.log("Waehle folgenden Studiengang "+studiengangName);
+                },
+                params
+            );
+            $.when(studgAjax).done(function() {
+                // Waehle korrektes Semester und Studiengang
+                $("#vn_alle_auswahl_studiengang").val(studiengangName);
+                $("#vn_alle_auswahl_semester").val(semesterName);
+                var ajax = leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName);
+                $.when(ajax).done(function() {
+                    // Aktiviere den Alle-Tab
+                    $("#tab-2").prop("checked",true);
+                    
+                    // Klappe die entsprechende VN aus
+                    $("#vn_alle_"+id+"_radio").trigger("click").prop("checked",true);
+                });
             });
         });
     }
