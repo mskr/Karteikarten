@@ -45,6 +45,7 @@ $(document).ready(function() {
             $("#profil_avatar_submit").fadeOut();
     });
     
+    getProfilStudiengaenge();
     registerProfilSpeichernEvents();
     registerAvatarAendernEvent();
 });
@@ -58,7 +59,7 @@ function fillProfilseite() {
     
     if(currentProfilID == jsonBenutzer[paramId])
     {
-    	return fillMyProfil(jsonBenutzer[paramNutzerstatus] == "ADMIN");
+    	fillMyProfil(jsonBenutzer[paramNutzerstatus] == "ADMIN");
     }
     else
     {
@@ -86,7 +87,7 @@ function fillProfilseite() {
 /**
  * Holt die Studiengaenge und traegt sie in das select Element ein.
  */
-function fillProfilStudiengaenge(benutzer) {
+function getProfilStudiengaenge() {
     return ajaxCall(startseitenServlet,
     				actionGetStudiengaenge,
     				function(response) 
@@ -96,7 +97,6 @@ function fillProfilStudiengaenge(benutzer) {
 				    	for(var i in studgArr) {
 				    		$("#profil_studiengang_input").append("<option>"+studgArr[i]+"</option>");
 				    	}
-				    	$("#profil_studiengang_input").val(benutzer[paramStudiengang]);
 			    	}
 		    	);
 }
@@ -123,7 +123,7 @@ function fillMyProfil(isAdmin)
     $("#profil_nachname_input").val(jsonBenutzer[paramNachname]);
     $("#profil_matnr_input").val(jsonBenutzer[paramMatrikelNr]);
     $("#profil_rolle_input").val(jsonBenutzer[paramNutzerstatus]);
-    var ajax1 = fillProfilStudiengaenge(jsonBenutzer);
+	$("#profil_studiengang_input").val(jsonBenutzer[paramStudiengang]);
     
     switch(jsonBenutzer[paramNotifyKommentare])
     {
@@ -152,8 +152,6 @@ function fillMyProfil(isAdmin)
 		$("#profil_studiengang_input").prop("disabled", false);
 		$("#profil_rolle_input").prop("disabled", false);
 	}
-	
-	return ajax1;
 }
 
 function fillOtherProfil(benutzer, isAdmin)
@@ -166,7 +164,7 @@ function fillOtherProfil(benutzer, isAdmin)
     $("#profil_nachname_input").val(benutzer[paramNachname]);
     $("#profil_matnr_input").val(benutzer[paramMatrikelNr]);
     $("#profil_rolle_input").val(benutzer[paramNutzerstatus]);
-    var ajax1 = fillProfilStudiengaenge(benutzer);
+	$("#profil_studiengang_input").val(benutzer[paramStudiengang]);
     
     switch(benutzer[paramNotifyKommentare])
     {
@@ -213,8 +211,6 @@ function fillOtherProfil(benutzer, isAdmin)
 		$("#profil_studiengang_input").prop("disabled", false);
 		$("#profil_rolle_input").prop("disabled", false);
 	}
-	
-	return ajax1;
 }
 
 /**

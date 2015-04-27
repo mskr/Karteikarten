@@ -7,7 +7,7 @@ $(document).ready(function() {
     registerSuchEvent();
     
     // Aktiviert den CK-Editor
-    //$("#vn_beschr_input").ckeditor();
+    $("#vn_beschr_input").ckeditor();
     
     // Code fuer das Veranstaltung erstellen Popup
     $('#vn_erstellen_popup').popup({
