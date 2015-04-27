@@ -337,6 +337,25 @@ public class VeranstaltungServlet extends ServletController {
         
         return true;
     }
+    
+    public void leseStudiengaengeVeranstaltung(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Id));
+        List<String> studiengaenge = dbManager.leseStudiengaenge(veranstaltung);
+        if(studiengaenge != null)
+        {
+            JSONObject jo = JSONConverter.toJson(studiengaenge);
+            outWriter.print(jo);
+        }
+        else
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+        }
+    }
 
     @Override
     protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -362,6 +381,9 @@ public class VeranstaltungServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionVeranstErstellen))
         {
             veranstaltungErstellen(req,resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionGetStudgVn)){
+            leseStudiengaengeVeranstaltung(req, resp);
         }
         else
         {
