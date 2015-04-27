@@ -383,6 +383,7 @@ function registerAvatarAendernEvent() {
     		    // complete
     		    $("#profil_avatar_submit").val("Avatar ändern");
                 $("#profil_avatar_submit").prop("disabled", false);
+                $("#profil_avatar_submit").hide(0);
     		});
     	}
         event.preventDefault();
