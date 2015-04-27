@@ -30,3 +30,7 @@ $(document).ready(function() {
         }
     });
 });
+//todo übergebe Informationen über Veranstaltung
+function fillVeranstaltungsSeite(){
+	//aktualisiere title
+}
