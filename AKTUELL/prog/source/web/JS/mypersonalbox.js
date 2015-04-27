@@ -179,11 +179,20 @@ function updateBenachrichtigungen(newBens)
 		// Sollte nicht auftreten. WEnn eine benachrichtigung von gelesen zu neu wird z.b.
 		else
 		{
-			// TODO
 			var benDiv = contentDiv.find("[data-id="+newBens[i][paramId]+"]");
-			benDiv.addClass("neu");
-			benDiv.removeClass("gelesen");
+			if(newBens[i][paramBenGelesen] == true)
+			{
+				benDiv.addClass("gelesen");
+				benDiv.removeClass("neu");
+			}
+			else
+			{
+				benDiv.addClass("neu");
+				benDiv.removeClass("gelesen");
+			}
 		}
+		
+		newBens[i][paramBenGelesen]
 	}
 	
 	// Prüfen, welche Benachrichtigngen verschwunden sind.
