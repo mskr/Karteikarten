@@ -408,6 +408,32 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
         }
     }
+    
+    public void leseModeratorenVeranstaltung(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Id));
+        List<Benutzer> moderatoren = dbManager.leseModeratoren(veranstaltung);
+        if(moderatoren != null)
+        {
+            List<String> modIds = new ArrayList<String>();
+
+            for(Benutzer b: moderatoren)
+            {
+                modIds.add(String.valueOf(b.getId()));
+            }
+
+            JSONObject jo = JSONConverter.toJson(modIds);
+            outWriter.print(jo);
+        }
+        else
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+        }
+    }
 
     @Override
     protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -437,6 +463,10 @@ public class VeranstaltungServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionGetStudgVn))
         {
             leseStudiengaengeVeranstaltung(req, resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionGetModeratorenVn))
+        {
+            leseModeratorenVeranstaltung(req, resp);
         }
         else if(aktuelleAction.equals(ParamDefines.ActionGetVeranstaltung))
         {

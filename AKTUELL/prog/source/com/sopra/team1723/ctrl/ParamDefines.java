@@ -36,8 +36,9 @@ public class ParamDefines
     public final static String ActionAusschreiben = "ausschreiben";
     public final static String ActionEinschreiben = "einschreiben";
     public final static String ActionVeranstErstellen = "erstelleVeranst";
-    
+
     public final static String ActionGetStudgVn = "getStudgVn";
+    public final static String ActionGetModeratorenVn = "getModVn";
 
 
     
