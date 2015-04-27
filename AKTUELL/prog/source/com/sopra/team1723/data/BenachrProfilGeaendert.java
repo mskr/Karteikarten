@@ -15,7 +15,7 @@ public class BenachrProfilGeaendert extends Benachrichtigung{
     public BenachrProfilGeaendert(GregorianCalendar erstelldaum, int benutzer, Benutzer admin)
     {
        this.id = -1;
-       this.inhalt = "";
+       this.inhalt = "Ihr Profil wurde geändert!";
        this.erstelldaum = erstelldaum;
        this.benutzer = benutzer;
        this.admin = admin;

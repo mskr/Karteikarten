@@ -206,10 +206,9 @@ public class ProfilServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-
+        
         jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         outWriter.print(jo);
-
 
         return true;
     }
