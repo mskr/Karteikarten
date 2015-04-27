@@ -11,11 +11,15 @@ $(document).ready(function() {
 	
     registerSuchEvent();
     
-    $.widget("ui.dialog", $.ui.dialog, {
-    	_allowInteraction: function(event) {
-    		return !!$(event.target).closest(".cke").length || this._super(event);
-    	}
-    });
+    $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+        _title: function(title) {
+            if (!this.options.title ) {
+                title.html("&#160;");
+            } else {
+                title.html(this.options.title);
+            }
+        }
+    }));
     
     // Code fuer das Veranstaltung erstellen Popup
     $('#vn_erstellen_bt').click(function() {
