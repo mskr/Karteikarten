@@ -44,7 +44,6 @@ public class Datenbankmanager implements IDatenbankmanager {
      */
     public Datenbankmanager() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
-        conMysql = DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root","");
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
         connections = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)
@@ -137,6 +136,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public Benutzer leseBenutzer(int id)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Benutzer benutzer = null;
@@ -161,6 +162,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return benutzer;
@@ -168,6 +170,8 @@ public class Datenbankmanager implements IDatenbankmanager {
 
     @Override
     public void schreibeBenutzer(Benutzer benutzer) throws DbUniqueConstraintException, SQLException{
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         System.out.println("------");
         String md5pwd = benutzer.getKennwort();
@@ -200,12 +204,15 @@ public class Datenbankmanager implements IDatenbankmanager {
                 throw e;
         } finally{
             closeQuietly(ps);
+            conLock.getValue().unlock();
         }
     }
 
     @Override
     public void bearbeiteBenutzer(Benutzer benutzer)
             throws SQLException, DbUniqueConstraintException {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
@@ -231,11 +238,14 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
     }
 
     @Override
     public void bearbeiteBenutzerAdmin(Benutzer benutzer) throws SQLException, DbUniqueConstraintException {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
@@ -264,11 +274,14 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
     }
 
     @Override
     public boolean loescheBenutzer(int benutzerId) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try{
@@ -281,12 +294,15 @@ public class Datenbankmanager implements IDatenbankmanager {
             erfolgreich = false;
         } finally{
             closeQuietly(ps);
+            conLock.getValue().unlock();
         }
         return erfolgreich;
     }
 
     @Override
     public void pruefeLogin(String eMail, String passwort) throws SQLException, DbFalseLoginDataException {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
@@ -312,12 +328,15 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
     }
 
     @Override
     public List<String> leseStudiengaenge(){
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         ArrayList<String> studiengaenge = new ArrayList<String>();
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -334,6 +353,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
         return studiengaenge;
     }
@@ -341,6 +361,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public Map<Integer,String> leseSemester()
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Map<Integer, String> semester = null;
@@ -358,12 +380,15 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
         return semester;
     }
 
     @Override
     public boolean passwortAendern(String eMail, String neuesPasswort) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean erfolgreich = true;
@@ -379,12 +404,15 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
         return erfolgreich;
     }
     @Override
     public boolean aendereProfilBild(int benutzerId, String dateiName)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean erfolgreich = true;
@@ -401,12 +429,15 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
         return erfolgreich;
     }
 
     @Override
     public Veranstaltung leseVeranstaltung(int id) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Veranstaltung veranstaltung = null;
@@ -430,6 +461,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return veranstaltung;
@@ -534,6 +566,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public List<Veranstaltung> leseVeranstaltungen(String semester, String studiengang)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<Veranstaltung> veranstaltungen = null;
@@ -560,6 +594,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
         return veranstaltungen;
 
@@ -568,6 +603,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public List<Veranstaltung> leseVeranstaltungen(int benutzer)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<Veranstaltung> veranstaltungen = null;
@@ -593,6 +630,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return veranstaltungen;
@@ -601,6 +639,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public List<Benutzer> leseModeratoren(int veranstaltung)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<Benutzer> moderatoren = null;
@@ -625,6 +665,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return moderatoren;
@@ -633,6 +674,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public List<String> leseStudiengaenge(int veranstaltung)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<String> studiengaenge = null;
@@ -652,6 +695,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return studiengaenge;
@@ -660,6 +704,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public Boolean istModerator(int benutzer, int veranstaltung)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Boolean istModerator = false;
@@ -678,6 +724,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return istModerator;
@@ -720,6 +767,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public Map<IjsonObject, Integer>  durchsucheDatenbankVeranstaltung(String suchmuster)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Map<IjsonObject,Integer> ergebnisse = null;
@@ -742,6 +791,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
         return ergebnisse;
     }
@@ -749,6 +799,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public Map<IjsonObject, Integer> durchsucheDatenbankBenutzer(String suchmuster)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Map<IjsonObject,Integer> ergebnisse = null;
@@ -775,12 +827,15 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
         return ergebnisse;
     }
 
     @Override
     public boolean angemeldet(int benutzer, int veranstaltung) throws SQLException{
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean angemeldet = false;
@@ -800,12 +855,15 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
         return angemeldet;
     }
 
     @Override
     public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException  {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         conMysql.setAutoCommit(false);
@@ -866,6 +924,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             conMysql.setAutoCommit(true);
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
 
@@ -910,32 +969,34 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public List<Benachrichtigung> leseBenachrichtigungen(int benutzer, int limit)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<Benachrichtigung> aktBenachrichtigungen = null;
         try{
             aktBenachrichtigungen = new ArrayList<Benachrichtigung>();
 
-            ps = conMysql.prepareStatement("SELECT bem.ID AS ID, 'benachrichtigung_einladung_moderator' AS Tabelle,"
+            ps = conMysql.prepareStatement("SELECT bem.ID AS ID, 'benachrichtigung_einladung_moderator' AS Tabelle, gelesen AS gel,"
                     + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtigung AS b ON"
-                    + " bem.Benachrichtigung = b.ID WHERE bem.Gelesen = false AND bem.Benutzer =? UNION "
+                    + " bem.Benachrichtigung = b.ID WHERE bem.Benutzer =? UNION "
 
-                    + "SELECT bk.ID AS ID, 'benachrichtigung_karteikartenaenderung' AS Tabelle ,"
+                    + "SELECT bk.ID AS ID, 'benachrichtigung_karteikartenaenderung' AS Tabelle, gelesen AS gel,"
                     + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_karteikartenaenderung AS bk JOIN benachrichtigung AS b ON"
-                    + " bk.Benachrichtigung = b.ID WHERE bk.Gelesen = false AND bk.Benutzer =? UNION "
+                    + " bk.Benachrichtigung = b.ID WHERE bk.Benutzer =? UNION "
 
-                    + "SELECT bnk.ID AS ID, 'benachrichtigung_neuer_kommentar' AS Tabelle ,"
+                    + "SELECT bnk.ID AS ID, 'benachrichtigung_neuer_kommentar' AS Tabelle , gelesen AS gel,"
                     + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_neuer_kommentar AS bnk JOIN benachrichtigung AS b ON"
-                    + " bnk.Benachrichtigung = b.ID WHERE bnk.Gelesen = false AND bnk.Benutzer =? UNION "
+                    + " bnk.Benachrichtigung = b.ID WHERE bnk.Benutzer =? UNION "
 
-                    + "SELECT bpg.ID AS ID, 'benachrichtigung_profil_geaendert' AS Tabelle ,"
+                    + "SELECT bpg.ID AS ID, 'benachrichtigung_profil_geaendert' AS Tabelle , gelesen AS gel,"
                     + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_profil_geaendert AS bpg JOIN benachrichtigung AS b ON"
-                    + " bpg.Benachrichtigung = b.ID WHERE bpg.Gelesen = false AND bpg.Benutzer =? UNION "
+                    + " bpg.Benachrichtigung = b.ID WHERE bpg.Benutzer =? UNION "
 
-                    + "SELECT bv.ID AS ID, 'benachrichtigung_veranstaltungsaenderung' AS Tabelle ,"
+                    + "SELECT bv.ID AS ID, 'benachrichtigung_veranstaltungsaenderung' AS Tabelle , gelesen AS gel,"
                     + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_veranstaltungsaenderung AS bv JOIN benachrichtigung AS b ON"
-                    + " bv.Benachrichtigung = b.ID WHERE bv.Gelesen = false AND bv.Benutzer =? "
-                    + "ORDER BY Erstelldatum DESC LIMIT ?");
+                    + " bv.Benachrichtigung = b.ID WHERE bv.Benutzer =? "
+                    + "ORDER BY gel, Erstelldatum DESC LIMIT ?");
 
             ps.setInt(1, benutzer);
             ps.setInt(2, benutzer);
@@ -968,6 +1029,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
         return aktBenachrichtigungen;
     }
@@ -975,6 +1037,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public BenachrEinlModerator leseBenachrEinlModerator(int id)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrEinlModerator benachrichtigung = null;
@@ -998,6 +1062,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
@@ -1006,6 +1071,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public BenachrKarteikAenderung leseBenachrKarteikAenderung(int id)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrKarteikAenderung benachrichtigung = null;
@@ -1028,6 +1095,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
@@ -1036,6 +1104,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public BenachrNeuerKommentar leseBenachrNeuerKommentar(int id)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrNeuerKommentar benachrichtigung = null;
@@ -1058,6 +1128,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
@@ -1066,6 +1137,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public BenachrProfilGeaendert leseBenachrProfilGeaendert(int id)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrProfilGeaendert benachrichtigung = null;
@@ -1088,6 +1161,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
@@ -1096,6 +1170,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public BenachrVeranstAenderung leseBenachrVeranstAenderung(int id)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrVeranstAenderung benachrichtigung = null;
@@ -1118,6 +1194,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
@@ -1126,6 +1203,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public boolean schreibeBenachrichtigung(Benachrichtigung benachrichtigung)
     {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean erfolgreich = true;
@@ -1218,6 +1297,9 @@ public class Datenbankmanager implements IDatenbankmanager {
             catch (SQLException e)
             {
                 e.printStackTrace();
+            } 
+            finally{
+                conLock.getValue().unlock();
             }
         }
 
@@ -1386,6 +1468,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     @Override
     public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort) throws SQLException, 
     DbUniqueConstraintException, DbFalsePasswortException {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
@@ -1416,11 +1500,14 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
         }
     }
 
     @Override
     public boolean vonVeranstaltungAbmelden(int veranstaltung, int benutzer) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try{
@@ -1434,6 +1521,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             e.printStackTrace();
         } finally {
             closeQuietly(ps);
+            conLock.getValue().unlock();
         }
         return erfolgreich;
     }

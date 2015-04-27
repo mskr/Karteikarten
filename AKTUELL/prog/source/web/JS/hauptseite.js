@@ -1,41 +1,102 @@
 /**
  * @author mk
  */
+/***
+ * Pacth for dialog-fix ckeditor problem [ by ticket #4727 ]
+ * 	http://dev.jqueryui.com/ticket/4727
+ */
+
 // Statische Handler einmal registrieren
 $(document).ready(function() {
 	
     registerSuchEvent();
     
-    // Aktiviert den CK-Editor
-    $("#vn_beschr_input").ckeditor();
+    $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+        _title: function(title) {
+            if (!this.options.title ) {
+                title.html("&#160;");
+            } else {
+                title.html(this.options.title);
+            }
+        }
+    }));
     
     // Code fuer das Veranstaltung erstellen Popup
-    $('#vn_erstellen_popup').popup({
-    	openelement: '#vn_erstellen_bt',
-    	closeelement: '#vn_popup_close',
-    	focuselement: '#vn_titel_input',
-        blur: false,
-    	transition: 'all 0.3s',
-    	onclose : function() {
-    		if(jsonBenutzer == undefined)
-    			return;
-    		
-    		$("#vn_titel_input").val("");
-    		// TODO
-//  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
-    		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
-    		
-    		$("#vn_pass_input").val("");
-    		$("#vn_beschr_input").val("");
-    		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
-    		$("#vn_komm_erlaubt").prop("checked", true);
-    		$("#vn_bew_erlaubt").prop("checked", true);
-    		$("#vn_mod_list").children().remove();
-			$("#vn_mod_input").val("");
-			$("#vn_mod_vorschlag").slideUp(100);
-    		selectedModList = {};
-    	}
-    });
+    $('#vn_erstellen_bt').click(function() {
+    	$('#vn_erstellen_popup').dialog({
+    	    show: "fold",   //  the animation on show
+    	    hide: "fold",    // the animation on close
+    	    resizable: false,   // prevents user from resizing
+    	    closeOnEscape: true,    //  esc key will close dlg
+    	    modal: true,
+    	    width: '40em',
+    	    title: "<div class='popup_fenster_titel'>" + 
+		"<span class='octicon octicon-podium'></span>" +
+		"<span class='popup_fenster_ueberschrift'> Veranstaltung erstellen</span>" +
+		"</div>", // dlg title in ttl bar
+    	    buttons: {},
+    	    open: function(event, ui) { 
+    	        //hide close button.
+    	        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+    	    },
+    	    close: function(e) {
+    	    	if(jsonBenutzer == undefined)
+    	    		return;
+
+    	    	$("#vn_titel_input").val("");
+    	    	// TODO
+//  	    	$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
+    	    	$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
+
+    	    	$("#vn_pass_input").val("");
+    	    	$("#vn_beschr_input").val("");
+    	    	$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
+    	    	$("#vn_komm_erlaubt").prop("checked", true);
+    	    	$("#vn_bew_erlaubt").prop("checked", true);
+    	    	$("#vn_mod_list").children().remove();
+    	    	$("#vn_mod_input").val("");
+    	    	$("#vn_mod_vorschlag").slideUp(100);
+    	    	selectedModList = {};
+    	    }
+    	});
+        // Aktiviert den CK-Editor
+        $("#vn_beschr_input").ckeditor();
+        
+	})
+	
+	$('#vn_popup_close').click(function() {
+		$('#vn_erstellen_popup').dialog("close");
+		var editor = $('#vn_beschr_input').ckeditorGet();
+        editor.destroy();
+	});
+    
+	
+//    $('#vn_erstellen_popup').popup({
+//    	openelement: '#vn_erstellen_bt',
+//    	closeelement: '#vn_popup_close',
+//    	focuselement: '#vn_titel_input',
+//        blur: false,
+//    	transition: 'all 0.3s',
+//    	onclose : function() {
+//    		if(jsonBenutzer == undefined)
+//    			return;
+//    		
+//    		$("#vn_titel_input").val("");
+//    		// TODO
+////  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
+//    		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
+//    		
+//    		$("#vn_pass_input").val("");
+//    		$("#vn_beschr_input").val("");
+//    		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
+//    		$("#vn_komm_erlaubt").prop("checked", true);
+//    		$("#vn_bew_erlaubt").prop("checked", true);
+//    		$("#vn_mod_list").children().remove();
+//			$("#vn_mod_input").val("");
+//			$("#vn_mod_vorschlag").slideUp(100);
+//    		selectedModList = {};
+//    	}
+//    });
 
 
 	$("#vn_alle_auswahl_studiengang").change(function() {
@@ -471,29 +532,62 @@ function fillSuchergebnisse(arrSuchErgebnisse)
 function registerSucheClickEvent(jsonSuchErgebnis)
 {
     var id = jsonSuchErgebnis[paramId];
+    // klasse gibt an, ob es sich um einen Benutzer oder eine Veranstaltung handelt
     var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
-    if(klasse == keyJsonObjKlasseBenutzer) {
+    if(klasse == keyJsonObjKlasseBenutzer)
+    {
+        // Bei Klick auf einen Benutzer, gehe zum Profil
         $("#sucherg_benutzer_"+id).click(function() {
             // Verberge die Suchergebnisse
             $("#sucherg_x").trigger("click");
             gotoProfil(id);
         });
     }
-    else if(klasse == keyJsonObjKlasseVeranst) {
+    else if(klasse == keyJsonObjKlasseVeranst)
+    {
+        // Bei Klick auf Veranstaltung, klappe entsprechende Veranstaltung in der Liste aus
         $("#sucherg_vn_"+id).click(function() {
             // Verberge die Suchergebnisse
             $("#sucherg_x").trigger("click");
-            // Gehe zum Semester und zum Studiengang der VN
+            // Gehe zum Semester und zum Studiengang der Veranstaltung
             var semesterName = jsonSuchErgebnis[paramSemester];
-            var studiengangName = "Informatik"; //TODO Wir muessen die Studiengaenge im Veranstaltungs-Objekt speichern!
-            $("#vn_alle_auswahl_studiengang").val(studiengangName);
-            $("#vn_alle_auswahl_semester").val(semesterName);
-            var ajax = leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName);
-            $.when(ajax).done(function() {
-                // Aktiviere den Alle-Tab
-                $("#tab-2").prop("checked",true);
-                // Klappe die entsprechende VN aus
-                $("#vn_alle_"+id+"_radio").trigger("click").prop("checked",true);
+            //TODO
+            // 1. Hole die zu dieser Veranstaltung gehoerenden Studiengaenge
+            // 2. Schaue, ob der Studiengang des angemeldeten Benutzers dabei ist
+            // 3. Wenn ja, waehle diesen in der select Liste im Alle Tab und klappe die Veranstaltung aus
+            // 4. Wenn nein, nehme den ersten Studiengang und waehle diesen in der select Liste
+            var studiengangName;
+            var params = {};
+            params[paramId] = id;
+            var studgAjax = ajaxCall(
+                veranstaltungServlet, 
+                actionGetStudgVn, 
+                function(response) {
+                    var studgArr = response[keyJsonArrResult];
+                    studiengangName = studgArr[0];
+                    for(var i in studgArr)
+                    {
+                        if(studgArr[i] == jsonBenutzer[paramStudiengang])
+                        {
+                            studiengangName = studgArr[i];
+                        }
+                    }
+                    console.log("Waehle folgenden Studiengang "+studiengangName);
+                },
+                params
+            );
+            $.when(studgAjax).done(function() {
+                // Waehle korrektes Semester und Studiengang
+                $("#vn_alle_auswahl_studiengang").val(studiengangName);
+                $("#vn_alle_auswahl_semester").val(semesterName);
+                var ajax = leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName);
+                $.when(ajax).done(function() {
+                    // Aktiviere den Alle-Tab
+                    $("#tab-2").prop("checked",true);
+                    
+                    // Klappe die entsprechende VN aus
+                    $("#vn_alle_"+id+"_radio").trigger("click").prop("checked",true);
+                });
             });
         });
     }
@@ -532,21 +626,21 @@ var modSuchTimer;
 function registerVeranstErzeugeHandler() {
 	
 	$("#vn_erzeugen_cancel").click(function() {
-		$("#vn_erstellen_popup").popup("hide");
+		$("#vn_erstellen_popup").dialog('close');
 	});
 	
 	$("#vn_erzeugen_submit").click(function(event) {
 		event.preventDefault();
 		
-		var popup = $("#vn_erstellen_popup");
-		var titel = popup.find("#vn_titel_input").val(),
-			semester = popup.find("#vn_erstellen_auswahl_semester").val(),
-			studiengang = popup.find("#vn_erstellen_auswahl_studiengang").val(),
-			beschr = popup.find("#vn_beschr_input").val(),
-			moderatorenKkBearbeiten = popup.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
-			passw = popup.find("#vn_pass_input").val(),
-			kommentareErlaubt = popup.find("#vn_komm_erlaubt").is(':checked'),
-			bewertungenErlaubt = popup.find("#vn_bew_erlaubt").is(':checked');
+		var dialog = $("#vn_erstellen_popup");
+		var titel = dialog.find("#vn_titel_input").val(),
+			semester = dialog.find("#vn_erstellen_auswahl_semester").val(),
+			studiengang = dialog.find("#vn_erstellen_auswahl_studiengang").val(),
+			beschr = dialog.find("#vn_beschr_input").val(),
+			moderatorenKkBearbeiten = dialog.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
+			passw = dialog.find("#vn_pass_input").val(),
+			kommentareErlaubt = dialog.find("#vn_komm_erlaubt").is(':checked'),
+			bewertungenErlaubt = dialog.find("#vn_bew_erlaubt").is(':checked');
 		
 		var moderatorenIDs = [];
 		
@@ -570,7 +664,7 @@ function registerVeranstErzeugeHandler() {
 				actionErstelleVeranst,
 				function(response) {
 					showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich erzeugt.");
-					popup.popup('hide');
+					dialog.dialog('close');
 					fillVeranstaltungsliste();	
 				},
 				params

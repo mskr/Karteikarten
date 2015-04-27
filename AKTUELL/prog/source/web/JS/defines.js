@@ -19,6 +19,7 @@ var actionRegister = "registrieren";
 var actionResetPasswort = "resetPasswort";
 var actionGetBenutzer = "getBenutzer";
 var actionGetStudiengaenge = "getStudiengaenge";
+var actionGetStudgVn = "getStudgVn";
 var actionGetOtherBenutzer = "getOtherBenutzer";
 var actionGetSemester = "getSemester";
 var actionAenderePasswort = "aenderePasswort";
