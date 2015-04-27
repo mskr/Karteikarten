@@ -1247,14 +1247,12 @@ textarea.input_std {
 	border-bottom: 1px solid black;
 	text-shadow: 0px -1px 0 black;
 	overflow: hidden;
-} .popup_fenster_body * {
-	display: block;
-}  .popup_fenster_body * input {
-	display: inline-block;
-}  .popup_fenster_spalte {
+} .popup_fenster_spalte {
 	margin-top: 1em;
 	width: 50%;
 	float: left;
+} .popup_fenster_spalte span {
+	display: block;
 } .popup_fenster_foot {
 	padding: 1em;
 	text-align: right;
