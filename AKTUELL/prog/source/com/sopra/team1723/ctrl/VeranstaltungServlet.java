@@ -338,7 +338,7 @@ public class VeranstaltungServlet extends ServletController {
         return true;
     }
     
-    public void leseStudiengaengeVeranstaltung(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws IOException{
+    public void leseStudiengaengeVeranstaltung(HttpServletRequest req, HttpServletResponse resp) throws IOException{
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
@@ -383,7 +383,7 @@ public class VeranstaltungServlet extends ServletController {
             veranstaltungErstellen(req,resp);
         }
         else if(aktuelleAction.equals(ParamDefines.ActionGetStudgVn)){
-            
+            leseStudiengaengeVeranstaltung(req, resp);
         }
         else
         {
