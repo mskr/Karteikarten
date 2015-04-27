@@ -116,7 +116,6 @@ function interpreteUrlQuery(paramObj)
 
 //	$(".mainbox").fadeOut("slow");
 //	$("#mainbox_loadScreen").fadeIn("slow");
-	
     var ziel = paramObj[urlParamLocation];
 	// Benutzer eingeloggt
     if(jsonBenutzer != undefined)

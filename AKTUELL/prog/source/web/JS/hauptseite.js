@@ -125,6 +125,7 @@ function fillHauptseite()
 		function(response) 
 		{
 			var studgArr = response[keyJsonArrResult];
+
 			fillSelectWithOptions($("#vn_alle_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
 			fillSelectWithOptions($("#vn_erstellen_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
 		}
@@ -142,7 +143,8 @@ function fillHauptseite()
 			var studgArr = response[keyJsonArrResult];
 			var aktSemesterString = response[paramAktSemester];
 			var aktSemesterDI = 1; //default, falls kein match
-			
+			document.title = "Veranstaltungen";
+
 			for(var i in studgArr) {
 				$("#vn_alle_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
 				$("#vn_erstellen_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
