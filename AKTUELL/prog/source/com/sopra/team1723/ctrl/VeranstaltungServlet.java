@@ -212,7 +212,59 @@ public class VeranstaltungServlet extends ServletController {
             return false;
         }
     }
+    /**
+     * Aus der Datenbank wird mit Hilfe der VeranstaltungsID die Informationen
+     * bezuglich der Veranstaltung gelesen und zuruckgegeben.
+     * Falls es diese Veranstaltung in der Datenbank nicht gibt, gibt die
+     * Methode false zuruck.
+     * @param request 
+     * @param response 
+     * @return
+     * @throws IOException 
+     */
+    private boolean einzelneVeranstaltungenLesen(HttpServletRequest request, HttpServletResponse response) throws IOException 
+    {
+        HttpSession aktuelleSession = request.getSession();
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
+        JSONObject jo;
+        String idStr = request.getParameter(ParamDefines.Id);
+        if(isEmpty(idStr))
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        int id;
+        try
+        {
+            id = Integer.parseInt(idStr);            
+        }
+        catch (NumberFormatException e)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+
+        Veranstaltung v =  dbManager.leseVeranstaltung(id);
+        
+        if(v != null)
+        {
+            outWriter.print(v.toJSON(true));
+            return false;
+        }
+        else
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+
+    }
     /**
      * Aus der Datenbank wird mit Hilfe der VeranstaltungsID die Informationen
      * bezuglich der Veranstaltung gelesen und zuruckgegeben.
@@ -382,8 +434,13 @@ public class VeranstaltungServlet extends ServletController {
         {
             veranstaltungErstellen(req,resp);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionGetStudgVn)){
+        else if(aktuelleAction.equals(ParamDefines.ActionGetStudgVn))
+        {
             leseStudiengaengeVeranstaltung(req, resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionGetVeranstaltung))
+        {
+            einzelneVeranstaltungenLesen(req,resp);
         }
         else
         {

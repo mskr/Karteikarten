@@ -25,6 +25,8 @@ public class ParamDefines
     public final static String ActionSucheBenVeranst = "sucheBenVeranst";
     public final static String ActionSucheBenutzer = "sucheBenutzer";
 
+    
+    public final static String ActionGetVeranstaltung = "getVeranstaltung";
     public final static String ActionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
     public final static String LeseVeranstMode = "mode";                        // Liefert Veranstaltungen
     public final static String LeseVeranstModeStudiengangSemester =             // Liefert alle Veranstaltungen
