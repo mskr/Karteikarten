@@ -11,61 +11,63 @@ $(document).ready(function() {
 	
     registerSuchEvent();
     
-    $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
-        _title: function(title) {
-            if (!this.options.title ) {
-                title.html("&#160;");
-            } else {
-                title.html(this.options.title);
-            }
-        }
-    }));
+//    $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+//        _title: function(title) {
+//            if (!this.options.title ) {
+//                title.html("&#160;");
+//            } else {
+//                title.html(this.options.title);
+//            }
+//        }
+//    }));
     
     // Code fuer das Veranstaltung erstellen Popup
     $('#vn_erstellen_bt').click(function() {
-    	$('#vn_erstellen_popup').dialog({
-    	    show: "fold",   //  the animation on show
-    	    hide: "fold",    // the animation on close
-    	    resizable: false,   // prevents user from resizing
-    	    closeOnEscape: true,    //  esc key will close dlg
-    	    modal: true,
-    	    width: '40em',
-    	    title: "<div class='popup_fenster_titel'>" + 
-		"<span class='octicon octicon-podium'></span>" +
-		"<span class='popup_fenster_ueberschrift'> Veranstaltung erstellen</span>" +
-		"</div>", // dlg title in ttl bar
-    	    buttons: {},
-    	    open: function(event, ui) { 
-    	        //hide close button.
-    	        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
-    	    },
-    	    close: function(e) {
-    	    	if(jsonBenutzer == undefined)
-    	    		return;
-
-    	    	$("#vn_titel_input").val("");
-    	    	// TODO
-//  	    	$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
-    	    	$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
-
-    	    	$("#vn_pass_input").val("");
-    	    	$("#vn_beschr_input").val("");
-    	    	$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
-    	    	$("#vn_komm_erlaubt").prop("checked", true);
-    	    	$("#vn_bew_erlaubt").prop("checked", true);
-    	    	$("#vn_mod_list").children().remove();
-    	    	$("#vn_mod_input").val("");
-    	    	$("#vn_mod_vorschlag").slideUp(100);
-    	    	selectedModList = {};
-    	    }
-    	});
+        // jQuery-UI auskommentiert
+//    	$('#vn_erstellen_popup').dialog({
+//    	    show: "fold",   //  the animation on show
+//    	    hide: "fold",    // the animation on close
+//    	    resizable: false,   // prevents user from resizing
+//    	    closeOnEscape: true,    //  esc key will close dlg
+//    	    modal: true,
+//    	    width: '40em',
+//    	    title: "<div class='popup_fenster_titel'>" + 
+//		"<span class='octicon octicon-podium'></span>" +
+//		"<span class='popup_fenster_ueberschrift'> Veranstaltung erstellen</span>" +
+//		"</div>", // dlg title in ttl bar
+//    	    buttons: {},
+//    	    open: function(event, ui) { 
+//    	        //hide close button.
+//    	        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+//    	    },
+//    	    close: function(e) {
+//    	    	if(jsonBenutzer == undefined)
+//    	    		return;
+//
+//    	    	$("#vn_titel_input").val("");
+//    	    	// TODO
+////  	    	$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
+//    	    	$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
+//
+//    	    	$("#vn_pass_input").val("");
+//    	    	$("#vn_beschr_input").val("");
+//    	    	$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
+//    	    	$("#vn_komm_erlaubt").prop("checked", true);
+//    	    	$("#vn_bew_erlaubt").prop("checked", true);
+//    	    	$("#vn_mod_list").children().remove();
+//    	    	$("#vn_mod_input").val("");
+//    	    	$("#vn_mod_vorschlag").slideUp(100);
+//    	    	selectedModList = {};
+//    	    }
+//    	});
+        popupFenster($("#vn_erstellen_popup_overlay"), "open", $("#vn_titel_input"));
         // Aktiviert den CK-Editor
         $("#vn_beschr_input").ckeditor();
         
 	})
 	
 	$('#vn_popup_close').click(function() {
-		$('#vn_erstellen_popup').dialog("close");
+        popupFenster($("#vn_erstellen_popup_overlay"), "close");
 		var editor = $('#vn_beschr_input').ckeditorGet();
         editor.destroy();
 	});
@@ -354,7 +356,7 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     {
         // AUSSCHREIBEN
         button.click(function() {
-            sindSieSicher((this), "", function() {
+            sindSieSicher($(this), "", function() {
             	var params = {};
             	params[paramId] = jsonVeranstObj[paramId];
             	
@@ -626,12 +628,10 @@ var modSuchTimer;
 function registerVeranstErzeugeHandler() {
 	
 	$("#vn_erzeugen_cancel").click(function() {
-		$("#vn_erstellen_popup").dialog('close');
+	    popupFenster($("#vn_erstellen_popup_overlay"), "close");
 	});
 	
-	$("#vn_erzeugen_submit").click(function(event) {
-		event.preventDefault();
-		
+	$("#vn_erzeugen_ok").click(function(event) {
 		var dialog = $("#vn_erstellen_popup");
 		var titel = dialog.find("#vn_titel_input").val(),
 			semester = dialog.find("#vn_erstellen_auswahl_semester").val(),

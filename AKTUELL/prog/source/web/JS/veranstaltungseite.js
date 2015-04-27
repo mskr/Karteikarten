@@ -4,11 +4,11 @@
 
 $(document).ready(function() {
     // Code fuer das Attribute Tooltip
-    $("#attr_popup").popup({
-            type: 'tooltip',
-            vertical: 'topedge',
-            horizontal: 'leftedge'
-    });
+//    $("#attr_popup").popup({
+//            type: 'tooltip',
+//            vertical: 'topedge',
+//            horizontal: 'leftedge'
+//    });
 //  CKEDITOR.config.irgendeinPlugin
     // Einklappen der Kommentarboxen
     $('.kk_kommtoggle').html('Einklappen');
