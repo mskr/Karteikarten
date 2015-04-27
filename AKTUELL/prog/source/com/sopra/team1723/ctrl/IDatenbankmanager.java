@@ -336,13 +336,18 @@ public interface IDatenbankmanager {
     public BenachrVeranstAenderung leseBenachrVeranstAenderung(int id);
 
     /**
-     * Holt eine Benachrichtigung für eine Veranstaltungsänderung aus der Datenbank
-     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
-     * Benachrichtigung gefunden wird kommt null zurück.
+     * Schreibt die Benachrichtigung in die Datenbank
+     * @param benachrichtigung Objekt. Die Methode setzt das Attribut gelesen
+     * standardmäßig auf false.
+     * @return Liefert bei Erfolg true zurück und bei einem Fehler false.
      */
     public boolean schreibeBenachrichtigung(Benachrichtigung benachrichtigung);
 
+    /**
+     * Setzt das Attribut gelesen der Benachrichtigung auf true.
+     * @param benID referenziert eindeutig eine Benachrichtigung
+     * @return Liefert bei Erfolg true zurück und bei einem Fehler false.
+     */
     public boolean markiereBenAlsGelesen(int benID, int benutzerID);
     /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
