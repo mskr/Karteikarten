@@ -13,6 +13,11 @@ var fileUploadServlet = "FileUploadServlet";
 var suchfeldServlet = "SuchfeldServlet";
 var benachrichtungsServlet = "BenachrichtigungsServlet";
 
+
+// TODO Alle ErrorCodes stehen noch hard gecoded im text !!
+
+var errorMsg = "errorMessage";
+
 var actionLogin = "login";
 var actionLogout = "logout";
 var actionRegister = "registrieren";

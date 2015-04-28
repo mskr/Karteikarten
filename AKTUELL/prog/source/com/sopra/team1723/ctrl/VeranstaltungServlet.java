@@ -109,13 +109,17 @@ public class VeranstaltungServlet extends ServletController {
         }
         catch (SQLException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
         }
         catch (DbUniqueConstraintException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError, 
+                    "Es existiert schon eine Veranstaltung \""+veranst.getTitel()+"\" im Semester \""+veranst.getSemester()+"\". "
+                            + "Bitte kontaktieren Sie einen Administrator oder löschen Sie die andere Veranstaltung, wenn Sie die Berechtigungen besitzen.");
+            outWriter.print(jo);
+            return false;
         }
 
         jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
