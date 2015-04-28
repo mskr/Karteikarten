@@ -807,7 +807,9 @@ textarea.input_std {
 	z-index: 4;
 }
 
-.vn_header {
+.vn_header {  
+	margin: 1em;
+  	margin-left: 0.1em;
 	margin-bottom: 30px;
 	position: relative;
 	z-index: 1;
@@ -817,16 +819,23 @@ textarea.input_std {
 	font-family: Computer Modern Serif;
 	font-weight: bold;
 	display: inline-block;
-} .vn_header span {
+}
+.vn_info_right
+{
+	display: inline-block;
+	text-align: right;
+	float: right; 
+}
+/*  .vn_header span {
 	margin: 5px;
 	display: inline-block;
 	vertical-align: middle;
 	text-align: right;
-	float: right;
-	opacity: 0;
-	transition: opacity 0.1s;
-} .vn_header:hover span {
-	opacity: 1;
+	float: right; */
+/* 	opacity: 0;
+	transition: opacity 0.1s; */
+/* } .vn_header:hover span {
+	opacity: 1; */
 }
 
 .kk_wrapper {

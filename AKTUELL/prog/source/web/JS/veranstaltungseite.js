@@ -30,24 +30,39 @@ $(document).ready(function() {
         }
     });
 });
-function fillVeranstaltungsSeite(Vid){
+function fillVeranstaltungsSeite(Vid)
+{
+	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
+	d = jQuery.Deferred();
+	
 	var params = {};
 	params[paramId] = Vid;
-	var ajax1 = ajaxCall(veranstaltungServlet,
+	ajaxCall(veranstaltungServlet,
 		actionGetVeranstaltung,
 		function(response) 
 		{
 			veranstaltungsObject = response;
+			
 			$.when(findStudiengaenge(Vid)).done(function() {
-				titel = response[paramTitel];
-				$("#vn_title").html(titel);
-				document.title = titel;
-				findModeratorenVn(Vid);
+				$.when(findModeratorenVn(Vid)).done(function() {
+					
+					// Wenn alles geladen wurde
+					titel = veranstaltungsObject[paramTitel];
+					$("#vn_title").html(titel);
+					$("#vn_ersteller").html(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
+					$("#vn_semester").html(veranstaltungsObject[paramSemester]);
+					document.title = titel;
+					
+					// Deferred Objekt als abgeschlossen markieren.
+					d.resolve();
+				});
 			});
 			
 		},
 		params
 	);
+	
+	return d;
 }
 
 //sucht Studiengänge, die zur Veranstaltung gehören

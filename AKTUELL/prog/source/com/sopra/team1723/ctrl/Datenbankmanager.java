@@ -654,7 +654,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next()){
                 moderatoren.add(new Benutzer(rs.getInt("b.ID"),rs.getString("eMail"),rs.getString("Vorname"),
                         rs.getString("Nachname"), rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),
-                        rs.getString("Kennwort"),Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
+                        rs.getString("CryptedPW"),Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
                         NotifyKommentare.valueOf(rs.getString("NotifyKommentare")),rs.getString("Profilbild")));
             }
