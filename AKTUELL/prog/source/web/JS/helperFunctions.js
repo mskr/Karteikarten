@@ -29,20 +29,62 @@ function fillSelectWithOptions(select, optArray, selectedOptName, clearFirst)
  * @param doCriticalThing ist eine Funktion, die nach Bestaetigung mit Ok ausgefuehrt wird.
  */
 function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
-{	
-    $("#dialog_sicher").popup({
-        type: 'tooltip',
-        vertical: locV,
-        horizontal: locH,
-        tooltipanchor: anchorElem,
-        transition: 'none'
+{
+    $("#dialog_sicher").removeClass("hidden");
+    $("#dialog_sicher").css({
+        top: 0,
+        left: 0
     });
-    $("#dialog_sicher").popup("show");
+    var pos = anchorElem.offset();
+    $("#dialog_sicher").offset({
+        top: pos.top,
+        left: pos.left
+    });
+    var overflow = $("#dialog_sicher").offset().left + $("#dialog_sicher").width() - $(window).width();
+    if(overflow > 0)
+    {
+        $("#dialog_sicher").offset({
+            top: $("#dialog_sicher").offset().top,
+            left: $("#dialog_sicher").offset().left - overflow
+        });
+    }
+    $("#dialog_sicher").fadeIn(300);
+    $("#dialog_sicher_popup_overlay").fadeIn(300);
+    $("#dialog_sicher_popup_overlay").click(function() {
+        $("#dialog_sicher").addClass("hidden");
+        $("#dialog_sicher").fadeOut(300);
+        $("#dialog_sicher_popup_overlay").fadeOut(300);
+        $("#dialog_sicher_popup_overlay").off();
+    });
     $(".dialog_sicher_frage").text(message);
     $(".dialog_sicher_ja").click(function() {
         doCriticalThing();
-        $("#dialog_sicher").popup("hide");
+        $("#dialog_sicher").addClass("hidden");
+        $("#dialog_sicher").fadeOut(300);
+        $("#dialog_sicher_popup_overlay").fadeOut(300);
+        $("#dialog_sicher_popup_overlay").off();
     });
+}
+
+/**
+ * Blendet ein Popup auf der GUI ein
+ * @param popupOverlayWrapper
+ * @param operation 'open' oder 'close'
+ * @param focusElem Element das nach dem Oeffnen fokussiert werden soll
+ */
+function popupFenster(popupOverlayWrapper, operation, focusElem)
+{
+    if(operation == "open")
+    {
+        popupOverlayWrapper.fadeIn(300);
+        popupOverlayWrapper.find(".popup_fenster").removeClass("hidden");
+        focusElem.focus();
+    }
+    else if(operation == "close")
+    {
+        popupOverlayWrapper.fadeOut(300);
+        popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
+    }
 }
 
 /**

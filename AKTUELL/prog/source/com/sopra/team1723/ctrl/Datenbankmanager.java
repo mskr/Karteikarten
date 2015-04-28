@@ -892,23 +892,26 @@ public class Datenbankmanager implements IDatenbankmanager {
             int VeranstID = rs.getInt(1);
             closeQuietly(ps);
 
+            if(moderatorenIds != null) {
+                for(String stg: studiengaenge){
+                    ps.close();
 
-            for(String stg: studiengaenge){
-                ps.close();
-
-                ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");   
-                ps.setInt(1, VeranstID);
-                ps.setString(2, stg);
-                ps.executeUpdate();         
+                    ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");   
+                    ps.setInt(1, VeranstID);
+                    ps.setString(2, stg);
+                    ps.executeUpdate();         
+                }
             }
 
-            for(int mod : moderatorenIds){
-                ps.close();
-
-                ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
-                ps.setInt(1, mod);
-                ps.setInt(2, VeranstID);
-                ps.executeUpdate();
+            if(moderatorenIds != null) {
+                for(int mod : moderatorenIds){
+                    ps.close();
+    
+                    ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
+                    ps.setInt(1, mod);
+                    ps.setInt(2, VeranstID);
+                    ps.executeUpdate();
+                }
             }
 
             conMysql.commit();

@@ -29,9 +29,9 @@
 <!-- JQuery -->
 <script src="JS/jquery-latest.min.js"></script>
 <!-- JQuery Popup Overlay, Doc: http://dev.vast.com/jquery-popup-overlay/ -->
-<script src="JS/jquery.popupoverlay.js"></script>
+<!-- <script src="JS/jquery.popupoverlay.js"></script> -->
 <!-- JQuery UI -->
-<script src="jquery-ui/jquery-ui.js"></script>
+<!-- <script src="jquery-ui/jquery-ui.js"></script> -->
 <!-- JQuery History-State-API -->
 <script src="history/scripts/bundled/html4+html5/jquery.history.js"></script>
 <!-- CKEditor Core -->
@@ -75,11 +75,13 @@
 <!-- Initial alle Kind<div>s von <body> verbergen -->
 <!-- md5 hash function -->
 <script src="JS/md5.js"></script>
+<!-- [Deprecated]
 <style>
-body > div {
-	display: none;
-}
+	body > div {
+		display: none;
+	}
 </style>
+-->
 </head>
 
 <body>
@@ -89,15 +91,77 @@ body > div {
 <div class="msg success"></div>
 
 <!-- Sind Sie Sicher Dialog -->
-<div id="dialog_sicher" class="bigtooltip">
-	<div class="bigtooltip_head">
-		<span class="dialog_sicher_titel"><span class="octicon octicon-question"></span> Sind Sie sicher?</span>
+<div id="dialog_sicher_popup_overlay" class="popup_fenster_overlay">
+	<div id="dialog_sicher" class="bigtooltip hidden">
+		<div class="bigtooltip_head">
+			<span class="dialog_sicher_titel"><span class="octicon octicon-question"></span> Sind Sie sicher?</span>
+		</div>
+		<div class="bigtooltip_body">
+			<span class="dialog_sicher_frage"></span>
+		</div>
+		<div class="bigtooltip_foot">
+			<span class="dialog_sicher_ja mybutton red"><span class="octicon octicon-check"></span> Ja, weiter</span>
+		</div>
 	</div>
-	<div class="bigtooltip_body">
-		<span class="dialog_sicher_frage"></span>
+</div>
+
+<!-- Veranstaltung Erstellen Popup Fenster -->
+<div id="vn_erstellen_popup_overlay" class="popup_fenster_overlay">
+	<div id="vn_erstellen_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+			<span class="octicon octicon-podium"></span>
+			<span class="popup_fenster_ueberschrift"> Veranstaltung erstellen</span>
+		</div>
+		<div id="vn_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div class="popup_fenster_body">
+			<input class="input_std vn_erstellen_input" id="vn_titel_input" type="text" placeholder="Titel" required>
+			<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_semester"></select>
+			<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_studiengang" multiple></select>
+			<input class="input_std vn_erstellen_input" id="vn_pass_input" type="password" placeholder="Passwort" required>
+			<div class="itemlist" id="vn_mod_list"></div>
+			<input class="input_std vn_erstellen_input" id="vn_mod_input" type="text" placeholder="Moderator hinzufügen"></input>
+			<div class="input_std" id="vn_mod_vorschlag" style="display:none;
+			    background: #2a2a2a;
+			    position: absolute;
+			    /* float: right; */
+			    margin: 0;
+			    width: calc(100% - 4.2em);
+			    height: auto;
+			"></div>
+			<textarea class="input_std vn_erstellen_input" id="vn_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
+			<div class="popup_fenster_spalte" id="vn_bearbeiten_mode">
+				<span class="form_infotext">Wer darf bearbeiten?</span>
+				<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_keiner_bearb" value = "Nur ich" type="radio"checked>Nur ich</label></span>
+				<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_mod_bearb" value = "Ich und Moderatoren"type="radio">Ich und Moderatoren</label></span>
+			</div>
+			<div class="popup_fenster_spalte">
+				<span><label><input id="vn_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
+				<span><label><input id="vn_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
+			</div>
+		</div>
+		<div class="popup_fenster_foot">
+			<input id="vn_erzeugen_cancel" class="mybutton dark flat" type="button" value="Abbrechen">
+			<input id="vn_erzeugen_ok" class="mybutton green" type="button" value="Erstellen">
+		</div>
 	</div>
-	<div class="bigtooltip_foot">
-		<span class="dialog_sicher_ja mybutton red"><span class="octicon octicon-check"></span> Ja, weiter</span>
+	
+	<!-- Karteikarten Attribute aendern Tooltip -->
+	<div id="attr_popup" class="bigtooltip">
+		<div class="bigtooltip_pfeil"></div>
+		<div class="bigtooltip_head">
+			<span class="octicon octicon-checklist"></span><span> Attribute ändern</span>
+		</div>
+		<div class="bigtooltip_body">
+			<span><input id="attr_satz" type="checkbox" name="attr"><label for="attr_satz">Satz</label></span>
+			<span><input id="attr_beweis" type="checkbox" name="attr"><label for="attr_beweis">Beweis</label></span>
+			<span><input id="attr_def" type="checkbox" name="attr"><label for="attr_def">Definition</label></span>
+			<span><input id="attr_wichtig" type="checkbox" name="attr"><label for="attr_wichtig">Wichtig</label></span>
+			<span><input id="attr_grundl" type="checkbox" name="attr"><label for="attr_grundl">Grundlagen</label></span>
+			<span><input id="attr_ueberschr" type="checkbox" name="attr"><label for="attr_ueberschr">Überschrift</label></span>
+		</div>
+		<div class="bigtooltip_foot"></div>
 	</div>
 </div>
 
@@ -234,7 +298,8 @@ Dann aber so leer.
 				<!-- Veranstaltungen hier -->
 			</div>
 		</div>
-		<span class="mybutton dark flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span>
+		<!-- Button rechts neben den Tabs -->
+		<!-- <span class="mybutton dark flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span> -->
 	</div>
 	<div class="impressum">
 		Uni Ulm <br> 
@@ -616,62 +681,6 @@ Dann aber so leer.
 			</div>
 		</div>
 	</div>
-</div>
-
-<div id="vn_erstellen_popup" class="popup_fenster">
-<!-- 	<div class="popup_fenster_titel">
-		<span class="octicon octicon-podium"></span>
-		<span class="popup_fenster_ueberschrift"> Veranstaltung erstellen</span>
-	</div> -->
-	<div id="vn_popup_close" class="popup_fenster_close">
-		<span class="octicon octicon-x"></span>
-	</div>
-	<div class="popup_fenster_body">
-		<input class="input_std vn_erstellen_input" id="vn_titel_input" type="text" placeholder="Titel" required>
-		<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_semester"></select>
-		<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_studiengang" multiple></select>
-		<input class="input_std vn_erstellen_input" id="vn_pass_input" type="password" placeholder="Passwort" required>
-		<div class="itemlist" id="vn_mod_list"></div>
-		<input class="input_std vn_erstellen_input" id="vn_mod_input" type="text" placeholder="Moderator hinzufügen"></input>
-		<div class="input_std" id="vn_mod_vorschlag" style="display:none;
-		    background: #2a2a2a;
-		    position: absolute;
-		    /* float: right; */
-		    margin: 0;
-		    width: calc(100% - 4.2em);
-		    height: auto;
-		"></div>
-		<textarea class="input_std vn_erstellen_input" id="vn_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
-		<div class="popup_fenster_spalte" id="vn_bearbeiten_mode">
-			<span class="form_infotext">Wer darf bearbeiten?</span>
-			<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_keiner_bearb" value = "Nur ich" type="radio"checked>Nur ich</label></span>
-			<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_mod_bearb" value = "Ich und Moderatoren"type="radio">Ich und Moderatoren</label></span>
-		</div>
-		<div class="popup_fenster_spalte">
-			<span><label><input id="vn_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
-			<span><label><input id="vn_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
-		</div>
-	</div>
-	<div class="popup_fenster_foot">
-		<input id="vn_erzeugen_cancel" class="mybutton dark flat" type="button" value="Abbrechen">
-		<input id="vn_erzeugen_submit" class="mybutton green" type="submit" value="Erstellen">
-	</div>
-</div>
-
-<div id="attr_popup" class="bigtooltip">
-	<div class="bigtooltip_pfeil"></div>
-	<div class="bigtooltip_head">
-		<span class="octicon octicon-checklist"></span><span> Attribute ändern</span>
-	</div>
-	<div class="bigtooltip_body">
-		<span><input id="attr_satz" type="checkbox" name="attr"><label for="attr_satz">Satz</label></span>
-		<span><input id="attr_beweis" type="checkbox" name="attr"><label for="attr_beweis">Beweis</label></span>
-		<span><input id="attr_def" type="checkbox" name="attr"><label for="attr_def">Definition</label></span>
-		<span><input id="attr_wichtig" type="checkbox" name="attr"><label for="attr_wichtig">Wichtig</label></span>
-		<span><input id="attr_grundl" type="checkbox" name="attr"><label for="attr_grundl">Grundlagen</label></span>
-		<span><input id="attr_ueberschr" type="checkbox" name="attr"><label for="attr_ueberschr">Überschrift</label></span>
-	</div>
-	<div class="bigtooltip_foot"></div>
 </div>
 
 </body>
