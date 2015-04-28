@@ -108,7 +108,9 @@ public class ParamDefines
     /**
      * JSON-Feld-Werte, die nicht schon als Parameter vorkommen
      */
-    public final static String jsonErrorTxt = "error";
+
+    public final static String jsonErrorCode = "error";
+    public final static String jsonErrorMsg = "errorMessage";
     public final static String jsonErrorNoError = "noerror";                        // Kein Fehler
 
     // Alle bekannten Fehlertypen

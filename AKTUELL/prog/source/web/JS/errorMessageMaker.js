@@ -41,45 +41,74 @@ function showInfo(intoTxt) {
 	message(1,intoTxt);
 }
 
-function handleError(errorCode) {
+function handleError(errorCode,msg) {
 	switch (errorCode)
 	{
 		case "systemerror": 
-			showError("Ein interner Fehler ist aufgetreten. Versuchen Sie es erneut. Wenn der Fehler weiterhin besteht, wenden Sie sich an den Administrator.");
+			if(msg == undefined)
+				showError("Ein interner Fehler ist aufgetreten. Versuchen Sie es erneut. Wenn der Fehler weiterhin besteht, wenden Sie sich an den Administrator.");
+			else
+				showError(msg);
 			break;
 		case "invalidparam": 
-			showError("Der Server hat ungueltige oder fehlende Parameter erhalten. Bitte machen Sie andere Eingaben!");
+			if(msg == undefined)
+				showError("Der Server hat ungueltige oder fehlende Parameter erhalten. Bitte machen Sie andere Eingaben!");
+			else
+				showError(msg);
 			break;
 		case "notloggedin": 
-			
+	
 			if(getUrlParameterByName(urlParamLocation) != ansichtStartseite)
 				showError("Bitte loggen Sie sich ein!");
-			
+			else if(msg != undefined)
+					showError(msg);
+	
 			jsonBenutzer = undefined;			// Benutzer objekt ungültig
 			gotoStartseite();
 			break;
 		case "loginfailed": 
-			showError("Dieser Eintrag wurde in der Datenbank nicht gefunden.");
+			if(msg == undefined)
+				showError("Dieser Eintrag wurde in der Datenbank nicht gefunden.");
+			else
+				showError(msg);
 			break;
 		case "registerfailed": 
-			showError("Ihre Daten konnten nicht registriert werden. Bitte versuchen Sie es erneut.");
+			if(msg == undefined)
+				showError("Ihre Daten konnten nicht registriert werden. Bitte versuchen Sie es erneut.");
+			else
+				showError(msg);
 			break;
 		case "emailalreadyinuse": 
-			showError("Entschuldigung, diese E-Mail Adresse ist bereits vergeben.");
+			if(msg == undefined)
+				showError("Entschuldigung, diese E-Mail Adresse ist bereits vergeben.");
+			else
+				showError(msg);
 			break;
 		case "pwresetfailed": 
-			showError("Ihr Passwort konnte nicht zurueckgesetzt werden. Bitte versuchen Sie es erneut.");
+			if(msg == undefined)
+				showError("Ihr Passwort konnte nicht zurueckgesetzt werden. Bitte versuchen Sie es erneut.");
+			else
+				showError(msg);
 			break;
 		case "sessionexpired": 
-			showError("Ihre Login Session ist abgelaufen. Bitte loggen Sie sich erneut ein.");
+			if(msg == undefined)
+				showError("Ihre Login Session ist abgelaufen. Bitte loggen Sie sich erneut ein.");
+			else
+				showError(msg);
 			break;
 		case "notallowed":
-			showError("Diese Aktion ist nicht erlaubt. Sie haben womöglich nicht die nötigen Berechtigungen.");
+			if(msg == undefined)
+				showError("Diese Aktion ist nicht erlaubt. Sie haben womöglich nicht die nötigen Berechtigungen.");
+			else
+				showError(msg);
 			break;
 		default: 
-			showError("Ein unbekannter Fehler ist aufgetreten (Error Code nicht bekannt).");
+			if(msg == undefined)
+				showError("Ein unbekannter Fehler ist aufgetreten (Error Code nicht bekannt).");
+			else
+				showError(msg);
 		break;
-	}
+		}
 }
 
 /**
@@ -98,7 +127,7 @@ function verifyResponse(jsonResponse, specialErrorHandlingFkt)
 			processed = specialErrorHandlingFkt(jsonResponse["error"]);
 		
 		if(!processed)
-			handleError(jsonResponse["error"]);	
+			handleError(jsonResponse["error"], jsonResponse[errorMsg]);	
 		
 		return false;
 	}
