@@ -20,8 +20,10 @@ var actionResetPasswort = "resetPasswort";
 var actionGetBenutzer = "getBenutzer";
 var actionGetStudiengaenge = "getStudiengaenge";
 var actionGetStudgVn = "getStudgVn";
+var actionGetModVn = "getModVn";
 var actionGetOtherBenutzer = "getOtherBenutzer";
 var actionGetSemester = "getSemester";
+var actionGetVeranstaltung = "getVeranstaltung";
 var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
@@ -75,6 +77,7 @@ var paramAnzTeilnehmer = "anzTeilnehmer";
 var paramAngemeldet = "angemeldet";
 var paramKennwortGesetzt = "kennwortGesetzt";
 
+
 var paramAktSemester = "aktSemester";
 var paramGewaehltesStudiengang = "gewaehlterStudiengang";
 var paramGewaehltesSemester = "gewaehltesSemester";
@@ -107,5 +110,9 @@ var urlParamId = "id";
 var ansichtStartseite = "startseite";
 var ansichtHauptseite = "hauptseite";
 var ansichtProfilseite = "profilseite";
-var ansichtVeranstaltungseite = "veranstaltungseite";
-var alleAnsichten = [ansichtStartseite,ansichtHauptseite,ansichtProfilseite,ansichtVeranstaltungseite];
+var ansichtVeranstaltungsseite = "veranstaltungsseite";
+var alleAnsichten = [ansichtStartseite,ansichtHauptseite,ansichtProfilseite,ansichtVeranstaltungsseite];
+
+//Aktuelle Objecte
+
+var veranstaltungsObject;

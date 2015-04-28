@@ -31,6 +31,55 @@ $(document).ready(function() {
     });
 });
 //todo übergebe Informationen über Veranstaltung
-function fillVeranstaltungsSeite(){
-	//aktualisiere title
+function fillVeranstaltungsSeite(Vid){
+	var params = {};
+	params[paramId] = Vid;
+	var ajax1 = ajaxCall(veranstaltungServlet,
+		actionGetVeranstaltung,
+		function(response) 
+		{
+			veranstaltungsObject = response;
+			$.when(findStudiengaenge(Vid)).done(function() {
+				titel = response[paramTitel];
+				$("#vn_title").html(titel);
+				document.title = titel;
+				findModeratorenVn(Vid);
+			});
+			
+		},
+		params
+	);
+}
+
+//sucht Studiengänge, die zur Veranstaltung gehören
+function findStudiengaenge(id){
+	var params = {};
+    params[paramId] = id;
+    
+	return ajaxCall(
+        veranstaltungServlet, 
+        actionGetStudgVn, 
+        function(response) {
+            studgArr = response[keyJsonArrResult];
+            veranstaltungsObject[paramStudiengang] = studgArr;
+            
+        },
+        params
+    );
+}
+//sucht Moderatoren, die zur Veranstaltung gehören
+function findModeratorenVn(id){
+	var params = {};
+    params[paramId] = id;
+    
+	return ajaxCall(
+        veranstaltungServlet, 
+        actionGetModVn, 
+        function(response) {
+            ModArr = response[keyJsonArrResult];
+            console.log(ModArr);
+            veranstaltungsObject[paramModeratoren] = ModArr;
+        },
+        params
+    );
 }
