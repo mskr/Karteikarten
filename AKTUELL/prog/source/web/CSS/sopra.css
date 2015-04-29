@@ -255,6 +255,7 @@ textarea.input_std {
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	text-align: center;
+	white-space: nowrap;
 } .popup_fenster_ueberschrift {
 	font-weight: bold;
 	white-space: nowrap;
