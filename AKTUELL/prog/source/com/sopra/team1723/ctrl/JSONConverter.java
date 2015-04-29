@@ -23,17 +23,31 @@ public class JSONConverter
     
     /**
      * Einfache Bestätigung von Aktionen oder Error
-     * @param erroText 
+     * @param errorCode 
      * @return
      */
-    static JSONObject toJsonError(String erroText)
+    static JSONObject toJsonError(String errorCode)
     {
         JSONObject jo = new JSONObject();
         
-        jo.put(ParamDefines.jsonErrorTxt, erroText);
+        jo.put(ParamDefines.jsonErrorCode, errorCode);
        
         return jo;
     }
+    /**
+     * Gibt einen Fehler inklusive individuellem ErrorText zurück
+     * @param errorCode
+     * @param errorText
+     * @return
+     */
+    static JSONObject toJsonError(String errorCode, String errorText)
+    {
+        JSONObject jo = toJsonError(errorCode);
+        jo.put(ParamDefines.jsonErrorMsg,errorText);
+        return jo;
+    }
+    
+    
     
     /**
      * Verpackt die Daten eines Benutzer Objekts in
@@ -57,7 +71,7 @@ public class JSONConverter
     {
         JSONObject jo = new JSONObject();
         
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         JSONArray array = new JSONArray();
         
         for(String s: strings)
@@ -78,7 +92,7 @@ public class JSONConverter
     {
         JSONObject jo = new JSONObject();
         
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         JSONArray array = new JSONArray();
         
         for(IjsonObject ergs: suchtreffer){
@@ -98,7 +112,7 @@ public class JSONConverter
     static JSONObject toJson(String txt) 
     {
         JSONObject jo = new JSONObject();  
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);      
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);      
         jo.put(ParamDefines.jsonStrResult, txt);
         
         return jo;
@@ -113,7 +127,7 @@ public class JSONConverter
     {
         // TODO Interface benutzen!!
         JSONObject jo = new JSONObject();
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         
         JSONArray array = new JSONArray();
 
@@ -122,7 +136,7 @@ public class JSONConverter
         {
             JSONObject o = new JSONObject();
 
-            o.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);      
+            o.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);      
             o.put(ParamDefines.Titel, v.getTitel());   
             o.put(ParamDefines.Id, v.getId()); 
             o.put(ParamDefines.Beschr, v.getBeschreibung()); 
@@ -168,7 +182,7 @@ public class JSONConverter
     static JSONObject toJsonBenachrichtigungen(List<Benachrichtigung> benachrichtigungen) 
     {
         JSONObject jo = new JSONObject();
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         
         JSONArray array = new JSONArray();
         for(Benachrichtigung ben: benachrichtigungen)
@@ -224,7 +238,7 @@ public class JSONConverter
     static JSONObject toJsonSemesterMap(Map<Integer, String> semester) 
     {
         JSONObject jo = new JSONObject();  
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         
         JSONArray array = new JSONArray();
 

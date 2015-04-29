@@ -9,12 +9,18 @@
  * Setzt einen Timeout.
  */
 $.ajaxSetup({
-    type: "GET",
+    type: "POST",
 	timeout: 3000,
 	error: function(jqXHR, textStatus, errorThrown) { 
 	    //status === 'timeout' if it took too long.
 	    //handle that however you want.
-	    showError("Ajax Call returned error. Debug Info: "+jqXHR.status+", "+textStatus+", "+errorThrown);
+		
+		if(textStatus == "timeout")
+		    showError("Verbindung zum Server wurde unterbrochen. Wiederholen Sie den Vorngang, wenn möglich.");
+		else if(jqXHR.responseText == "")
+		    showError("Bitte prüfen Sie Ihre Internetverbindung! Es konnte keine Verbindung zum Server hergestellt werden.");
+		else
+			showError("Ajax Call returned error. Debug Info: "+jqXHR.status+", "+textStatus+", "+errorThrown + "resonseText: " + jqXHR.responseText);
 	}
 });
 

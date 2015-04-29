@@ -251,7 +251,7 @@ public class Veranstaltung implements IjsonObject {
         // Ignore parameter full
         JSONObject jo = new JSONObject();
         jo.put(ParamDefines.Klasse, ParamDefines.KlasseVeranst);
-        jo.put(ParamDefines.jsonErrorTxt, ParamDefines.jsonErrorNoError);    
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);    
         jo.put(ParamDefines.Id, this.getId());   
         jo.put(ParamDefines.Titel, this.getTitel()); 
         jo.put(ParamDefines.Beschr, this.getBeschreibung()); 

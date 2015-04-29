@@ -30,7 +30,70 @@ $(document).ready(function() {
         }
     });
 });
-//todo übergebe Informationen über Veranstaltung
-function fillVeranstaltungsSeite(){
-	//aktualisiere title
+function fillVeranstaltungsSeite(Vid)
+{
+	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
+	d = jQuery.Deferred();
+	
+	var params = {};
+	params[paramId] = Vid;
+	ajaxCall(veranstaltungServlet,
+		actionGetVeranstaltung,
+		function(response) 
+		{
+			veranstaltungsObject = response;
+			
+			$.when(findStudiengaenge(Vid)).done(function() {
+				$.when(findModeratorenVn(Vid)).done(function() {
+					
+					// Wenn alles geladen wurde
+					titel = veranstaltungsObject[paramTitel];
+					$("#vn_title").html(titel);
+					$("#vn_ersteller").html(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
+					$("#vn_semester").html(veranstaltungsObject[paramSemester]);
+					document.title = titel;
+					
+					// Deferred Objekt als abgeschlossen markieren.
+					d.resolve();
+				});
+			});
+			
+		},
+		params
+	);
+	
+	return d;
+}
+
+//sucht Studiengänge, die zur Veranstaltung gehören
+function findStudiengaenge(id){
+	var params = {};
+    params[paramId] = id;
+    
+	return ajaxCall(
+        veranstaltungServlet, 
+        actionGetStudgVn, 
+        function(response) {
+            studgArr = response[keyJsonArrResult];
+            veranstaltungsObject[paramStudiengang] = studgArr;
+            
+        },
+        params
+    );
+}
+//sucht Moderatoren, die zur Veranstaltung gehören
+function findModeratorenVn(id){
+	var params = {};
+    params[paramId] = id;
+    
+	return ajaxCall(
+        veranstaltungServlet, 
+        actionGetModVn, 
+        function(response) {
+            ModArr = response[keyJsonArrResult];
+            console.log(ModArr);
+            veranstaltungsObject[paramModeratoren] = ModArr;
+        },
+        params
+    );
 }

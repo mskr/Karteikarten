@@ -650,6 +650,13 @@ function registerVeranstErzeugeHandler() {
 		{
 			moderatorenIDs.push(selectedModList[key][paramId]);
 		}
+		
+		// Fehlerprüfung
+		if(titel == "" || beschr == "")
+		{
+			showError("Bitte geben Sie mindestens einen Titel und eine Beschreibung an!");
+			return;
+		}
 	
 		var params = {};
 		params[paramTitel] = escape(titel);
@@ -666,7 +673,7 @@ function registerVeranstErzeugeHandler() {
 				actionErstelleVeranst,
 				function(response) {
 					showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich erzeugt.");
-					dialog.dialog('close');
+			        popupFenster($("#vn_erstellen_popup_overlay"), "close");
 					fillVeranstaltungsliste();	
 				},
 				params
@@ -739,8 +746,9 @@ function registerVeranstErzeugeHandler() {
 											});
 										})(res[i]);
 	
-	
+
 								$("#vn_mod_vorschlag").append(x);
+								$("#vn_mod_vorschlag").append("<br>");
 							}
 							$("#vn_mod_vorschlag").slideDown(100);
 						}

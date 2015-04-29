@@ -132,6 +132,9 @@ function interpreteUrlQuery(paramObj)
         } else if(ziel == ansichtProfilseite) 
         {
         	ajax2 = fillProfilseite();
+        } else if(ziel == ansichtVeranstaltungsseite){
+        	vid = paramObj[paramId];
+        	ajax2 = fillVeranstaltungsSeite(vid);
         }
         
         $.when(ajax1, ajax2).done(function() {
@@ -223,7 +226,7 @@ function gotoProfil(benutzerID)
 function gotoVeranstaltung(veranstId)
 {
 	var paramObj = {};
-	paramObj[urlParamLocation] = ansichtVeranstaltungseite;
+	paramObj[urlParamLocation] = ansichtVeranstaltungsseite;
 	paramObj[urlParamId] = veranstId;
 	buildUrlQuery(paramObj);
 }

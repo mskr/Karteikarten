@@ -647,14 +647,14 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             moderatoren = new ArrayList<Benutzer>();
             ps = conMysql.prepareStatement("SELECT b.ID, eMail, Vorname, Nachname, Profilbild, Matrikelnummer, Studiengang, "
-                    + "Kennwort, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, "
+                    + "CryptedPW, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, "
                     + "Profilbild FROM benutzer AS b JOIN moderator AS m ON b.ID = m.Benutzer AND m.Veranstaltung =?"); 
             ps.setInt(1, veranstaltung);
             rs = ps.executeQuery();
             while(rs.next()){
                 moderatoren.add(new Benutzer(rs.getInt("b.ID"),rs.getString("eMail"),rs.getString("Vorname"),
                         rs.getString("Nachname"), rs.getInt("Matrikelnummer"),rs.getString("Studiengang"),
-                        rs.getString("Kennwort"),Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
+                        rs.getString("CryptedPW"),Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), 
                         rs.getBoolean("NotifyVeranstAenderung"),rs.getBoolean("NotifyKarteikartenAenderung"),
                         NotifyKommentare.valueOf(rs.getString("NotifyKommentare")),rs.getString("Profilbild")));
             }
