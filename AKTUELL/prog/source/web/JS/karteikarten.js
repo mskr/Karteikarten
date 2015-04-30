@@ -2,4 +2,7 @@
  * @author mk
  */
 
-function showTextKarteikarte()
+function buildTextKarteikarte(karteikarteJson)
+{
+    
+}
