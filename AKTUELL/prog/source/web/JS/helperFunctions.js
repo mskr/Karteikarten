@@ -35,12 +35,20 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
         top: 0,
         left: 0
     });
+    
     var pos = anchorElem.offset();
     $("#dialog_sicher").offset({
         top: pos.top,
         left: pos.left
     });
-    var overflow = $("#dialog_sicher").offset().left + $("#dialog_sicher").width() - $(window).width();
+    
+    var clone = $("#dialog_sicher").clone();
+    clone.css("visibility","hidden");
+    $('body').append(clone);
+    var width = clone.outerWidth();
+    clone.remove();
+    
+    var overflow = pos.left + width - $(window).width();
     if(overflow > 0)
     {
         $("#dialog_sicher").offset({
@@ -48,6 +56,7 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
             left: $("#dialog_sicher").offset().left - overflow
         });
     }
+    
     $("#dialog_sicher").fadeIn(300);
     $("#dialog_sicher_popup_overlay").fadeIn(300);
     $("#dialog_sicher_popup_overlay").click(function() {
@@ -56,6 +65,7 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
         $("#dialog_sicher_popup_overlay").fadeOut(300);
         $("#dialog_sicher_popup_overlay").off();
     });
+    
     $(".dialog_sicher_frage").text(message);
     $(".dialog_sicher_ja").click(function() {
         doCriticalThing();

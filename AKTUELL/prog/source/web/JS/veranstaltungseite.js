@@ -10,25 +10,48 @@ $(document).ready(function() {
 //            horizontal: 'leftedge'
 //    });
 //  CKEDITOR.config.irgendeinPlugin
+	
+	
+	$("#vn_loeschen").click(function() {
+		
+		sindSieSicher($("#vn_loeschen"), "Soll die Veranstaltung wirklich gelöscht werden?", function() {
+			var params = {};
+			params[paramId] = getUrlParameterByName(paramId);
+			ajaxCall(veranstaltungServlet,
+				actionGetVeranstaltung,		// TODO
+				function(response) 
+				{
+					gotoHauptseite();
+				},
+				params
+			);
+		})
+		
+	});
+	$("#vn_bearbeiten").click(function() {
+		// TODO Dialog öffnen
+	});
+	
+	
     // Einklappen der Kommentarboxen
-    $('.kk_kommtoggle').html('Einklappen');
-    var height = 0;
-    $('.kk_kommtoggle').click( function() {
-        var domelem = $(this).parent().get(0);
-        var jqueryobj = $(domelem);
-        if( jqueryobj.height()>50 ) {
-            height = jqueryobj.height();
-            jqueryobj.animate({
-                height: "15px"
-            }, 500 );
-            $(this).html('Ausklappen');
-        } else {
-            jqueryobj.animate({
-                height: ""+height+"px"
-            }, 500 );
-            $(this).html('Einklappen');
-        }
-    });
+//    $('.kk_kommtoggle').html('Einklappen');
+//    var height = 0;
+//    $('.kk_kommtoggle').click( function() {
+//        var domelem = $(this).parent().get(0);
+//        var jqueryobj = $(domelem);
+//        if( jqueryobj.height()>50 ) {
+//            height = jqueryobj.height();
+//            jqueryobj.animate({
+//                height: "15px"
+//            }, 500 );
+//            $(this).html('Ausklappen');
+//        } else {
+//            jqueryobj.animate({
+//                height: ""+height+"px"
+//            }, 500 );
+//            $(this).html('Einklappen');
+//        }
+//    });
 });
 function fillVeranstaltungsSeite(Vid)
 {
@@ -97,3 +120,5 @@ function findModeratorenVn(id){
         params
     );
 }
+
+
