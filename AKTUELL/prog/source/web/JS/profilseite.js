@@ -159,9 +159,7 @@ function fillMyProfil(isAdmin)
 function fillOtherProfil(benutzer, isAdmin)
 {
 	//aktualisiere Titel
-	console.log(benutzer);
 	UserName = benutzer[paramVorname]+" "+benutzer[paramNachname];
-	console.log(UserName);
 	document.title = UserName;
 
 	

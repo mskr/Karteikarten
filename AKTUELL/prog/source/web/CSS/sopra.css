@@ -260,6 +260,7 @@ textarea.input_std {
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	text-align: center;
+	white-space: nowrap;
 } .popup_fenster_ueberschrift {
 	font-weight: bold;
 	white-space: nowrap;
@@ -595,14 +596,14 @@ textarea.input_std {
 	font-size: .8em;
 	font-weight: bold;
 	color: lightgray;
-} .sucherg_vn, .sucherg_benutzer {
+} .sucherg {
 	width: 100%;
-} .sucherg_vn_item, .sucherg_benutzer_item {
+} .sucherg_item {
 	padding: .9em;
 	cursor: pointer;
-} .sucherg_vn_item span, .sucherg_benutzer_item span {
+} .sucherg_item span {
 	margin-right: .5em;
-} .sucherg_vn_leer {
+} .sucherg_leer {
 	padding: .9em;
 	color: gray;
 	font-style: italic;

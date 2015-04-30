@@ -70,18 +70,12 @@
 <script src="JS/profilseite.js"></script>
 <!-- Hauptseite Skript -->
 <script src="JS/hauptseite.js"></script>
+<!-- Veranstaltung Erstellen Skript -->
+<script src="JS/vnErstellen.js"></script>
 <!-- Veranstaltungseite Skript -->
 <script src="JS/veranstaltungseite.js"></script>
-<!-- Initial alle Kind<div>s von <body> verbergen -->
 <!-- md5 hash function -->
 <script src="JS/md5.js"></script>
-<!-- [Deprecated]
-<style>
-	body > div {
-		display: none;
-	}
-</style>
--->
 </head>
 
 <body>
@@ -265,18 +259,18 @@ Dann aber so leer.
 
 <div id="mainbox_hauptseite" class="mainbox">
 	<div class="hauptseite_head">
-			<input id="suche_global_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Veranstaltungen und Personen finden..." required>
-			<div id="suche_ergebnisse" class="suche_ergebnisse flex_container">
-				<div class="sucherg_x"><span id="sucherg_x" class="octicon octicon-x"></span></div>
-				<div class="sucherg_titel">VERANSTALTUNGEN</div>
-				<div id="sucherg_vn" class="sucherg_vn">
-					<!-- Suchergebnisse hier -->
-				</div>
-				<div class="sucherg_titel">PERSONEN</div>
-				<div id="sucherg_benutzer" class="sucherg_benutzer">
-					<!-- Suchergebnisse hier -->
-				</div>
-			</div>
+		<input id="suche_global_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Veranstaltungen und Personen finden..." required>
+<!-- 		<div id="suche_ergebnisse" class="suche_ergebnisse"> -->
+<!-- 			<div class="sucherg_x"><span id="sucherg_x" class="octicon octicon-x"></span></div> -->
+<!-- 			<div class="sucherg_titel">VERANSTALTUNGEN</div> -->
+<!-- 			<div id="sucherg_vn" class="sucherg_vn"> -->
+<!-- 				Suchergebnisse hier -->
+<!-- 			</div> -->
+<!-- 			<div class="sucherg_titel">PERSONEN</div> -->
+<!-- 			<div id="sucherg_benutzer" class="sucherg_benutzer"> -->
+<!-- 				Suchergebnisse hier -->
+<!-- 			</div> -->
+<!-- 		</div> -->
 		<span id="vn_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span> </span>
 	</div>
 	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
