@@ -400,7 +400,7 @@ public interface IDatenbankmanager {
      * @param Position 
      * @return
      */
-    public boolean schreibeKarteikarte(Karteikarte karteik, int vaterKarteikID, int Position);
+    public int schreibeKarteikarte(Karteikarte karteik) throws SQLException;
 
     /**
      * @param karteik 

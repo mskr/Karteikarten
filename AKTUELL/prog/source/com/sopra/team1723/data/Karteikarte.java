@@ -10,7 +10,22 @@ public class Karteikarte {
     
     
 
-    public Karteikarte(int id, String titel, Date aenderungsdatum, String inhalt, KarteikartenTyp typ, int veranstaltung)
+    public Karteikarte(String titel,  String inhalt, KarteikartenTyp typ, int veranstaltung)
+    {
+        super();
+        this.id = -1;
+        this.titel = titel;
+        this.aenderungsdatum = Calendar.getInstance();
+        this.inhalt = inhalt;
+        this.typ = typ;
+        this.veranstaltung = veranstaltung;
+        this.bewertung = 0;
+    }
+    
+    
+
+    public Karteikarte(int id, String titel, Calendar aenderungsdatum, String inhalt, KarteikartenTyp typ,
+            int veranstaltung, int bewertung)
     {
         super();
         this.id = id;
@@ -19,7 +34,10 @@ public class Karteikarte {
         this.inhalt = inhalt;
         this.typ = typ;
         this.veranstaltung = veranstaltung;
+        this.bewertung = bewertung;
     }
+
+
 
     /**
      * 
@@ -40,7 +58,7 @@ public class Karteikarte {
     /**
      * 
      */
-    private Date aenderungsdatum;
+    private Calendar aenderungsdatum;
 
     /**
      * 
@@ -55,6 +73,8 @@ public class Karteikarte {
     
     
     private int veranstaltung;
+    
+    private int bewertung;
         
         
 
@@ -78,12 +98,12 @@ public class Karteikarte {
         this.titel = titel;
     }
 
-    public Date getAenderungsdatum()
+    public Calendar getAenderungsdatum()
     {
         return aenderungsdatum;
     }
 
-    public void setAenderungsdatum(Date aenderungsdatum)
+    public void setAenderungsdatum(Calendar aenderungsdatum)
     {
         this.aenderungsdatum = aenderungsdatum;
     }
@@ -118,6 +138,17 @@ public class Karteikarte {
     {
         this.veranstaltung = veranstaltung;
     }
+
+    public int getBewertung()
+    {
+        return bewertung;
+    }
+
+    public void setBewertung(int bewertung)
+    {
+        bewertung = bewertung;
+    }
+    
     
 
     

@@ -1416,18 +1416,18 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(1, benachrichtigung);
             ps.setInt(2, benutzer);
             ps.executeUpdate();
-            
+
             closeQuietly(ps);
-            
+
             ps = conMysql.prepareStatement("INSERT INTO moderator(Benutzer,Veranstaltung) SELECT Benutzer, Veranstaltung FROM"
                     + " benachrichtigung_einladung_moderator WHERE Benachrichtigung = ? AND Benutzer = ?");
             ps.setInt(1, benachrichtigung);
             ps.setInt(2, benutzer);
             ps.executeUpdate();
-            
+
             conMysql.commit();
-            
-           
+
+
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
@@ -1471,7 +1471,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(1, benachrichtigung);
             ps.setInt(2, benutzer);
             ps.executeUpdate();
-            
+
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
@@ -1479,9 +1479,9 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
             conLock.getValue().unlock();
         }
-        
+
         return erfolgreich;
-        
+
     }
 
     @Override
@@ -1492,14 +1492,18 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         Karteikarte karteikarte = null;
         try {
-            ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung"
-                    + " FROM karteikarte WHERE ID = ?");
+            ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung,"
+                    + " Bewertung FROM karteikarte WHERE ID = ?");
             ps.setInt(1,karteikID);
 
             rs = ps.executeQuery();
-            if(rs.next())
-                karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), rs.getDate("Aenderungsdatum"),
-                        rs.getString("Inhalt"), KarteikartenTyp.valueOf(rs.getString("Typ")), rs.getInt("Veranstaltung"));
+            if(rs.next()){
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(rs.getTimestamp("Aenderungsdatum"));
+                karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), cal,
+                        rs.getString("Inhalt"), KarteikartenTyp.valueOf(rs.getString("Typ")), rs.getInt("Veranstaltung"),
+                        rs.getInt("Bewertung"));
+            }
 
         } catch (SQLException e) {
             karteikarte = null;
@@ -1547,9 +1551,57 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean schreibeKarteikarte(Karteikarte karteik, int vaterKarteikID, int Position) {
-        // TODO Auto-generated method stub
-        return false;
+    public int schreibeKarteikarte(Karteikarte karteik) throws SQLException {
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int insertedId = -1;
+
+        try{
+            conNeo4j.setAutoCommit(false);
+            conMysql.setAutoCommit(false);
+
+            ps = conNeo4j.prepareStatement("CREATE(n) RETURN id(n) AS Id");
+
+            rs = ps.executeQuery();
+            if(!rs.next())
+                return insertedId;
+            insertedId = rs.getInt("Id");
+
+            closeQuietly(ps);
+
+            ps = conMysql.prepareStatement("INSERT INTO karteikarte(ID,Titel,Inhalt,Typ,"
+                    + "Veranstaltung) VALUES(?,?,?,?,?)");
+            ps.setInt(1, insertedId);
+            ps.setString(2, karteik.getTitel());
+            ps.setString(3, karteik.getInhalt());
+            ps.setString(4, karteik.getTyp().name());
+            ps.setInt(5,karteik.getVeranstaltung());
+            ps.executeUpdate();
+
+            conNeo4j.commit();
+            conMysql.commit();
+
+        } catch(SQLException e){
+            conNeo4j.rollback();
+            conMysql.rollback();
+            e.printStackTrace();
+            throw e;
+        } finally{
+            conNeo4j.setAutoCommit(true);
+            conMysql.setAutoCommit(true);
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+            conLock.getValue().unlock();
+        }
+
+        return insertedId;
     }
 
     @Override

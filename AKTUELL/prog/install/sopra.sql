@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 01. Mai 2015 um 23:14
+-- Erstellungszeit: 02. Mai 2015 um 00:47
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -285,8 +285,8 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
   `Titel` text NOT NULL,
   `Inhalt` text NOT NULL,
   `Typ` enum('TEXT','BILD','VIDEO','') NOT NULL,
-  `Bewertung` int(11) NOT NULL,
-  `Aenderungsdatum` date NOT NULL,
+  `Bewertung` int(11) NOT NULL DEFAULT '0',
+  `Aenderungsdatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Veranstaltung` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -295,19 +295,19 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
 --
 
 INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderungsdatum`, `Veranstaltung`) VALUES
-(7, 'Softwaretechnik I', '...', 'TEXT', 0, '2015-05-01', 1),
-(8, 'Einführung und Motivation', '...', 'TEXT', 0, '2015-05-01', 1),
-(9, 'Grundlagen', '...', 'TEXT', 0, '2015-05-01', 1),
-(10, 'System-Engineering', '...', 'TEXT', 0, '2015-05-01', 1),
-(11, 'Organisatorisches', '...', 'TEXT', 0, '2015-05-01', 1),
-(12, 'Bedeutung von Software', '...', 'TEXT', 0, '2015-05-01', 1),
-(13, 'Software-Probleme, "Software-Krise"', '...', 'TEXT', 0, '2015-05-01', 1),
-(14, 'Software als Wirtschaftsfaktor', '...', 'TEXT', 0, '2015-05-01', 1),
-(15, 'Grundbegriffe', '...', 'TEXT', 0, '2015-05-01', 1),
-(16, 'Übungsaufgaben', '...', 'TEXT', 0, '2015-05-01', 1),
-(17, 'Einfache Übungsaufgaben', '...', 'TEXT', 0, '2015-05-01', 1),
-(18, 'Mittelschwere Übungsaufgaben', '...', 'TEXT', 0, '2015-05-01', 1),
-(19, 'Schwierige Übungsaufgaben', '...', 'TEXT', 0, '2015-05-01', 1);
+(7, 'Softwaretechnik I', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(8, 'Einführung und Motivation', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(9, 'Grundlagen', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(10, 'System-Engineering', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(11, 'Organisatorisches', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(12, 'Bedeutung von Software', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(13, 'Software-Probleme, "Software-Krise"', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(14, 'Software als Wirtschaftsfaktor', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(15, 'Grundbegriffe', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(16, 'Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(17, 'Einfache Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(18, 'Mittelschwere Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(19, 'Schwierige Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1);
 
 -- --------------------------------------------------------
 
