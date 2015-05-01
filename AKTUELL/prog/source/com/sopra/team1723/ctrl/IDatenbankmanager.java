@@ -350,18 +350,22 @@ public interface IDatenbankmanager {
      */
     public boolean markiereBenAlsGelesen(int benID, int benutzerID);
     /**
-     * Holt Daten der Karteikarte anhand der ID aus der Datenbank und
-     * return
-     * @param karteikID 
-     * @return
+     * Holt Daten der Karteikarte anhand der ID aus der Datenbank
+     * @param karteikID referenziert eindeutig eine Karteikarte
+     * @return Es wird ein Karteikarten Objekt zurückgegeben. Tritt ein Fehler
+     * auf oder gibt es keine Karteikarte mit dieser ID, kommt null zurück
      */
     public Karteikarte leseKarteikarte(int karteikID);
 
-    /**
-     * @param vaterKarteikID 
-     * @return
+    /** Gibt alle Kinder einer Karteikarte zurück.
+     * @param vaterKarteikID referenziert eindeutig eine Karteikarte
+     * @return Gibt eine Map zurück, in der der Schlüssel angibt das wievielte
+     * Kind die Karteikarte ist. (Es wird bei 0 mit Zählen begonnen
+     * Tritt ein Fehler auf wird null zurückgegeben.
+     * Hat die angegebene Karteikarte keine Kinder, so wird eine leere Map
+     * zurückgeliefert.
      */
-    public Karteikarte[] leseKindKarteikarten(int vaterKarteikID);
+    public Map<Integer,Karteikarte> leseKindKarteikarten(int vaterKarteikID);
 
     /**
      * Fugt neue Karteikarte in die Datenbank ein. Bei Erfolg wird true

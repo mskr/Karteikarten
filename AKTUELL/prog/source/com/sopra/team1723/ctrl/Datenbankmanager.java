@@ -33,8 +33,8 @@ import com.sopra.team1723.exceptions.*;
  */
 public class Datenbankmanager implements IDatenbankmanager {
     final int UNIQUE_CONSTRAINT_ERROR = 1062;
-    private Connection conMysql = null;
-    private Connection conNeo4j = null;
+    //private Connection conNeo4j = null;
+    private HashMap<Connection,ReentrantLock> connectionsNeo4j = null;
     private HashMap<Connection,ReentrantLock> connections = null;
     private final static int AnzConnections = 5;  
     /**
@@ -44,13 +44,36 @@ public class Datenbankmanager implements IDatenbankmanager {
      */
     public Datenbankmanager() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("org.neo4j.jdbc.Driver");
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
+        
+        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
+        for(int i=0; i<AnzConnections; ++i)
+            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/"), new ReentrantLock());
+        
         connections = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)
             connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root",""), new ReentrantLock());
 
     }
 
+    public Entry<Connection, ReentrantLock> getConnectionNeo4j(){
+        Iterator<Entry<Connection,ReentrantLock>> it = connectionsNeo4j.entrySet().iterator();
+        Entry<Connection, ReentrantLock> defaultConnection = null;
+        while(it.hasNext()){
+            Entry<Connection, ReentrantLock> connection = it.next();
+            if(!connection.getValue().isLocked()){
+                connection.getValue().lock();
+                return connection;
+            }
+
+            if(defaultConnection == null || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
+                defaultConnection = connection;
+        }
+        defaultConnection.getValue().lock();
+        return defaultConnection;
+    }
+    
     public Entry<Connection, ReentrantLock> getConnection(){
         Iterator<Entry<Connection,ReentrantLock>> it = connections.entrySet().iterator();
         Entry<Connection, ReentrantLock> defaultConnection = null;
@@ -75,6 +98,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             // ignored
         }
+        
     }
 
     protected void closeQuietly(PreparedStatement statement) {
@@ -443,8 +467,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         Veranstaltung veranstaltung = null;
         try{
             ps = conMysql.prepareStatement("SELECT Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer"
-                    + " FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer,"
+                    + " ErsteKarteikarte FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz "
                     + "ON v.ID = bvz.Veranstaltung WHERE v.ID=?"); 
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -452,7 +476,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                 veranstaltung = new Veranstaltung(id,rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
                         rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"));
+                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"), rs.getInt("ErsteKarteikarte"));
             }
         } catch (SQLException e) {
             veranstaltung = null;
@@ -574,8 +598,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
-                    + "FROM benutzer_veranstaltung_zuordnung AS bvz RIGHT OUTER JOIN veranstaltung AS v ON "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer, "
+                    + "ErsteKarteikarte FROM benutzer_veranstaltung_zuordnung AS bvz RIGHT OUTER JOIN veranstaltung AS v ON "
                     + "v.ID = bvz.Veranstaltung JOIN veranstaltung_studiengang_zuordnung AS vsz ON v.ID = vsz.Veranstaltung"
                     + " WHERE vsz.Studiengang =? AND Semester =? GROUP BY v.ID"); 
             ps.setString(1, studiengang);
@@ -585,7 +609,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                 veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
                         rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
+                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"), rs.getInt("ErsteKarteikarte")));
             }
         } catch (SQLException e) {
             veranstaltungen = null;
@@ -611,8 +635,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
-                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer, "
+                    + "ErsteKarteikarte FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
                     + "v.ID = bvz.Veranstaltung WHERE ? IN (SELECT Benutzer FROM benutzer_veranstaltung_zuordnung WHERE"
                     + " Veranstaltung = v.ID) GROUP BY v.ID"); 
             ps.setInt(1, benutzer);
@@ -621,7 +645,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                 veranstaltungen.add(new Veranstaltung(rs.getInt("ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
                         rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
+                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"), rs.getInt("ErsteKarteikarte")));
             }
         } catch (SQLException e) {
             veranstaltungen = null;
@@ -1380,14 +1404,64 @@ public class Datenbankmanager implements IDatenbankmanager {
 
     @Override
     public Karteikarte leseKarteikarte(int karteikID) {
-        // TODO Auto-generated method stub
-        return null;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Karteikarte karteikarte = null;
+        try {
+            ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung"
+                    + " FROM karteikarte WHERE ID = ?");
+            ps.setInt(1,karteikID);
+            
+            rs = ps.executeQuery();
+            if(rs.next())
+                 karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), rs.getDate("Aenderungsdatum"),
+                         rs.getString("Inhalt"), KarteikartenTyp.valueOf(rs.getString("Typ")), rs.getInt("Veranstaltung"));
+                         
+        } catch (SQLException e) {
+            karteikarte = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLock.getValue().unlock();
+        }
+
+        return karteikarte;
     }
 
     @Override
-    public Karteikarte[] leseKindKarteikarten(int vaterKarteikID) {
-        // TODO Auto-generated method stub
-        return null;
+    public Map<Integer,Karteikarte> leseKindKarteikarten(int vaterKarteikID) {
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        HashMap<Integer,Karteikarte> kindKarteikarten = null;
+        try {
+            kindKarteikarten = new HashMap<Integer, Karteikarte>();
+            ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->()-[:h_brother*0..50]-(m)"
+                    + " WHERE id(n) = {1}"
+                    + " return id(m) AS ID");
+            ps.setInt(1,vaterKarteikID);
+            
+            rs = ps.executeQuery();
+            
+            int i = 0;
+            while(rs.next()) {
+                 kindKarteikarten.put(i, leseKarteikarte(rs.getInt("ID")));
+                 ++ i;
+            }
+        } catch (SQLException e) {
+            kindKarteikarten = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return kindKarteikarten;
     }
 
     @Override

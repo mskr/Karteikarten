@@ -16,7 +16,7 @@ public class Veranstaltung implements IjsonObject {
     
     public Veranstaltung(int id, String titel, String beschreibung, String semester,
             String zugangspasswort, boolean bewertungenErlaubt, boolean moderatorKarteikartenBearbeiten,
-            Benutzer ersteller, boolean kommentareErlaubt, int anzTeilnehmer)
+            Benutzer ersteller, boolean kommentareErlaubt, int anzTeilnehmer, int ersteKarteikarte)
     {
         this.id = id;
         this.titel = titel;
@@ -28,6 +28,7 @@ public class Veranstaltung implements IjsonObject {
         this.kommentareErlaubt = kommentareErlaubt;
         this.ersteller = ersteller;
         this.anzTeilnehmer = anzTeilnehmer;
+        this.ersteKarteikarte = ersteKarteikarte;
     }
     
  
@@ -83,7 +84,16 @@ public class Veranstaltung implements IjsonObject {
      */
     private int anzTeilnehmer;
     
+
+    /**
+     * 
+     */
     private Benutzer ersteller;
+    
+    /**
+     * 
+     */
+    private int ersteKarteikarte;
 
     public int getId()
     {
@@ -245,6 +255,22 @@ public class Veranstaltung implements IjsonObject {
 
 
 
+    public int getErsteKarteikarte()
+    {
+        return ersteKarteikarte;
+    }
+
+
+
+
+    public void setErsteKarteikarte(int ersteKarteikarte)
+    {
+        this.ersteKarteikarte = ersteKarteikarte;
+    }
+
+
+
+
     @Override
     public JSONObject toJSON(boolean full)
     {
@@ -260,6 +286,7 @@ public class Veranstaltung implements IjsonObject {
         jo.put(ParamDefines.ModeratorKkBearbeiten, this.isModeratorKarteikartenBearbeiten()); 
         jo.put(ParamDefines.KommentareErlauben,this.isKommentareErlaubt());
         jo.put(ParamDefines.Ersteller,this.getErsteller().toJSON(true));
+        jo.put(ParamDefines.ErsteKarteikarte, this.ersteKarteikarte);
         return jo;
     }
 

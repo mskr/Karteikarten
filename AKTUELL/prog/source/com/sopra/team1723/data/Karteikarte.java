@@ -5,7 +5,21 @@ import java.util.*;
 /**
  * 
  */
-public abstract class Karteikarte {
+public class Karteikarte {
+
+    
+    
+
+    public Karteikarte(int id, String titel, Date aenderungsdatum, String inhalt, KarteikartenTyp typ, int veranstaltung)
+    {
+        super();
+        this.id = id;
+        this.titel = titel;
+        this.aenderungsdatum = aenderungsdatum;
+        this.inhalt = inhalt;
+        this.typ = typ;
+        this.veranstaltung = veranstaltung;
+    }
 
     /**
      * 
@@ -36,12 +50,13 @@ public abstract class Karteikarte {
     /**
      * 
      */
-    private Set<AttributTyp> attribute;
-
-    /**
-     * 
-     */
     private KarteikartenTyp typ;
+    
+    
+    
+    private int veranstaltung;
+        
+        
 
     public int getId()
     {
@@ -83,15 +98,6 @@ public abstract class Karteikarte {
         this.inhalt = inhalt;
     }
 
-    public Set<AttributTyp> getAttribute()
-    {
-        return attribute;
-    }
-
-    public void setAttribute(Set<AttributTyp> attribute)
-    {
-        this.attribute = attribute;
-    }
 
     public KarteikartenTyp getTyp()
     {
@@ -102,6 +108,17 @@ public abstract class Karteikarte {
     {
         this.typ = typ;
     }
+
+    public int getVeranstaltung()
+    {
+        return veranstaltung;
+    }
+
+    public void setVeranstaltung(int veranstaltung)
+    {
+        this.veranstaltung = veranstaltung;
+    }
+    
 
     
 }

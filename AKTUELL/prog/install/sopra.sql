@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 26. Apr 2015 um 15:52
+-- Erstellungszeit: 01. Mai 2015 um 19:12
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
 
 INSERT INTO `benachrichtigung_einladung_moderator` (`ID`, `Benachrichtigung`, `Benutzer`, `Veranstaltung`, `Gelesen`, `Angenommen`) VALUES
 (1, 1, 4, 1, 0, 0),
-(2, 2, 6, 4, 0, 0);
+(2, 2, 6, 4, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_profil_geaendert` (
 --
 
 INSERT INTO `benachrichtigung_profil_geaendert` (`ID`, `Benachrichtigung`, `Benutzer`, `Admin`, `Gelesen`) VALUES
-(3, 40, 6, 2, 0);
+(3, 40, 6, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -281,26 +281,33 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
 --
 
 CREATE TABLE IF NOT EXISTS `karteikarte` (
-`ID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `Titel` text NOT NULL,
-  `Typ` enum('Text','Bild','Video','') NOT NULL,
+  `Inhalt` text NOT NULL,
+  `Typ` enum('TEXT','BILD','VIDEO','') NOT NULL,
   `Bewertung` int(11) NOT NULL,
   `Aenderungsdatum` date NOT NULL,
   `Veranstaltung` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
 --
--- Tabellenstruktur für Tabelle `karteikarten_struktur`
+-- Daten für Tabelle `karteikarte`
 --
 
-CREATE TABLE IF NOT EXISTS `karteikarten_struktur` (
-`ID` int(11) NOT NULL,
-  `Position` int(11) NOT NULL,
-  `SohnKarteik` int(11) NOT NULL,
-  `VaterKarteik` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderungsdatum`, `Veranstaltung`) VALUES
+(7, 'Softwaretechnik I', '...', 'TEXT', 0, '2015-05-01', 1),
+(8, 'Einführung und Motivation', '...', 'TEXT', 0, '2015-05-01', 1),
+(9, 'Grundlagen', '...', 'TEXT', 0, '2015-05-01', 1),
+(10, 'System-Engineering', '...', 'TEXT', 0, '2015-05-01', 1),
+(11, 'Organisatorisches', '...', 'TEXT', 0, '2015-05-01', 1),
+(12, 'Bedeutung von Software', '...', 'TEXT', 0, '2015-05-01', 1),
+(13, 'Software-Probleme, "Software-Krise"', '...', 'TEXT', 0, '2015-05-01', 1),
+(14, 'Software als Wirtschaftsfaktor', '...', 'TEXT', 0, '2015-05-01', 1),
+(15, 'Grundbegriffe', '...', 'TEXT', 0, '2015-05-01', 1),
+(16, 'Übungsaufgaben', '...', 'TEXT', 0, '2015-05-01', 1),
+(17, 'Einfache Übungsaufgaben', '...', 'TEXT', 0, '2015-05-01', 1),
+(18, 'Mittelschwere Übungsaufgaben', '...', 'TEXT', 0, '2015-05-01', 1),
+(19, 'Schwierige Übungsaufgaben', '...', 'TEXT', 0, '2015-05-01', 1);
 
 -- --------------------------------------------------------
 
@@ -423,23 +430,24 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `BewertungenErlaubt` tinyint(1) NOT NULL,
   `ModeratorKarteikartenBearbeiten` tinyint(1) NOT NULL,
   `Ersteller` int(11) NOT NULL,
-  `Titel` varchar(50) NOT NULL
+  `Titel` varchar(50) NOT NULL,
+  `ErsteKarteikarte` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `veranstaltung`
 --
 
-INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `KommentareErlaubt`, `BewertungenErlaubt`, `ModeratorKarteikartenBearbeiten`, `Ersteller`, `Titel`) VALUES
-(1, 'Softwaretechnik Vorlesung', 'WiSe2014/15', '1234', 1, 1, 1, 5, 'Softwaretechnik'),
-(2, 'Softwaretechnik Vorlesung', 'WiSe2015/16', '1234', 1, 1, 1, 4, 'Softwaretechnik'),
-(3, 'Medizin I', 'SoSe2013', '1234', 1, 0, 0, 2, 'Medizin I'),
-(4, 'Algorithmen und Datenstrukturen Vorlesung', 'WiSe2014/15', '1234', 1, 0, 1, 6, 'Algorithmen und Datenstrukture'),
-(5, 'Physik I für Ingenieure Vorlesung', 'SoSe2015', '1234', 1, 0, 0, 3, 'Physik I für Ingenieure'),
-(6, 'Latex Kurs', 'WiSe2014/15', '1234', 1, 1, 1, 2, 'Latex Kurs'),
-(7, 'Softwaregrundproekt', 'SoSe2015', NULL, 1, 1, 1, 6, 'Sopra'),
-(8, 'Grundlagen der Betriebssysteme Vorlesung', 'WiSe2014/15', NULL, 1, 0, 0, 5, 'Grundlagen der Betriebssysteme'),
-(9, 'nur für pimmelberger', 'SoSe2015', 'pimmelberger', 1, 1, 1, 8, 'Digitale Medien');
+INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `KommentareErlaubt`, `BewertungenErlaubt`, `ModeratorKarteikartenBearbeiten`, `Ersteller`, `Titel`, `ErsteKarteikarte`) VALUES
+(1, 'Softwaretechnik Vorlesung', 'WiSe2014/15', '1234', 1, 1, 1, 5, 'Softwaretechnik', 0),
+(2, 'Softwaretechnik Vorlesung', 'WiSe2015/16', '1234', 1, 1, 1, 4, 'Softwaretechnik', 0),
+(3, 'Medizin I', 'SoSe2013', '1234', 1, 0, 0, 2, 'Medizin I', 0),
+(4, 'Algorithmen und Datenstrukturen Vorlesung', 'WiSe2014/15', '1234', 1, 0, 1, 6, 'Algorithmen und Datenstrukture', 0),
+(5, 'Physik I für Ingenieure Vorlesung', 'SoSe2015', '1234', 1, 0, 0, 3, 'Physik I für Ingenieure', 0),
+(6, 'Latex Kurs', 'WiSe2014/15', '1234', 1, 1, 1, 2, 'Latex Kurs', 0),
+(7, 'Softwaregrundproekt', 'SoSe2015', NULL, 1, 1, 1, 6, 'Sopra', 0),
+(8, 'Grundlagen der Betriebssysteme Vorlesung', 'WiSe2014/15', NULL, 1, 0, 0, 5, 'Grundlagen der Betriebssysteme', 0),
+(9, 'nur für pimmelberger', 'SoSe2015', 'pimmelberger', 1, 1, 1, 8, 'Digitale Medien', 0);
 
 -- --------------------------------------------------------
 
@@ -551,12 +559,6 @@ ALTER TABLE `karteikarte`
  ADD PRIMARY KEY (`ID`), ADD KEY `VeranstaltungID` (`Veranstaltung`);
 
 --
--- Indizes für die Tabelle `karteikarten_struktur`
---
-ALTER TABLE `karteikarten_struktur`
- ADD PRIMARY KEY (`ID`), ADD KEY `SohnKarteik` (`SohnKarteik`), ADD KEY `VaterKarteik` (`VaterKarteik`);
-
---
 -- Indizes für die Tabelle `kommentar`
 --
 ALTER TABLE `kommentar`
@@ -590,7 +592,7 @@ ALTER TABLE `studiengang`
 -- Indizes für die Tabelle `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
- ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `Semester` (`Semester`,`Titel`), ADD KEY `Ersteller` (`Ersteller`), ADD KEY `Semester_2` (`Semester`);
+ ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `Semester` (`Semester`,`Titel`), ADD KEY `Ersteller` (`Ersteller`), ADD KEY `Semester_2` (`Semester`), ADD KEY `ErsteKarteikarte` (`ErsteKarteikarte`);
 
 --
 -- Indizes für die Tabelle `veranstaltung_studiengang_zuordnung`
@@ -651,16 +653,6 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT für Tabelle `bewertung_kommentar`
 --
 ALTER TABLE `bewertung_kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `karteikarte`
---
-ALTER TABLE `karteikarte`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `karteikarten_struktur`
---
-ALTER TABLE `karteikarten_struktur`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `kommentar`
@@ -752,7 +744,7 @@ ADD CONSTRAINT `benutzer_veranstaltung_zuordnung_ibfk_4` FOREIGN KEY (`Benutzer`
 -- Constraints der Tabelle `bewertung_karteikarte`
 --
 ALTER TABLE `bewertung_karteikarte`
-ADD CONSTRAINT `bewertung_karteikarte_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`);
+ADD CONSTRAINT `bewertung_karteikarte_ibfk_1` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `bewertung_kommentar`
@@ -764,21 +756,14 @@ ADD CONSTRAINT `bewertung_kommentar_ibfk_2` FOREIGN KEY (`KommentarID`) REFERENC
 -- Constraints der Tabelle `karteikarte`
 --
 ALTER TABLE `karteikarte`
-ADD CONSTRAINT `karteikarte_ibfk_1` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`);
-
---
--- Constraints der Tabelle `karteikarten_struktur`
---
-ALTER TABLE `karteikarten_struktur`
-ADD CONSTRAINT `karteikarten_struktur_ibfk_1` FOREIGN KEY (`SohnKarteik`) REFERENCES `karteikarte` (`ID`),
-ADD CONSTRAINT `karteikarten_struktur_ibfk_2` FOREIGN KEY (`VaterKarteik`) REFERENCES `karteikarte` (`ID`);
+ADD CONSTRAINT `karteikarte_ibfk_1` FOREIGN KEY (`Veranstaltung`) REFERENCES `veranstaltung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `kommentar`
 --
 ALTER TABLE `kommentar`
-ADD CONSTRAINT `kommentar_ibfk_4` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`),
-ADD CONSTRAINT `kommentar_ibfk_5` FOREIGN KEY (`VaterkommentarID`) REFERENCES `kommentar` (`ID`) ON DELETE CASCADE;
+ADD CONSTRAINT `kommentar_ibfk_5` FOREIGN KEY (`VaterkommentarID`) REFERENCES `kommentar` (`ID`) ON DELETE CASCADE,
+ADD CONSTRAINT `kommentar_ibfk_6` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `moderator`
@@ -791,7 +776,7 @@ ADD CONSTRAINT `moderator_ibfk_3` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer`
 -- Constraints der Tabelle `notiz`
 --
 ALTER TABLE `notiz`
-ADD CONSTRAINT `notiz_ibfk_2` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`);
+ADD CONSTRAINT `notiz_ibfk_1` FOREIGN KEY (`KarteikarteID`) REFERENCES `karteikarte` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `veranstaltung`

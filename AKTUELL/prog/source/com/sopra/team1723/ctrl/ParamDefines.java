@@ -77,6 +77,7 @@ public class ParamDefines
     public final static String ModeratorKkBearbeiten = "moderatorKkBearbeiten";
     public final static String KommentareErlauben = "kommentareErlauben";
     public final static String Ersteller = "ersteller";
+    public final static String ErsteKarteikarte = "ersteKarteikarte";
     public final static String Moderatoren = "moderatoren";
     public final static String AnzTeilnehmer = "anzTeilnehmer";
     public final static String Angemeldet = "angemeldet";
