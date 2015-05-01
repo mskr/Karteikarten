@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 01. Mai 2015 um 19:12
+-- Erstellungszeit: 01. Mai 2015 um 23:14
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
-  `Angenommen` tinyint(1) DEFAULT '0'
+  `Angenommen` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --

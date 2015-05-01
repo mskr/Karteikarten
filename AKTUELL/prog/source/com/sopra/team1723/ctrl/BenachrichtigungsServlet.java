@@ -34,7 +34,8 @@ public class BenachrichtigungsServlet extends ServletController
             jo = JSONConverter.toJsonBenachrichtigungen(benachrichtigungen);
             outWriter.print(jo);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionMarkiereBenGelesen))
+        else if(aktuelleAction.equals(ParamDefines.ActionMarkiereBenGelesen) || aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen)
+                || aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen))
         {
             String benIDStr = req.getParameter(ParamDefines.Id);
             if(isEmpty(benIDStr))
@@ -54,7 +55,28 @@ public class BenachrichtigungsServlet extends ServletController
                     outWriter.print(jo);
                     return;
                 }
-                dbManager.markiereBenAlsGelesen(benID, aktuellerBenutzer.getId());
+                
+                if(!dbManager.markiereBenAlsGelesen(benID, aktuellerBenutzer.getId())){
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                    outWriter.print(jo);
+                }
+                    
+                
+                if(aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen)){
+                    if(!dbManager.einladungModeratorAnnehmen(benID, aktuellerBenutzer.getId())){
+                        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                        outWriter.print(jo);
+                        return;
+                    }
+                } 
+                else if(aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen)){
+                    if(!dbManager.einladungModeratorAblehnen(benID, aktuellerBenutzer.getId())){
+                        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                        outWriter.print(jo);
+                        return;
+                    }
+                }
+                
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
                 outWriter.print(jo);
             }

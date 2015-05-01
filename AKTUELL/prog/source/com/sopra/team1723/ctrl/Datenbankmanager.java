@@ -46,11 +46,11 @@ public class Datenbankmanager implements IDatenbankmanager {
         Class.forName("com.mysql.jdbc.Driver");
         Class.forName("org.neo4j.jdbc.Driver");
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
-        
+
         connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)
             connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/"), new ReentrantLock());
-        
+
         connections = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)
             connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root",""), new ReentrantLock());
@@ -73,7 +73,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         defaultConnection.getValue().lock();
         return defaultConnection;
     }
-    
+
     public Entry<Connection, ReentrantLock> getConnection(){
         Iterator<Entry<Connection,ReentrantLock>> it = connections.entrySet().iterator();
         Entry<Connection, ReentrantLock> defaultConnection = null;
@@ -98,7 +98,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             // ignored
         }
-        
+
     }
 
     protected void closeQuietly(PreparedStatement statement) {
@@ -338,10 +338,10 @@ public class Datenbankmanager implements IDatenbankmanager {
                 throw new DbFalseLoginDataException();
             }		
             else{
-            	String Crypted = rs.getString("CryptedPW");
-            	if(BCrypt.checkpw(passwort, Crypted)==false){
-            		throw new DbFalseLoginDataException();
-            	}
+                String Crypted = rs.getString("CryptedPW");
+                if(BCrypt.checkpw(passwort, Crypted)==false){
+                    throw new DbFalseLoginDataException();
+                }
             }
 
 
@@ -885,12 +885,13 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException  {
+    public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge) throws SQLException, DbUniqueConstraintException  {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         conMysql.setAutoCommit(false);
+        int veranstId = -1;
         try{
             ps = conMysql.prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
                     + "BewertungenErlaubt, ModeratorKarteikartenBearbeiten, Ersteller) VALUES(?,?,?,?,?,?,?,?)");
@@ -913,28 +914,17 @@ public class Datenbankmanager implements IDatenbankmanager {
             rs = ps.executeQuery();
             if(!rs.next())
                 throw new SQLException();
-            int VeranstID = rs.getInt(1);
+            veranstId = rs.getInt(1);
             closeQuietly(ps);
 
-            if(moderatorenIds != null) {
+            if(studiengaenge != null) {
                 for(String stg: studiengaenge){
                     ps.close();
 
                     ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");   
-                    ps.setInt(1, VeranstID);
+                    ps.setInt(1, veranstId);
                     ps.setString(2, stg);
                     ps.executeUpdate();         
-                }
-            }
-
-            if(moderatorenIds != null) {
-                for(int mod : moderatorenIds){
-                    ps.close();
-    
-                    ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
-                    ps.setInt(1, mod);
-                    ps.setInt(2, VeranstID);
-                    ps.executeUpdate();
                 }
             }
 
@@ -954,37 +944,44 @@ public class Datenbankmanager implements IDatenbankmanager {
             conLock.getValue().unlock();
         }
 
-
+        return veranstId;
     }
 
     @Override
     public void bearbeiteVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException {
-        //        PreparedStatement ps = null;
-        //        ResultSet rs = null;
-        //        try{
-        //            ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
-        //                    + "Kennwort=?, KommentareErlaubt=?,"
-        //                    + "BewertungenErlaubt=?  WHERE eMail = ?");
-        //            ps.setString(1, benutzer.geteMail());
-        //            ps.setString(2, benutzer.getVorname());
-        //            ps.setString(3, benutzer.getNachname());
-        //            ps.setString(4, benutzer.getNotifyKommentare().name());
-        //            ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
-        //            ps.setBoolean(6, benutzer.isNotifyKarteikartenAenderung());
-        //            ps.setString(7, alteMail);    
-        //            ps.executeUpdate();
-        //
-        //        } catch (SQLException e) {
-        //            e.printStackTrace();
-        //            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
-        //                throw new DbUniqueConstraintException();
-        //            else
-        //                throw e;
-        //
-        //        } finally{
-        //            closeQuietly(ps);
-        //            closeQuietly(rs);
-        //        }
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
+                    + "Kennwort=?, KommentareErlaubt=?, BewertungenErlaubt=?, ModeratorKarteikartenBearbeiten=?,"
+                    + " Ersteller=?, ErsteKarteikarte=? WHERE ID = ?");
+            ps.setString(1, veranst.getTitel());
+            ps.setString(2, veranst.getBeschreibung());
+            ps.setString(3, veranst.getSemester());
+            ps.setString(4, veranst.getZugangspasswort());
+            ps.setBoolean(5, veranst.isKommentareErlaubt());
+            ps.setBoolean(6, veranst.isBewertungenErlaubt());
+            ps.setBoolean(7, veranst.isModeratorKarteikartenBearbeiten());
+            ps.setInt(8, veranst.getErsteller().getId());
+            ps.setInt(9,veranst.getErsteKarteikarte());
+            ps.setInt(10, veranst.getId());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
+                throw new DbUniqueConstraintException();
+            else
+                throw e;
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLock.getValue().unlock();
+        }
     }
 
     @Override
@@ -1258,8 +1255,8 @@ public class Datenbankmanager implements IDatenbankmanager {
                 ps.setInt(2, bem.getBenutzer());
                 ps.setInt(3, bem.getVeranstaltung().getId());
 
-            
-            // todo karteikarten und kommentar Benachrichtigungen müssen noch angepasst werden
+
+                // todo karteikarten und kommentar Benachrichtigungen müssen noch angepasst werden
             } else if (benachrichtigung instanceof BenachrKarteikAenderung){
                 BenachrKarteikAenderung bk = (BenachrKarteikAenderung) benachrichtigung;
                 ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_karteikartenaenderung (Benachrichtigung, Benutzer,"
@@ -1342,8 +1339,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             String sql =
                     "UPDATE benachrichtigung_veranstaltungsaenderung "
-                    + "SET Gelesen = 1 "
-                    + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+                            + "SET Gelesen = 1 "
+                            + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
             ps = conMysql.prepareStatement(sql);
             ps.setInt(1, benID);
             ps.setInt(2, benutzerID);
@@ -1385,7 +1382,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(2, benutzerID);
             updates += ps.executeUpdate();
 
-            
+
             if(updates != 1)
             {
                 System.err.println("[Benachrichtigung gelesen] Es wurden " + updates + " anstatt einem Eintrag in der Tabelle geändert.");
@@ -1403,6 +1400,91 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
+    public boolean einladungModeratorAnnehmen(int benachrichtigung, int benutzer)
+    {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            conMysql.setAutoCommit(false);
+            String sql =
+                    "UPDATE benachrichtigung_einladung_moderator "
+                            + "SET Angenommen = 1 "
+                            + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, benachrichtigung);
+            ps.setInt(2, benutzer);
+            ps.executeUpdate();
+            
+            closeQuietly(ps);
+            
+            ps = conMysql.prepareStatement("INSERT INTO moderator(Benutzer,Veranstaltung) SELECT Benutzer, Veranstaltung FROM"
+                    + " benachrichtigung_einladung_moderator WHERE Benachrichtigung = ? AND Benutzer = ?");
+            ps.setInt(1, benachrichtigung);
+            ps.setInt(2, benutzer);
+            ps.executeUpdate();
+            
+            conMysql.commit();
+            
+           
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+            try
+            {
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {
+                e1.printStackTrace();
+            }
+        } finally{
+            try
+            {
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
+    }
+
+    @Override
+    public boolean einladungModeratorAblehnen(int benachrichtigung, int benutzer)
+    {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            String sql =
+                    "UPDATE benachrichtigung_einladung_moderator "
+                            + "SET Angenommen = 0 "
+                            + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, benachrichtigung);
+            ps.setInt(2, benutzer);
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+        
+        return erfolgreich;
+        
+    }
+
+    @Override
     public Karteikarte leseKarteikarte(int karteikID) {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
@@ -1413,12 +1495,12 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung"
                     + " FROM karteikarte WHERE ID = ?");
             ps.setInt(1,karteikID);
-            
+
             rs = ps.executeQuery();
             if(rs.next())
-                 karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), rs.getDate("Aenderungsdatum"),
-                         rs.getString("Inhalt"), KarteikartenTyp.valueOf(rs.getString("Typ")), rs.getInt("Veranstaltung"));
-                         
+                karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), rs.getDate("Aenderungsdatum"),
+                        rs.getString("Inhalt"), KarteikartenTyp.valueOf(rs.getString("Typ")), rs.getInt("Veranstaltung"));
+
         } catch (SQLException e) {
             karteikarte = null;
             e.printStackTrace();
@@ -1444,13 +1526,13 @@ public class Datenbankmanager implements IDatenbankmanager {
                     + " WHERE id(n) = {1}"
                     + " return id(m) AS ID");
             ps.setInt(1,vaterKarteikID);
-            
+
             rs = ps.executeQuery();
-            
+
             int i = 0;
             while(rs.next()) {
-                 kindKarteikarten.put(i, leseKarteikarte(rs.getInt("ID")));
-                 ++ i;
+                kindKarteikarten.put(i, leseKarteikarte(rs.getInt("ID")));
+                ++ i;
             }
         } catch (SQLException e) {
             kindKarteikarten = null;
@@ -1639,6 +1721,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         // TODO Auto-generated method stub
         return null;
     }
+
 
 
 }

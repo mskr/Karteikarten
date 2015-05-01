@@ -204,21 +204,23 @@ public interface IDatenbankmanager {
     public boolean angemeldet(int benutzer, int veranstaltung) throws SQLException;
 
     /**
-     * Fugt neue Veranstaltung in die Datenbank ein. Bei Erfolg wird
-     * true zuruckgegeben. Bei einem Fehler in der Datenbank oder falls
-     * es schon eine Veranstaltung mit dem gleichen Titel gibt, wird false
-     * zuruckgeliefert.
-     * @param veranst 
-     * @return
+     * Fügt eine neue Veranstaltung in die Datenbank ein.
+     * Werden Titel und Semester zu bereits vorhandenen Werten geändert,
+     * wird eine DbUniqueConstraintException geworfen. Bei einem anderen Fehler wird
+     * eine SQLException geworfen.
+     * @param veranst-Objekt, das in die db eingefügt wird
+     * @param studiengaenge, die zu der Veranstaltung gehören
+     * Veranstaltung werden.
+     * @return gibt die ID der soeben eingefügten Veranstaltung zurück.
      */
-    public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException;
+    public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Daten der angegebenen Veranstaltung werden in der Datenbank
-     * geupdatet. Bei Erfolg liefert die Methode true zuruck (auch wenn
-     * die Veranstaltung gar nicht in der Datenbank vorhanden war). Bei
-     * einem Fehler false.
-     * @param veranst 
+     * geupdatet. Werden Titel und Semester zu bereits vorhandenen Werten geändert,
+     * wird eine DbUniqueConstraintException geworfen. Bei einem anderen Fehler wird
+     * eine SQLException geworfen.
+     * @param veranst-Objekt, das in der db geupdatet wird
      * @return
      */
     public void bearbeiteVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException;
@@ -306,7 +308,7 @@ public interface IDatenbankmanager {
     /**
      * Holt eine Benachrichtigung für eine Karteikartenänderung aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * @return BenachrKarteikAenderung Objekt. Bei einem Fehler oder wenn keine
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrKarteikAenderung leseBenachrKarteikAenderung(int id);
@@ -314,7 +316,7 @@ public interface IDatenbankmanager {
     /**
      * Holt eine Benachrichtigung für einen neuen Kommentar aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * @return BenachrNeuerKommentar Objekt. Bei einem Fehler oder wenn keine
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrNeuerKommentar leseBenachrNeuerKommentar(int id);
@@ -322,7 +324,7 @@ public interface IDatenbankmanager {
     /**
      * Holt eine Benachrichtigung für ein geändertes Profil aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * @return BenachrProfilGeaendert Objekt. Bei einem Fehler oder wenn keine
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrProfilGeaendert leseBenachrProfilGeaendert(int id);
@@ -330,11 +332,11 @@ public interface IDatenbankmanager {
     /**
      * Holt eine Benachrichtigung für eine Veranstaltungsänderung aus der Datenbank
      * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
+     * @return BenachrVeranstAenderung Objekt. Bei einem Fehler oder wenn keine
      * Benachrichtigung gefunden wird kommt null zurück.
      */
     public BenachrVeranstAenderung leseBenachrVeranstAenderung(int id);
-
+    
     /**
      * Schreibt die Benachrichtigung in die Datenbank
      * @param benachrichtigung Objekt. Die Methode setzt das Attribut gelesen
@@ -349,6 +351,28 @@ public interface IDatenbankmanager {
      * @return Liefert bei Erfolg true zurück und bei einem Fehler false.
      */
     public boolean markiereBenAlsGelesen(int benID, int benutzerID);
+    
+    /**
+     * Markiert die Einladung als akzeptiert und trägt den Benutzer als Moderator
+     * für die Veranstaltung ein.
+     * @param benachrichtigung referenziert eindeutig eine Benachrichtigung
+     * @param benutzer, zu einer Benachrichtigung können mehrere Benutzer gehören,
+     * weshalb noch der Benutzer übergeben werden muss
+     * @return Liefert bei Erfolg true zurück (auch wenn die benachrichtigung nicht existiert)
+     * und bei einem Fehler false.
+     */
+    public boolean einladungModeratorAnnehmen(int benachrichtigung, int benutzer);
+    
+    /**
+     * Markiert die Einladung als abgelehnt
+     * @param benachrichtigung referenziert eindeutig eine Benachrichtigung
+     * @param benutzer, zu einer Benachrichtigung können mehrere Benutzer gehören,
+     * weshalb noch der Benutzer übergeben werden muss
+     * @return Liefert bei Erfolg true zurück (auch wenn die benachrichtigung nicht existiert)
+     * und bei einem Fehler false.
+     */
+    public boolean einladungModeratorAblehnen(int benachrichtigung, int benutzer);
+    
     /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank
      * @param karteikID referenziert eindeutig eine Karteikarte
