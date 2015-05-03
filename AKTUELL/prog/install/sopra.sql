@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 02. Mai 2015 um 00:47
+-- Erstellungszeit: 03. Mai 2015 um 10:57
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 `ID` int(11) NOT NULL,
   `Inhalt` mediumtext NOT NULL,
   `Erstelldatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `benachrichtigung`
@@ -85,7 +85,8 @@ INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
 (1, 'Einladung als Moderator für die Vorlesung Softwaretechnik', '2015-04-22 14:15:42'),
 (2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-04-22 14:15:47'),
 (3, 'Prüfungstermine sind nun in der Beschreibung bekannt gegeben', '2015-04-22 14:15:53'),
-(40, '', '2015-03-28 22:39:30');
+(40, '', '2015-03-28 22:39:30'),
+(41, 'Sie werden zur Veranstaltung test als Moderator eingeladen', '2015-05-03 08:56:44');
 
 -- --------------------------------------------------------
 
@@ -100,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
   `Veranstaltung` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
   `Angenommen` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `benachrichtigung_einladung_moderator`
@@ -431,8 +432,8 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `ModeratorKarteikartenBearbeiten` tinyint(1) NOT NULL,
   `Ersteller` int(11) NOT NULL,
   `Titel` varchar(50) NOT NULL,
-  `ErsteKarteikarte` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+  `ErsteKarteikarte` int(11) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `veranstaltung`
@@ -459,7 +460,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
@@ -608,12 +609,12 @@ ALTER TABLE `veranstaltung_studiengang_zuordnung`
 -- AUTO_INCREMENT für Tabelle `benachrichtigung`
 --
 ALTER TABLE `benachrichtigung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=41;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=42;
 --
 -- AUTO_INCREMENT für Tabelle `benachrichtigung_einladung_moderator`
 --
 ALTER TABLE `benachrichtigung_einladung_moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT für Tabelle `benachrichtigung_karteikartenaenderung`
 --
@@ -678,12 +679,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 -- AUTO_INCREMENT für Tabelle `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT für Tabelle `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
 --
 -- Constraints der exportierten Tabellen
 --
