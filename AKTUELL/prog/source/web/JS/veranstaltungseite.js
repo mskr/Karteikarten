@@ -21,7 +21,7 @@ $(document).ready(function() {
 			var params = {};
 			params[paramId] = getUrlParameterByName(paramId);
 			ajaxCall(veranstaltungServlet,
-				"test",		// TODO
+				actionDeleteVn,
 				function(response) 
 				{
 					gotoHauptseite();

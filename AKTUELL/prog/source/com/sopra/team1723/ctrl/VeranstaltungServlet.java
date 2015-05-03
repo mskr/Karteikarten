@@ -448,6 +448,35 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
         }
     }
+    public boolean loescheVeranstaltung(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+
+        int veranstID = Integer.parseInt(req.getParameter(ParamDefines.Id));
+        
+        Veranstaltung v = dbManager.leseVeranstaltung(veranstID);
+        if(v.getErsteller().getId() != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return false;
+        }
+        boolean result = dbManager.loescheVeranstaltung(veranstID);
+        if(result)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            outWriter.print(jo);
+            return true;
+        }
+        else
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+    }
 
     public void leseModeratorenVeranstaltung(HttpServletRequest req, HttpServletResponse resp) throws IOException{
         HttpSession aktuelleSession = req.getSession();
@@ -499,6 +528,10 @@ public class VeranstaltungServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionVeranstErstellen))
         {
             veranstaltungErstellen(req,resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionLoescheVn))
+        {
+            loescheVeranstaltung(req, resp);
         }
         else if(aktuelleAction.equals(ParamDefines.ActionGetStudgVn))
         {

@@ -232,7 +232,7 @@ public interface IDatenbankmanager {
      * @param veranstTitel 
      * @return
      */
-    public boolean loescheVeranstaltung(String veranstTitel);
+    public boolean loescheVeranstaltung(int veranstId);
 
     /**
      * 

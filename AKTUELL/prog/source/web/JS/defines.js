@@ -35,7 +35,8 @@ var actionUploadProfilBild = "uploadProfilBild";
 var actionSucheBenVeranst = "sucheBenVeranst";
 var actionSucheBenutzer = "sucheBenutzer";
 var actionErstelleVeranst = "erstelleVeranst";
-var actionDeleteBenutzer = "deleteBenutzer";
+var actionDeleteBenutzer = "deleteBenutzer"; 
+var actionDeleteVn = "vnLoeschen";
 
 
 var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen

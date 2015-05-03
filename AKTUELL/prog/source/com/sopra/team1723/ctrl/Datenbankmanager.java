@@ -47,9 +47,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         Class.forName("org.neo4j.jdbc.Driver");
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
 
-        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
-        for(int i=0; i<AnzConnections; ++i)
-            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/"), new ReentrantLock());
+//        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
+//        for(int i=0; i<AnzConnections; ++i)
+//            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/"), new ReentrantLock());
 
         connections = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)
@@ -985,8 +985,26 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean loescheVeranstaltung(String veranstTitel) {
-        // TODO Auto-generated method stub
+    public boolean loescheVeranstaltung(int veranstId) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        try{
+            ps = conMysql.prepareStatement("DELETE FROM VERANSTALTUNG WHERE ID = ?");
+            ps.setInt(1, veranstId);
+            int res = ps.executeUpdate();
+            if(res != 1)
+                return false;
+            else 
+                return true;
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
         return false;
     }
 

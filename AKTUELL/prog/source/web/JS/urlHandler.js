@@ -96,8 +96,15 @@ function buildUrlQuery(paramObj)
     
     // TODO
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
-    
+    var State =  History.getState();
     History.pushState(null,null, locationSearchTmp);
+
+    // WORKAROUND Wenn zeilseite = aktuelle seite, dann wird die Change Funktion nicht getriggert
+    if(State.url.indexOf(locationSearchTmp) >= 0)
+    {
+    	var urlQuery = parseUrlQuery(undefined);
+        interpreteUrlQuery(urlQuery);
+    }
 }
 
 /**
