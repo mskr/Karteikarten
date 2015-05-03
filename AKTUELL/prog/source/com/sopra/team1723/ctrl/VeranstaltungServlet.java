@@ -114,6 +114,8 @@ public class VeranstaltungServlet extends ServletController {
                     dbManager.schreibeBenachrichtigung(new BenachrEinlModerator(mIds[i], veranst));
                 }
             }
+            
+            dbManager.zuVeranstaltungEinschreiben(veranst.getId(), aktuellerBenutzer.getId(), veranst.getZugangspasswort());
         }
         catch (SQLException e)
         {
@@ -131,6 +133,13 @@ public class VeranstaltungServlet extends ServletController {
         } catch(NumberFormatException e)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        // Einschreiben für den Ersteller fehlgeschlagen. Sollte eigentlich nicht passieren
+        catch (DbFalsePasswortException e)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }
