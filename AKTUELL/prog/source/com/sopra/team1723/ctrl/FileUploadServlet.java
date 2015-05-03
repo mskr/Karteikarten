@@ -26,6 +26,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONObject;
 
 import com.sopra.team1723.data.Benutzer;
+import com.sopra.team1723.data.Nutzerstatus;
 
 @MultipartConfig
 public class FileUploadServlet extends ServletController
@@ -49,6 +50,28 @@ public class FileUploadServlet extends ServletController
             outWriter.print(jo);
             return;
         }
+        
+        String idStr = req.getParameter(ParamDefines.Id);
+        
+        int id = 0;
+        
+        try{
+            id = Integer.parseInt(idStr);
+        }
+        catch(NumberFormatException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
+        
+        if(id != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return;
+        }
+
         
         Part uploadedFile = req.getPart(ParamDefines.UploadFile);
         String fileName = getFileName(uploadedFile);
@@ -98,7 +121,10 @@ public class FileUploadServlet extends ServletController
         String absolutePath = contextPath + relativerPfad;
         ImageIO.write(scaledImage, "png", new File(absolutePath));
         
-        if(!dbManager.aendereProfilBild(aktuellerBenutzer.getId(), dateiName))
+        // Benutzer holen um zu prüfen, wie sein Altes profilbild heißt
+        Benutzer bcurr = dbManager.leseBenutzer(id);
+        
+        if(!dbManager.aendereProfilBild(id, dateiName))
         {
             // Sende Error zurück
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
@@ -107,9 +133,9 @@ public class FileUploadServlet extends ServletController
         }
         
         // Altes Bild löschen
-        if(!aktuellerBenutzer.getProfilBildPfad().contains("default.png"))
+        if(!bcurr.getProfilBildPfad().contains("default.png"))
         {
-            File f = new File(contextPath + aktuellerBenutzer.getProfilBildPfad());
+            File f = new File(contextPath + bcurr.getProfilBildPfad());
             f.delete();
         }
         System.out.println("File gespeichert: " + absolutePath);

@@ -1,9 +1,12 @@
 
-function uploadFile(file, successFkt, uploadAction, beforeFkt, completeFkt) 
+function uploadFile(file, successFkt, uploadAction, params, beforeFkt, completeFkt) 
 {
 	var formData = new FormData();
 	formData.append('file', file);
 	formData.append('action', uploadAction);
+	for(var key in params)
+		formData.append(key, params[key]);
+		
 	$.ajax({
 		type: "POST",
 		url: fileUploadServlet,

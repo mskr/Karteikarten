@@ -114,6 +114,7 @@ function fillMyProfil(isAdmin)
 	$(".profil_loeschen").show();
 	$("#profil_einstellungen").show();
 	$("#profil_passwort ").show();
+	$("#profil_daten_speichern").show();
 	
 	$(".profil_benutzername").text(jsonBenutzer[paramVorname] +" "+jsonBenutzer[paramNachname]);
 	$(".profil_avatar_img").attr("src", jsonBenutzer[paramProfilBild]);
@@ -195,6 +196,7 @@ function fillOtherProfil(benutzer, isAdmin)
 		$(".profil_loeschen").hide();
 		$("#profil_einstellungen").hide();
 		$("#profil_passwort ").hide();
+		$("#profil_daten_speichern").hide();
 
 		$("#profil_email_input").prop("disabled", true);
 		$("#profil_vorname_input").prop("disabled", true);
@@ -210,6 +212,7 @@ function fillOtherProfil(benutzer, isAdmin)
 		$(".profil_loeschen").show();
 		$("#profil_einstellungen").show();
 		$("#profil_passwort ").show();
+		$("#profil_daten_speichern").show();
 
 		$("#profil_email_input").prop("disabled", false);
 		$("#profil_vorname_input").prop("disabled", false);
@@ -358,10 +361,12 @@ function registerAvatarAendernEvent() {
     			fileName.toLowerCase().indexOf(".png") < 0)
     	{
     		showError("Leider werden nur die Formate jpg/jpeg, bmp oder png unterstützt.");
-    		$("#profil_avatar_submit").hide(0);
+            $("#profil_avatar_submit").fadeOut();
     	}
     	else
     	{
+    		var params = {};
+    		params[paramId] = currentProfilID;
     		uploadFile(file, function(response) {
     			
 
@@ -385,6 +390,7 @@ function registerAvatarAendernEvent() {
     			}
     		},
     		actionUploadProfilBild,
+    		params,
     		function() {
     		    // beforeSend
     		    $("#profil_avatar_submit").val("Lädt...");
@@ -394,7 +400,7 @@ function registerAvatarAendernEvent() {
     		    // complete
     		    $("#profil_avatar_submit").val("Avatar ändern");
                 $("#profil_avatar_submit").prop("disabled", false);
-                $("#profil_avatar_submit").hide(0);
+                $("#profil_avatar_submit").fadeOut();
     		});
     	}
         event.preventDefault();
