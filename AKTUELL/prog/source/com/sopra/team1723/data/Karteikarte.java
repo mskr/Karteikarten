@@ -5,7 +5,39 @@ import java.util.*;
 /**
  * 
  */
-public abstract class Karteikarte {
+public class Karteikarte {
+
+    
+    
+
+    public Karteikarte(String titel,  String inhalt, KarteikartenTyp typ, int veranstaltung)
+    {
+        super();
+        this.id = -1;
+        this.titel = titel;
+        this.aenderungsdatum = Calendar.getInstance();
+        this.inhalt = inhalt;
+        this.typ = typ;
+        this.veranstaltung = veranstaltung;
+        this.bewertung = 0;
+    }
+    
+    
+
+    public Karteikarte(int id, String titel, Calendar aenderungsdatum, String inhalt, KarteikartenTyp typ,
+            int veranstaltung, int bewertung)
+    {
+        super();
+        this.id = id;
+        this.titel = titel;
+        this.aenderungsdatum = aenderungsdatum;
+        this.inhalt = inhalt;
+        this.typ = typ;
+        this.veranstaltung = veranstaltung;
+        this.bewertung = bewertung;
+    }
+
+
 
     /**
      * 
@@ -26,7 +58,7 @@ public abstract class Karteikarte {
     /**
      * 
      */
-    private Date aenderungsdatum;
+    private Calendar aenderungsdatum;
 
     /**
      * 
@@ -36,12 +68,15 @@ public abstract class Karteikarte {
     /**
      * 
      */
-    private Set<AttributTyp> attribute;
-
-    /**
-     * 
-     */
     private KarteikartenTyp typ;
+    
+    
+    
+    private int veranstaltung;
+    
+    private int bewertung;
+        
+        
 
     public int getId()
     {
@@ -63,12 +98,12 @@ public abstract class Karteikarte {
         this.titel = titel;
     }
 
-    public Date getAenderungsdatum()
+    public Calendar getAenderungsdatum()
     {
         return aenderungsdatum;
     }
 
-    public void setAenderungsdatum(Date aenderungsdatum)
+    public void setAenderungsdatum(Calendar aenderungsdatum)
     {
         this.aenderungsdatum = aenderungsdatum;
     }
@@ -83,15 +118,6 @@ public abstract class Karteikarte {
         this.inhalt = inhalt;
     }
 
-    public Set<AttributTyp> getAttribute()
-    {
-        return attribute;
-    }
-
-    public void setAttribute(Set<AttributTyp> attribute)
-    {
-        this.attribute = attribute;
-    }
 
     public KarteikartenTyp getTyp()
     {
@@ -102,6 +128,28 @@ public abstract class Karteikarte {
     {
         this.typ = typ;
     }
+
+    public int getVeranstaltung()
+    {
+        return veranstaltung;
+    }
+
+    public void setVeranstaltung(int veranstaltung)
+    {
+        this.veranstaltung = veranstaltung;
+    }
+
+    public int getBewertung()
+    {
+        return bewertung;
+    }
+
+    public void setBewertung(int bewertung)
+    {
+        bewertung = bewertung;
+    }
+    
+    
 
     
 }

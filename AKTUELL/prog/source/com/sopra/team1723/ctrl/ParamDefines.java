@@ -45,6 +45,9 @@ public class ParamDefines
 
     public final static String ActionLeseBenachrichtungen = "leseBen";
     public final static String ActionMarkiereBenGelesen = "benGelesen";
+    public final static String ActionEinlModeratorAnnehmen = "einlModAnnehmen";
+    public final static String ActionEinlModeratorAblehnen = "einlModAblehnen";
+
 
 
     public final static String Klasse = "klasse";
@@ -77,6 +80,7 @@ public class ParamDefines
     public final static String ModeratorKkBearbeiten = "moderatorKkBearbeiten";
     public final static String KommentareErlauben = "kommentareErlauben";
     public final static String Ersteller = "ersteller";
+    public final static String ErsteKarteikarte = "ersteKarteikarte";
     public final static String Moderatoren = "moderatoren";
     public final static String AnzTeilnehmer = "anzTeilnehmer";
     public final static String Angemeldet = "angemeldet";

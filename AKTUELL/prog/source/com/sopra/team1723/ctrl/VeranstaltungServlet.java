@@ -45,7 +45,7 @@ public class VeranstaltungServlet extends ServletController {
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
         JSONObject jo;
-        
+
         if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.DOZENT && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
@@ -61,10 +61,9 @@ public class VeranstaltungServlet extends ServletController {
         boolean kommentareErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.KommentareErlauben));
         boolean bewertungenErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.BewertungenErlauben));
         boolean moderatorKkBearbeiten = Boolean.parseBoolean(request.getParameter(ParamDefines.ModeratorKkBearbeiten));
-        
+
         String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren);
         int[] mIds = null;
-        
         
         if(moderatorIds != null)
         {
@@ -81,7 +80,6 @@ public class VeranstaltungServlet extends ServletController {
                 return false;
             }
         }
-        // TODO Moderatoren
         if(studiengaenge == null || studiengaenge.length == 0||
                 isEmptyAndRemoveSpaces(semester)||
                 zugangspasswort == null||
@@ -92,7 +90,7 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-        
+
         Veranstaltung veranst = new Veranstaltung();
         veranst.setBeschreibung(beschr);
         veranst.setTitel(titel);
@@ -103,10 +101,19 @@ public class VeranstaltungServlet extends ServletController {
         veranst.setAnzTeilnehmer(0);
         veranst.setErsteller(aktuellerBenutzer);
         veranst.setZugangspasswort(zugangspasswort);
-        
+
+
         try
         {
-            dbManager.schreibeVeranstaltung(veranst,studiengaenge, mIds);
+            veranst.setId(dbManager.schreibeVeranstaltung(veranst,studiengaenge));
+        
+            if(mIds != null)
+            {
+                for(int i = 0; i < mIds.length;i++)
+                {
+                    dbManager.schreibeBenachrichtigung(new BenachrEinlModerator(mIds[i], veranst));
+                }
+            }
         }
         catch (SQLException e)
         {
@@ -121,6 +128,11 @@ public class VeranstaltungServlet extends ServletController {
                             + "Bitte kontaktieren Sie einen Administrator oder löschen Sie die andere Veranstaltung, wenn Sie die Berechtigungen besitzen.");
             outWriter.print(jo);
             return false;
+        } catch(NumberFormatException e)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
         }
 
         jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
@@ -128,18 +140,18 @@ public class VeranstaltungServlet extends ServletController {
         return true;
     }
 
-    
+
     private ArrayList<Boolean>leseZuWelchenVeranstAngemeldet(List<Veranstaltung> veranstaltungen, 
-        HttpServletRequest request, HttpServletResponse response) throws IOException{
+            HttpServletRequest request, HttpServletResponse response) throws IOException{
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
-        
+
         ArrayList<Boolean> angemeldet = new ArrayList<Boolean>();
         Iterator<Veranstaltung> it = veranstaltungen.iterator();
         while(it.hasNext()){
-            
+
             try
             {
                 angemeldet.add(dbManager.angemeldet(aktuellerBenutzer.getId(), it.next().getId()));
@@ -153,8 +165,8 @@ public class VeranstaltungServlet extends ServletController {
         }
         return angemeldet;
     }
-    
-    
+
+
     /**
      * Aus der Datenbank wird mit Hilfe der VeranstaltungsID die Informationen
      * bezuglich der Veranstaltung gelesen und zuruckgegeben.
@@ -171,8 +183,8 @@ public class VeranstaltungServlet extends ServletController {
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
-       
-        
+
+
         JSONObject jo;
         String mode = request.getParameter(ParamDefines.LeseVeranstMode);
         if(isEmpty(mode))
@@ -242,7 +254,7 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-        
+
         int id;
         try
         {
@@ -256,7 +268,7 @@ public class VeranstaltungServlet extends ServletController {
         }
 
         Veranstaltung v =  dbManager.leseVeranstaltung(id);
-        
+
         if(v != null)
         {
             outWriter.print(v.toJSON(true));
@@ -312,14 +324,14 @@ public class VeranstaltungServlet extends ServletController {
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
-        
+
         String idStr = request.getParameter(ParamDefines.Id);
 
         int vId ;
         try
         {
             vId = Integer.parseInt(idStr);
-            
+
             Veranstaltung v = dbManager.leseVeranstaltung(vId); // TODO Kann das weg?
 
             String pw = request.getParameter(ParamDefines.Password);
@@ -351,11 +363,11 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-        
+
         return true;
     }
-    
-    
+
+
 
     /**
      * Ein Benutzer kann sich in die gewunschte Veranstaltung ausschreiben.
@@ -372,14 +384,14 @@ public class VeranstaltungServlet extends ServletController {
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
-        
+
         String idStr = request.getParameter(ParamDefines.Id);
 
         int vId;
         try
         {
             vId = Integer.parseInt(idStr);
-            
+
             dbManager.vonVeranstaltungAbmelden(vId, aktuellerBenutzer.getId());
 
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
@@ -391,15 +403,15 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-        
+
         return true;
     }
-    
+
     public void leseStudiengaengeVeranstaltung(HttpServletRequest req, HttpServletResponse resp) throws IOException{
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
-        
+
         int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Id));
         List<String> studiengaenge = dbManager.leseStudiengaenge(veranstaltung);
         if(studiengaenge != null)
@@ -413,12 +425,12 @@ public class VeranstaltungServlet extends ServletController {
             outWriter.print(jo);
         }
     }
-    
+
     public void leseModeratorenVeranstaltung(HttpServletRequest req, HttpServletResponse resp) throws IOException{
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
-        
+
         int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Id));
         List<Benutzer> moderatoren = dbManager.leseModeratoren(veranstaltung);
         if(moderatoren != null)
@@ -442,7 +454,7 @@ public class VeranstaltungServlet extends ServletController {
 
     @Override
     protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-            IOException
+    IOException
     { 
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();

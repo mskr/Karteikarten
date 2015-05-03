@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 public class BenachrEinlModerator extends Benachrichtigung{
     private Veranstaltung veranstaltung;
-    private boolean angenommen;
+    private Boolean angenommen;
     public BenachrEinlModerator(int id, String inhalt, Calendar erstelldaum, int benutzer,
             boolean gelesen, Veranstaltung veranstaltung, boolean angenommen)
     {
@@ -14,10 +14,10 @@ public class BenachrEinlModerator extends Benachrichtigung{
         this.angenommen = angenommen;
     }
     
-    public BenachrEinlModerator(String inhalt, Calendar erstelldatum, int benutzer,
-            Veranstaltung veranstaltung){
-        this.inhalt = inhalt;
-        this.erstelldaum = erstelldatum;
+    public BenachrEinlModerator(int benutzer,  Veranstaltung veranstaltung){
+        this.inhalt = "Sie werden zur Veranstaltung " + veranstaltung.getTitel() + " als "
+                + "Moderator eingeladen";
+        this.erstelldaum = Calendar.getInstance();
         this.benutzer = benutzer;
         this.veranstaltung = veranstaltung;
         this.id = -1;

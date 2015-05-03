@@ -33,8 +33,8 @@ import com.sopra.team1723.exceptions.*;
  */
 public class Datenbankmanager implements IDatenbankmanager {
     final int UNIQUE_CONSTRAINT_ERROR = 1062;
-    private Connection conMysql = null;
-    private Connection conNeo4j = null;
+    //private Connection conNeo4j = null;
+    private HashMap<Connection,ReentrantLock> connectionsNeo4j = null;
     private HashMap<Connection,ReentrantLock> connections = null;
     private final static int AnzConnections = 5;  
     /**
@@ -44,11 +44,34 @@ public class Datenbankmanager implements IDatenbankmanager {
      */
     public Datenbankmanager() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("org.neo4j.jdbc.Driver");
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
+
+        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
+        for(int i=0; i<AnzConnections; ++i)
+            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/"), new ReentrantLock());
+
         connections = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)
             connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root",""), new ReentrantLock());
 
+    }
+
+    public Entry<Connection, ReentrantLock> getConnectionNeo4j(){
+        Iterator<Entry<Connection,ReentrantLock>> it = connectionsNeo4j.entrySet().iterator();
+        Entry<Connection, ReentrantLock> defaultConnection = null;
+        while(it.hasNext()){
+            Entry<Connection, ReentrantLock> connection = it.next();
+            if(!connection.getValue().isLocked()){
+                connection.getValue().lock();
+                return connection;
+            }
+
+            if(defaultConnection == null || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
+                defaultConnection = connection;
+        }
+        defaultConnection.getValue().lock();
+        return defaultConnection;
     }
 
     public Entry<Connection, ReentrantLock> getConnection(){
@@ -75,6 +98,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             // ignored
         }
+
     }
 
     protected void closeQuietly(PreparedStatement statement) {
@@ -314,10 +338,10 @@ public class Datenbankmanager implements IDatenbankmanager {
                 throw new DbFalseLoginDataException();
             }		
             else{
-            	String Crypted = rs.getString("CryptedPW");
-            	if(BCrypt.checkpw(passwort, Crypted)==false){
-            		throw new DbFalseLoginDataException();
-            	}
+                String Crypted = rs.getString("CryptedPW");
+                if(BCrypt.checkpw(passwort, Crypted)==false){
+                    throw new DbFalseLoginDataException();
+                }
             }
 
 
@@ -443,8 +467,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         Veranstaltung veranstaltung = null;
         try{
             ps = conMysql.prepareStatement("SELECT Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer"
-                    + " FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer,"
+                    + " ErsteKarteikarte FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz "
                     + "ON v.ID = bvz.Veranstaltung WHERE v.ID=?"); 
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -452,7 +476,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                 veranstaltung = new Veranstaltung(id,rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
                         rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"));
+                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"), rs.getInt("ErsteKarteikarte"));
             }
         } catch (SQLException e) {
             veranstaltung = null;
@@ -574,8 +598,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
-                    + "FROM benutzer_veranstaltung_zuordnung AS bvz RIGHT OUTER JOIN veranstaltung AS v ON "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer, "
+                    + "ErsteKarteikarte FROM benutzer_veranstaltung_zuordnung AS bvz RIGHT OUTER JOIN veranstaltung AS v ON "
                     + "v.ID = bvz.Veranstaltung JOIN veranstaltung_studiengang_zuordnung AS vsz ON v.ID = vsz.Veranstaltung"
                     + " WHERE vsz.Studiengang =? AND Semester =? GROUP BY v.ID"); 
             ps.setString(1, studiengang);
@@ -585,7 +609,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                 veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
                         rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
+                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"), rs.getInt("ErsteKarteikarte")));
             }
         } catch (SQLException e) {
             veranstaltungen = null;
@@ -611,8 +635,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             veranstaltungen = new ArrayList<Veranstaltung>();
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
-                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
+                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer, "
+                    + "ErsteKarteikarte FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
                     + "v.ID = bvz.Veranstaltung WHERE ? IN (SELECT Benutzer FROM benutzer_veranstaltung_zuordnung WHERE"
                     + " Veranstaltung = v.ID) GROUP BY v.ID"); 
             ps.setInt(1, benutzer);
@@ -621,7 +645,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                 veranstaltungen.add(new Veranstaltung(rs.getInt("ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
                         rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
                         rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
+                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer"), rs.getInt("ErsteKarteikarte")));
             }
         } catch (SQLException e) {
             veranstaltungen = null;
@@ -861,12 +885,13 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException  {
+    public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge) throws SQLException, DbUniqueConstraintException  {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         conMysql.setAutoCommit(false);
+        int veranstId = -1;
         try{
             ps = conMysql.prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
                     + "BewertungenErlaubt, ModeratorKarteikartenBearbeiten, Ersteller) VALUES(?,?,?,?,?,?,?,?)");
@@ -889,28 +914,17 @@ public class Datenbankmanager implements IDatenbankmanager {
             rs = ps.executeQuery();
             if(!rs.next())
                 throw new SQLException();
-            int VeranstID = rs.getInt(1);
+            veranstId = rs.getInt(1);
             closeQuietly(ps);
 
-            if(moderatorenIds != null) {
+            if(studiengaenge != null) {
                 for(String stg: studiengaenge){
                     ps.close();
 
                     ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");   
-                    ps.setInt(1, VeranstID);
+                    ps.setInt(1, veranstId);
                     ps.setString(2, stg);
                     ps.executeUpdate();         
-                }
-            }
-
-            if(moderatorenIds != null) {
-                for(int mod : moderatorenIds){
-                    ps.close();
-    
-                    ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
-                    ps.setInt(1, mod);
-                    ps.setInt(2, VeranstID);
-                    ps.executeUpdate();
                 }
             }
 
@@ -930,37 +944,44 @@ public class Datenbankmanager implements IDatenbankmanager {
             conLock.getValue().unlock();
         }
 
-
+        return veranstId;
     }
 
     @Override
     public void bearbeiteVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException {
-        //        PreparedStatement ps = null;
-        //        ResultSet rs = null;
-        //        try{
-        //            ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
-        //                    + "Kennwort=?, KommentareErlaubt=?,"
-        //                    + "BewertungenErlaubt=?  WHERE eMail = ?");
-        //            ps.setString(1, benutzer.geteMail());
-        //            ps.setString(2, benutzer.getVorname());
-        //            ps.setString(3, benutzer.getNachname());
-        //            ps.setString(4, benutzer.getNotifyKommentare().name());
-        //            ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
-        //            ps.setBoolean(6, benutzer.isNotifyKarteikartenAenderung());
-        //            ps.setString(7, alteMail);    
-        //            ps.executeUpdate();
-        //
-        //        } catch (SQLException e) {
-        //            e.printStackTrace();
-        //            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
-        //                throw new DbUniqueConstraintException();
-        //            else
-        //                throw e;
-        //
-        //        } finally{
-        //            closeQuietly(ps);
-        //            closeQuietly(rs);
-        //        }
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
+                    + "Kennwort=?, KommentareErlaubt=?, BewertungenErlaubt=?, ModeratorKarteikartenBearbeiten=?,"
+                    + " Ersteller=?, ErsteKarteikarte=? WHERE ID = ?");
+            ps.setString(1, veranst.getTitel());
+            ps.setString(2, veranst.getBeschreibung());
+            ps.setString(3, veranst.getSemester());
+            ps.setString(4, veranst.getZugangspasswort());
+            ps.setBoolean(5, veranst.isKommentareErlaubt());
+            ps.setBoolean(6, veranst.isBewertungenErlaubt());
+            ps.setBoolean(7, veranst.isModeratorKarteikartenBearbeiten());
+            ps.setInt(8, veranst.getErsteller().getId());
+            ps.setInt(9,veranst.getErsteKarteikarte());
+            ps.setInt(10, veranst.getId());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
+                throw new DbUniqueConstraintException();
+            else
+                throw e;
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLock.getValue().unlock();
+        }
     }
 
     @Override
@@ -1234,8 +1255,8 @@ public class Datenbankmanager implements IDatenbankmanager {
                 ps.setInt(2, bem.getBenutzer());
                 ps.setInt(3, bem.getVeranstaltung().getId());
 
-            
-            // todo karteikarten und kommentar Benachrichtigungen müssen noch angepasst werden
+
+                // todo karteikarten und kommentar Benachrichtigungen müssen noch angepasst werden
             } else if (benachrichtigung instanceof BenachrKarteikAenderung){
                 BenachrKarteikAenderung bk = (BenachrKarteikAenderung) benachrichtigung;
                 ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_karteikartenaenderung (Benachrichtigung, Benutzer,"
@@ -1318,8 +1339,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             String sql =
                     "UPDATE benachrichtigung_veranstaltungsaenderung "
-                    + "SET Gelesen = 1 "
-                    + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+                            + "SET Gelesen = 1 "
+                            + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
             ps = conMysql.prepareStatement(sql);
             ps.setInt(1, benID);
             ps.setInt(2, benutzerID);
@@ -1361,7 +1382,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(2, benutzerID);
             updates += ps.executeUpdate();
 
-            
+
             if(updates != 1)
             {
                 System.err.println("[Benachrichtigung gelesen] Es wurden " + updates + " anstatt einem Eintrag in der Tabelle geändert.");
@@ -1379,21 +1400,208 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
+    public boolean einladungModeratorAnnehmen(int benachrichtigung, int benutzer)
+    {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            conMysql.setAutoCommit(false);
+            String sql =
+                    "UPDATE benachrichtigung_einladung_moderator "
+                            + "SET Angenommen = 1 "
+                            + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, benachrichtigung);
+            ps.setInt(2, benutzer);
+            ps.executeUpdate();
+
+            closeQuietly(ps);
+
+            ps = conMysql.prepareStatement("INSERT INTO moderator(Benutzer,Veranstaltung) SELECT Benutzer, Veranstaltung FROM"
+                    + " benachrichtigung_einladung_moderator WHERE Benachrichtigung = ? AND Benutzer = ?");
+            ps.setInt(1, benachrichtigung);
+            ps.setInt(2, benutzer);
+            ps.executeUpdate();
+
+            conMysql.commit();
+
+
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+            try
+            {
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {
+                e1.printStackTrace();
+            }
+        } finally{
+            try
+            {
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
+    }
+
+    @Override
+    public boolean einladungModeratorAblehnen(int benachrichtigung, int benutzer)
+    {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            String sql =
+                    "UPDATE benachrichtigung_einladung_moderator "
+                            + "SET Angenommen = 0 "
+                            + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, benachrichtigung);
+            ps.setInt(2, benutzer);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
+
+    }
+
+    @Override
     public Karteikarte leseKarteikarte(int karteikID) {
-        // TODO Auto-generated method stub
-        return null;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Karteikarte karteikarte = null;
+        try {
+            ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung,"
+                    + " Bewertung FROM karteikarte WHERE ID = ?");
+            ps.setInt(1,karteikID);
+
+            rs = ps.executeQuery();
+            if(rs.next()){
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(rs.getTimestamp("Aenderungsdatum"));
+                karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), cal,
+                        rs.getString("Inhalt"), KarteikartenTyp.valueOf(rs.getString("Typ")), rs.getInt("Veranstaltung"),
+                        rs.getInt("Bewertung"));
+            }
+
+        } catch (SQLException e) {
+            karteikarte = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLock.getValue().unlock();
+        }
+
+        return karteikarte;
     }
 
     @Override
-    public Karteikarte[] leseKindKarteikarten(int vaterKarteikID) {
-        // TODO Auto-generated method stub
-        return null;
+    public Map<Integer,Karteikarte> leseKindKarteikarten(int vaterKarteikID) {
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        HashMap<Integer,Karteikarte> kindKarteikarten = null;
+        try {
+            kindKarteikarten = new HashMap<Integer, Karteikarte>();
+            ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->()-[:h_brother*0..50]-(m)"
+                    + " WHERE id(n) = {1}"
+                    + " return id(m) AS ID");
+            ps.setInt(1,vaterKarteikID);
+
+            rs = ps.executeQuery();
+
+            int i = 0;
+            while(rs.next()) {
+                kindKarteikarten.put(i, leseKarteikarte(rs.getInt("ID")));
+                ++ i;
+            }
+        } catch (SQLException e) {
+            kindKarteikarten = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return kindKarteikarten;
     }
 
     @Override
-    public boolean schreibeKarteikarte(Karteikarte karteik, int vaterKarteikID, int Position) {
-        // TODO Auto-generated method stub
-        return false;
+    public int schreibeKarteikarte(Karteikarte karteik) throws SQLException {
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int insertedId = -1;
+
+        try{
+            conNeo4j.setAutoCommit(false);
+            conMysql.setAutoCommit(false);
+
+            ps = conNeo4j.prepareStatement("CREATE(n) RETURN id(n) AS Id");
+
+            rs = ps.executeQuery();
+            if(!rs.next())
+                return insertedId;
+            insertedId = rs.getInt("Id");
+
+            closeQuietly(ps);
+
+            ps = conMysql.prepareStatement("INSERT INTO karteikarte(ID,Titel,Inhalt,Typ,"
+                    + "Veranstaltung) VALUES(?,?,?,?,?)");
+            ps.setInt(1, insertedId);
+            ps.setString(2, karteik.getTitel());
+            ps.setString(3, karteik.getInhalt());
+            ps.setString(4, karteik.getTyp().name());
+            ps.setInt(5,karteik.getVeranstaltung());
+            ps.executeUpdate();
+
+            conNeo4j.commit();
+            conMysql.commit();
+
+        } catch(SQLException e){
+            conNeo4j.rollback();
+            conMysql.rollback();
+            e.printStackTrace();
+            throw e;
+        } finally{
+            conNeo4j.setAutoCommit(true);
+            conMysql.setAutoCommit(true);
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+            conLock.getValue().unlock();
+        }
+
+        return insertedId;
     }
 
     @Override
@@ -1565,6 +1773,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         // TODO Auto-generated method stub
         return null;
     }
+
 
 
 }
