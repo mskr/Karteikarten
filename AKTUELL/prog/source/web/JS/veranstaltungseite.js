@@ -2,6 +2,8 @@
  * @author mk
  */
 
+var veranstaltungsObject;
+
 $(document).ready(function() {
     // Code fuer das Attribute Tooltip
 //    $("#attr_popup").popup({
@@ -11,6 +13,7 @@ $(document).ready(function() {
 //    });
 //  CKEDITOR.config.irgendeinPlugin
 	
+	$("#vn_kk_ueberscht_box").hide();
 	
 	$("#vn_loeschen").click(function() {
 		
@@ -18,7 +21,7 @@ $(document).ready(function() {
 			var params = {};
 			params[paramId] = getUrlParameterByName(paramId);
 			ajaxCall(veranstaltungServlet,
-				actionGetVeranstaltung,		// TODO
+				"test",		// TODO
 				function(response) 
 				{
 					gotoHauptseite();
@@ -58,6 +61,8 @@ function fillVeranstaltungsSeite(Vid)
 	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
 	d = jQuery.Deferred();
 	
+	
+	
 	var params = {};
 	params[paramId] = Vid;
 	ajaxCall(veranstaltungServlet,
@@ -71,10 +76,26 @@ function fillVeranstaltungsSeite(Vid)
 					
 					// Wenn alles geladen wurde
 					titel = veranstaltungsObject[paramTitel];
-					$("#vn_title").html(titel);
+					$(".vn_title").html(titel);
 					$("#vn_ersteller").html(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
 					$("#vn_semester").html(veranstaltungsObject[paramSemester]);
 					document.title = titel;
+					
+					
+					if(veranstaltungsObject[paramErsteller][paramId] == jsonBenutzer[paramId] || jsonBenutzer[paramNutzerstatus] == "ADMIN")
+					{
+						$("#vn_loeschen").show();
+						$("#vn_bearbeiten").show();
+						$("#kk_erstellen").show();
+					}
+					else
+					{
+						$("#vn_loeschen").hide();
+						$("#vn_bearbeiten").hide();
+						$("#kk_erstellen").hide();
+					}
+					
+					
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();

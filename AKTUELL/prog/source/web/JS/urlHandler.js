@@ -114,6 +114,8 @@ function interpreteUrlQuery(paramObj)
 	// Versteck alle Popupfenster. Wo wÃ¤re das besser ?
 //	$(".popup_fenster").popup('hide');
 
+	$("#vn_kk_ueberscht_box").fadeOut("slow");
+	
 //	$(".mainbox").fadeOut("slow");
 //	$("#mainbox_loadScreen").fadeIn("slow");
     var ziel = paramObj[urlParamLocation];
@@ -202,6 +204,11 @@ function display(ansicht)
         $(".mainbox").not("#mainbox_"+alleAnsichten[ansichtIdx]).fadeOut("slow", function(){
             $("#mainbox_"+alleAnsichten[ansichtIdx]).fadeIn("slow");
         });
+        
+        if(ansicht == ansichtVeranstaltungsseite)
+        {
+        	$("#vn_kk_ueberscht_box").fadeIn("slow");
+        }
     }
     else 
     {

@@ -120,4 +120,3 @@ var alleAnsichten = [ansichtStartseite,ansichtHauptseite,ansichtProfilseite,ansi
 
 //Aktuelle Objecte
 
-var veranstaltungsObject;

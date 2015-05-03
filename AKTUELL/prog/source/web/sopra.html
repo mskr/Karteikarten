@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
 <!-- Verhindert favIcon Error -->
 <link rel="shortcut icon" href="files/general/icon.png">
-<!-- JQuery -->
+<!-- JQuery --> 
 <script src="JS/jquery-latest.min.js"></script>
 <!-- JQuery Popup Overlay, Doc: http://dev.vast.com/jquery-popup-overlay/ -->
 <!-- <script src="JS/jquery.popupoverlay.js"></script> -->
@@ -94,7 +94,7 @@
 			<span class="dialog_sicher_frage"></span>
 		</div>
 		<div class="bigtooltip_foot">
-			<span class="dialog_sicher_ja mybutton red"><span class="octicon octicon-check"></span> Ja, weiter</span>
+			<span id = "dialog_sicher_ja" class="dialog_sicher_ja mybutton red"><span class="octicon octicon-check"></span> Ja, weiter</span>
 		</div>
 	</div>
 </div>
@@ -213,7 +213,30 @@ function naviconTransformicon() {
 		<a id="logout"><span class="octicon octicon-sign-out"></span><span class="logout">Logout</span></a>
 	</div>
 	
-<!-- TODO Wie soll man das hier machen? Vllt weglassen weil == Meine Veranstaltungen. 
+		<div
+			style="height: auto; background-color: #4a4a4a; margin-top: 20px;
+	/* margin-left: 0px; */ text-align: center; padding: 0.2em;"
+			id="vn_kk_ueberscht_box">
+			<h3 class = "vn_title" style="width: inherit;word-wrap: break-word;">Titel der Veranstaltung</h3>
+			<br>
+			<h3>Inhaltsverzeichnis</h3>
+			<br> <span>
+				<ol style="text-align: left; overflow-y: auto; max-height: 250px;">
+					<li><a>Einführung</a></li>
+					<ol>
+						<li><a>Einführung</a></li>
+						<li><a> asdasd </a></li>
+						<li><a> asdasd </a></li>
+						<li><a> asdasd </a></li>
+					</ol>
+
+				</ol>
+
+			</span>
+		</div>
+
+
+		<!-- TODO Wie soll man das hier machen? Vllt weglassen weil == Meine Veranstaltungen. 
 Dann aber so leer.
  - Ich würde sagen, man kann nochmal aus Meine Veranstaltungen welche auswaehlen, die man anpinnen moechte 
 (wenn man in sehr viele eingeschrieben ist) - Marius -->
@@ -454,16 +477,15 @@ Dann aber so leer.
 			<span class="mybutton dark"><span class="octicon octicon-cloud-download"></span></span>
 		</div>
 		<div class="kk_erstellen_bt">
-			<span class="mybutton green"><span class="octicon octicon-plus"></span></span>
+			<span class="mybutton green" id = "kk_erstellen" ><span class="octicon octicon-plus"></span></span>
 		</div>
 	</div>
 	<div class="vn_header">
-	<!-- 	<h1>Analysis I</h1> -->
-		<span id="vn_title" class = "text_h1" style="float:left;"></span>
+		<span id="vn_title" class = "vn_title text_h1" style="float:left;"></span>
 		<span id="vn_ersteller" class = "vn_info_right">Dr. Liebezeit</span><br>
 		<span id="vn_semester" class = "vn_info_right">Wintersemester 2014/15</span><br>
-		<span id="vn_loeschen" class="mybutton red octicon octicon-trashcan"></span>
-		<span id="vn_bearbeiten" class="mybutton dark octicon octicon-pencil"></span>
+		<span id="vn_loeschen" class="mybutton red octicon octicon-trashcan vn_info_right"></span>
+		<span id="vn_bearbeiten" class="mybutton dark octicon octicon-pencil vn_info_right"></span>
 	</div>
 	<div class="kk_wrapper">
 		<div class="kk_votes">

@@ -69,7 +69,6 @@ function registerVeranstErzeugeHandler() {
                 actionErstelleVeranst,
                 function(response) {
                     showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich erzeugt.");
-                    popupFenster($("#vn_erstellen_popup_overlay"), "close");
                     fillVeranstaltungsliste();  
                 },
                 params

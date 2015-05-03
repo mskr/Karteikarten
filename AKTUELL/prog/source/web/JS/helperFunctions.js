@@ -28,6 +28,14 @@ function fillSelectWithOptions(select, optArray, selectedOptName, clearFirst)
  * @param message ist die Nachricht, die der Benutzer bestaetigen soll.
  * @param doCriticalThing ist eine Funktion, die nach Bestaetigung mit Ok ausgefuehrt wird.
  */
+$(document).ready(function() {
+	$("#dialog_sicher_popup_overlay").click(function() {
+		$("#dialog_sicher").addClass("hidden");
+		$("#dialog_sicher").fadeOut(300);
+		$("#dialog_sicher_popup_overlay").fadeOut(300);
+	    $("#dialog_sicher_ja").off("click");
+	});
+});
 function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
 {
     $("#dialog_sicher").removeClass("hidden");
@@ -42,6 +50,7 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
         left: pos.left
     });
     
+    // Workaround
     var clone = $("#dialog_sicher").clone();
     clone.css("visibility","hidden");
     $('body').append(clone);
@@ -57,22 +66,13 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
         });
     }
     
-    $("#dialog_sicher").fadeIn(300);
     $("#dialog_sicher_popup_overlay").fadeIn(300);
-    $("#dialog_sicher_popup_overlay").click(function() {
-        $("#dialog_sicher").addClass("hidden");
-        $("#dialog_sicher").fadeOut(300);
-        $("#dialog_sicher_popup_overlay").fadeOut(300);
-        $("#dialog_sicher_popup_overlay").off();
-    });
-    
+    $("#dialog_sicher").fadeIn(300);
+
     $(".dialog_sicher_frage").text(message);
-    $(".dialog_sicher_ja").click(function() {
+    
+    $("#dialog_sicher_ja").click(function(e) {
         doCriticalThing();
-        $("#dialog_sicher").addClass("hidden");
-        $("#dialog_sicher").fadeOut(300);
-        $("#dialog_sicher_popup_overlay").fadeOut(300);
-        $("#dialog_sicher_popup_overlay").off();
     });
 }
 
