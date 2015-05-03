@@ -71,6 +71,13 @@ function fillVeranstaltungsSeite(Vid)
 		{
 			veranstaltungsObject = response;
 			
+			if(veranstaltungsObject[paramAngemeldet] == false)
+			{
+				showError("Sie haben nicht die notwendingen Berechtigungen um diese Seite zu sehen!");
+				gotoHauptseite();
+				return d; // TODO Achtung
+			}
+			
 			$.when(findStudiengaenge(Vid)).done(function() {
 				$.when(findModeratorenVn(Vid)).done(function() {
 					

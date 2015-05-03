@@ -268,11 +268,22 @@ public class VeranstaltungServlet extends ServletController {
         }
 
         Veranstaltung v =  dbManager.leseVeranstaltung(id);
-
+                
         if(v != null)
         {
-            outWriter.print(v.toJSON(true));
-            return false;
+            jo = v.toJSON(true);
+            try
+            {
+                jo.put(ParamDefines.Angemeldet,dbManager.angemeldet(aktuellerBenutzer.getId(), v.getId()));
+            }
+            catch (SQLException e)
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return false;
+            }
+            outWriter.print(jo);
+            return true;
         }
         else
         {
