@@ -282,11 +282,14 @@ public class Veranstaltung implements IjsonObject {
         jo.put(ParamDefines.Titel, this.getTitel()); 
         jo.put(ParamDefines.Beschr, this.getBeschreibung()); 
         jo.put(ParamDefines.Semester, this.getSemester()); 
-        jo.put(ParamDefines.BewertungenErlauben, this.isBewertungenErlaubt()); 
-        jo.put(ParamDefines.ModeratorKkBearbeiten, this.isModeratorKarteikartenBearbeiten()); 
-        jo.put(ParamDefines.KommentareErlauben,this.isKommentareErlaubt());
-        jo.put(ParamDefines.Ersteller,this.getErsteller().toJSON(true));
-        jo.put(ParamDefines.ErsteKarteikarte, this.ersteKarteikarte);
+        if(full)
+        {
+            jo.put(ParamDefines.ErsteKarteikarte, this.ersteKarteikarte);
+            jo.put(ParamDefines.BewertungenErlauben, this.isBewertungenErlaubt()); 
+            jo.put(ParamDefines.ModeratorKkBearbeiten, this.isModeratorKarteikartenBearbeiten()); 
+            jo.put(ParamDefines.KommentareErlauben,this.isKommentareErlaubt());
+        }
+        jo.put(ParamDefines.Ersteller,this.getErsteller().toJSON(full));
         return jo;
     }
 

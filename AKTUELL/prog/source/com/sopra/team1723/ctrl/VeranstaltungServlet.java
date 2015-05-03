@@ -271,10 +271,10 @@ public class VeranstaltungServlet extends ServletController {
                 
         if(v != null)
         {
-            jo = v.toJSON(true);
+            boolean angem = false;
             try
             {
-                jo.put(ParamDefines.Angemeldet,dbManager.angemeldet(aktuellerBenutzer.getId(), v.getId()));
+               angem = dbManager.angemeldet(aktuellerBenutzer.getId(), v.getId());
             }
             catch (SQLException e)
             {
@@ -282,6 +282,9 @@ public class VeranstaltungServlet extends ServletController {
                 outWriter.print(jo);
                 return false;
             }
+            jo = v.toJSON(angem);
+            jo.put(ParamDefines.Angemeldet,angem);
+
             outWriter.print(jo);
             return true;
         }
