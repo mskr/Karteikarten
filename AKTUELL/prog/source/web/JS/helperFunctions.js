@@ -89,7 +89,10 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, focusElem)
 {
     popupOverlayWrapper.fadeIn(300);
     popupOverlayWrapper.find(".popup_fenster").removeClass("hidden");
-    focusElem.focus();
+    
+    if(focusElem != undefined)
+    	focusElem.focus();
+    
     for(var i in closeElems)
     {
         closeElems[i].click(function() {

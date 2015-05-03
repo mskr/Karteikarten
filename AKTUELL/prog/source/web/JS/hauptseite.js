@@ -108,7 +108,7 @@ function fillHauptseite()
 	}
 	else
 	{
-		$("#vn_erstellen_bt").hide(); // TODO Hier vielleicht besser remove(), dann kann ein Hacker ihn nicht mehr einblenden
+		$("#vn_erstellen_bt").hide();
 	}
 
     return $.when(ajax1,ajax2).done(fillVeranstaltungsliste);

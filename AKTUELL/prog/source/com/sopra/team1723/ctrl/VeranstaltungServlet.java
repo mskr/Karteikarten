@@ -65,6 +65,7 @@ public class VeranstaltungServlet extends ServletController {
         String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren);
         int[] mIds = null;
         
+        
         if(moderatorIds != null)
         {
             mIds = new int[moderatorIds.length];
