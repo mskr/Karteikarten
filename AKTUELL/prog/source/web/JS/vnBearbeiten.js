@@ -45,7 +45,7 @@ $(document).ready(function() {
         for(var i in veranstaltungsObject[paramStudiengang])
     	{
         	var data = {};
-        	data[paramTitel] = veranstaltungsObject[paramStudiengang][i];
+        	data[paramStudiengang] = veranstaltungsObject[paramStudiengang][i];
         	
         	addItemToList(selectedStudiengaenge, $("#vn_bearbeiten_stg_list"), 
         			data[paramStudiengang], 
@@ -69,8 +69,9 @@ $(document).ready(function() {
 		for(var m in veranstaltungsObject[paramModeratoren])
 		{
 			 addItemToList(selectedModList, $("#vn_bearbeiten_mod_list"), 
-                     m[paramVorname] + " " + m[paramNachname], 
-                     m, undefined,undefined
+					 veranstaltungsObject[paramModeratoren][m][paramVorname]
+			 + " " + veranstaltungsObject[paramModeratoren][m][paramNachname], 
+			 veranstaltungsObject[paramModeratoren][m], undefined,undefined
              );
 		}
 		
