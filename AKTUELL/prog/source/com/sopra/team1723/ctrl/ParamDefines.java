@@ -54,7 +54,9 @@ public class ParamDefines
     public final static String Klasse = "klasse";
     public final static String KlasseBenutzer = "klasseBenutzer";
     public final static String KlasseVeranst = "klasseVeranst";
+    public final static String KlasseStudieng = "klasseStudieng";
     public final static String KlasseKarteikarte = "klasseKarteikarte";
+
 
 
     public final static String Id = "id";

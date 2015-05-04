@@ -105,7 +105,7 @@ public class VeranstaltungServlet extends ServletController {
 
         try
         {
-            veranst.setId(dbManager.schreibeVeranstaltung(veranst,studiengaenge));
+            veranst.setId(dbManager.schreibeVeranstaltung(veranst,studiengaenge,mIds));
         
             if(mIds != null)
             {
