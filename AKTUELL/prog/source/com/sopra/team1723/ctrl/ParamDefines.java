@@ -54,6 +54,7 @@ public class ParamDefines
     public final static String Klasse = "klasse";
     public final static String KlasseBenutzer = "klasseBenutzer";
     public final static String KlasseVeranst = "klasseVeranst";
+    public final static String KlasseKarteikarte = "klasseKarteikarte";
 
 
     public final static String Id = "id";
@@ -86,11 +87,15 @@ public class ParamDefines
     public final static String AnzTeilnehmer = "anzTeilnehmer";
     public final static String Angemeldet = "angemeldet";
     public final static String KennwortGesetzt = "kennwortGesetzt";
+    
+    public final static String Veranstaltung = "veranstaltung";
+    public final static String Aenderungsdatum = "aenderungsdatum";
+    public final static String Bewertung = "bewertung";
 
 
-    public final static String benInhalt = "benInhalt";
-    public final static String benGelesen = "benGelesen";
-    public final static String benType = "benType";
+    public final static String Inhalt = "inhalt";
+    public final static String Gelesen = "gelesen";
+    public final static String Type = "type";
     public final static String benTypeModerator = "moderator";
     public final static String benTypeVeranstaltung = "veranst";
     public final static String benTypeKarteikarte = "karteikarte";
