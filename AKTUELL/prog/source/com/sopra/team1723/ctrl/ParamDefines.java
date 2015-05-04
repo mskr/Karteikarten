@@ -92,7 +92,6 @@ public class ParamDefines
     public final static String Aenderungsdatum = "aenderungsdatum";
     public final static String Bewertung = "bewertung";
 
-
     public final static String Inhalt = "inhalt";
     public final static String Gelesen = "gelesen";
     public final static String Type = "type";
