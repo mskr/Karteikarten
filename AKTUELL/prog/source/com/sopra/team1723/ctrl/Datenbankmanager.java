@@ -806,10 +806,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> ergebnisse = null;
         try{
             ergebnisse = new HashMap<IjsonObject,Integer>();
-            ps = conMysql.prepareStatement("SELECT ID, levenshtein(?,Titel) AS lev FROM Veranstaltung WHERE levenshtein(?,Titel)"
-                    + " BETWEEN 0 AND 5 ORDER BY lev LIMIT 5");
+            ps = conMysql.prepareStatement("SELECT ID, levenshtein(?,Titel) AS lev FROM Veranstaltung ORDER BY lev LIMIT 5");
             ps.setString(1, suchmuster);
-            ps.setString(2, suchmuster);
             rs = ps.executeQuery();
             while(rs.next()){         
                 ergebnisse.put(leseVeranstaltung(rs.getInt("ID")), rs.getInt("lev"));
@@ -838,14 +836,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> ergebnisse = null;
         try{
             ergebnisse = new HashMap<IjsonObject,Integer>();
-            ps = conMysql.prepareStatement("SELECT id,min(lev) AS lev FROM( SELECT ID, levenshtein(?,Vorname) AS lev, Vorname"
-                    + " FROM Benutzer WHERE levenshtein(?,Vorname) BETWEEN 0 AND 5 UNION SELECT ID, "
-                    + "levenshtein(?,Nachname) AS lev, Nachname FROM Benutzer WHERE levenshtein(?,Nachname) BETWEEN 0 AND 5)"
-                    + " AS T group by ID ORDER BY lev LIMIT 5 ");
+            ps = conMysql.prepareStatement("SELECT * , levenshtein(?,CONCAT(Vorname,' ',Nachname)) AS lev"
+                    + " FROM Benutzer ORDER BY lev LIMIT 5 ");
             ps.setString(1, suchmuster);
-            ps.setString(2, suchmuster);
-            ps.setString(3, suchmuster);
-            ps.setString(4, suchmuster);
             rs = ps.executeQuery();
             while(rs.next()){         
                 ergebnisse.put(leseBenutzer(rs.getInt("ID")), rs.getInt("lev"));
@@ -873,12 +866,12 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> ergebnisse = null;
         try{
             ergebnisse = new HashMap<IjsonObject,Integer>();
-            ps = conMysql.prepareStatement("SELECT Name, levenshtein(?,Name) AS lev FROM Studiengang WHERE levenshtein(?,Name)"
-                    + " BETWEEN 0 AND 5 ORDER BY lev LIMIT 5");
+            ps = conMysql.prepareStatement("SELECT Name, levenshtein(?,Name) AS lev FROM Studiengang ORDER BY lev LIMIT 5");
             ps.setString(1, suchmuster);
-            ps.setString(2, suchmuster);
+//            ps.setString(2, suchmuster);
             rs = ps.executeQuery();
-            while(rs.next()){         
+            while(rs.next()){
+                System.out.println(rs.getString("Name") + " " + suchmuster + " " + rs.getInt("lev"));
                 ergebnisse.put(new Studiengang(rs.getString("Name")), rs.getInt("lev"));
             }
 
