@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 03. Mai 2015 um 14:08
+-- Erstellungszeit: 04. Mai 2015 um 15:37
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -296,19 +296,19 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
 --
 
 INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderungsdatum`, `Veranstaltung`) VALUES
-(7, 'Softwaretechnik I', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(8, 'Einführung und Motivation', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(9, 'Grundlagen', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(10, 'System-Engineering', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(11, 'Organisatorisches', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(12, 'Bedeutung von Software', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(13, 'Software-Probleme, "Software-Krise"', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(14, 'Software als Wirtschaftsfaktor', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(15, 'Grundbegriffe', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(16, 'Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(17, 'Einfache Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(18, 'Mittelschwere Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(19, 'Schwierige Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1);
+(0, 'Softwaretechnik I', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(1, 'Einführung und Motivation', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(2, 'Grundlagen', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(3, 'System-Engineering', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(4, 'Organisatorisches', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(5, 'Bedeutung von Software', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(6, 'Software-Probleme, "Software-Krise"', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(7, 'Software als Wirtschaftsfaktor', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(8, 'Grundbegriffe', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(9, 'Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(10, 'Einfache Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(11, 'Mittelschwere Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(12, 'Schwierige Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1);
 
 -- --------------------------------------------------------
 
