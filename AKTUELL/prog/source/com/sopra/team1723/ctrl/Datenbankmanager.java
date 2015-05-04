@@ -957,25 +957,24 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
 
             if(studiengaenge != null) {
-                for(String stg: studiengaenge){
-                    ps.close();
-
-                    ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");   
+                ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");  
+                for(String stg: studiengaenge){        
                     ps.setInt(1, veranstId);
                     ps.setString(2, stg);
-                    ps.executeUpdate();         
+                    ps.addBatch();        
                 }
+                ps.executeBatch();
+                closeQuietly(ps);
             }
             
             if(moderatorenIds != null) {
+                ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
                 for(int mod : moderatorenIds){
-                    ps.close();
-
-                    ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
                     ps.setInt(1, mod);
                     ps.setInt(2, veranstId);
-                    ps.executeUpdate();
+                    ps.addBatch();
                 }
+                ps.executeBatch();
             }
 
             conMysql.commit();
@@ -998,19 +997,22 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void bearbeiteVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException {
+    public void bearbeiteVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
-        ResultSet rs = null;
         try{
+           conMysql.setAutoCommit(false);
             ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
                     + "Kennwort=?, KommentareErlaubt=?, BewertungenErlaubt=?, ModeratorKarteikartenBearbeiten=?,"
                     + " Ersteller=?, ErsteKarteikarte=? WHERE ID = ?");
             ps.setString(1, veranst.getTitel());
             ps.setString(2, veranst.getBeschreibung());
             ps.setString(3, veranst.getSemester());
-            ps.setString(4, veranst.getZugangspasswort());
+            if(veranst.getZugangspasswort().equals(""))
+                ps.setNull(4, Types.INTEGER);
+            else
+                ps.setString(4, veranst.getZugangspasswort());
             ps.setBoolean(5, veranst.isKommentareErlaubt());
             ps.setBoolean(6, veranst.isBewertungenErlaubt());
             ps.setBoolean(7, veranst.isModeratorKarteikartenBearbeiten());
@@ -1018,9 +1020,46 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(9,veranst.getErsteKarteikarte());
             ps.setInt(10, veranst.getId());
 
+            ps.executeUpdate();  
+            closeQuietly(ps);
+            
+            ps = conMysql.prepareStatement("DELETE FROM veranstaltung_studiengang_zuordnung WHERE Veranstaltung = ?");
+            ps.setInt(1, veranst.getId());
             ps.executeUpdate();
+            closeQuietly(ps);
+            
+            if(studiengaenge != null) {
+                ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");  
+                for(String stg: studiengaenge){        
+                    ps.setInt(1, veranst.getId());
+                    ps.setString(2, stg);
+                    ps.addBatch();        
+                }
+                ps.executeBatch();
+                closeQuietly(ps);
+            }
+            
+            ps = conMysql.prepareStatement("DELETE FROM moderator WHERE Veranstaltung = ?");
+            ps.setInt(1, veranst.getId());
+            ps.executeUpdate();
+            closeQuietly(ps);
+            
+            
+            if(moderatorenIds != null) {
+                ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
+                for(int mod : moderatorenIds){
+                    ps.setInt(1, mod);
+                    ps.setInt(2, veranst.getId());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+
+            conMysql.commit();
+
 
         } catch (SQLException e) {
+            conMysql.rollback();
             e.printStackTrace();
             if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
@@ -1028,8 +1067,8 @@ public class Datenbankmanager implements IDatenbankmanager {
                 throw e;
 
         } finally{
+            conMysql.setAutoCommit(true);
             closeQuietly(ps);
-            closeQuietly(rs);
             conLock.getValue().unlock();
         }
     }
