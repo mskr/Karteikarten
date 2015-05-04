@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.json.simple.*;
 
@@ -88,15 +89,20 @@ public class JSONConverter
      * nur die ähnlichen Texte gegeben
      * @return JSONObject mit einer Liste von Strings
      */
-    static JSONObject toJsonSuchfeld(List<IjsonObject> suchtreffer) 
+    static JSONObject toJsonSuchfeld(Map<IjsonObject,Integer> suchtreffer) 
     {
         JSONObject jo = new JSONObject();
         
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         JSONArray array = new JSONArray();
         
-        for(IjsonObject ergs: suchtreffer){
-            array.add(ergs.toJSON(true));
+        JSONObject tupel;
+        for(Entry<IjsonObject,Integer> ergs: suchtreffer.entrySet()){
+            tupel = new JSONObject();
+            tupel.put("key",ergs.getKey().toJSON(true));
+            tupel.put("value", ergs.getValue());
+            
+            array.add(tupel);
         }
         
         jo.put(ParamDefines.jsonArrResult, array);
