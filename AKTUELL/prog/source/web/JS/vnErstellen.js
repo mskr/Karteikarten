@@ -49,9 +49,9 @@ $(document).ready(function() {
                 }
                 
                 // Fehlerprüfung
-                if(titel == "" || beschr == "")
+                if(titel == "" || beschr == "" || $.isEmptyObject(selectedStudiengaenge))
                 {
-                    showError("Bitte geben Sie mindestens einen Titel und eine Beschreibung an!");
+                    showError("Bitte geben Sie mindestens einen Titel, eine Beschreibung und einen Studiengang an!");
                     return false;
                 }
             

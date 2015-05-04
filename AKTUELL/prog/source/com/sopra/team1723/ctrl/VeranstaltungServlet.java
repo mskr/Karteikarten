@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.sopra.team1723.data.*;
@@ -485,16 +486,19 @@ public class VeranstaltungServlet extends ServletController {
 
         int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Id));
         List<Benutzer> moderatoren = dbManager.leseModeratoren(veranstaltung);
+        
         if(moderatoren != null)
         {
-            List<String> modIds = new ArrayList<String>();
-
+            JSONObject jo = new JSONObject();
+            JSONArray arr = new JSONArray();
             for(Benutzer b: moderatoren)
             {
-                modIds.add(String.valueOf(b.getId()));
+                arr.add(b.toJSON(false));
             }
 
-            JSONObject jo = JSONConverter.toJson(modIds);
+
+            jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
+            jo.put(ParamDefines.jsonArrResult, arr);
             outWriter.print(jo);
         }
         else

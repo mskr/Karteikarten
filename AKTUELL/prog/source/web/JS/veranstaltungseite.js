@@ -163,7 +163,6 @@ function findStudiengaenge(id){
         function(response) {
             studgArr = response[keyJsonArrResult];
             veranstaltungsObject[paramStudiengang] = studgArr;
-            
         },
         params
     );
