@@ -35,7 +35,7 @@ $(document).ready(function() {
 	);
 
     
-	$('#vn_bearbeiten_bt').click(function() {
+	$('#vn_bearbeiten').click(function() {
 		
 		// Daten füllen
 		var dialog = $("#vn_bearbeiten_popup");
