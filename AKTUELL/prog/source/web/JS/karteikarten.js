@@ -15,7 +15,7 @@ function buildKarteikarte(karteikarteJson)
         "<div id='kk_"+kkId+"_wrapper' class='kk_wrapper'>" +
             "<div class='kk_votes'>" +
                 "<a class='kk_voteup'><span class='mega-octicon octicon-triangle-up'></span></a>" +
-                "<div class='kk_votestat'>-5</div>" +
+                "<div class='kk_votestat'></div>" +
                 "<a class='kk_votedown'><span class='mega-octicon octicon-triangle-down'></span></a>" +
             "</div>" +
             "<div class='kk_optionen'>" +
