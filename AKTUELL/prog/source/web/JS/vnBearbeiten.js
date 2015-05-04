@@ -117,11 +117,11 @@ $(document).ready(function() {
 					}
 
 					// Fehlerprüfung
-					if(titel == "" || beschr == "")
-					{
-						showError("Bitte geben Sie mindestens einen Titel und eine Beschreibung an!");
-						return false;
-					}
+	                if(titel == "" || beschr == "" || $.isEmptyObject(selectedStudiengaenge))
+	                {
+	                    showError("Bitte geben Sie mindestens einen Titel, eine Beschreibung und einen Studiengang an!");
+	                    return false;
+	                }
 					
 					if(passw == "")
 						passw = "null";
