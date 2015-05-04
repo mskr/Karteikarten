@@ -22,6 +22,7 @@ import org.json.simple.JSONObject;
 
 
 
+
 import com.sopra.team1723.data.*;
 
 
@@ -54,7 +55,7 @@ public class SuchfeldServlet extends ServletController {
         JSONObject jo = JSONConverter.toJsonSuchfeld(dbManager.durchsucheDatenbank(suchmuster));
         outWriter.print(jo);
     }
-    
+
     /**
      * @throws IOException 
      */
@@ -67,11 +68,26 @@ public class SuchfeldServlet extends ServletController {
         
         String suchmuster = req.getParameter(ParamDefines.Suchmuster);
 
-        JSONObject jo = JSONConverter.toJsonSuchfeld(
-                new ArrayList<IjsonObject>(
-                        Datenbankmanager.sortByValue(dbManager.durchsucheDatenbankBenutzer(suchmuster)).keySet())
-                );
+        JSONObject jo = JSONConverter.toJsonSuchfeld(dbManager.durchsucheDatenbankBenutzer(suchmuster));
+
         outWriter.print(jo);
+    }
+    
+    /**
+     * @throws IOException 
+     */
+    public void sucheStudiengang(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        String suchmuster = req.getParameter(ParamDefines.Suchmuster);
+
+        JSONObject jo = JSONConverter.toJsonSuchfeld(dbManager.durchsucheDatenbankStudiengang(suchmuster));
+        outWriter.print(jo);
+        
     }
 
     @Override
@@ -90,6 +106,10 @@ public class SuchfeldServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionSucheBenutzer))
         {
             sucheBenutzer(req, resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionSucheStudiengang))
+        {
+            sucheStudiengang(req, resp);
         }
         else
         {

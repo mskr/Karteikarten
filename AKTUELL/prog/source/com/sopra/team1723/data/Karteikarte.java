@@ -164,7 +164,7 @@ public class Karteikarte implements IjsonObject {
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         jo.put(ParamDefines.Id, this.getId());
         jo.put(ParamDefines.Titel, this.getTitel());
-        jo.put(ParamDefines.Type, this.getTyp());
+        jo.put(ParamDefines.Type, this.getTyp().name());
         jo.put(ParamDefines.Veranstaltung, this.getVeranstaltung());
         if(full)
         {
