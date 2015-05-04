@@ -76,17 +76,70 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
     });
 }
 
+var popupSeitenIterator = 0;
 /**
- * Blendet ein Popup auf der GUI ein.
+ * Blendet ein Popup auf der GUI ein. Hat das Popup mehrere Elemente mit der Klasse popup_fenster_body,
+ * werden diese als Seiten dargestellt.
  * @param popupOverlayWrapper jQuery Objekt. Element, das den dunklen Hintergrund darstellt.
  * @param closeElems Array aus jQuery Objekten. Elemente, die bei Klick das Popup schliessen.
- * @param focusElem jQuery Objekt. Element, das nach dem Oeffnen fokussiert werden soll.
- * @param submitFunc Funktion, die bei Bestaetigung ausgefuehrt wird.
- * @param cancelFunc Funktion, die bei Abbruch ausgefuehrt wird.
  * @param closeFunc Funktion, die bei Schliessen (egal auf welchem Weg!) ausgefuehrt wird.
+ * @param submitElem jQuery Objekt. Element, das das Abschicken der Daten aus diesem Popup triggert.
+ * @param submitFunc Funktion, die das Abschicken der Daten aus diesem Popup ausfuehrt.
+ * Gibt sie true zurueck wird das Popup geschlossen, andernfalls bleibt es bestehen.
+ * @param focusElem jQuery Objekt. Element, das nach dem Oeffnen fokussiert werden soll.
+ * @param weiterElem jQuery Objekt. Element, das das Umschalten zur naechsten Seite triggert.
+ * @param zurueckElem jQuery Objekt. Element, das das Umschalten zur vorherigen Seite triggert.
  */
-function popupFenster(popupOverlayWrapper, closeElems, closeFunc, focusElem)
+function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, submitFunc, focusElem, weiterElem, zurueckElem)
 {
+    var seitenArr = popupOverlayWrapper.find(".popup_fenster_body");
+    $(seitenArr[0]).show();
+    if(seitenArr.length > 1)
+    {
+        for(var i=1; i<seitenArr.length; i++)
+        {
+            $(seitenArr[i]).hide();
+        }
+        submitElem.hide();
+        weiterElem.show();
+        zurueckElem.hide();
+        weiterElem.off();
+        weiterElem.click(function() {
+            $(seitenArr[popupSeitenIterator]).slideUp();
+            popupSeitenIterator++;
+            $(seitenArr[popupSeitenIterator]).slideDown();
+            if(popupSeitenIterator > 0)
+            {
+                zurueckElem.show();
+            }
+            if(popupSeitenIterator == seitenArr.length-1)
+            {
+                weiterElem.hide();
+                submitElem.show();
+            }
+        });
+        zurueckElem.off();
+        zurueckElem.click(function() {
+            $(seitenArr[popupSeitenIterator]).slideUp();
+            popupSeitenIterator--;
+            $(seitenArr[popupSeitenIterator]).slideDown();
+            if(popupSeitenIterator == 0)
+            {
+                zurueckElem.hide();
+            }
+            if(popupSeitenIterator < seitenArr.length-1)
+            {
+                weiterElem.show();
+                submitElem.hide();
+            }
+        });
+    }
+    else
+    {
+        weiterElem.hide();
+        zurueckElem.hide();
+    }
+    
     popupOverlayWrapper.fadeIn(300);
     popupOverlayWrapper.find(".popup_fenster").removeClass("hidden");
     
@@ -95,12 +148,24 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, focusElem)
     
     for(var i in closeElems)
     {
+        closeElems[i].off(),
         closeElems[i].click(function() {
             popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
             closeFunc();
+            popupSeitenIterator = 0;
         });
     }
+    
+    submitElem.click(function() {
+        if(submitFunc())
+        {
+            popupOverlayWrapper.fadeOut(300);
+            popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
+            closeFunc();
+            popupSeitenIterator = 0;
+        }
+    });
     
 }
 
@@ -236,7 +301,7 @@ function addItemToList(itemMap, container, displayName, data, removeFkt, clickFk
 function autoComplete(textInput, categories, categoryClassMapping)
 {
     var suchergHtmlStr = "<div id='suche_ergebnisse_"+textInput.attr("id")+"' class='suche_ergebnisse'>"
-                   +         "<div class='sucherg_x'><span class='octicon octicon-x'></span></div>";
+                   +         "<div id='sucherg_x_"+textInput.attr("id")+"' class='sucherg_x'><span class='octicon octicon-x'></span></div>";
     for(var i in categoryClassMapping)
     {
         suchergHtmlStr +=    "<div class='sucherg_titel'>"+categoryClassMapping[i]+"</div>"
@@ -278,6 +343,7 @@ function autoComplete(textInput, categories, categoryClassMapping)
     // Reagiere auf Klick auf das x zum Schliessen des Suchergebniscontainers
     suchergJQueryObj.find(".sucherg_x span").click(function() {
         textInput.val("");
+        textInput.focus();
     });
 }
 
@@ -327,8 +393,8 @@ var suchTimer = function(){
  * <strong>WICHTIG:</strong> Hier muss entschieden werden, welche Teile des empfangenen JSON Objekts angezeigt werden
  * (z.B. bei Benutzern: Vorname Nachname, bei Veranstaltungen: Titel). Standardmaessig werden IDs angezeigt.
  * @param arrSuchErgebnisse
- * @param categories
- * @param categoryClassMapping
+ * @param categories siehe autoComplete
+ * @param categoryClassMapping siehe autoComplete
  */
 function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
 {
@@ -344,7 +410,8 @@ function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
         return function() {
             // Fuehre die Funktion aus, die Suchergebnissen in dieser Kategorie zugeordnet wurde
             categories[category](jsonSuchErgebnis);
-            // TODO Suchergebnisse verbergen
+            //TODO klappe einfach alle Suchergebnisse ein
+            $(".sucherg_x span").trigger("click");
         }
     }
     for(var i in arrSuchErgebnisse)
@@ -413,7 +480,7 @@ function handlePfeiltastenEvents(pressedKey, suchergJQueryObj) {
     }
     else if(pressedKey == 27) // ESC
     {
-        suchergJQueryObj.find(".sucherg_x").trigger("click");
+        suchergJQueryObj.find(".sucherg_x span").trigger("click");
     }
     $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
 }

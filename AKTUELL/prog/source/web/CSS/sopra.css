@@ -245,6 +245,7 @@ textarea.input_std {
 	width: 100%;
 	max-width: 50em;
 	margin: auto;
+	max-height: 100%;
 	opacity: 1;
 	transform: scale(1);
 	transition: all .3s;
@@ -294,11 +295,9 @@ textarea.input_std {
 	border-top: 1px solid DimGray;
 	border-bottom: 1px solid black;
 	text-shadow: 0px -1px 0 black;
-	overflow: hidden;
 } .popup_fenster_spalte {
 	margin-top: 1em;
 	width: 50%;
-	float: left;
 } .popup_fenster_spalte span {
 	display: block;
 } .popup_fenster_foot {
@@ -321,6 +320,10 @@ textarea.input_std {
 	height: 100%;
 	padding-top: 1%;
 	background: rgba(0,0,0,.5);
+}
+
+.autoCompleteWrapper {
+	position: relative;
 }
 
 .card {
@@ -570,11 +573,12 @@ textarea.input_std {
 	position: absolute;
 	z-index: 300;
 	left: 1px;
-	top: 3em;
+	margin-top: -6px;
 	width: 100%;
 	background: white;
 	color: #4a4a4a;
 	font-size: .9em;
+	text-shadow: none;
 	border-top: 1px dashed lightgray;
 	-webkit-border-radius: 0 0 .4em .4em;
 	-moz-border-radius: 0 0 .4em .4em;
@@ -582,7 +586,7 @@ textarea.input_std {
 	box-shadow: 0 .2em .2em black;
 	overflow: hidden;
 	background-clip: padding-box;
-} .suche_etwas:invalid ~ .suche_ergebnisse {
+} input[type="text"]:invalid + .suche_ergebnisse {
 	visibility: hidden;
 } .sucherg_x {
 	color: lightgray;
@@ -1305,7 +1309,7 @@ textarea.input_std {
 .vn_erstellen_input {
 	width: 100%;
 } .vn_erstellen_input[type="text"], .vn_erstellen_input[type="password"], textarea.vn_erstellen_input {
-	width: calc(100% - 2em);
+	width: calc(100% - 1.8em);
 }
 
 .profil_head {
