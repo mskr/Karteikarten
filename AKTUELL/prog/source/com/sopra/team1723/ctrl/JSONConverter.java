@@ -190,8 +190,8 @@ public class JSONConverter
             JSONObject j = new JSONObject();
 
             j.put(ParamDefines.Id, ben.getId());
-            j.put(ParamDefines.benInhalt, ben.getInhalt());
-            j.put(ParamDefines.benGelesen, ben.isGelesen());
+            j.put(ParamDefines.Inhalt, ben.getInhalt());
+            j.put(ParamDefines.Gelesen, ben.isGelesen());
             SimpleDateFormat d = new SimpleDateFormat("hh:mm dd.MM.yyyy");
             String s = d.format(ben.getErstelldaum().getTime());
             j.put(ParamDefines.benErstelldaum, s);            
@@ -199,30 +199,30 @@ public class JSONConverter
             if (ben instanceof BenachrProfilGeaendert)
             {
                 BenachrProfilGeaendert b = (BenachrProfilGeaendert) ben;
-                j.put(ParamDefines.benType, ParamDefines.benTypeProfil);
+                j.put(ParamDefines.Type, ParamDefines.benTypeProfil);
             }
             else  if (ben instanceof BenachrEinlModerator)
             {
                 BenachrEinlModerator b = (BenachrEinlModerator) ben;
-                j.put(ParamDefines.benType, ParamDefines.benTypeModerator);
+                j.put(ParamDefines.Type, ParamDefines.benTypeModerator);
                 j.put(ParamDefines.benVeranst, toJson(b.getVeranstaltung()));
             }
             else  if (ben instanceof BenachrKarteikAenderung)
             {
                 BenachrKarteikAenderung b = (BenachrKarteikAenderung) ben;
-                j.put(ParamDefines.benType, ParamDefines.benTypeKarteikarte);
+                j.put(ParamDefines.Type, ParamDefines.benTypeKarteikarte);
 //                j.put(ParamDefines.benKarteikarte,toJson( b.getKarteikarte()));
             }
             else  if (ben instanceof BenachrNeuerKommentar)
             {
                 BenachrNeuerKommentar b = (BenachrNeuerKommentar) ben;
-                j.put(ParamDefines.benType, ParamDefines.benTypeKommentar);
+                j.put(ParamDefines.Type, ParamDefines.benTypeKommentar);
 //                j.put(ParamDefines.benKommentar, toJson(b.getKommentar()));
             }
             else  if (ben instanceof BenachrVeranstAenderung)
             {
                 BenachrVeranstAenderung b = (BenachrVeranstAenderung) ben;
-                j.put(ParamDefines.benType, ParamDefines.benTypeVeranstaltung);
+                j.put(ParamDefines.Type, ParamDefines.benTypeVeranstaltung);
                 j.put(ParamDefines.benVeranst, toJson(b.getVeranstaltung()));
             }
             array.add(j);

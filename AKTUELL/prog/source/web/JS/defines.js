@@ -49,8 +49,14 @@ var actionEinschreiben = "einschreiben";
 var actionLeseBenachrichtungen = "leseBen";
 var actionMarkiereBenGelesen = "benGelesen";
 
-// GET/POST-Parameter fuer die Servlets
-// Werden auch als Schluesselnamen fuer JSON Objekte verwendet
+
+
+
+// GET/POST- und JSON-Schluessel-Parameter
+// Die folgenden Bereiche koennen sich ueberschneiden...
+// ===========================================================
+
+// Allgemeines + Benutzer
 var paramId = "id";
 var paramEmail = "email";
 var paramEmailNew = "emailNew";
@@ -69,6 +75,14 @@ var paramNotifyKommentareValVeranst = "VERANSTALTUNG_TEILGENOMMEN";
 var paramNotifyKommentareValDiskussion = "DISKUSSION_TEILGENOMMEN";
 var paramProfilBild = "profilBildPfad";
 var paramSuchmuster = "suchmuster";
+var paramInhalt = "inhalt";
+var paramGelesen = "gelesen";
+var paramType = "type";
+
+//Karteikarte
+var paramVeranstaltung = "veranstaltung";
+var paramAenderungsdatum = "aenderungsdatum";
+var paramBewertung = "bewertung";
 
 // Veranstaltungen
 var paramTitel = "titel";
@@ -88,10 +102,7 @@ var paramAktSemester = "aktSemester";
 var paramGewaehltesStudiengang = "gewaehlterStudiengang";
 var paramGewaehltesSemester = "gewaehltesSemester";
 
-// Benachrichtigungen
-var paramBenInhalt = "benInhalt";
-var paramBenGelesen = "benGelesen";
-var paramBenType = "benType";
+//Benachrichtigungen
 var paramBenTypeModerator = "moderator";
 var paramBenTypeVeranstaltung = "veranst";
 var paramBenTypeKarteikarte = "karteikarte";
@@ -103,11 +114,17 @@ var paramBenKarteikarte = "benKarteikarte";
 var paramBenKommentar = "benKommentar";
 var paramBenProfil = "benProfil";
 
+
+
+
+
+
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";
 var keyJsonObjKlasse = "klasse";
 var keyJsonObjKlasseBenutzer = "klasseBenutzer";
 var keyJsonObjKlasseVeranst = "klasseVeranst";
+var keyJsonObjKlasseKarteikarte = "klasseKarteikarte";
 
 // GET-Parameter fuer den urlHandler.js
 var urlParamLocation = "location";
