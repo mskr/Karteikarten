@@ -24,6 +24,7 @@ public class ParamDefines
     public final static String ActionUploadProfilBild = "uploadProfilBild";
     public final static String ActionSucheBenVeranst = "sucheBenVeranst";
     public final static String ActionSucheBenutzer = "sucheBenutzer";
+    public final static String ActionSucheStudiengang = "sucheStudiengang";
     public final static String ActionLoescheVn = "vnLoeschen";
 
     
@@ -54,9 +55,8 @@ public class ParamDefines
     public final static String Klasse = "klasse";
     public final static String KlasseBenutzer = "klasseBenutzer";
     public final static String KlasseVeranst = "klasseVeranst";
-    public final static String KlasseStudieng = "klasseStudieng";
+    public final static String KlasseStudiengang = "klasseStudiengang";
     public final static String KlasseKarteikarte = "klasseKarteikarte";
-
 
 
     public final static String Id = "id";

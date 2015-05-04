@@ -72,6 +72,8 @@
 <script src="JS/hauptseite.js"></script>
 <!-- Veranstaltung Erstellen Skript -->
 <script src="JS/vnErstellen.js"></script>
+<!-- Veranstaltung Bearbeiten Skript -->
+<script src="JS/vnBearbeiten.js"></script>
 <!-- Veranstaltungseite Skript -->
 <script src="JS/veranstaltungseite.js"></script>
 <!-- md5 hash function -->
@@ -108,58 +110,115 @@
 			<span class="octicon octicon-podium"></span>
 			<span class="popup_fenster_ueberschrift"> Veranstaltung erstellen</span>
 		</div>
-		<div id="vn_popup_close" class="popup_fenster_close">
+		<div id="vn_erstellen_popup_close" class="popup_fenster_close">
 			<span class="octicon octicon-x"></span>
 		</div>
 		<div class="popup_fenster_body">
-			<input class="input_std vn_erstellen_input" id="vn_titel_input" type="text" placeholder="Titel" required>
-			<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_semester"></select>
-			<select class="input_std vn_erstellen_input" id="vn_erstellen_auswahl_studiengang" multiple></select>
-			<input class="input_std vn_erstellen_input" id="vn_pass_input" type="password" placeholder="Passwort" required>
-			<div class="itemlist" id="vn_mod_list"></div>
+			<input class="input_std popup_input" id="vn_erstellen_titel_input" type="text" placeholder="Titel" required>
+			<select class="input_std popup_input" id="vn_erstellen_auswahl_semester"></select>
+<!-- 			<select class="input_std popup_input" id="vn_erstellen_auswahl_studiengang" multiple></select>
+ -->			
+ 			<div class="itemlist" id="vn_erstellen_stg_list"></div>
 			<div class="autoCompleteWrapper">
-				<input class="input_std vn_erstellen_input" id="vn_mod_input" type="text" placeholder="Moderator hinzufügen" required></input>
+				<input class="input_std popup_input" id="vn_erstellen_stg_input" type="text" placeholder="Studiengang hinzufügen" required></input>
+			</div>
+			<input class="input_std popup_input" id="vn_erstellen_pass_input" type="password" placeholder="Passwort" required>
+			<div class="itemlist" id="vn_erstellen_mod_list"></div>
+			<div class="autoCompleteWrapper">
+				<input class="input_std popup_input" id="vn_erstellen_mod_input" type="text" placeholder="Moderator hinzufügen" required></input>
 			</div>
 			<div class="flex_container">
-				<div class="popup_fenster_spalte" id="vn_bearbeiten_mode">
+				<div class="popup_fenster_spalte" id="vn_erstellen_bearbeiten_mode">
 					<span class="form_infotext">Wer darf bearbeiten?</span>
-					<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_keiner_bearb" value = "Nur ich" type="radio"checked>Nur ich</label></span>
-					<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_mod_bearb" value = "Ich und Moderatoren"type="radio">Ich und Moderatoren</label></span>
+					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_keiner_bearb" value = "Nur ich" type="radio"checked>Nur ich</label></span>
+					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_mod_bearb" value = "Ich und Moderatoren"type="radio">Ich und Moderatoren</label></span>
 				</div>
 				<div class="popup_fenster_spalte">
-					<span><label><input id="vn_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
-					<span><label><input id="vn_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
+					<span><label><input id="vn_erstellen_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
+					<span><label><input id="vn_erstellen_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
 				</div>
 			</div>
 		</div>
 		<div class="popup_fenster_body">
 			<span class="form_infotext">Verfassen Sie eine für jeden sichtbare Beschreibung der Veranstaltung.</span>
-			<textarea class="input_std vn_erstellen_input" id="vn_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
+			<textarea class="input_std popup_input" id="vn_erstellen_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
 		</div>
 		<div class="popup_fenster_foot">
-			<span id="vn_erzeugen_cancel" class="mybutton dark flat">Abbrechen</span>
-			<span id="vn_erzeugen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
-			<span id="vn_erzeugen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
-			<span id="vn_erzeugen_ok" class="mybutton green">Erstellen</span>
+			<span id="vn_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="vn_erstellen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="vn_erstellen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="vn_erstellen_ok" class="mybutton green">Erstellen</span>
 		</div>
 	</div>
+</div>
+<!-- Veranstaltung Bearbeiten Popup Fenster -->
+<div id="vn_bearbeiten_popup_overlay" class="popup_fenster_overlay">
+	<div id="vn_bearbeiten_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+			<span class="octicon octicon-podium"></span>
+			<span class="popup_fenster_ueberschrift"> Veranstaltung bearbeiten</span>
+		</div>
+		<div id="vn_bearbeiten_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div class="popup_fenster_body">
+			<input class="input_std popup_input" id="vn_bearbeiten_titel_input" type="text" placeholder="Titel" required>
+			<select class="input_std popup_input" id="vn_bearbeiten_auswahl_semester"></select>
+			
+			<div class="itemlist" id="vn_bearbeiten_stg_list"></div>
+			<div class="autoCompleteWrapper">
+				<input class="input_std popup_input" id="vn_bearbeiten_stg_input" type="text" placeholder="Studiengang hinzufügen" required></input>
+			</div>
+			
+			<label><input id="vn_bearbeiten_passwort_set" type="checkbox"checked> Passwort ist gesetzt</label>
+			<input class="input_std popup_input" id="vn_bearbeiten_pass_input" type="password" placeholder="Passwort" required>
+			
+			<div class="itemlist" id="vn_bearbeiten_mod_list"></div>
+			<div class="autoCompleteWrapper">
+				<input class="input_std popup_input" id="vn_bearbeiten_mod_input" type="text" placeholder="Moderator hinzufügen" required></input>
+			</div>
+			
+			<div class="flex_container">
+				<div class="popup_fenster_spalte" id="vn_bearbeiten_bearbeiten_mode">
+					<span class="form_infotext">Wer darf bearbeiten?</span>
+					<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_bearbeiten_keiner_bearb" value = "Nur ich" type="radio"checked>Nur ich</label></span>
+					<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_bearbeiten_mod_bearb" value = "Ich und Moderatoren"type="radio">Ich und Moderatoren</label></span>
+				</div>
+				<div class="popup_fenster_spalte">
+					<span><label><input id="vn_bearbeiten_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
+					<span><label><input id="vn_bearbeiten_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
+				</div>
+			</div>
+		</div>
+		<div class="popup_fenster_body">
+			<span class="form_infotext">Verfassen Sie eine für jeden sichtbare Beschreibung der Veranstaltung.</span>
+			<textarea class="input_std popup_input" id="vn_bearbeiten_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="vn_bearbeiten_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="vn_bearbeiten_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="vn_bearbeiten_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="vn_bearbeiten_ok" class="mybutton green">Erstellen</span>
+		</div>
+	</div>
+</div>
+
 	
-	<!-- Karteikarten Attribute aendern Tooltip -->
-	<div id="attr_popup" class="bigtooltip">
-		<div class="bigtooltip_pfeil"></div>
-		<div class="bigtooltip_head">
-			<span class="octicon octicon-checklist"></span><span> Attribute ändern</span>
-		</div>
-		<div class="bigtooltip_body">
-			<span><input id="attr_satz" type="checkbox" name="attr"><label for="attr_satz">Satz</label></span>
-			<span><input id="attr_beweis" type="checkbox" name="attr"><label for="attr_beweis">Beweis</label></span>
-			<span><input id="attr_def" type="checkbox" name="attr"><label for="attr_def">Definition</label></span>
-			<span><input id="attr_wichtig" type="checkbox" name="attr"><label for="attr_wichtig">Wichtig</label></span>
-			<span><input id="attr_grundl" type="checkbox" name="attr"><label for="attr_grundl">Grundlagen</label></span>
-			<span><input id="attr_ueberschr" type="checkbox" name="attr"><label for="attr_ueberschr">Überschrift</label></span>
-		</div>
-		<div class="bigtooltip_foot"></div>
+<!-- Karteikarten Attribute aendern Tooltip -->
+<div id="attr_popup" class="bigtooltip">
+	<div class="bigtooltip_pfeil"></div>
+	<div class="bigtooltip_head">
+		<span class="octicon octicon-checklist"></span><span> Attribute ändern</span>
 	</div>
+	<div class="bigtooltip_body">
+		<span><input id="attr_satz" type="checkbox" name="attr"><label for="attr_satz">Satz</label></span>
+		<span><input id="attr_beweis" type="checkbox" name="attr"><label for="attr_beweis">Beweis</label></span>
+		<span><input id="attr_def" type="checkbox" name="attr"><label for="attr_def">Definition</label></span>
+		<span><input id="attr_wichtig" type="checkbox" name="attr"><label for="attr_wichtig">Wichtig</label></span>
+		<span><input id="attr_grundl" type="checkbox" name="attr"><label for="attr_grundl">Grundlagen</label></span>
+		<span><input id="attr_ueberschr" type="checkbox" name="attr"><label for="attr_ueberschr">Überschrift</label></span>
+	</div>
+	<div class="bigtooltip_foot"></div>
 </div>
 
 <!-- Elemente fuer kleine Bildschirme -->
@@ -488,7 +547,7 @@ Dann aber so leer.
 		<span id="vn_ersteller" class = "vn_info_right">Dr. Liebezeit</span><br>
 		<span id="vn_semester" class = "vn_info_right">Wintersemester 2014/15</span><br>
 		<span id="vn_loeschen" class="mybutton red octicon octicon-trashcan vn_info_right"></span>
-		<span id="vn_bearbeiten" class="mybutton dark octicon octicon-pencil vn_info_right"></span>
+		<span id="vn_bearbeiten_bt" class="mybutton dark octicon octicon-pencil vn_info_right"></span>
 	</div>
 	<div class="kk_wrapper">
 		<div class="kk_votes">

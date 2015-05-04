@@ -1306,9 +1306,9 @@ textarea.input_std {
 	text-shadow: 0px -1px 0px #000;
 }
 
-.vn_erstellen_input {
+.popup_input {
 	width: 100%;
-} .vn_erstellen_input[type="text"], .vn_erstellen_input[type="password"], textarea.vn_erstellen_input {
+} .popup_input[type="text"], .popup_input[type="password"], textarea.popup_input {
 	width: calc(100% - 1.8em);
 }
 

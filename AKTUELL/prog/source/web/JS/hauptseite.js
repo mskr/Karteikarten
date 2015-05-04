@@ -432,6 +432,7 @@ function registerSuchEvent()
                     });
                 }
             },
-            categoryClassMapping
+            categoryClassMapping,
+            actionSucheBenVeranst
     );
 }
