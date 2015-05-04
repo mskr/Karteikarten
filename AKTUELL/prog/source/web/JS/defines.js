@@ -34,7 +34,9 @@ var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
 var actionSucheBenVeranst = "sucheBenVeranst";
 var actionSucheBenutzer = "sucheBenutzer";
+var actionSucheStudiengang = "sucheStudiengang";
 var actionErstelleVeranst = "erstelleVeranst";
+var actionBearbeiteVeranst = "bearbeiteVeranst";
 var actionDeleteBenutzer = "deleteBenutzer"; 
 var actionDeleteVn = "vnLoeschen";
 
@@ -108,6 +110,7 @@ var keyJsonArrResult = "arrResult";
 var keyJsonObjKlasse = "klasse";
 var keyJsonObjKlasseBenutzer = "klasseBenutzer";
 var keyJsonObjKlasseVeranst = "klasseVeranst";
+var keyJsonObjKlasseStudiengang = "klasseStudiengang";
 
 // GET-Parameter fuer den urlHandler.js
 var urlParamLocation = "location";

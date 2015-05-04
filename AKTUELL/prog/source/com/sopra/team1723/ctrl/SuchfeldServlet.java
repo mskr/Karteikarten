@@ -22,6 +22,7 @@ import org.json.simple.JSONObject;
 
 
 
+
 import com.sopra.team1723.data.*;
 
 
@@ -54,7 +55,7 @@ public class SuchfeldServlet extends ServletController {
         JSONObject jo = JSONConverter.toJsonSuchfeld(dbManager.durchsucheDatenbank(suchmuster));
         outWriter.print(jo);
     }
-    
+
     /**
      * @throws IOException 
      */
@@ -73,6 +74,35 @@ public class SuchfeldServlet extends ServletController {
                 );
         outWriter.print(jo);
     }
+    
+    /**
+     * @throws IOException 
+     */
+    public void sucheStudiengang(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        String suchmuster = req.getParameter(ParamDefines.Suchmuster);
+
+        ArrayList<IjsonObject> arr =  new ArrayList<IjsonObject>();
+        arr.add(new IjsonObject() {
+            @Override
+            public JSONObject toJSON(boolean full)
+            {
+                JSONObject jo = new JSONObject();
+                jo.put(ParamDefines.Titel, "BeispielVeranstaltung");
+                jo.put(ParamDefines.Klasse, ParamDefines.KlasseStudiengang);
+                return jo;
+            }
+        });
+        JSONObject jo = JSONConverter.toJsonSuchfeld(arr);
+        outWriter.print(jo);
+        
+        
+    }
 
     @Override
     protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -90,6 +120,10 @@ public class SuchfeldServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionSucheBenutzer))
         {
             sucheBenutzer(req, resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionSucheStudiengang))
+        {
+            sucheStudiengang(req, resp);
         }
         else
         {

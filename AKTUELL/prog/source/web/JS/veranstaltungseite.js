@@ -35,6 +35,42 @@ $(document).ready(function() {
 		// TODO Dialog öffnen
 	});
 	
+	// Studiengänge in auswahlliste anzeigen
+	var ajax1 = ajaxCall(startseitenServlet,
+			actionGetStudiengaenge,
+			function(response) 
+			{
+				var studgArr = response[keyJsonArrResult];
+				fillSelectWithOptions($("#vn_bearbeiten_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
+			}
+	); 
+
+
+	// Semester in auswahlliste anzeigen
+	var ajax2 =  ajaxCall(startseitenServlet,
+			actionGetSemester,
+			function(response) 
+			{
+				$("#vn_bearbeiten_auswahl_semester").empty();
+		
+				var studgArr = response[keyJsonArrResult];
+				var aktSemesterString = response[paramAktSemester];
+				var aktSemesterDI = 1; //default, falls kein match
+		
+				for(var i in studgArr) {
+					$("#vn_bearbeiten_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
+					if(aktSemesterString==studgArr[i][paramSemester]){
+						aktSemesterDI = Number(i)+1;
+					}
+				}
+				$("#vn_bearbeiten_auswahl_semester").find("option").sort(function(a,b) {
+					return $(a).data('semesterid') > $(b).data('semesterid');
+				}).appendTo('#vn_bearbeiten_auswahl_semester');
+		
+				$("[data-semesterid='"+aktSemesterDI+"']").prop('selected', true);
+				$("#vn_bearbeiten_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
+			}
+	);
 	
     // Einklappen der Kommentarboxen
 //    $('.kk_kommtoggle').html('Einklappen');

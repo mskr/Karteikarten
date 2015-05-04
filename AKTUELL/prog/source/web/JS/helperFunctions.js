@@ -298,7 +298,7 @@ function addItemToList(itemMap, container, displayName, data, removeFkt, clickFk
  * @param categoryClassMapping Object, das als Keys die Klassen von Objekten enthaelt, die vom Server als Suchergebnisse kommen (z.B. Benutzer, Veranstaltungen...);
  * Value ist hier jeweils die Kategorie, in die das Objekt eingeordnet werden soll.
  */
-function autoComplete(textInput, categories, categoryClassMapping)
+function autoComplete(textInput, categories, categoryClassMapping, action)
 {
     var suchergHtmlStr = "<div id='suche_ergebnisse_"+textInput.attr("id")+"' class='suche_ergebnisse'>"
                    +         "<div id='sucherg_x_"+textInput.attr("id")+"' class='sucherg_x'><span class='octicon octicon-x'></span></div>";
@@ -337,7 +337,7 @@ function autoComplete(textInput, categories, categoryClassMapping)
             $("#suche_ergebnisse_"+textInput.attr("id")).show();
         }
         suchTimer.reset();
-        suchTimer.set(textInput, categories, categoryClassMapping);
+        suchTimer.set(textInput, action, suchergJQueryObj,  categories, categoryClassMapping);
     });
            
     // Reagiere auf Klick auf das x zum Schliessen des Suchergebniscontainers
@@ -358,24 +358,24 @@ var suchTimer = function(){
     var that = this,
     time = 15,
     timer;
-    that.set = function(textInput, categories, categoryClassMapping) {
+    that.set = function(textInput, action, suchergContainer, categories, categoryClassMapping) {
         timer = setTimeout(function() {
             for(var i in categoryClassMapping)
             {
-                $("#sucherg_"+categoryClassMapping[i]).slideUp("fast").empty();
+            	suchergContainer.find("#sucherg_"+categoryClassMapping[i]).slideUp("fast").empty();
             }
             var params = {};
             params[paramSuchmuster] = textInput.val();
             ajaxCall (
                 suchfeldServlet,
-                actionSucheBenVeranst,
+                action,
                 function(response) {
                     var arrSuchErgebnisse = response[keyJsonArrResult];
-                    fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping);
+                    fillSuchergebnisse(arrSuchErgebnisse,suchergContainer, categories, categoryClassMapping);
                     suchErgIterator = -1;
                     for(var i in categoryClassMapping)
                     {
-                        $("#sucherg_"+categoryClassMapping[i]).slideDown("fast");
+                    	suchergContainer.find("#sucherg_"+categoryClassMapping[i]).slideDown("fast");
                     }
                 },
                 params
@@ -396,7 +396,7 @@ var suchTimer = function(){
  * @param categories siehe autoComplete
  * @param categoryClassMapping siehe autoComplete
  */
-function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
+function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, categoryClassMapping)
 {
     var isCategoryEmpty = {};
     for(var i in categoryClassMapping)
@@ -411,7 +411,7 @@ function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
             // Fuehre die Funktion aus, die Suchergebnissen in dieser Kategorie zugeordnet wurde
             categories[category](jsonSuchErgebnis);
             //TODO klappe einfach alle Suchergebnisse ein
-            $(".sucherg_x span").trigger("click");
+            suchergContainer.find(".sucherg_x span").trigger("click");
         }
     }
     for(var i in arrSuchErgebnisse)
@@ -431,6 +431,11 @@ function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
             suchErgHtmlString += "<span class='octicon octicon-podium'></span>" +
                                  jsonSuchErgebnis[paramTitel];
         }
+        else if(klasse == keyJsonObjKlasseStudiengang)
+        {
+            suchErgHtmlString += "<span class='octicon octicon-mortar-board'></span>" +
+                                 jsonSuchErgebnis[paramTitel];
+        }
         // TODO Falls noch andere Objekte als Suchergebnisse kommen koennen, muessen diese hier nachgetragen werden.
         else
         {
@@ -438,7 +443,7 @@ function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
         }
         suchErgHtmlString +=    "</div>";
         var suchErgJQueryObj = $(suchErgHtmlString);
-        $("#sucherg_"+category).append(suchErgJQueryObj);
+        suchergContainer.find("#sucherg_"+category).append(suchErgJQueryObj);
         isCategoryEmpty[category] = false;
 
         suchErgJQueryObj.click( clickHandler(categories, category, jsonSuchErgebnis) );
@@ -449,7 +454,7 @@ function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
     {
         if(isCategoryEmpty[i])
         {
-            $("#sucherg_"+i).append("<div class='sucherg_leer'>Nichts gefunden.</div>");
+            suchergContainer.find("#sucherg_"+i).append("<div class='sucherg_leer'>Nichts gefunden.</div>");
         }
     }
 }
