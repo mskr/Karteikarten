@@ -47,9 +47,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         Class.forName("org.neo4j.jdbc.Driver");
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
 
-//        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
-//        for(int i=0; i<AnzConnections; ++i)
-//            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/"), new ReentrantLock());
+        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
+        for(int i=0; i<AnzConnections; ++i)
+            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten","neo4j","hallo123"), new ReentrantLock());
 
         connections = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)
@@ -754,7 +754,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         return istModerator;
     }
 
-    public static <K, V extends Comparable<? super V>> Map<K, V> 
+    public static <K, V extends Comparable<? super V>> LinkedHashMap<K, V> 
     sortByValue( Map<K, V> map )
     {
         List<Map.Entry<K, V>> list =
@@ -768,7 +768,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             }
                 } );
 
-        Map<K, V> result = new LinkedHashMap<>();
+        LinkedHashMap<K, V> result = new LinkedHashMap<>();
         for (Map.Entry<K, V> entry : list)
         {
             result.put( entry.getKey(), entry.getValue() );
@@ -777,15 +777,23 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public List<IjsonObject> durchsucheDatenbank(String suchmuster){
+    public Map<IjsonObject,Integer> durchsucheDatenbank(String suchmuster){
         Map<IjsonObject,Integer> alleErgebnisse = new HashMap<IjsonObject, Integer>();
         alleErgebnisse.putAll(durchsucheDatenbankVeranstaltung(suchmuster));
         alleErgebnisse.putAll(durchsucheDatenbankBenutzer(suchmuster));
 
-        ArrayList<IjsonObject> ergebnisse = new ArrayList<IjsonObject>(sortByValue(alleErgebnisse).keySet());
-        if(ergebnisse.size() > 5)
-            ergebnisse = new ArrayList<IjsonObject>(ergebnisse.subList(0, 4));
-        return ergebnisse;
+        LinkedHashMap<IjsonObject, Integer> sortierteErgebnisse = sortByValue(alleErgebnisse);
+        LinkedHashMap<IjsonObject, Integer> teilErgebnisse = new LinkedHashMap<IjsonObject, Integer>();
+        Iterator<Entry<IjsonObject, Integer>> it = sortierteErgebnisse.entrySet().iterator();
+        int i = 0;
+        Entry<IjsonObject, Integer> entry;
+        while (i < 5 && it.hasNext()) {
+            entry = it.next();
+            teilErgebnisse.put(entry.getKey(), entry.getValue());
+            ++i;
+        }
+
+        return teilErgebnisse;
     }
 
     @Override
@@ -798,10 +806,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> ergebnisse = null;
         try{
             ergebnisse = new HashMap<IjsonObject,Integer>();
-            ps = conMysql.prepareStatement("SELECT ID, levenshtein(?,Titel) AS lev FROM Veranstaltung WHERE levenshtein(?,Titel)"
-                    + " BETWEEN 0 AND 5 ORDER BY lev LIMIT 5");
+            ps = conMysql.prepareStatement("SELECT ID, levenshtein(?,Titel) AS lev FROM Veranstaltung ORDER BY lev LIMIT 5");
             ps.setString(1, suchmuster);
-            ps.setString(2, suchmuster);
             rs = ps.executeQuery();
             while(rs.next()){         
                 ergebnisse.put(leseVeranstaltung(rs.getInt("ID")), rs.getInt("lev"));
@@ -830,17 +836,43 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> ergebnisse = null;
         try{
             ergebnisse = new HashMap<IjsonObject,Integer>();
-            ps = conMysql.prepareStatement("SELECT id,min(lev) AS lev FROM( SELECT ID, levenshtein(?,Vorname) AS lev, Vorname"
-                    + " FROM Benutzer WHERE levenshtein(?,Vorname) BETWEEN 0 AND 5 UNION SELECT ID, "
-                    + "levenshtein(?,Nachname) AS lev, Nachname FROM Benutzer WHERE levenshtein(?,Nachname) BETWEEN 0 AND 5)"
-                    + " AS T group by ID ORDER BY lev LIMIT 5 ");
+            ps = conMysql.prepareStatement("SELECT * , levenshtein(?,CONCAT(Vorname,' ',Nachname)) AS lev"
+                    + " FROM Benutzer ORDER BY lev LIMIT 5 ");
             ps.setString(1, suchmuster);
-            ps.setString(2, suchmuster);
-            ps.setString(3, suchmuster);
-            ps.setString(4, suchmuster);
             rs = ps.executeQuery();
             while(rs.next()){         
                 ergebnisse.put(leseBenutzer(rs.getInt("ID")), rs.getInt("lev"));
+            }
+
+
+        } catch (SQLException e) {
+            ergebnisse = null;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLock.getValue().unlock();
+        }
+        return ergebnisse;
+    }
+    
+    @Override
+    public Map<IjsonObject, Integer>  durchsucheDatenbankStudiengang(String suchmuster){
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Map<IjsonObject,Integer> ergebnisse = null;
+        try{
+            ergebnisse = new HashMap<IjsonObject,Integer>();
+            ps = conMysql.prepareStatement("SELECT Name, levenshtein(?,Name) AS lev FROM Studiengang ORDER BY lev LIMIT 5");
+            ps.setString(1, suchmuster);
+//            ps.setString(2, suchmuster);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                System.out.println(rs.getString("Name") + " " + suchmuster + " " + rs.getInt("lev"));
+                ergebnisse.put(new Studiengang(rs.getString("Name")), rs.getInt("lev"));
             }
 
 
@@ -885,7 +917,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge) throws SQLException, DbUniqueConstraintException  {
+    public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException  {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
@@ -925,6 +957,17 @@ public class Datenbankmanager implements IDatenbankmanager {
                     ps.setInt(1, veranstId);
                     ps.setString(2, stg);
                     ps.executeUpdate();         
+                }
+            }
+            
+            if(moderatorenIds != null) {
+                for(int mod : moderatorenIds){
+                    ps.close();
+
+                    ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
+                    ps.setInt(1, mod);
+                    ps.setInt(2, veranstId);
+                    ps.executeUpdate();
                 }
             }
 
@@ -1425,7 +1468,6 @@ public class Datenbankmanager implements IDatenbankmanager {
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try{
-            conMysql.setAutoCommit(false);
             String sql =
                     "UPDATE benachrichtigung_einladung_moderator "
                             + "SET Angenommen = 1 "
@@ -1437,14 +1479,46 @@ public class Datenbankmanager implements IDatenbankmanager {
 
             closeQuietly(ps);
 
-            ps = conMysql.prepareStatement("INSERT INTO moderator(Benutzer,Veranstaltung) SELECT Benutzer, Veranstaltung FROM"
-                    + " benachrichtigung_einladung_moderator WHERE Benachrichtigung = ? AND Benutzer = ?");
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+ 
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
+    }
+
+    @Override
+    public boolean einladungModeratorAblehnen(int benachrichtigung, int benutzer)
+    {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            conMysql.setAutoCommit(false);
+            String sql =
+                    "UPDATE benachrichtigung_einladung_moderator "
+                            + "SET Angenommen = 0 "
+                            + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
+            ps = conMysql.prepareStatement(sql);
             ps.setInt(1, benachrichtigung);
             ps.setInt(2, benutzer);
             ps.executeUpdate();
-
+            
+            closeQuietly(ps);
+            
+            ps = conMysql.prepareStatement("DELETE FROM moderator WHERE Veranstaltung = ANY (SELECT Veranstaltung FROM"
+                    + " benachrichtigung_einladung_moderator WHERE Benachrichtigung = ? AND Benutzer = ?) AND Benutzer = ?");
+            ps.setInt(1, benachrichtigung);
+            ps.setInt(2, benutzer);
+            ps.setInt(3, benutzer);
+            ps.executeUpdate();
+            
             conMysql.commit();
-
 
         } catch (SQLException e) {
             erfolgreich = false;
@@ -1466,34 +1540,6 @@ public class Datenbankmanager implements IDatenbankmanager {
             {
                 e.printStackTrace();
             }
-            closeQuietly(ps);
-            conLock.getValue().unlock();
-        }
-
-        return erfolgreich;
-    }
-
-    @Override
-    public boolean einladungModeratorAblehnen(int benachrichtigung, int benutzer)
-    {
-        Entry<Connection,ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
-        PreparedStatement ps = null;
-        boolean erfolgreich = true;
-        try{
-            String sql =
-                    "UPDATE benachrichtigung_einladung_moderator "
-                            + "SET Angenommen = 0 "
-                            + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
-            ps = conMysql.prepareStatement(sql);
-            ps.setInt(1, benachrichtigung);
-            ps.setInt(2, benutzer);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            erfolgreich = false;
-            e.printStackTrace();
-        } finally{
             closeQuietly(ps);
             conLock.getValue().unlock();
         }

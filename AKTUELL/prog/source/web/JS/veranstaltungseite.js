@@ -35,6 +35,33 @@ $(document).ready(function() {
 		// TODO Dialog öffnen
 	});
 	
+	
+	
+    // Einklappen der Kommentarboxen
+//    $('.kk_kommtoggle').html('Einklappen');
+//    var height = 0;
+//    $('.kk_kommtoggle').click( function() {
+//        var domelem = $(this).parent().get(0);
+//        var jqueryobj = $(domelem);
+//        if( jqueryobj.height()>50 ) {
+//            height = jqueryobj.height();
+//            jqueryobj.animate({
+//                height: "15px"
+//            }, 500 );
+//            $(this).html('Ausklappen');
+//        } else {
+//            jqueryobj.animate({
+//                height: ""+height+"px"
+//            }, 500 );
+//            $(this).html('Einklappen');
+//        }
+//    });
+});
+function fillVeranstaltungsSeite(Vid)
+{
+	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
+	d = jQuery.Deferred();
+	
 	// Studiengänge in auswahlliste anzeigen
 	var ajax1 = ajaxCall(startseitenServlet,
 			actionGetStudiengaenge,
@@ -71,33 +98,6 @@ $(document).ready(function() {
 				$("#vn_bearbeiten_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
 			}
 	);
-	
-    // Einklappen der Kommentarboxen
-//    $('.kk_kommtoggle').html('Einklappen');
-//    var height = 0;
-//    $('.kk_kommtoggle').click( function() {
-//        var domelem = $(this).parent().get(0);
-//        var jqueryobj = $(domelem);
-//        if( jqueryobj.height()>50 ) {
-//            height = jqueryobj.height();
-//            jqueryobj.animate({
-//                height: "15px"
-//            }, 500 );
-//            $(this).html('Ausklappen');
-//        } else {
-//            jqueryobj.animate({
-//                height: ""+height+"px"
-//            }, 500 );
-//            $(this).html('Einklappen');
-//        }
-//    });
-});
-function fillVeranstaltungsSeite(Vid)
-{
-	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
-	d = jQuery.Deferred();
-	
-	
 	
 	var params = {};
 	params[paramId] = Vid;
@@ -149,7 +149,7 @@ function fillVeranstaltungsSeite(Vid)
 		params
 	);
 	
-	return d;
+	return $.when(ajax1,ajax2,d);
 }
 
 //sucht Studiengänge, die zur Veranstaltung gehören

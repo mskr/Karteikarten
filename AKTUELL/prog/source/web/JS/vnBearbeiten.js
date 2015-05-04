@@ -7,7 +7,7 @@ $(document).ready(function() {
 			{
 				STUDIENGAENGE: function(jsonSuchErgebnis) {
 					addItemToList(selectedStudiengaenge, $("#vn_bearbeiten_stg_list"), 
-							jsonSuchErgebnis[paramTitel], 
+							jsonSuchErgebnis[paramStudiengang], 
 							jsonSuchErgebnis, undefined,undefined
 					);
 					$("#vn_bearbeiten_stg_list").focus(); //TODO geht nicht
@@ -48,7 +48,7 @@ $(document).ready(function() {
         	data[paramTitel] = veranstaltungsObject[paramStudiengang][i];
         	
         	addItemToList(selectedStudiengaenge, $("#vn_bearbeiten_stg_list"), 
-        			data[paramTitel], 
+        			data[paramStudiengang], 
 					data, undefined,undefined
 			);
     	}
@@ -132,7 +132,7 @@ $(document).ready(function() {
 	                
 	                for(var i in selectedStudiengaenge)
 	            	{
-	                	params[paramStudiengang] += selectedStudiengaenge[i][paramTitel] + ",";
+	                	params[paramStudiengang] += selectedStudiengaenge[i][paramStudiengang] + ",";
 	            	}
 					params[paramBeschr] = escape(beschr);
 					params[paramModeratorKkBearbeiten] = moderatorenKkBearbeiten;

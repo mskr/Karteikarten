@@ -416,11 +416,12 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
     }
     for(var i in arrSuchErgebnisse)
     {
-        var jsonSuchErgebnis = arrSuchErgebnisse[i];
+        var jsonSuchErgebnis = arrSuchErgebnisse[i]["key"];
+        var abstand = arrSuchErgebnisse[i]["value"];
         var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
         var category = categoryClassMapping[klasse];
         var id = jsonSuchErgebnis[paramId];
-        var suchErgHtmlString = "<div id='sucherg_"+category+"_"+id+"' class='sucherg_item'>";
+        var suchErgHtmlString = "<div data-abstand = '"+ abstand +"'id='sucherg_"+category+"_"+id+"' class='sucherg_item'>";
         if(klasse == keyJsonObjKlasseBenutzer)
         {
             suchErgHtmlString += "<span class='octicon octicon-person'></span>" +
@@ -434,7 +435,7 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         else if(klasse == keyJsonObjKlasseStudiengang)
         {
             suchErgHtmlString += "<span class='octicon octicon-mortar-board'></span>" +
-                                 jsonSuchErgebnis[paramTitel];
+                                 jsonSuchErgebnis[paramStudiengang];
         }
         // TODO Falls noch andere Objekte als Suchergebnisse kommen koennen, muessen diese hier nachgetragen werden.
         else
@@ -447,8 +448,22 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         isCategoryEmpty[category] = false;
 
         suchErgJQueryObj.click( clickHandler(categories, category, jsonSuchErgebnis) );
-        
     }
+
+    $.each(suchergContainer.find(".sucherg"), function(index, obj) {
+    	var elem = $(obj).find('div').sort( function(a,b)
+	    	{
+    			return $(a).attr("data-abstand") - $(b).attr("data-abstand");
+    		});
+    	$(obj).append(elem);
+	});
+    
+//    var elem = contentDiv.find('div').sort( function(a,b)
+//    		{
+//    			return $(a).attr("data-abstand") - $(b).attr("data-abstand");
+//    		});
+//
+//    contentDiv.append(elem);
     
     for(var i in isCategoryEmpty)
     {
@@ -458,6 +473,7 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         }
     }
 }
+
 
 /**
  * Diese Funktion wird von autoComplete genutzt.

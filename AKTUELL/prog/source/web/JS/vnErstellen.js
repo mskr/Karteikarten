@@ -62,7 +62,7 @@ $(document).ready(function() {
                 
                 for(var i in selectedStudiengaenge)
             	{
-                	params[paramStudiengang] += selectedStudiengaenge[i][paramTitel] + ",";
+                	params[paramStudiengang] += selectedStudiengaenge[i][paramStudiengang] + ",";
             	}
                 	
                 params[paramBeschr] = escape(beschr);
@@ -108,7 +108,7 @@ function registerVeranstErzeugeHandler() {
             {
             	STUDIENGAENGE: function(jsonSuchErgebnis) {
                     addItemToList(selectedStudiengaenge, $("#vn_erstellen_stg_list"), 
-                            jsonSuchErgebnis[paramTitel], 
+                            jsonSuchErgebnis[paramStudiengang], 
                             jsonSuchErgebnis, undefined,undefined
                     );
                     $("#vn_erstellen_stg_list").focus(); //TODO geht nicht

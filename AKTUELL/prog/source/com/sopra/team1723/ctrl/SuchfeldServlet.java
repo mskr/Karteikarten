@@ -68,10 +68,8 @@ public class SuchfeldServlet extends ServletController {
         
         String suchmuster = req.getParameter(ParamDefines.Suchmuster);
 
-        JSONObject jo = JSONConverter.toJsonSuchfeld(
-                new ArrayList<IjsonObject>(
-                        Datenbankmanager.sortByValue(dbManager.durchsucheDatenbankBenutzer(suchmuster)).keySet())
-                );
+        JSONObject jo = JSONConverter.toJsonSuchfeld(dbManager.durchsucheDatenbankBenutzer(suchmuster));
+
         outWriter.print(jo);
     }
     
@@ -87,20 +85,8 @@ public class SuchfeldServlet extends ServletController {
         
         String suchmuster = req.getParameter(ParamDefines.Suchmuster);
 
-        ArrayList<IjsonObject> arr =  new ArrayList<IjsonObject>();
-        arr.add(new IjsonObject() {
-            @Override
-            public JSONObject toJSON(boolean full)
-            {
-                JSONObject jo = new JSONObject();
-                jo.put(ParamDefines.Titel, "BeispielVeranstaltung");
-                jo.put(ParamDefines.Klasse, ParamDefines.KlasseStudiengang);
-                return jo;
-            }
-        });
-        JSONObject jo = JSONConverter.toJsonSuchfeld(arr);
+        JSONObject jo = JSONConverter.toJsonSuchfeld(dbManager.durchsucheDatenbankStudiengang(suchmuster));
         outWriter.print(jo);
-        
         
     }
 

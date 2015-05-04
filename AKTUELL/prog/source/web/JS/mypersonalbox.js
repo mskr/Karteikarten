@@ -56,7 +56,7 @@ function fillUserContainer()
  */
 function addBenachrichtigung(ben)
 {
-	var type = ben[paramBenType];
+	var type = ben[paramType];
 	var onClickfkt = function() {};
 	if(type == paramBenTypeKarteikarte)
 	{
@@ -90,7 +90,7 @@ function addBenachrichtigung(ben)
 	divBn.addClass("bn");
 	divBn.attr("data-id",ben[paramId]);
 	
-	if(ben[paramBenGelesen] != true)
+	if(ben[paramGelesen] != true)
 	{
 		divBn.addClass("neu");
 	}
@@ -99,7 +99,7 @@ function addBenachrichtigung(ben)
 	
 	var spanCntnt = $("<span></span>");
 	spanCntnt.addClass("bn_text");
-	spanCntnt.append(ben[paramBenInhalt]);
+	spanCntnt.append(ben[paramInhalt]);
 	spanCntnt.append("<span class='bn_zeit' style='float: right;'>" + ben[paramBenErstelldaum] + "</span>");
 	
 	divBn.append(spanCntnt);
@@ -146,7 +146,7 @@ function updateBenachrichtigungen(newBens)
 	
 	for(var i in newBens)
 	{
-		if(newBens[i][paramBenGelesen] != true)
+		if(newBens[i][paramGelesen] != true)
 			ungelesenCount++;
 		
 		var isNew = true;
@@ -180,7 +180,7 @@ function updateBenachrichtigungen(newBens)
 		else
 		{
 			var benDiv = contentDiv.find("[data-id="+newBens[i][paramId]+"]");
-			if(newBens[i][paramBenGelesen] == true)
+			if(newBens[i][paramGelesen] == true)
 			{
 				benDiv.addClass("gelesen");
 				benDiv.removeClass("neu");
@@ -192,7 +192,7 @@ function updateBenachrichtigungen(newBens)
 			}
 		}
 		
-		newBens[i][paramBenGelesen]
+		newBens[i][paramGelesen]
 	}
 	
 	// Prüfen, welche Benachrichtigngen verschwunden sind.
