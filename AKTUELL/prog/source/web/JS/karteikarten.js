@@ -58,5 +58,5 @@ function buildKarteikarte(karteikarteJson)
                 "</div>" +
             "</div>" +
         "</div>";
-    return $(kkHtmlStr);
+    fillKarteiKarte($(kkHtmlStr),karteikarteJson);
 }
