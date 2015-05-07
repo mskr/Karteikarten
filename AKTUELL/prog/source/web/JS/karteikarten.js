@@ -60,3 +60,59 @@ function buildKarteikarte(karteikarteJson)
         "</div>";
     fillKarteiKarte($(kkHtmlStr),karteikarteJson);
 }
+
+
+function showHauptKommentare(karteikarteContainer, kommentarArray)
+{
+	var kommbox = karteikarteContainer.find(".kk_kommbox");
+	var kommCountElem = kommbox.find(".kk_kommzaehler");	
+	kommCountElem.html(kommentarArray.length);
+	
+	
+	for(var i in kommentarArray)
+	{
+		var kommObj = kommentarArray[i];
+		var kommErsteller = kommObj[paramErsteller];
+		var hauptKomm = $("#templateSuperKomm").clone();
+		
+		hauptKomm.removeAttr("id");
+		hauptKomm.attr("data-komm-id",kommObj[paramId]);
+		
+		hauptKomm.find(".komm_votestat").html(kommObj[paramVotes]);
+		
+		if(kommObj[paramHatGevoted] == true)
+		{
+			// Oder löschen? TODO
+			hauptKomm.find(".komm_voteup").hide();
+			hauptKomm.find(".komm_down").hide();
+		}
+		else
+		{
+			// TODO Handler registrieren
+		}
+		
+		if(kommErsteller[paramId] == jsonBenutzer[paramId] || 
+				jsonBenutzer[paramNutzerstatus] == "ADMIN" )
+		{
+			// TODO Löschen handler
+		}
+		else
+		{
+			hauptKomm.find(".kk_komm_loeschen").hide();
+		}
+		
+		hauptKomm.find(".kk_inhalt").html(kommObj[paramInhalt]);
+		hautpKomm.find(".kommAuthor").html(kommErsteller[paramVorname] + " " +kommErsteller[paramNachname]);
+		hautpKomm.find(".kommDatum").html(kommObj[paramErstellDatum]);
+		hautpKomm.find(".komm_antw_bt").click(function(){
+			// TODO Antworten handler
+		});
+		
+		kommbox.append(hauptKomm);
+		hauptKomm.show();		
+	}
+}
+function showAntwortKommentare(hauptkommentar, kommentarArray)
+{
+	
+}
