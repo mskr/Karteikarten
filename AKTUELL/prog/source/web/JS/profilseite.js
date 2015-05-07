@@ -121,6 +121,8 @@ function fillMyProfil(isAdmin)
 	
     $(".profil_loeschen").show();
 
+    $("#profil_email").show();
+    $("#profil_matrikelnummer").show();
     $("#profil_email_input").val(jsonBenutzer[paramEmail]);
     $("#profil_vorname_input").val(jsonBenutzer[paramVorname]);
     $("#profil_nachname_input").val(jsonBenutzer[paramNachname]);
@@ -167,10 +169,8 @@ function fillOtherProfil(benutzer, isAdmin)
 	$(".profil_benutzername").text(benutzer[paramVorname] +" "+benutzer[paramNachname]);
 	$(".profil_avatar_img").attr("src", benutzer[paramProfilBild]);
 
-    $("#profil_email_input").val(benutzer[paramEmail]);
     $("#profil_vorname_input").val(benutzer[paramVorname]);
     $("#profil_nachname_input").val(benutzer[paramNachname]);
-    $("#profil_matnr_input").val(benutzer[paramMatrikelNr]);
     $("#profil_rolle_input").val(benutzer[paramNutzerstatus]);
 	$("#profil_studiengang_input").val(benutzer[paramStudiengang]);
     
@@ -191,6 +191,8 @@ function fillOtherProfil(benutzer, isAdmin)
 	
 	if(!isAdmin)
 	{
+	    $("#profil_email").hide();
+	    $("#profil_matrikelnummer").hide();
 		$("#profil_avatar_aendern_file_name").hide();
 		$(".profil_avatar_overlay").hide();
 		$(".profil_loeschen").hide();
@@ -198,6 +200,9 @@ function fillOtherProfil(benutzer, isAdmin)
 		$("#profil_passwort ").hide();
 		$("#profil_daten_speichern").hide();
 
+	    $("#profil_email_input").val("");
+	    $("#profil_matnr_input").val("");
+	    
 		$("#profil_email_input").prop("disabled", true);
 		$("#profil_vorname_input").prop("disabled", true);
 		$("#profil_nachname_input").prop("disabled", true);
@@ -207,6 +212,8 @@ function fillOtherProfil(benutzer, isAdmin)
 	}
 	else
 	{
+	    $("#profil_email").show();
+	    $("#profil_matrikelnummer").show();
 		$("#profil_avatar_aendern_file_name").show();
 		$(".profil_avatar_overlay").show();
 		$(".profil_loeschen").show();
@@ -214,6 +221,9 @@ function fillOtherProfil(benutzer, isAdmin)
 		$("#profil_passwort ").show();
 		$("#profil_daten_speichern").show();
 
+	    $("#profil_email_input").val(benutzer[paramEmail]);
+	    $("#profil_matnr_input").val(benutzer[paramMatrikelNr]);
+	    
 		$("#profil_email_input").prop("disabled", false);
 		$("#profil_vorname_input").prop("disabled", false);
 		$("#profil_nachname_input").prop("disabled", false);

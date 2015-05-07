@@ -52,6 +52,9 @@ var actionLeseBenachrichtungen = "leseBen";
 var actionMarkiereBenGelesen = "benGelesen";
 
 
+var actionGetKarteikarteByID = "getKarteikarte";
+var actionGetKarteikartenKinder = "getKKKinder";
+var actionGetKarteikartenVater = "getKKVater";
 
 
 // GET/POST- und JSON-Schluessel-Parameter

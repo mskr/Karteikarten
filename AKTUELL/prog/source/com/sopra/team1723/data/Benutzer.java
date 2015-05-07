@@ -288,16 +288,16 @@ public class Benutzer implements IjsonObject {
         JSONObject jo = new JSONObject();
         jo.put(ParamDefines.Klasse, ParamDefines.KlasseBenutzer);
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
-        jo.put(ParamDefines.Email, this.geteMail());
         jo.put(ParamDefines.Id, this.getId());
         jo.put(ParamDefines.Vorname, this.getVorname());
         jo.put(ParamDefines.Nachname, this.getNachname());
-        jo.put(ParamDefines.MatrikelNr, new Integer(this.getMatrikelnummer()).toString());
         jo.put(ParamDefines.Nutzerstatus, this.getNutzerstatus().name());
         jo.put(ParamDefines.Studiengang, this.getStudiengang());
         jo.put(ParamDefines.ProfilBildPfad, this.getProfilBildPfad());
         if(full)
         {
+            jo.put(ParamDefines.Email, this.geteMail());
+            jo.put(ParamDefines.MatrikelNr, new Integer(this.getMatrikelnummer()).toString());
             jo.put(ParamDefines.NotifyVeranstAenderung, this.isNotifyVeranstAenderung());
             jo.put(ParamDefines.NotifyKarteikartenAenderung, this.isNotifyKarteikartenAenderung());
             jo.put(ParamDefines.NotifyKommentare, this.getNotifyKommentare().name());
