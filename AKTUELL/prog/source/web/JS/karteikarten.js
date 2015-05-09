@@ -61,6 +61,19 @@ function buildKarteikarte(karteikarteJson)
     fillKarteiKarte($(kkHtmlStr),karteikarteJson);
 }
 
+function getKarteikarteByID (id){
+	var params = {};
+    params[paramId] = id;
+    
+	return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
+        function(response) {
+			karteikarteJSON = response;
+			console.log(karteikarteJSON);
+			buildKarteikarte(karteikarteJSON);
+		},
+        params
+    );
+}
 
 function showHauptKommentare(karteikarteContainer, kommentarArray)
 {

@@ -15,7 +15,9 @@ public class Karteikarte implements IjsonObject {
     
     
 
-    public Karteikarte(String titel,  String inhalt, KarteikartenTyp typ, int veranstaltung)
+
+
+	public Karteikarte(String titel,  String inhalt, KarteikartenTyp typ, int veranstaltung)
     {
         super();
         this.id = -1;
@@ -174,7 +176,30 @@ public class Karteikarte implements IjsonObject {
         }
         return jo;
     }
-    
+
+    public JSONObject toJSONDateFix(boolean full)
+    {
+        JSONObject jo = new JSONObject();
+        jo.put(ParamDefines.Klasse, ParamDefines.KlasseKarteikarte);
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
+        jo.put(ParamDefines.Id, this.getId());
+        jo.put(ParamDefines.Titel, this.getTitel());
+        jo.put(ParamDefines.Type, this.getTyp().name());
+        jo.put(ParamDefines.Veranstaltung, this.getVeranstaltung());
+        if(full)
+        {
+            jo.put(ParamDefines.Aenderungsdatum, this.getAenderungsdatum().toString());
+            jo.put(ParamDefines.Bewertung, this.getBewertung());
+            jo.put(ParamDefines.Inhalt, this.getInhalt());
+        }
+        return jo;
+    }
+    @Override
+	public String toString() {
+		return "Karteikarte [id=" + id + ", titel=" + titel + ", aenderungsdatum=" + aenderungsdatum + ", inhalt="
+				+ inhalt + ", typ=" + typ + ", veranstaltung=" + veranstaltung + ", bewertung=" + bewertung + "]";
+	}
+
     
 
     

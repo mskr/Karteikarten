@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -48,9 +51,34 @@ public class KarteikartenServlet extends ServletController {
      * @param response 
      * @return
      */
-    private boolean karteikartenAnzeigen(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+    private void getKarteikarteByID(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    	 HttpSession aktuelleSession = request.getSession();
+         PrintWriter outWriter = response.getWriter();
+         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+
+         JSONObject jo;
+
+         int karteikartenID = -1;
+         try{
+        	 karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
+         }    
+         catch(NumberFormatException e){
+             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+             outWriter.print(jo);
+             return;
+         }
+
+         if(!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response) &&
+                 aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN){
+             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+             outWriter.print(jo);
+         }
+         Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
+         jo = Kk.toJSONDateFix(true);
+         outWriter.print(jo);
+
+         
     }
 
     /**
@@ -181,7 +209,10 @@ public class KarteikartenServlet extends ServletController {
         if(aktuelleAction.equals(ParamDefines.ActionGetKarteikartenKinder))
         {
             getKarteikartenKinder(req,resp);
-        } 
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionGetKarteikarteByID)){
+        	getKarteikarteByID(req,resp);
+        }
 
     }
 
