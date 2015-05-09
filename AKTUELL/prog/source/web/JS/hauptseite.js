@@ -387,9 +387,6 @@ function registerSuchEvent()
     autoComplete(
             $("#suche_global_input"),
             {
-                BENUTZER: function(jsonSuchErgebnis) {
-                    gotoProfil(jsonSuchErgebnis[paramId]);
-                },
                 VERANSTALTUNGEN: function(jsonSuchErgebnis) {
                     // Gehe zum Semester und zum Studiengang der Veranstaltung
                     var id = jsonSuchErgebnis[paramId];
@@ -430,6 +427,9 @@ function registerSuchEvent()
                             $("#vn_alle_"+id+"_radio").trigger("click").prop("checked",true);
                         });
                     });
+                },
+                BENUTZER: function(jsonSuchErgebnis) {
+                    gotoProfil(jsonSuchErgebnis[paramId]);
                 }
             },
             categoryClassMapping,
