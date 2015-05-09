@@ -431,7 +431,6 @@ public class ProfilServlet extends ServletController {
             else
             {
                 // TODO Testen!
-
                 jo = JSONConverter.toJson(b,aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN);
                 outWriter.print(jo);
                 return;

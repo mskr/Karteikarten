@@ -44,7 +44,7 @@ public class Datenbankmanager implements IDatenbankmanager {
      */
     public Datenbankmanager() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
-        Class.forName("org.neo4j.jdbc.Driver");
+//        Class.forName("org.neo4j.jdbc.Driver");
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
 
         connectionsNeo4j = new HashMap<Connection, ReentrantLock>();

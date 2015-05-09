@@ -42,15 +42,16 @@ public class ParamDefines
     public final static String ActionGetStudgVn = "getStudgVn";
     public final static String ActionGetModeratorenVn = "getModVn";
 
-
-    
-
     public final static String ActionLeseBenachrichtungen = "leseBen";
     public final static String ActionMarkiereBenGelesen = "benGelesen";
     public final static String ActionEinlModeratorAnnehmen = "einlModAnnehmen";
     public final static String ActionEinlModeratorAblehnen = "einlModAblehnen";
 
+    public final static String ActionGetKarteikarteByID = "getKarteikarte";
+    public final static String ActionGetKarteikartenKinder = "getKKKinder";
+    public final static String ActionGetKarteikartenVater = "getKKVater";
 
+    
 
     public final static String Klasse = "klasse";
     public final static String KlasseBenutzer = "klasseBenutzer";

@@ -98,6 +98,10 @@ function buildUrlQuery(paramObj)
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
     var State =  History.getState();
     History.pushState(null,null, locationSearchTmp);
+    
+    // Beim Seitenwechsel alle Nachrichten verwerfen
+    // TODO Ist das sinvoll?
+    //clearMessageQueue();
 
     // WORKAROUND Wenn zeilseite = aktuelle seite, dann wird die Change Funktion nicht getriggert
     if(State.url.indexOf(locationSearchTmp) >= 0)
