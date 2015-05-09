@@ -23,7 +23,7 @@ sampleJSON2[paramBewertung] = 9;
 
 
 var sampleJSON3 = {};
-sampleJSON3[paramId] = 7;
+sampleJSON3[paramId] = 10;
 sampleJSON3[paramTitel] = "Potenzgesetze IIi";
 sampleJSON3[paramType] = "VIDEO";
 sampleJSON3[paramInhalt] = "";
@@ -45,12 +45,12 @@ fillKarteiKarte = function(domElem, json){
 	// detect type and add content
 	switch (json[paramType]) {
     case "TEXT":
-    	console.log(json[paramInhalt]);
     	domElem.find(".inhalt_text").html(json[paramInhalt]);
     	break;
     case "BILD":
     	image = $(document.createElement("img"));
     	image.attr("src","files/images/"+json[paramId]+".png");
+    	image.attr("onerror","this.src='files/general/default.png'");
     	domElem.find(".inhalt_bild").html(image);
     	break;
     case "VIDEO":
