@@ -119,6 +119,12 @@ public class KarteikartenServlet extends ServletController {
             
             Karteikarte karteikarte = new Karteikarte(titel,inhalt,typ,veranstaltung);
             
+            if(!istModeratorDozentOderAdmin(aktuellerBenutzer,veranstaltung,dbManager))
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+                outWriter.print(jo);
+                return;
+            }
             dbManager.schreibeKarteikarte(karteikarte);
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             
@@ -130,6 +136,15 @@ public class KarteikartenServlet extends ServletController {
         }
 
         outWriter.print(jo);
+    }
+    
+    private boolean istModeratorDozentOderAdmin(Benutzer aktuellerBenutzer, int veranstaltung, IDatenbankmanager dbManager){
+        if(aktuellerBenutzer.getId() != dbManager.leseVeranstaltung(veranstaltung).getErsteller().getId() &&
+                !(dbManager.istModerator(aktuellerBenutzer.getId(), veranstaltung)) &&
+                !(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)){
+            return false;
+        }
+        return true;
     }
 
     private void leseKarteikarte(HttpServletRequest req, HttpServletResponse resp) throws IOException{
