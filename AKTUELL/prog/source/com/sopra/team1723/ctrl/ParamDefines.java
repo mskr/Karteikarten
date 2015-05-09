@@ -50,7 +50,7 @@ public class ParamDefines
     public final static String ActionGetKarteikarteByID = "getKarteikarte";
     public final static String ActionGetKarteikartenKinder = "getKKKinder";
     public final static String ActionGetKarteikartenVater = "getKKVater";
-
+    public final static String ActionErstelleKarteikarte = "erstelleKarteikarte";
     
 
     public final static String Klasse = "klasse";
@@ -60,6 +60,7 @@ public class ParamDefines
     public final static String KlasseKarteikarte = "klasseKarteikarte";
 
 
+    // Parameter für Benutzer
     public final static String Id = "id";
     public final static String Email = "email";
     public final static String EmailNew = "emailNew";
@@ -78,6 +79,7 @@ public class ParamDefines
     public final static String Suchmuster = "suchmuster";
 
 
+    // Parameter für Veranstaltung
     public final static String Titel = "titel";
     public final static String Beschr = "beschr";
     public final static String Semester = "semester";
@@ -91,10 +93,15 @@ public class ParamDefines
     public final static String Angemeldet = "angemeldet";
     public final static String KennwortGesetzt = "kennwortGesetzt";
     
+    
+    // Parameter für Karteikarte  
     public final static String Veranstaltung = "veranstaltung";
     public final static String Aenderungsdatum = "aenderungsdatum";
     public final static String Bewertung = "bewertung";
+    
+    public final static String Reihenfolge = "reihenfolge";
 
+    // Parameter für Benachrichtigung
     public final static String Inhalt = "inhalt";
     public final static String Gelesen = "gelesen";
     public final static String Type = "type";

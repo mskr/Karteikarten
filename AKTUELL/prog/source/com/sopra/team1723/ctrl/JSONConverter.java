@@ -16,6 +16,7 @@ import com.sopra.team1723.data.BenachrProfilGeaendert;
 import com.sopra.team1723.data.BenachrVeranstAenderung;
 import com.sopra.team1723.data.Benachrichtigung;
 import com.sopra.team1723.data.Benutzer;
+import com.sopra.team1723.data.Tupel;
 import com.sopra.team1723.data.Veranstaltung;
 
 @SuppressWarnings("unchecked")
@@ -255,6 +256,28 @@ public class JSONConverter
             o.put(ParamDefines.Id, key);
             o.put(ParamDefines.Semester, semester.get(key));
             
+            
+            array.add(o);
+        }
+
+        jo.put(ParamDefines.jsonArrResult, array);
+
+        return jo;
+    }
+    
+    static JSONObject toJsonKarteikarten(Map<Integer, Tupel<Integer,String>> karteikarten) 
+    {
+        JSONObject jo = new JSONObject();  
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
+        JSONArray array = new JSONArray();
+
+        for(Integer key : karteikarten.keySet())
+        {
+            JSONObject o = new JSONObject();
+
+            o.put(ParamDefines.Reihenfolge, key);
+            o.put(ParamDefines.Id, karteikarten.get(key).x);
+            o.put(ParamDefines.Titel, karteikarten.get(key).y);            
             
             array.add(o);
         }

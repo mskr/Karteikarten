@@ -11,7 +11,7 @@ function buildKarteikarte(karteikarteJson)
         kkInhalt = karteikarteJson[paramInhalt];
         kkBewertung = karteikarteJson[paramBewertung];
         kkAenderungsdatum = karteikarteJson[paramAenderungsdatum];
-    var kkHtmlStr = 
+    var kkDom = 
         "<div id='kk_"+kkId+"_wrapper' class='kk_wrapper'>" +
             "<div class='kk_votes'>" +
                 "<a class='kk_voteup'><span class='mega-octicon octicon-triangle-up'></span></a>" +
@@ -36,21 +36,21 @@ function buildKarteikarte(karteikarteJson)
     
     if(kkType == paramKkText)
     {
-        kkHtmlStr +=
+        kkDom +=
             "<div class='kk inhalt_text' contenteditable></div>";
     }
     else if(kkType == paramKkBild)
     {
-        kkHtmlStr +=
+        kkDom +=
             "<div class='kk inhalt_bild' contenteditable></div>";
     }
     else if(kkType == paramKkVideo)
     {
-        kkHtmlStr +=
+        kkDom +=
             "<div class='kk inhalt_video' contenteditable></div>";
     }
             
-    kkHtmlStr +=
+    kkDom +=
             "<div class='kk_kommbox'>" +
                 "<div class='kk_kommheader'><span class='octicon octicon-comment-discussion'></span> Kommentare (<span class='kk_kommzaehler'></span>)</div>" +
                 "<div class='kk_kommerstellen'>" +
@@ -61,7 +61,7 @@ function buildKarteikarte(karteikarteJson)
             "</div>" +
         "</div>";
 
-    kkHtmlStr =  $(kkHtmlStr);
+    kkDom =  $(kkDom);
     
     arr = [];
     sampleKommentar[paramErsteller] = jsonBenutzer;
@@ -69,8 +69,25 @@ function buildKarteikarte(karteikarteJson)
     arr.push(sampleKommentar);
     arr.push(sampleKommentar2);
     arr.push(sampleKommentar);
-    showHauptKommentare(kkHtmlStr,arr);
-    fillKarteiKarte(kkHtmlStr,karteikarteJson);
+    showHauptKommentare(kkDom,arr);
+    fillKarteiKarte(kkDom,karteikarteJson);
+    
+    return kkDom;
+}
+
+function getKarteikarteByID (id){
+	var params = {};
+    params[paramId] = id;
+    
+	return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
+        function(response) {
+			karteikarteJSON = response;
+			console.log(karteikarteJSON);
+//			buildKarteikarte(karteikarteJSON); //just for test
+			return karteikarteJSON;
+		},
+        params
+    );
 }
 
 var sampleKommentar = {};

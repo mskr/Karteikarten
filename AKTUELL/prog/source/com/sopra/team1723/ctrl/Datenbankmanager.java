@@ -1620,15 +1620,20 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public Map<Integer,Karteikarte> leseKindKarteikarten(int vaterKarteikID) {
+    public Map<Integer,Tupel<Integer,String>> leseKindKarteikarten(int vaterKarteikID) {
         Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
         Connection conNeo4j = conLockNeo4j.getKey();
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        
         PreparedStatement ps = null;
         ResultSet rs = null;
-        HashMap<Integer,Karteikarte> kindKarteikarten = null;
+        PreparedStatement psMysql = null;
+        ResultSet rsMysql = null;
+        HashMap<Integer,Tupel<Integer,String>> kindKarteikarten = null;
         try {
-            kindKarteikarten = new HashMap<Integer, Karteikarte>();
-            ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->()-[:h_brother*0..50]-(m)"
+            kindKarteikarten = new HashMap<Integer, Tupel<Integer,String>>();
+            ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->()-[:h_brother*0..]-(m)"
                     + " WHERE id(n) = {1}"
                     + " return id(m) AS ID");
             ps.setInt(1,vaterKarteikID);
@@ -1637,8 +1642,16 @@ public class Datenbankmanager implements IDatenbankmanager {
 
             int i = 0;
             while(rs.next()) {
-                kindKarteikarten.put(i, leseKarteikarte(rs.getInt("ID")));
+                psMysql = conMysql.prepareStatement("SELECT Titel FROM Karteikarte WHERE ID = ?");
+                psMysql.setInt(1, rs.getInt("ID"));
+                rsMysql = psMysql.executeQuery();
+                if (!rsMysql.next())
+                    return null;
+                
+                kindKarteikarten.put(i, new Tupel<Integer, String>(rs.getInt("ID"),rsMysql.getString("Titel")));
                 ++ i;
+                closeQuietly(psMysql);
+                closeQuietly(rsMysql);
             }
         } catch (SQLException e) {
             kindKarteikarten = null;
@@ -1646,6 +1659,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            closeQuietly(psMysql);
+            closeQuietly(rsMysql);
+            conLock.getValue().unlock();
             conLockNeo4j.getValue().unlock();
         }
 
@@ -1669,7 +1685,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             conMysql.setAutoCommit(false);
 
             ps = conNeo4j.prepareStatement("CREATE(n) RETURN id(n) AS Id");
-
+            
             rs = ps.executeQuery();
             if(!rs.next())
                 return insertedId;
@@ -1768,12 +1784,6 @@ public class Datenbankmanager implements IDatenbankmanager {
 
     @Override
     public boolean hatKommentarBewertet(int kommentarID, String benutzer) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean istModerator(Veranstaltung veranst, String benutzerMail) {
         // TODO Auto-generated method stub
         return false;
     }

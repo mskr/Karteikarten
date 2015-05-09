@@ -648,8 +648,15 @@ textarea.input_std {
 } .sucherg_item {
 	padding: .9em;
 	cursor: pointer;
+	background: none;
+	color: #4a4a4a;
+} .sucherg_item.selected {
+	background: #4a4a4a;
+	color: white;
 } .sucherg_item span {
 	margin-right: .5em;
+} .sucherg_item_detail {
+	font-size: .8em;
 } .sucherg_leer {
 	padding: .9em;
 	color: gray;

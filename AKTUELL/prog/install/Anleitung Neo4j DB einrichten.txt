@@ -1,6 +1,0 @@
-1. neo4j runterladen und installieren Link: http://neo4j.com/download/
-2. Um die Datenbank zu importieren gibt es im git repository im Ordner install
-   einen Ordner karteikarten. Dieser muss in das Verzeichnis von neo4j kopiert
-   werden. (Bei mir C:\Benutzer\Matthias\Dokumente\Neo4j
-3. neo4j starten und die richtige Datenbank wählen
-4. Zum exportieren selbigen Ordner einfach ins git repository kopieren

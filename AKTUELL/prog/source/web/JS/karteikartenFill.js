@@ -60,12 +60,12 @@ fillKarteiKarte = function(domElem, json){
 //    	video.attr("autoplay",""); 
     	video.attr("controls","");
     	video.append("<source src='files/videos/"+json[paramId]+".mp4' type='video/mp4'></source>");
-    	video.append("<source src='files/videos/"+json[paramId]+".ogg' type='video/ogg'></source>");
     	video.append("Your browser does not support the video tag.");
     	domElem.find(".inhalt_video").html(video);
     	break;
 	}
-	
-	$("#kk_all").append(domElem);
+	// TODO Über rückgabetyp
+//	$("#kk_all").append(domElem);
+	return domElem;
 	
 }
