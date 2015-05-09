@@ -50,7 +50,7 @@ public class ParamDefines
     public final static String ActionGetKarteikarteByID = "getKarteikarte";
     public final static String ActionGetKarteikartenKinder = "getKKKinder";
     public final static String ActionGetKarteikartenVater = "getKKVater";
-
+    public final static String ActionErstelleKarteikarte = "erstelleKarteikarte";
     
 
     public final static String Klasse = "klasse";
@@ -94,7 +94,7 @@ public class ParamDefines
     public final static String KennwortGesetzt = "kennwortGesetzt";
     
     
-    // Parameter für Karteikarte
+    // Parameter für Karteikarte  
     public final static String Veranstaltung = "veranstaltung";
     public final static String Aenderungsdatum = "aenderungsdatum";
     public final static String Bewertung = "bewertung";
