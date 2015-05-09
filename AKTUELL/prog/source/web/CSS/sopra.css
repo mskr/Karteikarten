@@ -189,6 +189,7 @@ textarea.input_std {
 .bigtooltip {
 	display: none;
 	position: absolute;
+	width: 13em;
 	z-index: 200;
 	transform: scale(1);
 	transform-origin: left top;
@@ -206,7 +207,7 @@ textarea.input_std {
 } .bigtooltip_head {
 	display: inline-block;
 	padding: 1em;
-	width: 10em;
+	width: inherit;
 	font-weight: bold;
 	background: black;
 	border-radius: 4px 4px 0 0;
@@ -217,7 +218,7 @@ textarea.input_std {
 	display: inline;
 } .bigtooltip_body {
 	padding: 0 1em;
-	width: 10em;
+	width: inherit;
 	background: black;
 	-webkit-box-shadow: 0px 0px 5px black;
 	-moz-box-shadow: 0px 0px 5px black;
@@ -227,7 +228,7 @@ textarea.input_std {
 } .bigtooltip_foot {
 	display: inline-block;
 	padding: 1em;
-	width: 10em;
+	width: inherit;
 	background: black;
 	border-radius: 0 0 4px 4px;
 	-webkit-box-shadow: 0px 0px 5px black;
@@ -238,6 +239,48 @@ textarea.input_std {
 	transform: scale(.3);
 }
 
+.sindSieSicherContainer {
+	display: none;
+	position: absolute;
+	width: 13em;
+	z-index: 200;
+	transform: scale(1);
+	transform-origin: left top;
+	transition: all .3s;
+}.sindSieSicher_head {
+	display: inline-block;
+	padding: 1em;
+	width: inherit;
+	font-weight: bold;
+	background: black;
+	border-radius: 4px 4px 0 0;
+	-webkit-box-shadow: 0px 0px 5px black;
+	-moz-box-shadow: 0px 0px 5px black;
+	box-shadow: 0px 0px 5px black;
+} /* .bigtooltip_head span {
+	display: inline;
+} */ .sindSieSicher_body {
+	padding: 0 1em;
+	width: inherit;
+	background: black;
+	-webkit-box-shadow: 0px 0px 5px black;
+	-moz-box-shadow: 0px 0px 5px black;
+	box-shadow: 0px 0px 5px black;
+} /* .sindSieSicher_body span {
+	display: block;
+}  */.sindSieSicher_foot {
+	display: inline-block;
+	padding: 1em;
+	width: inherit;
+	background: black;
+	border-radius: 0 0 4px 4px;
+	-webkit-box-shadow: 0px 0px 5px black;
+	-moz-box-shadow: 0px 0px 5px black;
+	box-shadow: 0px 0px 5px black;
+	text-align: right;
+} .sindSieSicher.hidden {
+	transform: scale(.3);
+}
 .popup_fenster {
 	position: relative;
     z-index: 200;
@@ -1147,6 +1190,7 @@ textarea.input_std {
 	-webkit-box-shadow: 0px 2px 2px #000;
 	-moz-box-shadow: 0px 2px 2px #000;
 	box-shadow: 0px 2px 2px #000;
+	font-size: 12px;
 } .kk_kommheader {
 	color: gray;
 	font-weight: bold;

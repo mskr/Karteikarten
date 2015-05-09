@@ -534,14 +534,6 @@ public interface IDatenbankmanager {
      */
     public boolean hatKommentarBewertet(int kommentarID, String benutzer);
 
-    /**
-     * Gibt true zuruck, falls der Benutzer ein Moderator dieser Veranstaltung
-     * ist. Ansonsten false.
-     * @param veranst 
-     * @param benutzerMail 
-     * @return
-     */
-    public boolean istModerator(Veranstaltung veranst, String benutzerMail);
 
     /**
      * Schreibt Benutzer in die Veranstaltung ein. Ist der Benutzer bereits in die Veranstaltung eingetragen,

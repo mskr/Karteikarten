@@ -54,7 +54,8 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
     var clone = $("#dialog_sicher").clone();
     clone.css("visibility","hidden");
     $('body').append(clone);
-    var width = clone.outerWidth();
+    // Breite + Padding !
+    var width = clone.find(".sindSieSicher_head").outerWidth() + 1*clone.find(".sindSieSicher_head").css("padding-left").replace(/[^-\d\.]/g, '');
     clone.remove();
     
     var overflow = pos.left + width - $(window).width();
@@ -69,7 +70,7 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
     $("#dialog_sicher_popup_overlay").fadeIn(300);
     $("#dialog_sicher").fadeIn(300);
 
-    $(".dialog_sicher_frage").text(message);
+    $("#dialog_sicher_frage").text(message);
     
     $("#dialog_sicher_ja").click(function(e) {
         doCriticalThing();

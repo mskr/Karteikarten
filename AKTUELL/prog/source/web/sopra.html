@@ -92,15 +92,16 @@
 
 <!-- Sind Sie Sicher Dialog -->
 <div id="dialog_sicher_popup_overlay" class="popup_fenster_overlay">
-	<div id="dialog_sicher" class="bigtooltip hidden">
-		<div class="bigtooltip_head">
+	<div id="dialog_sicher" class="sindSieSicherContainer hidden">
+		<div class="sindSieSicher_head">
 			<span class="dialog_sicher_titel"><span class="octicon octicon-question"></span> Sind Sie sicher?</span>
 		</div>
-		<div class="bigtooltip_body">
-			<span class="dialog_sicher_frage"></span>
+		<div class="sindSieSicher_body">
+			<span id="dialog_sicher_frage"></span>
 		</div>
-		<div class="bigtooltip_foot">
+		<div class="sindSieSicher_foot">
 			<span id = "dialog_sicher_ja" class="dialog_sicher_ja mybutton red"><span class="octicon octicon-check"></span> Ja, weiter</span>
+			<span id = "dialog_sicher_nein" class="dialog_sicher_nein mybutton green"><span class="octicon octicon-x"></span> Nein</span>
 		</div>
 	</div>
 </div>
@@ -849,11 +850,19 @@ Dann aber so leer.
 		<a><span class="octicon octicon-trashcan"></span></a>
 	</div>
 	<span class="kk_inhalt"></span>
-	<div class="kk_komminfo"><a class="kommAuthor">Matthias Englert</a><span class="kommDatum">28. Jan '15 um 15:29</span></div>
+	<div class="kk_komminfo">
+		<a class="kommAuthor">Matthias Englert</a>
+		<span class="kommDatum">28. Jan '15 um 15:29</span>
+	</div>
 	
 	<div class="kk_kommantwort">
-		<textarea placeholder="Antworten..." rows="1"></textarea>
-		<a class="komm_antw_bt"><span class="octicon octicon-triangle-up">Antworten</span></a>
+		<textarea class="antw" placeholder="Antworten..." rows="1" ></textarea>
+		<a class="komm_submit_bt" style="float:right">Antwort absenden</a>
+	</div>
+	
+	<a class="antwAnzeigen" style="color:yellow"><span class ="AntwPfeil"></span><span class="subKommCount">0</span> Antworten</a>
+	<div class="subkommentare" style="display:none">
+	
 	</div>
 </div>
 

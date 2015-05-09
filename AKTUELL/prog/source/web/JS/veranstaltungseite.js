@@ -138,7 +138,11 @@ function fillVeranstaltungsSeite(Vid)
 						$("#kk_erstellen").hide();
 					}
 					
-					
+					// TODO 
+
+					$("#kk_all").append(buildKarteikarte(sampleJSON1));
+					$("#kk_all").append(buildKarteikarte(sampleJSON2));
+					$("#kk_all").append(buildKarteikarte(sampleJSON3));
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();

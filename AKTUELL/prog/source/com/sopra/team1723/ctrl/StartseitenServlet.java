@@ -485,6 +485,7 @@ public class StartseitenServlet extends ServletController {
             {
                 dbManager = null;
                 System.err.println("Es Konnte keine Verbindung zur Datenbank hergestellt werden oder ein unerwarteter Fehler ist aufgetreten!");
+                e.printStackTrace();
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
                 return;
