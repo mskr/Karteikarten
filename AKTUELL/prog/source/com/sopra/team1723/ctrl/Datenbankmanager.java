@@ -44,12 +44,12 @@ public class Datenbankmanager implements IDatenbankmanager {
      */
     public Datenbankmanager() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
-        Class.forName("org.neo4j.jdbc.Driver");
+//        Class.forName("org.neo4j.jdbc.Driver");
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
 
-        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
-        for(int i=0; i<AnzConnections; ++i)
-            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten","neo4j","hallo123"), new ReentrantLock());
+//        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
+//        for(int i=0; i<AnzConnections; ++i)
+//            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten","neo4j","hallo123"), new ReentrantLock());
 
         connections = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)
