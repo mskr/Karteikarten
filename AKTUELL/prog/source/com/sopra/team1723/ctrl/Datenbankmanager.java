@@ -1790,12 +1790,6 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean istModerator(Veranstaltung veranst, String benutzerMail) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort) throws SQLException, 
     DbUniqueConstraintException, DbFalsePasswortException {
         Entry<Connection,ReentrantLock> conLock = getConnection();
