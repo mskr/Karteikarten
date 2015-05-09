@@ -402,12 +402,13 @@ public interface IDatenbankmanager {
     /** Gibt alle Kinder einer Karteikarte zurück.
      * @param vaterKarteikID referenziert eindeutig eine Karteikarte
      * @return Gibt eine Map zurück, in der der Schlüssel angibt das wievielte
-     * Kind die Karteikarte ist. (Es wird bei 0 mit Zählen begonnen
+     * Kind die Karteikarte ist. (Es wird bei 0 mit Zählen begonnen)
+     *  Von der Karteikarte werden nur ID und Name zurückgegeben. 
      * Tritt ein Fehler auf wird null zurückgegeben.
      * Hat die angegebene Karteikarte keine Kinder, so wird eine leere Map
      * zurückgeliefert.
      */
-    public Map<Integer,Karteikarte> leseKindKarteikarten(int vaterKarteikID);
+    public Map<Integer,Tupel<Integer,String>> leseKindKarteikarten(int vaterKarteikID);
 
     /**
      * Fugt neue Karteikarte in die Datenbank ein. Bei Erfolg wird true
