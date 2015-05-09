@@ -3,6 +3,8 @@ package com.sopra.team1723.ctrl;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -124,20 +126,44 @@ public class KarteikartenServlet extends ServletController {
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
         JSONObject jo = null;
+        int vaterKarteikarte = -1;
         try{
-            if(!pruefeFuerVeranstDerKarteikEingeschrieben(Integer.parseInt(req.getParameter(ParamDefines.Id)),dbManager)){
-                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-                outWriter.print(jo);
-            }
-        }
+            vaterKarteikarte = Integer.parseInt(req.getParameter(ParamDefines.Id));
+        }    
         catch(NumberFormatException e){
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
+            return;
         }
+
+        if(!pruefeFuerVeranstDerKarteikEingeschrieben(vaterKarteikarte, req, resp) &&
+                aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN){
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+        }
+
+        Map<Integer,Tupel<Integer,String>> kindKarteikarten = dbManager.leseKindKarteikarten(vaterKarteikarte);
+
+        jo = JSONConverter.toJsonKarteikarten(kindKarteikarten);
+        outWriter.print(jo);
 
     }
 
-    private boolean pruefeFuerVeranstDerKarteikEingeschrieben(int karteikarte, IDatenbankmanager dbManager){
+    private boolean pruefeFuerVeranstDerKarteikEingeschrieben(int karteikarte, HttpServletRequest req, HttpServletResponse resp) throws IOException{
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+
+        try
+        {
+            return dbManager.angemeldet(aktuellerBenutzer.getId(),dbManager.leseKarteikarte(karteikarte).getVeranstaltung());
+        }
+        catch (SQLException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+        }
         return false;
     }
 

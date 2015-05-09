@@ -98,6 +98,8 @@ public class ParamDefines
     public final static String Veranstaltung = "veranstaltung";
     public final static String Aenderungsdatum = "aenderungsdatum";
     public final static String Bewertung = "bewertung";
+    
+    public final static String Reihenfolge = "reihenfolge";
 
     // Parameter für Benachrichtigung
     public final static String Inhalt = "inhalt";
