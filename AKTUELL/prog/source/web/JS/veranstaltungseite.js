@@ -138,7 +138,10 @@ function fillVeranstaltungsSeite(Vid)
 						$("#kk_erstellen").hide();
 					}
 					
-					
+
+					buildKarteikarte(sampleJSON1);
+					buildKarteikarte(sampleJSON2);
+					buildKarteikarte(sampleJSON3);
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();

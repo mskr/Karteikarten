@@ -122,9 +122,10 @@ var paramBenKarteikarte = "benKarteikarte";
 var paramBenKommentar = "benKommentar";
 var paramBenProfil = "benProfil";
 
-
-
-
+// Kommentare
+var paramHatGevoted = "hatgevotet";
+var paramErstellDatum = "erstellDatum";
+var paramAntwortCount = "antwCount";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";

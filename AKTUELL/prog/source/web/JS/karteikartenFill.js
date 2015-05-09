@@ -34,15 +34,12 @@ sampleJSON3[paramBewertung] = -5;
 
 $(document).ready(function(){
 	
-	buildKarteikarte(sampleJSON1);
-	buildKarteikarte(sampleJSON2);
-	buildKarteikarte(sampleJSON3);
 });
 
 fillKarteiKarte = function(domElem, json){
 	//set Rating
 	
-	domElem = domElem.clone();
+//	domElem = domElem.clone();
 	domElem.find(".kk_votestat").html(json[paramBewertung]);
 	
 	// detect type and add content
