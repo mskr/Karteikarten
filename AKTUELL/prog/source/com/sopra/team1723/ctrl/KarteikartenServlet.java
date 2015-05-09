@@ -8,6 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import org.json.simple.JSONObject;
+
 import com.sopra.team1723.data.*;
 
 /**
@@ -115,15 +117,46 @@ public class KarteikartenServlet extends ServletController {
         return null;
     }
 
+    private void getKarteikartenKinder(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+
+        JSONObject jo = null;
+        try{
+            if(!pruefeFuerVeranstDerKarteikEingeschrieben(Integer.parseInt(req.getParameter(ParamDefines.Id)),dbManager)){
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+            }
+        }
+        catch(NumberFormatException e){
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+        }
+
+    }
+
+    private boolean pruefeFuerVeranstDerKarteikEingeschrieben(int karteikarte, IDatenbankmanager dbManager){
+        return false;
+    }
+
+
     @Override
     protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-            IOException
+    IOException
     {
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
-        
+
+
+        if(aktuelleAction.equals(ParamDefines.ActionGetKarteikartenKinder))
+        {
+            getKarteikartenKinder(req,resp);
+        } 
+
     }
 
 }
