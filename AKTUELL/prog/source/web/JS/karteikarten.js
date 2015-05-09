@@ -62,6 +62,19 @@ function buildKarteikarte(karteikarteJson)
         "</div>";
 
     kkDom =  $(kkDom);
+    // Neues Thema Handler TODO
+    kkDom.find(".komm_submit_bt").click(function(){
+		if(kkDom.find(".antw").val().trim() == "")
+		{
+			showError("Der Text darf nicht leer sein!");
+			return;
+		}
+		erstelleNeuesThemaKk(karteikarteJson[paramId], kkDom.find(".antw").val());
+		
+		kkDom.find(".antw").val("");
+		// Antworten updaten
+		// TODO 
+	});
     
     arr = [];
     sampleKommentar[paramErsteller] = jsonBenutzer;
@@ -188,7 +201,7 @@ function showHauptKommentare(karteikarteContainer, kommentarArray)
 					return;
 				}
 				
-				sendeAntwort(kommObj[paramId], hauptKomm.find(".antw").val());
+				sendeAntwortKomm(kommObj[paramId], hauptKomm.find(".antw").val());
 				hauptKomm.find(".antw").val("");
 				// Antworten updaten
 				arr = [];
@@ -326,8 +339,13 @@ function loescheKommentar(kommId)
 	console.log("loesche Kommentar " + kommId);
 	showInfo("Kommentar gelöscht.");
 }
-function sendeAntwort(hautpKommId, text)
+function sendeAntwortKomm(hautpKommId, text)
 {
 	console.log("Antworte auf Kommentar " + hautpKommId + " mit: " + text);
 	showInfo("Antwort gespeichert.");
+}
+function erstelleNeuesThemaKk(kkId, text)
+{
+	console.log("Neues Thema zur Karteikarte " + kkId + " mit: " + text);
+	showInfo("Thema erstellt gespeichert.");
 }
