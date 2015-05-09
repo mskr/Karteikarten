@@ -294,14 +294,11 @@ public class KarteikartenServlet extends ServletController {
         } 
         else if(aktuelleAction.equals(ParamDefines.ActionGetKarteikarteByID))
         {
-            leseKarteikarte(req,resp);
+        	getKarteikarteByID(req,resp);
         }
         else if(aktuelleAction.equals(ParamDefines.ActionErstelleKarteikarte))
         {
             erstelleKarteikarte(req,resp);
-        }
-        else if(aktuelleAction.equals(ParamDefines.ActionGetKarteikarteByID)){
-        	getKarteikarteByID(req,resp);
         }
         
 

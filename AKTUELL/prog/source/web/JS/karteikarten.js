@@ -69,7 +69,8 @@ function getKarteikarteByID (id){
         function(response) {
 			karteikarteJSON = response;
 			console.log(karteikarteJSON);
-			buildKarteikarte(karteikarteJSON);
+			buildKarteikarte(karteikarteJSON); //just for test
+			return karteikarteJSON;
 		},
         params
     );
