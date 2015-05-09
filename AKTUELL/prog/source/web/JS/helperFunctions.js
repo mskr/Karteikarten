@@ -347,7 +347,6 @@ function autoComplete(textInput, categories, categoryClassMapping, action)
     });
 }
 
-var suchErgIterator = -1;
 var autoCompleteTimerMillis = 400;
 
 /**
@@ -372,7 +371,7 @@ var suchTimer = function(){
                 function(response) {
                     var arrSuchErgebnisse = response[keyJsonArrResult];
                     fillSuchergebnisse(arrSuchErgebnisse,suchergContainer, categories, categoryClassMapping);
-                    suchErgIterator = -1;
+                    suchErgIterator = 0;
                     for(var i in categoryClassMapping)
                     {
                     	suchergContainer.find("#sucherg_"+categoryClassMapping[i]).slideDown("fast");
@@ -410,7 +409,6 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         return function() {
             // Fuehre die Funktion aus, die Suchergebnissen in dieser Kategorie zugeordnet wurde
             categories[category](jsonSuchErgebnis);
-            //TODO klappe einfach alle Suchergebnisse ein
             suchergContainer.find(".sucherg_x span").trigger("click");
         }
     }
@@ -430,7 +428,12 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         else if(klasse == keyJsonObjKlasseVeranst)
         {
             suchErgHtmlString += "<span class='octicon octicon-podium'></span>" +
-                                 jsonSuchErgebnis[paramTitel];
+                                 jsonSuchErgebnis[paramTitel] +
+                                 "<br>" +
+                                 "<span class='sucherg_item_detail'>" +
+                                 jsonSuchErgebnis[paramErsteller][paramVorname] + " " + jsonSuchErgebnis[paramErsteller][paramNachname] +
+                                 " | " + jsonSuchErgebnis[paramSemester] +
+                                 "</span>";
         }
         else if(klasse == keyJsonObjKlasseStudiengang)
         {
@@ -458,6 +461,8 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
     	$(obj).append(elem);
 	});
     
+    $(suchergContainer.find(".sucherg_item")[0]).addClass("selected");
+    
 //    var elem = contentDiv.find('div').sort( function(a,b)
 //    		{
 //    			return $(a).attr("data-abstand") - $(b).attr("data-abstand");
@@ -474,7 +479,7 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
     }
 }
 
-
+var suchErgIterator = 0;
 /**
  * Diese Funktion wird von autoComplete genutzt.
  * Sie ermoeglicht es mit der Tastatur in den Suchergebnissen zu navigieren.
@@ -485,13 +490,13 @@ function handlePfeiltastenEvents(pressedKey, suchergJQueryObj) {
     var arr = suchergJQueryObj.find(".sucherg_item");
     if(pressedKey == 40) // Pfeil runter
     {
-        $(arr[suchErgIterator]).css({"background":"none", "color":"#4a4a4a"});
+        $(arr[suchErgIterator]).removeClass("selected");
         if(suchErgIterator+1 < arr.length)
             suchErgIterator++;
     }
     else if(pressedKey == 38) // Pfeil hoch
     {
-        $(arr[suchErgIterator]).css({"background":"none", "color":"#4a4a4a"});
+        $(arr[suchErgIterator]).removeClass("selected");
         if(suchErgIterator-1 >= 0)
             suchErgIterator--;
     }
@@ -503,5 +508,5 @@ function handlePfeiltastenEvents(pressedKey, suchergJQueryObj) {
     {
         suchergJQueryObj.find(".sucherg_x span").trigger("click");
     }
-    $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
+    $(arr[suchErgIterator]).addClass("selected");
 }
