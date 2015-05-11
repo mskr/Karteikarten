@@ -211,6 +211,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		"	<span class='vn_beschreibung'>" + jsonVeranstObj[paramBeschr] + "</span>" +
 		"	<div class='vn_optionen'>";
 
+		console.log(jsonVeranstObj);
 
 		if(jsonVeranstObj[paramAngemeldet] == true)
 			str += "<a class='vn_einausschreiben '><span class='octicon octicon-x'></span> Ausschreiben</a>";

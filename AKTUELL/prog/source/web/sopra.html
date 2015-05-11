@@ -266,18 +266,23 @@ function naviconTransformicon() {
 
 	<img id="loadingDiv" src="files/general/ajaxLoader.gif" style="width:50px;position: absolute;top: 0.5em;left: 0.5em;" />
 
-	<!-- Return Link erscheint nicht auf Hauptseite -->
-	<a class="return tiptrigger tipabove" data-tooltip="Zurück zur Hauptseite"><span class="mega-octicon octicon-chevron-left"></span></a>
+	<a class="return tiptrigger tipright" data-tooltip="Zurück zur Hauptseite"><span class="mega-octicon octicon-chevron-left"></span></a>
 
 	<!-- Elemente fuer mittelgrosse Bildschirme -->
-	<div class="r-usercontainer-toggle">
-		<input id="r-usercontainer-toggle-radio" type="radio">
-		<label for="r-usercontainer-toggle-radio"></label>
-	</div>
-	<div class="r-bn-toggle">
-		<input id="r-bn-toggle-radio" type="radio">
-		<label for="r-bn-toggle-radio"></label>
-	</div>
+	<div class="r-return"></div>
+
+	<input id="r-usercontainer-toggle-radio" type="radio" name="r-mypersonalbox">
+	<label class="r-usercontainer-toggle tiptrigger tipright" for="r-usercontainer-toggle-radio" data-tooltip="Benutzer">
+		<span class="mega-octicon octicon-person"></span>
+	</label>
+	<input id="r-usercontainer-toggle-radio-off" type="radio" name="r-mypersonalbox">
+	<label class="r-usercontainer-toggle-off" for="r-usercontainer-toggle-radio-off"></label>
+	<input id="r-bn-toggle-radio" type="radio" name="r-mypersonalbox">
+	<label class="r-bn-toggle tiptrigger tipright" for="r-bn-toggle-radio" data-tooltip="Benachrichtugungen">
+		<span class="mega-octicon octicon-pulse"></span>
+	</label>
+	<input id="r-bn-toggle-radio-off" type="radio" name="r-mypersonalbox">
+	<label class="r-bn-toggle-off" for="r-bn-toggle-radio-off"></label>
 			
 	<div class="user_container">
 		<img class="user_MyProfilBild" alt="profilBild" src="files/profilBilder/default.png"><br>
@@ -287,29 +292,6 @@ function naviconTransformicon() {
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
 		<a id="logout"><span class="octicon octicon-sign-out"></span><span class="logout">Logout</span></a>
 	</div>
-	
-		<div
-			style="height: auto; background-color: #4a4a4a; margin-top: 20px;
-	/* margin-left: 0px; */ text-align: center; padding: 0.2em;"
-			id="vn_kk_ueberscht_box">
-			<h3 class = "vn_title" style="width: inherit;word-wrap: break-word;">Titel der Veranstaltung</h3>
-			<br>
-			<h3>Inhaltsverzeichnis</h3>
-			<br> <span>
-				<ol style="text-align: left; overflow-y: auto; max-height: 250px;">
-					<li><a>Einführung</a></li>
-					<ol>
-						<li><a>Einführung</a></li>
-						<li><a> asdasd </a></li>
-						<li><a> asdasd </a></li>
-						<li><a> asdasd </a></li>
-					</ol>
-
-				</ol>
-
-			</span>
-		</div>
-
 
 		<!-- TODO Wie soll man das hier machen? Vllt weglassen weil == Meine Veranstaltungen. 
 Dann aber so leer.
@@ -477,6 +459,29 @@ Dann aber so leer.
 
 
 <div id="mainbox_veranstaltungsseite" class="mainbox">
+	<div class="vn_header">
+		<input id="vn_attributliste_anzeigen_checkbox" type="checkbox">
+		<span id="vn_title" class="vn_title text_h1">
+			<label id="vn_attributliste_anzeigen" for="vn_attributliste_anzeigen_checkbox">
+				<span class="octicon octicon-triangle-down"></span>
+			</label>
+		</span>
+		<button id="vn_loeschen" class="mybutton red"><span class="octicon octicon-trashcan"></span></button>
+		<div class="vn_attributliste">
+			<span id="vn_attr_semester"></span><br>
+			<span id="vn_attr_studgang"></span><br>
+			<span id="vn_attr_ersteller"></span><br>
+			<span id="vn_attr_moderatoren"></span><br>
+			<span id="vn_attr_bewertungen_erlaubt"></span><br>
+			<span id="vn_attr_kommentare_erlaubt"></span><br>
+			<span id="vn_attr_modbearb_erlaubt"></span><br>
+		</div>
+		<button id="vn_bearbeiten" class="mybutton dark flat"><span class="octicon octicon-pencil"></span></button>
+	</div>
+	<input id="r-kk_toolbar_toggle_checkbox" class="r-kk_toolbar_toggle" type="checkbox">
+	<label id="r-kk_toolbar_toggle" class="r-kk_toolbar_toggle" for="r-kk_toolbar_toggle_checkbox">
+		<span class="octicon octicon-tools"></span> TOOLS<span class="octicon octicon-triangle-down"></span>
+	</label>
 	<div class="kk_toolbar">
 		<div class="mybuttongroup filtern" grouplabel="Filter">
 			<input id="filter0" type="radio" name="group_filtern" checked>
@@ -505,7 +510,7 @@ Dann aber so leer.
 			</label>
 			<input id="filter4" type="radio" name="group_filtern">
 			<label for="filter4">
-				<input class="groupelem_input right filterstring" type="search" placeholder="Karteikarten filtern..." required autofocus>
+				<input class="input_std groupelem_input right filterstring" type="text" placeholder="Karteikarten filtern..." required autofocus>
 			</label>
 		</div>
 		<div class="mybuttongroup sortieren" grouplabel="Sortieren">
@@ -548,19 +553,27 @@ Dann aber so leer.
 				</a>
 			</label>
 		</div>
-		<div class="kk_export_bt">
-			<span class="mybutton dark"><span class="octicon octicon-cloud-download"></span></span>
-		</div>
-		<div class="kk_erstellen_bt">
-			<span class="mybutton green" id = "kk_erstellen" ><span class="octicon octicon-plus"></span></span>
-		</div>
+		<button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button>
+		<button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button>
 	</div>
-	<div class="vn_header">
-		<span id="vn_title" class = "vn_title text_h1" style="float:left;"></span>
-		<span id="vn_ersteller" class = "vn_info_right">Dr. Liebezeit</span><br>
-		<span id="vn_semester" class = "vn_info_right">Wintersemester 2014/15</span><br>
-		<span id="vn_loeschen" class="mybutton red octicon octicon-trashcan vn_info_right"></span>
-		<span id="vn_bearbeiten" class="mybutton dark octicon octicon-pencil vn_info_right"></span>
+	<div id="kk_inhaltsverzeichnis">
+		<ul>
+			<li>Karteikarte 1</li>
+			<li>
+				<ul data-text="Überschrift 1">
+					<li>Unterkarteikarte 1</li>
+					<li>Unterkarteikarte 2</li>
+				</ul>
+			</li>
+			<li>Karteikarte 2</li>
+			<li>
+				<ul data-text="Überschrift 2">
+					<li>Unterkarteikarte 3</li>
+					<li>Unterkarteikarte 4</li>
+				</ul>
+			</li>
+			<li>Karteikarte 3</li>
+		</ul>
 	</div>
 	<div id="kk_all">
 		<div class="kk_wrapper" id="textKarteikarteTest" style="display:none;"> <!-- TEXT TEST KARTEIKARTE  -->
