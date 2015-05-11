@@ -5,11 +5,11 @@
 function buildKarteikarte(karteikarteJson)
 {
     var kkId = karteikarteJson[paramId],
-        kkTitel = karteikarteJson[paramTitel];
-        kkType = karteikarteJson[paramType];
-        kkVeranstaltung = karteikarteJson[paramVeranstaltung];
-        kkInhalt = karteikarteJson[paramInhalt];
-        kkBewertung = karteikarteJson[paramBewertung];
+        kkTitel = karteikarteJson[paramTitel],
+        kkType = karteikarteJson[paramType],
+        kkVeranstaltung = karteikarteJson[paramVeranstaltung],
+        kkInhalt = karteikarteJson[paramInhalt],
+        kkBewertung = karteikarteJson[paramBewertung],
         kkAenderungsdatum = karteikarteJson[paramAenderungsdatum];
     var kkDom = 
         "<div id='kk_"+kkId+"_wrapper' class='kk_wrapper'>" +

@@ -35,8 +35,6 @@ $(document).ready(function() {
 		// TODO Dialog öffnen
 	});
 	
-	
-	
     // Einklappen der Kommentarboxen
 //    $('.kk_kommtoggle').html('Einklappen');
 //    var height = 0;
@@ -119,10 +117,35 @@ function fillVeranstaltungsSeite(Vid)
 					
 					// Wenn alles geladen wurde
 					titel = veranstaltungsObject[paramTitel];
-					$(".vn_title").html(titel);
-					$("#vn_ersteller").html(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
-					$("#vn_semester").html(veranstaltungsObject[paramSemester]);
-					document.title = titel;
+					console.log(veranstaltungsObject);
+					// Details der VN in DOM einfuegen
+					$(".vn_title").prepend(titel);
+					$("#vn_attr_semester").append(veranstaltungsObject[paramSemester]);
+					for(var i = 0; i<veranstaltungsObject[paramStudiengang].length; i++)
+					{
+	                    $("#vn_attr_studgang").append(veranstaltungsObject[paramStudiengang][i]);
+	                    if(i < veranstaltungsObject[paramStudiengang].length-1)
+	                        $("#vn_attr_studgang").append(", ");
+					}
+                    $("#vn_attr_ersteller").append(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
+                    if(veranstaltungsObject[paramModeratoren].length > 0)
+                    {
+                        for(var i = 0; i<veranstaltungsObject[paramModeratoren].length; i++)
+                        {
+                            $("#vn_attr_moderatoren").append(veranstaltungsObject[paramModeratoren][i]);
+                            if(i < veranstaltungsObject[paramModeratoren].length-1)
+                                $("#vn_attr_studgang").append(", ");
+                        }
+                    }
+                    else
+                    {
+                        $("#vn_attr_moderatoren").append("-");
+                    }
+                    $("#vn_attr_bewertungen_erlaubt").append(veranstaltungsObject[paramBewertungenErlauben] ? "ja" : "nein");
+                    $("#vn_attr_kommentare_erlaubt").append(veranstaltungsObject[paramKommentareErlauben] ? "ja" : "nein");
+                    $("#vn_attr_modbearb_erlaubt").append(veranstaltungsObject[paramModeratorKkBearbeiten] ? "ja" : "nein");
+                    
+                    document.title = titel;
 					
 					
 					if(veranstaltungsObject[paramErsteller][paramId] == jsonBenutzer[paramId] || jsonBenutzer[paramNutzerstatus] == "ADMIN")
