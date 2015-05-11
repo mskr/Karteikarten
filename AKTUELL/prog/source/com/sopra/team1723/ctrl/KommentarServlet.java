@@ -2,6 +2,8 @@ package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -110,12 +112,70 @@ public class KommentarServlet extends ServletController {
     }
     
     private boolean kommentareLeseThemen(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        return false;
+        HttpSession aktuelleSession = request.getSession();
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+
+        String kkIDStr = request.getParameter(ParamDefines.Id);
+
+        if(isEmpty(kkIDStr))
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        int KKId;
+        try
+        {
+            KKId = Integer.parseInt(kkIDStr);
+        }
+        catch (NumberFormatException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+
+        List<Kommentar> list = dbManager.leseThemenKommentare(KKId, aktuellerBenutzer.getId());
+        
+        JSONObject jo = JSONConverter.toJson(list,false);
+        outWriter.print(jo);
+        return true;
+      
 
     }
     private boolean kommentareLeseAntworten(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        return false;
+        HttpSession aktuelleSession = request.getSession();
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
+        String VaterIDStr = request.getParameter(ParamDefines.Id);
+
+        if(isEmpty(VaterIDStr))
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        int VaterId;
+        try
+        {
+            VaterId = Integer.parseInt(VaterIDStr);
+        }
+        catch (NumberFormatException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+
+        List<Kommentar> list = dbManager.leseAntwortKommentare(VaterId, aktuellerBenutzer.getId());
+        
+        JSONObject jo = JSONConverter.toJson(list,false);
+        outWriter.print(jo);
+        return true;
     }
 
     private boolean kommentarNegativBewerten(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -279,11 +339,11 @@ public class KommentarServlet extends ServletController {
         }
         else if(aktuelleAction.equals(ParamDefines.ActionLeseAntwortKommentar))
         {
-            kommentarAntwortErstellen(req, resp);
+            kommentareLeseAntworten(req, resp);
         }
         else if(aktuelleAction.equals(ParamDefines.ActionLeseThemaKommentar))
         {
-            kommentarThemaErstellen(req, resp);
+            kommentareLeseThemen(req, resp);
         }
         else
         {

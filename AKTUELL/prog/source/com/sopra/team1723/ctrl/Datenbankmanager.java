@@ -1899,7 +1899,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
         
         try{
-            String sql = "INSERT INTO kommentar(Inhalt, Benutzer, KarteikarteID, VaterkommentarID) VALUES(?,?,?,?)";
+            String sql = "INSERT INTO kommentar(Inhalt, Benutzer, Karteikarte, Vaterkommentar) VALUES(?,?,?,?)";
             ps = conMysql.prepareStatement(sql);
             ps.setString(1, kommentar.getInhalt());
             ps.setInt(2, kommentar.getErsteller().getId());
@@ -1909,9 +1909,9 @@ public class Datenbankmanager implements IDatenbankmanager {
             else
                 ps.setInt(3, kommentar.getKarteikartenID());
             if(kommentar.getVaterID() == -1)
-                ps.setNull(3,java.sql.Types.INTEGER);
+                ps.setNull(4,java.sql.Types.INTEGER);
             else
-                ps.setInt(3, kommentar.getVaterID());
+                ps.setInt(4, kommentar.getVaterID());
             
             ps.executeUpdate();
 
