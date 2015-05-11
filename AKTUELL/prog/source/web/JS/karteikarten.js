@@ -108,16 +108,19 @@ function buildKarteikarte(karteikarteJson)
 function getKarteikarteByID (id){
 	var params = {};
     params[paramId] = id;
-    
-	return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
+    karteikarteJSON = {};
+    return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
         function(response) {
 			karteikarteJSON = response;
-			console.log(karteikarteJSON);
+//			console.log("getKarteikarte bekam folgenden json:");
+//			console.log(karteikarteJSON);
+//			buildKarteikarte(karteikarteJSON);
+//			console.log(karteikarteJSON);
 //			buildKarteikarte(karteikarteJSON); //just for test
-			return karteikarteJSON;
 		},
         params
     );
+	
 }
 
 function showHauptKommentare(karteikarteContainer, kommentarArray)

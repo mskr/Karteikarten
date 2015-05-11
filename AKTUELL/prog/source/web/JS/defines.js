@@ -99,6 +99,7 @@ var paramKkVideo = "VIDEO";
 var paramVeranstaltung = "veranstaltung";
 var paramAenderungsdatum = "aenderungsdatum";
 var paramBewertung = "bewertung";
+var paramIndex = "index"; //bei liste der karteikarten ids: index für reihenfolge
 
 // Veranstaltungen
 var paramTitel = "titel";

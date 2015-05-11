@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 11. Mai 2015 um 13:55
+-- Erstellungszeit: 11. Mai 2015 um 14:28
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -214,7 +214,7 @@ INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Mat
 (5, 'marius.kircher@uni-ulm.de', 'Marius', 'Kircher', 'default.png', 111111, 'Medieninformatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
 (6, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 828584, 'Informatik', 'STUDENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
 (7, 'heinz.harald@uni-ulm.de', 'Heinz Harald', 'Haraldson', 'default.png', 123456, 'Chemie', 'STUDENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
-(8, 'julius.friedrich@uni-ulm.de', 'Julius', 'Friedrich', 'default.png', 841963, 'Informatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
+(8, 'julius.friedrich@uni-ulm.de', 'Julius', 'Friedrich', 'default.png', 841963, 'Informatik', 'ADMIN', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
 (12, 'jhdazw3jio@euhw.de', 'ejwahuwdi', 'juwia', 'default.png', 187372, 'Biologie', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
 (13, 'felixrottler@gmx.de', 'Felix', 'Rottler', 'default.png', 193182, 'Medieninformatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK');
 
@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -246,6 +246,7 @@ INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung
 (10, 6, 2),
 (6, 6, 4),
 (12, 6, 7),
+(15, 8, 1),
 (14, 8, 5),
 (13, 8, 7);
 
@@ -318,7 +319,15 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (9, 'Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
 (10, 'Einfache Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
 (11, 'Mittelschwere Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(12, 'Schwierige Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1);
+(12, 'Schwierige Übungsaufgaben', '...', 'TEXT', 0, '2015-04-30 22:00:00', 1),
+(20, 'Test1', '', 'BILD', -9, '2015-05-11 12:23:39', 1),
+(21, 'Test2', '', 'VIDEO', -3, '2015-05-11 12:25:28', 1),
+(22, 'Test3', 'dies ist ein beispielinhalt von test3', 'TEXT', -3, '2015-05-11 12:25:28', 1),
+(23, 'Test4', 'dies ist ein beispielinhalt von test4', 'TEXT', -3, '2015-05-11 12:25:28', 1),
+(24, 'Test5', 'dies ist ein beispielinhalt von test5', 'TEXT', -3, '2015-05-11 12:25:28', 1),
+(25, 'Test6', 'dies ist ein beispielinhalt von test6', 'TEXT', -3, '2015-05-11 12:25:28', 1),
+(26, 'Test7', 'dies ist ein beispielinhalt von test7', 'TEXT', -3, '2015-05-11 12:25:28', 1),
+(27, 'Test8', 'dies ist ein beispielinhalt von test8', 'TEXT', -3, '2015-05-11 12:25:28', 1);
 
 -- --------------------------------------------------------
 
@@ -732,7 +741,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
