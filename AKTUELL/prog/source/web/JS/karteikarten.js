@@ -330,11 +330,11 @@ function showAntwortKommentare(hauptkommentar, kommentarArray)
 									hauptkommentar.find(".subKommCount").html(i-1);
 								}
 								else{
-									hauptkommentar.find(".antwAnzeigen").hide();
-									hauptKomm.find(".subkommentare").slideUp("slow",function(){
-										hauptKomm.find(".subkommentare").empty();
-										hauptKomm.find(".AntwPfeil").addClass("octicon-triangle-down");
-										hauptKomm.find(".AntwPfeil").removeClass("octicon-triangle-up");
+									hauptkommentar.find(".subkommentare").slideUp("slow",function(){
+										hauptkommentar.find(".subkommentare").empty();
+										hauptkommentar.find(".antwAnzeigen").hide();
+										hauptkommentar.find(".AntwPfeil").addClass("octicon-triangle-down");
+										hauptkommentar.find(".AntwPfeil").removeClass("octicon-triangle-up");
 									});
 								}							
 							});
