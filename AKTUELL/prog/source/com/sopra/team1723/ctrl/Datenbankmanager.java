@@ -1768,7 +1768,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next())
             {
                 GregorianCalendar g = new GregorianCalendar();
-                g.setTime(rs.getDate("erstelldatum"));
+                g.setTime(rs.getTimestamp("erstelldatum"));
                 Kommentar k = new Kommentar(rs.getInt("ID"), 
                         rs.getString("Inhalt"), 
                         g, 
@@ -1812,7 +1812,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             {
                
                 GregorianCalendar g = new GregorianCalendar();
-                g.setTime(rs.getDate("erstelldatum"));
+                g.setTime(rs.getTimestamp("erstelldatum"));
                 
                 int vaterID = rs.getInt("VaterKommentar");
                 if(rs.wasNull())
@@ -1859,7 +1859,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             while(rs.next())
             {
                 GregorianCalendar g = new GregorianCalendar();
-                g.setTime(rs.getDate("erstelldatum"));
+                g.setTime(rs.getTimestamp("erstelldatum"));
                 Kommentar k = new Kommentar(rs.getInt("ID"), 
                         rs.getString("Inhalt"), 
                         g, 

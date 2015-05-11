@@ -105,7 +105,7 @@ function buildKarteikarte(karteikarteJson)
     return kkDom;
 }
 
-function getKarteikarteByID (id){
+function getKarteikarteByID(id){
 	var params = {};
     params[paramId] = id;
     karteikarteJSON = {};
@@ -324,10 +324,19 @@ function showAntwortKommentare(hauptkommentar, kommentarArray)
 							$.when(loescheKommentar(kommObj[paramId])).done(function()
 							{
 								subKomm.slideUp("slow");
-								i = (Number)hauptkommentar.find(".subKommCount").html();
-								
-								hauptkommentar.find(".subKommCount").html(i);
-																
+								i = parseInt(hauptkommentar.find(".subKommCount").html());
+								if(i-1 > 0){
+									hauptkommentar.find(".antwAnzeigen").show();
+									hauptkommentar.find(".subKommCount").html(i-1);
+								}
+								else{
+									hauptkommentar.find(".antwAnzeigen").hide();
+									hauptKomm.find(".subkommentare").slideUp("slow",function(){
+										hauptKomm.find(".subkommentare").empty();
+										hauptKomm.find(".AntwPfeil").addClass("octicon-triangle-down");
+										hauptKomm.find(".AntwPfeil").removeClass("octicon-triangle-up");
+									});
+								}							
 							});
 						});
 				});
