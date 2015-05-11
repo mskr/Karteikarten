@@ -104,6 +104,7 @@ var paramModeratoren = "moderatoren";
 var paramAnzTeilnehmer = "anzTeilnehmer";
 var paramAngemeldet = "angemeldet";
 var paramKennwortGesetzt = "kennwortGesetzt";
+var paramErsteKarteikarte = "ersteKarteikarte";
 
 
 var paramAktSemester = "aktSemester";

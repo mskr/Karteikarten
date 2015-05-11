@@ -55,6 +55,7 @@ $(document).ready(function() {
 //        }
 //    });
 });
+
 function fillVeranstaltungsSeite(Vid)
 {
 	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
@@ -99,7 +100,7 @@ function fillVeranstaltungsSeite(Vid)
 	
 	var params = {};
 	params[paramId] = Vid;
-	ajaxCall(veranstaltungServlet,
+	var ajax3 = ajaxCall(veranstaltungServlet,
 		actionGetVeranstaltung,
 		function(response) 
 		{
@@ -119,31 +120,37 @@ function fillVeranstaltungsSeite(Vid)
 					titel = veranstaltungsObject[paramTitel];
 					console.log(veranstaltungsObject);
 					// Details der VN in DOM einfuegen
-					$(".vn_title").prepend(titel);
-					$("#vn_attr_semester").append(veranstaltungsObject[paramSemester]);
+					$("#vn_title").text(titel);
+					$("#vn_attr_semester").text(veranstaltungsObject[paramSemester]);
+					var vnStudiengaenge = "";
 					for(var i = 0; i<veranstaltungsObject[paramStudiengang].length; i++)
 					{
-	                    $("#vn_attr_studgang").append(veranstaltungsObject[paramStudiengang][i]);
+					    vnStudiengaenge += veranstaltungsObject[paramStudiengang][i];
 	                    if(i < veranstaltungsObject[paramStudiengang].length-1)
-	                        $("#vn_attr_studgang").append(", ");
+	                        vnStudiengaenge += ", ";
 					}
-                    $("#vn_attr_ersteller").append(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
+					$("#vn_attr_studgang").text(vnStudiengaenge);
+                    $("#vn_attr_ersteller").text(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
+                    var vnModeratoren = "";
                     if(veranstaltungsObject[paramModeratoren].length > 0)
                     {
                         for(var i = 0; i<veranstaltungsObject[paramModeratoren].length; i++)
                         {
-                            $("#vn_attr_moderatoren").append(veranstaltungsObject[paramModeratoren][i]);
+                            console.log(veranstaltungsObject[paramModeratoren][i]);
+                            vnModeratoren += veranstaltungsObject[paramModeratoren][i][paramVorname] +
+                                             " " + veranstaltungsObject[paramModeratoren][i][paramNachname];
                             if(i < veranstaltungsObject[paramModeratoren].length-1)
-                                $("#vn_attr_studgang").append(", ");
+                                vnModeratoren += ", ";
                         }
                     }
                     else
                     {
-                        $("#vn_attr_moderatoren").append("-");
+                        vnModeratoren += "-";
                     }
-                    $("#vn_attr_bewertungen_erlaubt").append(veranstaltungsObject[paramBewertungenErlauben] ? "ja" : "nein");
-                    $("#vn_attr_kommentare_erlaubt").append(veranstaltungsObject[paramKommentareErlauben] ? "ja" : "nein");
-                    $("#vn_attr_modbearb_erlaubt").append(veranstaltungsObject[paramModeratorKkBearbeiten] ? "ja" : "nein");
+                    $("#vn_attr_moderatoren").text(vnModeratoren);
+                    $("#vn_attr_bewertungen_erlaubt").text(veranstaltungsObject[paramBewertungenErlauben] ? "ja" : "nein");
+                    $("#vn_attr_kommentare_erlaubt").text(veranstaltungsObject[paramKommentareErlauben] ? "ja" : "nein");
+                    $("#vn_attr_modbearb_erlaubt").text(veranstaltungsObject[paramModeratorKkBearbeiten] ? "ja" : "nein");
                     
                     document.title = titel;
 					
@@ -167,6 +174,8 @@ function fillVeranstaltungsSeite(Vid)
 					$("#kk_all").append(buildKarteikarte(sampleJSON2));
 					$("#kk_all").append(buildKarteikarte(sampleJSON3));
 					
+					
+					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
 				});
@@ -176,7 +185,52 @@ function fillVeranstaltungsSeite(Vid)
 		params
 	);
 	
+	// Inhaltsverzeichnis aufbauen
+	// warte bis VN Objekt geladen
+	$.when(ajax3).done(function() {
+	    ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
+	});
+	
 	return $.when(ajax1,ajax2,d);
+}
+
+function ladeKindKarteikarten(vaterId, vaterElem) {
+    var params = {};
+    params[paramId] = vaterId;
+    if(vaterId==5) console.log(vaterId+" Bedeutung von Software");
+    // ersetze evntl bestehende Kindkarteikarten
+    vaterElem.find("ul").remove();
+    vaterElem = vaterElem.append("<ul></ul>").find("ul");
+    return ajaxCall(
+            karteikartenServlet,
+            actionGetKarteikartenKinder,
+            function(response) {
+                // neu geladene Kindkarteikarten holen
+                var arr = response[keyJsonArrResult];
+                console.log(arr);
+                // falls keine Kindkarteikarten vorhanden, verlasse Funktion
+                if(arr.length == 0) {
+                    console.log("hat keine kinder mehr");
+                    return;
+                }
+                // andernfalls DOM aufbauen
+                for(var i in arr)
+                {
+                    var kkListItem = $("<li>"+arr[i][paramTitel]+"</li>");
+                    vaterElem.append(kkListItem);
+                    // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
+                    var f = function(arr, kkListItem, i) {
+                        kkListItem.click(function(e) {
+                            console.log(kkListItem);
+                            ladeKindKarteikarten(arr[i][paramId], kkListItem);
+                            e.stopPropagation();
+                        });
+                    }
+                    f(arr, kkListItem, i);
+                }
+            },
+            params
+    );
 }
 
 //sucht Studiengänge, die zur Veranstaltung gehören

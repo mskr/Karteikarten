@@ -943,7 +943,6 @@ textarea.input_std {
 	text-align: center;
 	text-shadow: 0 -1px 0 black;
 } #vn_title {
-	display: block;
 	font-family: Computer Modern Serif;
 	font-weight: bold;
 } #vn_loeschen {
@@ -990,21 +989,12 @@ textarea.input_std {
 	position: fixed;
 	z-index: 3;
 	right: 0;
-	width: 15em;
-} #kk_inhaltsverzeichnis > ul > li {
-	font-weight: bold;
+	width: 22em;
+	font-size: .8em;
+	background: #333;
 } #kk_inhaltsverzeichnis ul {
-    list-style: none;
-} #kk_inhaltsverzeichnis ul li ul:before {
-	content: attr(data-text);
-	/*Ruecke innere ul auf erste Ebene*/
-	position: relative;
-	left: -2.5em;
-} #kk_inhaltsverzeichnis ul li ul * {
-	display: none;
-	font-weight: normal;
-} #kk_inhaltsverzeichnis ul li:hover * {
-	display: block;
+    /*list-style: none;
+	padding: 0;*/
 }
 
 .kk_wrapper {
