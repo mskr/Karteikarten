@@ -310,7 +310,6 @@ function showAntwortKommentare(hauptkommentar, kommentarArray)
 			kommbox.append(subKomm);
 		};
 		f(Obj);
-		
 	}
 	// Sortieren
 	orderKommentareById(kommbox);
@@ -329,26 +328,63 @@ function sortDivByKommentarId(a,b)
 
 function voteKommentarUp(kommId)
 {
-	console.log("Vote Kommentar " + kommId + " nach oben");
-	showInfo("Kommentar positiv bewertet.");
+	var params = {};
+    params[paramId] = kommId;
+	return ajaxCall(kommentarServlet, actionVoteKommentarUp, 
+	        function(response) {
+				console.log("Vote Kommentar " + kommId + " nach oben");
+				showInfo("Kommentar positiv bewertet.");
+			},
+	        params
+	    );
 }
 function voteKommentarDown(kommId)
 {
-	console.log("Vote Kommentar " + kommId + " nach unten");
-	showInfo("Kommentar negativ bewertet.");
+	var params = {};
+    params[paramId] = kommId;
+	return ajaxCall(kommentarServlet, actionVoteKommentarDown, 
+	        function(response) {
+				console.log("Vote Kommentar " + kommId + " nach unten");
+				showInfo("Kommentar negativ bewertet.");
+			},
+	        params
+	    );
 }
 function loescheKommentar(kommId)
 {
-	console.log("loesche Kommentar " + kommId);
-	showInfo("Kommentar gelöscht.");
+	var params = {};
+    params[paramId] = kommId;
+	return ajaxCall(kommentarServlet, actionDeleteKommentar, 
+	        function(response) {
+				console.log("loesche Kommentar " + kommId);
+				showInfo("Kommentar gelöscht.");
+			},
+	        params
+	    );
 }
 function sendeAntwortKomm(hautpKommId, text)
 {
-	console.log("Antworte auf Kommentar " + hautpKommId + " mit: " + text);
-	showInfo("Antwort gespeichert.");
+	var params = {};
+    params[paramId] = hautpKommId;
+    params[paramInhalt] = text;
+	return ajaxCall(kommentarServlet, actionErstelleAntwortKommentar, 
+	        function(response) {
+				console.log("Antworte auf Kommentar " + hautpKommId + " mit: " + text);
+				showInfo("Antwort gespeichert.");
+			},
+	        params
+	    );
 }
 function erstelleNeuesThemaKk(kkId, text)
 {
-	console.log("Neues Thema zur Karteikarte " + kkId + " mit: " + text);
-	showInfo("Thema erstellt gespeichert.");
+	var params = {};
+    params[paramId] = kkId;
+    params[paramInhalt] = text;
+	return ajaxCall(kommentarServlet, actionErstelleThemaKommentar, 
+	        function(response) {
+				console.log("Neues Thema zur Karteikarte " + kkId + " mit: " + text);
+				showInfo("Thema erstellt gespeichert.");
+			},
+	        params
+	    );
 }
