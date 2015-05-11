@@ -26,6 +26,7 @@ public class ParamDefines
     public final static String ActionSucheBenutzer = "sucheBenutzer";
     public final static String ActionSucheStudiengang = "sucheStudiengang";
     public final static String ActionLoescheVn = "vnLoeschen";
+    public final static String ActionPing = "ping";
 
     
     public final static String ActionGetVeranstaltung = "getVeranstaltung";
@@ -100,7 +101,14 @@ public class ParamDefines
     public final static String Bewertung = "bewertung";
     
     public final static String Reihenfolge = "reihenfolge";
-
+    
+    // Kommentare
+    public final static String HatGevoted = "hatgevotet";
+    public final static String ErstellDatum = "erstellDatum";
+    public final static String AntwortCount = "antwCount";
+    public final static String KommentarVaterId = "vaterId";
+    public final static String KommentarKKid = "kkId";
+    
     // Parameter für Benachrichtigung
     public final static String Inhalt = "inhalt";
     public final static String Gelesen = "gelesen";
@@ -116,6 +124,13 @@ public class ParamDefines
     public final static String benKommentar = "benKommentar";
     public final static String benProfil = "benProfil";
 
+    public final static String ActionVoteKommentarUp = "voteUpKomm";
+    public final static String ActionVoteKommentarDown = "voteDownKomm";
+    public final static String ActionDeleteKommentar = "deleteKomm";
+    public final static String ActionErstelleAntwortKommentar = "erstelleAntwKomm";
+    public final static String ActionErstelleThemaKommentar = "erstelleThemaKomm";
+    public final static String ActionLeseAntwortKommentar = "leseAntwKomm";
+    public final static String ActionLeseThemaKommentar = "leseThemaKomm";
 
     public final static String AktSemester = "aktSemester";
 

@@ -39,6 +39,7 @@ var actionErstelleVeranst = "erstelleVeranst";
 var actionBearbeiteVeranst = "bearbeiteVeranst";
 var actionDeleteBenutzer = "deleteBenutzer"; 
 var actionDeleteVn = "vnLoeschen";
+var actionPing = "ping";
 
 
 var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
@@ -56,6 +57,13 @@ var actionGetKarteikarteByID = "getKarteikarte";
 var actionGetKarteikartenKinder = "getKKKinder";
 var actionGetKarteikartenVater = "getKKVater";
 
+var actionVoteKommentarUp = "voteUpKomm";
+var actionVoteKommentarDown = "voteDownKomm";
+var actionDeleteKommentar = "deleteKomm";
+var actionErstelleAntwortKommentar = "erstelleAntwKomm";
+var actionErstelleThemaKommentar = "erstelleThemaKomm";
+var actionLeseAntwortKommentar = "leseAntwKomm";
+var actionLeseThemaKommentar = "leseThemaKomm";
 
 // GET/POST- und JSON-Schluessel-Parameter
 // Die folgenden Bereiche koennen sich ueberschneiden...
@@ -126,6 +134,8 @@ var paramBenProfil = "benProfil";
 var paramHatGevoted = "hatgevotet";
 var paramErstellDatum = "erstellDatum";
 var paramAntwortCount = "antwCount";
+var paramKommentarVaterId = "vaterId";
+var paramKommentarKKid = "kkId";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";

@@ -148,7 +148,6 @@ function fillVeranstaltungsSeite(Vid)
 					d.resolve();
 				});
 			});
-			
 		},
 		params
 	);

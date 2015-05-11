@@ -32,7 +32,7 @@ function checkConnection()
 {
 	$.ajax({
         url: startseitenServlet,
-        data: "action="+actionGetSemester,
+        data: "action="+actionPing,
         success: function(jsonResponse) {
 		    showInfo("Verbindungsaufbau erfolgreich. Bitte warten...");
 		    setTimeout(function(){
