@@ -1240,7 +1240,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
                 benachrichtigung = new BenachrNeuerKommentar(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"), cal,
-                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseKommentar(rs.getInt("Kommentar")));
+                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), rs.getInt("Kommentar"));
             }
         } catch (SQLException e) {
             benachrichtigung = null;
@@ -1368,7 +1368,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                         + "Kommentar) VALUES (?,?,?);");
                 ps.setInt(1, id);
                 ps.setInt(2, bnk.getBenutzer());
-                ps.setInt(3, bnk.getKommentar().getId());
+                ps.setInt(3, bnk.getKommentarId());
 
             } else if (benachrichtigung instanceof BenachrProfilGeaendert){
                 BenachrProfilGeaendert bpg = (BenachrProfilGeaendert) benachrichtigung;
@@ -1751,39 +1751,296 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public Kommentar[] leseKommentare(int karteikID, int vaterKID) {
-        // TODO Auto-generated method stub
-        return null;
+    public ArrayList<Kommentar> leseThemenKommentare(int karteikID, int aktBenutzerID) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+
+        ArrayList<Kommentar> komms =  new ArrayList<Kommentar>();
+
+        try{
+            String sql = "SELECT * FROM kommentaruebersicht WHERE Karteikarte = ?";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, karteikID);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                GregorianCalendar g = new GregorianCalendar();
+                g.setTime(rs.getTimestamp("erstelldatum"));
+                Kommentar k = new Kommentar(rs.getInt("ID"), 
+                        rs.getString("Inhalt"), 
+                        g, 
+                        leseBenutzer(rs.getInt("Benutzer")), 
+                        rs.getInt("Bewertung"),
+                        hatKommentarBewertet(rs.getInt("ID"),aktBenutzerID), 
+                        -1, 
+                        rs.getInt("Karteikarte"),
+                        rs.getInt("AnzKinder"));
+
+                komms.add(k);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return komms;
+    }
+    
+    @Override
+    public Kommentar leseKommentar(int kommId, int aktBenutzerID) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+
+        Kommentar k = null;
+
+        try{
+            String sql = "SELECT * FROM kommentaruebersicht WHERE ID = ?";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, kommId);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+               
+                GregorianCalendar g = new GregorianCalendar();
+                g.setTime(rs.getTimestamp("erstelldatum"));
+                
+                int vaterID = rs.getInt("VaterKommentar");
+                if(rs.wasNull())
+                    vaterID = -1;
+                int kkId = rs.getInt("Karteikarte");
+                if(rs.wasNull())
+                    kkId = -1;
+                
+                k = new Kommentar(rs.getInt("ID"), 
+                        rs.getString("Inhalt"), 
+                        g, 
+                        leseBenutzer(rs.getInt("Benutzer")), 
+                        rs.getInt("Bewertung"),
+                        hatKommentarBewertet(rs.getInt("ID"),aktBenutzerID), 
+                        vaterID, 
+                        kkId,
+                        rs.getInt("AnzKinder"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return k;
+    }
+    @Override
+    public ArrayList<Kommentar> leseAntwortKommentare(int vaterKID, int aktBenutzerID) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        
+        ArrayList<Kommentar> komms =  new ArrayList<Kommentar>();
+      
+        try{
+            String sql = "SELECT * FROM kommentaruebersicht WHERE Vaterkommentar = ?";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, vaterKID);
+            
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                GregorianCalendar g = new GregorianCalendar();
+                g.setTime(rs.getTimestamp("erstelldatum"));
+                Kommentar k = new Kommentar(rs.getInt("ID"), 
+                        rs.getString("Inhalt"), 
+                        g, 
+                        leseBenutzer(rs.getInt("Benutzer")), 
+                        rs.getInt("bewertung"),
+                        hatKommentarBewertet(rs.getInt("ID"),aktBenutzerID), 
+                        rs.getInt("VaterKommentar"), 
+                        -1,
+                        0);
+                
+                komms.add(k);
+            }
+            
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return komms;
     }
 
     @Override
     public boolean schreibeKommentar(Kommentar kommentar) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        
+        // Mindestens eins muss angegeben sein
+        if(kommentar.getKarteikartenID() == -1 && kommentar.getVaterID() == -1)
+        {
+            return false;
+        }
+        
+        try{
+            String sql = "INSERT INTO kommentar(Inhalt, Benutzer, Karteikarte, Vaterkommentar) VALUES(?,?,?,?)";
+            ps = conMysql.prepareStatement(sql);
+            ps.setString(1, kommentar.getInhalt());
+            ps.setInt(2, kommentar.getErsteller().getId());
+            // Folgendes nur setzen, wenn nicht -1
+            if(kommentar.getKarteikartenID() == -1)
+                ps.setNull(3,java.sql.Types.INTEGER);
+            else
+                ps.setInt(3, kommentar.getKarteikartenID());
+            if(kommentar.getVaterID() == -1)
+                ps.setNull(4,java.sql.Types.INTEGER);
+            else
+                ps.setInt(4, kommentar.getVaterID());
+            
+            ps.executeUpdate();
 
-    @Override
-    public boolean bearbeiteKommentar(Kommentar kommentar) {
-        // TODO Auto-generated method stub
-        return false;
+            closeQuietly(ps);
+
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
     public boolean loescheKommentar(int kommentarID) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        
+        try{
+            String sql = "DELETE FROM kommentar WHERE ID = ?";
+            ps = conMysql.prepareStatement(sql);
+            
+            ps.setInt(1, kommentarID);
+           
+            ps.executeUpdate();
+
+            closeQuietly(ps);
+
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
-    public boolean bewerteKommentar(int kommentarID, int bewert, String benutzer) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean bewerteKommentar(int kommentarID, int bewert, int benutzerId) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        
+        try{
+            conMysql.setAutoCommit(false);
+            
+            String sql = "INSERT INTO bewertung_kommentar(Bewertung, Benutzer, KommentarID) VALUES(?,?,?)";
+            ps = conMysql.prepareStatement(sql);
+
+            ps.setInt(1, bewert);
+            ps.setInt(2, benutzerId);
+            ps.setInt(3, kommentarID);
+           
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            try
+            {
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {}
+            erfolgreich = false;
+            e.printStackTrace();
+
+        } finally{
+            try
+            {
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e) {}
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
-    public boolean hatKommentarBewertet(int kommentarID, String benutzer) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean hatKommentarBewertet(int kommentarID, int benutzerId) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+
+        try
+        {
+            conMysql.setAutoCommit(false);
+
+            String sql = "SELECT COUNT(*) AS anz FROM bewertung_kommentar WHERE Benutzer = ? AND KommentarID = ?";
+            ps = conMysql.prepareStatement(sql);
+
+            ps.setInt(1, benutzerId);
+            ps.setInt(2, kommentarID);
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            return rs.getInt("anz") > 0;
+        } 
+        catch (SQLException e) {
+            try
+            {
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {}
+            erfolgreich = false;
+            e.printStackTrace();
+        } 
+        finally{
+            try
+            {
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e) {}
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
@@ -1875,13 +2132,6 @@ public class Datenbankmanager implements IDatenbankmanager {
     public boolean rolleZuweisen(String eMail, Nutzerstatus status) {
         // TODO Auto-generated method stub
         return false;
-    }
-
-    @Override
-    public Kommentar leseKommentar(int id)
-    {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 

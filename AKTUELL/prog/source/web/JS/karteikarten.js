@@ -69,56 +69,59 @@ function buildKarteikarte(karteikarteJson)
 			showError("Der Text darf nicht leer sein!");
 			return;
 		}
-		erstelleNeuesThemaKk(karteikarteJson[paramId], kkDom.find(".antw").val());
+		$.when(erstelleNeuesThemaKk(karteikarteJson[paramId], kkDom.find(".antw").val())).done(function(){
+			kkDom.find(".antw").val("");
+			 var params = {};
+			    params[paramId] = kkId;
+				ajaxCall(
+				    kommentarServlet,
+				    actionLeseThemaKommentar,
+				    function(response) {
+				    	arr = response[keyJsonArrResult];
+				        showHauptKommentare(kkDom,arr);
+				    },
+				    params
+				);
+		});
 		
-		kkDom.find(".antw").val("");
 		// Antworten updaten
 		// TODO 
 	});
-    
-    arr = [];
-    sampleKommentar[paramErsteller] = jsonBenutzer;
-    sampleKommentar2[paramErsteller] = jsonBenutzer;
-    arr.push(sampleKommentar);
-    arr.push(sampleKommentar2);
-    arr.push(sampleKommentar);
-    showHauptKommentare(kkDom,arr);
+
+    var params = {};
+    params[paramId] = kkId;
+	ajaxCall(
+	    kommentarServlet,
+	    actionLeseThemaKommentar,
+	    function(response) {
+	    	arr = response[keyJsonArrResult];
+	        showHauptKommentare(kkDom,arr);
+	    },
+	    params
+	);
+	
     fillKarteiKarte(kkDom,karteikarteJson);
     
     return kkDom;
 }
 
-function getKarteikarteByID (id){
+function getKarteikarteByID(id){
 	var params = {};
     params[paramId] = id;
-    
-	return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
+    karteikarteJSON = {};
+    return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
         function(response) {
 			karteikarteJSON = response;
-			console.log(karteikarteJSON);
+//			console.log("getKarteikarte bekam folgenden json:");
+//			console.log(karteikarteJSON);
+//			buildKarteikarte(karteikarteJSON);
+//			console.log(karteikarteJSON);
 //			buildKarteikarte(karteikarteJSON); //just for test
-			return karteikarteJSON;
 		},
         params
     );
+	
 }
-
-var sampleKommentar = {};
-sampleKommentar[paramId] = 5;
-sampleKommentar[paramBewertung] = -6;
-sampleKommentar[paramHatGevoted] = false;
-sampleKommentar[paramInhalt] = "Dies ist ein beispiel kommentar dj kadjks fsdjkfsdkjfsdk jsdkjkj sdkjsdk jdsfsdkj fdsfkj dsfkj dskj dskj dsf kjdskj sdkj sdfkj dsfkj dskj ds kjsd kjdsfkj sdf kjdsf kjldsf kjlsdf kjldsf kjlds zu einer Karteikarte";
-sampleKommentar[paramErstellDatum] = "20.05.2015 12:00 Uhr";
-sampleKommentar[paramAntwortCount] = 1;
-
-
-var sampleKommentar2 = {};
-sampleKommentar2[paramId] = 6;
-sampleKommentar2[paramBewertung] = 23;
-sampleKommentar2[paramHatGevoted] = true;
-sampleKommentar2[paramInhalt] = "Dies ist ein beispiel kommentar dj kadjks fsdjkfsdkjfsdk jsdkjkj sdkjsdk jdsfsdkj fdsfkj dsfkj dskj dskj dsf kjdskj sdkj sdfkj dsfkj dskj ds kjsd kjdsfkj sdf kjdsf kjldsf kjlsdf kjldsf kjlds zu einer Karteikarte";
-sampleKommentar2[paramErstellDatum] = "20.05.2015 15:00 Uhr";
-sampleKommentar2[paramAntwortCount] = 6;
 
 function showHauptKommentare(karteikarteContainer, kommentarArray)
 {
@@ -150,34 +153,41 @@ function showHauptKommentare(karteikarteContainer, kommentarArray)
 			}
 			else
 			{
-				// TODO Vote-Handler registrieren
+				// Vote-Handler registrieren
 				hauptKomm.find(".komm_voteup").click(function() {
-					voteKommentarUp(kommObj[paramId]);
-					// TODO 
-					hauptKomm.find(".komm_voteup").fadeTo("fast",0);
-					hauptKomm.find(".komm_votedown").fadeTo("fast",0);
-					hauptKomm.find(".komm_voteup").off("click");
-					hauptKomm.find(".komm_votedown").off("click");
+					$.when(voteKommentarUp(kommObj[paramId])).done(function()
+						{
+							hauptKomm.find(".komm_voteup").fadeTo("fast",0);
+							hauptKomm.find(".komm_votedown").fadeTo("fast",0);
+							hauptKomm.find(".komm_voteup").off("click");
+							hauptKomm.find(".komm_votedown").off("click");
+							hauptKomm.find(".komm_votestat").html(kommObj[paramBewertung]+1);
+						});
 				});
 				hauptKomm.find(".komm_votedown").click(function() {
-					voteKommentarDown(kommObj[paramId]);
-					// TODO 
-					hauptKomm.find(".komm_voteup").fadeTo("fast",0);
-					hauptKomm.find(".komm_votedown").fadeTo("fast",0);
-					hauptKomm.find(".komm_voteup").off("click");
-					hauptKomm.find(".komm_votedown").off("click");
+					$.when(voteKommentarDown(kommObj[paramId])).done(function()
+						{
+							hauptKomm.find(".komm_voteup").fadeTo("fast",0);
+							hauptKomm.find(".komm_votedown").fadeTo("fast",0);
+							hauptKomm.find(".komm_voteup").off("click");
+							hauptKomm.find(".komm_votedown").off("click");
+							hauptKomm.find(".komm_votestat").html(kommObj[paramBewertung]-1);
+						});
 				});
 			}
 
 			if(kommErsteller[paramId] == jsonBenutzer[paramId] || 
 					jsonBenutzer[paramNutzerstatus] == "ADMIN" )
 			{
-				// TODO Löschen handler
+				// Löschen handler
 				hauptKomm.find(".kk_komm_loeschen").click(function() {
 					sindSieSicher(hauptKomm.find(".kk_komm_loeschen"), "Wollen Sie das gesamte Thema wirklich löschen?", 
-							function() {
-								loescheKommentar(kommObj[paramId]);
-							});
+					function() {
+						$.when(loescheKommentar(kommObj[paramId])).done(function()
+						{
+							hauptKomm.slideUp("slow");
+						});
+					});
 				});
 			}
 			else
@@ -193,7 +203,7 @@ function showHauptKommentare(karteikarteContainer, kommentarArray)
 			
 			hauptKomm.find(".kommDatum").html(kommObj[paramErstellDatum]);
 
-			// TODO Antworten handler
+			// Antworten handler
 			hauptKomm.find(".komm_submit_bt").click(function(){
 				if(hauptKomm.find(".antw").val().trim() == "")
 				{
@@ -201,60 +211,83 @@ function showHauptKommentare(karteikarteContainer, kommentarArray)
 					return;
 				}
 				
-				sendeAntwortKomm(kommObj[paramId], hauptKomm.find(".antw").val());
-				hauptKomm.find(".antw").val("");
-				// Antworten updaten
-				arr = [];
-				sampleKommentar[paramErsteller] = jsonBenutzer;
-				sampleKommentar2[paramErsteller] = jsonBenutzer;
-				arr.push(sampleKommentar);
-				arr.push(sampleKommentar2);
-				arr.push(sampleKommentar);
-				showAntwortKommentare(hauptKomm,arr);
+				$.when(sendeAntwortKomm(kommObj[paramId], hauptKomm.find(".antw").val())).done(function() {
+					hauptKomm.find(".antw").val("");
+					
+					// Antworten updaten				
+					var params = {};
+					params[paramId] = kommObj[paramId];
+					ajaxCall(
+							kommentarServlet,
+							actionLeseAntwortKommentar,
+							function(response) {
+								arr = response[keyJsonArrResult];
+								showAntwortKommentare(hauptKomm,arr);
+								if(arr.length > 0)
+								{
+									hauptKomm.find(".antwAnzeigen").show();
+									hauptKomm.find(".subKommCount").text(arr.length);
+									hauptKomm.find(".AntwPfeil").addClass("octicon octicon-triangle-down");
+								}
+								else
+								{
+									hauptKomm.find(".antwAnzeigen").hide();
+								}
+								
+								hauptKomm.find(".subKommCount").text(arr.length);
+								hauptKomm.find(".AntwPfeil").addClass("octicon-triangle-up");
+								hauptKomm.find(".AntwPfeil").removeClass("octicon-triangle-down");
+								hauptKomm.find(".subkommentare").slideDown("slow");
+							},
+							params
+					);
+				});
 				
-				hauptKomm.find(".AntwPfeil").addClass("octicon-triangle-up");
-				hauptKomm.find(".AntwPfeil").removeClass("octicon-triangle-down");
-				hauptKomm.find(".subkommentare").slideDown("slow");
 			});
 
 			if(kommObj[paramAntwortCount] > 0)
 			{
+				hauptKomm.find(".antwAnzeigen").show();
 				hauptKomm.find(".subKommCount").text(kommObj[paramAntwortCount]);
 				hauptKomm.find(".AntwPfeil").addClass("octicon octicon-triangle-down");
-				hauptKomm.find(".antwAnzeigen").click(function(){
-					// Aufgeklappt ?
-					if ( hauptKomm.find(".subkommentare").is(':visible') ) 
-					{
-						hauptKomm.find(".subkommentare").slideUp("slow",function(){
-							hauptKomm.find(".subkommentare").empty();
-							hauptKomm.find(".AntwPfeil").addClass("octicon-triangle-down");
-							hauptKomm.find(".AntwPfeil").removeClass("octicon-triangle-up");
-						});
-					}
-					// Zugeklappt ?
-					else if ( hauptKomm.find(".subkommentare").is(':hidden') ) 
-					{
-						// TODO ClickHandler
-						arr = [];
-						sampleKommentar[paramErsteller] = jsonBenutzer;
-						sampleKommentar2[paramErsteller] = jsonBenutzer;
-						arr.push(sampleKommentar);
-						arr.push(sampleKommentar2);
-						arr.push(sampleKommentar);
-						showAntwortKommentare(hauptKomm,arr);
-						
-						hauptKomm.find(".AntwPfeil").addClass("octicon-triangle-up");
-						hauptKomm.find(".AntwPfeil").removeClass("octicon-triangle-down");
-						hauptKomm.find(".subkommentare").slideDown("slow");
-						
-					}
-				});
 			}
 			else
 			{
 				hauptKomm.find(".antwAnzeigen").hide();
 			}
+			
+			hauptKomm.find(".antwAnzeigen").click(function(){
+				// Aufgeklappt ?
+				if ( hauptKomm.find(".subkommentare").is(':visible') ) 
+				{
+					hauptKomm.find(".subkommentare").slideUp("slow",function(){
+						hauptKomm.find(".subkommentare").empty();
+						hauptKomm.find(".AntwPfeil").addClass("octicon-triangle-down");
+						hauptKomm.find(".AntwPfeil").removeClass("octicon-triangle-up");
+					});
+				}
+				// Zugeklappt ?
+				else if ( hauptKomm.find(".subkommentare").is(':hidden') ) 
+				{
+					// TODO ClickHandler
+					var params = {};
+					params[paramId] = kommObj[paramId];
+					ajaxCall(
+							kommentarServlet,
+							actionLeseAntwortKommentar,
+							function(response) {
+								arr = response[keyJsonArrResult];
+								showAntwortKommentare(hauptKomm,arr);
+								
+								hauptKomm.find(".AntwPfeil").addClass("octicon-triangle-up");
+								hauptKomm.find(".AntwPfeil").removeClass("octicon-triangle-down");
+								hauptKomm.find(".subkommentare").slideDown("slow");
+							},
+							params
+					);
 
+				}
+			});
 
 			kommbox.find(".kk_kommList").append(hauptKomm);
 		};
@@ -288,7 +321,23 @@ function showAntwortKommentare(hauptkommentar, kommentarArray)
 				subKomm.find(".kk_komm_loeschen").click(function() {
 					sindSieSicher(subKomm.find(".kk_komm_loeschen"), "Wollen Sie den Kommentar wirklich löschen?", 
 						function() {
-							loescheKommentar(kommObj[paramId]);
+							$.when(loescheKommentar(kommObj[paramId])).done(function()
+							{
+								subKomm.slideUp("slow");
+								i = parseInt(hauptkommentar.find(".subKommCount").html());
+								if(i-1 > 0){
+									hauptkommentar.find(".antwAnzeigen").show();
+									hauptkommentar.find(".subKommCount").html(i-1);
+								}
+								else{
+									hauptkommentar.find(".antwAnzeigen").hide();
+									hauptKomm.find(".subkommentare").slideUp("slow",function(){
+										hauptKomm.find(".subkommentare").empty();
+										hauptKomm.find(".AntwPfeil").addClass("octicon-triangle-down");
+										hauptKomm.find(".AntwPfeil").removeClass("octicon-triangle-up");
+									});
+								}							
+							});
 						});
 				});
 			}
@@ -307,7 +356,6 @@ function showAntwortKommentare(hauptkommentar, kommentarArray)
 			kommbox.append(subKomm);
 		};
 		f(Obj);
-		
 	}
 	// Sortieren
 	orderKommentareById(kommbox);
@@ -326,26 +374,63 @@ function sortDivByKommentarId(a,b)
 
 function voteKommentarUp(kommId)
 {
-	console.log("Vote Kommentar " + kommId + " nach oben");
-	showInfo("Kommentar positiv bewertet.");
+	var params = {};
+    params[paramId] = kommId;
+	return ajaxCall(kommentarServlet, actionVoteKommentarUp, 
+	        function(response) {
+				console.log("Vote Kommentar " + kommId + " nach oben");
+				showInfo("Kommentar positiv bewertet.");
+			},
+	        params
+	    );
 }
 function voteKommentarDown(kommId)
 {
-	console.log("Vote Kommentar " + kommId + " nach unten");
-	showInfo("Kommentar negativ bewertet.");
+	var params = {};
+    params[paramId] = kommId;
+	return ajaxCall(kommentarServlet, actionVoteKommentarDown, 
+	        function(response) {
+				console.log("Vote Kommentar " + kommId + " nach unten");
+				showInfo("Kommentar negativ bewertet.");
+			},
+	        params
+	    );
 }
 function loescheKommentar(kommId)
 {
-	console.log("loesche Kommentar " + kommId);
-	showInfo("Kommentar gelöscht.");
+	var params = {};
+    params[paramId] = kommId;
+	return ajaxCall(kommentarServlet, actionDeleteKommentar, 
+	        function(response) {
+				console.log("loesche Kommentar " + kommId);
+				showInfo("Kommentar gelöscht.");
+			},
+	        params
+	    );
 }
 function sendeAntwortKomm(hautpKommId, text)
 {
-	console.log("Antworte auf Kommentar " + hautpKommId + " mit: " + text);
-	showInfo("Antwort gespeichert.");
+	var params = {};
+    params[paramId] = hautpKommId;
+    params[paramInhalt] = text;
+	return ajaxCall(kommentarServlet, actionErstelleAntwortKommentar, 
+	        function(response) {
+				console.log("Antworte auf Kommentar " + hautpKommId + " mit: " + text);
+				showInfo("Antwort gespeichert.");
+			},
+	        params
+	    );
 }
 function erstelleNeuesThemaKk(kkId, text)
 {
-	console.log("Neues Thema zur Karteikarte " + kkId + " mit: " + text);
-	showInfo("Thema erstellt gespeichert.");
+	var params = {};
+    params[paramId] = kkId;
+    params[paramInhalt] = text;
+	return ajaxCall(kommentarServlet, actionErstelleThemaKommentar, 
+	        function(response) {
+				console.log("Neues Thema zur Karteikarte " + kkId + " mit: " + text);
+				showInfo("Thema erstellt gespeichert.");
+			},
+	        params
+	    );
 }

@@ -530,12 +530,17 @@ public class StartseitenServlet extends ServletController {
         {
             leseSemester(req, resp);
         }
+        else if(action.equals(ParamDefines.ActionPing))
+        {
+            JSONObject jo  = null;
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            outWriter.print(jo);
+        }
         else
         {
             // Sende Nack mit ErrorText zurück
             JSONObject jo  = null;
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            System.out.println("Antwort: " + jo.toJSONString());
             outWriter.print(jo);
         }
     }
