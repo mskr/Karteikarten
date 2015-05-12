@@ -35,7 +35,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     final int UNIQUE_CONSTRAINT_ERROR = 1062;
     private HashMap<Connection,ReentrantLock> connectionsNeo4j = null;
     private HashMap<Connection,ReentrantLock> connections = null;
-    private final static int AnzConnections = 5;  
+    private final static int AnzConnections = 10;  
     /**
      * Implementiert die Methoden des    private ArrayList<Connection> connections = null;
     private ArrayList<ReentrantLock> locks = null; @ref IDatenbankmanager. Bietet eine Schnittstelle zur Datenbank.

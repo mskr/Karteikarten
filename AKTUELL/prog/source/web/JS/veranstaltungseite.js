@@ -131,7 +131,7 @@ function fillVeranstaltungsSeite(Vid)
 		{
 			veranstaltungsObject = response;
 			
-			if(veranstaltungsObject[paramAngemeldet] == false)
+			if(veranstaltungsObject[paramAngemeldet] == false && jsonBenutzer[paramNutzerstatus] != "ADMIN" )
 			{
 				showError("Sie haben nicht die notwendingen Berechtigungen um diese Seite zu sehen!");
 				gotoHauptseite();

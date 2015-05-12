@@ -285,6 +285,12 @@ public class KommentarServlet extends ServletController {
         }
         
         Kommentar k = dbManager.leseKommentar(kommId, aktuellerBenutzer.getId());
+        if(k == null)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Dieser Kommentar existiert nicht!");
+            outWriter.print(jo);
+            return false;
+        }
         if(k.getErsteller().getId() != aktuellerBenutzer.getId() 
                 && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
