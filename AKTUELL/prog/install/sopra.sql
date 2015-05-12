@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 11. Mai 2015 um 14:28
+-- Erstellungszeit: 12. Mai 2015 um 17:48
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -238,6 +238,7 @@ INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung
 (4, 1, 2),
 (7, 1, 4),
 (9, 2, 3),
+(16, 2, 7),
 (5, 3, 5),
 (1, 4, 1),
 (8, 4, 6),
@@ -274,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KommentarID` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Daten für Tabelle `bewertung_kommentar`
@@ -284,7 +285,10 @@ INSERT INTO `bewertung_kommentar` (`ID`, `Bewertung`, `Benutzer`, `KommentarID`)
 (1, 1, 5, 1),
 (2, -1, 3, 2),
 (3, 1, 3, 1),
-(4, -5, 1, 2);
+(4, -5, 1, 2),
+(5, 1, 4, 4),
+(6, 1, 2, 4),
+(7, -1, 4, 8);
 
 -- --------------------------------------------------------
 
@@ -342,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Karteikarte` int(11) DEFAULT NULL,
   `Vaterkommentar` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Daten für Tabelle `kommentar`
@@ -351,7 +355,12 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
 INSERT INTO `kommentar` (`ID`, `Inhalt`, `Erstelldatum`, `Benutzer`, `Karteikarte`, `Vaterkommentar`) VALUES
 (1, 'sdfgsdfgsdfgdsfgsdfgsdfg', '2015-05-11 12:49:50', 3, 2, NULL),
 (2, 'asdfasdfasdfasdf', '2015-05-11 12:50:14', 5, NULL, 1),
-(3, 'ewr', '2015-05-11 13:44:12', 5, 2, NULL);
+(3, 'ewr', '2015-05-11 13:44:12', 5, 2, NULL),
+(4, 'Das ist aber ein interessantes Thema ! :o', '2015-05-12 17:45:09', 4, 26, NULL),
+(5, 'Ja finde ich auch !', '2015-05-12 17:45:32', 2, NULL, 4),
+(6, 'Haha !', '2015-05-12 17:45:41', 4, NULL, 4),
+(7, 'Was gibts denn da zu lachen ! -.-', '2015-05-12 17:46:58', 2, NULL, 4),
+(8, 'Ich wollte nur mal Hallo sagen !', '2015-05-12 17:48:04', 4, 21, NULL);
 
 -- --------------------------------------------------------
 
@@ -741,7 +750,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
@@ -751,12 +760,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `bewertung_kommentar`
 --
 ALTER TABLE `bewertung_kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `kommentar`
 --
 ALTER TABLE `kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `moderator`
 --

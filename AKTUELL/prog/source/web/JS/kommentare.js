@@ -151,7 +151,7 @@ function createAndFillKommentar(kommObj, isAntwortKommentar, vaterKomm)
 	}
 	else
 	{
-		domKomm.find(".kk_komm_loeschen").hide();
+		domKomm.find(".kk_komm_loeschen").fadeTo("fast", 0);
 	}
 	
 	if(isAntwortKommentar)
