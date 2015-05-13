@@ -1,6 +1,7 @@
 package com.sopra.team1723.ctrl;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -471,16 +472,8 @@ public interface IDatenbankmanager {
      * @param vaterKID 
      * @return
      */
-    public Kommentar[] leseKommentare(int karteikID, int vaterKID);
-
-    /**
-     * Gibt alle Kommentare zu einer Karteikarte zuruck. Bei einem Fehler
-     * wird null zuruckgegeben
-     * @param karteikID 
-     * @param vaterKID 
-     * @return
-     */
-    public Kommentar leseKommentar(int id);
+    public ArrayList<Kommentar> leseThemenKommentare(int karteikID, int aktBenutzerID);
+    public ArrayList<Kommentar> leseAntwortKommentare(int vaterKID, int aktBenutzerID);
 
     /**
      * Fugt neuen Kommentar in die Datenbank ein. Bei Erfolg wird
@@ -490,16 +483,6 @@ public interface IDatenbankmanager {
      * @return
      */
     public boolean schreibeKommentar(Kommentar kommentar);
-
-    /**
-     * Daten des angegebenen Kommentars werden in der Datenbank geupdatet.
-     * Bei Erfolg liefert die Methode true zuruck (auch wenn der
-     * Kommentar gar nicht in der Datenbank vorhanden war). Bei einem
-     * Fehler false.
-     * @param kommentar 
-     * @return
-     */
-    public boolean bearbeiteKommentar(Kommentar kommentar);
 
     /**
      * Entfernt den Kommentar aus der Datenbank. Tritt ein Fehler auf
@@ -520,7 +503,7 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public boolean bewerteKommentar(int kommentarID, int bewert, String benutzer);
+    public boolean bewerteKommentar(int kommentarID, int bewert, int benutzerId);
 
     /**
      * Gibt true zuruck, falls der Benutzer diesen Kommentar bereits bewertet
@@ -529,7 +512,7 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public boolean hatKommentarBewertet(int kommentarID, String benutzer);
+    public boolean hatKommentarBewertet(int kommentarID, int benutzerId);
 
 
     /**
@@ -592,5 +575,7 @@ public interface IDatenbankmanager {
      * @return
      */
     public boolean rolleZuweisen(String eMail, Nutzerstatus status);
+
+    public Kommentar leseKommentar(int kommId, int aktBenutzerID);
 
 }

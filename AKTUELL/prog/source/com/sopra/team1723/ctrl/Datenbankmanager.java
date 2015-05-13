@@ -33,10 +33,9 @@ import com.sopra.team1723.exceptions.*;
  */
 public class Datenbankmanager implements IDatenbankmanager {
     final int UNIQUE_CONSTRAINT_ERROR = 1062;
-    private Connection conNeo4j = null;
     private HashMap<Connection,ReentrantLock> connectionsNeo4j = null;
     private HashMap<Connection,ReentrantLock> connections = null;
-    private final static int AnzConnections = 5;  
+    private final static int AnzConnections = 10;  
     /**
      * Implementiert die Methoden des    private ArrayList<Connection> connections = null;
     private ArrayList<ReentrantLock> locks = null; @ref IDatenbankmanager. Bietet eine Schnittstelle zur Datenbank.
@@ -45,10 +44,10 @@ public class Datenbankmanager implements IDatenbankmanager {
     public Datenbankmanager() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
 
-        //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
-//        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
-//        for(int i=0; i<AnzConnections; ++i)
-//            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten","neo4j","hallo123"), new ReentrantLock());
+        Class.forName("org.neo4j.jdbc.Driver");
+        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
+        for(int i=0; i<AnzConnections; ++i)
+            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten","neo4j","hallo123"), new ReentrantLock());
 
         connections = new HashMap<Connection, ReentrantLock>();
         for(int i=0; i<AnzConnections; ++i)

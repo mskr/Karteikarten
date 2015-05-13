@@ -80,8 +80,12 @@
 <script src="JS/md5.js"></script>
 <!-- Karteikarten Skript -->
 <script src="JS/karteikarten.js"></script>
+<!-- Karteikarten Erstellen Skript -->
+<script src="JS/kkErstellen.js"></script>
 <!-- Testfunktion zum Karteikarten füllen -->
 <script src="JS/karteikartenFill.js"></script>
+<!-- Kommentare -->
+<script src="JS/kommentare.js"></script>
 </head>
 
 <body>
@@ -206,7 +210,51 @@
 	</div>
 </div>
 
-	
+<!-- Veranstaltung Erstellen Popup Fenster -->
+<div id="kk_erstellen_popup_overlay" class="popup_fenster_overlay">
+	<div id="kk_erstellen_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+			<span class="octicon octicon-podium"></span>
+			<span class="popup_fenster_ueberschrift"> Karteikarte erstellen</span>
+		</div>
+		<div id="kk_erstellen_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div class="popup_fenster_body">
+			<input class="input_std popup_input" id="kk_erstellen_titel_input" type="text" placeholder="Titel" required>
+ 			<div class="itemlist" id="vn_erstellen_stg_list"></div>
+			<div class="autoCompleteWrapper">
+				<input class="input_std popup_input" id="vn_erstellen_stg_input" type="text" placeholder="Studiengang hinzufügen" required></input>
+			</div>
+			<input class="input_std popup_input" id="vn_erstellen_pass_input" type="password" placeholder="Passwort" required>
+			<div class="itemlist" id="vn_erstellen_mod_list"></div>
+			<div class="autoCompleteWrapper">
+				<input class="input_std popup_input" id="vn_erstellen_mod_input" type="text" placeholder="Moderator hinzufügen" required></input>
+			</div>
+			<div class="flex_container">
+				<div class="popup_fenster_spalte" id="vn_erstellen_bearbeiten_mode">
+					<span class="form_infotext">Wer darf bearbeiten?</span>
+					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_keiner_bearb" value = "Nur ich" type="radio"checked>Nur ich</label></span>
+					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_mod_bearb" value = "Ich und Moderatoren"type="radio">Ich und Moderatoren</label></span>
+				</div>
+				<div class="popup_fenster_spalte">
+					<span><label><input id="vn_erstellen_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
+					<span><label><input id="vn_erstellen_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
+				</div>
+			</div>
+		</div>
+		<div class="popup_fenster_body">
+			<span class="form_infotext">Verfassen Sie eine für jeden sichtbare Beschreibung der Veranstaltung.</span>
+			<textarea class="input_std popup_input" id="vn_erstellen_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="vn_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="vn_erstellen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="vn_erstellen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="vn_erstellen_ok" class="mybutton green">Erstellen</span>
+		</div>
+	</div>
+</div>	
 <!-- Karteikarten Attribute aendern Tooltip -->
 <div id="attr_popup" class="bigtooltip">
 	<div class="bigtooltip_pfeil"></div>
@@ -461,11 +509,10 @@ Dann aber so leer.
 <div id="mainbox_veranstaltungsseite" class="mainbox">
 	<div class="vn_header">
 		<input id="vn_attributliste_anzeigen_checkbox" type="checkbox">
-		<span id="vn_title" class="vn_title text_h1">
-			<label id="vn_attributliste_anzeigen" for="vn_attributliste_anzeigen_checkbox">
-				<span class="octicon octicon-triangle-down"></span>
-			</label>
-		</span>
+		<span id="vn_title" class="vn_title text_h1"></span>
+		<label id="vn_attributliste_anzeigen" for="vn_attributliste_anzeigen_checkbox">
+			<span class="octicon octicon-triangle-down"></span>
+		</label>
 		<button id="vn_loeschen" class="mybutton red"><span class="octicon octicon-trashcan"></span></button>
 		<div class="vn_attributliste">
 			<span id="vn_attr_semester"></span><br>
@@ -556,25 +603,7 @@ Dann aber so leer.
 		<button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button>
 		<button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button>
 	</div>
-	<div id="kk_inhaltsverzeichnis">
-		<ul>
-			<li>Karteikarte 1</li>
-			<li>
-				<ul data-text="Überschrift 1">
-					<li>Unterkarteikarte 1</li>
-					<li>Unterkarteikarte 2</li>
-				</ul>
-			</li>
-			<li>Karteikarte 2</li>
-			<li>
-				<ul data-text="Überschrift 2">
-					<li>Unterkarteikarte 3</li>
-					<li>Unterkarteikarte 4</li>
-				</ul>
-			</li>
-			<li>Karteikarte 3</li>
-		</ul>
-	</div>
+	<div id="kk_inhaltsverzeichnis"></div>
 	<div id="kk_all">
 		<div class="kk_wrapper" id="textKarteikarteTest" style="display:none;"> <!-- TEXT TEST KARTEIKARTE  -->
 			<div class="kk_votes">
@@ -873,7 +902,7 @@ Dann aber so leer.
 		<a class="komm_submit_bt" style="float:right">Antwort absenden</a>
 	</div>
 	
-	<a class="antwAnzeigen" style="color:yellow"><span class ="AntwPfeil"></span><span class="subKommCount">0</span> Antworten</a>
+	<a class="antwAnzeigen" style="color:yellow"><span class ="AntwPfeil octicon octicon-triangle-down"></span><span class="subKommCount">0</span> Antwort(en)</a>
 	<div class="subkommentare" style="display:none">
 	
 	</div>

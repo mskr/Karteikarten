@@ -83,6 +83,25 @@ public class JSONConverter
         
         return jo;
     }
+    /**
+     * 
+     * @param strings
+     * @return JSONObject mit einer Liste von JsonObjekten
+     */
+    static JSONObject toJson(List<? extends IjsonObject> obj, boolean full) 
+    {
+        JSONObject jo = new JSONObject();
+        
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
+        JSONArray array = new JSONArray();
+        
+        for(IjsonObject s: obj)
+            array.add(s.toJSON(full));
+        
+        jo.put(ParamDefines.jsonArrResult, array);
+        
+        return jo;
+    }
     
     /**
      * Von den Ergebnissen der Suche, welche in der Klasse
@@ -176,10 +195,10 @@ public class JSONConverter
      * @param strings
      * @return JSONObject mit NoError und einem String
      */
-    static JSONObject toJson(Veranstaltung veranst) 
-    {
-        return veranst.toJSON(true); // Boolean in diesem Fall egal
-    }
+//    static JSONObject toJson(Veranstaltung veranst) 
+//    {
+//        return veranst.toJSON(true); // Boolean in diesem Fall egal
+//    }
     
     /**
      * 
@@ -212,7 +231,7 @@ public class JSONConverter
             {
                 BenachrEinlModerator b = (BenachrEinlModerator) ben;
                 j.put(ParamDefines.Type, ParamDefines.benTypeModerator);
-                j.put(ParamDefines.benVeranst, toJson(b.getVeranstaltung()));
+                j.put(ParamDefines.benVeranst, b.getVeranstaltung().toJSON(false));
             }
             else  if (ben instanceof BenachrKarteikAenderung)
             {
@@ -230,7 +249,7 @@ public class JSONConverter
             {
                 BenachrVeranstAenderung b = (BenachrVeranstAenderung) ben;
                 j.put(ParamDefines.Type, ParamDefines.benTypeVeranstaltung);
-                j.put(ParamDefines.benVeranst, toJson(b.getVeranstaltung()));
+                j.put(ParamDefines.benVeranst, b.getVeranstaltung().toJSON(false));
             }
             array.add(j);
         }

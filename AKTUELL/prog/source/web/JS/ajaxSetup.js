@@ -16,25 +16,31 @@ $.ajaxSetup({
 		if(textStatus == "timeout")
 		{
 		    showError("Verbindung zum Server wurde unterbrochen. Wiederholen Sie den Vorngang, wenn möglich.");
-			checkConnection();
+		    if(!connectionCheckRunning)
+		    	checkConnection();
 		}
 		else if(jqXHR.responseText == "")
 		{
 		    showError("Bitte prüfen Sie Ihre Internetverbindung! Es konnte keine Verbindung zum Server hergestellt werden. Versuche Verbindung wieder herzustellen...");
-			checkConnection();
+
+		    if(!connectionCheckRunning)
+		    	checkConnection();
 		}
 		else
 			showError("Unbekannter Fehler. AjaxStatus: "+jqXHR.status+", AjaxTextStatus: "+textStatus+", AjaxErrorCode: "+errorThrown + ", resonseText: " + jqXHR.responseText);
 	}
 });
 
+var connectionCheckRunning = false;
 function checkConnection() 
 {
+    connectionCheckRunning = true;
 	$.ajax({
         url: startseitenServlet,
-        data: "action="+actionGetSemester,
+        data: "action="+actionPing,
         success: function(jsonResponse) {
 		    showInfo("Verbindungsaufbau erfolgreich. Bitte warten...");
+		    connectionCheckRunning = false;
 		    setTimeout(function(){
 		    	location.reload();
 		    }, 3000);
