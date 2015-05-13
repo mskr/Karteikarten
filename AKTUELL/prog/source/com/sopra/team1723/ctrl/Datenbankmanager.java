@@ -44,6 +44,7 @@ public class Datenbankmanager implements IDatenbankmanager {
      */
     public Datenbankmanager() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
+
         //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
 //        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
 //        for(int i=0; i<AnzConnections; ++i)
@@ -309,8 +310,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             ps = conMysql.prepareStatement("DELETE FROM benutzer WHERE ID=?");
             ps.setInt(1, benutzerId);    
-            if(ps.executeUpdate()!= 1)
-                return false;
+            ps.executeUpdate();
+
         } catch(SQLException e){
             e.printStackTrace();
             erfolgreich = false;
@@ -418,8 +419,8 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps = conMysql.prepareStatement("UPDATE benutzer SET CryptedPW=? WHERE eMail=?");
             ps.setString(1, neuesPasswort);
             ps.setString(2, eMail);
-            if(ps.executeUpdate()!= 1)
-                return false;
+            ps.executeUpdate();
+            
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
@@ -442,8 +443,8 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps = conMysql.prepareStatement("UPDATE benutzer SET Profilbild=? WHERE ID=?");
             ps.setString(1, dateiName);
             ps.setInt(2, benutzerId);
-            if(ps.executeUpdate()!= 1)
-                return false;
+            ps.executeUpdate();
+            
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
@@ -1792,6 +1793,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     DbUniqueConstraintException, DbFalsePasswortException {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+        
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
@@ -1830,6 +1832,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     public boolean vonVeranstaltungAbmelden(int veranstaltung, int benutzer) {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+        
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try{
@@ -1849,27 +1852,107 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public Notiz[] leseNotizen(String erstellerEMail, int karteikID) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<Notiz> leseNotizen(int benutzer, int karteikID) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Notiz> notizen = new ArrayList<Notiz>();
+        try{
+            ps = conMysql.prepareStatement("SELECT ID, Inhalt, Benutzer, KarteikarteID FROM Notiz WHERE"
+                    + " Benutzer = ? AND KarteikarteID = ?");
+            ps.setInt(1, benutzer);
+            ps.setInt(2, karteikID);
+            
+            rs = ps.executeQuery();
+            
+            while(rs.next()){
+                notizen.add(new Notiz(rs.getInt("ID"), rs.getString("Inhalt"),
+                        rs.getInt("Benutzer"), rs.getInt("KarteikarteID")));
+                
+            }
+        } catch(SQLException e){
+            notizen = null;
+            e.printStackTrace();
+        } finally {
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLock.getValue().unlock();
+        }
+        return notizen;
     }
 
     @Override
     public boolean schreibeNotiz(Notiz notiz) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conMysql.prepareStatement("INSERT INTO Notiz (Inhalt,Benutzer,KarteikarteID) VALUES(?,?,?)");
+            ps.setString(1, notiz.getInhalt());
+            ps.setInt(2, notiz.getErsteller());
+            ps.setInt(3, notiz.getKarteikarte());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            erfolgreich = false;
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+        return erfolgreich;
     }
 
     @Override
     public boolean bearbeiteNotiz(Notiz notiz) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean erfolgreich = true;;
+        try{
+            ps = conMysql.prepareStatement("UPDATE Notiz SET Inhalt = ?");
+            ps.setString(1,notiz.getInhalt());
+            
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            erfolgreich = false;
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLock.getValue().unlock();
+        }
+        return erfolgreich;
     }
 
     @Override
     public boolean loescheNotiz(int notizID) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conMysql.prepareStatement("DELETE FROM Notiz WHERE ID=?");
+            ps.setInt(1, notizID);    
+            ps.executeUpdate();
+
+        } catch(SQLException e){
+            e.printStackTrace();
+            erfolgreich = false;
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+        return erfolgreich;
     }
 
     @Override

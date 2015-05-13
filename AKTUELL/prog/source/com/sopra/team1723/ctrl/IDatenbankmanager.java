@@ -411,13 +411,10 @@ public interface IDatenbankmanager {
     public Map<Integer,Tupel<Integer,String>> leseKindKarteikarten(int vaterKarteikID);
 
     /**
-     * Fugt neue Karteikarte in die Datenbank ein. Bei Erfolg wird true
-     * zuruckgegeben. Bei einem Fehler in der Datenbank wird false
-     * zuruckgeliefert.
-     * @param karteik 
-     * @param vaterKarteikID 
-     * @param Position 
-     * @return
+     * Fügt neue Karteikarte in die Datenbank ein. Bei einem Fehler wird eine
+     * SQLException geworfen.  
+     * @param karteik
+     * @return ID der gerade eingefügten Karteikarte
      */
     public int schreibeKarteikarte(Karteikarte karteik) throws SQLException;
 
@@ -559,27 +556,33 @@ public interface IDatenbankmanager {
     public boolean vonVeranstaltungAbmelden(int veranstaltung, int benutzer);
 
     /**
-     * @param erstellerEMail 
-     * @param karteikID 
-     * @return
+     * Liest alle Notizen eines Benutzers zu einer Karteikarte
+     * @param benutzer referenziert eindeutig einen Benutzer 
+     * @param karteikID referenziert eindeutig eine Karteikarte
+     * @return Liste von Notiz-Objekten. Bei einem Fehler wird null zurückgegeben.
+     * Gibt es keine Notizen von dem Benutzer zu dieser Karteikarte wird
+     * eine leere Liste zurückgegeben
      */
-    public Notiz[] leseNotizen(String erstellerEMail, int karteikID);
+    public List<Notiz> leseNotizen(int benutzer, int karteikID);
 
     /**
-     * @param notiz 
-     * @return
+     * Fügt die angegebene Notiz in die Datenbank ein
+     * @param notiz
+     * @return Liefert true, falls kein Fehler aufgetreten ist, ansonsten false
      */
     public boolean schreibeNotiz(Notiz notiz);
 
     /**
+     * Updatet die angegebene Notiz in der Datenbank
      * @param notiz 
-     * @return
+     * @return Liefert true, falls kein Fehler aufgetreten ist, ansonsten false
      */
     public boolean bearbeiteNotiz(Notiz notiz);
 
     /**
-     * @param notizID 
-     * @return
+     * Löscht die Notiz aus der Datenbank
+     * @param notizID referenziert eindeutig eine Notiz
+     * @return Liefert true, falls kein Fehler aufgetreten ist, ansonsten false
      */
     public boolean loescheNotiz(int notizID);
 
