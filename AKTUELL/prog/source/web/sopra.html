@@ -40,6 +40,8 @@
 <script src="ckeditor/config.js"></script>
 <!-- CKEditor JQuery Adapter -->
 <script src="ckeditor/adapters/jquery.js"></script>
+<!-- Eigene CKEditor configurationen -->
+<script src="JS/ckeditorConfigs.js"></script>
 <!-- CKEditor Code Snippet Syntax Highlighting CSS -->
 <!-- <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/zenburn.css" rel="stylesheet"> -->
 <!-- HTML5-Videoplayer -->
@@ -82,8 +84,6 @@
 <script src="JS/karteikarten.js"></script>
 <!-- Karteikarten Erstellen Skript -->
 <script src="JS/kkErstellen.js"></script>
-<!-- Testfunktion zum Karteikarten füllen -->
-<script src="JS/karteikartenFill.js"></script>
 <!-- Kommentare -->
 <script src="JS/kommentare.js"></script>
 </head>
@@ -879,7 +879,55 @@ Dann aber so leer.
 </div>
 
 
-
+<!-- Template Karteikarte -->
+<div id="templatekarteikarte" class="kk_wrapper" style="display:none">
+		<div class="kk_votes">
+			<a class="kk_voteup"><span
+				class="mega-octicon octicon-triangle-up"></span></a>
+			<div class="kk_votestat">0</div>
+			<a class="kk_votedown"><span
+				class="mega-octicon octicon-triangle-down"></span></a>
+		</div>
+		<div class="kk_optionen">
+			<a class="option permalink tiptrigger tipabove"
+				data-tooltip="Link kopieren"><span 
+				class="octicon octicon-link"></span></a>
+			<a class="option loeschen tiptrigger tipabove"
+				data-tooltip="Karteikarte löschen"><span
+				class="octicon octicon-trashcan"></span></a>
+			<a class="option einfuegen tiptrigger tipabove"
+				data-tooltip="Karteikarte unter dieser Karteikarte einfügen"><span
+				class="octicon octicon-plus"></span></a>
+			<a class="option attribute attr_popup_open tiptrigger tipabove"
+				data-tooltip="Attribute ändern"><span
+				class="octicon octicon-checklist"></span></a>
+		</div>
+	
+		<div style = "display:inline-flex;width: 80%;">
+			<div class="kk kk_inhalt"></div>
+			<div class="kk_notizen">
+				<textarea class="kk_notizen_body" contenteditable=""></textarea>
+				<div class="kk_notizen_foot" style="padding-top: 0.5em;">
+					<span class="mybutton green"> Speichern </span>
+				</div>
+			</div>
+	
+		</div>
+		<div class="kk_kommbox">
+			<a class="kk_kommheader">
+				<span class="octicon octicon-comment-discussion"></span> Kommentare
+				(<span class="kk_kommzaehler">0</span>)
+			</a>
+			<div class = "kk_kommbody" style = "display:none">
+				<div class="kk_kommerstellen">
+					<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
+					<a class="komm_submit_bt" style="float: right">Thema erstellen</a>
+				</div><div class="clearfix"></div>
+				<div class="kk_kommList">
+				</div>
+			</div>
+		</div>
+	</div>
 
 <!-- Template Kommentare -->
 <div class="kk_superkomm" id="templateSuperKomm" data-komm-id="" style="display:none">
@@ -896,10 +944,11 @@ Dann aber so leer.
 		<a class="kommAuthor">Matthias Englert</a>
 		<span class="kommDatum">28. Jan '15 um 15:29</span>
 	</div>
-	
+	<div class="clearfix"></div>
 	<div class="kk_kommantwort">
 		<textarea class="antw" placeholder="Antworten..." rows="1" ></textarea>
 		<a class="komm_submit_bt" style="float:right">Antwort absenden</a>
+		<div class="clearfix"></div>
 	</div>
 	
 	<a class="antwAnzeigen" style="color:yellow"><span class ="AntwPfeil octicon octicon-triangle-down"></span><span class="subKommCount">0</span> Antwort(en)</a>
@@ -914,6 +963,7 @@ Dann aber so leer.
 	</div>
 	<span class="kk_inhalt"></span>
 	<div class="kk_komminfo"><a class="kommAuthor">Jan Willem Liebezeit</a><span class="kommDatum">28. Jan '15 um 16:29</span></div>
+	<div class="clearfix"></div>
 </div>
 
 </body>

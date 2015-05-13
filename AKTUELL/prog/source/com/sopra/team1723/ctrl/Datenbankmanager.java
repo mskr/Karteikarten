@@ -2108,13 +2108,13 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public List<Notiz> leseNotizen(int benutzer, int karteikID) {
+    public Notiz leseNotiz(int benutzer, int karteikID) {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         
         PreparedStatement ps = null;
         ResultSet rs = null;
-        List<Notiz> notizen = new ArrayList<Notiz>();
+        Notiz notiz = null;
         try{
             ps = conMysql.prepareStatement("SELECT ID, Inhalt, Benutzer, KarteikarteID FROM Notiz WHERE"
                     + " Benutzer = ? AND KarteikarteID = ?");
@@ -2124,19 +2124,18 @@ public class Datenbankmanager implements IDatenbankmanager {
             rs = ps.executeQuery();
             
             while(rs.next()){
-                notizen.add(new Notiz(rs.getInt("ID"), rs.getString("Inhalt"),
-                        rs.getInt("Benutzer"), rs.getInt("KarteikarteID")));
+                notiz = new Notiz(rs.getInt("ID"), rs.getString("Inhalt"),
+                        rs.getInt("Benutzer"), rs.getInt("KarteikarteID"));
                 
             }
         } catch(SQLException e){
-            notizen = null;
             e.printStackTrace();
         } finally {
             closeQuietly(ps);
             closeQuietly(rs);
             conLock.getValue().unlock();
         }
-        return notizen;
+        return notiz;
     }
 
     @Override

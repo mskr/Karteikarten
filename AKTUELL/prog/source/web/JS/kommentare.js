@@ -6,7 +6,7 @@ function showHauptKommentare(karteikarteContainer, kommentarArray)
 	kommbox.find(".kk_kommList").empty();
 	for(var i in kommentarArray)
 	{
-		hauptKomm = createAndFillKommentar(kommentarArray[i], false);
+		hauptKomm = createAndFillKommentar(kommentarArray[i], false, karteikarteContainer);
 		kommbox.find(".kk_kommList").append(hauptKomm);
 	}
 
@@ -27,7 +27,7 @@ function showAntwortKommentare(hauptkommentar, kommentarArray)
 	orderKommentareById(kommbox);
 }
 
-function fillHauptKommentar(domKomm, kommObj)
+function fillHauptKommentar(domKomm, kommObj, domKK)
 {
 	// Voting	
 	domKomm.find(".komm_votestat").html(kommObj[paramBewertung]);
@@ -61,6 +61,26 @@ function fillHauptKommentar(domKomm, kommObj)
 				});
 		});
 	}
+
+	var kommErsteller = kommObj[paramErsteller];
+	if(kommErsteller[paramId] == jsonBenutzer[paramId] || 
+			jsonBenutzer[paramNutzerstatus] == "ADMIN" )
+	{
+		// Löschen handler
+		domKomm.find(".kk_komm_loeschen").click(function() {
+			sindSieSicher(domKomm.find(".kk_komm_loeschen"), "Wollen Sie das gesamte Thema wirklich löschen?", 
+			function() {
+				$.when(loescheKommentar(kommObj[paramId])).done(function()
+				{
+					domKomm.slideUp("slow");
+					count = parseInt(domKK.find(".kk_kommzaehler").html());	
+					domKK.find(".kk_kommzaehler").html(count-1);
+				});
+			});
+		});
+	}
+
+	domKomm.find(".antw").ckeditor(ckEditorKommentarAntwortConfig);
 	setupAntwAnz(domKomm, kommObj[paramAntwortCount]);
 
 	// Antworten anzeigen
@@ -98,24 +118,28 @@ function fillAntKomm(domKomm, kommObj, domVaterKomm)
 {
 	var kommErsteller = kommObj[paramErsteller];
 	
-	domKomm.find(".kk_komm_loeschen").off("click");
-	domKomm.find(".kk_komm_loeschen").click(function() {
-		sindSieSicher(domKomm.find(".kk_komm_loeschen"), "Wollen Sie den Kommentar wirklich löschen?", 
-			function() {
-				$.when(loescheKommentar(kommObj[paramId])).done(function()
-				{
-					domKomm.slideUp("slow");
-					i = parseInt(domVaterKomm.find(".subKommCount").html());
-					if(!setupAntwAnz(domVaterKomm, i-1))
+	if(kommErsteller[paramId] == jsonBenutzer[paramId] || 
+			jsonBenutzer[paramNutzerstatus] == "ADMIN" )
+	{
+		domKomm.find(".kk_komm_loeschen").off("click");
+		domKomm.find(".kk_komm_loeschen").click(function() {
+			sindSieSicher(domKomm.find(".kk_komm_loeschen"), "Wollen Sie den Kommentar wirklich löschen?", 
+				function() {
+					$.when(loescheKommentar(kommObj[paramId])).done(function()
 					{
-						hideAntworten(domVaterKomm);
-					}							
+						domKomm.slideUp("slow");
+						i = parseInt(domVaterKomm.find(".subKommCount").html());
+						if(!setupAntwAnz(domVaterKomm, i-1))
+						{
+							hideAntworten(domVaterKomm);
+						}							
+					});
 				});
-			});
-	});
+		});
+	}
 }
 
-function createAndFillKommentar(kommObj, isAntwortKommentar, vaterKomm)
+function createAndFillKommentar(kommObj, isAntwortKommentar, domVater)
 {
 	komID = isAntwortKommentar? "#templateSubKomm": "#templateSuperKomm";
 
@@ -138,16 +162,6 @@ function createAndFillKommentar(kommObj, isAntwortKommentar, vaterKomm)
 	if(kommErsteller[paramId] == jsonBenutzer[paramId] || 
 			jsonBenutzer[paramNutzerstatus] == "ADMIN" )
 	{
-		// Löschen handler
-		domKomm.find(".kk_komm_loeschen").click(function() {
-			sindSieSicher(domKomm.find(".kk_komm_loeschen"), "Wollen Sie das gesamte Thema wirklich löschen?", 
-			function() {
-				$.when(loescheKommentar(kommObj[paramId])).done(function()
-				{
-					domKomm.slideUp("slow");
-				});
-			});
-		});
 	}
 	else
 	{
@@ -156,10 +170,10 @@ function createAndFillKommentar(kommObj, isAntwortKommentar, vaterKomm)
 	
 	if(isAntwortKommentar)
 	{
-		fillAntKomm(domKomm, kommObj, vaterKomm);
+		fillAntKomm(domKomm, kommObj, domVater);
 	}
 	else
-		fillHauptKommentar(domKomm, kommObj);
+		fillHauptKommentar(domKomm, kommObj, domVater);
 		
 	return domKomm;
 }

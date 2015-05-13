@@ -2,10 +2,15 @@ package com.sopra.team1723.data;
 
 import java.util.*;
 
+import org.json.simple.JSONObject;
+
+import com.sopra.team1723.ctrl.IjsonObject;
+import com.sopra.team1723.ctrl.ParamDefines;
+
 /**
  * 
  */
-public class Notiz {    
+public class Notiz implements IjsonObject{    
     
     public Notiz(int id, String inhalt, int ersteller, int karteikarte)
     {
@@ -57,7 +62,10 @@ public class Notiz {
         return karteikarte;
     }
 
-
+    public void setInhalt(String inhalt)
+    {
+        this.inhalt = inhalt;
+    }
 
     /**
      * 
@@ -78,5 +86,15 @@ public class Notiz {
      * 
      */
     private int karteikarte;
+
+    @Override
+    public JSONObject toJSON(boolean full)
+    {
+        JSONObject jo = new JSONObject();
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
+        jo.put(ParamDefines.Id, getId());
+        jo.put(ParamDefines.Inhalt, getInhalt());
+        return jo;
+    }
 
 }

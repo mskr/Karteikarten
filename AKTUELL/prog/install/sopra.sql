@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 12. Mai 2015 um 17:48
+-- Erstellungszeit: 13. Mai 2015 um 20:13
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KommentarID` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Daten für Tabelle `bewertung_kommentar`
@@ -288,7 +288,8 @@ INSERT INTO `bewertung_kommentar` (`ID`, `Bewertung`, `Benutzer`, `KommentarID`)
 (4, -5, 1, 2),
 (5, 1, 4, 4),
 (6, 1, 2, 4),
-(7, -1, 4, 8);
+(7, -1, 4, 8),
+(8, -1, 4, 9);
 
 -- --------------------------------------------------------
 
@@ -346,7 +347,7 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Karteikarte` int(11) DEFAULT NULL,
   `Vaterkommentar` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 --
 -- Daten für Tabelle `kommentar`
@@ -360,7 +361,8 @@ INSERT INTO `kommentar` (`ID`, `Inhalt`, `Erstelldatum`, `Benutzer`, `Karteikart
 (5, 'Ja finde ich auch !', '2015-05-12 17:45:32', 2, NULL, 4),
 (6, 'Haha !', '2015-05-12 17:45:41', 4, NULL, 4),
 (7, 'Was gibts denn da zu lachen ! -.-', '2015-05-12 17:46:58', 2, NULL, 4),
-(8, 'Ich wollte nur mal Hallo sagen !', '2015-05-12 17:48:04', 4, 21, NULL);
+(8, 'Ich wollte nur mal Hallo sagen !', '2015-05-12 17:48:04', 4, 21, NULL),
+(9, '<p>Was f&uuml;r ein m&uuml;ll!</p>\n', '2015-05-13 20:13:24', 4, 26, NULL);
 
 -- --------------------------------------------------------
 
@@ -438,7 +440,14 @@ CREATE TABLE IF NOT EXISTS `notiz` (
   `Inhalt` text NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Daten für Tabelle `notiz`
+--
+
+INSERT INTO `notiz` (`ID`, `Inhalt`, `Benutzer`, `KarteikarteID`) VALUES
+(2, 'Das muss ich mir gut merken !!', 4, 21);
 
 -- --------------------------------------------------------
 
@@ -760,12 +769,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `bewertung_kommentar`
 --
 ALTER TABLE `bewertung_kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `kommentar`
 --
 ALTER TABLE `kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `moderator`
 --
@@ -775,7 +784,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 -- AUTO_INCREMENT for table `notiz`
 --
 ALTER TABLE `notiz`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `semester`
 --

@@ -546,7 +546,7 @@ public interface IDatenbankmanager {
      * Gibt es keine Notizen von dem Benutzer zu dieser Karteikarte wird
      * eine leere Liste zurückgegeben
      */
-    public List<Notiz> leseNotizen(int benutzer, int karteikID);
+    public Notiz leseNotiz(int benutzer, int karteikID);
 
     /**
      * Fügt die angegebene Notiz in die Datenbank ein
