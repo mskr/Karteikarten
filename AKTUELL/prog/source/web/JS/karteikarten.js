@@ -11,58 +11,49 @@ function buildKarteikarte(karteikarteJson)
         kkInhalt = karteikarteJson[paramInhalt],
         kkBewertung = karteikarteJson[paramBewertung],
         kkAenderungsdatum = karteikarteJson[paramAenderungsdatum];
-    var kkDom = 
-        "<div id='kk_"+kkId+"_wrapper' class='kk_wrapper'>" +
-            "<div class='kk_votes'>" +
-                "<a class='kk_voteup'><span class='mega-octicon octicon-triangle-up'></span></a>" +
-                "<div class='kk_votestat'></div>" +
-                "<a class='kk_votedown'><span class='mega-octicon octicon-triangle-down'></span></a>" +
-            "</div>" +
-            "<div class='kk_optionen'>" +
-                "<a class='option permalink tiptrigger tipabove' data-tooltip='Link kopieren'>" +
-                    "<span class='octicon octicon-link'></span>" +
-                "</a>" +
-                "<a class='option loeschen tiptrigger tipabove' data-tooltip='Karteikarte löschen'>" +
-                    "<span class='octicon octicon-trashcan'></span>" +
-                "</a>" +
-                "<a class='option einfuegen tiptrigger tipabove' data-tooltip='Karteikarte unter dieser Karteikarte einfügen'>" +
-                    "<span class='octicon octicon-plus'></span>" +
-                "</a>" +
-                "<a class='option attribute attr_popup_open tiptrigger tipabove' data-tooltip='Attribute ändern'>" +
-                    "<span class='octicon octicon-checklist'></span>" +
-                "</a>" +
-            "</div>" +
-            "<div class='kk_notizen' contenteditable></div>";
+    
+    var kkDom = $("#templatekarteikarte").clone();
+    kkDom.attr("id", "kk_" +kkId+"_wrapper");
+    kkDom.show();
     
     if(kkType == paramKkText)
-    {
-        kkDom +=
-            "<div class='kk inhalt_text' contenteditable></div>";
-    }
+        kkDom.find(".kk_inhalt").addClass("inhalt_text");
     else if(kkType == paramKkBild)
-    {
-        kkDom +=
-            "<div class='kk inhalt_bild' contenteditable></div>";
-    }
+        kkDom.find(".kk_inhalt").addClass("inhalt_bild");
     else if(kkType == paramKkVideo)
-    {
-        kkDom +=
-            "<div class='kk inhalt_video' contenteditable></div>";
-    }
-            
-    kkDom +=
-            "<div class='kk_kommbox'>" +
-                "<div class='kk_kommheader'><span class='octicon octicon-comment-discussion'></span> Kommentare (<span class='kk_kommzaehler'></span>)</div>" +
-                "<div class='kk_kommerstellen'>" +
-                    "<textarea class='antw' placeholder='Neues Thema beginnen...'></textarea>"+
-                	"<a class='komm_submit_bt' style='float:right'>Thema erstellen</a>"+
-                "</div>" +
-                "<div class='kk_kommList'></div>" +
-            "</div>" +
-        "</div>";
+        kkDom.find(".kk_inhalt").addClass("inhalt_video");
 
-    kkDom =  $(kkDom);
-    // Neues Thema Handler TODO
+    fillKarteiKarte(kkDom,karteikarteJson);
+    
+    // Notiz
+    kkDom.find(".kk_notizen_body").ckeditor(function() {
+    	// TODO FadeIn des Speichern buttons wenn sich der inhalt geändert hat.
+    	setNotiz(kkDom, kkId)
+	}, ckEditorNotizConfig);
+    
+    kkDom.find(".kk_notizen_foot").find(".mybutton").click(function(){
+    	var params = {};
+    	text = kkDom.find(".kk_notizen_body").val();
+	    params[paramId] = kkId;
+	    params[paramInhalt] = text;
+		ajaxCall(
+		    notizServlet,
+		    actionSpeichereNotiz,
+		    function(response) {
+		    	showInfo("Notizen wurden gespeichert.");
+		    },
+		    params
+		);
+    });
+    
+    // Kommentare aufklappen
+    kkDom.find(".kk_kommheader").click(function(){
+    	kkDom.find(".kk_kommbody").slideToggle("slow");
+    });
+    
+    // Neues Thema Handler
+    kkDom.find(".antw").ckeditor(ckEditorKommentarConfig);
+    
     kkDom.find(".komm_submit_bt").click(function(){
 		if(kkDom.find(".antw").val().trim() == "")
 		{
@@ -83,11 +74,10 @@ function buildKarteikarte(karteikarteJson)
 				    params
 				);
 		});
-		
-		// Antworten updaten
-		// TODO 
 	});
-
+    
+    
+    // Kommentare laden und anzeigen
     var params = {};
     params[paramId] = kkId;
 	ajaxCall(
@@ -99,10 +89,35 @@ function buildKarteikarte(karteikarteJson)
 	    },
 	    params
 	);
-	
-    fillKarteiKarte(kkDom,karteikarteJson);
-    
     return kkDom;
+}
+
+function fillKarteiKarte(domElem, json){
+	//set Rating
+	domElem.find(".kk_votestat").html(json[paramBewertung]);
+	
+	// detect type and add content
+	switch (json[paramType]) {
+    case "TEXT":
+    	domElem.find(".inhalt_text").html(json[paramInhalt]);
+    	break;
+    case "BILD":
+    	image = $(document.createElement("img"));
+    	image.attr("src","files/images/"+json[paramId]+".png");
+    	image.attr("onerror","this.src='files/general/default.png'");
+    	domElem.find(".inhalt_bild").html(image);
+    	break;
+    case "VIDEO":
+    	video = $(document.createElement("video"));
+    	video.css("flex-shrink"," 0");
+    	video.attr("autobuffer","");
+//    	video.attr("autoplay",""); 
+    	video.attr("controls","");
+    	video.append("<source src='files/videos/"+json[paramId]+".mp4' type='video/mp4'></source>");
+    	video.append("Your browser does not support the video tag.");
+    	domElem.find(".inhalt_video").html(video);
+    	break;
+	}
 }
 
 function getKarteikarteByID(id){
@@ -120,4 +135,19 @@ function getKarteikarteByID(id){
 		},
         params
     );
+}
+
+function setNotiz(kkDom, kkId)
+{
+	var params = {};
+	text = kkDom.find(".kk_notizen_body").val();
+    params[paramId] = kkId;
+	return ajaxCall(
+	    notizServlet,
+	    actionLeseNotiz,
+	    function(response) {
+	    	kkDom.find(".kk_notizen_body").val(response[paramInhalt]);
+	    },
+	    params
+	);
 }

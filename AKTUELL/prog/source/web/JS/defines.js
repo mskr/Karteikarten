@@ -65,6 +65,8 @@ var actionErstelleThemaKommentar = "erstelleThemaKomm";
 var actionLeseAntwortKommentar = "leseAntwKomm";
 var actionLeseThemaKommentar = "leseThemaKomm";
 
+var actionSpeichereNotiz = "speichereNotiz";
+var actionLeseNotiz = "leseNotiz";
 // GET/POST- und JSON-Schluessel-Parameter
 // Die folgenden Bereiche koennen sich ueberschneiden...
 // ===========================================================

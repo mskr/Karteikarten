@@ -53,6 +53,9 @@ public class ParamDefines
     public final static String ActionGetKarteikartenVater = "getKKVater";
     public final static String ActionErstelleKarteikarte = "erstelleKarteikarte";
     
+    public final static String ActionSpeichereNotiz = "speichereNotiz";
+    public final static String ActionLeseNotiz = "leseNotiz";
+    
 
     public final static String Klasse = "klasse";
     public final static String KlasseBenutzer = "klasseBenutzer";

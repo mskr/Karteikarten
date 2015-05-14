@@ -46,6 +46,15 @@ label {
 	font-size: .9em;
 }
 
+/* Beendet das fließen von Elementen sauber */
+.clearfix:after {
+    content: ".";
+    clear: both;
+    display: block;
+    visibility: hidden;
+    height: 0px;
+}
+
 input[type="radio"], input[type="checkbox"] {
     margin-right: 10px;
 }
@@ -1067,9 +1076,10 @@ textarea.input_std {
 }
 
 .kk {
-	max-width: 500px;
-	width: 100%;
-	display: inline-block;
+	padding: 2%;
+	/* max-width: 500px; */
+	width: 500px;
+	display: inline-flex;
 	position: relative;
 	z-index: 6;
 	background: #e0e0e0;
@@ -1085,23 +1095,25 @@ textarea.input_std {
 	-webkit-transition: background 0.5s;
 	transition: background 0.5s;
 } .inhalt_text {
-	padding: 2%;
-	min-height: 300px;
 	font-family: Computer Modern Serif;
 	color: #333333;
 } .inhalt_bild {
 	/* see: http://stackoverflow.com/questions/14142378 */
-	padding: 0;
-	max-width: calc(500px + 4%);
-	display: flex;
+
+/* 	max-width: calc(500px + 4%); */
+	/* width: 100%; */
+/* 	display: inline-table; */
 	justify-content: center;
 	align-items: center;
 	overflow: hidden;
-} .inhalt_video {
-	padding: 0;
-	height: auto;
-	max-width: calc(500px + 4%);
-	display: flex;
+} .inhalt_video { 	
+	padding-top: 0;
+ 	padding-bottom: 0;
+/* 	flex-shrink: 0; */
+/* 	padding: 0; */
+/* 	width: 100%; */
+	height:auto;
+/* 	display: inline-table; */
 	justify-content: center;
 	align-items: center;
 	overflow: hidden;
@@ -1139,10 +1151,10 @@ textarea.input_std {
 	color: black;
 }
 
-.kk_video {
+/* .kk_video {
 	width: inherit;
 	flex-shrink: 0;
-}
+} */
 
 .video_controls {
 	position: absolute;
@@ -1292,7 +1304,7 @@ textarea.input_std {
 .kk_kommbox {
 	margin-top: -1px;
 	padding: 1%;
-	width: calc(2% + 500px);
+	width: calc(1.1% + 500px);
 	height: auto;
 	display: block;
 	position: relative;
@@ -1314,7 +1326,7 @@ textarea.input_std {
 	font-weight: bold;
 	text-shadow: 0px -1px 0px black;
 	display: inline-block;
-	cursor: default;
+/* 	cursor: default; */
 } .kk_superkomm {
 	margin: 10px 0;
 	padding: 6px 10px;
@@ -1373,10 +1385,10 @@ textarea.input_std {
 	opacity: 1;
 } .kk_komm_loeschen a:hover {
 	color: #800000;
-} .kk_kommantwort {
+} /* .kk_kommantwort {
 	margin-top: 10px;
 	text-align: left;
-} .kk_kommantwort textarea {
+} */ .kk_kommantwort textarea {
 	padding: 6px 10px;
 	width: calc(100% - 23px);
 	display: inline-block;
@@ -1443,13 +1455,13 @@ textarea.input_std {
 }
 
 .kk_notizen {
-	padding: 2%;
-	width: 300px;
-	min-height: 300px;
+	padding: 1em;
+	width: 250px;
+/* 	min-height: 300px; */
 	font-size: 14px;
-	position: absolute;
+/* 	position: absolute; */
 	z-index: 5;
-	left: calc(4% + 580px);
+/* 	left: calc(4% + 580px); */
 	background: #333333;
 	outline: none;
 	-webkit-border-radius: 0 2px 0 0;
@@ -1458,7 +1470,7 @@ textarea.input_std {
 	-webkit-box-shadow: 0px 2px 2px #000;
 	-moz-box-shadow: 0px 2px 2px #000;
 	box-shadow: 0px 2px 2px #000;
-	clear: both;
+/* 	clear: both; */
 	-webkit-transition: width 0.5s;
 } .kk_notizen:focus {
 	color: white;
@@ -1466,23 +1478,22 @@ textarea.input_std {
 /* 	Die abgeknickte Ecke oben rechts */
 	width: 0; 
     content: ''; 
-    position: absolute; 
-    top: 0; 
-    right: -2px; 
-    border-top: 50px solid #4a4a4a;
-    border-left: 50px solid #242424;
+    position: relative; 
+    top: 26px; 
+    left: calc(100% - 25px); 
+    border-top: 40px solid #4a4a4a;
+    border-left: 40px solid #242424;
 	-webkit-box-shadow: 0px 1px 0px #000;
 	-moz-box-shadow: 0px 1px 0px #000;
 	box-shadow: 0px 1px 0px #000;
-} .kk_notizen:after {
+}  .kk_notizen:after {
 	content: "Notizen";
-	position: absolute;
-	top: 15px;
-	left: 15px;
+	position: relative;
+	top: -220px;
+/* 	left: 15px; */
 	color: gray;
 	text-shadow: 0px -1px 0px #000;
-}
-
+} 
 .popup_input {
 	width: 100%;
 	margin-top: 0;
