@@ -953,13 +953,12 @@ textarea.input_std {
 	display: none;
 } #vn_attributliste_anzeigen_checkbox:checked ~ .vn_attributliste {
 	height: auto;
-} #vn_attributliste_anzeigen_checkbox:checked ~ span label span {
+} #vn_attributliste_anzeigen_checkbox:checked ~ label span {
 	transform: rotate(180deg);
 } .vn_attributliste {
 	font-size: .8em;
 	height: 0;
 	overflow: hidden;
-	transition: all .2s;
 } .vn_attributliste *:before {
 	margin-right: .5em;
 	color: gray;
@@ -986,15 +985,40 @@ textarea.input_std {
 }
 
 #kk_inhaltsverzeichnis {
-	position: fixed;
-	z-index: 3;
+	position: absolute;
 	right: 0;
+	z-index: 3;
+	padding: 1em 1em 1em 0;
 	width: 22em;
+	height: auto;
 	font-size: .8em;
 	background: #333;
+	overflow: auto;
+	border: 1px solid #e0e0e0;
+} #kk_inhaltsverzeichnis > ul {
+	
 } #kk_inhaltsverzeichnis ul {
-    /*list-style: none;
-	padding: 0;*/
+	padding-left: 1em;
+    list-style: none;
+} #kk_inhaltsverzeichnis ul li {
+	white-space: nowrap;
+	border-left: 1px solid #e0e0e0;
+} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_knoten {
+	
+} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_knoten:before {
+	content: "\2014";
+	padding-right: .5em;
+} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_erstellen {
+	color: GreenYellow;
+} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_erstellen:before {
+	content: "\2192";
+	padding-right: .5em;
+} #kk_inhaltsverzeichnis.stuck {
+    position: fixed !important;
+    top: 0;
+    right: 0;
+} .inhaltsverzeichnis-sticky-wrapper {
+	height: 0 !important;
 }
 
 .kk_wrapper {

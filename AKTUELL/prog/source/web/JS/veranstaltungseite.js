@@ -216,11 +216,6 @@ function fillVeranstaltungsSeite(Vid)
 						}
 					});
 					
-					
-					
-					
-					
-					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
 				});
@@ -232,16 +227,24 @@ function fillVeranstaltungsSeite(Vid)
 	// Inhaltsverzeichnis aufbauen
 	// warte bis VN Objekt geladen
 	$.when(ajax3).done(function() {
-	    ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
+	    var ajax4 = ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"));
+        // Inhaltsverzeichnis im Viewport halten
+	    // warte bis mainbox visible
+	    $.when(ajax1,ajax2,d,ajax4).done(function() {
+	        var sticky = new Waypoint.Sticky({
+	            element: $("#kk_inhaltsverzeichnis"),
+	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
+	        });
+	    });
+        
 	});
-	
+    
 	return $.when(ajax1,ajax2,d);
 }
 
 function ladeKindKarteikarten(vaterId, vaterElem) {
     var params = {};
     params[paramId] = vaterId;
-    if(vaterId==5) console.log(vaterId+" Bedeutung von Software");
     // ersetze evntl bestehende Kindkarteikarten
     vaterElem.find("ul").remove();
     vaterElem = vaterElem.append("<ul></ul>").find("ul");
@@ -252,25 +255,29 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
                 console.log(arr);
-                // falls keine Kindkarteikarten vorhanden, verlasse Funktion
+                // falls keine Kindkarteikarten vorhanden, tue nichts mehr
                 if(arr.length == 0) {
                     console.log("hat keine kinder mehr");
-                    return;
                 }
                 // andernfalls DOM aufbauen
-                for(var i in arr)
+                else
                 {
-                    var kkListItem = $("<li>"+arr[i][paramTitel]+"</li>");
-                    vaterElem.append(kkListItem);
-                    // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
-                    var f = function(arr, kkListItem, i) {
-                        kkListItem.click(function(e) {
-                            console.log(kkListItem);
-                            ladeKindKarteikarten(arr[i][paramId], kkListItem);
-                            e.stopPropagation();
-                        });
+                    for(var i in arr)
+                    {
+                        var kkListItem = $("<li><a class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
+                        vaterElem.append(kkListItem);
+                        // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
+                        var f = function(arr, kkListItem, i) {
+                            kkListItem.find("a").click(function(e) {
+                                ladeKindKarteikarten(arr[i][paramId], kkListItem);
+                                e.stopPropagation();
+                            });
+                        }
+                        f(arr, kkListItem, i);
+                        // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                        vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Neu</a></li>");
+                        //TODO Click Handler
                     }
-                    f(arr, kkListItem, i);
                 }
             },
             params
