@@ -11,7 +11,7 @@
 
 $.ajaxSetup({
     type: "POST",
-	timeout: 3000,
+	timeout: 6000,
 	error: function(jqXHR, textStatus, errorThrown) { 
 		if(textStatus == "timeout")
 		{
@@ -51,7 +51,7 @@ function checkConnection()
     		    setTimeout(function(){
         			checkConnection();
     		    }, 3000);
-        	}, 5000);
+        	}, 8000);
         }
     });
 }
