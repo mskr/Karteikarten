@@ -266,6 +266,7 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                     {
                         var kkListItem = $("<li><a class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
                         vaterElem.append(kkListItem);
+                        //TODO Hier sortieren
                         // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
                         var f = function(arr, kkListItem, i) {
                             kkListItem.find("a").click(function(e) {
@@ -276,7 +277,7 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                         f(arr, kkListItem, i);
                         // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
                         vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Neu</a></li>");
-                        //TODO Click Handler
+                        //TODO Click Handler Karteikarte hinzu
                     }
                 }
             },

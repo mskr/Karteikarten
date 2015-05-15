@@ -390,6 +390,39 @@ textarea.input_std {
 	position: relative;
 }
 
+#loadingDiv {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 4em;
+	height: 4em;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+} #loadingDiv:before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1em;
+	height: 1em;
+	line-height: 1em;
+	content: "\21BB";
+	color: white;
+	text-align: center;
+	text-shadow: 0 0 10px white;
+	font-family: monospace;
+	font-size: 5em;
+	-webkit-animation: ajaxloader 1s linear infinite;
+	animation: textloader 1s linear infinite;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-transform-origin: 50% 47%;
+	-moz-transform-origin: 50% 47%;
+}
+@-webkit-keyframes ajaxloader {
+  to { transform: rotate(360deg) }
+}
+
 .card {
 	margin-right: 1em;
 	margin-bottom: 1em;
@@ -492,12 +525,6 @@ textarea.input_std {
 	margin-top: 1em;
 	margin-left: 21em;
 	width: calc(100% - 21em);
-}
-
-#mainbox_loadScreen {
-	text-align: center;
-	margin-left:auto;
-	margin-right:auto;
 }
 
 .impressum {
@@ -1774,10 +1801,6 @@ select.profil_input {
 }
 
 /* STYLE FUER KLEINE BILDSCHIRME ENDE */
-
-#vn_kk_ueberscht_box {
-	display: none;
-}
 
 .bn_zeit{
 	font-size: 0.7em;
