@@ -87,7 +87,7 @@ $(document).ready(function() {
             $("#vn_erstellen_zurueck")
         );
         
-        $("#vn_erstellen_beschr_input").ckeditor();
+        $("#vn_erstellen_beschr_input").ckeditor(ckEditorVnErstellenConfig);
         
     });
     
