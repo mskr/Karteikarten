@@ -74,10 +74,45 @@ public class KarteikartenServlet extends ServletController {
      * @param request 
      * @param response 
      * @return
+     * @throws IOException 
      */
-    private boolean karteikarteBewerten(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
+    private void karteikarteBewerten(HttpServletRequest request, HttpServletResponse response, int bewertung) throws IOException {
+        HttpSession aktuelleSession = request.getSession();
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        
+        String karteikIdString = request.getParameter(ParamDefines.Id);
+        
+        if(isEmpty(karteikIdString))
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
+        int karteikId;
+        try
+        {
+            karteikId = Integer.parseInt(karteikIdString);
+        }
+        catch (NumberFormatException e)
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
+        if(dbManager.bewerteKarteikarte(karteikId, bewertung, aktuellerBenutzer.getId()))
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            outWriter.print(jo);
+            return;
+        }
+        else
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+        }
+
     }
 
     /**
@@ -299,6 +334,12 @@ public class KarteikartenServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionErstelleKarteikarte))
         {
             erstelleKarteikarte(req,resp);
+        } 
+        else if(aktuelleAction.equals(ParamDefines.ActionVoteKarteikareUp)){
+            karteikarteBewerten(req, resp, 1);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionVoteKarteikareDown)){
+            karteikarteBewerten(req,resp,-1);
         }
         
 

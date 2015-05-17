@@ -1722,33 +1722,157 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void schreibeErsteKarteikarte(Karteikarte karteik, int sohnKarteikID) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public boolean bearbeiteKarteikarte(Karteikarte karteik) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        PreparedStatement ps = null;
+        
+        boolean erfolgreich = true;
+
+        try{
+            ps = conMysql.prepareStatement("UPDATE karteikarte SET "
+                    + "Titel = ?, Inhalt = ?, Typ = ?, Aenderungsdatum = ? WHERE ID = ?");
+            ps.setString(1, karteik.getTitel());
+            ps.setString(2, karteik.getInhalt());
+            ps.setString(3, karteik.getTyp().toString());
+            
+            Date today = new java.util.Date();
+            ps.setTimestamp(4,new java.sql.Timestamp(today.getTime()));
+            
+            ps.setInt(5, karteik.getId());
+
+            ps.executeUpdate();
+
+        } catch(SQLException e){
+            erfolgreich = false;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
     public boolean loescheKarteikarte(int karteikID) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        PreparedStatement ps = null;
+        
+        boolean erfolgreich = true;
+
+        try{
+            conNeo4j.setAutoCommit(false);
+            conMysql.setAutoCommit(false);
+
+            ps = conNeo4j.prepareStatement("Match(n) WHERE id(n) = {1} DELETE n");
+            ps.setInt(1, karteikID);
+            
+            ps.executeUpdate();
+
+            closeQuietly(ps);
+
+            ps = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
+            ps.setInt(1, karteikID);
+            ps.executeUpdate();
+
+            conNeo4j.commit();
+            conMysql.commit();
+
+        } catch(SQLException e){
+            try
+            {
+                conNeo4j.rollback();
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally{
+            try
+            {
+                conNeo4j.setAutoCommit(true);
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+
+            closeQuietly(ps);
+            conLockNeo4j.getValue().unlock();
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
-    public boolean bewerteKarteikarte(int karteikID, int bewert, String benutzer) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean bewerteKarteikarte(int karteikID, int bewert, int benutzer) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+
+        boolean erfolgreich = true;
+
+        try{
+            ps = conMysql.prepareStatement("INSERT INTO bewertung_karteikarte (Bewertung,Benutzer,KarteikarteID) VALUES (?,?,?)");
+            ps.setInt(1, bewert);
+            ps.setInt(2, benutzer);
+            ps.setInt(3, karteikID);
+
+            ps.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            erfolgreich = false;
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
-    public boolean hatKarteikarteBewertet(int karteikID, String benutzer) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean hatKarteikarteBewertet(int karteikID, int benutzer) throws SQLException {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try{
+            ps = conMysql.prepareStatement("SELECT ID FROM bewertung_karteikarte WHERE Benutzer = ? AND KarteikarteID = ?");
+            ps.setInt(1, benutzer);
+            ps.setInt(2, karteikID);
+
+            rs = ps.executeQuery();
+            if(rs.next())
+                return true;
+            else
+                return false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+
+        } finally{
+            closeQuietly(rs);
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
     }
 
     @Override
@@ -2210,11 +2334,6 @@ public class Datenbankmanager implements IDatenbankmanager {
         return erfolgreich;
     }
 
-    @Override
-    public boolean rolleZuweisen(String eMail, Nutzerstatus status) {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
 
 
