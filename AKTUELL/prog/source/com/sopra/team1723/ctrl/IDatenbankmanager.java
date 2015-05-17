@@ -419,11 +419,6 @@ public interface IDatenbankmanager {
      */
     public int schreibeKarteikarte(Karteikarte karteik) throws SQLException;
 
-    /**
-     * @param karteik 
-     * @param sohnKarteikID
-     */
-    public void schreibeErsteKarteikarte(Karteikarte karteik, int sohnKarteikID);
 
     /**
      * Daten der angegebenen Karteikarte werden in der Datenbank geupdatet.
@@ -447,14 +442,14 @@ public interface IDatenbankmanager {
     /**
      * Speichert die Bewertung, die der Benutzer dieser Karteikarte gegeben
      * hat. Die Gesamtbewertung der Karteikarte wird entsprechend
-     * angepasst. Bei einem Fehler wird false zuruckgeliefert ansonsten
+     * angepasst. 
+     * @param karteikID referenziert eindeutig eine Karteikarte
+     * @param bewert Bewertung des Benutzers, die entweder 1 oder -1 ist
+     * @param benutzer referenziert eindeutig einen Benutzer
+     * @return Bei einem Fehler wird false zurückgeliefert ansonsten
      * true.
-     * @param karteikID 
-     * @param bewert 
-     * @param benutzer 
-     * @return
      */
-    public boolean bewerteKarteikarte(int karteikID, int bewert, String benutzer);
+    public boolean bewerteKarteikarte(int karteikID, int bewert, int benutzer);
 
     /**
      * Gibt true zuruck, falls der Benutzer diese Karteikarte bereits bewertet
@@ -463,7 +458,7 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public boolean hatKarteikarteBewertet(int karteikID, String benutzer);
+    public boolean hatKarteikarteBewertet(int karteikID, int benutzer) throws SQLException;
 
     /**
      * Gibt alle Kommentare zu einer Karteikarte zuruck. Bei einem Fehler
@@ -574,7 +569,6 @@ public interface IDatenbankmanager {
      * @param status 
      * @return
      */
-    public boolean rolleZuweisen(String eMail, Nutzerstatus status);
 
     public Kommentar leseKommentar(int kommId, int aktBenutzerID);
 
