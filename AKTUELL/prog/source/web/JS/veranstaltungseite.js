@@ -216,11 +216,6 @@ function fillVeranstaltungsSeite(Vid)
 						}
 					});
 					
-					
-					
-					
-					
-					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
 				});
@@ -232,18 +227,47 @@ function fillVeranstaltungsSeite(Vid)
 	// Inhaltsverzeichnis aufbauen
 	// warte bis VN Objekt geladen
 	$.when(ajax3).done(function() {
-	    ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
+	    var ajax4 = ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"));
+        // Inhaltsverzeichnis im Viewport halten
+	    // warte bis mainbox visible
+	    $.when(ajax1,ajax2,d,ajax4).done(function() {
+	        var sticky = new Waypoint.Sticky({
+	            element: $("#kk_inhaltsverzeichnis"),
+	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
+	        });
+	    });
+        
 	});
 	
+    // Elemente fuer kleine Bildschirme
+    if (window.matchMedia("(max-width: 56em)").matches)
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").show();
+    }
+    else
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").hide();
+    }
+    
 	return $.when(ajax1,ajax2,d);
 }
 
+/**
+ * Generische Methode, die alle direkten Kindkarteikarten zu einer gegebenen Vater-ID
+ * vom Server laedt und in eine Unordered List einfuegt. Es wird ein Click Handler registriert,
+ * der beim Klick auf einen Eintrag rekursiv dessen Kinder laedt.
+ * @param vaterId ID der Vaterkarteikarte
+ * @param vaterElem jQuery Objekt. Container, in den die Unordered List eingefuegt wird.
+ * @returns Ajax Objekt
+ */
 function ladeKindKarteikarten(vaterId, vaterElem) {
     var params = {};
     params[paramId] = vaterId;
-    if(vaterId==5) console.log(vaterId+" Bedeutung von Software");
-    // ersetze evntl bestehende Kindkarteikarten
+    // Evntl bestehende Kindkarteikarten aushaengen
     vaterElem.find("ul").remove();
+    // Neue Liste aufbauen
     vaterElem = vaterElem.append("<ul></ul>").find("ul");
     return ajaxCall(
             karteikartenServlet,
@@ -251,26 +275,34 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
             function(response) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
-                console.log(arr);
-                // falls keine Kindkarteikarten vorhanden, verlasse Funktion
+                // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
                 if(arr.length == 0) {
                     console.log("hat keine kinder mehr");
-                    return;
+                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
                 }
                 // andernfalls DOM aufbauen
-                for(var i in arr)
+                else
                 {
-                    var kkListItem = $("<li>"+arr[i][paramTitel]+"</li>");
-                    vaterElem.append(kkListItem);
-                    // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
-                    var f = function(arr, kkListItem, i) {
-                        kkListItem.click(function(e) {
-                            console.log(kkListItem);
-                            ladeKindKarteikarten(arr[i][paramId], kkListItem);
-                            e.stopPropagation();
-                        });
+                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                    for(var i in arr)
+                    {
+                        var kkListItem = $("<li><a class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
+                        vaterElem.append(kkListItem);
+                        //TODO Hier sortieren
+                        // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
+                        var f = function(arr, kkListItem, i) {
+                            kkListItem.find("a").click(function(e) {
+                                ladeKindKarteikarten(arr[i][paramId], kkListItem);
+                                e.stopPropagation();
+                            });
+                        }
+                        f(arr, kkListItem, i);
+                        // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                        vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                        //TODO Click Handler Karteikarte hinzu
                     }
-                    f(arr, kkListItem, i);
                 }
             },
             params

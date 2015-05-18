@@ -57,9 +57,9 @@ function checkConnection()
 }
 
 $( document ).ajaxStart(function() {
-	  $("#loadingDiv").fadeIn();
+	  $("#loadingDiv").show();
 	});
 
 $( document ).ajaxStop(function() {
-	  $("#loadingDiv").fadeOut();
+	  $("#loadingDiv").hide();
 	});
