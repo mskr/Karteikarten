@@ -64,8 +64,8 @@ public class ParamDefines
     public final static String ActionLeseAntwortKommentar = "leseAntwKomm";
     public final static String ActionLeseThemaKommentar = "leseThemaKomm";
     
-    public final static String ActionVoteKarteikareUp = "voteUpKarteik";
-    public final static String ActionVoteKarteikareDown = "voteDownKarteik";
+    public final static String ActionVoteKarteikarteUp = "voteUpKarteik";
+    public final static String ActionVoteKarteikarteDown = "voteDownKarteik";
     
 
     public final static String Klasse = "klasse";

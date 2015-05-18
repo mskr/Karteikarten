@@ -73,6 +73,10 @@ hr
 	border-top: 1px solid #ccc;
 }
 
+/* img{
+	filter: invert(1);
+} */
+
 img.right
 {
 	border: 1px solid #ccc;

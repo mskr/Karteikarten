@@ -1845,7 +1845,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean hatKarteikarteBewertet(int karteikID, int benutzer) throws SQLException {
+    public boolean hatKarteikarteBewertet(int karteikID, int benutzer){
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
@@ -1865,7 +1865,7 @@ public class Datenbankmanager implements IDatenbankmanager {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            throw e;
+            return false;
 
         } finally{
             closeQuietly(rs);
@@ -2333,8 +2333,4 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
         return erfolgreich;
     }
-
-
-
-
 }

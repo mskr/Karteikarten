@@ -1124,11 +1124,12 @@ textarea.input_std {
 }
 
 .kk {
+	vertical-align: middle;
 	box-sizing: border-box;
 	padding: 2em;
 	max-width: 500px; 
-	width: 100%;
-	position: relative;
+/* 	width: 100%;
+ */	position: relative;
 	z-index: 6;
 	background: #e0e0e0;
 	outline: none;
@@ -1147,10 +1148,10 @@ textarea.input_std {
 	align-items: center;
 	overflow: hidden;
 } .inhalt_video { 	
-	padding-top: 0;
- 	padding-bottom: 0;
+	
+	padding:0;
 	display: inline-flex;
-	background-clip: content-box;
+/* 	background-clip: content-box; */
 	height:auto;
 	justify-content: center;
 	align-items: center;
@@ -1158,8 +1159,8 @@ textarea.input_std {
 }
 
 .kk_bild {
-	width: 600px;
-	flex-shrink: 0;
+/* 	width: 600px;
+ */	flex-shrink: 0;
 }
 
 .kk_bildunterschrift {
@@ -1340,11 +1341,11 @@ textarea.input_std {
 .kk_kommbox {
 	margin-top: -1px;
 	padding: 1%;
-	width: calc(1.1% + 500px);
-	height: auto;
+	/* width: calc(1.1% + 500px);
+	height: auto; */
 	display: block;
-	position: relative;
-	left: 80px;
+	/* position: relative;
+	left: 80px; */
 	z-index: 7;
 	overflow: hidden;
 	background: #333333;
@@ -1380,6 +1381,7 @@ textarea.input_std {
 	color: white;
 	background: #252525;
 } .kk_superkomm img {
+	filter: invert(1);
 	-webkit-filter: invert(1);
 } .kk_subkomm {
 	margin-top: 5px;

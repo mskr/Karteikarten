@@ -60,7 +60,9 @@ public class KarteikartenServlet extends ServletController {
              outWriter.print(jo);
          }
          Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
-         jo = Kk.toJSONDateFix(true);
+         Kk.setHatBewertet(dbManager.hatKarteikarteBewertet(karteikartenID  , aktuellerBenutzer.getId()));
+         jo = Kk.toJSON(true);
+         
          outWriter.print(jo);
 
          
@@ -335,14 +337,12 @@ public class KarteikartenServlet extends ServletController {
         {
             erstelleKarteikarte(req,resp);
         } 
-        else if(aktuelleAction.equals(ParamDefines.ActionVoteKarteikareUp)){
+        else if(aktuelleAction.equals(ParamDefines.ActionVoteKarteikarteUp)){
             karteikarteBewerten(req, resp, 1);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionVoteKarteikareDown)){
+        else if(aktuelleAction.equals(ParamDefines.ActionVoteKarteikarteDown)){
             karteikarteBewerten(req,resp,-1);
         }
-        
-
     }
 
 }

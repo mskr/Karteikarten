@@ -56,6 +56,8 @@ var actionMarkiereBenGelesen = "benGelesen";
 var actionGetKarteikarteByID = "getKarteikarte";
 var actionGetKarteikartenKinder = "getKKKinder";
 var actionGetKarteikartenVater = "getKKVater";
+var actionVoteKarteikarteUp = "voteUpKarteik";
+var actionVoteKarteikarteDown = "voteDownKarteik";
 
 var actionVoteKommentarUp = "voteUpKomm";
 var actionVoteKommentarDown = "voteDownKomm";
