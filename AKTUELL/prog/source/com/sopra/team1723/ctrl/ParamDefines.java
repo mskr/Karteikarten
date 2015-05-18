@@ -22,6 +22,8 @@ public class ParamDefines
     public final static String ActionAenderePasswort = "aenderePasswort";
     public final static String ActionAendereProfil = "aendereProfil";
     public final static String ActionUploadProfilBild = "uploadProfilBild";
+    public final static String ActionUploadKKBild = "uploadKKBild";
+    public final static String ActionUploadKKVideo = "uploadKKVideo";
     public final static String ActionSucheBenVeranst = "sucheBenVeranst";
     public final static String ActionSucheBenutzer = "sucheBenutzer";
     public final static String ActionSucheStudiengang = "sucheStudiengang";
