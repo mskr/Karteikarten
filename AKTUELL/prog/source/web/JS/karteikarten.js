@@ -27,9 +27,24 @@ function buildKarteikarte(karteikarteJson)
     
     // Notiz
     kkDom.find(".kk_notizen_body").ckeditor(function() {
-    	// TODO FadeIn des Speichern buttons wenn sich der inhalt geändert hat.
-    	setNotiz(kkDom, kkId)
+
+    	// TODO Karteikarte setzen und DANACH change handler registireren
+    	// Funktioniert irgendwie nicht. Handler wird gesetzt bevor Inhalt gesetzt wurde
+    	var f = function(that){
+    		that.on('change', function() {
+            	kkDom.find(".kk_notizen_foot").slideDown();
+            });
+    	};
+    	var f2 = function(that) {
+    		$.when(setNotiz(kkDom, kkId)).done(function(){
+        		f(that);
+        	});
+		};
+    	f2(this);
+    	
 	}, ckEditorNotizConfig);
+    
+    
     
     kkDom.find(".kk_notizen_foot").find(".mybutton").click(function(){
     	var params = {};
