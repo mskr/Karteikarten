@@ -80,6 +80,7 @@ $(document).ready(function() {
 //        }
 //    });
 });
+
 function fillVeranstaltungsSeite(Vid)
 {
 	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
@@ -124,13 +125,13 @@ function fillVeranstaltungsSeite(Vid)
 	
 	var params = {};
 	params[paramId] = Vid;
-	ajaxCall(veranstaltungServlet,
+	var ajax3 = ajaxCall(veranstaltungServlet,
 		actionGetVeranstaltung,
 		function(response) 
 		{
 			veranstaltungsObject = response;
 			
-			if(veranstaltungsObject[paramAngemeldet] == false)
+			if(veranstaltungsObject[paramAngemeldet] == false && jsonBenutzer[paramNutzerstatus] != "ADMIN" )
 			{
 				showError("Sie haben nicht die notwendingen Berechtigungen um diese Seite zu sehen!");
 				gotoHauptseite();
@@ -144,31 +145,37 @@ function fillVeranstaltungsSeite(Vid)
 					titel = veranstaltungsObject[paramTitel];
 					console.log(veranstaltungsObject);
 					// Details der VN in DOM einfuegen
-					$(".vn_title").prepend(titel);
-					$("#vn_attr_semester").append(veranstaltungsObject[paramSemester]);
+					$("#vn_title").text(titel);
+					$("#vn_attr_semester").text(veranstaltungsObject[paramSemester]);
+					var vnStudiengaenge = "";
 					for(var i = 0; i<veranstaltungsObject[paramStudiengang].length; i++)
 					{
-	                    $("#vn_attr_studgang").append(veranstaltungsObject[paramStudiengang][i]);
+					    vnStudiengaenge += veranstaltungsObject[paramStudiengang][i];
 	                    if(i < veranstaltungsObject[paramStudiengang].length-1)
-	                        $("#vn_attr_studgang").append(", ");
+	                        vnStudiengaenge += ", ";
 					}
-                    $("#vn_attr_ersteller").append(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
+					$("#vn_attr_studgang").text(vnStudiengaenge);
+                    $("#vn_attr_ersteller").text(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
+                    var vnModeratoren = "";
                     if(veranstaltungsObject[paramModeratoren].length > 0)
                     {
                         for(var i = 0; i<veranstaltungsObject[paramModeratoren].length; i++)
                         {
-                            $("#vn_attr_moderatoren").append(veranstaltungsObject[paramModeratoren][i]);
+                            console.log(veranstaltungsObject[paramModeratoren][i]);
+                            vnModeratoren += veranstaltungsObject[paramModeratoren][i][paramVorname] +
+                                             " " + veranstaltungsObject[paramModeratoren][i][paramNachname];
                             if(i < veranstaltungsObject[paramModeratoren].length-1)
-                                $("#vn_attr_studgang").append(", ");
+                                vnModeratoren += ", ";
                         }
                     }
                     else
                     {
-                        $("#vn_attr_moderatoren").append("-");
+                        vnModeratoren += "-";
                     }
-                    $("#vn_attr_bewertungen_erlaubt").append(veranstaltungsObject[paramBewertungenErlauben] ? "ja" : "nein");
-                    $("#vn_attr_kommentare_erlaubt").append(veranstaltungsObject[paramKommentareErlauben] ? "ja" : "nein");
-                    $("#vn_attr_modbearb_erlaubt").append(veranstaltungsObject[paramModeratorKkBearbeiten] ? "ja" : "nein");
+                    $("#vn_attr_moderatoren").text(vnModeratoren);
+                    $("#vn_attr_bewertungen_erlaubt").text(veranstaltungsObject[paramBewertungenErlauben] ? "ja" : "nein");
+                    $("#vn_attr_kommentare_erlaubt").text(veranstaltungsObject[paramKommentareErlauben] ? "ja" : "nein");
+                    $("#vn_attr_modbearb_erlaubt").text(veranstaltungsObject[paramModeratorKkBearbeiten] ? "ja" : "nein");
                     
                     document.title = titel;
 					
@@ -209,9 +216,6 @@ function fillVeranstaltungsSeite(Vid)
 						}
 					});
 					
-					
-					
-					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
 				});
@@ -220,7 +224,89 @@ function fillVeranstaltungsSeite(Vid)
 		params
 	);
 	
+	// Inhaltsverzeichnis aufbauen
+	// warte bis VN Objekt geladen
+	$.when(ajax3).done(function() {
+	    var ajax4 = ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"));
+        // Inhaltsverzeichnis im Viewport halten
+	    // warte bis mainbox visible
+	    $.when(ajax1,ajax2,d,ajax4).done(function() {
+	        var sticky = new Waypoint.Sticky({
+	            element: $("#kk_inhaltsverzeichnis"),
+	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
+	        });
+	    });
+        
+	});
+	
+    // Elemente fuer kleine Bildschirme
+    if (window.matchMedia("(max-width: 56em)").matches)
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").show();
+    }
+    else
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").hide();
+    }
+    
 	return $.when(ajax1,ajax2,d);
+}
+
+/**
+ * Generische Methode, die alle direkten Kindkarteikarten zu einer gegebenen Vater-ID
+ * vom Server laedt und in eine Unordered List einfuegt. Es wird ein Click Handler registriert,
+ * der beim Klick auf einen Eintrag rekursiv dessen Kinder laedt.
+ * @param vaterId ID der Vaterkarteikarte
+ * @param vaterElem jQuery Objekt. Container, in den die Unordered List eingefuegt wird.
+ * @returns Ajax Objekt
+ */
+function ladeKindKarteikarten(vaterId, vaterElem) {
+    var params = {};
+    params[paramId] = vaterId;
+    // Evntl bestehende Kindkarteikarten aushaengen
+    vaterElem.find("ul").remove();
+    // Neue Liste aufbauen
+    vaterElem = vaterElem.append("<ul></ul>").find("ul");
+    return ajaxCall(
+            karteikartenServlet,
+            actionGetKarteikartenKinder,
+            function(response) {
+                // neu geladene Kindkarteikarten holen
+                var arr = response[keyJsonArrResult];
+                // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
+                if(arr.length == 0) {
+                    console.log("hat keine kinder mehr");
+                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                }
+                // andernfalls DOM aufbauen
+                else
+                {
+                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                    for(var i in arr)
+                    {
+                        var kkListItem = $("<li><a class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
+                        vaterElem.append(kkListItem);
+                        //TODO Hier sortieren
+                        // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
+                        var f = function(arr, kkListItem, i) {
+                            kkListItem.find("a").click(function(e) {
+                                ladeKindKarteikarten(arr[i][paramId], kkListItem);
+                                e.stopPropagation();
+                            });
+                        }
+                        f(arr, kkListItem, i);
+                        // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                        vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                        //TODO Click Handler Karteikarte hinzu
+                    }
+                }
+            },
+            params
+    );
 }
 
 //sucht Studiengänge, die zur Veranstaltung gehören

@@ -412,21 +412,13 @@ public interface IDatenbankmanager {
     public Map<Integer,Tupel<Integer,String>> leseKindKarteikarten(int vaterKarteikID);
 
     /**
-     * Fugt neue Karteikarte in die Datenbank ein. Bei Erfolg wird true
-     * zuruckgegeben. Bei einem Fehler in der Datenbank wird false
-     * zuruckgeliefert.
-     * @param karteik 
-     * @param vaterKarteikID 
-     * @param Position 
-     * @return
+     * Fügt neue Karteikarte in die Datenbank ein. Bei einem Fehler wird eine
+     * SQLException geworfen.  
+     * @param karteik
+     * @return ID der gerade eingefügten Karteikarte
      */
     public int schreibeKarteikarte(Karteikarte karteik) throws SQLException;
 
-    /**
-     * @param karteik 
-     * @param sohnKarteikID
-     */
-    public void schreibeErsteKarteikarte(Karteikarte karteik, int sohnKarteikID);
 
     /**
      * Daten der angegebenen Karteikarte werden in der Datenbank geupdatet.
@@ -450,14 +442,14 @@ public interface IDatenbankmanager {
     /**
      * Speichert die Bewertung, die der Benutzer dieser Karteikarte gegeben
      * hat. Die Gesamtbewertung der Karteikarte wird entsprechend
-     * angepasst. Bei einem Fehler wird false zuruckgeliefert ansonsten
+     * angepasst. 
+     * @param karteikID referenziert eindeutig eine Karteikarte
+     * @param bewert Bewertung des Benutzers, die entweder 1 oder -1 ist
+     * @param benutzer referenziert eindeutig einen Benutzer
+     * @return Bei einem Fehler wird false zurückgeliefert ansonsten
      * true.
-     * @param karteikID 
-     * @param bewert 
-     * @param benutzer 
-     * @return
      */
-    public boolean bewerteKarteikarte(int karteikID, int bewert, String benutzer);
+    public boolean bewerteKarteikarte(int karteikID, int bewert, int benutzer);
 
     /**
      * Gibt true zuruck, falls der Benutzer diese Karteikarte bereits bewertet
@@ -466,7 +458,7 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public boolean hatKarteikarteBewertet(int karteikID, String benutzer);
+    public boolean hatKarteikarteBewertet(int karteikID, int benutzer) throws SQLException;
 
     /**
      * Gibt alle Kommentare zu einer Karteikarte zuruck. Bei einem Fehler
@@ -542,27 +534,33 @@ public interface IDatenbankmanager {
     public boolean vonVeranstaltungAbmelden(int veranstaltung, int benutzer);
 
     /**
-     * @param erstellerEMail 
-     * @param karteikID 
-     * @return
+     * Liest alle Notizen eines Benutzers zu einer Karteikarte
+     * @param benutzer referenziert eindeutig einen Benutzer 
+     * @param karteikID referenziert eindeutig eine Karteikarte
+     * @return Liste von Notiz-Objekten. Bei einem Fehler wird null zurückgegeben.
+     * Gibt es keine Notizen von dem Benutzer zu dieser Karteikarte wird
+     * eine leere Liste zurückgegeben
      */
-    public Notiz[] leseNotizen(String erstellerEMail, int karteikID);
+    public Notiz leseNotiz(int benutzer, int karteikID);
 
     /**
-     * @param notiz 
-     * @return
+     * Fügt die angegebene Notiz in die Datenbank ein
+     * @param notiz
+     * @return Liefert true, falls kein Fehler aufgetreten ist, ansonsten false
      */
     public boolean schreibeNotiz(Notiz notiz);
 
     /**
+     * Updatet die angegebene Notiz in der Datenbank
      * @param notiz 
-     * @return
+     * @return Liefert true, falls kein Fehler aufgetreten ist, ansonsten false
      */
     public boolean bearbeiteNotiz(Notiz notiz);
 
     /**
-     * @param notizID 
-     * @return
+     * Löscht die Notiz aus der Datenbank
+     * @param notizID referenziert eindeutig eine Notiz
+     * @return Liefert true, falls kein Fehler aufgetreten ist, ansonsten false
      */
     public boolean loescheNotiz(int notizID);
 
@@ -571,7 +569,6 @@ public interface IDatenbankmanager {
      * @param status 
      * @return
      */
-    public boolean rolleZuweisen(String eMail, Nutzerstatus status);
 
     public Kommentar leseKommentar(int kommId, int aktBenutzerID);
 

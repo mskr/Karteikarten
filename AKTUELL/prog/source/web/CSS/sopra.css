@@ -34,16 +34,18 @@ a { /* Link Style */
 	color: gray;
 }
 
-h1 {
-	margin-top: 1%;
-	color: white;
-	text-shadow: 0px -2px 0px #000;
-	display: inline-block;
-}
-
 label {
 	cursor: pointer;
 	font-size: .9em;
+}
+
+/* Beendet das fließen von Elementen sauber */
+.clearfix:after {
+    content: ".";
+    clear: both;
+    display: block;
+    visibility: hidden;
+    height: 0px;
 }
 
 input[type="radio"], input[type="checkbox"] {
@@ -110,12 +112,6 @@ textarea.input_std {
 	border-radius: .3em;
 } textarea.input_std:hover::-webkit-scrollbar-thumb {
 	background-color: rgba(0,0,0,1);
-}
-.text_h1{
-	color: white;
-	font-size: 2em;
-	text-shadow: 0px -2px 0px #000;
-	display: inline-block;
 }
 .form_infotext {
 	font-size: .9em;
@@ -381,6 +377,39 @@ textarea.input_std {
 	position: relative;
 }
 
+#loadingDiv {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 4em;
+	height: 4em;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+} #loadingDiv:before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1em;
+	height: 1em;
+	line-height: 1em;
+	content: "\21BB";
+	color: white;
+	text-align: center;
+	text-shadow: 0 0 10px white;
+	font-family: monospace;
+	font-size: 5em;
+	-webkit-animation: ajaxloader 1s linear infinite;
+	animation: textloader 1s linear infinite;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-transform-origin: 50% 47%;
+	-moz-transform-origin: 50% 47%;
+}
+@-webkit-keyframes ajaxloader {
+  to { transform: rotate(360deg) }
+}
+
 .card {
 	margin-right: 1em;
 	margin-bottom: 1em;
@@ -483,12 +512,6 @@ textarea.input_std {
 	margin-top: 1em;
 	margin-left: 21em;
 	width: calc(100% - 21em);
-}
-
-#mainbox_loadScreen {
-	text-align: center;
-	margin-left:auto;
-	margin-right:auto;
 }
 
 .impressum {
@@ -658,12 +681,6 @@ textarea.input_std {
 	display: inline-block;
 }
 
-.hauptseite_head {
-	margin-right: 1em;
-	margin-bottom: 1em;
-	position: relative;
-}
-
 .flex_container {
 	display: flex;
 	flex-direction: row;
@@ -680,14 +697,25 @@ textarea.input_std {
 
 .suche_etwas {
 	margin: 0;
-	width: 35%;
+	width: 50%;
 	height: 2.5em;
 	position: relative;
-	z-index: 10; /* Suchfeld Ueberlagert den Veranstaltung-erstellen-Button, wenn der User tippt */
+	z-index: 10;
+	margin-bottom: 1em;
 } .suche_etwas:valid {
-	width: calc(100% - 1.8em); /* 100% - 2x0.9em padding */
+	width: calc(100% - 1.8em);
 	background: white;
 	box-shadow: none;
+}
+
+#vn_erstellen_bt {
+	position: absolute;
+	z-index: 11;
+	top: 0;
+	right: 1em;
+	margin-bottom: 1em;
+} #vn_erstellen_bt:after {
+	content: "Veranstaltung erstellen";
 }
 
 .suche_ergebnisse {
@@ -695,7 +723,7 @@ textarea.input_std {
 	position: absolute;
 	z-index: 300;
 	left: 1px;
-	margin-top: -6px;
+	margin-top: -.7em;
 	width: 100%;
 	background: white;
 	color: #4a4a4a;
@@ -730,8 +758,7 @@ textarea.input_std {
 	background: none;
 	color: #4a4a4a;
 } .sucherg_item.selected {
-	background: #4a4a4a;
-	color: white;
+	background: lightgray;
 } .sucherg_item span {
 	margin-right: .5em;
 } .sucherg_item_detail {
@@ -740,15 +767,6 @@ textarea.input_std {
 	padding: .9em;
 	color: gray;
 	font-style: italic;
-}
-
-#vn_erstellen_bt {
-	position: absolute;
-	z-index: 9;
-	top: 0;
-	right: 0;
-} #vn_erstellen_bt:after {
-	content: "Veranstaltung erstellen";
 }
 
 .itemlist {
@@ -775,69 +793,105 @@ textarea.input_std {
 	margin: 0.3em;
 }
 
-
-/* Tabs erstellt nach dieser Anleitung: */
-/* http://css-tricks.com/functional-css-tabs-revisited/ */
-/* Hat nur ein Problem: Der vorderste Tabinhalt verdeckt immer die hintersten. min-height muss ausreichen um Inhalte auf allen Tabs zu "verdecken". */
-/* -> deshalb: min-height mit JQuery dynamisch einstellen! */
-.vn_container {
+.vn_tab_container {
 	margin-right: 1em;
 	margin-bottom: 1em;
-	position: relative;   
-	min-height: 200em; /* TODO This part sucks */
-	clear: both;
-	overflow: visible;
-} .vn_tab {
-	margin-top: 10px; /* Damit die Buttons nicht zu weit unten sitzen */
-	float: left;
-} .vn_tab .vn_tablabel {
-	padding: 10px;
-	border: none;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
-	margin-left: 3px;
 	position: relative;
-	left: 1px;
-} .vn_tabradio {
+	overflow: hidden;
+} .vn_tab_container > input {
 	display: none;
-} .vn_fktn_allg {
-	float: right;
-} .vn_tabcontent {
-	margin-top: 10px; /* Damit die Buttons nicht zu weit unten sitzen */
 	position: absolute;
-	top: 28px;
+	z-index: 10;
+	width: 50%;
+	max-width: 10em;
+	height: 3em;
 	left: 0;
-	background: #333333;
-	right: 0;
-	bottom: 0;
-	padding: 1em;
-	border-radius: 2px;
- 	overflow: auto; /* Scrollbar */
-} .vn_tabradio:checked ~ label {
+	top: 0;
+	opacity: 0;
+	cursor: pointer;
+	margin: 0;
+} .vn_tab_container > input#vn_tab_alle {
+	left: 50%;
+} .vn_tab_container > label {
+	position: relative;
+	width: calc(50% - 2em);
+	max-width: 10em;
+	padding: .5em 1em 1em 1em;
+	float: left;
+	display: block;
+	font-size: 1em;
+} .vn_tab_container > label span {
+	margin-right: .2em;
+} .vn_tab_container > input:checked + label {
 	font-weight: bold;
 	color: white;
 	background: #333333;
 	border-top: .25em solid white;
 	text-shadow: 0px 1px 0px black;
-	z-index: 2;
-}.vn_tabradio:checked ~ label ~ .vn_tabcontent {
-	display: block;
+	border-radius: 2px;
+	z-index: 6;
+} .vn_tab_content {
+	height: auto;
+	width: 100%;
+	float: left;
+	position: relative;
+	z-index: 5;
+	top: -10px;
+} .vn_tab_content > div {
+	position: relative;
+	float: left;
+	top: 0;
+	left: 0;
 	z-index: 1;
-	-webkit-box-shadow: 0px 2px 2px black;
-	-moz-box-shadow: 0px 2px 2px black;
-	box-shadow: 0px 2px 2px black;
-} .vn_tabcontent {
-	display: none;
-} .meine_vn_tablabel:after {
-	content: "Meine";
-	margin-left: .3em;
-} .alle_vn_tablabel:after {
-	content: "Alle";
-	margin-left: .3em;
-} .vn_toolbar {
+	opacity: 0;
+	width: 0;
+	height: 0;
+	background: #333;
+	box-shadow: 0 2px 2px black;
+	border-radius: 2px;
+	box-sizing: border-box;
+} .vn_tab_container .vn_tab_meine_radio:checked ~ .vn_tab_content .vn_tabcontent_meine,
+  .vn_tab_container .vn_tab_alle_radio:checked ~ .vn_tab_content .vn_tabcontent_alle {
+  	z-index: 9;
+  	opacity: 1;
+  	height: auto;
+  	padding: 1em;
+  	width: 100%;
+  	height: auto;
+}
+
+.vn_toolbar {
 	padding-bottom: 1em;
 	font-size: .9em;
+	text-align: center;
+} .vn_toolbar select {
+	width: calc(50% - 2px);
+	height: 2rem;
+	color: white;
+	border: none;
+	border-bottom: 1px solid white;
+	font-weight: bold;
+	background: transparent;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	cursor: pointer;
+	transition: all .2s;
+} .vn_toolbar select:hover {
+	border-bottom-width: 2px;
+} .vn_toolbar select option {
+	color: black;
+}
+
+.vn_liste_leer_info {
+	padding: 2em;
+	margin: 1em;
+	border: 1px dashed gray;
+	text-align: center;
+	font-style: italic;
+	color: gray;
+} .vn_liste_leer_info span {
+	display: block;
+	text-shadow: 0 -1px 0 black;
 }
 
 .vn {
@@ -943,9 +997,12 @@ textarea.input_std {
 	text-align: center;
 	text-shadow: 0 -1px 0 black;
 } #vn_title {
-	display: block;
 	font-family: Computer Modern Serif;
 	font-weight: bold;
+	color: white;
+	font-size: 2em;
+	text-shadow: 0 -2px 0 black;
+	display: inline-block;
 } #vn_loeschen {
 	position: absolute;
 	top: 0;
@@ -954,13 +1011,12 @@ textarea.input_std {
 	display: none;
 } #vn_attributliste_anzeigen_checkbox:checked ~ .vn_attributliste {
 	height: auto;
-} #vn_attributliste_anzeigen_checkbox:checked ~ span label span {
+} #vn_attributliste_anzeigen_checkbox:checked ~ label span {
 	transform: rotate(180deg);
 } .vn_attributliste {
 	font-size: .8em;
 	height: 0;
 	overflow: hidden;
-	transition: all .2s;
 } .vn_attributliste *:before {
 	margin-right: .5em;
 	color: gray;
@@ -987,33 +1043,49 @@ textarea.input_std {
 }
 
 #kk_inhaltsverzeichnis {
-	position: fixed;
-	z-index: 3;
+	position: absolute;
 	right: 0;
-	width: 15em;
-} #kk_inhaltsverzeichnis > ul > li {
-	font-weight: bold;
+	z-index: 3;
+	padding: 1em 1em 1em 0;
+	width: 22em;
+	height: auto;
+	font-size: .8em;
+	background: #333;
+	overflow: auto;
+	border: 1px solid #e0e0e0;
+} #kk_inhaltsverzeichnis > ul {
+	
 } #kk_inhaltsverzeichnis ul {
+	padding-left: 1em;
     list-style: none;
-} #kk_inhaltsverzeichnis ul li ul:before {
-	content: attr(data-text);
-	/*Ruecke innere ul auf erste Ebene*/
-	position: relative;
-	left: -2.5em;
-} #kk_inhaltsverzeichnis ul li ul * {
-	display: none;
-	font-weight: normal;
-} #kk_inhaltsverzeichnis ul li:hover * {
-	display: block;
+} #kk_inhaltsverzeichnis ul li {
+	white-space: nowrap;
+	border-left: 1px solid #e0e0e0;
+} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_knoten {
+	
+} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_knoten:before {
+	content: "\2014";
+	padding-right: .5em;
+} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_erstellen {
+	color: LimeGreen;
+	opacity: 0;
+} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_erstellen:hover {
+	opacity: 1;
+} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_erstellen:before {
+	content: "\2192";
+	padding-right: .5em;
+} #kk_inhaltsverzeichnis.stuck {
+    position: fixed !important;
+    top: 0;
+    right: 0;
+} .inhaltsverzeichnis-sticky-wrapper {
+	height: 0 !important;
 }
 
 .kk_wrapper {
-	margin-bottom: 30px;
-	padding-bottom: 5px;
+	margin-bottom: 2rem;
 	position: relative;
 	display: block;
-/* 	overflow: hidden; */
-	clear: both;
 } .kk_wrapper:hover .kk_optionen {
 	opacity: 1;
 } .kk_wrapper:hover .kk {
@@ -1021,7 +1093,7 @@ textarea.input_std {
 }
 
 .kk_votes {
-	min-width: 80px;
+	width: 4rem;
 	display: block;
 	float: left;
 	text-shadow: 0px -1px 0px black;
@@ -1030,12 +1102,11 @@ textarea.input_std {
 	display: block;
 } .kk_votestat {
 	font-weight: bold;
-	cursor: default;
 }
 
 .kk_optionen {
-	margin-top: 5px;
-	min-width: 80px;
+	margin-top: .5rem;
+	width: 4rem;
 	display: block;
 	float: left;
 	text-shadow: 0px -1px 0px black;
@@ -1053,51 +1124,42 @@ textarea.input_std {
 }
 
 .kk {
-	max-width: 500px;
+	box-sizing: border-box;
+	padding: 2em;
+	max-width: 500px; 
 	width: 100%;
-	display: inline-block;
 	position: relative;
 	z-index: 6;
 	background: #e0e0e0;
 	outline: none;
 	border-bottom: 1px solid #1d1d1d;
 	box-shadow: inset 0px 5px 10px #c0c0c0;
-	-webkit-border-radius: 2px 0 0 0;
-	-moz-border-radius: 2px 0 0 0;
 	border-radius: 2px 0 0 0;
-	-webkit-box-shadow: 0px 2px 2px #000;
-	-moz-box-shadow: 0px 2px 2px #000;
 	box-shadow: 0px 2px 2px #000;
-	-webkit-transition: background 0.5s;
 	transition: background 0.5s;
 } .inhalt_text {
-	padding: 2%;
-	min-height: 300px;
 	font-family: Computer Modern Serif;
 	color: #333333;
 } .inhalt_bild {
 	/* see: http://stackoverflow.com/questions/14142378 */
-	padding: 0;
-	max-width: calc(500px + 4%);
-	display: flex;
+	display: inline-flex;
 	justify-content: center;
 	align-items: center;
 	overflow: hidden;
-} .inhalt_video {
-	padding: 0;
-	height: auto;
-	max-width: calc(500px + 4%);
-	display: flex;
+} .inhalt_video { 	
+	padding-top: 0;
+ 	padding-bottom: 0;
+	display: inline-flex;
+	background-clip: content-box;
+	height:auto;
 	justify-content: center;
 	align-items: center;
 	overflow: hidden;
-} .kk a {
-	text-decoration: underline;
 }
 
 .kk_bild {
 	width: 600px;
-/* 	flex-shrink: 0; */ /* Das wuerde nur einen Ausschnitt des Bildes zeigen */
+	flex-shrink: 0;
 }
 
 .kk_bildunterschrift {
@@ -1125,10 +1187,10 @@ textarea.input_std {
 	color: black;
 }
 
-.kk_video {
+/* .kk_video {
 	width: inherit;
 	flex-shrink: 0;
-}
+} */
 
 .video_controls {
 	position: absolute;
@@ -1278,7 +1340,7 @@ textarea.input_std {
 .kk_kommbox {
 	margin-top: -1px;
 	padding: 1%;
-	width: calc(2% + 500px);
+	width: calc(1.1% + 500px);
 	height: auto;
 	display: block;
 	position: relative;
@@ -1300,7 +1362,7 @@ textarea.input_std {
 	font-weight: bold;
 	text-shadow: 0px -1px 0px black;
 	display: inline-block;
-	cursor: default;
+/* 	cursor: default; */
 } .kk_superkomm {
 	margin: 10px 0;
 	padding: 6px 10px;
@@ -1317,6 +1379,8 @@ textarea.input_std {
 } .kk_superkomm:hover {
 	color: white;
 	background: #252525;
+} .kk_superkomm img {
+	-webkit-filter: invert(1);
 } .kk_subkomm {
 	margin-top: 5px;
 	padding: 6px 10px;
@@ -1359,10 +1423,10 @@ textarea.input_std {
 	opacity: 1;
 } .kk_komm_loeschen a:hover {
 	color: #800000;
-} .kk_kommantwort {
+} /* .kk_kommantwort {
 	margin-top: 10px;
 	text-align: left;
-} .kk_kommantwort textarea {
+} */ .kk_kommantwort textarea {
 	padding: 6px 10px;
 	width: calc(100% - 23px);
 	display: inline-block;
@@ -1429,13 +1493,13 @@ textarea.input_std {
 }
 
 .kk_notizen {
-	padding: 2%;
-	width: 300px;
-	min-height: 300px;
+	padding: 1em;
+	width: 250px;
+/* 	min-height: 300px; */
 	font-size: 14px;
-	position: absolute;
+/* 	position: absolute; */
 	z-index: 5;
-	left: calc(4% + 580px);
+/* 	left: calc(4% + 580px); */
 	background: #333333;
 	outline: none;
 	-webkit-border-radius: 0 2px 0 0;
@@ -1444,30 +1508,30 @@ textarea.input_std {
 	-webkit-box-shadow: 0px 2px 2px #000;
 	-moz-box-shadow: 0px 2px 2px #000;
 	box-shadow: 0px 2px 2px #000;
-	clear: both;
+/* 	clear: both; */
 	-webkit-transition: width 0.5s;
 } .kk_notizen:focus {
 	color: white;
 } .kk_notizen:before {
 /* 	Die abgeknickte Ecke oben rechts */
 	width: 0; 
-    content: ''; 
-    position: absolute; 
-    top: 0; 
-    right: -2px; 
-    border-top: 50px solid #4a4a4a;
-    border-left: 50px solid #242424;
+    content: ""; 
+    position: relative; 
+    top: 16px; 
+    left: calc(100% - 22px); 
+    border-top: 30px solid #4a4a4a;
+    border-left: 37px solid #242424;
 	-webkit-box-shadow: 0px 1px 0px #000;
 	-moz-box-shadow: 0px 1px 0px #000;
 	box-shadow: 0px 1px 0px #000;
-} .kk_notizen:after {
+}/*   .kk_notizen:after {
 	content: "Notizen";
-	position: absolute;
-	top: 15px;
+	position: relative;
+	top: -220px;
 	left: 15px;
 	color: gray;
 	text-shadow: 0px -1px 0px #000;
-}
+}  */
 
 .popup_input {
 	width: 100%;
@@ -1586,11 +1650,11 @@ select.profil_input {
 .r-header {
 	display: none;
 	position: fixed;
-	z-index: 98;
+	z-index: 97;
 	top: 0;
 	width: 100%;
 	height: 4em;
-	background: black;
+	background: rgba(0,0,0,.5);
 }
 
 .r-checkbox {
@@ -1612,6 +1676,39 @@ select.profil_input {
 	top: 0;
 	left: 0;
 }
+.r-suche_etwas_label {
+	display: none;
+	margin: 0;
+	padding: 1rem;
+	width: 2rem;
+	height: 2rem;
+	text-align: center;
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 98;
+} .r-suche_etwas_label span:before {
+	content: "\f02e";
+	font-size: 1.5rem;
+}
+.r-kk-inhaltsvz-checkbox {
+	display: none;
+} .r-kk-inhaltsvz-toggle {
+	display: none;
+	margin: 0;
+	padding: 1rem;
+	width: 2rem;
+	height: 2rem;
+	text-align: center;
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 98;
+} .r-kk-inhaltsvz-toggle span:before {
+	content: "\f039";
+	font-size: 1.5rem;
+}
+
 @media only screen 
 	and (max-width: 56em) {
 
@@ -1640,10 +1737,41 @@ select.profil_input {
 		width: calc(100% - 8em);
 		padding: 2em;
 	}
+	
 	.mainbox {
 		margin-left: 1em;
 		margin-top: 5em;
 		width: calc(100% - 1em);
+	}
+	
+	.r-suche_etwas_label {
+		display: block;
+	}
+	
+	#suche_global_input {
+		position: absolute;
+		z-index: 100;
+		top: -5rem;
+		right: 0;
+		width: 0;
+		height: 4rem;
+		border: none;
+		margin: 0;
+		padding: 0 4rem 0 4rem;
+		border-radius: 0;
+		border: none;
+		box-shadow: none;
+		background: black;
+		color: white;
+		opacity: 0;
+	} #suche_global_input:focus {
+		width: calc(100% - 7rem);
+		opacity: 1;
+		z-index: 150;
+	} #suche_global_input + .suche_ergebnisse {
+		margin: -1rem 0 0 -1rem;
+		width: calc(100% + 1rem - 1px);
+		border: none;
 	}
 	
 	.bn_full {
@@ -1683,6 +1811,45 @@ select.profil_input {
 	} #r-kk_toolbar_toggle_checkbox:checked ~ .kk_toolbar {
 		display: block;
 	}
+	
+	#kk_inhaltsverzeichnis {
+		width: 0;
+		padding: 0;
+		margin: 0;
+		border: none;
+		transition: all .2s;
+	} .r-kk-inhaltsvz-toggle {
+		display: block;
+	} .r-kk-inhaltsvz-checkbox:checked ~ #mainbox_veranstaltungsseite #kk_inhaltsverzeichnis {
+		width: calc(100% - 8em);
+		padding: 1rem;
+		height: 100%;
+		position: fixed;
+		top: 4rem !important;
+		right: 0;
+		z-index: 96;
+	}
+	
+	.kk_votes {
+		float: none;
+		overflow: hidden;
+		display: inline-block;
+		width: auto;
+	} .kk_optionen {
+		float: none;
+		display: inline-block;
+		width: 50%;
+		overflow: hidden;
+		margin-left: 1em;
+		opacity: 1;
+	} .kk_votes * {
+		float: left;
+		margin: 0 .2em;
+	} .kk_optionen * {
+		float: left;
+		margin: 0 .2em;
+	}
+	
 }
 	
 @media only screen 
@@ -1749,10 +1916,6 @@ select.profil_input {
 }
 
 /* STYLE FUER KLEINE BILDSCHIRME ENDE */
-
-#vn_kk_ueberscht_box {
-	display: none;
-}
 
 .bn_zeit{
 	font-size: 0.7em;

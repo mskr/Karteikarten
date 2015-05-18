@@ -228,12 +228,13 @@ function toUrlParamString(paramObj)
     	{
     		for( var i in paramObj[param])
     		{
-                locationSearchTmp += param + "=" + paramObj[param][i] + "&";
+    			// ESCAPING WICHTIG! Sonst können wir bspw. keine umlaute übertragen
+                locationSearchTmp += escape(param) + "=" + escape(paramObj[param][i]) + "&";
     		}
     	}
     	else
     	{
-            locationSearchTmp += param + "=" + paramObj[param] + "&";
+            locationSearchTmp += escape(param) + "=" + escape(paramObj[param]) + "&";
     	}
     }
     return locationSearchTmp;

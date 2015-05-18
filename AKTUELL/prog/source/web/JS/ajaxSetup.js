@@ -11,30 +11,36 @@
 
 $.ajaxSetup({
     type: "POST",
-	timeout: 3000,
+	timeout: 6000,
 	error: function(jqXHR, textStatus, errorThrown) { 
 		if(textStatus == "timeout")
 		{
 		    showError("Verbindung zum Server wurde unterbrochen. Wiederholen Sie den Vorngang, wenn möglich.");
-			checkConnection();
+		    if(!connectionCheckRunning)
+		    	checkConnection();
 		}
 		else if(jqXHR.responseText == "")
 		{
 		    showError("Bitte prüfen Sie Ihre Internetverbindung! Es konnte keine Verbindung zum Server hergestellt werden. Versuche Verbindung wieder herzustellen...");
-			checkConnection();
+
+		    if(!connectionCheckRunning)
+		    	checkConnection();
 		}
 		else
 			showError("Unbekannter Fehler. AjaxStatus: "+jqXHR.status+", AjaxTextStatus: "+textStatus+", AjaxErrorCode: "+errorThrown + ", resonseText: " + jqXHR.responseText);
 	}
 });
 
+var connectionCheckRunning = false;
 function checkConnection() 
 {
+    connectionCheckRunning = true;
 	$.ajax({
         url: startseitenServlet,
         data: "action="+actionPing,
         success: function(jsonResponse) {
 		    showInfo("Verbindungsaufbau erfolgreich. Bitte warten...");
+		    connectionCheckRunning = false;
 		    setTimeout(function(){
 		    	location.reload();
 		    }, 3000);
@@ -45,15 +51,15 @@ function checkConnection()
     		    setTimeout(function(){
         			checkConnection();
     		    }, 3000);
-        	}, 5000);
+        	}, 8000);
         }
     });
 }
 
 $( document ).ajaxStart(function() {
-	  $("#loadingDiv").fadeIn();
+	  $("#loadingDiv").show();
 	});
 
 $( document ).ajaxStop(function() {
-	  $("#loadingDiv").fadeOut();
+	  $("#loadingDiv").hide();
 	});

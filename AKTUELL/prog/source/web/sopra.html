@@ -40,8 +40,13 @@
 <script src="ckeditor/config.js"></script>
 <!-- CKEditor JQuery Adapter -->
 <script src="ckeditor/adapters/jquery.js"></script>
+<!-- Eigene CKEditor configurationen -->
+<script src="JS/ckeditorConfigs.js"></script>
 <!-- CKEditor Code Snippet Syntax Highlighting CSS -->
 <!-- <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/zenburn.css" rel="stylesheet"> -->
+<!-- Waypoints JS Lib -->
+<script src="JS/jquery.waypoints.min.js"></script>
+<script src="JS/sticky.min.js"></script>
 <!-- Dropzone.js Skript -->
 <script src="JS/libs/dropzone.js"></script>
 <!-- HTML5-Videoplayer -->
@@ -84,8 +89,8 @@
 <script src="JS/karteikarten.js"></script>
 <!-- Karteikarten Erstellen Skript -->
 <script src="JS/kkErstellen.js"></script>
-<!-- Testfunktion zum Karteikarten füllen -->
-<script src="JS/karteikartenFill.js"></script>
+<!-- Kommentare -->
+<script src="JS/kommentare.js"></script>
 </head>
 
 <body>
@@ -270,12 +275,14 @@
 <label class="r-toggle lines-button x" for="r-checkbox" onclick="naviconTransformicon()">
 	<span class="lines"></span>
 </label>
+<label for="suche_global_input" class="r-suche_etwas_label">
+	<span class="mega-octicon"></span>
+</label>
+<input id="r-kk-inhaltsvz-checkbox" class="r-kk-inhaltsvz-checkbox" type="checkbox">
+<label class="r-kk-inhaltsvz-toggle" for="r-kk-inhaltsvz-checkbox">
+	<span class="mega-octicon"></span>
+</label>
 <label class="r-overlay" for="r-checkbox" onclick="naviconTransformicon()"></label>
-<script>
-function naviconTransformicon() {
-	$(".lines-button").toggleClass("close");
-}
-</script>
 
 <!-- Container für die Startseite -->
 <div id="mypersonalbox_startseite" class="mypersonalbox card">
@@ -304,7 +311,8 @@ function naviconTransformicon() {
 
 <div id="mypersonalbox_main" class="mypersonalbox card">
 
-	<img id="loadingDiv" src="files/general/ajaxLoader.gif" style="width:50px;position: absolute;top: 0.5em;left: 0.5em;" />
+	<!-- <img id="loadingDiv" src="files/general/ajaxLoader.gif" style="width:50px;position: absolute;top: 0.5em;left: 0.5em;" /> -->
+	<div id="loadingDiv"></div>
 
 	<a class="return tiptrigger tipright" data-tooltip="Zurück zur Hauptseite"><span class="mega-octicon octicon-chevron-left"></span></a>
 
@@ -373,48 +381,58 @@ Dann aber so leer.
 	</svg>
 	-->
 </div>
-<div id="mainbox_loadScreen" class = "mainbox" >
-	<img alt="load icon" src="files/general/ajaxLoader.gif" style="width: 200px;height:  200px; top: 200px; position:absolute;">
-</div>
 
 <div id="mainbox_hauptseite" class="mainbox">
-	<div class="hauptseite_head">
-		<input id="suche_global_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Veranstaltungen und Personen finden..." required>
-<!-- 		<div id="suche_ergebnisse" class="suche_ergebnisse"> -->
-<!-- 			<div class="sucherg_x"><span id="sucherg_x" class="octicon octicon-x"></span></div> -->
-<!-- 			<div class="sucherg_titel">VERANSTALTUNGEN</div> -->
-<!-- 			<div id="sucherg_vn" class="sucherg_vn"> -->
-<!-- 				Suchergebnisse hier -->
-<!-- 			</div> -->
-<!-- 			<div class="sucherg_titel">PERSONEN</div> -->
-<!-- 			<div id="sucherg_benutzer" class="sucherg_benutzer"> -->
-<!-- 				Suchergebnisse hier -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-		<span id="vn_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span> </span>
-	</div>
+	<input id="suche_global_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Veranstaltungen und Personen finden..." required>
+	<span id="vn_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span> </span>
+	
 	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
-	<div class="vn_container">
+<!--	<div class="vn_container" id="vn_container">
 		<div class="vn_tab meine_vn">
 			<input class="vn_tabradio" type="radio" id="tab-1" name="group1" checked>
-			<label class="meine_vn_tablabel vn_tablabel" for="tab-1"><span class="octicon octicon-home"></span></label>
+			<label class="meine_vn_tablabel vn_tablabel" for="tab-1"><span class="mega-octicon octicon-home"></span></label>
 			<div class="vn_tabcontent" id="vn_tabcontent_meine">
-				<div class="vn_toolbar">Veranstaltungen, in die Sie eingeschrieben sind</div>
-				<!-- Veranstaltungen hier -->
+				<div class="vn_toolbar">Hier finden Sie Veranstaltungen, in die Sie eingeschrieben sind.</div>
+				
 			</div>
 		</div>
 		<div class="vn_tab alle_vn">
 			<input class="vn_tabradio" type="radio" id="tab-2" name="group1">
-			<label class="alle_vn_tablabel vn_tablabel" for="tab-2"><span class="octicon octicon-package"></span></label>
+			<label class="alle_vn_tablabel vn_tablabel" for="tab-2"><span class="mega-octicon octicon-list-unordered"></span></label>
 			<div class="vn_tabcontent" id="vn_tabcontent_alle">
-				<div class="vn_toolbar">Semester wählen: <select id="vn_alle_auswahl_semester"></select>
-										Studiengang wählen: <select id="vn_alle_auswahl_studiengang"></select></div>
+				<div class="vn_toolbar">
+					Hier finden Sie alle Veranstaltungen im System.<br>
+					<select id="vn_alle_auswahl_semester"></select>
+					<select id="vn_alle_auswahl_studiengang"></select>
+				</div>
+				
+			</div>
+		</div>
+	</div> -->
+	
+	<div class="vn_tab_container">
+		<input id="vn_tab_meine" type="radio" name="vn_tab_set" class="vn_tab_meine_radio" checked>
+		<label for="vn_tab_meine" class="vn_tab_meine_label"><span class="mega-octicon octicon-home"></span> Meine</label>
+		<input id="vn_tab_alle" type="radio" name="vn_tab_set" class="vn_tab_alle_radio">
+		<label for="vn_tab_alle" class="vn_tab_alle_label"><span class="mega-octicon octicon-list-unordered"></span> Alle</label>
+		<div class="vn_tab_content">
+			<div id="vn_tabcontent_meine" class="vn_tabcontent_meine">
+				<div class="vn_toolbar">
+					Hier finden Sie Veranstaltungen, in die Sie eingeschrieben sind.
+				</div>
+				<!-- Veranstaltungen hier -->
+			</div>
+			<div id="vn_tabcontent_alle" class="vn_tabcontent_alle">
+				<div class="vn_toolbar">
+					Hier finden Sie alle Veranstaltungen im System.<br>
+					<select id="vn_alle_auswahl_semester"></select>
+					<select id="vn_alle_auswahl_studiengang"></select>
+				</div>
 				<!-- Veranstaltungen hier -->
 			</div>
 		</div>
-		<!-- Button rechts neben den Tabs -->
-		<!-- <span class="mybutton dark flat vn_fktn_allg"><span class="octicon octicon-gear"></span></span> -->
 	</div>
+	
 	<div class="impressum">
 		Uni Ulm <br> 
 		WiSe 14/15 <br> 
@@ -501,11 +519,10 @@ Dann aber so leer.
 <div id="mainbox_veranstaltungsseite" class="mainbox">
 	<div class="vn_header">
 		<input id="vn_attributliste_anzeigen_checkbox" type="checkbox">
-		<span id="vn_title" class="vn_title text_h1">
-			<label id="vn_attributliste_anzeigen" for="vn_attributliste_anzeigen_checkbox">
-				<span class="octicon octicon-triangle-down"></span>
-			</label>
-		</span>
+		<span id="vn_title"></span>
+		<label id="vn_attributliste_anzeigen" for="vn_attributliste_anzeigen_checkbox">
+			<span class="octicon octicon-triangle-down"></span>
+		</label>
 		<button id="vn_loeschen" class="mybutton red"><span class="octicon octicon-trashcan"></span></button>
 		<div class="vn_attributliste">
 			<span id="vn_attr_semester"></span><br>
@@ -593,28 +610,10 @@ Dann aber so leer.
 				</a>
 			</label>
 		</div>
-		<button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button>
-		<button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button>
+		<!-- <button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button> -->
+		<!-- <button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button> -->
 	</div>
-	<div id="kk_inhaltsverzeichnis">
-		<ul>
-			<li>Karteikarte 1</li>
-			<li>
-				<ul data-text="Überschrift 1">
-					<li>Unterkarteikarte 1</li>
-					<li>Unterkarteikarte 2</li>
-				</ul>
-			</li>
-			<li>Karteikarte 2</li>
-			<li>
-				<ul data-text="Überschrift 2">
-					<li>Unterkarteikarte 3</li>
-					<li>Unterkarteikarte 4</li>
-				</ul>
-			</li>
-			<li>Karteikarte 3</li>
-		</ul>
-	</div>
+	<div id="kk_inhaltsverzeichnis"></div>
 	<div id="kk_all">
 		<div class="kk_wrapper" id="textKarteikarteTest" style="display:none;"> <!-- TEXT TEST KARTEIKARTE  -->
 			<div class="kk_votes">
@@ -890,7 +889,56 @@ Dann aber so leer.
 </div>
 
 
-
+<!-- Template Karteikarte -->
+<div id="templatekarteikarte" class="kk_wrapper" style="display:none">
+		<div class="kk_votes">
+			<a class="kk_voteup"><span
+				class="mega-octicon octicon-triangle-up"></span></a>
+			<div class="kk_votestat">0</div>
+			<a class="kk_votedown"><span
+				class="mega-octicon octicon-triangle-down"></span></a>
+		</div>
+		<div class="kk_optionen">
+			<a class="option permalink tiptrigger tipabove"
+				data-tooltip="Link kopieren"><span 
+				class="octicon octicon-link"></span></a>
+			<a class="option loeschen tiptrigger tipabove"
+				data-tooltip="Karteikarte löschen"><span
+				class="octicon octicon-trashcan"></span></a>
+			<a class="option einfuegen tiptrigger tipabove"
+				data-tooltip="Karteikarte unter dieser Karteikarte einfügen"><span
+				class="octicon octicon-plus"></span></a>
+			<a class="option attribute attr_popup_open tiptrigger tipabove"
+				data-tooltip="Attribute ändern"><span
+				class="octicon octicon-checklist"></span></a>
+		</div>
+	
+		<div style = "display:inline-flex;width: 80%;">
+			<div class="kk kk_inhalt"></div>
+			<div class="kk_notizen">
+				<h3>Notizen</h3>
+				<textarea class="kk_notizen_body" contenteditable=""></textarea>
+				<div class="kk_notizen_foot" style="padding-top: 0.5em;">
+					<span class="mybutton green"> Speichern </span>
+				</div>
+			</div>
+	
+		</div>
+		<div class="kk_kommbox">
+			<a class="kk_kommheader">
+				<span class="octicon octicon-comment-discussion"></span> Kommentare
+				(<span class="kk_kommzaehler">0</span>)
+			</a>
+			<div class = "kk_kommbody" style = "display:none">
+				<div class="kk_kommerstellen">
+					<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
+					<a class="komm_submit_bt" style="float: right">Thema erstellen</a>
+				</div><div class="clearfix"></div>
+				<div class="kk_kommList">
+				</div>
+			</div>
+		</div>
+	</div>
 
 <!-- Template Kommentare -->
 <div class="kk_superkomm" id="templateSuperKomm" data-komm-id="" style="display:none">
@@ -907,13 +955,14 @@ Dann aber so leer.
 		<a class="kommAuthor">Matthias Englert</a>
 		<span class="kommDatum">28. Jan '15 um 15:29</span>
 	</div>
-	
+	<div class="clearfix"></div>
 	<div class="kk_kommantwort">
 		<textarea class="antw" placeholder="Antworten..." rows="1" ></textarea>
 		<a class="komm_submit_bt" style="float:right">Antwort absenden</a>
+		<div class="clearfix"></div>
 	</div>
 	
-	<a class="antwAnzeigen" style="color:yellow"><span class ="AntwPfeil"></span><span class="subKommCount">0</span> Antworten</a>
+	<a class="antwAnzeigen" style="color:yellow"><span class ="AntwPfeil octicon octicon-triangle-down"></span><span class="subKommCount">0</span> Antwort(en)</a>
 	<div class="subkommentare" style="display:none">
 	
 	</div>
@@ -925,6 +974,7 @@ Dann aber so leer.
 	</div>
 	<span class="kk_inhalt"></span>
 	<div class="kk_komminfo"><a class="kommAuthor">Jan Willem Liebezeit</a><span class="kommDatum">28. Jan '15 um 16:29</span></div>
+	<div class="clearfix"></div>
 </div>
 
 </body>

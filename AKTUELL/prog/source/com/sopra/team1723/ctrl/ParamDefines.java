@@ -55,6 +55,20 @@ public class ParamDefines
     public final static String ActionGetKarteikartenVater = "getKKVater";
     public final static String ActionErstelleKarteikarte = "erstelleKarteikarte";
     
+    public final static String ActionSpeichereNotiz = "speichereNotiz";
+    public final static String ActionLeseNotiz = "leseNotiz";
+    
+    public final static String ActionVoteKommentarUp = "voteUpKomm";
+    public final static String ActionVoteKommentarDown = "voteDownKomm";
+    public final static String ActionDeleteKommentar = "deleteKomm";
+    public final static String ActionErstelleAntwortKommentar = "erstelleAntwKomm";
+    public final static String ActionErstelleThemaKommentar = "erstelleThemaKomm";
+    public final static String ActionLeseAntwortKommentar = "leseAntwKomm";
+    public final static String ActionLeseThemaKommentar = "leseThemaKomm";
+    
+    public final static String ActionVoteKarteikareUp = "voteUpKarteik";
+    public final static String ActionVoteKarteikareDown = "voteDownKarteik";
+    
 
     public final static String Klasse = "klasse";
     public final static String KlasseBenutzer = "klasseBenutzer";
@@ -126,13 +140,6 @@ public class ParamDefines
     public final static String benKommentar = "benKommentar";
     public final static String benProfil = "benProfil";
 
-    public final static String ActionVoteKommentarUp = "voteUpKomm";
-    public final static String ActionVoteKommentarDown = "voteDownKomm";
-    public final static String ActionDeleteKommentar = "deleteKomm";
-    public final static String ActionErstelleAntwortKommentar = "erstelleAntwKomm";
-    public final static String ActionErstelleThemaKommentar = "erstelleThemaKomm";
-    public final static String ActionLeseAntwortKommentar = "leseAntwKomm";
-    public final static String ActionLeseThemaKommentar = "leseThemaKomm";
 
     public final static String AktSemester = "aktSemester";
 

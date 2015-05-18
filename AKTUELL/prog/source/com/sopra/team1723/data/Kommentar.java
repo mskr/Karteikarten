@@ -78,7 +78,7 @@ public class Kommentar implements IjsonObject{
         return bewertung;
     }
 
-    public boolean isHatBewertet()
+    public boolean isBewertet()
     {
         return hatBewertet;
     }
@@ -95,9 +95,11 @@ public class Kommentar implements IjsonObject{
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);    
         jo.put(ParamDefines.Id, this.getId());   
         jo.put(ParamDefines.Inhalt, this.getInhalt()); 
+        jo.put(ParamDefines.Bewertung, this.getBewertung()); 
+        jo.put(ParamDefines.HatGevoted, this.isBewertet()); 
         
-        SimpleDateFormat f = new SimpleDateFormat("dd.MM.yyyy hh:mm");
-        jo.put(ParamDefines.ErstellDatum, f.format(this.getErstelldatum())); 
+        SimpleDateFormat f = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        jo.put(ParamDefines.ErstellDatum, f.format(this.getErstelldatum().getTime())); 
         
         if(getVaterID() != -1)
             jo.put(ParamDefines.KommentarVaterId, this.getVaterID()); 
