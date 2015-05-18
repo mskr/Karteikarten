@@ -270,3 +270,10 @@ function handleReturnLink() {
         $(".return").off();
     }
 }
+
+/**
+ * Ermoeglicht das Ausklappen der mypersonalbox im Smartphonemodus
+ */
+function naviconTransformicon() {
+    $(".lines-button").toggleClass("close");
+}

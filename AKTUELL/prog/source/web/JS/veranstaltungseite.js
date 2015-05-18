@@ -238,15 +238,36 @@ function fillVeranstaltungsSeite(Vid)
 	    });
         
 	});
+	
+    // Elemente fuer kleine Bildschirme
+    if (window.matchMedia("(max-width: 56em)").matches)
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").show();
+    }
+    else
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").hide();
+    }
     
 	return $.when(ajax1,ajax2,d);
 }
 
+/**
+ * Generische Methode, die alle direkten Kindkarteikarten zu einer gegebenen Vater-ID
+ * vom Server laedt und in eine Unordered List einfuegt. Es wird ein Click Handler registriert,
+ * der beim Klick auf einen Eintrag rekursiv dessen Kinder laedt.
+ * @param vaterId ID der Vaterkarteikarte
+ * @param vaterElem jQuery Objekt. Container, in den die Unordered List eingefuegt wird.
+ * @returns Ajax Objekt
+ */
 function ladeKindKarteikarten(vaterId, vaterElem) {
     var params = {};
     params[paramId] = vaterId;
-    // ersetze evntl bestehende Kindkarteikarten
+    // Evntl bestehende Kindkarteikarten aushaengen
     vaterElem.find("ul").remove();
+    // Neue Liste aufbauen
     vaterElem = vaterElem.append("<ul></ul>").find("ul");
     return ajaxCall(
             karteikartenServlet,
@@ -254,14 +275,17 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
             function(response) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
-                console.log(arr);
-                // falls keine Kindkarteikarten vorhanden, tue nichts mehr
+                // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
                 if(arr.length == 0) {
                     console.log("hat keine kinder mehr");
+                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
                 }
                 // andernfalls DOM aufbauen
                 else
                 {
+                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
                     for(var i in arr)
                     {
                         var kkListItem = $("<li><a class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
@@ -276,7 +300,7 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                         }
                         f(arr, kkListItem, i);
                         // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
-                        vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Neu</a></li>");
+                        vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
                         //TODO Click Handler Karteikarte hinzu
                     }
                 }

@@ -14,17 +14,19 @@ $(document).ready(function() {
             	editor.destroy();
 
             	var dialog = $("#vn_erstellen_popup");
+            	console.log("[LOG] dialog ");
+            	console.log(dialog);
             	dialog.find("#vn_erstellen_titel_input").val("");
 //            	dialog.find("#vn_erstellen_auswahl_semester").val(jsonBenutzer[paramSemester]);
             	selectedStudiengaenge = {};
             	$("#vn_erstellen_stg_list").empty();
-            	
+            	$("#vn_erstellen_stg_input").val("");
             	dialog.find("#vn_erstellen_beschr_input").val("");
             	dialog.find("#vn_erstellen_pass_input").val("");
             	dialog.find("#vn_erstellen_komm_erlaubt").prop("checked", true);
             	dialog.find("#vn_erstellen_bew_erlaubt").prop("checked", true);
-
-            	dialog.find("#vn_erstellen_keiner_bearb").prop("checked", true);
+            	$("#vn_erstellen_mod_input").val("");
+            	$("#vn_erstellen_mod_bearb").prop("checked", true); // TODO Radio Button wird nicht gecheckt
 
             	selectedModList = {};
             	$("#vn_erstellen_mod_list").empty();
@@ -134,90 +136,5 @@ function registerVeranstErzeugeHandler() {
             categoryClassMapping,
             actionSucheBenutzer
     );
-    
-    // Triggert das eigene Enter-Event wenn key 13 gedrückt wurde
-//    $("#vn_mod_input").keyup(function(e)
-//    {
-//        if(e.keyCode == 37) // Pfeil links
-//        {
-//            // TODO 
-//        }
-//        else if(e.keyCode == 38) // Pfeil hoch
-//        {
-//            // TODO
-//        }
-//        else if(e.keyCode == 39) // Pfeil rechts
-//        {
-//            // TODO
-//        }
-//        else if(e.keyCode == 40) // Pfeil runter
-//        {
-//            // TODO
-//        }
-//        else if(e.keyCode == 13) // ENTER
-//        {
-//            // TODO
-//            $("#vn_mod_vorschlag").children().first().trigger("click");
-//        }
-//        else if(e.keyCode == 27) // ESC
-//        {
-//            $("#vn_mod_input").val("");
-//            $("#vn_mod_input").trigger("keyup");
-//        }
-//        // Falls etwas eingegeben wurde suchen, sonst Feld leeren
-//        else if($("#vn_mod_input").val() != "")
-//        {
-//            clearTimeout(modSuchTimer);
-//            modSuchTimer = setTimeout(function(){
-//                var params = {};
-//                params[paramSuchmuster] = $("#vn_mod_input").val();
-//                ajaxCall(suchfeldServlet,
-//                    actionSucheBenutzer,
-//                    function(response) 
-//                    {
-//                        // Alle Suchergebnisse entfernen
-//                        $("#vn_mod_vorschlag").children().remove();
-//                        // Neue Suchergebnisse holen
-//                        var res = response[keyJsonArrResult];
-//                        // Falls welche existieren
-//                        if(res.length>0)
-//                        {
-//                            for(var i in res)
-//                            {
-//                                var x = $("<a>" + res[i][paramVorname] + " " + res[i][paramNachname] + "</a>");
-//    
-//                                (function(benutzer) 
-//                                        {
-//                                    // Click handler für den Sucheintrag
-//                                    x.click(function()
-//                                            {
-//                                        addItemToList(selectedModList, $("#vn_mod_list"), 
-//                                                benutzer[paramVorname] + " " + benutzer[paramNachname], 
-//                                                benutzer, undefined,undefined);
-//    
-//                                        $("#vn_mod_input").val("");
-//                                        $("#vn_mod_vorschlag").slideUp(100);
-//    
-//                                            });
-//                                        })(res[i]);
-//    
-//
-//                                $("#vn_mod_vorschlag").append(x);
-//                                $("#vn_mod_vorschlag").append("<br>");
-//                            }
-//                            $("#vn_mod_vorschlag").slideDown(100);
-//                        }
-//                        else
-//                            $("#vn_mod_vorschlag").slideUp(100);
-//
-//                    },
-//                    params
-//                );
-//
-//            },400);
-//        }
-//        else
-//            $("#vn_mod_vorschlag").fadeOut();
-//    });
 }
 

@@ -188,15 +188,13 @@ function display(ansicht)
     // mypersonalbox
     if(ansicht == ansichtStartseite)
     {
-        $("#mypersonalbox_main").fadeOut("slow",function(){
-            $("#mypersonalbox_startseite").show();
-        });
+        $("#mypersonalbox_main").hide();
+        $("#mypersonalbox_startseite").show();
     }
     else
     {
-        $("#mypersonalbox_startseite").fadeOut("slow",function(){
-            $("#mypersonalbox_main").show();
-        });
+        $("#mypersonalbox_startseite").hide();
+        $("#mypersonalbox_main").show();
         
     }
     // mainbox
