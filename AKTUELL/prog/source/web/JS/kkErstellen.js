@@ -1,20 +1,15 @@
 $(document).ready(function() {
-    
+	Dropzone.autoDiscover = false;
+
     $('#kk_erstellen_bt').click(function() {
         
         popupFenster(
             $("#kk_erstellen_popup_overlay"), 
             [$('#kk_erstellen_popup_close'),$("#kk_erstellen_cancel")],
             function() {
-            	var editor = $('#vn_erstellen_beschr_input').ckeditorGet();
-            	editor.destroy();
-
-            	var dialog = $("#vn_erstellen_popup");
-            	dialog.find("#vn_erstellen_titel_input").val("");
-//            	dialog.find("#vn_erstellen_auswahl_semester").val(jsonBenutzer[paramSemester]);
-            	selectedStudiengaenge = {};
-            	$("#vn_erstellen_stg_list").empty();
             	
+            	var dialog = $("#vn_erstellen_popup");
+            	$("#vn_erstellen_stg_list").empty();
             	dialog.find("#vn_erstellen_beschr_input").val("");
             	dialog.find("#vn_erstellen_pass_input").val("");
             	dialog.find("#vn_erstellen_komm_erlaubt").prop("checked", true);
@@ -82,10 +77,51 @@ $(document).ready(function() {
             $("#vn_erstellen_weiter"),
             $("#vn_erstellen_zurueck")
         );
-        
+    	var myDropzone = $("#file-dropzone").dropzone({
+             url: actionUploadKKBild,
+             acceptedFiles: "image/jpeg,image/png,image/gif,video/mp4",
+             clickable: true,
+             maxFilesize: 1,
+             autoProcessQueue:false,
+             createImageThumbnails: true,
+             uploadMultiple: false,
+             addRemoveLinks: true,
+             init: function() {
+        	    this.on("addedfile", function(file) {
+        	    	console.log("Added file.");
+        	    	$("#dz_info_message").hide(0);
+//        	    	$("#dz_uploaded_file_message").html(file.name+"<br>"+file.size);
+//        	    	$("#dz_uploaded_file_message").show(0);
+        	    	this.getAcceptedFiles();
+        	    });
+        	  }
+         });
+    	console.log(myDropzone);
         $("#vn_erstellen_beschr_input").ckeditor();
         
     });
     
 });
 
+
+
+function isImage(filename) {
+    var ext = getExtension(filename);
+    switch (ext.toLowerCase()) {
+    case 'jpg':
+    case 'png':
+        //etc
+        return true;
+    }
+    return false;
+}
+
+function isVideo(filename) {
+    var ext = getExtension(filename);
+    switch (ext.toLowerCase()) {
+    case 'mp4':
+        // etc
+        return true;
+    }
+    return false;
+}

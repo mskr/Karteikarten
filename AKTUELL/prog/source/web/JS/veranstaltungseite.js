@@ -1,31 +1,31 @@
 /**
  * @author mk
  */
-var sampleJSONIDs = {};
-sampleJSONIDs["k_1"] = {};
-sampleJSONIDs["k_1"][paramIndex] = 7;
-sampleJSONIDs["k_1"][paramId] = 24;
-sampleJSONIDs["k_2"] = {};
-sampleJSONIDs["k_2"][paramIndex] = 1;
-sampleJSONIDs["k_2"][paramId] = 26;
-sampleJSONIDs["k_3"] = {};
-sampleJSONIDs["k_3"][paramIndex] = 3;
-sampleJSONIDs["k_3"][paramId] = 22;
-sampleJSONIDs["k_4"] = {};
-sampleJSONIDs["k_4"][paramIndex] = 4;
-sampleJSONIDs["k_4"][paramId] = 23;
-sampleJSONIDs["k_5"] = {};
-sampleJSONIDs["k_5"][paramIndex] = 8;
-sampleJSONIDs["k_5"][paramId] = 20;
-sampleJSONIDs["k_6"] = {};
-sampleJSONIDs["k_6"][paramIndex] = 6;
-sampleJSONIDs["k_6"][paramId] = 25;
-sampleJSONIDs["k_7"] = {};
-sampleJSONIDs["k_7"][paramIndex] = 2;
-sampleJSONIDs["k_7"][paramId] = 21;
-sampleJSONIDs["k_8"] = {};
-sampleJSONIDs["k_8"][paramIndex] = 5;
-sampleJSONIDs["k_8"][paramId] = 27;
+var sampleJSONIDs = [];
+sampleJSONIDs[0] = {};
+sampleJSONIDs[0][paramIndex] = 7;
+sampleJSONIDs[0][paramId] = 24;
+sampleJSONIDs[1] = {};
+sampleJSONIDs[1][paramIndex] = 1;
+sampleJSONIDs[1][paramId] = 26;
+sampleJSONIDs[2] = {};
+sampleJSONIDs[2][paramIndex] = 3;
+sampleJSONIDs[2][paramId] = 22;
+sampleJSONIDs[3] = {};
+sampleJSONIDs[3][paramIndex] = 4;
+sampleJSONIDs[3][paramId] = 23;
+sampleJSONIDs[4] = {};
+sampleJSONIDs[4][paramIndex] = 8;
+sampleJSONIDs[4][paramId] = 20;
+sampleJSONIDs[5] = {};
+sampleJSONIDs[5][paramIndex] = 6;
+sampleJSONIDs[5][paramId] = 25;
+sampleJSONIDs[6] = {};
+sampleJSONIDs[6][paramIndex] = 2;
+sampleJSONIDs[6][paramId] = 21;
+//sampleJSONIDs[7] = {};
+//sampleJSONIDs[7][paramIndex] = 5;
+//sampleJSONIDs[7][paramId] = 27;
 
 var veranstaltungsObject;
 
@@ -198,7 +198,7 @@ function fillVeranstaltungsSeite(Vid)
 					jsonKkIDs = sampleJSONIDs;
 					
 					
-					json_length = Object.keys(jsonKkIDs).length; //anzahl der einträge im json
+					json_length = jsonKkIDs.length; //anzahl der einträge im json
 					newIdArray = sortiereKarteikartenIDs(jsonKkIDs);	//array in dem die ids in der gewünschten reihenfolge aufgelistet sind;
 					
 					ajaxArr = [];
@@ -208,8 +208,7 @@ function fillVeranstaltungsSeite(Vid)
 					}
 					
 					$.when.apply($,ajaxArr).done(function() { //wenn alle fertig, werden diese erstellt und appended
-						console.log("alle ajax calls für karteikarten fertig, array von karteikarten hier:")
-						console.log(ajaxArr);
+						$("#kk_all").empty();
 						for(i=0;i<json_length;i++){
 							domElem = buildKarteikarte( jQuery.parseJSON(ajaxArr[i].responseText));
 							$("#kk_all").append(domElem);
@@ -343,31 +342,36 @@ function findModeratorenVn(id){
 
 function sortiereKarteikartenIDs(jsonKkIDs){
 	newIdArray = [];
-	id_of_smallest_index =-1;
-	smallest_index = -1;
-	j_to_delete = -1;
-	for(i=1; i<json_length+1;i++){
-		for(j=1; j<json_length+1;j++){
-			if(smallest_index == -1){
-			//	console.log("set smallest index initial from -1 to:"+ jsonKkIDs["k_"+j].index);
-				id_of_smallest_index = jsonKkIDs["k_"+j].id;
-				smallest_index = jsonKkIDs["k_"+j].index;
-				j_to_delete = j;
-			}
-			else if(jsonKkIDs["k_"+j].index < smallest_index){
-			//	console.log("replace smallest index:"+ smallest_index + ",id: "+id_of_smallest_index);
-				j_to_delete = j;
-				id_of_smallest_index = jsonKkIDs["k_"+j].id;
-				smallest_index = jsonKkIDs["k_"+j].index;
-			//	console.log("with index: "+smallest_index+", id: "+ id_of_smallest_index);
-			}
-		}
-	//	console.log("found smallest index: "+ smallest_index +"with id:"+ id_of_smallest_index);
-		newIdArray[i-1]=id_of_smallest_index;
-		jsonKkIDs["k_"+j_to_delete].index = 999999999;
-		smallest_index = -1;
-		id_of_smallest_index = -1;
-	}
+	jsonKkIDs.sort(function(a,b){
+		return a[paramIndex] - b[paramIndex];
+	});
+	for(var i in jsonKkIDs)
+		newIdArray.push(jsonKkIDs[i][paramId]);
+	
+//	id_of_smallest_index =-1;
+//	smallest_index = -1;
+//	j_to_delete = -1;
+//	for(i=1; i<json_length+1;i++){
+//		for(j=1; j<json_length+1;j++){
+//			if(smallest_index == -1){
+//			//	console.log("set smallest index initial from -1 to:"+ jsonKkIDs["k_"+j].index);
+//				id_of_smallest_index = jsonKkIDs["k_"+j].id;
+//				smallest_index = jsonKkIDs["k_"+j].index;
+//				j_to_delete = j;
+//			}
+//			else if(jsonKkIDs["k_"+j].index < smallest_index){
+//			//	console.log("replace smallest index:"+ smallest_index + ",id: "+id_of_smallest_index);
+//				j_to_delete = j;
+//				id_of_smallest_index = jsonKkIDs["k_"+j].id;
+//				smallest_index = jsonKkIDs["k_"+j].index;
+//			//	console.log("with index: "+smallest_index+", id: "+ id_of_smallest_index);
+//			}
+//		}
+//	//	console.log("found smallest index: "+ smallest_index +"with id:"+ id_of_smallest_index);
+//		newIdArray[i-1]=id_of_smallest_index;
+//		jsonKkIDs["k_"+j_to_delete].index = 999999999;
+//		smallest_index = -1;
+//		id_of_smallest_index = -1;
+//	}
 	return newIdArray;
 }
-

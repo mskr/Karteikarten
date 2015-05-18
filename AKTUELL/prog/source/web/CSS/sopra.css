@@ -1043,6 +1043,14 @@ textarea.input_std {
 	z-index: 2;
 }
 
+.kk_load{
+	height:30px;
+	weidth:100%;
+	cursor:pointer;
+	text-align:center;
+	background: #444;
+	margin-bottom: 1em;
+}
 #kk_inhaltsverzeichnis {
 	position: absolute;
 	right: 0;
@@ -1086,7 +1094,7 @@ textarea.input_std {
 .kk_wrapper {
 	margin-bottom: 2rem;
 	position: relative;
-	display: block;
+	display: table;
 } .kk_wrapper:hover .kk_optionen {
 	opacity: 1;
 } .kk_wrapper:hover .kk {
@@ -1125,11 +1133,12 @@ textarea.input_std {
 }
 
 .kk {
+	vertical-align: middle;
 	box-sizing: border-box;
 	padding: 2em;
 	max-width: 500px; 
-	width: 100%;
-	position: relative;
+/* 	width: 100%;
+ */	position: relative;
 	z-index: 6;
 	background: #e0e0e0;
 	outline: none;
@@ -1148,10 +1157,10 @@ textarea.input_std {
 	align-items: center;
 	overflow: hidden;
 } .inhalt_video { 	
-	padding-top: 0;
- 	padding-bottom: 0;
+	
+	padding:0;
 	display: inline-flex;
-	background-clip: content-box;
+/* 	background-clip: content-box; */
 	height:auto;
 	justify-content: center;
 	align-items: center;
@@ -1159,8 +1168,8 @@ textarea.input_std {
 }
 
 .kk_bild {
-	width: 600px;
-	flex-shrink: 0;
+/* 	width: 600px;
+ */	flex-shrink: 0;
 }
 
 .kk_bildunterschrift {
@@ -1341,11 +1350,11 @@ textarea.input_std {
 .kk_kommbox {
 	margin-top: -1px;
 	padding: 1%;
-	width: calc(1.1% + 500px);
-	height: auto;
+	/* width: calc(1.1% + 500px);
+	height: auto; */
 	display: block;
-	position: relative;
-	left: 80px;
+	/* position: relative;
+	left: 80px; */
 	z-index: 7;
 	overflow: hidden;
 	background: #333333;
@@ -1381,6 +1390,7 @@ textarea.input_std {
 	color: white;
 	background: #252525;
 } .kk_superkomm img {
+	filter: invert(1);
 	-webkit-filter: invert(1);
 } .kk_subkomm {
 	margin-top: 5px;
@@ -1831,7 +1841,7 @@ select.profil_input {
 		z-index: 96;
 	}
 	
-	.kk_votes {
+	/* .kk_votes {
 		float: none;
 		overflow: hidden;
 		display: inline-block;
@@ -1849,7 +1859,7 @@ select.profil_input {
 	} .kk_optionen * {
 		float: left;
 		margin: 0 .2em;
-	}
+	} */
 	
 }
 	
@@ -1920,4 +1930,32 @@ select.profil_input {
 
 .bn_zeit{
 	font-size: 0.7em;
+}
+.drop_file_areas{
+	margin: 0;
+	overflow: hidden;
+	min-height: 12em;
+	border: 1px dashed DimGray;
+	border-radius: .3em;
+	width:30%;
+}
+.dz-message{
+	cursor:pointer;
+	display:block;
+	text-align: center;
+	margin: 0 auto;
+	margin-top:25%;
+}
+#dz_uploaded_file_message{
+	display:none;
+	margin: 0 auto;
+	overflow: hidden;
+	min-height: 3em;
+	text-align:center;
+	border: 1px solid black;
+	background-color:black;
+	margin-top:2em;
+	padding:1.5em;
+	border-radius: 1em;
+	width:30%;
 }
