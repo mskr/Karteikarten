@@ -410,6 +410,9 @@ public interface IDatenbankmanager {
      * zurückgeliefert.
      */
     public Map<Integer,Tupel<Integer,String>> leseKindKarteikarten(int vaterKarteikID);
+    
+    
+    public Map<Integer,Karteikarte> leseNachfolger(int karteikarte, int anzNachfolger);
 
     /**
      * Fügt neue Karteikarte in die Datenbank ein. Bei einem Fehler wird eine
