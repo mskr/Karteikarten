@@ -1085,7 +1085,7 @@ textarea.input_std {
 .kk_wrapper {
 	margin-bottom: 2rem;
 	position: relative;
-	display: block;
+	display: table;
 } .kk_wrapper:hover .kk_optionen {
 	opacity: 1;
 } .kk_wrapper:hover .kk {
@@ -1832,7 +1832,7 @@ select.profil_input {
 		z-index: 96;
 	}
 	
-	.kk_votes {
+	/* .kk_votes {
 		float: none;
 		overflow: hidden;
 		display: inline-block;
@@ -1850,7 +1850,7 @@ select.profil_input {
 	} .kk_optionen * {
 		float: left;
 		margin: 0 .2em;
-	}
+	} */
 	
 }
 	

@@ -614,22 +614,29 @@ Dann aber so leer.
 		<!-- <button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button> -->
 	</div>
 	<div id="kk_inhaltsverzeichnis"></div>
-	<div id="kk_all">
-		<!-- Karteikartencontainer -->
+	<div style="width: 70%;max-width: 800px">
+		<div> ... </div><br>
+		<div id="kk_all">
+			<!-- Karteikartencontainer -->
+		</div><br>
+		<div> ... </div>
 	</div>
+	
 </div>
 
 
 <!-- Template Karteikarte -->
 <div id="templatekarteikarte" class="kk_wrapper" style="display:none">
-		<div class="kk_votes">
+<div style = "display:table-row">
+	<div style="display:table-cell;">
+		<div class="kk_votes" style="display:table-cell;">
 			<a class="kk_voteup"><span
 				class="mega-octicon octicon-triangle-up"></span></a>
 			<div class="kk_votestat">0</div>
 			<a class="kk_votedown"><span
 				class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
-		<div class="kk_optionen">
+		<div class="kk_optionen" style="display:table-cell;">
 			<a class="option permalink tiptrigger tipabove"
 				data-tooltip="Link kopieren"><span 
 				class="octicon octicon-link"></span></a>
@@ -643,9 +650,10 @@ Dann aber so leer.
 				data-tooltip="Attribute ändern"><span
 				class="octicon octicon-checklist"></span></a>
 		</div>
-	
-		<div style = "display:table;width: 70%%;">
-			<div style = "display:table-row-group;">
+	</div>
+	<div style="display:table-cell;vertical-align:middle;width:100%">
+		<div style = "display:table;width:100%">
+			<div style = "display:table-row;">
 				<div class="kk kk_inhalt" style="display:table-cell"></div>
 				<div class="kk_notizen" style="display:table-cell">
 					<h3>Notizen</h3>
@@ -655,7 +663,7 @@ Dann aber so leer.
 					</div>
 				</div>
 			</div>
-			<div style="display:table-row-group;">
+			<div style="display:table-row;">
 				<div class="kk_kommbox" style="display:table-cell;">
 					<a class="kk_kommheader">
 						<span class="octicon octicon-comment-discussion"></span> Kommentare
@@ -672,8 +680,9 @@ Dann aber so leer.
 				</div>
 			</div>
 		</div>
-		
 	</div>
+</div>	
+</div>
 
 <!-- Template Kommentare -->
 <div class="kk_superkomm" id="templateSuperKomm" data-komm-id="" style="display:none">

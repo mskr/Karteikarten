@@ -194,7 +194,7 @@ function doVoteKkGUI(domKomm, vote){
 	domKomm.find(".kk_voteup").css("opacity","0.1");
 	domKomm.find(".kk_votedown").css("opacity","0.1");
 	domKomm.find(".kk_voteup").css("cursor","default");
-	domKomm.find(".kk_votedown").css("opacity","default");
+	domKomm.find(".kk_votedown").css("cursor","default");
 	domKomm.find(".kk_voteup").off("click");
 	domKomm.find(".kk_votedown").off("click");
 	domKomm.find(".kk_votestat").html(vote);

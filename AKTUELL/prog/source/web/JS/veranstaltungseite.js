@@ -209,8 +209,6 @@ function fillVeranstaltungsSeite(Vid)
 					
 					$.when.apply($,ajaxArr).done(function() { //wenn alle fertig, werden diese erstellt und appended
 						$("#kk_all").empty();
-//						console.log("alle ajax calls für karteikarten fertig, array von karteikarten hier:")
-//						console.log(ajaxArr);
 						for(i=0;i<json_length;i++){
 							domElem = buildKarteikarte( jQuery.parseJSON(ajaxArr[i].responseText));
 							$("#kk_all").append(domElem);
