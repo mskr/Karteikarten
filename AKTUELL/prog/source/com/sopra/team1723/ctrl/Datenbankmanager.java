@@ -1757,6 +1757,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
         }
 
         return karteik;
@@ -1784,6 +1785,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
         }
 
         return karteik;
