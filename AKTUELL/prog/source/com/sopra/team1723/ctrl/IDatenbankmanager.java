@@ -413,6 +413,8 @@ public interface IDatenbankmanager {
     
     
     public Map<Integer,Karteikarte> leseNachfolger(int karteikarte, int anzNachfolger);
+    
+    public Map<Integer,Karteikarte> leseVorgänger(int karteikarte, int anzVorgänger);
 
     /**
      * Fügt neue Karteikarte in die Datenbank ein. Bei einem Fehler wird eine
