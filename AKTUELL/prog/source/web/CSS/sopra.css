@@ -1042,6 +1042,14 @@ textarea.input_std {
 	z-index: 2;
 }
 
+.kk_load{
+	height:30px;
+	weidth:100%;
+	cursor:pointer;
+	text-align:center;
+	background: #444;
+	margin-bottom: 1em;
+}
 #kk_inhaltsverzeichnis {
 	position: absolute;
 	right: 0;
