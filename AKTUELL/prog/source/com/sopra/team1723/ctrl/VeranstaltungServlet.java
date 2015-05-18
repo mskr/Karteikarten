@@ -10,8 +10,10 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.tuckey.web.filters.urlrewrite.substitution.UnescapeReplacer;
 
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.DbFalsePasswortException;
@@ -56,9 +58,9 @@ public class VeranstaltungServlet extends ServletController {
 
         String[] studiengaenge = request.getParameter(ParamDefines.Studiengang).split(",");
         String semester = request.getParameter(ParamDefines.Semester);
-        String titel = request.getParameter(ParamDefines.Titel);
-        String beschr = request.getParameter(ParamDefines.Beschr);
-        String zugangspasswort = request.getParameter(ParamDefines.Password);
+        String titel = StringEscapeUtils.unescapeHtml4(request.getParameter(ParamDefines.Titel));
+        String beschr = StringEscapeUtils.unescapeHtml4(request.getParameter(ParamDefines.Beschr));
+        String zugangspasswort = StringEscapeUtils.unescapeHtml4(request.getParameter(ParamDefines.Password));
         boolean kommentareErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.KommentareErlauben));
         boolean bewertungenErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.BewertungenErlauben));
         boolean moderatorKkBearbeiten = Boolean.parseBoolean(request.getParameter(ParamDefines.ModeratorKkBearbeiten));

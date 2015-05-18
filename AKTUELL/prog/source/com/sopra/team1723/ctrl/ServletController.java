@@ -203,7 +203,7 @@ public abstract class ServletController extends HttpServlet
         System.out.println();
 
         PrintWriter outWriter = resp.getWriter();
-        resp.setContentType("text/json");
+        resp.setContentType("text/json;charset=utf-8");
 
         // Prüfen ob session abgelaufen ist
         if (req.getRequestedSessionId() != null && 
