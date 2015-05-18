@@ -22,6 +22,8 @@ public class ParamDefines
     public final static String ActionAenderePasswort = "aenderePasswort";
     public final static String ActionAendereProfil = "aendereProfil";
     public final static String ActionUploadProfilBild = "uploadProfilBild";
+    public final static String ActionUploadKKBild = "uploadKKBild";
+    public final static String ActionUploadKKVideo = "uploadKKVideo";
     public final static String ActionSucheBenVeranst = "sucheBenVeranst";
     public final static String ActionSucheBenutzer = "sucheBenutzer";
     public final static String ActionSucheStudiengang = "sucheStudiengang";
@@ -64,8 +66,8 @@ public class ParamDefines
     public final static String ActionLeseAntwortKommentar = "leseAntwKomm";
     public final static String ActionLeseThemaKommentar = "leseThemaKomm";
     
-    public final static String ActionVoteKarteikareUp = "voteUpKarteik";
-    public final static String ActionVoteKarteikareDown = "voteDownKarteik";
+    public final static String ActionVoteKarteikarteUp = "voteUpKarteik";
+    public final static String ActionVoteKarteikarteDown = "voteDownKarteik";
     
 
     public final static String Klasse = "klasse";

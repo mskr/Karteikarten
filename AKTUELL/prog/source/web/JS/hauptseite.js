@@ -110,6 +110,17 @@ function fillHauptseite()
 	{
 		$("#vn_erstellen_bt").hide();
 	}
+	
+	// Elemente fuer kleine Bildschirme
+    if (window.matchMedia("(max-width: 56em)").matches) {
+    	$(".r-suche_etwas_label").show();
+    	$(".r-kk-inhaltsvz-toggle").hide();
+    }
+    else
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").hide();
+    }
 
     return $.when(ajax1,ajax2).done(fillVeranstaltungsliste);
 }
@@ -154,14 +165,34 @@ function leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName)
 		params
 	);
 }
+
+
+
 function displayVeranstaltungen(container, ajaxResult)
 {
 	if(verifyResponse(ajaxResult))
 	{
 		var veranstObjekte = ajaxResult[keyJsonArrResult];
+		
 		// Alle Veranstaltungen entfernen
 		container.children().not(".vn_toolbar").remove();
-
+		
+		// Zeige spezielle Meldung, falls Liste leer ist
+		if(veranstObjekte.length == 0)
+		{
+		    var str = "";
+		    if(container.attr("id").split("_")[2] == "meine")
+		    {
+	            str += "<div class='vn_liste_leer_info'><span>Sie sind in keine Veranstaltungen eingeschrieben</span></div>";
+		    }
+		    else
+		    {
+                str += "<div class='vn_liste_leer_info'><span>Keine Veranstaltungen im gewählten Semester und Studiengang</span></div>";
+		    }
+		    container.append(str);
+		}
+		
+		// Zeige entsprechende Veranstaltungen an und berechne die benoetigte Hoehe
 		for(var i in veranstObjekte)
 		{
 			displayVeranstaltung(container, veranstObjekte[i]);
@@ -211,8 +242,6 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		"	<span class='vn_beschreibung'>" + jsonVeranstObj[paramBeschr] + "</span>" +
 		"	<div class='vn_optionen'>";
 
-		console.log(jsonVeranstObj);
-
 		if(jsonVeranstObj[paramAngemeldet] == true)
 			str += "<a class='vn_einausschreiben '><span class='octicon octicon-x'></span> Ausschreiben</a>";
 		else
@@ -258,6 +287,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		// Titel Click Handler
 		if(jsonVeranstObj[paramAngemeldet] == true)
 		{
+		    $("#"+id+"_titel").off();
 			$("#"+id+"_titel").click(function() {
 				gotoVeranstaltung(jsonVeranstObj[paramId]);
 			});
@@ -275,6 +305,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
  */
 function registerErstellerClickFunction(vnHtmlString, jsonVeranstObj) {
     var erstellerLink = vnHtmlString.find(".vn_dozent");
+    erstellerLink.off();
     erstellerLink.click(function() {
         gotoProfil(jsonVeranstObj[paramErsteller][paramId]);
     });
@@ -287,6 +318,7 @@ function registerErstellerClickFunction(vnHtmlString, jsonVeranstObj) {
  */
 function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     var button = vnHtmlString.find(".vn_einausschreiben");
+    button.off();
     if(jsonVeranstObj[paramAngemeldet] == true)
     {
         // AUSSCHREIBEN
@@ -416,14 +448,13 @@ function registerSuchEvent()
                         params
                     );
                     $.when(studgAjax).done(function() {
-                        // Waehle korrektes Semester und Studiengang
+                        // Setze korrektes Semester und Studiengang im Select
                         $("#vn_alle_auswahl_studiengang").val(studiengangName);
                         $("#vn_alle_auswahl_semester").val(semesterName);
                         var ajax = leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName);
                         $.when(ajax).done(function() {
                             // Aktiviere den Alle-Tab
-                            $("#tab-2").prop("checked",true);
-                            
+                            $("#vn_tab_alle").prop("checked",true);
                             // Klappe die entsprechende VN aus
                             $("#vn_alle_"+id+"_radio").trigger("click").prop("checked",true);
                         });

@@ -32,6 +32,8 @@ var actionGetVeranstaltung = "getVeranstaltung";
 var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
+var actionUploadKKBild = "uploadKKBild";
+var actionUploadKKVideo = "uploadKKVideo";
 var actionSucheBenVeranst = "sucheBenVeranst";
 var actionSucheBenutzer = "sucheBenutzer";
 var actionSucheStudiengang = "sucheStudiengang";
@@ -56,6 +58,8 @@ var actionMarkiereBenGelesen = "benGelesen";
 var actionGetKarteikarteByID = "getKarteikarte";
 var actionGetKarteikartenKinder = "getKKKinder";
 var actionGetKarteikartenVater = "getKKVater";
+var actionVoteKarteikarteUp = "voteUpKarteik";
+var actionVoteKarteikarteDown = "voteDownKarteik";
 
 var actionVoteKommentarUp = "voteUpKomm";
 var actionVoteKommentarDown = "voteDownKomm";

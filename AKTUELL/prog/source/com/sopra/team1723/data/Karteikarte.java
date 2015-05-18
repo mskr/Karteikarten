@@ -1,5 +1,6 @@
 package com.sopra.team1723.data;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.json.simple.JSONObject;
@@ -61,6 +62,7 @@ public class Karteikarte implements IjsonObject {
      * 
      */
     private String titel;
+    private boolean hatBewertet;
 
     /**
      * 
@@ -153,9 +155,12 @@ public class Karteikarte implements IjsonObject {
 
     public void setBewertung(int bewertung)
     {
-        bewertung = bewertung;
+        this.bewertung = bewertung;
     }
-
+    public void setHatBewertet(boolean hatBewertet)
+    {
+        this.hatBewertet = hatBewertet;
+    }
 
 
     @Override
@@ -168,32 +173,16 @@ public class Karteikarte implements IjsonObject {
         jo.put(ParamDefines.Titel, this.getTitel());
         jo.put(ParamDefines.Type, this.getTyp().name());
         jo.put(ParamDefines.Veranstaltung, this.getVeranstaltung());
-        if(full)
-        {
-            jo.put(ParamDefines.Aenderungsdatum, this.getAenderungsdatum());
-            jo.put(ParamDefines.Bewertung, this.getBewertung());
-            jo.put(ParamDefines.Inhalt, this.getInhalt());
-        }
+        jo.put(ParamDefines.HatGevoted, hatBewertet);
+        
+        SimpleDateFormat f = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        jo.put(ParamDefines.Aenderungsdatum, f.format(this.getAenderungsdatum().getTime()));
+        jo.put(ParamDefines.Bewertung, this.getBewertung());
+        jo.put(ParamDefines.Inhalt, this.getInhalt());
+
         return jo;
     }
 
-    public JSONObject toJSONDateFix(boolean full)
-    {
-        JSONObject jo = new JSONObject();
-        jo.put(ParamDefines.Klasse, ParamDefines.KlasseKarteikarte);
-        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
-        jo.put(ParamDefines.Id, this.getId());
-        jo.put(ParamDefines.Titel, this.getTitel());
-        jo.put(ParamDefines.Type, this.getTyp().name());
-        jo.put(ParamDefines.Veranstaltung, this.getVeranstaltung());
-        if(full)
-        {
-            jo.put(ParamDefines.Aenderungsdatum, this.getAenderungsdatum().toString());
-            jo.put(ParamDefines.Bewertung, this.getBewertung());
-            jo.put(ParamDefines.Inhalt, this.getInhalt());
-        }
-        return jo;
-    }
     @Override
 	public String toString() {
 		return "Karteikarte [id=" + id + ", titel=" + titel + ", aenderungsdatum=" + aenderungsdatum + ", inhalt="

@@ -15,22 +15,50 @@ function buildKarteikarte(karteikarteJson)
     var kkDom = $("#templatekarteikarte").clone();
     kkDom.attr("id", "kk_" +kkId+"_wrapper");
     kkDom.show();
-    
-    if(kkType == paramKkText)
-        kkDom.find(".kk_inhalt").addClass("inhalt_text");
-    else if(kkType == paramKkBild)
-        kkDom.find(".kk_inhalt").addClass("inhalt_bild");
-    else if(kkType == paramKkVideo)
-        kkDom.find(".kk_inhalt").addClass("inhalt_video");
 
     fillKarteiKarte(kkDom,karteikarteJson);
     
     // Notiz
     kkDom.find(".kk_notizen_body").ckeditor(function() {
-    	// TODO FadeIn des Speichern buttons wenn sich der inhalt geändert hat.
-    	setNotiz(kkDom, kkId)
+
+    	// TODO Karteikarte setzen und DANACH change handler registireren
+    	// Funktioniert irgendwie nicht. Handler wird gesetzt bevor Inhalt gesetzt wurde
+    	var f = function(that){
+    		that.on('change', function() {
+            	kkDom.find(".kk_notizen_foot").slideDown();
+            });
+    	};
+    	var f2 = function(that) {
+    		$.when(setNotiz(kkDom, kkId)).done(function(){
+        		f(that);
+        	});
+		};
+    	f2(this);
+    	
 	}, ckEditorNotizConfig);
     
+    if(karteikarteJson[paramHatGevoted] == true)
+    {
+    	kkDom.find(".kk_voteup").css("opacity","0.1");
+    	kkDom.find(".kk_votedown").css("opacity","0.1");
+    	kkDom.find(".kk_voteup").css("cursor","default");
+    	kkDom.find(".kk_votedown").css("opacity","default");
+    }
+    else
+    {
+    	kkDom.find(".kk_voteup").click(function() {
+			$.when(voteKkUp(karteikarteJson[paramId])).done(function()
+				{
+					doVoteKkGUI(kkDom, parseInt(kkDom.find(".kk_votestat").html())+1);
+				});
+		});
+    	kkDom.find(".kk_votedown").click(function() {
+			$.when(voteKkDown(karteikarteJson[paramId])).done(function()
+				{
+					doVoteKkGUI(kkDom, parseInt(kkDom.find(".kk_votestat").html())-1);
+				});
+		});
+    }
     kkDom.find(".kk_notizen_foot").find(".mybutton").click(function(){
     	var params = {};
     	text = kkDom.find(".kk_notizen_body").val();
@@ -93,6 +121,16 @@ function buildKarteikarte(karteikarteJson)
 }
 
 function fillKarteiKarte(domElem, json){
+	
+    var kkType = json[paramType];
+    
+    if(kkType == paramKkText)
+    	domElem.find(".kk_inhalt").addClass("inhalt_text");
+    else if(kkType == paramKkBild)
+    	domElem.find(".kk_inhalt").addClass("inhalt_bild");
+    else if(kkType == paramKkVideo)
+    	domElem.find(".kk_inhalt").addClass("inhalt_video");
+    
 	//set Rating
 	domElem.find(".kk_votestat").html(json[paramBewertung]);
 	
@@ -109,7 +147,7 @@ function fillKarteiKarte(domElem, json){
     	break;
     case "VIDEO":
     	video = $(document.createElement("video"));
-    	video.css("flex-shrink"," 0");
+    	video.css("width","100%");
     	video.attr("autobuffer","");
 //    	video.attr("autoplay",""); 
     	video.attr("controls","");
@@ -150,4 +188,32 @@ function setNotiz(kkDom, kkId)
 	    },
 	    params
 	);
+}
+//Funktion für GUI der Votes
+function doVoteKkGUI(domKomm, vote){
+	domKomm.find(".kk_voteup").css("opacity","0.1");
+	domKomm.find(".kk_votedown").css("opacity","0.1");
+	domKomm.find(".kk_voteup").css("cursor","default");
+	domKomm.find(".kk_votedown").css("cursor","default");
+	domKomm.find(".kk_voteup").off("click");
+	domKomm.find(".kk_votedown").off("click");
+	domKomm.find(".kk_votestat").html(vote);
+}
+function voteKkUp(kommId)
+{
+	var params = {};
+    params[paramId] = kommId;
+	return ajaxCall(karteikartenServlet, actionVoteKarteikarteUp, 
+	        function(response) {},
+	        params
+	    );
+}
+function voteKkDown(kommId)
+{
+	var params = {};
+    params[paramId] = kommId;
+	return ajaxCall(karteikartenServlet, actionVoteKarteikarteDown, 
+	        function(response) {},
+	        params
+	    );
 }

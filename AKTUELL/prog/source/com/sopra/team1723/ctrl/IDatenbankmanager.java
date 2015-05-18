@@ -461,7 +461,7 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public boolean hatKarteikarteBewertet(int karteikID, int benutzer) throws SQLException;
+    public boolean hatKarteikarteBewertet(int karteikID, int benutzer);
 
     /**
      * Gibt alle Kommentare zu einer Karteikarte zuruck. Bei einem Fehler

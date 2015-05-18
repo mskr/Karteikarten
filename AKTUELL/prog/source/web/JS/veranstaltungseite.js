@@ -1,31 +1,31 @@
 /**
  * @author mk
  */
-var sampleJSONIDs = {};
-sampleJSONIDs["k_1"] = {};
-sampleJSONIDs["k_1"][paramIndex] = 7;
-sampleJSONIDs["k_1"][paramId] = 24;
-sampleJSONIDs["k_2"] = {};
-sampleJSONIDs["k_2"][paramIndex] = 1;
-sampleJSONIDs["k_2"][paramId] = 26;
-sampleJSONIDs["k_3"] = {};
-sampleJSONIDs["k_3"][paramIndex] = 3;
-sampleJSONIDs["k_3"][paramId] = 22;
-sampleJSONIDs["k_4"] = {};
-sampleJSONIDs["k_4"][paramIndex] = 4;
-sampleJSONIDs["k_4"][paramId] = 23;
-sampleJSONIDs["k_5"] = {};
-sampleJSONIDs["k_5"][paramIndex] = 8;
-sampleJSONIDs["k_5"][paramId] = 20;
-sampleJSONIDs["k_6"] = {};
-sampleJSONIDs["k_6"][paramIndex] = 6;
-sampleJSONIDs["k_6"][paramId] = 25;
-sampleJSONIDs["k_7"] = {};
-sampleJSONIDs["k_7"][paramIndex] = 2;
-sampleJSONIDs["k_7"][paramId] = 21;
-sampleJSONIDs["k_8"] = {};
-sampleJSONIDs["k_8"][paramIndex] = 5;
-sampleJSONIDs["k_8"][paramId] = 27;
+var sampleJSONIDs = [];
+sampleJSONIDs[0] = {};
+sampleJSONIDs[0][paramIndex] = 7;
+sampleJSONIDs[0][paramId] = 24;
+sampleJSONIDs[1] = {};
+sampleJSONIDs[1][paramIndex] = 1;
+sampleJSONIDs[1][paramId] = 26;
+sampleJSONIDs[2] = {};
+sampleJSONIDs[2][paramIndex] = 3;
+sampleJSONIDs[2][paramId] = 22;
+sampleJSONIDs[3] = {};
+sampleJSONIDs[3][paramIndex] = 4;
+sampleJSONIDs[3][paramId] = 23;
+sampleJSONIDs[4] = {};
+sampleJSONIDs[4][paramIndex] = 8;
+sampleJSONIDs[4][paramId] = 20;
+sampleJSONIDs[5] = {};
+sampleJSONIDs[5][paramIndex] = 6;
+sampleJSONIDs[5][paramId] = 25;
+sampleJSONIDs[6] = {};
+sampleJSONIDs[6][paramIndex] = 2;
+sampleJSONIDs[6][paramId] = 21;
+//sampleJSONIDs[7] = {};
+//sampleJSONIDs[7][paramIndex] = 5;
+//sampleJSONIDs[7][paramId] = 27;
 
 var veranstaltungsObject;
 
@@ -198,7 +198,7 @@ function fillVeranstaltungsSeite(Vid)
 					jsonKkIDs = sampleJSONIDs;
 					
 					
-					json_length = Object.keys(jsonKkIDs).length; //anzahl der einträge im json
+					json_length = jsonKkIDs.length; //anzahl der einträge im json
 					newIdArray = sortiereKarteikartenIDs(jsonKkIDs);	//array in dem die ids in der gewünschten reihenfolge aufgelistet sind;
 					
 					ajaxArr = [];
@@ -208,18 +208,12 @@ function fillVeranstaltungsSeite(Vid)
 					}
 					
 					$.when.apply($,ajaxArr).done(function() { //wenn alle fertig, werden diese erstellt und appended
-						console.log("alle ajax calls für karteikarten fertig, array von karteikarten hier:")
-						console.log(ajaxArr);
+						$("#kk_all").empty();
 						for(i=0;i<json_length;i++){
 							domElem = buildKarteikarte( jQuery.parseJSON(ajaxArr[i].responseText));
 							$("#kk_all").append(domElem);
 						}
 					});
-					
-					
-					
-					
-					
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
@@ -232,18 +226,47 @@ function fillVeranstaltungsSeite(Vid)
 	// Inhaltsverzeichnis aufbauen
 	// warte bis VN Objekt geladen
 	$.when(ajax3).done(function() {
-	    ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
+	    var ajax4 = ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"));
+        // Inhaltsverzeichnis im Viewport halten
+	    // warte bis mainbox visible
+	    $.when(ajax1,ajax2,d,ajax4).done(function() {
+	        var sticky = new Waypoint.Sticky({
+	            element: $("#kk_inhaltsverzeichnis"),
+	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
+	        });
+	    });
+        
 	});
 	
+    // Elemente fuer kleine Bildschirme
+    if (window.matchMedia("(max-width: 56em)").matches)
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").show();
+    }
+    else
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").hide();
+    }
+    
 	return $.when(ajax1,ajax2,d);
 }
 
+/**
+ * Generische Methode, die alle direkten Kindkarteikarten zu einer gegebenen Vater-ID
+ * vom Server laedt und in eine Unordered List einfuegt. Es wird ein Click Handler registriert,
+ * der beim Klick auf einen Eintrag rekursiv dessen Kinder laedt.
+ * @param vaterId ID der Vaterkarteikarte
+ * @param vaterElem jQuery Objekt. Container, in den die Unordered List eingefuegt wird.
+ * @returns Ajax Objekt
+ */
 function ladeKindKarteikarten(vaterId, vaterElem) {
     var params = {};
     params[paramId] = vaterId;
-    if(vaterId==5) console.log(vaterId+" Bedeutung von Software");
-    // ersetze evntl bestehende Kindkarteikarten
+    // Evntl bestehende Kindkarteikarten aushaengen
     vaterElem.find("ul").remove();
+    // Neue Liste aufbauen
     vaterElem = vaterElem.append("<ul></ul>").find("ul");
     return ajaxCall(
             karteikartenServlet,
@@ -251,26 +274,34 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
             function(response) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
-                console.log(arr);
-                // falls keine Kindkarteikarten vorhanden, verlasse Funktion
+                // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
                 if(arr.length == 0) {
                     console.log("hat keine kinder mehr");
-                    return;
+                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
                 }
                 // andernfalls DOM aufbauen
-                for(var i in arr)
+                else
                 {
-                    var kkListItem = $("<li>"+arr[i][paramTitel]+"</li>");
-                    vaterElem.append(kkListItem);
-                    // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
-                    var f = function(arr, kkListItem, i) {
-                        kkListItem.click(function(e) {
-                            console.log(kkListItem);
-                            ladeKindKarteikarten(arr[i][paramId], kkListItem);
-                            e.stopPropagation();
-                        });
+                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                    for(var i in arr)
+                    {
+                        var kkListItem = $("<li><a class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
+                        vaterElem.append(kkListItem);
+                        //TODO Hier sortieren
+                        // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
+                        var f = function(arr, kkListItem, i) {
+                            kkListItem.find("a").click(function(e) {
+                                ladeKindKarteikarten(arr[i][paramId], kkListItem);
+                                e.stopPropagation();
+                            });
+                        }
+                        f(arr, kkListItem, i);
+                        // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                        vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                        //TODO Click Handler Karteikarte hinzu
                     }
-                    f(arr, kkListItem, i);
                 }
             },
             params
@@ -311,31 +342,36 @@ function findModeratorenVn(id){
 
 function sortiereKarteikartenIDs(jsonKkIDs){
 	newIdArray = [];
-	id_of_smallest_index =-1;
-	smallest_index = -1;
-	j_to_delete = -1;
-	for(i=1; i<json_length+1;i++){
-		for(j=1; j<json_length+1;j++){
-			if(smallest_index == -1){
-			//	console.log("set smallest index initial from -1 to:"+ jsonKkIDs["k_"+j].index);
-				id_of_smallest_index = jsonKkIDs["k_"+j].id;
-				smallest_index = jsonKkIDs["k_"+j].index;
-				j_to_delete = j;
-			}
-			else if(jsonKkIDs["k_"+j].index < smallest_index){
-			//	console.log("replace smallest index:"+ smallest_index + ",id: "+id_of_smallest_index);
-				j_to_delete = j;
-				id_of_smallest_index = jsonKkIDs["k_"+j].id;
-				smallest_index = jsonKkIDs["k_"+j].index;
-			//	console.log("with index: "+smallest_index+", id: "+ id_of_smallest_index);
-			}
-		}
-	//	console.log("found smallest index: "+ smallest_index +"with id:"+ id_of_smallest_index);
-		newIdArray[i-1]=id_of_smallest_index;
-		jsonKkIDs["k_"+j_to_delete].index = 999999999;
-		smallest_index = -1;
-		id_of_smallest_index = -1;
-	}
+	jsonKkIDs.sort(function(a,b){
+		return a[paramIndex] - b[paramIndex];
+	});
+	for(var i in jsonKkIDs)
+		newIdArray.push(jsonKkIDs[i][paramId]);
+	
+//	id_of_smallest_index =-1;
+//	smallest_index = -1;
+//	j_to_delete = -1;
+//	for(i=1; i<json_length+1;i++){
+//		for(j=1; j<json_length+1;j++){
+//			if(smallest_index == -1){
+//			//	console.log("set smallest index initial from -1 to:"+ jsonKkIDs["k_"+j].index);
+//				id_of_smallest_index = jsonKkIDs["k_"+j].id;
+//				smallest_index = jsonKkIDs["k_"+j].index;
+//				j_to_delete = j;
+//			}
+//			else if(jsonKkIDs["k_"+j].index < smallest_index){
+//			//	console.log("replace smallest index:"+ smallest_index + ",id: "+id_of_smallest_index);
+//				j_to_delete = j;
+//				id_of_smallest_index = jsonKkIDs["k_"+j].id;
+//				smallest_index = jsonKkIDs["k_"+j].index;
+//			//	console.log("with index: "+smallest_index+", id: "+ id_of_smallest_index);
+//			}
+//		}
+//	//	console.log("found smallest index: "+ smallest_index +"with id:"+ id_of_smallest_index);
+//		newIdArray[i-1]=id_of_smallest_index;
+//		jsonKkIDs["k_"+j_to_delete].index = 999999999;
+//		smallest_index = -1;
+//		id_of_smallest_index = -1;
+//	}
 	return newIdArray;
 }
-

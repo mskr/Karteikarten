@@ -42,108 +42,113 @@ public class FileUploadServlet extends ServletController
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) s.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);
-        
-        if(!aktuelleAction.equals(ParamDefines.ActionUploadProfilBild))
+        if(aktuelleAction.equals(ParamDefines.ActionUploadKKBild)){
+        	System.out.println("IMAGE TO UPLOAD");
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionUploadKKVideo)){
+        	System.out.println("VIDEO TO UPLOAD");
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionUploadProfilBild))
         {
-            // Sende Error zurück
+        	String idStr = req.getParameter(ParamDefines.Id);
+            
+            int id = 0;
+        	try{
+                id = Integer.parseInt(idStr);
+            }
+            catch(NumberFormatException e)
+            {
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return;
+            }
+            
+            if(id != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+            {
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+                outWriter.print(jo);
+                return;
+            }
+
+            
+            Part uploadedFile = req.getPart(ParamDefines.UploadFile);
+            String fileName = getFileName(uploadedFile);
+            InputStream contentStream = uploadedFile.getInputStream();
+
+            ServletContext servletContext = getServletContext();
+            String contextPath = servletContext.getRealPath(File.separator);
+            String fileExt = FilenameUtils.getExtension(fileName);
+            
+            if(fileExt == null || 
+                    (!fileExt.equalsIgnoreCase("jpg") && 
+                    !fileExt.equalsIgnoreCase("jpeg") &&
+                    !fileExt.equalsIgnoreCase("png")  &&
+                    !fileExt.equalsIgnoreCase("bmp")))
+            {
+                // Sende Error zurück
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return;
+            }
+            
+            // Bild neu Skalieren und speichern
+            BufferedImage originalImage = ImageIO.read(contentStream);
+            
+            // Bild zuschneiden
+            if(originalImage.getWidth() > originalImage.getHeight())
+            {
+                int diff = originalImage.getWidth()-originalImage.getHeight();
+                // Links und rechts abschneiden
+                originalImage = originalImage.getSubimage(diff/2, 0, originalImage.getWidth()-diff, originalImage.getHeight());
+            }
+            else  if(originalImage.getWidth() < originalImage.getHeight())
+            {
+                int diff = originalImage.getHeight()-originalImage.getWidth();
+                // oben und unten abschneiden
+                originalImage = originalImage.getSubimage(0, diff/2, originalImage.getWidth(), originalImage.getHeight()-diff);
+            }
+            
+            // Bild skalieren
+            BufferedImage scaledImage = new BufferedImage(profilBildWidth, profilBildHeigth, BufferedImage.TYPE_INT_ARGB);
+            Graphics g = scaledImage.createGraphics();
+            g.drawImage(originalImage, 0, 0, profilBildWidth, profilBildHeigth, null);
+            g.dispose();
+
+            String dateiName = System.currentTimeMillis() + ".png";
+            String relativerPfad = dirProfilBilder + dateiName;
+            String absolutePath = contextPath + relativerPfad;
+            ImageIO.write(scaledImage, "png", new File(absolutePath));
+            
+            // Benutzer holen um zu prüfen, wie sein Altes profilbild heißt
+            Benutzer bcurr = dbManager.leseBenutzer(id);
+            
+            if(!dbManager.aendereProfilBild(id, dateiName))
+            {
+                // Sende Error zurück
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+                return;
+            }
+            
+            // Altes Bild löschen
+            if(!bcurr.getProfilBildPfad().contains("default.png"))
+            {
+                File f = new File(contextPath + bcurr.getProfilBildPfad());
+                f.delete();
+            }
+            System.out.println("File gespeichert: " + absolutePath);
+            System.out.println("Web Pfad: " + relativerPfad);
+
+            JSONObject jo = JSONConverter.toJson(relativerPfad);
+            outWriter.print(jo);
+            return;
+        }
+        else{
+        	 // Sende Error zurück
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
-        
-        String idStr = req.getParameter(ParamDefines.Id);
-        
-        int id = 0;
-        
-        try{
-            id = Integer.parseInt(idStr);
-        }
-        catch(NumberFormatException e)
-        {
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            outWriter.print(jo);
-            return;
-        }
-        
-        if(id != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
-        {
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
-            outWriter.print(jo);
-            return;
-        }
-
-        
-        Part uploadedFile = req.getPart(ParamDefines.UploadFile);
-        String fileName = getFileName(uploadedFile);
-        InputStream contentStream = uploadedFile.getInputStream();
-
-        ServletContext servletContext = getServletContext();
-        String contextPath = servletContext.getRealPath(File.separator);
-        String fileExt = FilenameUtils.getExtension(fileName);
-        
-        if(fileExt == null || 
-                (!fileExt.equalsIgnoreCase("jpg") && 
-                !fileExt.equalsIgnoreCase("jpeg") &&
-                !fileExt.equalsIgnoreCase("png")  &&
-                !fileExt.equalsIgnoreCase("bmp")))
-        {
-            // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            outWriter.print(jo);
-            return;
-        }
-        
-        // Bild neu Skalieren und speichern
-        BufferedImage originalImage = ImageIO.read(contentStream);
-        
-        // Bild zuschneiden
-        if(originalImage.getWidth() > originalImage.getHeight())
-        {
-            int diff = originalImage.getWidth()-originalImage.getHeight();
-            // Links und rechts abschneiden
-            originalImage = originalImage.getSubimage(diff/2, 0, originalImage.getWidth()-diff, originalImage.getHeight());
-        }
-        else  if(originalImage.getWidth() < originalImage.getHeight())
-        {
-            int diff = originalImage.getHeight()-originalImage.getWidth();
-            // oben und unten abschneiden
-            originalImage = originalImage.getSubimage(0, diff/2, originalImage.getWidth(), originalImage.getHeight()-diff);
-        }
-        
-        // Bild skalieren
-        BufferedImage scaledImage = new BufferedImage(profilBildWidth, profilBildHeigth, BufferedImage.TYPE_INT_ARGB);
-        Graphics g = scaledImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, profilBildWidth, profilBildHeigth, null);
-        g.dispose();
-
-        String dateiName = System.currentTimeMillis() + ".png";
-        String relativerPfad = dirProfilBilder + dateiName;
-        String absolutePath = contextPath + relativerPfad;
-        ImageIO.write(scaledImage, "png", new File(absolutePath));
-        
-        // Benutzer holen um zu prüfen, wie sein Altes profilbild heißt
-        Benutzer bcurr = dbManager.leseBenutzer(id);
-        
-        if(!dbManager.aendereProfilBild(id, dateiName))
-        {
-            // Sende Error zurück
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-            return;
-        }
-        
-        // Altes Bild löschen
-        if(!bcurr.getProfilBildPfad().contains("default.png"))
-        {
-            File f = new File(contextPath + bcurr.getProfilBildPfad());
-            f.delete();
-        }
-        System.out.println("File gespeichert: " + absolutePath);
-        System.out.println("Web Pfad: " + relativerPfad);
-
-        JSONObject jo = JSONConverter.toJson(relativerPfad);
-        outWriter.print(jo);
-        return;
     }
     
     private String getFileName(Part part) 
