@@ -1130,7 +1130,11 @@ textarea.input_std {
 } .loeschen:hover {
 	color: #800000;
 }
-
+.kk_titel{
+	text-align: center;
+	display:block;
+	font-size: 1.3em;
+}
 .kk {
 	vertical-align: middle;
 	box-sizing: border-box;

@@ -121,31 +121,34 @@ function buildKarteikarte(karteikarteJson)
 }
 
 function fillKarteiKarte(domElem, json){
-	
-    var kkType = json[paramType];
-    
-    if(kkType == paramKkText)
-    	domElem.find(".kk_inhalt").addClass("inhalt_text");
-    else if(kkType == paramKkBild)
-    	domElem.find(".kk_inhalt").addClass("inhalt_bild");
-    else if(kkType == paramKkVideo)
-    	domElem.find(".kk_inhalt").addClass("inhalt_video");
-    
+	        
 	//set Rating
 	domElem.find(".kk_votestat").html(json[paramBewertung]);
+	domElem.find(".kk_titel").text(json[paramTitel]);
 	
 	// detect type and add content
 	switch (json[paramType]) {
-    case "TEXT":
-    	domElem.find(".inhalt_text").html(json[paramInhalt]);
+    case paramKkText:
+    	domElem.find(".kk_inhalt").addClass("inhalt_text");
+    	if(json[paramInhalt].trim() == "")
+    	{
+    		domElem.find("div").find("*").off();
+    		domElem.find("div").hide();
+    	}
+    	else
+    	{
+    		domElem.find(".inhalt_text").html(json[paramInhalt]);
+    	}
     	break;
-    case "BILD":
+    case paramKkBild:
+    	domElem.find(".kk_inhalt").addClass("inhalt_bild");
     	image = $(document.createElement("img"));
     	image.attr("src","files/images/"+json[paramId]+".png");
     	image.attr("onerror","this.src='files/general/default.png'");
     	domElem.find(".inhalt_bild").html(image);
     	break;
-    case "VIDEO":
+    case paramKkVideo:
+    	domElem.find(".kk_inhalt").addClass("inhalt_video");
     	video = $(document.createElement("video"));
     	video.css("width","100%");
     	video.attr("autobuffer","");
@@ -165,11 +168,6 @@ function getKarteikarteByID(id){
     return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
         function(response) {
 			karteikarteJSON = response;
-//			console.log("getKarteikarte bekam folgenden json:");
-//			console.log(karteikarteJSON);
-//			buildKarteikarte(karteikarteJSON);
-//			console.log(karteikarteJSON);
-//			buildKarteikarte(karteikarteJSON); //just for test
 		},
         params
     );

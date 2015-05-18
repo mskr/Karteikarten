@@ -30,14 +30,6 @@ sampleJSONIDs[6][paramId] = 21;
 var veranstaltungsObject;
 
 $(document).ready(function() {
-    // Code fuer das Attribute Tooltip
-//    $("#attr_popup").popup({
-//            type: 'tooltip',
-//            vertical: 'topedge',
-//            horizontal: 'leftedge'
-//    });
-//  CKEDITOR.config.irgendeinPlugin
-	
 	$("#vn_kk_ueberscht_box").hide();
 	
 	$("#vn_loeschen").click(function() {
@@ -54,31 +46,35 @@ $(document).ready(function() {
 				params
 			);
 		})
-		
-	});
-	$("#vn_bearbeiten").click(function() {
-		// TODO Dialog öffnen
 	});
 	
-    // Einklappen der Kommentarboxen
-//    $('.kk_kommtoggle').html('Einklappen');
-//    var height = 0;
-//    $('.kk_kommtoggle').click( function() {
-//        var domelem = $(this).parent().get(0);
-//        var jqueryobj = $(domelem);
-//        if( jqueryobj.height()>50 ) {
-//            height = jqueryobj.height();
-//            jqueryobj.animate({
-//                height: "15px"
-//            }, 500 );
-//            $(this).html('Ausklappen');
-//        } else {
-//            jqueryobj.animate({
-//                height: ""+height+"px"
-//            }, 500 );
-//            $(this).html('Einklappen');
-//        }
-//    });
+	  // LadeHandler
+    $(".kk_load_pre").click(function(){
+    	// TODO Ajax call
+    	ajax = getKarteikarteByID(1);
+    	$.when(ajax).done(function(){
+    		domkk = buildKarteikarte( jQuery.parseJSON(ajax.responseText));
+    		domkk.hide();
+    		$("#kk_all").prepend(domkk);
+    		domkk.slideDown();
+    		$("body").animate({scrollTop: 0},"slow");
+    	});
+    	
+    });    
+    $(".kk_load_after").click(function(){
+    	// TODO Ajax call
+    	ajax = getKarteikarteByID(2);
+    	$.when(ajax).done(function(){
+    		domkk = buildKarteikarte( jQuery.parseJSON(ajax.responseText));
+    		domkk.hide();
+    		$("#kk_all").append(domkk);
+    		domkk.slideDown();
+        	$("body").animate({scrollTop: $("body").height},"slow");
+    		
+    	});
+    });    
+    
+    
 });
 
 function fillVeranstaltungsSeite(Vid)
@@ -195,25 +191,30 @@ function fillVeranstaltungsSeite(Vid)
 					
 					// TODO hole eine liste mit den ersten 20, 30, ... karteikartenids vom server
 					// hier noch mit samplejson sampleJSONIDs
-					jsonKkIDs = sampleJSONIDs;
-					
-					
-					json_length = jsonKkIDs.length; //anzahl der einträge im json
-					newIdArray = sortiereKarteikartenIDs(jsonKkIDs);	//array in dem die ids in der gewünschten reihenfolge aufgelistet sind;
-					
-					ajaxArr = [];
-					
-					for(i=0;i<json_length;i++){			//startet für benötigte Karteikarten ajaxcalls und speichert diese in array
-						ajaxArr[i] = getKarteikarteByID(newIdArray[i]);
-					}
-					
-					$.when.apply($,ajaxArr).done(function() { //wenn alle fertig, werden diese erstellt und appended
-						$("#kk_all").empty();
-						for(i=0;i<json_length;i++){
-							domElem = buildKarteikarte( jQuery.parseJSON(ajaxArr[i].responseText));
-							$("#kk_all").append(domElem);
+					var params ={};
+					params[paramId] = veranstaltungsObject[paramErsteKarteikarte];
+					ajaxCall(karteikartenServlet, actionGetKarteikartenKinder, function(response){
+						jsonKkIDs = response[keyJsonArrResult];
+
+						json_length = jsonKkIDs.length; //anzahl der einträge im json
+						newIdArray = sortiereKarteikartenIDs(jsonKkIDs);	//array in dem die ids in der gewünschten reihenfolge aufgelistet sind;
+
+						ajaxArr = [];
+
+						for(i=0;i<json_length;i++){			//startet für benötigte Karteikarten ajaxcalls und speichert diese in array
+							ajaxArr[i] = getKarteikarteByID(newIdArray[i]);
 						}
-					});
+
+						$.when.apply($,ajaxArr).done(function() { //wenn alle fertig, werden diese erstellt und appended
+							$("#kk_all").empty();
+							for(i=0;i<json_length;i++){
+								domElem = buildKarteikarte( jQuery.parseJSON(ajaxArr[i].responseText));
+								$("#kk_all").append(domElem);
+							}
+						});
+					}, params);
+					
+					
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
@@ -249,6 +250,12 @@ function fillVeranstaltungsSeite(Vid)
         $(".r-suche_etwas_label").hide();
         $(".r-kk-inhaltsvz-toggle").hide();
     }
+    
+  
+    
+    
+    
+    
     
 	return $.when(ajax1,ajax2,d);
 }

@@ -101,6 +101,7 @@ var paramType = "type";
 //Karteikarte
 var paramKkText = "TEXT";
 var paramKkBild = "BILD";
+var paramKkUeberschrift = "BILD";
 var paramKkVideo = "VIDEO";
 var paramVeranstaltung = "veranstaltung";
 var paramAenderungsdatum = "aenderungsdatum";
