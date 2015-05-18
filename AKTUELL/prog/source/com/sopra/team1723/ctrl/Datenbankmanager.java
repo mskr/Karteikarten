@@ -1676,10 +1676,10 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         HashMap<Integer,Karteikarte> kindKarteikarten = new HashMap<Integer, Karteikarte>();
         try {
-            int letzteKindKarteikarte = karteikarte;
+            int letzteKindKarteikarte;
             int i = 0;
             while(anzNachfolger > 0){
-
+                letzteKindKarteikarte = karteikarte;
                 ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child*1.."+anzNachfolger+"]->(m)"
                         + " WHERE id(n) = {1}"
                         + " return id(m) AS ID");
