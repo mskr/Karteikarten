@@ -217,11 +217,11 @@ function fillVeranstaltungsSeite(Vid)
 					ajaxCall(karteikartenServlet, actionGetKarteikartenNachfolger, function(response){
 						
 						arr = response[keyJsonArrResult];
-	    				for(i = arr.length-1; i >= 0; i--)
+	    				for(i = 0; i <arr.length;i++)
 						{
 	    					domkk = buildKarteikarte(arr[i]);
 	    	        		domkk.hide();
-	    	        		$("#kk_all").prepend(domkk);
+	    	        		$("#kk_all").append(domkk);
 	    	        		domkk.slideDown();
 //	    	        		$("body").animate({scrollTop: 0},"slow");
 						}
@@ -261,13 +261,6 @@ function fillVeranstaltungsSeite(Vid)
         $(".r-suche_etwas_label").hide();
         $(".r-kk-inhaltsvz-toggle").hide();
     }
-    
-  
-    
-    
-    
-    
-    
 	return $.when(ajax1,ajax2,d);
 }
 
@@ -313,6 +306,37 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                             kkListItem.find("a").click(function(e) {
                                 ladeKindKarteikarten(arr[i][paramId], kkListItem);
                                 e.stopPropagation();
+ 
+                                $("#kk_all").empty();
+
+            					var params ={};
+            					params[paramId] = arr[i][paramId];
+    	    	        		ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
+    	    	        			domkk = buildKarteikarte(response);
+    	    	        			domkk.hide();
+    	    	        			$("#kk_all").append(domkk);
+    	    	        			domkk.slideDown();
+//  	    	        			$("body").animate({scrollTop: 0},"slow");
+            						
+            					}, params);
+    	    	        		
+            					$.when(ajax).done(function(){
+            						ajaxCall(karteikartenServlet, actionGetKarteikartenNachfolger, function(response){
+            						
+                                   
+            						data = response[keyJsonArrResult];
+            						for(i = 0; i <data.length;i++)
+            						{
+            	    					domkk = buildKarteikarte(data[i]);
+            	    	        		domkk.hide();
+            	    	        		$("#kk_all").append(domkk);
+            	    	        		domkk.slideDown();
+//            	    	        		$("body").animate({scrollTop: 0},"slow");
+            						}
+            					}, params)
+            					});
+                                
+                                
                             });
                         }
                         f(arr, kkListItem, i);
