@@ -50,6 +50,8 @@ public class ParamDefines
     public final static String ActionEinlModeratorAnnehmen = "einlModAnnehmen";
     public final static String ActionEinlModeratorAblehnen = "einlModAblehnen";
 
+    public final static String ActionGetKarteikartenVorgaenger = "getKkVor";
+    public final static String ActionGetKarteikartenNachfolger = "getKkNach";
     public final static String ActionGetKarteikarteByID = "getKarteikarte";
     public final static String ActionGetKarteikartenKinder = "getKKKinder";
     public final static String ActionGetKarteikartenVater = "getKKVater";

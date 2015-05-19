@@ -13,6 +13,10 @@ $.ajaxSetup({
     type: "POST",
 	timeout: 6000,
 	error: function(jqXHR, textStatus, errorThrown) { 
+
+		console.log("AJAX-ERROR: " + textStatus + " " + errorThrown);
+		console.log("timeout -> timeout, keine antwort innerhalb von 6 sekunden; \"\" -> Verbindung hergestellt, aber keine Antwort vom Server");
+		
 		if(textStatus == "timeout")
 		{
 		    showError("Verbindung zum Server wurde unterbrochen. Wiederholen Sie den Vorngang, wenn möglich.");

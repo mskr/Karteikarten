@@ -55,6 +55,8 @@ var actionLeseBenachrichtungen = "leseBen";
 var actionMarkiereBenGelesen = "benGelesen";
 
 
+var actionGetKarteikartenVorgaenger = "getKkVor";
+var actionGetKarteikartenNachfolger = "getKkNach";
 var actionGetKarteikarteByID = "getKarteikarte";
 var actionGetKarteikartenKinder = "getKKKinder";
 var actionGetKarteikartenVater = "getKKVater";

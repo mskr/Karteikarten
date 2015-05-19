@@ -13,7 +13,8 @@ function buildKarteikarte(karteikarteJson)
         kkAenderungsdatum = karteikarteJson[paramAenderungsdatum];
     
     var kkDom = $("#templatekarteikarte").clone();
-    kkDom.attr("id", "kk_" +kkId+"_wrapper");
+    kkDom.removeAttr("id");
+    kkDom.attr("data-kkid", kkId);
     kkDom.show();
 
     fillKarteiKarte(kkDom,karteikarteJson);

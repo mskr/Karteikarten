@@ -50,35 +50,60 @@ $(document).ready(function() {
 	
 	  // LadeHandler
     $(".kk_load_pre").click(function(){
-    	// TODO Ajax call
-    	ajax = getKarteikarteByID(1);
-    	$.when(ajax).done(function(){
-    		domkk = buildKarteikarte( jQuery.parseJSON(ajax.responseText));
-    		domkk.hide();
-    		$("#kk_all").prepend(domkk);
-    		domkk.slideDown();
-    		$("body").animate({scrollTop: 0},"slow");
-    	});
+    	var params ={};
+    	params[paramId] = $("#kk_all").children().first().attr("data-kkid");
+    	ajaxCall(karteikartenServlet, 
+    			actionGetKarteikartenVorgaenger, 
+    			function(response)
+    			{
+    				arr = response[keyJsonArrResult];
+    				if(arr.length == 0)
+    				{
+    					$(".kk_load_pre").slideUp();
+    				}
+    				for(i = 0; i < arr.length;i++)
+					{
+    					domkk = buildKarteikarte(arr[i]);
+    	        		domkk.hide();
+    	        		$("#kk_all").prepend(domkk);
+    	        		domkk.slideDown();
+    	        		$("body").animate({scrollTop: 0},"slow");
+					}
+	        		
+    			}, params);
+    			
+    	
     	
     });    
     $(".kk_load_after").click(function(){
-    	// TODO Ajax call
-    	ajax = getKarteikarteByID(2);
-    	$.when(ajax).done(function(){
-    		domkk = buildKarteikarte( jQuery.parseJSON(ajax.responseText));
-    		domkk.hide();
-    		$("#kk_all").append(domkk);
-    		domkk.slideDown();
-        	$("body").animate({scrollTop: $("body").height},"slow");
-    		
-    	});
-    });    
-    
-    
+    	var params ={};
+    	params[paramId] = $("#kk_all").children().last().attr("data-kkid");;
+    	ajaxCall(karteikartenServlet, 
+    			actionGetKarteikartenNachfolger, 
+    			function(response)
+    			{
+    				arr = response[keyJsonArrResult];
+    				if(arr.length == 0)
+    				{
+    					$(".kk_load_after").slideUp();
+    				}
+    				for(i = arr.length-1; i >= 0; i--)
+					{
+	    	    		domkk = buildKarteikarte(arr[i]);
+	    	    		domkk.hide();
+	    	    		$("#kk_all").append(domkk);
+	    	    		domkk.slideDown();
+	    	        	$("body").animate({scrollTop: $("body").height},"slow");
+					}
+    			}, params);
+    });
 });
 
 function fillVeranstaltungsSeite(Vid)
 {
+	$(".kk_load_after").show();
+	$(".kk_load_pre").show();
+	
 	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
 	d = jQuery.Deferred();
 	$("#kk_all").empty();
@@ -193,28 +218,36 @@ function fillVeranstaltungsSeite(Vid)
 					// hier noch mit samplejson sampleJSONIDs
 					var params ={};
 					params[paramId] = veranstaltungsObject[paramErsteKarteikarte];
-					ajaxCall(karteikartenServlet, actionGetKarteikartenKinder, function(response){
-						jsonKkIDs = response[keyJsonArrResult];
-
-						json_length = jsonKkIDs.length; //anzahl der einträge im json
-						newIdArray = sortiereKarteikartenIDs(jsonKkIDs);	//array in dem die ids in der gewünschten reihenfolge aufgelistet sind;
-
-						ajaxArr = [];
-
-						for(i=0;i<json_length;i++){			//startet für benötigte Karteikarten ajaxcalls und speichert diese in array
-							ajaxArr[i] = getKarteikarteByID(newIdArray[i]);
+					ajaxCall(karteikartenServlet, actionGetKarteikartenNachfolger, function(response){
+						
+						arr = response[keyJsonArrResult];
+	    				for(i = arr.length-1; i >= 0; i--)
+						{
+	    					domkk = buildKarteikarte(arr[i]);
+	    	        		domkk.hide();
+	    	        		$("#kk_all").prepend(domkk);
+	    	        		domkk.slideDown();
+	    	        		$("body").animate({scrollTop: 0},"slow");
 						}
-
-						$.when.apply($,ajaxArr).done(function() { //wenn alle fertig, werden diese erstellt und appended
-							$("#kk_all").empty();
-							for(i=0;i<json_length;i++){
-								domElem = buildKarteikarte( jQuery.parseJSON(ajaxArr[i].responseText));
-								$("#kk_all").append(domElem);
-							}
-						});
+//						jsonKkIDs = response[keyJsonArrResult];
+//
+//						json_length = jsonKkIDs.length; //anzahl der einträge im json
+//						newIdArray = sortiereKarteikartenIDs(jsonKkIDs);	//array in dem die ids in der gewünschten reihenfolge aufgelistet sind;
+//
+//						ajaxArr = [];
+//
+//						for(i=0;i<json_length;i++){			//startet für benötigte Karteikarten ajaxcalls und speichert diese in array
+//							ajaxArr[i] = getKarteikarteByID(newIdArray[i]);
+//						}
+//
+//						$.when.apply($,ajaxArr).done(function() { //wenn alle fertig, werden diese erstellt und appended
+//							$("#kk_all").empty();
+//							for(i=0;i<json_length;i++){
+//								domElem = buildKarteikarte( jQuery.parseJSON(ajaxArr[i].responseText));
+//								$("#kk_all").append(domElem);
+//							}
+//						});
 					}, params);
-					
-					
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
