@@ -1676,21 +1676,20 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         HashMap<Integer,Karteikarte> kindKarteikarten = new HashMap<Integer, Karteikarte>();
         try {
-            int letzteKindKarteikarte;
+            Integer aktuelleKarteikarte = karteikarte;
             int i = 0;
             while(anzNachfolger > 0){
-                letzteKindKarteikarte = karteikarte;
                 ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child*1.."+anzNachfolger+"]->(m)"
                         + " WHERE id(n) = {1}"
                         + " return id(m) AS ID");
-                ps.setInt(1,karteikarte);
+                ps.setInt(1,aktuelleKarteikarte);
 
                 rs = ps.executeQuery();
 
 
                 while(rs.next()) {
-                    letzteKindKarteikarte = rs.getInt("ID");
-                    kindKarteikarten.put(i,leseKarteikarte(letzteKindKarteikarte));
+                    aktuelleKarteikarte = rs.getInt("ID");
+                    kindKarteikarten.put(i,leseKarteikarte(aktuelleKarteikarte));
                     --anzNachfolger;
                     ++i;
                 }
@@ -1701,26 +1700,116 @@ public class Datenbankmanager implements IDatenbankmanager {
 
                 Integer bruderKarteik;
                 do {
-                    bruderKarteik = gibBruder(letzteKindKarteikarte);
+                    bruderKarteik = gibBruder(aktuelleKarteikarte);
 
                     if(bruderKarteik == null)
                         return null;
                     else if(bruderKarteik == -1){
-                        Integer vaterKarteikarte = gibVater(letzteKindKarteikarte);
+                        Integer vaterKarteikarte = gibVater(aktuelleKarteikarte);
                         if(vaterKarteikarte == null)
                             return null;
                         else if(vaterKarteikarte == -1)
                             return kindKarteikarten;
                         else
-                            letzteKindKarteikarte = vaterKarteikarte;
+                            aktuelleKarteikarte = vaterKarteikarte;
                     }
                 }
                 while(bruderKarteik == -1);
 
                 kindKarteikarten.put(i,leseKarteikarte(bruderKarteik));
-                karteikarte = bruderKarteik;
+                aktuelleKarteikarte = bruderKarteik;
                 ++i;
                 --anzNachfolger;
+
+            }
+        } catch (SQLException e) {
+            kindKarteikarten = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return kindKarteikarten;
+    }
+
+    @Override
+    public Map<Integer,Karteikarte> leseVorgänger(int karteikarte, int anzVorgänger){
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        HashMap<Integer,Karteikarte> kindKarteikarten = new HashMap<Integer, Karteikarte>();
+        try {
+            Integer aktuelleKarteikarte = karteikarte;
+            int i = 0;
+            while(anzVorgänger > 0){
+                ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_brother]-(m)"
+                        + " WHERE id(n) = {1}"
+                        + " return id(m) AS ID");
+                ps.setInt(1,aktuelleKarteikarte);
+
+                rs = ps.executeQuery();
+
+                closeQuietly(ps);
+                closeQuietly(rs);
+
+                if(!rs.next()) {
+                    aktuelleKarteikarte = gibVater(aktuelleKarteikarte);
+                    if(aktuelleKarteikarte == null)
+                        return null;
+                    else if(aktuelleKarteikarte == -1)
+                        return kindKarteikarten;
+
+                    kindKarteikarten.put(i,leseKarteikarte(aktuelleKarteikarte));
+                    --anzVorgänger;
+                    ++i;
+                    continue;
+                } else{
+                    aktuelleKarteikarte = rs.getInt("ID");
+                }
+
+                boolean abbruch = false;
+                do{
+
+                    ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->(m)"
+                            + " WHERE id(n) = {1}" 
+                            + " return id(m) AS ID");             
+
+                    ps.setInt(1,aktuelleKarteikarte);
+                    rs = ps.executeQuery();
+
+                    if(!rs.next()){
+                        abbruch = true;
+                        kindKarteikarten.put(i,leseKarteikarte(aktuelleKarteikarte));
+                        --anzVorgänger;
+                        ++i;
+                        closeQuietly(ps);
+                        closeQuietly(rs);
+                    } else{
+                        aktuelleKarteikarte = rs.getInt("ID");
+                        closeQuietly(ps);
+                        closeQuietly(rs);
+                        ps = conNeo4j.prepareStatement("MATCH p=((n)-[:h_brother*0..]->(m))"
+                                + " WHERE id(n) = {1}" 
+                                + " return id(m) AS ID ORDER BY length(p) DESC LIMIT 1");             
+
+                        ps.setInt(1,aktuelleKarteikarte);
+                        rs = ps.executeQuery();
+                        
+                        if(rs.next())
+                            aktuelleKarteikarte = rs.getInt("ID");
+                        else
+                            return null;
+                        
+                        closeQuietly(ps);
+                        closeQuietly(rs);
+                    }
+                }
+                while(abbruch == false);
+
 
             }
         } catch (SQLException e) {
@@ -1757,6 +1846,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
         }
 
         return karteik;
@@ -1784,6 +1874,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } finally{
             closeQuietly(ps);
             closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
         }
 
         return karteik;
