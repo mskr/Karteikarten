@@ -130,6 +130,10 @@ public class KarteikartenServlet extends ServletController {
         Map<Integer,Karteikarte> Kks = dbManager.leseNachfolger(karteikartenID, 5);
         List<Karteikarte> kk = new ArrayList<Karteikarte>(Kks.values());
         
+        for(Karteikarte k : kk){
+            System.out.println(k.getTitel());
+        }
+        
         jo =  JSONConverter.toJson(kk, true);
         outWriter.print(jo);
    }

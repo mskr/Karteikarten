@@ -1713,6 +1713,19 @@ public class Datenbankmanager implements IDatenbankmanager {
                     if(bruderKarteik == null)
                         return null;
                     else if(bruderKarteik == -1){
+                        ps = conNeo4j.prepareStatement("MATCH p=((n)<-[:h_brother*0..]-(m))"
+                                + " WHERE id(n) = {1}"
+                                + " return id(m) AS ID ORDER BY length(p) DESC LIMIT 1");
+                        ps.setInt(1,aktuelleKarteikarte);
+
+                        rs = ps.executeQuery();
+
+                        while(rs.next()) {
+                            aktuelleKarteikarte = rs.getInt("ID");
+                        }
+                        closeQuietly(ps);
+                        closeQuietly(rs);
+                        
                         Integer vaterKarteikarte = gibVater(aktuelleKarteikarte);
                         if(vaterKarteikarte == null)
                             return null;
