@@ -57,7 +57,7 @@ $(document).ready(function() {
     			function(response)
     			{
     				arr = response[keyJsonArrResult];
-    				if(arr.length == 0)
+    				if(arr.length < 5)
     				{
     					$(".kk_load_pre").slideUp();
     				}
@@ -71,9 +71,6 @@ $(document).ready(function() {
 					}
 	        		
     			}, params);
-    			
-    	
-    	
     });    
     $(".kk_load_after").click(function(){
     	var params ={};
@@ -83,7 +80,7 @@ $(document).ready(function() {
     			function(response)
     			{
     				arr = response[keyJsonArrResult];
-    				if(arr.length == 0)
+    				if(arr.length < 5)
     				{
     					$(".kk_load_after").slideUp();
     				}
