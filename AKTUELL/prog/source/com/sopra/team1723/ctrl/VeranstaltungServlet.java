@@ -405,8 +405,7 @@ public class VeranstaltungServlet extends ServletController {
         v.setBewertungenErlaubt(bewertungenErlaubt);
         v.setSemester(semester);
         v.setErsteller(aktuellerBenutzer);
-        if(zugangspasswort.equals("null"))
-            v.setZugangspasswort("");
+        v.setZugangspasswort(zugangspasswort);
 
         try
         {

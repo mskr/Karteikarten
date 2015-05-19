@@ -122,10 +122,7 @@ $(document).ready(function() {
 	                    showError("Bitte geben Sie mindestens einen Titel, eine Beschreibung und einen Studiengang an!");
 	                    return false;
 	                }
-					
-					if(passw == "")
-						passw = "null";
-					
+										
 					var params = {};
 					params[paramId] = veranstaltungsObject[paramId]
 					params[paramTitel] = titel;
@@ -146,7 +143,7 @@ $(document).ready(function() {
 					var ajax = ajaxCall(veranstaltungServlet,
 							actionBearbeiteVeranst,
 							function(response) {
-						showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich erzeugt.");
+						showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich bearbeitet.");
 						fillVeranstaltungsliste();  
 					},
 					params

@@ -195,12 +195,17 @@ public class Datenbankmanager implements IDatenbankmanager {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
-        System.out.println("------");
+        if(ServletController.DEBUGMODE)
+            System.out.println("------");
         String md5pwd = benutzer.getKennwort();
         String CryptedPW = BCrypt.hashpw(md5pwd, BCrypt.gensalt());
-        System.out.println("------");
-        System.out.println("md5: "+ md5pwd + "crypted: " + CryptedPW);
-        System.out.println("------");
+
+        if(ServletController.DEBUGMODE)
+        {
+            System.out.println("------");
+            System.out.println("md5: "+ md5pwd + "crypted: " + CryptedPW);
+            System.out.println("------");
+        }
         try{
             ps = conMysql.prepareStatement("INSERT INTO benutzer (Vorname,Nachname,Matrikelnummer,eMail,Studiengang,"
                     + "CryptedPW, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, "
@@ -328,7 +333,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
-            System.out.println("DB prueft: email="+eMail+", passwort="+passwort);
+            if(ServletController.DEBUGMODE)
+                System.out.println("DB prueft: email="+eMail+", passwort="+passwort);
             ps = conMysql.prepareStatement("SELECT * FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
@@ -869,7 +875,8 @@ public class Datenbankmanager implements IDatenbankmanager {
             //            ps.setString(2, suchmuster);
             rs = ps.executeQuery();
             while(rs.next()){
-                System.out.println(rs.getString("Name") + " " + suchmuster + " " + rs.getInt("lev"));
+                if(ServletController.DEBUGMODE)
+                    System.out.println(rs.getString("Name") + " " + suchmuster + " " + rs.getInt("lev"));
                 ergebnisse.put(new Studiengang(rs.getString("Name")), rs.getInt("lev"));
             }
 
@@ -1379,21 +1386,21 @@ public class Datenbankmanager implements IDatenbankmanager {
                 ps.setInt(2, bpg.getBenutzer());
                 ps.setInt(3, bpg.getAdmin().getId()); 
 
-            } else {
+            } else if (benachrichtigung instanceof BenachrVeranstAenderung){
                 BenachrVeranstAenderung bv = (BenachrVeranstAenderung) benachrichtigung;
                 ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_veranstaltungsaenderung"
                         + " (Benachrichtigung, Veranstaltung, Benutzer)"
                         + " SELECT ?,?,Benutzer FROM benutzer_veranstaltung_zuordnung AS bvz "
-                        + "JOIN Benutzer AS b ON bvz.Benutzer = b.ID WHERE bvz.Veranstaltung = 1 "
-                        + "AND b.NotifyVeranstAenderung = ?;");
+                        + "JOIN Benutzer AS b ON bvz.Benutzer = b.ID WHERE bvz.Veranstaltung = ? "
+                        + "AND b.NotifyVeranstAenderung = true");
                 ps.setInt(1, id);
                 ps.setInt(2, bv.getVeranstaltung().getId());
                 ps.setInt(3, bv.getVeranstaltung().getId());
             }           
-
-            if(ps.executeUpdate() == 0)                
-                erfolgreich = false;
-
+            // ACHTUNG es kann auch sein, dass keiner Eingeschrieben ist und niemand die benachrichtung erhält!
+//            if(ps.executeUpdate() == 0)                
+//                erfolgreich = false;
+            ps.executeUpdate();
             conMysql.commit();
 
 
@@ -1418,6 +1425,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             }
             catch (SQLException e)
             {
+                erfolgreich = false;
                 e.printStackTrace();
             } 
             finally{
