@@ -256,7 +256,7 @@ function fillVeranstaltungsSeite(Vid)
 /**
  * Generische Methode, die alle direkten Kindkarteikarten zu einer gegebenen Vater-ID
  * vom Server laedt und in eine Unordered List einfuegt. Es wird ein Click Handler registriert,
- * der beim Klick auf einen Eintrag rekursiv dessen Kinder laedt.
+ * der beim Klick auf ein ListItem rekursiv dessen direkte Kinder laedt usw.
  * @param vaterId ID der Vaterkarteikarte
  * @param vaterElem jQuery Objekt. Container, in den die Unordered List eingefuegt wird.
  * @returns Ajax Objekt
@@ -274,6 +274,8 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
             function(response) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
+                console.log("[LOG] Inhaltsvz hat Array empfangen...");
+                console.log(arr);
                 // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
                 if(arr.length == 0) {
                     console.log("hat keine kinder mehr");
@@ -289,11 +291,19 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                     {
                         var kkListItem = $("<li><a class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
                         vaterElem.append(kkListItem);
-                        //TODO Hier sortieren
-                        // Lade bei Klick auf ein kkListItem dessen Kinder rekursiv
+                        // Click Handler
                         var f = function(arr, kkListItem, i) {
                             kkListItem.find("a").click(function(e) {
-                                ladeKindKarteikarten(arr[i][paramId], kkListItem);
+                                // Falls noch nicht geschehen, lade Kindkarteikarten rekursiv
+                                if($(e.target).siblings("ul").length == 0)
+                                {
+                                    ladeKindKarteikarten(arr[i][paramId], kkListItem);
+                                }
+                                // Andernfalls klappe Kindkarteikarten ein
+                                else
+                                {
+                                    $(e.target).siblings("ul").remove();
+                                }
                                 e.stopPropagation();
                             });
                         }
