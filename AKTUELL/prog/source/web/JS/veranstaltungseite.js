@@ -84,7 +84,7 @@ $(document).ready(function() {
     				{
     					$(".kk_load_after").slideUp();
     				}
-    				for(i = arr.length-1; i >= 0; i--)
+    				for(i = 0; i < arr.length;i++)
 					{
 	    	    		domkk = buildKarteikarte(arr[i]);
 	    	    		domkk.hide();
