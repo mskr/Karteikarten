@@ -313,25 +313,130 @@ public class VeranstaltungServlet extends ServletController {
      * @param request 
      * @param response 
      * @return
+     * @throws IOException 
      */
-    private boolean veranstaltungBearbeiten(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
-    }
+    private boolean veranstaltungBearbeiten(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession aktuelleSession = request.getSession();
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
-    /**
-     * Aus der Datenbank wird mit Hilfe der VeranstaltungsID die
-     * gewunschte Veranstaltung geloscht. Falls es diese Veranstaltung
-     * nicht gibt, gibt die Methode false zuruck
-     * @param request 
-     * @param response 
-     * @return
-     */
-    private boolean veranstaltungLoeschen(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
-    }
+        JSONObject jo;
+        
+        String idStr = request.getParameter(ParamDefines.Id);
+        if(isEmpty(idStr))
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
 
+        int id;
+        try
+        {
+            id = Integer.parseInt(idStr);            
+        }
+        catch (NumberFormatException e)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        Veranstaltung v =  dbManager.leseVeranstaltung(id);
+
+        if(v == null)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.DOZENT && 
+                aktuellerBenutzer.getId() != v.getErsteller().getId() &&
+                aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return false;
+        }
+
+        String[] studiengaenge = request.getParameter(ParamDefines.Studiengang).split(",");
+        String semester = request.getParameter(ParamDefines.Semester);
+        String titel = request.getParameter(ParamDefines.Titel);
+        String beschr = request.getParameter(ParamDefines.Beschr);
+        String zugangspasswort = request.getParameter(ParamDefines.Password);
+        boolean kommentareErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.KommentareErlauben));
+        boolean bewertungenErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.BewertungenErlauben));
+        boolean moderatorKkBearbeiten = Boolean.parseBoolean(request.getParameter(ParamDefines.ModeratorKkBearbeiten));
+
+        String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren);
+        int[] mIds = null;
+        
+        if(moderatorIds != null)
+        {
+            mIds = new int[moderatorIds.length];
+            try
+            {
+                for(int i = 0; i < moderatorIds.length;i++)
+                    mIds[i] = Integer.parseInt(moderatorIds[i]);
+            }
+            catch(NumberFormatException e)
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                outWriter.print(jo);
+                return false;
+            }
+        }
+        if(studiengaenge == null || studiengaenge.length == 0||
+                isEmptyAndRemoveSpaces(semester)||
+                zugangspasswort == null||
+                isEmptyAndRemoveSpaces(titel)||
+                isEmpty(beschr))// ||moderatorIds == null)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+
+        v.setBeschreibung(beschr);
+        v.setTitel(titel);
+        v.setKommentareErlaubt(kommentareErlaubt);
+        v.setModeratorKarteikartenBearbeiten(moderatorKkBearbeiten);
+        v.setBewertungenErlaubt(bewertungenErlaubt);
+        v.setSemester(semester);
+        v.setErsteller(aktuellerBenutzer);
+        if(zugangspasswort.equals("null"))
+            v.setZugangspasswort("");
+
+        try
+        {
+            dbManager.bearbeiteVeranstaltung(v,studiengaenge,mIds);
+            BenachrVeranstAenderung bva = new BenachrVeranstAenderung(v);
+            if(!dbManager.schreibeBenachrichtigung(bva))
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+                return false;
+            }
+        }
+        catch (SQLException e)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+        catch (DbUniqueConstraintException e)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            e.printStackTrace();
+            return false;
+        }
+
+        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+        outWriter.print(jo);
+        return true;
+    }
     /**
      * Ein Benutzer kann sich in die gewunschte Veranstaltung einschreiben.
      * Seine ID wird dann in die betreende Datenbank bezuglich der
@@ -494,8 +599,6 @@ public class VeranstaltungServlet extends ServletController {
             {
                 arr.add(b.toJSON(false));
             }
-
-
             jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
             jo.put(ParamDefines.jsonArrResult, arr);
             outWriter.print(jo);
@@ -531,6 +634,10 @@ public class VeranstaltungServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionVeranstErstellen))
         {
             veranstaltungErstellen(req,resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionVeranstaltungBearbeiten))
+        {
+            veranstaltungBearbeiten(req,resp);
         }
         else if(aktuelleAction.equals(ParamDefines.ActionLoescheVn))
         {

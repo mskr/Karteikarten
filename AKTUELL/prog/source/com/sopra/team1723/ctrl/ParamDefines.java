@@ -37,6 +37,7 @@ public class ParamDefines
     public final static String LeseVeranstModeStudiengangSemester =             // Liefert alle Veranstaltungen
             "studiengangSemester";                                              // für das gewählte Semester und Studiengang
     public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
+    public final static String ActionVeranstaltungBearbeiten = "bearbeiteVeranst";
 
     public final static String ActionAusschreiben = "ausschreiben";
     public final static String ActionEinschreiben = "einschreiben";

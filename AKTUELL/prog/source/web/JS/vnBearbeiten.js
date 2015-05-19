@@ -127,19 +127,20 @@ $(document).ready(function() {
 						passw = "null";
 					
 					var params = {};
-					params[paramTitel] = escape(titel);
-					params[paramSemester] = escape(semester);
+					params[paramId] = veranstaltungsObject[paramId]
+					params[paramTitel] = titel;
+					params[paramSemester] = semester;
 	                params[paramStudiengang] = "";
 	                
 	                for(var i in selectedStudiengaenge)
 	            	{
 	                	params[paramStudiengang] += selectedStudiengaenge[i][paramStudiengang] + ",";
 	            	}
-					params[paramBeschr] = escape(beschr);
+					params[paramBeschr] = beschr;
 					params[paramModeratorKkBearbeiten] = moderatorenKkBearbeiten;
 					params[paramKommentareErlauben] = kommentareErlaubt;
 					params[paramBewertungenErlauben] = bewertungenErlaubt;
-					params[paramPasswort] = escape(passw);
+					params[paramPasswort] = passw;
 					params[paramModeratoren] = moderatorenIDs;
 
 					var ajax = ajaxCall(veranstaltungServlet,
@@ -157,7 +158,7 @@ $(document).ready(function() {
 				$("#vn_bearbeiten_zurueck")
 		);
 
-		$("#vn_bearbeiten_beschr_input").ckeditor();
+		$("#vn_bearbeiten_beschr_input").ckeditor(ckEditorVnErstellenConfig);
 
 	});
 });

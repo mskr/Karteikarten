@@ -67,7 +67,7 @@ $(document).ready(function() {
     	        		domkk.hide();
     	        		$("#kk_all").prepend(domkk);
     	        		domkk.slideDown();
-    	        		$("body").animate({scrollTop: 0},"slow");
+//    	        		$("body").animate({scrollTop: 0},"slow");
 					}
 	        		
     			}, params);
@@ -90,7 +90,7 @@ $(document).ready(function() {
 	    	    		domkk.hide();
 	    	    		$("#kk_all").append(domkk);
 	    	    		domkk.slideDown();
-	    	        	$("body").animate({scrollTop: $("body").height},"slow");
+//	    	        	$("body").animate({scrollTop: $("body").height},"slow");
 					}
     			}, params);
     });
@@ -113,7 +113,6 @@ function fillVeranstaltungsSeite(Vid)
 				fillSelectWithOptions($("#vn_bearbeiten_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
 			}
 	); 
-
 
 	// Semester in auswahlliste anzeigen
 	var ajax2 =  ajaxCall(startseitenServlet,
@@ -224,26 +223,8 @@ function fillVeranstaltungsSeite(Vid)
 	    	        		domkk.hide();
 	    	        		$("#kk_all").prepend(domkk);
 	    	        		domkk.slideDown();
-	    	        		$("body").animate({scrollTop: 0},"slow");
+//	    	        		$("body").animate({scrollTop: 0},"slow");
 						}
-//						jsonKkIDs = response[keyJsonArrResult];
-//
-//						json_length = jsonKkIDs.length; //anzahl der einträge im json
-//						newIdArray = sortiereKarteikartenIDs(jsonKkIDs);	//array in dem die ids in der gewünschten reihenfolge aufgelistet sind;
-//
-//						ajaxArr = [];
-//
-//						for(i=0;i<json_length;i++){			//startet für benötigte Karteikarten ajaxcalls und speichert diese in array
-//							ajaxArr[i] = getKarteikarteByID(newIdArray[i]);
-//						}
-//
-//						$.when.apply($,ajaxArr).done(function() { //wenn alle fertig, werden diese erstellt und appended
-//							$("#kk_all").empty();
-//							for(i=0;i<json_length;i++){
-//								domElem = buildKarteikarte( jQuery.parseJSON(ajaxArr[i].responseText));
-//								$("#kk_all").append(domElem);
-//							}
-//						});
 					}, params);
 					
 					// Deferred Objekt als abgeschlossen markieren.
