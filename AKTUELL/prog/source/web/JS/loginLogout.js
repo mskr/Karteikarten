@@ -15,7 +15,12 @@ $(document).ready(function() {
              startseitenServlet,
              actionLogin,
              function() {
-                 $.when(getBenutzer()).done(gotoHauptseite);
+                 $.when(getBenutzer()).done(function(){
+                	 if(initialURL.indexOf("sopra.html")>=0)
+                		 History.back();
+                	 else
+                		 gotoHauptseite();
+                 });
              },
              params,
              undefined,

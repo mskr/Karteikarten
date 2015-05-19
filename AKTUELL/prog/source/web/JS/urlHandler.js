@@ -6,8 +6,10 @@
  * 4. Zeigt entsprechende Ansicht an
  * @author mk
  */
-
+var initialURL="";
 $(document).ready(function() {
+	
+	initialURL = History.getState().url;
 	
 	// Initial alles unsichtbar machen
 	$(".mainbox").hide();

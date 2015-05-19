@@ -157,7 +157,7 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
             popupSeitenIterator = 0;
         });
     }
-    
+    submitElem.off();
     submitElem.click(function() {
         if(submitFunc())
         {
@@ -193,7 +193,7 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
 {
     return $.ajax({
         url: servletUrl,
-        data: "action="+action+"&"+toUrlParamString(params),
+        data: "action="+action + "&"+ toUrlParamString(params),
         beforeSend: beforeFunc,
         success: function(jsonResponse) {
             if(verifyResponse(jsonResponse,errorHandlingFunc)) {
@@ -203,6 +203,23 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
         },
         complete: completeFunc
     });
+    
+//    if(params == undefined)
+//		params = {};
+//	params["action"] = action;
+//	
+//    return $.ajax({
+//        url: servletUrl,
+//        data: params,
+//        beforeSend: beforeFunc,
+//        success: function(jsonResponse) {
+//            if(verifyResponse(jsonResponse,errorHandlingFunc)) {
+//            	if(noerrorFunc!= undefined)
+//            		noerrorFunc(jsonResponse);
+//            }
+//        },
+//        complete: completeFunc
+//    });
 }
 
 /**
@@ -237,7 +254,7 @@ function toUrlParamString(paramObj)
             locationSearchTmp += param + "=" + paramObj[param] + "&";
     	}
     }
-    return encodeURI(locationSearchTmp);
+    return locationSearchTmp;
 }
 
 

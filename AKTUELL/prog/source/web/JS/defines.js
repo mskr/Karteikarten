@@ -55,6 +55,8 @@ var actionLeseBenachrichtungen = "leseBen";
 var actionMarkiereBenGelesen = "benGelesen";
 
 
+var actionGetKarteikartenVorgaenger = "getKkVor";
+var actionGetKarteikartenNachfolger = "getKkNach";
 var actionGetKarteikarteByID = "getKarteikarte";
 var actionGetKarteikartenKinder = "getKKKinder";
 var actionGetKarteikartenVater = "getKKVater";
@@ -101,6 +103,7 @@ var paramType = "type";
 //Karteikarte
 var paramKkText = "TEXT";
 var paramKkBild = "BILD";
+var paramKkUeberschrift = "BILD";
 var paramKkVideo = "VIDEO";
 var paramVeranstaltung = "veranstaltung";
 var paramAenderungsdatum = "aenderungsdatum";

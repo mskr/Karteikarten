@@ -37,6 +37,7 @@ public class ParamDefines
     public final static String LeseVeranstModeStudiengangSemester =             // Liefert alle Veranstaltungen
             "studiengangSemester";                                              // für das gewählte Semester und Studiengang
     public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
+    public final static String ActionVeranstaltungBearbeiten = "bearbeiteVeranst";
 
     public final static String ActionAusschreiben = "ausschreiben";
     public final static String ActionEinschreiben = "einschreiben";
@@ -50,6 +51,8 @@ public class ParamDefines
     public final static String ActionEinlModeratorAnnehmen = "einlModAnnehmen";
     public final static String ActionEinlModeratorAblehnen = "einlModAblehnen";
 
+    public final static String ActionGetKarteikartenVorgaenger = "getKkVor";
+    public final static String ActionGetKarteikartenNachfolger = "getKkNach";
     public final static String ActionGetKarteikarteByID = "getKarteikarte";
     public final static String ActionGetKarteikartenKinder = "getKKKinder";
     public final static String ActionGetKarteikartenVater = "getKKVater";
