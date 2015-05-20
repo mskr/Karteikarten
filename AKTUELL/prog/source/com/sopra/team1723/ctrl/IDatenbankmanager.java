@@ -577,4 +577,6 @@ public interface IDatenbankmanager {
 
     public Kommentar leseKommentar(int kommId, int aktBenutzerID);
 
+    public boolean connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ);
+    
 }

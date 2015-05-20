@@ -26,6 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.sql.Timestamp;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
 import com.sopra.team1723.exceptions.*;
 
 /**
@@ -2565,6 +2566,33 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
             conLock.getValue().unlock();
         }
+        return erfolgreich;
+    }
+
+    @Override
+    public boolean connectKk(int vonKK, int zuKK, BeziehungsTyp typ)
+    {
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try {
+            ps = conNeo4j.prepareStatement("MATCH (n),(m) "
+                    + "WHERE id(n) = {1} AND id(m) = {2} "
+                    + "CREATE (n)-[:"+typ.toString().toLowerCase()+"]->(m)");
+            ps.setInt(1,vonKK);
+            ps.setInt(2,zuKK);
+            ps.executeUpdate();
+
+        } catch(SQLException e){
+            erfolgreich = false;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            conLockNeo4j.getValue().unlock();
+        }
+
         return erfolgreich;
     }
 }
