@@ -386,7 +386,9 @@ Dann aber so leer.
 </div>
 
 <div id="mainbox_hauptseite" class="mainbox">
-	<input id="suche_global_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Veranstaltungen und Personen finden..." required>
+	<div class="autoCompleteWrapper">
+		<input id="suche_global_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Veranstaltungen und Personen finden..." required>
+	</div>
 	<span id="vn_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span> </span>
 	
 	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
@@ -617,291 +619,30 @@ Dann aber so leer.
 		<!-- <button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button> -->
 	</div>
 	<div id="kk_inhaltsverzeichnis"></div>
-	<div id="kk_all">
-		<div class="kk_wrapper" id="textKarteikarteTest" style="display:none;"> <!-- TEXT TEST KARTEIKARTE  -->
-			<div class="kk_votes">
-				<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
-				<div class="kk_votestat"></div>
-				<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
-			</div>
-			<div class="kk_optionen">
-				<a class="option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
-					<span class="octicon octicon-link"></span>
-				</a>
-				<a class="option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
-					<span class="octicon octicon-trashcan"></span>
-				</a>
-				<a class="option einfuegen tiptrigger tipabove" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
-					<span class="octicon octicon-plus"></span>
-				</a>
-				<a class="option attribute attr_popup_open tiptrigger tipabove" data-tooltip="Attribute ändern">
-					<span class="octicon octicon-checklist"></span>
-				</a>
-			</div>
-			<div class="kk_notizen" contenteditable="true">Verstehe ich nicht</div>
-			<div class="kk inhalt_text" contenteditable="true"></div>
-			<div class="kk_kommbox">
-				<div class="kk_kommheader"><span class="octicon octicon-comment-discussion"></span> Kommentare (6)</div>
-				<div class="kk_superkomm">
-					<div class="kk_kommvotes">
-						<a class="komm_voteup"><span class="octicon octicon-triangle-up"></span></a>
-						<div class="komm_votestat">3</div>
-						<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
-					</div>
-					<div class="kk_komm_loeschen">
-						<a><span class="octicon octicon-trashcan"></span></a>
-					</div>
-					
-					<div class="kk_komminfo"><a>Matthias Englert</a><span>28. Jan '15 um 15:29</span></div>
-					<div class="kk_subkomm">
-						<div class="kk_komm_loeschen">
-							<a><span class="octicon octicon-trashcan"></span></a>
-						</div>
-						Ist der Papst katholisch?
-						<div class="kk_komminfo"><a class="kk_kommautor">Jan Willem Liebezeit</a><span class="kk_kommzeit">28. Jan '15 um 16:29</span></div>
-					</div>
-					<div class="kk_subkomm">
-						<div class="kk_komm_loeschen">
-							<a><span class="octicon octicon-trashcan"></span></a>
-						</div>
-						Welche Farbe hat das weiße Pferd von Napoleon?
-						<div class="kk_komminfo"><a class="kk_kommautor">Matthias Englert</a><span class="kk_kommzeit">28. Jan '15 um 17:31</span></div>
-					</div>
-					<div class="kk_subkomm">
-						<div class="kk_komm_loeschen">
-							<a><span class="octicon octicon-trashcan"></span></a>
-						</div>
-						Die Randkurve bestimmt man wie im Skript Satz 13.5
-						<div class="kk_komminfo"><a class="kk_kommautor">Erik Hintz</a><span class="kk_kommzeit">29. Jan '15 um 12:29</span></div>
-					</div>
-					<div class="kk_kommantwort">
-						<textarea id="textarea1.1" placeholder="Antworten..." rows="1"></textarea>
-					</div>
-				</div>
-				<div class="kk_superkomm">
-					<div class="kk_kommvotes">
-						<a class="komm_voteup"><span class="octicon octicon-triangle-up"></span></a>
-						<div class="komm_votestat">-20</div>
-						<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
-					</div>
-					<div class="kk_komm_loeschen">
-						<a><span class="octicon octicon-trashcan"></span></a>
-					</div>
-					Ich check hier garnix alder wasn da los!?
-					<div class="kk_komminfo"><a class="kk_kommautor">Torsten Torstensson</a><span class="kk_kommzeit">30. Jan '15 um 03:29</span></div>
-					<div class="kk_subkomm">
-						<div class="kk_komm_loeschen">
-							<a><span class="octicon octicon-trashcan"></span></a>
-						</div>
-						Hör auf zu labern du Labersack -.-
-						<div class="kk_komminfo"><a class="kk_kommautor">Jan Willem Liebezeit</a><span class="kk_kommzeit">30. Jan '15 um 04:00</span></div>
-					</div>
-					<div class="kk_kommantwort">
-						<textarea id="textarea1.2" placeholder="Antworten..." rows="1"></textarea>
-					</div>
-				</div>
-				<div class="kk_kommerstellen">
-					<textarea id="textarea1.3" placeholder="Neues Thema beginnen..."></textarea>
-				</div>
-				<a class="kk_kommtoggle"></a>
-			</div>
-		</div>	<!-- TEXT TEST KARTEIKARTE ENDE -->
-		<div class="kk_wrapper">
-			<div class="kk_votes">
-				<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
-				<div class="kk_votestat">-5</div>
-				<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
-			</div>
-			<div class="kk_optionen">
-				<a class="option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
-					<span class="octicon octicon-link"></span>
-				</a>
-				<a class="option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
-					<span class="octicon octicon-trashcan"></span>
-				</a>
-				<a class="option einfuegen tiptrigger tipabove" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
-					<span class="octicon octicon-plus"></span>
-				</a>
-				<a class="option attribute attr_popup_open tiptrigger tipabove" data-tooltip="Attribute ändern">
-					<span class="octicon octicon-checklist"></span>
-				</a>
-			</div>
-			<div class="kk_notizen" contenteditable="true">Verstehe ich nicht</div>
-			<div class="kk inhalt_text" contenteditable="true"><strong>5.19 Definition.</strong> Sei D ⊂ R m × R d und F : D → R deine Funktion. Eine implizitdefinierte Funktion oder implizite Funktion ist eine Funktion y : Rm → Rd, derenFunktionswerte durch die Gleichung F(x, y(x)) = 0 definiert sind.</div>
-			<div class="kk_kommbox">
-				<div class="kk_kommheader"><span class="octicon octicon-comment-discussion"></span> Kommentare (6)</div>
-				<div class="kk_superkomm">
-					<div class="kk_kommvotes">
-						<a class="komm_voteup"><span class="octicon octicon-triangle-up"></span></a>
-						<div class="komm_votestat">3</div>
-						<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
-					</div>
-					<div class="kk_komm_loeschen">
-						<a><span class="octicon octicon-trashcan"></span></a>
-					</div>
-					Mir ist nicht so ganz klar wie man allgemein die Randkurve von einem Körper bestimmt. Z.B. bei der Aufgabe 1c braucht man ja die Randkurve des Kegels für den Satz von Stokes
-					<div class="kk_komminfo"><a>Matthias Englert</a><span>28. Jan '15 um 15:29</span></div>
-					<div class="kk_subkomm">
-						<div class="kk_komm_loeschen">
-							<a><span class="octicon octicon-trashcan"></span></a>
-						</div>
-						Ist der Papst katholisch?
-						<div class="kk_komminfo"><a class="kk_kommautor">Jan Willem Liebezeit</a><span class="kk_kommzeit">28. Jan '15 um 16:29</span></div>
-					</div>
-					<div class="kk_subkomm">
-						<div class="kk_komm_loeschen">
-							<a><span class="octicon octicon-trashcan"></span></a>
-						</div>
-						Welche Farbe hat das weiße Pferd von Napoleon?
-						<div class="kk_komminfo"><a class="kk_kommautor">Matthias Englert</a><span class="kk_kommzeit">28. Jan '15 um 17:31</span></div>
-					</div>
-					<div class="kk_subkomm">
-						<div class="kk_komm_loeschen">
-							<a><span class="octicon octicon-trashcan"></span></a>
-						</div>
-						Die Randkurve bestimmt man wie im Skript Satz 13.5
-						<div class="kk_komminfo"><a class="kk_kommautor">Erik Hintz</a><span class="kk_kommzeit">29. Jan '15 um 12:29</span></div>
-					</div>
-					<div class="kk_kommantwort">
-						<textarea id="textarea1.1" placeholder="Antworten..." rows="1"></textarea>
-					</div>
-				</div>
-				<div class="kk_superkomm">
-					<div class="kk_kommvotes">
-						<a class="komm_voteup"><span class="octicon octicon-triangle-up"></span></a>
-						<div class="komm_votestat">-20</div>
-						<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
-					</div>
-					<div class="kk_komm_loeschen">
-						<a><span class="octicon octicon-trashcan"></span></a>
-					</div>
-					Ich check hier garnix alder wasn da los!?
-					<div class="kk_komminfo"><a class="kk_kommautor">Torsten Torstensson</a><span class="kk_kommzeit">30. Jan '15 um 03:29</span></div>
-					<div class="kk_subkomm">
-						<div class="kk_komm_loeschen">
-							<a><span class="octicon octicon-trashcan"></span></a>
-						</div>
-						Hör auf zu labern du Labersack -.-
-						<div class="kk_komminfo"><a class="kk_kommautor">Jan Willem Liebezeit</a><span class="kk_kommzeit">30. Jan '15 um 04:00</span></div>
-					</div>
-					<div class="kk_kommantwort">
-						<textarea id="textarea1.2" placeholder="Antworten..." rows="1"></textarea>
-					</div>
-				</div>
-				<div class="kk_kommerstellen">
-					<textarea id="textarea1.3" placeholder="Neues Thema beginnen..."></textarea>
-				</div>
-				<a class="kk_kommtoggle"></a>
-			</div>
+	<div style="width: 70%;max-width: 800px">
+		<div class = "kk_load kk_load_pre"> ... </div>
+		<div id="kk_all">
+			<!-- Karteikartencontainer -->
 		</div>
-		<div class="kk_wrapper" id="bildKarteikarteTest">
-			<div class="kk_votes">
-				<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
-				<div class="kk_votestat">42</div>
-				<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
-			</div>
-			<div class="kk_optionen">
-				<a class="option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
-					<span class="octicon octicon-link"></span>
-				</a>
-				<a class="option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
-					<span class="octicon octicon-trashcan"></span>
-				</a>
-				<a class="option einfuegen tiptrigger tipabove" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
-					<span class="octicon octicon-plus"></span>
-				</a>
-				<a class="option hochladen tiptrigger tipabove" data-tooltip="Neue Version dieses Bildes hochladen">
-					<span class="octicon octicon-cloud-upload"></span>
-				</a>
-				<a class="option attribute attr_popup_open tiptrigger tipabove" data-tooltip="Attribute ändern">
-					<span class="octicon octicon-checklist"></span>
-				</a>
-			</div>
-			<div class="kk_notizen" contenteditable="true"></div>
-			<div class="kk inhalt_bild">
-				<img class="kk_bild" src="img/monalisa.jpg">
-			</div>
-			<div class="kk_bildunterschrift" contenteditable="true"><span><strong>Abbildung 1:</strong> ...</span></div>
-			<div class="kk_kommbox">
-				<div class="kk_kommheader"><span class="octicon octicon-comment-discussion"></span> Kommentare (0)</div>
-				<div class="kk_kommerstellen">
-					<textarea placeholder="Neues Thema beginnen..."></textarea>
-				</div>
-			</div>
-		</div>
-		<div class="kk_wrapper" id="videoKarteikarteTest">
-			<div class="kk_votes">
-				<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
-				<div class="kk_votestat">0</div>
-				<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
-			</div>
-			<div class="kk_optionen">
-				<a class="option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
-					<span class="octicon octicon-link"></span>
-				</a>
-				<a class="option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
-					<span class="octicon octicon-trashcan"></span>
-				</a>
-				<a class="option einfuegen tiptrigger tipabove" data-tooltip="Karteikarte unter dieser Karteikarte einfügen">
-					<span class="octicon octicon-plus"></span>
-				</a>
-				<a class="option hochladen tiptrigger tipabove" data-tooltip="Neue Version dieses Videos hochladen">
-					<span class="octicon octicon-cloud-upload"></span>
-				</a>
-				<a class="option attribute attr_popup_open tiptrigger tipabove" data-tooltip="Attribute ändern">
-					<span class="octicon octicon-checklist"></span>
-				</a>
-			</div>
-			<div class="kk_notizen" contenteditable="true"></div>
-			<div class="kk inhalt_video">
-				<video class="kk_video">
-	<!-- 				<source src="video/TheQuotientRuleMadeEasier(mathbff).mp4" type="video/mp4"> -->
-				</video>
-				<div class="video_controls"> <!-- Niemals die Reihenfolge der Childs aendern! -->
-					<a class="play_pause"><span class="mega-octicon octicon-playback-play"></span></a>
-					<input class="suchleiste" type="range" value="0">
-					<a class="stumm"><span class="octicon octicon-unmute"></span></a>
-					<input class="lautstaerke" type="range" min="0" max="1" step="0.1" value="1">
-					<a class="vollbild"><span class="octicon octicon-screen-full"></span></a>
-				</div>
-			</div>
-			<div class="kk_kommbox">
-				<div class="kk_kommheader"><span class="octicon octicon-comment-discussion"></span> Kommentare (1)</div>
-				<div class="kk_superkomm">
-					<div class="kk_komm_loeschen">
-						<a><span class="octicon octicon-trashcan"></span></a>
-					</div>
-					<div class="kk_kommvotes">
-						<a class="komm_voteup"><span class="octicon octicon-triangle-up"></span></a>
-						<div class="komm_votestat">-20</div>
-						<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
-					</div>
-					<a class="video_kommzeit">00:00:10: </a>Sehr toll erklärt! Die Dame macht das wirklich gut
-					<div class="kk_komminfo"><a class="kk_kommautor">Torsten Torstensson</a><span class="kk_kommzeit">30. Jan '15 um 03:29</span></div>
-					<div class="kk_kommantwort">
-						<textarea id="textarea1.2" placeholder="Antworten..." rows="1"></textarea>
-					</div>
-				</div>
-				<div class="kk_kommerstellen">
-					<span class="video_timebadge">00:00:00</span>
-					<textarea placeholder="An dieser Stelle kommentieren..."></textarea>
-				</div>
-			</div>
-		</div>
+		<div class = "kk_load kk_load_after"> ... </div>
 	</div>
+	
 </div>
 
 
 <!-- Template Karteikarte -->
 <div id="templatekarteikarte" class="kk_wrapper" style="display:none">
-		<div class="kk_votes">
+<span class="kk_titel">Karteikarten-Titel</span>
+<div style = "display:table-row">
+	<div style="display:table-cell;">
+		<div class="kk_votes" style="display:table-cell;">
 			<a class="kk_voteup"><span
 				class="mega-octicon octicon-triangle-up"></span></a>
 			<div class="kk_votestat">0</div>
 			<a class="kk_votedown"><span
 				class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
-		<div class="kk_optionen">
+		<div class="kk_optionen" style="display:table-cell;">
 			<a class="option permalink tiptrigger tipabove"
 				data-tooltip="Link kopieren"><span 
 				class="octicon octicon-link"></span></a>
@@ -915,33 +656,39 @@ Dann aber so leer.
 				data-tooltip="Attribute ändern"><span
 				class="octicon octicon-checklist"></span></a>
 		</div>
-	
-		<div style = "display:inline-flex;width: 80%;">
-			<div class="kk kk_inhalt"></div>
-			<div class="kk_notizen">
-				<h3>Notizen</h3>
-				<textarea class="kk_notizen_body" contenteditable=""></textarea>
-				<div class="kk_notizen_foot" style="padding-top: 0.5em;">
-					<span class="mybutton green"> Speichern </span>
+	</div>
+	<div style="display:table-cell;vertical-align:middle;width:100%">
+		<div style = "display:table;width:100%">
+			<div style = "display:table-row;">
+				<div class="kk kk_inhalt" style="display:table-cell"></div>
+				<div class="kk_notizen" style="display:table-cell">
+					<h3>Notizen</h3>
+					<textarea class="kk_notizen_body" contenteditable=""></textarea>
+					<div class="kk_notizen_foot" style="padding-top: 0.5em;display:none;">
+						<span class="mybutton green"> Änderungen speichern </span>
+					</div>
 				</div>
 			</div>
-	
-		</div>
-		<div class="kk_kommbox">
-			<a class="kk_kommheader">
-				<span class="octicon octicon-comment-discussion"></span> Kommentare
-				(<span class="kk_kommzaehler">0</span>)
-			</a>
-			<div class = "kk_kommbody" style = "display:none">
-				<div class="kk_kommerstellen">
-					<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
-					<a class="komm_submit_bt" style="float: right">Thema erstellen</a>
-				</div><div class="clearfix"></div>
-				<div class="kk_kommList">
+			<div style="display:table-row;">
+				<div class="kk_kommbox" style="display:table-cell;">
+					<a class="kk_kommheader">
+						<span class="octicon octicon-comment-discussion"></span> Kommentare
+						(<span class="kk_kommzaehler">0</span>)
+					</a>
+					<div class = "kk_kommbody" style = "display:none">
+						<div class="kk_kommerstellen">
+							<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
+							<a class="komm_submit_bt" style="float: right">Thema erstellen</a>
+						</div><div class="clearfix"></div>
+						<div class="kk_kommList">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>	
+</div>
 
 <!-- Template Kommentare -->
 <div class="kk_superkomm" id="templateSuperKomm" data-komm-id="" style="display:none">

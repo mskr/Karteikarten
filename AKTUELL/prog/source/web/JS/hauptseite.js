@@ -448,14 +448,13 @@ function registerSuchEvent()
                         params
                     );
                     $.when(studgAjax).done(function() {
-                        // Waehle korrektes Semester und Studiengang
+                        // Setze korrektes Semester und Studiengang im Select
                         $("#vn_alle_auswahl_studiengang").val(studiengangName);
                         $("#vn_alle_auswahl_semester").val(semesterName);
                         var ajax = leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName);
                         $.when(ajax).done(function() {
                             // Aktiviere den Alle-Tab
-                            $("#tab-2").prop("checked",true);
-                            
+                            $("#vn_tab_alle").prop("checked",true);
                             // Klappe die entsprechende VN aus
                             $("#vn_alle_"+id+"_radio").trigger("click").prop("checked",true);
                         });

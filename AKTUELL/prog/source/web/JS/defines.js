@@ -55,9 +55,13 @@ var actionLeseBenachrichtungen = "leseBen";
 var actionMarkiereBenGelesen = "benGelesen";
 
 
+var actionGetKarteikartenVorgaenger = "getKkVor";
+var actionGetKarteikartenNachfolger = "getKkNach";
 var actionGetKarteikarteByID = "getKarteikarte";
 var actionGetKarteikartenKinder = "getKKKinder";
 var actionGetKarteikartenVater = "getKKVater";
+var actionVoteKarteikarteUp = "voteUpKarteik";
+var actionVoteKarteikarteDown = "voteDownKarteik";
 
 var actionVoteKommentarUp = "voteUpKomm";
 var actionVoteKommentarDown = "voteDownKomm";
@@ -99,6 +103,7 @@ var paramType = "type";
 //Karteikarte
 var paramKkText = "TEXT";
 var paramKkBild = "BILD";
+var paramKkUeberschrift = "BILD";
 var paramKkVideo = "VIDEO";
 var paramKkUploadID = "uploadID";
 var paramVeranstaltung = "veranstaltung";

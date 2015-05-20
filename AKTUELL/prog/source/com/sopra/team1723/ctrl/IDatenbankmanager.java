@@ -410,6 +410,11 @@ public interface IDatenbankmanager {
      * zurückgeliefert.
      */
     public Map<Integer,Tupel<Integer,String>> leseKindKarteikarten(int vaterKarteikID);
+    
+    
+    public Map<Integer,Karteikarte> leseNachfolger(int karteikarte, int anzNachfolger);
+    
+    public Map<Integer,Karteikarte> leseVorgaenger(int karteikarte, int anzVorgänger);
 
     /**
      * Fügt neue Karteikarte in die Datenbank ein. Bei einem Fehler wird eine
@@ -458,7 +463,7 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public boolean hatKarteikarteBewertet(int karteikID, int benutzer) throws SQLException;
+    public boolean hatKarteikarteBewertet(int karteikID, int benutzer);
 
     /**
      * Gibt alle Kommentare zu einer Karteikarte zuruck. Bei einem Fehler

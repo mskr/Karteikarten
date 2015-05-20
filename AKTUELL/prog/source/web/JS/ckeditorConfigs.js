@@ -27,9 +27,9 @@ var ckEditorKommentarAntwortConfig = {
 var ckEditorNotizConfig = {
 		removePlugins: 'toolbar,elementspath',
 //		resize_maxHeight: "500px",
-//		resize_minHeight: "40px",
+		resize_minHeight: "40px",
 //		height: "100%",
-		autoGrow_onStartup : false,
+//		autoGrow_onStartup : false,
 		resize_enabled : false,
 }
 

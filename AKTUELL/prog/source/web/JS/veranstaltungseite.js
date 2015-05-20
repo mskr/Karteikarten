@@ -1,43 +1,35 @@
 /**
  * @author mk
  */
-var sampleJSONIDs = {};
-sampleJSONIDs["k_1"] = {};
-sampleJSONIDs["k_1"][paramIndex] = 7;
-sampleJSONIDs["k_1"][paramId] = 24;
-sampleJSONIDs["k_2"] = {};
-sampleJSONIDs["k_2"][paramIndex] = 1;
-sampleJSONIDs["k_2"][paramId] = 26;
-sampleJSONIDs["k_3"] = {};
-sampleJSONIDs["k_3"][paramIndex] = 3;
-sampleJSONIDs["k_3"][paramId] = 22;
-sampleJSONIDs["k_4"] = {};
-sampleJSONIDs["k_4"][paramIndex] = 4;
-sampleJSONIDs["k_4"][paramId] = 23;
-sampleJSONIDs["k_5"] = {};
-sampleJSONIDs["k_5"][paramIndex] = 8;
-sampleJSONIDs["k_5"][paramId] = 20;
-sampleJSONIDs["k_6"] = {};
-sampleJSONIDs["k_6"][paramIndex] = 6;
-sampleJSONIDs["k_6"][paramId] = 25;
-sampleJSONIDs["k_7"] = {};
-sampleJSONIDs["k_7"][paramIndex] = 2;
-sampleJSONIDs["k_7"][paramId] = 21;
-sampleJSONIDs["k_8"] = {};
-sampleJSONIDs["k_8"][paramIndex] = 5;
-sampleJSONIDs["k_8"][paramId] = 27;
+var sampleJSONIDs = [];
+sampleJSONIDs[0] = {};
+sampleJSONIDs[0][paramIndex] = 7;
+sampleJSONIDs[0][paramId] = 24;
+sampleJSONIDs[1] = {};
+sampleJSONIDs[1][paramIndex] = 1;
+sampleJSONIDs[1][paramId] = 26;
+sampleJSONIDs[2] = {};
+sampleJSONIDs[2][paramIndex] = 3;
+sampleJSONIDs[2][paramId] = 22;
+sampleJSONIDs[3] = {};
+sampleJSONIDs[3][paramIndex] = 4;
+sampleJSONIDs[3][paramId] = 23;
+sampleJSONIDs[4] = {};
+sampleJSONIDs[4][paramIndex] = 8;
+sampleJSONIDs[4][paramId] = 20;
+sampleJSONIDs[5] = {};
+sampleJSONIDs[5][paramIndex] = 6;
+sampleJSONIDs[5][paramId] = 25;
+sampleJSONIDs[6] = {};
+sampleJSONIDs[6][paramIndex] = 2;
+sampleJSONIDs[6][paramId] = 21;
+//sampleJSONIDs[7] = {};
+//sampleJSONIDs[7][paramIndex] = 5;
+//sampleJSONIDs[7][paramId] = 27;
 
 var veranstaltungsObject;
 
 $(document).ready(function() {
-    // Code fuer das Attribute Tooltip
-//    $("#attr_popup").popup({
-//            type: 'tooltip',
-//            vertical: 'topedge',
-//            horizontal: 'leftedge'
-//    });
-//  CKEDITOR.config.irgendeinPlugin
-	
 	$("#vn_kk_ueberscht_box").hide();
 	
 	$("#vn_loeschen").click(function() {
@@ -54,35 +46,61 @@ $(document).ready(function() {
 				params
 			);
 		})
-		
-	});
-	$("#vn_bearbeiten").click(function() {
-		// TODO Dialog öffnen
 	});
 	
-    // Einklappen der Kommentarboxen
-//    $('.kk_kommtoggle').html('Einklappen');
-//    var height = 0;
-//    $('.kk_kommtoggle').click( function() {
-//        var domelem = $(this).parent().get(0);
-//        var jqueryobj = $(domelem);
-//        if( jqueryobj.height()>50 ) {
-//            height = jqueryobj.height();
-//            jqueryobj.animate({
-//                height: "15px"
-//            }, 500 );
-//            $(this).html('Ausklappen');
-//        } else {
-//            jqueryobj.animate({
-//                height: ""+height+"px"
-//            }, 500 );
-//            $(this).html('Einklappen');
-//        }
-//    });
+	  // LadeHandler
+    $(".kk_load_pre").click(function(){
+    	var params ={};
+    	params[paramId] = $("#kk_all").children().first().attr("data-kkid");
+    	ajaxCall(karteikartenServlet, 
+    			actionGetKarteikartenVorgaenger, 
+    			function(response)
+    			{
+    				arr = response[keyJsonArrResult];
+    				if(arr.length < 5)
+    				{
+    					$(".kk_load_pre").slideUp();
+    				}
+    				for(i = 0; i < arr.length;i++)
+					{
+    					domkk = buildKarteikarte(arr[i]);
+    	        		domkk.hide();
+    	        		$("#kk_all").prepend(domkk);
+    	        		domkk.slideDown();
+//    	        		$("body").animate({scrollTop: 0},"slow");
+					}
+	        		
+    			}, params);
+    });    
+    $(".kk_load_after").click(function(){
+    	var params ={};
+    	params[paramId] = $("#kk_all").children().last().attr("data-kkid");;
+    	ajaxCall(karteikartenServlet, 
+    			actionGetKarteikartenNachfolger, 
+    			function(response)
+    			{
+    				arr = response[keyJsonArrResult];
+    				if(arr.length < 5)
+    				{
+    					$(".kk_load_after").slideUp();
+    				}
+    				for(i = 0; i < arr.length;i++)
+					{
+	    	    		domkk = buildKarteikarte(arr[i]);
+	    	    		domkk.hide();
+	    	    		$("#kk_all").append(domkk);
+	    	    		domkk.slideDown();
+//	    	        	$("body").animate({scrollTop: $("body").height},"slow");
+					}
+    			}, params);
+    });
 });
 
 function fillVeranstaltungsSeite(Vid)
 {
+	$(".kk_load_after").show();
+	$(".kk_load_pre").show();
+	
 	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
 	d = jQuery.Deferred();
 	$("#kk_all").empty();
@@ -95,7 +113,6 @@ function fillVeranstaltungsSeite(Vid)
 				fillSelectWithOptions($("#vn_bearbeiten_auswahl_studiengang"),studgArr,jsonBenutzer[paramStudiengang],true);
 			}
 	); 
-
 
 	// Semester in auswahlliste anzeigen
 	var ajax2 =  ajaxCall(startseitenServlet,
@@ -195,26 +212,20 @@ function fillVeranstaltungsSeite(Vid)
 					
 					// TODO hole eine liste mit den ersten 20, 30, ... karteikartenids vom server
 					// hier noch mit samplejson sampleJSONIDs
-					jsonKkIDs = sampleJSONIDs;
-					
-					
-					json_length = Object.keys(jsonKkIDs).length; //anzahl der einträge im json
-					newIdArray = sortiereKarteikartenIDs(jsonKkIDs);	//array in dem die ids in der gewünschten reihenfolge aufgelistet sind;
-					
-					ajaxArr = [];
-					
-					for(i=0;i<json_length;i++){			//startet für benötigte Karteikarten ajaxcalls und speichert diese in array
-						ajaxArr[i] = getKarteikarteByID(newIdArray[i]);
-					}
-					
-					$.when.apply($,ajaxArr).done(function() { //wenn alle fertig, werden diese erstellt und appended
-						console.log("alle ajax calls für karteikarten fertig, array von karteikarten hier:")
-						console.log(ajaxArr);
-						for(i=0;i<json_length;i++){
-							domElem = buildKarteikarte( jQuery.parseJSON(ajaxArr[i].responseText));
-							$("#kk_all").append(domElem);
+					var params ={};
+					params[paramId] = veranstaltungsObject[paramErsteKarteikarte];
+					ajaxCall(karteikartenServlet, actionGetKarteikartenNachfolger, function(response){
+						
+						arr = response[keyJsonArrResult];
+	    				for(i = 0; i <arr.length;i++)
+						{
+	    					domkk = buildKarteikarte(arr[i]);
+	    	        		domkk.hide();
+	    	        		$("#kk_all").append(domkk);
+	    	        		domkk.slideDown();
+//	    	        		$("body").animate({scrollTop: 0},"slow");
 						}
-					});
+					}, params);
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
@@ -250,7 +261,6 @@ function fillVeranstaltungsSeite(Vid)
         $(".r-suche_etwas_label").hide();
         $(".r-kk-inhaltsvz-toggle").hide();
     }
-    
 	return $.when(ajax1,ajax2,d);
 }
 
@@ -296,6 +306,37 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                             kkListItem.find("a").click(function(e) {
                                 ladeKindKarteikarten(arr[i][paramId], kkListItem);
                                 e.stopPropagation();
+ 
+                                $("#kk_all").empty();
+
+            					var params ={};
+            					params[paramId] = arr[i][paramId];
+    	    	        		ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
+    	    	        			domkk = buildKarteikarte(response);
+    	    	        			domkk.hide();
+    	    	        			$("#kk_all").append(domkk);
+    	    	        			domkk.slideDown();
+//  	    	        			$("body").animate({scrollTop: 0},"slow");
+            						
+            					}, params);
+    	    	        		
+            					$.when(ajax).done(function(){
+            						ajaxCall(karteikartenServlet, actionGetKarteikartenNachfolger, function(response){
+            						
+                                   
+            						data = response[keyJsonArrResult];
+            						for(i = 0; i <data.length;i++)
+            						{
+            	    					domkk = buildKarteikarte(data[i]);
+            	    	        		domkk.hide();
+            	    	        		$("#kk_all").append(domkk);
+            	    	        		domkk.slideDown();
+//            	    	        		$("body").animate({scrollTop: 0},"slow");
+            						}
+            					}, params)
+            					});
+                                
+                                
                             });
                         }
                         f(arr, kkListItem, i);
@@ -343,31 +384,36 @@ function findModeratorenVn(id){
 
 function sortiereKarteikartenIDs(jsonKkIDs){
 	newIdArray = [];
-	id_of_smallest_index =-1;
-	smallest_index = -1;
-	j_to_delete = -1;
-	for(i=1; i<json_length+1;i++){
-		for(j=1; j<json_length+1;j++){
-			if(smallest_index == -1){
-			//	console.log("set smallest index initial from -1 to:"+ jsonKkIDs["k_"+j].index);
-				id_of_smallest_index = jsonKkIDs["k_"+j].id;
-				smallest_index = jsonKkIDs["k_"+j].index;
-				j_to_delete = j;
-			}
-			else if(jsonKkIDs["k_"+j].index < smallest_index){
-			//	console.log("replace smallest index:"+ smallest_index + ",id: "+id_of_smallest_index);
-				j_to_delete = j;
-				id_of_smallest_index = jsonKkIDs["k_"+j].id;
-				smallest_index = jsonKkIDs["k_"+j].index;
-			//	console.log("with index: "+smallest_index+", id: "+ id_of_smallest_index);
-			}
-		}
-	//	console.log("found smallest index: "+ smallest_index +"with id:"+ id_of_smallest_index);
-		newIdArray[i-1]=id_of_smallest_index;
-		jsonKkIDs["k_"+j_to_delete].index = 999999999;
-		smallest_index = -1;
-		id_of_smallest_index = -1;
-	}
+	jsonKkIDs.sort(function(a,b){
+		return a[paramIndex] - b[paramIndex];
+	});
+	for(var i in jsonKkIDs)
+		newIdArray.push(jsonKkIDs[i][paramId]);
+	
+//	id_of_smallest_index =-1;
+//	smallest_index = -1;
+//	j_to_delete = -1;
+//	for(i=1; i<json_length+1;i++){
+//		for(j=1; j<json_length+1;j++){
+//			if(smallest_index == -1){
+//			//	console.log("set smallest index initial from -1 to:"+ jsonKkIDs["k_"+j].index);
+//				id_of_smallest_index = jsonKkIDs["k_"+j].id;
+//				smallest_index = jsonKkIDs["k_"+j].index;
+//				j_to_delete = j;
+//			}
+//			else if(jsonKkIDs["k_"+j].index < smallest_index){
+//			//	console.log("replace smallest index:"+ smallest_index + ",id: "+id_of_smallest_index);
+//				j_to_delete = j;
+//				id_of_smallest_index = jsonKkIDs["k_"+j].id;
+//				smallest_index = jsonKkIDs["k_"+j].index;
+//			//	console.log("with index: "+smallest_index+", id: "+ id_of_smallest_index);
+//			}
+//		}
+//	//	console.log("found smallest index: "+ smallest_index +"with id:"+ id_of_smallest_index);
+//		newIdArray[i-1]=id_of_smallest_index;
+//		jsonKkIDs["k_"+j_to_delete].index = 999999999;
+//		smallest_index = -1;
+//		id_of_smallest_index = -1;
+//	}
 	return newIdArray;
 }
-
