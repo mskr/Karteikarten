@@ -84,8 +84,26 @@ public class Karteikarte implements IjsonObject {
     private int veranstaltung;
     
     private int bewertung;
-        
-        
+       
+    
+    public enum BeziehungsTyp {
+        V_VORRAUSSETZUNG, 
+        V_UEBUNG, 
+        V_ZUSATZINFO
+    };
+    
+    public enum AttributTyp {
+        SATZ,
+        BEWEIS,
+        DEFINITION,
+        WICHTIG,
+        GRUNDLAGEN,
+        ZUSATZINFO,
+        EXKURS,
+        BEISPIEL,
+        UEBUNG
+    }
+    
 
     public int getId()
     {
