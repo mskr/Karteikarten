@@ -64,6 +64,14 @@ $(document).ready(function() {
             $("#vn_erstellen_zurueck")
         );
         $("#cke_kk_erstellen_TA").show();
+        $("#kk_erstellen_weiter").click(function(){
+        	$("#popup_fenster_body1").hide(0);
+        	$("#popup_fenster_body2").show(0);
+        });
+        $("#kk_erstellen_zurueck").click(function(){
+        	$("#popup_fenster_body1").show(0);
+        	$("#popup_fenster_body2").hide(0);
+        });
         try{
     		myDropzone = $("#file-dropzone").dropzone({
             url: actionUploadKKBild,
