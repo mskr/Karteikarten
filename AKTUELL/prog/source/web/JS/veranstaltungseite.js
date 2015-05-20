@@ -299,7 +299,7 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                     vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
                     for(var i in arr)
                     {
-                        var kkListItem = $("<li><a class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
+                        var kkListItem = $("<li><a data-kkID='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
                         vaterElem.append(kkListItem);
                         // Click Handler
                         var f = function(arr, kkListItem, i) {

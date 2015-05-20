@@ -1926,6 +1926,7 @@ select.profil_input {
 		position: fixed;
 		bottom: 0;
 		left: 4em;
+		z-index: 102;
 		margin: 0;
 		padding: 1em;
 		width: 11em;
