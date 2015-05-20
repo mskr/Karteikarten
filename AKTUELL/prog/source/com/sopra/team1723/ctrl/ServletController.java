@@ -45,6 +45,10 @@ public abstract class ServletController extends HttpServlet
      */
     public final static String dirFiles = "files/";             
     public final static String dirProfilBilder = dirFiles + "profilBilder/";
+    public final static String dirKKBild = dirFiles + "images/";
+    public final static String dirKKVideo = dirFiles + "videos/";
+
+
 
     /**
      * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 

@@ -227,6 +227,11 @@
 		</div>
 		<div class="popup_fenster_body">
 			<input class="input_std popup_input" id="kk_erstellen_titel_input" type="text" placeholder="Titel" required>
+ 			
+ 			<div id="kk_erstellen_text_area">
+ 				<textarea id="kk_erstellen_TA">
+ 				</textarea>
+ 			</div>
  			<div class="drop_file_areas" id="df_area_kk">
 				<form action="/file-upload" class="dropzone" id="file-dropzone">
 					<div class="fallback">
@@ -234,8 +239,6 @@
 					</div>
 			        <div class="dz-message" id="dz_info_message">
 						Drop files here or click to upload.<br>
-					</div>
-					<div class="dz-message" id="dz_uploaded_file_message">
 					</div>
 			    </form>
  			</div>
@@ -245,10 +248,10 @@
 			<textarea class="input_std popup_input" id="vn_erstellen_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
 		</div>
 		<div class="popup_fenster_foot">
-			<span id="vn_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>
-			<span id="vn_erstellen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
-			<span id="vn_erstellen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
-			<span id="vn_erstellen_ok" class="mybutton green">Erstellen</span>
+			<span id="kk_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="kk_erstellen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="kk_erstellen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="kk_erstellen_ok" class="mybutton green">Erstellen</span>
 		</div>
 	</div>
 </div>	
@@ -610,7 +613,7 @@ Dann aber so leer.
 				</a>
 			</label>
 		</div>
-		<!-- <button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button> -->
+		<button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button> 
 		<!-- <button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button> -->
 	</div>
 	<div id="kk_inhaltsverzeichnis"></div>

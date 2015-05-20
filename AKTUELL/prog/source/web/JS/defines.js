@@ -100,6 +100,7 @@ var paramType = "type";
 var paramKkText = "TEXT";
 var paramKkBild = "BILD";
 var paramKkVideo = "VIDEO";
+var paramKkUploadID = "uploadID";
 var paramVeranstaltung = "veranstaltung";
 var paramAenderungsdatum = "aenderungsdatum";
 var paramBewertung = "bewertung";

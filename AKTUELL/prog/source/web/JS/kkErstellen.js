@@ -1,27 +1,19 @@
 $(document).ready(function() {
 	Dropzone.autoDiscover = false;
-
+	var UPLOAD_ID;
     $('#kk_erstellen_bt').click(function() {
-        
+    	try{
+    		var kk_ck_editor = $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
+    	}
+        catch(e){
+        	console.log(e);
+        }
+
         popupFenster(
             $("#kk_erstellen_popup_overlay"), 
             [$('#kk_erstellen_popup_close'),$("#kk_erstellen_cancel")],
-            function() {
-            	
-            	var dialog = $("#vn_erstellen_popup");
-            	$("#vn_erstellen_stg_list").empty();
-            	dialog.find("#vn_erstellen_beschr_input").val("");
-            	dialog.find("#vn_erstellen_pass_input").val("");
-            	dialog.find("#vn_erstellen_komm_erlaubt").prop("checked", true);
-            	dialog.find("#vn_erstellen_bew_erlaubt").prop("checked", true);
-
-            	dialog.find("#vn_erstellen_keiner_bearb").prop("checked", true);
-
-            	selectedModList = {};
-            	$("#vn_erstellen_mod_list").empty();
-
-            },
-            $("#vn_erstellen_ok"),
+            function() {},
+            $("#kk_erstellen_ok"),
             function() {
                 var dialog = $("#vn_erstellen_popup");
                 var titel = dialog.find("#vn_erstellen_titel_input").val(),
@@ -31,13 +23,7 @@ $(document).ready(function() {
                     passw = dialog.find("#vn_erstellen_pass_input").val(),
                     kommentareErlaubt = dialog.find("#vn_erstellen_komm_erlaubt").is(':checked'),
                     bewertungenErlaubt = dialog.find("#vn_erstellen_bew_erlaubt").is(':checked');
-                
-                var moderatorenIDs = [];
-                
-                for( var key in selectedModList)
-                {
-                    moderatorenIDs.push(selectedModList[key][paramId]);
-                }
+
                 
                 // Fehlerprüfung
                 if(titel == "" || beschr == "" || $.isEmptyObject(selectedStudiengaenge))
@@ -77,27 +63,66 @@ $(document).ready(function() {
             $("#vn_erstellen_weiter"),
             $("#vn_erstellen_zurueck")
         );
-    	var myDropzone = $("#file-dropzone").dropzone({
-             url: actionUploadKKBild,
-             acceptedFiles: "image/jpeg,image/png,image/gif,video/mp4",
-             clickable: true,
-             maxFilesize: 1,
-             autoProcessQueue:false,
-             createImageThumbnails: true,
-             uploadMultiple: false,
-             addRemoveLinks: true,
-             init: function() {
-        	    this.on("addedfile", function(file) {
-        	    	console.log("Added file.");
-        	    	$("#dz_info_message").hide(0);
-//        	    	$("#dz_uploaded_file_message").html(file.name+"<br>"+file.size);
-//        	    	$("#dz_uploaded_file_message").show(0);
-        	    	this.getAcceptedFiles();
-        	    });
-        	  }
-         });
-    	console.log(myDropzone);
-        $("#vn_erstellen_beschr_input").ckeditor();
+        $("#cke_kk_erstellen_TA").show();
+        try{
+    		myDropzone = $("#file-dropzone").dropzone({
+            url: actionUploadKKBild,
+            acceptedFiles: "image/jpeg,image/png,image/gif,video/mp4",
+            clickable: true,
+            maxFilesize: 1,
+            autoDiscover :false,
+            autoProcessQueue:false,
+            createImageThumbnails: true,
+            uploadMultiple: false,
+            addRemoveLinks: true,
+                init: function() {
+                	var myDropzone = this;
+               	 $(".dz-error-message").remove();
+           	    this.on("addedfile", function(file) {
+           	    	var ext = file.name.substr(file.name.lastIndexOf('.') + 1);
+           	    	console.log(ext);
+           	    	uploadAction = false;
+           	    	if(ext=="png"||ext=="jpg"){
+           	    		uploadAction = actionUploadKKBild;
+           	    	}
+           	    	else if(ext=="mp4"){
+           	    		uploadAction = actionUploadKKVideo;
+           	    	}
+           	    	else{
+           	    		showError("Bitte verwenden sie für Bilder .png oder .jpg und für Videos .mp4 als Format!");
+           	         	myDropzone.removeAllFiles(true);
+           	    		return false;
+           	    	}
+           	    	var params = {};
+           	    	$("#dz_info_message").hide(0);
+           	    	$(".dz-preview").addClass("center");
+           	    	$(".dz-error-message").remove();
+           	    	$(".dz-error-mark").remove();
+           	    	$(".dz-success-mark").remove();
+           	    	$(".dz-preview").css("margin","40px");
+           	    	clone = $(".dz-size");
+           	    	$(".dz-size").remove();
+           	    	$(".dz-details").append(clone);
+           		    function successFkt(data){
+           		    	$("#cke_kk_erstellen_TA").hide(0);
+               	    	console.log(data);
+           		    }
+           	    	uploadFile(file, successFkt, uploadAction, params, function(){}, function(){}) 
+           	    });
+           	    this.on("removedfile", function(file) {
+           	    	$("#dz_info_message").show(0);
+           	    	$("#cke_kk_erstellen_TA").show(0);
+           	    });
+           	  }
+            }).get(0).dropzone;
+        }
+        catch(e){
+        	myDropzone.removeAllFiles(true);
+        }
+    	
+     	
+     	
+        
         
     });
     
