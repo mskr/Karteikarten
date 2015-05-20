@@ -285,8 +285,7 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
             function(response) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
-                console.log("[LOG] Inhaltsvz hat Array empfangen...");
-                console.log(arr);
+                console.log("[LOG] arr hat die laenge "+arr.length);
                 // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
                 if(arr.length == 0) {
                     console.log("hat keine kinder mehr");
@@ -308,19 +307,22 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 // Falls noch nicht geschehen, lade Kindkarteikarten rekursiv
                                 if($(e.target).siblings("ul").length == 0)
                                 {
+                                    console.log("[LOG] Ausklappen: Iteriere arr bei Index "+ i);
                                     ladeKindKarteikarten(arr[i][paramId], kkListItem);
                                 }
                                 // Andernfalls klappe Kindkarteikarten ein
                                 else
                                 {
+                                    console.log("[LOG] Einklappen: Iteriere arr bei Index "+ i);
                                     $(e.target).siblings("ul").remove();
                                 }
                                 e.stopPropagation();
  
                                 $("#kk_all").empty();
-
-            					var params ={};
-            					params[paramId] = arr[i][paramId];
+//
+            					var params2 ={};
+//            					console.log("[LOG] Iteriere arr bei Index "+ i);
+            					params2[paramId] = arr[i][paramId];
     	    	        		ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
     	    	        			domkk = buildKarteikarte(response);
     	    	        			domkk.hide();
@@ -328,24 +330,26 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
     	    	        			domkk.slideDown();
 //  	    	        			$("body").animate({scrollTop: 0},"slow");
             						
-            					}, params);
-    	    	        		
+            					}, params2);
+//    	    	        		
             					$.when(ajax).done(function(){
             						ajaxCall(karteikartenServlet, actionGetKarteikartenNachfolger, function(response){
             						
                                    
             						data = response[keyJsonArrResult];
-            						for(i = 0; i <data.length;i++)
+            						for(j = 0; j <data.length;j++)
             						{
-            	    					domkk = buildKarteikarte(data[i]);
+            	    					domkk = buildKarteikarte(data[j]);
             	    	        		domkk.hide();
             	    	        		$("#kk_all").append(domkk);
             	    	        		domkk.slideDown();
 //            	    	        		$("body").animate({scrollTop: 0},"slow");
             						}
-            					}, params)
+            					}, params2)
             					});
-                                
+
+                                console.log("[LOG] Array");
+                                console.log(arr);
                                 
                             });
                         }
