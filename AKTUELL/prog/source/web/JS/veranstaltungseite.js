@@ -249,27 +249,25 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 else
                                 {
                                 	destroyCKeditors($("#kk_all"));
-                                	$("#kk_all").empty();
-                                	showPreAfterLoad();
+                                	$("#kk_all").children().fadeOut("slow").promise().done(function(){
+                                		$("#kk_all").empty();
+                                    	showPreAfterLoad();
 
-                                	var params2 ={};
-                                	params2[paramId] = arr[i][paramId];
-                                	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
-                                		domkk = buildKarteikarte(response);
-                                		domkk.hide();
-                                		$("#kk_all").append(domkk);
-                                		domkk.slideDown();
-                                	}, params2);
+                                    	var params2 ={};
+                                    	params2[paramId] = arr[i][paramId];
+                                    	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
+                                    		domkk = buildKarteikarte(response);
+                                    		domkk.hide();
+                                    		$("#kk_all").append(domkk);
+                                    		domkk.slideDown();
+                                    	}, params2);
 
-                                	$.when(ajax).done(function(){
-                                		loadAfterKk(arr[i][paramId]);
+                                    	$.when(ajax).done(function(){
+                                    		loadAfterKk(arr[i][paramId]);
+                                    	});
                                 	});
+                                	
                                 }
-
-                                
-                                
-                                
-                                
                             });
                         }
                         f(arr, kkListItem, i);
@@ -324,6 +322,7 @@ function sortiereKarteikartenIDs(jsonKkIDs){
 		newIdArray.push(jsonKkIDs[i][paramId]);
 	return newIdArray;
 }
+displayingAfterKK = false;
 var kkLoadRequest;
 function loadAfterKk(id)
 {
@@ -337,30 +336,36 @@ function loadAfterKk(id)
 	kkLoadRequest = ajaxCall(karteikartenServlet,
 			actionGetKarteikartenNachfolger, 
 			function(response){
+
+				if(displayingAfterKK)
+					return;
+				displayingAfterKK = true;
+				
 				data = response[keyJsonArrResult];
 				if(data.length < 5)
 				{
 					$(".kk_load_after").slideUp();
 				}
 				
-				j = 0;
 				function nextItem(){
-					if(j < data.length)
-					{
-						domkk = buildKarteikarte(data[j]);
+						o = data.shift();
+						if(o == undefined)
+							return;
+						
+						domkk = buildKarteikarte(o);
 						domkk.hide();
 						$("#kk_all").append(domkk);
 						domkk.slideDown("fast",function(){
 							nextItem();
 						});
-					}
-					j++;
 				}
 				nextItem();
+				displayingAfterKK = false;
 				
 	}, params2);
 	return kkLoadRequest;
 }
+displayingPreKK = false;
 function loadPreKk(id)
 {
 	if (kkLoadRequest != null){ 
@@ -373,27 +378,30 @@ function loadPreKk(id)
 			actionGetKarteikartenVorgaenger, 
 			function(response)
 			{
-				arr = response[keyJsonArrResult];
-				if(arr.length < 5)
+				if(displayingPreKK)
+					return;
+				displayingPreKK = true;
+				
+				data = response[keyJsonArrResult];
+				if(data.length < 5)
 				{
 					$(".kk_load_pre").slideUp();
 				}
 
-				j = 0;
 				function nextItem(){
-					if(j < arr.length)
-					{
-						domkk = buildKarteikarte(arr[j]);
-						domkk.hide();
-						$("#kk_all").prepend(domkk);
-						domkk.slideDown("fast",function(){
-							nextItem();
-						});
-					}
-					j++;
+					o = data.shift();
+					if(o == undefined)
+						return;
+					domkk = buildKarteikarte(o);
+					domkk.hide();
+					$("#kk_all").prepend(domkk);
+					domkk.slideDown("fast",function(){
+						nextItem();
+					});
 				}
 				nextItem();
 				
+				displayingPreKK = false;
         		
 			}, params);
 	return kkLoadRequest;
