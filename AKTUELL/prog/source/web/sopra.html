@@ -616,12 +616,12 @@ Dann aber so leer.
 		<!-- <button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button> -->
 	</div>
 	<div id="kk_inhaltsverzeichnis"></div>
-	<div style="width: 70%;max-width: 800px">
-		<div class = "kk_load kk_load_pre"> ... </div>
+	<div id="kk_body">
+		<div class = "kk_load kk_load_pre"> <span class="mega-octicon octicon-arrow-up"></span> </div>
 		<div id="kk_all">
 			<!-- Karteikartencontainer -->
 		</div>
-		<div class = "kk_load kk_load_after"> ... </div>
+		<div class = "kk_load kk_load_after"> <span class="mega-octicon octicon-arrow-down"></span> </div>
 	</div>
 	
 </div>
@@ -675,27 +675,27 @@ Dann aber so leer.
 					</div>
 				</div>
 			</div>
-			<div style="display:table-row;">
-				<div class="kk_kommbox" style="display:table-cell;">
-					<a class="kk_kommheader">
-						<span class="octicon octicon-comment-discussion"></span> Kommentare
-						(<span class="kk_kommzaehler">0</span>)
-					</a>
-					<div class = "kk_kommbody" style = "display:none">
-						<div class="kk_kommerstellen">
-							<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
-							<a class="komm_submit_bt" style="float: right">Thema erstellen</a>
-						</div><div class="clearfix"></div>
-						<div class="kk_kommList">
-						</div>
-					</div>
-				</div>
+		</div>
+	</div>
+</div>
+<div style = "display:table-row">
+	<div style="display:table-cell;"></div>
+	<div class="kk_kommbox" style="display:table-cell;">
+		<a class="kk_kommheader">
+			<span class="octicon octicon-comment-discussion"></span> Kommentare
+			(<span class="kk_kommzaehler">0</span>)
+		</a>
+		<div class = "kk_kommbody" style = "display:none">
+			<div class="kk_kommerstellen">
+				<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
+				<a class="komm_submit_bt" style="float: right">Thema erstellen</a>
+			</div><div class="clearfix"></div>
+			<div class="kk_kommList">
 			</div>
 		</div>
 	</div>
-</div>	
 </div>
-
+</div>
 <!-- Template Kommentare -->
 <div class="kk_superkomm" id="templateSuperKomm" data-komm-id="" style="display:none">
 	<div class="kk_kommvotes">
