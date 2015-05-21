@@ -476,6 +476,7 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         suchErgJQueryObj.click( clickHandler(categories, category, jsonSuchErgebnis) );
     }
 
+    // Sortiere die Suchergebnisse nach Editierdistanz
     $.each(suchergContainer.find(".sucherg"), function(index, obj) {
     	var elem = $(obj).find('div').sort( function(a,b)
 	    	{
@@ -484,15 +485,19 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
     	$(obj).append(elem);
 	});
     
+    // Markiere initial das erste Suchergebnis
     $(suchergContainer.find(".sucherg_item")[0]).addClass("selected");
     
-    suchergContainer.find(".sucherg_item").off();
+    // Markieren der Suchergebnisse mit Hover
+    // suchergContainer.find(".sucherg_item").off(); // damit entfernt man auch die click handler
     suchergContainer.find(".sucherg_item").each(function(i, elem) {
         $(elem).hover(function(e) {
+            suchergContainer.find(".sucherg_item").removeClass("selected");
             $(e.target).addClass("selected");
             suchErgIterator = i;
         }, function(e) {
             $(e.target).removeClass("selected");
+            suchErgIterator = -1;
         });
     });
     
