@@ -87,6 +87,8 @@ public class Karteikarte implements IjsonObject {
        
     
     public enum BeziehungsTyp {
+        H_CHILD,
+        H_BROTHER,
         V_VORRAUSSETZUNG, 
         V_UEBUNG, 
         V_ZUSATZINFO

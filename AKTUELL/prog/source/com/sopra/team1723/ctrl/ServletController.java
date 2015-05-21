@@ -60,38 +60,6 @@ public abstract class ServletController extends HttpServlet
     public ServletController() 
     {
     }
-
-    //    /**
-    //     * Aktuell angemeldeter Benutzer. Null, falls Benutzer nicht angemeldet ist.
-    //     */
-    //    protected Benutzer aktuellerBenutzer = null;
-    //
-    //    /**
-    //     * 
-    //     */
-    //    protected String gewähltesSemester = null;
-    //    
-    //    /**
-    //     * 
-    //     */
-    //    protected IDatenbankmanager dbManager = null;
-    //
-    //    /**
-    //     *  Aktuelle Session.
-    //     */
-    //    protected HttpSession aktuelleSession = null;
-    //
-    //    /**
-    //     *  Print Writer über den Daten an den Client geschrieben werden können
-    //     */
-    //    protected PrintWriter outWriter = null;
-    //
-    //    /**
-    //     * Hier steht die vom ServletController ausgelesene Aktion, die der Client ausführen will.
-    //     */
-    //    protected String aktuelleAction = null;
-
-
     /**
      * Prüft, ob die eMail-Adresse des Benutzers in der aktuellen Session vorhanden ist und ob der Benutzer somit eingeloggt ist.
      * @return

@@ -26,6 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.sql.Timestamp;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
 import com.sopra.team1723.exceptions.*;
 
 /**
@@ -33,29 +34,40 @@ import com.sopra.team1723.exceptions.*;
  */
 public class Datenbankmanager implements IDatenbankmanager {
     final int UNIQUE_CONSTRAINT_ERROR = 1062;
-    private HashMap<Connection,ReentrantLock> connectionsNeo4j = null;
-    private HashMap<Connection,ReentrantLock> connections = null;
+    private static HashMap<Connection,ReentrantLock> connectionsNeo4j = null;
+    private static HashMap<Connection,ReentrantLock> connections = null;
     private final static int AnzConnections = 10;  
     /**
      * Implementiert die Methoden des    private ArrayList<Connection> connections = null;
     private ArrayList<ReentrantLock> locks = null; @ref IDatenbankmanager. Bietet eine Schnittstelle zur Datenbank.
      * @throws Exception 
      */
-    public Datenbankmanager() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
+    public Datenbankmanager() throws Exception {}
+    
+    static {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("org.neo4j.jdbc.Driver");
+            connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
+            for(int i=0; i<AnzConnections; ++i)
+                connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten","neo4j","hallo123"), new ReentrantLock());
 
-        Class.forName("org.neo4j.jdbc.Driver");
-        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
-        for(int i=0; i<AnzConnections; ++i)
-            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten","neo4j","hallo123"), new ReentrantLock());
-
-        connections = new HashMap<Connection, ReentrantLock>();
-        for(int i=0; i<AnzConnections; ++i)
-            connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root",""), new ReentrantLock());
-
+            connections = new HashMap<Connection, ReentrantLock>();
+            for(int i=0; i<AnzConnections; ++i)
+                connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root",""), new ReentrantLock());
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
-    public Entry<Connection, ReentrantLock> getConnectionNeo4j(){
+    public static Entry<Connection, ReentrantLock> getConnectionNeo4j(){
         Iterator<Entry<Connection,ReentrantLock>> it = connectionsNeo4j.entrySet().iterator();
         Entry<Connection, ReentrantLock> defaultConnection = null;
         while(it.hasNext()){
@@ -72,7 +84,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         return defaultConnection;
     }
 
-    public Entry<Connection, ReentrantLock> getConnection(){
+    public static Entry<Connection, ReentrantLock> getConnection(){
         Iterator<Entry<Connection,ReentrantLock>> it = connections.entrySet().iterator();
         Entry<Connection, ReentrantLock> defaultConnection = null;
         while(it.hasNext()){
@@ -343,6 +355,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             }		
             else{
                 String Crypted = rs.getString("CryptedPW");
+                System.out.println("PASSWORT="+passwort+"\nCRYPTED="+Crypted);
                 if(BCrypt.checkpw(passwort, Crypted)==false){
                     throw new DbFalseLoginDataException();
                 }
@@ -2565,6 +2578,33 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
             conLock.getValue().unlock();
         }
+        return erfolgreich;
+    }
+
+    @Override
+    public boolean connectKk(int vonKK, int zuKK, BeziehungsTyp typ)
+    {
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try {
+            ps = conNeo4j.prepareStatement("MATCH (n),(m) "
+                    + "WHERE id(n) = {1} AND id(m) = {2} "
+                    + "CREATE (n)-[:"+typ.toString().toLowerCase()+"]->(m)");
+            ps.setInt(1,vonKK);
+            ps.setInt(2,zuKK);
+            ps.executeUpdate();
+
+        } catch(SQLException e){
+            erfolgreich = false;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            conLockNeo4j.getValue().unlock();
+        }
+
         return erfolgreich;
     }
 }

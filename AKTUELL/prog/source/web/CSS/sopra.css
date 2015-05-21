@@ -34,6 +34,17 @@ a { /* Link Style */
 	color: gray;
 }
 
+.displayOnHover{
+	opacity: 0;
+}
+.kk_titel:hover + .displayOnHover{
+	opacity: 1;
+}
+.displayOnHover:hover{
+	opacity: 1;
+}
+
+
 label {
 	cursor: pointer;
 	font-size: .9em;
@@ -736,6 +747,10 @@ textarea.input_std {
 	box-shadow: 0 .2em .2em black;
 	overflow: hidden;
 	background-clip: padding-box;
+} input[type="text"] + .suche_ergebnisse {
+	visibility: hidden;
+} input[type="text"]:focus + .suche_ergebnisse {
+	visibility: visible;
 } input[type="text"]:invalid + .suche_ergebnisse {
 	visibility: hidden;
 } .sucherg_x {
@@ -761,6 +776,16 @@ textarea.input_std {
 	background: lightgray;
 } .sucherg_item span {
 	margin-right: .5em;
+} .sucherg_item_BENUTZER.selected:after {
+	content: "ZUM PROFIL \2192";
+	float: right;
+	font-size: .8em;
+	font-weight: bold;
+} .sucherg_item_VERANSTALTUNGEN.selected:after {
+	content: "VERANSTALTUNG FINDEN \2192";
+	float: right;
+	font-size: .8em;
+	font-weight: bold;
 } .sucherg_item_detail {
 	font-size: .8em;
 } .sucherg_leer {
@@ -1144,6 +1169,7 @@ textarea.input_std {
 	margin-bottom:0.5em;
 	display:block;
 	font-size: 1.3em;
+	padding-bottom: 0.5em;
 }
 .form_infotext2{
 	font-size: 2em;
@@ -1160,6 +1186,7 @@ textarea.input_std {
 }
 .kk_erstellen_zurueck{
 	display:none;
+	font-size: 1.3em; 
 }
 .kk {
 	vertical-align: middle;
@@ -1944,6 +1971,7 @@ select.profil_input {
 		position: fixed;
 		bottom: 0;
 		left: 4em;
+		z-index: 102;
 		margin: 0;
 		padding: 1em;
 		width: 11em;

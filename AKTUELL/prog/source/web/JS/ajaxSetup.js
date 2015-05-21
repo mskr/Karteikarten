@@ -15,7 +15,6 @@ $.ajaxSetup({
 	error: function(jqXHR, textStatus, errorThrown) { 
 
 		console.log("AJAX-ERROR: " + textStatus + " " + errorThrown);
-		console.log("timeout -> timeout, keine antwort innerhalb von 6 sekunden; \"\" -> Verbindung hergestellt, aber keine Antwort vom Server");
 		
 		if(textStatus == "timeout")
 		{
@@ -29,6 +28,10 @@ $.ajaxSetup({
 
 		    if(!connectionCheckRunning)
 		    	checkConnection();
+		}
+		else if (textStatus == "abort")
+		{
+			// ignorieren
 		}
 		else
 			showError("Unbekannter Fehler. AjaxStatus: "+jqXHR.status+", AjaxTextStatus: "+textStatus+", AjaxErrorCode: "+errorThrown + ", resonseText: " + jqXHR.responseText);

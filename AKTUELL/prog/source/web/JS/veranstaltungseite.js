@@ -1,31 +1,6 @@
 /**
  * @author mk
  */
-var sampleJSONIDs = [];
-sampleJSONIDs[0] = {};
-sampleJSONIDs[0][paramIndex] = 7;
-sampleJSONIDs[0][paramId] = 24;
-sampleJSONIDs[1] = {};
-sampleJSONIDs[1][paramIndex] = 1;
-sampleJSONIDs[1][paramId] = 26;
-sampleJSONIDs[2] = {};
-sampleJSONIDs[2][paramIndex] = 3;
-sampleJSONIDs[2][paramId] = 22;
-sampleJSONIDs[3] = {};
-sampleJSONIDs[3][paramIndex] = 4;
-sampleJSONIDs[3][paramId] = 23;
-sampleJSONIDs[4] = {};
-sampleJSONIDs[4][paramIndex] = 8;
-sampleJSONIDs[4][paramId] = 20;
-sampleJSONIDs[5] = {};
-sampleJSONIDs[5][paramIndex] = 6;
-sampleJSONIDs[5][paramId] = 25;
-sampleJSONIDs[6] = {};
-sampleJSONIDs[6][paramIndex] = 2;
-sampleJSONIDs[6][paramId] = 21;
-//sampleJSONIDs[7] = {};
-//sampleJSONIDs[7][paramIndex] = 5;
-//sampleJSONIDs[7][paramId] = 27;
 
 var veranstaltungsObject;
 
@@ -50,59 +25,21 @@ $(document).ready(function() {
 	
 	  // LadeHandler
     $(".kk_load_pre").click(function(){
-    	var params ={};
-    	params[paramId] = $("#kk_all").children().first().attr("data-kkid");
-    	ajaxCall(karteikartenServlet, 
-    			actionGetKarteikartenVorgaenger, 
-    			function(response)
-    			{
-    				arr = response[keyJsonArrResult];
-    				if(arr.length < 5)
-    				{
-    					$(".kk_load_pre").slideUp();
-    				}
-    				for(i = 0; i < arr.length;i++)
-					{
-    					domkk = buildKarteikarte(arr[i]);
-    	        		domkk.hide();
-    	        		$("#kk_all").prepend(domkk);
-    	        		domkk.slideDown();
-//    	        		$("body").animate({scrollTop: 0},"slow");
-					}
-	        		
-    			}, params);
+    	loadPreKk($("#kk_all").children().first().attr("data-kkid"))
+    	
     });    
     $(".kk_load_after").click(function(){
-    	var params ={};
-    	params[paramId] = $("#kk_all").children().last().attr("data-kkid");;
-    	ajaxCall(karteikartenServlet, 
-    			actionGetKarteikartenNachfolger, 
-    			function(response)
-    			{
-    				arr = response[keyJsonArrResult];
-    				if(arr.length < 5)
-    				{
-    					$(".kk_load_after").slideUp();
-    				}
-    				for(i = 0; i < arr.length;i++)
-					{
-	    	    		domkk = buildKarteikarte(arr[i]);
-	    	    		domkk.hide();
-	    	    		$("#kk_all").append(domkk);
-	    	    		domkk.slideDown();
-//	    	        	$("body").animate({scrollTop: $("body").height},"slow");
-					}
-    			}, params);
+		loadAfterKk($("#kk_all").children().last().attr("data-kkid"));
     });
 });
 
 function fillVeranstaltungsSeite(Vid)
 {
-	$(".kk_load_after").show();
-	$(".kk_load_pre").show();
+	showPreAfterLoad();
 	
 	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
 	d = jQuery.Deferred();
+    destroyCKeditors($("#kk_all"));
 	$("#kk_all").empty();
 	// Studiengänge in auswahlliste anzeigen
 	var ajax1 = ajaxCall(startseitenServlet,
@@ -210,22 +147,7 @@ function fillVeranstaltungsSeite(Vid)
 						$("#kk_erstellen").hide();
 					}
 					
-					// TODO hole eine liste mit den ersten 20, 30, ... karteikartenids vom server
-					// hier noch mit samplejson sampleJSONIDs
-					var params ={};
-					params[paramId] = veranstaltungsObject[paramErsteKarteikarte];
-					ajaxCall(karteikartenServlet, actionGetKarteikartenNachfolger, function(response){
-						
-						arr = response[keyJsonArrResult];
-	    				for(i = 0; i <arr.length;i++)
-						{
-	    					domkk = buildKarteikarte(arr[i]);
-	    	        		domkk.hide();
-	    	        		$("#kk_all").append(domkk);
-	    	        		domkk.slideDown();
-//	    	        		$("body").animate({scrollTop: 0},"slow");
-						}
-					}, params);
+					loadAfterKk(veranstaltungsObject[paramErsteKarteikarte]);
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
@@ -299,7 +221,7 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                     vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
                     for(var i in arr)
                     {
-                        var kkListItem = $("<li><a class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
+                        var kkListItem = $("<li><a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
                         vaterElem.append(kkListItem);
                         // Click Handler
                         var f = function(arr, kkListItem, i) {
@@ -307,50 +229,46 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 // Falls noch nicht geschehen, lade Kindkarteikarten rekursiv
                                 if($(e.target).siblings("ul").length == 0)
                                 {
-                                    console.log("[LOG] Ausklappen: Iteriere arr bei Index "+ i);
                                     ladeKindKarteikarten(arr[i][paramId], kkListItem);
                                 }
                                 // Andernfalls klappe Kindkarteikarten ein
                                 else
                                 {
-                                    console.log("[LOG] Einklappen: Iteriere arr bei Index "+ i);
                                     $(e.target).siblings("ul").remove();
                                 }
                                 e.stopPropagation();
- 
-                                $("#kk_all").empty();
-//
-            					var params2 ={};
-//            					console.log("[LOG] Iteriere arr bei Index "+ i);
-            					params2[paramId] = arr[i][paramId];
-    	    	        		ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
-    	    	        			domkk = buildKarteikarte(response);
-    	    	        			domkk.hide();
-    	    	        			$("#kk_all").append(domkk);
-    	    	        			domkk.slideDown();
-//  	    	        			$("body").animate({scrollTop: 0},"slow");
-            						
-            					}, params2);
-//    	    	        		
-            					$.when(ajax).done(function(){
-            						ajaxCall(karteikartenServlet, actionGetKarteikartenNachfolger, function(response){
-            						
-                                   
-            						data = response[keyJsonArrResult];
-            						for(j = 0; j <data.length;j++)
-            						{
-            	    					domkk = buildKarteikarte(data[j]);
-            	    	        		domkk.hide();
-            	    	        		$("#kk_all").append(domkk);
-            	    	        		domkk.slideDown();
-//            	    	        		$("body").animate({scrollTop: 0},"slow");
-            						}
-            					}, params2)
-            					});
-
-                                console.log("[LOG] Array");
-                                console.log(arr);
                                 
+                                // Karteikarte schon in der Liste?
+                                kkDiv = $("#kk_all").find("[data-kkid=" + arr[i][paramId] + "]");
+                                if(kkDiv.length)
+                                {
+                                	kkDiv.removeClass("blink");
+                                	$('html,body').animate({
+                                        scrollTop: kkDiv.offset().top},
+                                        'slow');
+                                }
+                                else
+                                {
+                                	destroyCKeditors($("#kk_all"));
+                                	$("#kk_all").children().fadeOut("slow").promise().done(function(){
+                                		$("#kk_all").empty();
+                                    	showPreAfterLoad();
+
+                                    	var params2 ={};
+                                    	params2[paramId] = arr[i][paramId];
+                                    	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
+                                    		domkk = buildKarteikarte(response);
+                                    		domkk.hide();
+                                    		$("#kk_all").append(domkk);
+                                    		domkk.slideDown();
+                                    	}, params2);
+
+                                    	$.when(ajax).done(function(){
+                                    		loadAfterKk(arr[i][paramId]);
+                                    	});
+                                	});
+                                	
+                                }
                             });
                         }
                         f(arr, kkListItem, i);
@@ -403,31 +321,97 @@ function sortiereKarteikartenIDs(jsonKkIDs){
 	});
 	for(var i in jsonKkIDs)
 		newIdArray.push(jsonKkIDs[i][paramId]);
-	
-//	id_of_smallest_index =-1;
-//	smallest_index = -1;
-//	j_to_delete = -1;
-//	for(i=1; i<json_length+1;i++){
-//		for(j=1; j<json_length+1;j++){
-//			if(smallest_index == -1){
-//			//	console.log("set smallest index initial from -1 to:"+ jsonKkIDs["k_"+j].index);
-//				id_of_smallest_index = jsonKkIDs["k_"+j].id;
-//				smallest_index = jsonKkIDs["k_"+j].index;
-//				j_to_delete = j;
-//			}
-//			else if(jsonKkIDs["k_"+j].index < smallest_index){
-//			//	console.log("replace smallest index:"+ smallest_index + ",id: "+id_of_smallest_index);
-//				j_to_delete = j;
-//				id_of_smallest_index = jsonKkIDs["k_"+j].id;
-//				smallest_index = jsonKkIDs["k_"+j].index;
-//			//	console.log("with index: "+smallest_index+", id: "+ id_of_smallest_index);
-//			}
-//		}
-//	//	console.log("found smallest index: "+ smallest_index +"with id:"+ id_of_smallest_index);
-//		newIdArray[i-1]=id_of_smallest_index;
-//		jsonKkIDs["k_"+j_to_delete].index = 999999999;
-//		smallest_index = -1;
-//		id_of_smallest_index = -1;
-//	}
 	return newIdArray;
+}
+displayingAfterKK = false;
+var kkLoadRequest;
+function loadAfterKk(id)
+{
+	if (kkLoadRequest != null){ 
+		kkLoadRequest.abort();
+		kkLoadRequest = null;
+	}
+	
+	var params2 ={};
+	params2[paramId] = id;
+	kkLoadRequest = ajaxCall(karteikartenServlet,
+			actionGetKarteikartenNachfolger, 
+			function(response){
+
+				if(displayingAfterKK)
+					return;
+				displayingAfterKK = true;
+				
+				data = response[keyJsonArrResult];
+				if(data.length < 5)
+				{
+					$(".kk_load_after").slideUp();
+				}
+				
+				function nextItem()
+				{
+						o = data.shift();
+						if(o == undefined)
+							return;
+						
+						domkk = buildKarteikarte(o);
+						domkk.hide();
+						$("#kk_all").append(domkk);
+						domkk.slideDown(function(){
+							nextItem();
+						});
+				}
+				nextItem();
+				displayingAfterKK = false;
+				
+	}, params2);
+	return kkLoadRequest;
+}
+displayingPreKK = false;
+function loadPreKk(id)
+{
+	if (kkLoadRequest != null){ 
+		kkLoadRequest.abort();
+		kkLoadRequest = null;
+	}
+	var params ={};
+	params[paramId] = id;
+	kkLoadRequest = ajaxCall(karteikartenServlet, 
+			actionGetKarteikartenVorgaenger, 
+			function(response)
+			{
+				if(displayingPreKK)
+					return;
+				displayingPreKK = true;
+				
+				data = response[keyJsonArrResult];
+				if(data.length < 5)
+				{
+					$(".kk_load_pre").slideUp();
+				}
+
+				function nextItem()
+				{
+					o = data.shift();
+					if(o == undefined)
+						return;
+					domkk = buildKarteikarte(o);
+					domkk.hide();
+					$("#kk_all").prepend(domkk);
+					domkk.slideDown(function(){
+						nextItem();
+					});
+				}
+				nextItem();
+				
+				displayingPreKK = false;
+        		
+			}, params);
+	return kkLoadRequest;
+}
+
+function showPreAfterLoad()
+{
+	$(".kk_load_after").show();
+	$(".kk_load_pre").show();
 }

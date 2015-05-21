@@ -97,6 +97,8 @@ public class KarteikartenServlet extends ServletController {
          // TODO
          Map<Integer,Karteikarte> Kks = dbManager.leseVorgaenger(karteikartenID, 5);
          List<Karteikarte> kk = new ArrayList<Karteikarte>(Kks.values());
+         for(Karteikarte k :kk)
+             k.setHatBewertet(dbManager.hatKarteikarteBewertet(k.getId()  , aktuellerBenutzer.getId()));
          
          jo =  JSONConverter.toJson(kk, true);
          outWriter.print(jo);
@@ -129,11 +131,10 @@ public class KarteikartenServlet extends ServletController {
 
         Map<Integer,Karteikarte> Kks = dbManager.leseNachfolger(karteikartenID, 5);
         List<Karteikarte> kk = new ArrayList<Karteikarte>(Kks.values());
-        
-        for(Karteikarte k : kk){
-            System.out.println(k.getTitel());
+        for(Karteikarte k :kk){
+            System.out.println(k.getId());
+            k.setHatBewertet(dbManager.hatKarteikarteBewertet(k.getId()  , aktuellerBenutzer.getId()));
         }
-        
         jo =  JSONConverter.toJson(kk, true);
         outWriter.print(jo);
    }
@@ -374,7 +375,11 @@ public class KarteikartenServlet extends ServletController {
 
         try
         {
-            return dbManager.angemeldet(aktuellerBenutzer.getId(),dbManager.leseKarteikarte(karteikarte).getVeranstaltung());
+            Karteikarte kk = dbManager.leseKarteikarte(karteikarte);
+            if(kk == null) {
+                return false;
+            }
+            return dbManager.angemeldet(aktuellerBenutzer.getId(), kk.getVeranstaltung());
         }
         catch (SQLException e)
         {

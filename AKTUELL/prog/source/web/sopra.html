@@ -247,6 +247,7 @@
 			<span class="form_infotext2">Fügen sie Attribute zu ihrer Karteikarte hinzu.</span><br>
 			<div id="kkE_attributes">
 				<span><input id="kkE_attr_satz" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_satz">Satz</label></span><br>
+				<span><input id="kkE_attr_lemma" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_lemma">Lemma</label></span><br>
 				<span><input id="kkE_attr_beweis" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_beweis">Beweis</label></span><br>
 				<span><input id="kkE_attr_def" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_def">Definition</label></span><br>
 				<span><input id="kkE_attr_wichtig" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_wichtig">Wichtig</label></span><br>
@@ -560,7 +561,7 @@ Dann aber so leer.
 		<span class="octicon octicon-tools"></span> TOOLS<span class="octicon octicon-triangle-down"></span>
 	</label>
 	<div class="kk_toolbar">
-		<div class="mybuttongroup filtern" grouplabel="Filter">
+<!-- 		<div class="mybuttongroup filtern" grouplabel="Filter">
 			<input id="filter0" type="radio" name="group_filtern" checked>
 			<label for="filter0">
 				<a class="groupelem left alle tiptrigger tipbelow" data-tooltip="Alle">
@@ -629,9 +630,9 @@ Dann aber so leer.
 					<span class="octicon octicon-git-merge"></span>
 				</a>
 			</label>
-		</div>
+		</div> -->
 		<button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button> 
-		<!-- <button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button> -->
+		<!-- <button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button>-->
 	</div>
 	<div id="kk_inhaltsverzeichnis"></div>
 	<div style="width: 70%;max-width: 800px">
@@ -647,7 +648,19 @@ Dann aber so leer.
 
 <!-- Template Karteikarte -->
 <div id="templatekarteikarte" class="kk_wrapper" style="display:none">
-<span class="kk_titel">Karteikarten-Titel</span>
+<span>
+	<span class="kk_titel">Karteikarten-Titel</span>
+	<!-- <span class="displayOnHover" style="display:inline-flex">
+		<a class=" option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
+			<span class="octicon octicon-trashcan"></span></a>
+		<a class="option permalink tiptrigger tipabove"
+			data-tooltip="Link kopieren"><span 
+			class="octicon octicon-link"></span></a>
+		<a class="option attribute attr_popup_open tiptrigger tipabove"
+			data-tooltip="Attribute ändern"><span
+			class="octicon octicon-checklist"></span></a>
+	</span> -->
+</span>
 <div style = "display:table-row">
 	<div style="display:table-cell;">
 		<div class="kk_votes" style="display:table-cell;">
@@ -657,20 +670,17 @@ Dann aber so leer.
 			<a class="kk_votedown"><span
 				class="mega-octicon octicon-triangle-down"></span></a>
 		</div>
-		<div class="kk_optionen" style="display:table-cell;">
+<!-- 		<div class="kk_optionen" style="display:table-cell;">
 			<a class="option permalink tiptrigger tipabove"
 				data-tooltip="Link kopieren"><span 
 				class="octicon octicon-link"></span></a>
-			<a class="option loeschen tiptrigger tipabove"
-				data-tooltip="Karteikarte löschen"><span
-				class="octicon octicon-trashcan"></span></a>
 			<a class="option einfuegen tiptrigger tipabove"
 				data-tooltip="Karteikarte unter dieser Karteikarte einfügen"><span
 				class="octicon octicon-plus"></span></a>
 			<a class="option attribute attr_popup_open tiptrigger tipabove"
 				data-tooltip="Attribute ändern"><span
 				class="octicon octicon-checklist"></span></a>
-		</div>
+		</div> -->
 	</div>
 	<div style="display:table-cell;vertical-align:middle;width:100%">
 		<div style = "display:table;width:100%">
