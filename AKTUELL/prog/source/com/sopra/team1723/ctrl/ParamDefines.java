@@ -117,7 +117,7 @@ public class ParamDefines
     // Parameter für Karteikarte  
     public final static String VaterKK = "vaterKK";
     public final static String BruderKK = "bruderKK";
-    
+    public final static String Attribute = "attribute";
     public final static String Veranstaltung = "veranstaltung";
     public final static String Aenderungsdatum = "aenderungsdatum";
     public final static String Bewertung = "bewertung";
