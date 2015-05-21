@@ -101,7 +101,7 @@ var UPLOADTYPE ="";
         
         function submitNewKarteikarte(params){
         	var ajax = ajaxCall(karteikartenServlet,
-            		actionErstelleKarteikarte,
+        			actionErstelleKarteikarte,
                     function(response) {
                         showInfo("Karteikarte \""+ titel +"\"wurde erfolgreich erzeugt.");
                      //   fillVeranstaltungsliste();  
