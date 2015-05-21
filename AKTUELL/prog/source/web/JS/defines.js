@@ -62,6 +62,7 @@ var actionGetKarteikartenKinder = "getKKKinder";
 var actionGetKarteikartenVater = "getKKVater";
 var actionVoteKarteikarteUp = "voteUpKarteik";
 var actionVoteKarteikarteDown = "voteDownKarteik";
+var actionErstelleKarteikarte = "erstelleKarteikarte";
 
 var actionVoteKommentarUp = "voteUpKomm";
 var actionVoteKommentarDown = "voteDownKomm";
