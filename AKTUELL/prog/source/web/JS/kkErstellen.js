@@ -1,5 +1,5 @@
 var UPLOADIDSET = -1;
-var UPLOADTYPE;
+var UPLOADTYPE ="";
 
 $(document).ready(function() {
 	
@@ -59,20 +59,22 @@ $(document).ready(function() {
         		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  processKKerstellen, 0, 0)
         	}
         	else{
-        		processKKerstellen();
+        		processKKerstellen(text,titel,attributes);
         	}
         	return false;
    
         });
         
 
-    	function processKKerstellen(){
+    	function processKKerstellen(text,titel,attributes){
     		var params = {};
     		params[paramTitel] = escape(titel);
-    		if(text==""){
-    			
-    		}
-    		console.log("can submit now");
+    		params[paramVeranstaltung] = veranstaltungsObject[paramId];
+    		params[paramInhalt] = escape(text);
+    		params[paramAttribute] = escape(attributes);
+    		params[paramType] = escape(UPLOADTYPE);
+    		params[paramKkUploadID] = escape(UPLOADIDSET);
+    		console.log("can submit now:"+$(params));
     		
     		//submitNewKarteikarte(params)
     	}
@@ -87,11 +89,12 @@ $(document).ready(function() {
         	return isTrue;
         }
         function getSelectedKkAttributes(){
-        	var arr = []
+        	var str = ""
         	$("#kkE_attributes").children().filter("span").children().filter("input").each(function(i){
-        		arr[i] = $(this).prop("checked");
+        		str = str + $(this).prop("checked")+",";
         	});
-        	return arr;
+        	str =str.substring(0, str.length - 1);
+        	return str;
         }
         
         function submitNewKarteikarte(params){
@@ -164,6 +167,7 @@ $(document).ready(function() {
            	    this.on("removedfile", function(file) {
            	    	$("#dz_info_message").show(0);
            	    	$("#cke_kk_erstellen_TA").show(0);
+           	    	UPLOADTYPE = "";
            	    	UPLOADIDSET = -1;
            	    });
            	  }
