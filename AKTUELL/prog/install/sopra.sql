@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 20. Mai 2015 um 18:11
+-- Erstellungszeit: 21. Mai 2015 um 14:39
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -400,42 +400,52 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
   `Typ` enum('TEXT','BILD','VIDEO','') NOT NULL,
   `Bewertung` int(11) NOT NULL DEFAULT '0',
   `Aenderungsdatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `Veranstaltung` int(11) NOT NULL
+  `Veranstaltung` int(11) NOT NULL,
+  `Satz` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
+  `Lemma` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
+  `Beweis` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
+  `Definition` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
+  `Wichtig` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
+  `Grundlagen` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
+  `Zusatzinformation` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
+  `Exkurs` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
+  `Beispiel` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
+  `Uebung` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `karteikarte`
 --
 
-INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderungsdatum`, `Veranstaltung`) VALUES
-(0, 'Softwaretechnik I', '', 'TEXT', 2, '2015-04-30 22:00:00', 1),
-(1, 'Einführung und Motivation', '', 'TEXT', -1, '2015-04-30 22:00:00', 1),
-(2, 'Grundlagen', '', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(3, 'System-Engineering', '', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(4, 'Organisatorisches', '', 'TEXT', 1, '2015-04-30 22:00:00', 1),
-(5, 'Bedeutung von Software', '', 'TEXT', 4, '2015-04-30 22:00:00', 1),
-(6, 'Software-Probleme, "Software-Krise"', '', 'TEXT', 5, '2015-04-30 22:00:00', 1),
-(7, 'Software als Wirtschaftsfaktor', '', 'TEXT', 4, '2015-04-30 22:00:00', 1),
-(8, 'Grundbegriffe', '', 'TEXT', 4, '2015-04-30 22:00:00', 1),
-(9, 'Übungsaufgaben', '', 'TEXT', 12, '2015-04-30 22:00:00', 1),
-(10, 'Einfache Übungsaufgaben', '', 'TEXT', 12, '2015-04-30 22:00:00', 1),
-(11, 'Mittelschwere Übungsaufgaben', '', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(12, 'Schwierige Übungsaufgaben', '', 'TEXT', 0, '2015-04-30 22:00:00', 1),
-(13, 'Software Engineering – gestern und heute', '......', 'TEXT', 0, '2015-05-20 15:11:47', 1),
-(14, 'Software Engineering – morgen', '.........', 'TEXT', 0, '2015-05-20 15:12:16', 1),
-(15, 'Modelle und Modellierung', '..........', 'TEXT', 0, '2015-05-20 15:14:09', 1),
-(16, 'System', '..........', 'TEXT', 0, '2015-05-20 15:15:18', 1),
-(17, 'Bedeutung einiger Folienmarkierungen', '..........', 'TEXT', 0, '2015-05-20 15:17:38', 1),
-(18, 'Hauptsächliche Hintergrund-Literatur', '..........', 'TEXT', 0, '2015-05-20 15:18:28', 1),
-(19, 'Weitere Literatur I', '.......', 'TEXT', 0, '2015-05-20 15:19:04', 1),
-(20, 'Test1', '', 'BILD', -8, '2015-05-11 12:23:39', 1),
-(21, 'Test2', '', 'VIDEO', -4, '2015-05-11 12:25:28', 1),
-(22, 'Test3', 'dies ist ein beispielinhalt von test3', 'TEXT', -2, '2015-05-11 12:25:28', 1),
-(23, 'Test4', 'dies ist ein beispielinhalt von test4', 'TEXT', -2, '2015-05-11 12:25:28', 1),
-(24, 'Test5', 'dies ist ein beispielinhalt von test5', 'TEXT', -2, '2015-05-11 12:25:28', 1),
-(25, 'Test6', 'dies ist ein beispielinhalt von test6', 'TEXT', -2, '2015-05-11 12:25:28', 1),
-(26, 'test7', 'dies ist ein beispielinhalt von test7', 'TEXT', -2, '2015-05-17 15:09:38', 1),
-(27, 'Charakteristika der Software-Erstellung', '....', 'TEXT', 0, '2015-05-20 15:22:19', 1);
+INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderungsdatum`, `Veranstaltung`, `Satz`, `Lemma`, `Beweis`, `Definition`, `Wichtig`, `Grundlagen`, `Zusatzinformation`, `Exkurs`, `Beispiel`, `Uebung`) VALUES
+(0, 'Softwaretechnik I', '', 'TEXT', 2, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1, 'Einführung und Motivation', '', 'TEXT', -1, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 'Grundlagen', '', 'TEXT', 0, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 'System-Engineering', '', 'TEXT', 0, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(4, 'Organisatorisches', '', 'TEXT', 1, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(5, 'Bedeutung von Software', '', 'TEXT', 4, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(6, 'Software-Probleme, "Software-Krise"', '', 'TEXT', 5, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(7, 'Software als Wirtschaftsfaktor', '', 'TEXT', 4, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(8, 'Grundbegriffe', '', 'TEXT', 4, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(9, 'Übungsaufgaben', '', 'TEXT', 12, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(10, 'Einfache Übungsaufgaben', '', 'TEXT', 12, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(11, 'Mittelschwere Übungsaufgaben', '', 'TEXT', 0, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(12, 'Schwierige Übungsaufgaben', '', 'TEXT', 0, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(13, 'Software Engineering – gestern und heute', '......', 'TEXT', 0, '2015-05-20 15:11:47', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(14, 'Software Engineering – morgen', '.........', 'TEXT', 0, '2015-05-20 15:12:16', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(15, 'Modelle und Modellierung', '..........', 'TEXT', 0, '2015-05-20 15:14:09', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(16, 'System', '..........', 'TEXT', 0, '2015-05-20 15:15:18', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(17, 'Bedeutung einiger Folienmarkierungen', '..........', 'TEXT', 0, '2015-05-20 15:17:38', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(18, 'Hauptsächliche Hintergrund-Literatur', '..........', 'TEXT', 0, '2015-05-20 15:18:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(19, 'Weitere Literatur I', '.......', 'TEXT', 0, '2015-05-20 15:19:04', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(20, 'Test1', '', 'BILD', -8, '2015-05-11 12:23:39', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(21, 'Test2', '', 'VIDEO', -4, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(22, 'Test3', 'dies ist ein beispielinhalt von test3', 'TEXT', -2, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(23, 'Test4', 'dies ist ein beispielinhalt von test4', 'TEXT', -2, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(24, 'Test5', 'dies ist ein beispielinhalt von test5', 'TEXT', -2, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(25, 'Test6', 'dies ist ein beispielinhalt von test6', 'TEXT', -2, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(26, 'test7', 'dies ist ein beispielinhalt von test7', 'TEXT', -2, '2015-05-17 15:09:38', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(27, 'Charakteristika der Software-Erstellung', '....', 'TEXT', 0, '2015-05-20 15:22:19', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
