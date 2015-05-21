@@ -14,8 +14,6 @@ $(document).ready(function() {
             	editor.destroy();
 
             	var dialog = $("#vn_erstellen_popup");
-            	console.log("[LOG] dialog ");
-            	console.log(dialog);
             	dialog.find("#vn_erstellen_titel_input").val("");
 //            	dialog.find("#vn_erstellen_auswahl_semester").val(jsonBenutzer[paramSemester]);
             	selectedStudiengaenge = {};

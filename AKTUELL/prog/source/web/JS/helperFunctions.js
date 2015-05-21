@@ -438,7 +438,7 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
         var category = categoryClassMapping[klasse];
         var id = jsonSuchErgebnis[paramId];
-        var suchErgHtmlString = "<div data-abstand = '"+ abstand +"'id='sucherg_"+category+"_"+id+"' class='sucherg_item'>";
+        var suchErgHtmlString = "<div data-abstand = '"+ abstand +"'id='sucherg_"+category+"_"+id+"' class='sucherg_item sucherg_item_"+category+"'>";
         if(klasse == keyJsonObjKlasseBenutzer)
         {
             suchErgHtmlString += "<span class='octicon octicon-person'></span>" +
@@ -482,6 +482,16 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
     
     $(suchergContainer.find(".sucherg_item")[0]).addClass("selected");
     
+    suchergContainer.find(".sucherg_item").off();
+    suchergContainer.find(".sucherg_item").each(function(i, elem) {
+        $(elem).hover(function(e) {
+            $(e.target).addClass("selected");
+            suchErgIterator = i;
+        }, function(e) {
+            $(e.target).removeClass("selected");
+        });
+    });
+    
 //    var elem = contentDiv.find('div').sort( function(a,b)
 //    		{
 //    			return $(a).attr("data-abstand") - $(b).attr("data-abstand");
@@ -512,12 +522,16 @@ function handlePfeiltastenEvents(pressedKey, suchergJQueryObj) {
         $(arr[suchErgIterator]).removeClass("selected");
         if(suchErgIterator+1 < arr.length)
             suchErgIterator++;
+        else
+            suchErgIterator = 0
     }
     else if(pressedKey == 38) // Pfeil hoch
     {
         $(arr[suchErgIterator]).removeClass("selected");
         if(suchErgIterator-1 >= 0)
             suchErgIterator--;
+        else
+            suchErgIterator = arr.length-1;
     }
     else if(pressedKey == 13) // ENTER
     {

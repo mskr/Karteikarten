@@ -374,7 +374,11 @@ public class KarteikartenServlet extends ServletController {
 
         try
         {
-            return dbManager.angemeldet(aktuellerBenutzer.getId(),dbManager.leseKarteikarte(karteikarte).getVeranstaltung());
+            Karteikarte kk = dbManager.leseKarteikarte(karteikarte);
+            if(kk == null) {
+                return false;
+            }
+            return dbManager.angemeldet(aktuellerBenutzer.getId(), kk.getVeranstaltung());
         }
         catch (SQLException e)
         {

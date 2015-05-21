@@ -344,6 +344,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             }		
             else{
                 String Crypted = rs.getString("CryptedPW");
+                System.out.println("PASSWORT="+passwort+"\nCRYPTED="+Crypted);
                 if(BCrypt.checkpw(passwort, Crypted)==false){
                     throw new DbFalseLoginDataException();
                 }

@@ -736,6 +736,10 @@ textarea.input_std {
 	box-shadow: 0 .2em .2em black;
 	overflow: hidden;
 	background-clip: padding-box;
+} input[type="text"] + .suche_ergebnisse {
+	visibility: hidden;
+} input[type="text"]:focus + .suche_ergebnisse {
+	visibility: visible;
 } input[type="text"]:invalid + .suche_ergebnisse {
 	visibility: hidden;
 } .sucherg_x {
@@ -761,6 +765,16 @@ textarea.input_std {
 	background: lightgray;
 } .sucherg_item span {
 	margin-right: .5em;
+} .sucherg_item_BENUTZER.selected:after {
+	content: "ZUM PROFIL \2192";
+	float: right;
+	font-size: .8em;
+	font-weight: bold;
+} .sucherg_item_VERANSTALTUNGEN.selected:after {
+	content: "VERANSTALTUNG FINDEN \2192";
+	float: right;
+	font-size: .8em;
+	font-weight: bold;
 } .sucherg_item_detail {
 	font-size: .8em;
 } .sucherg_leer {
