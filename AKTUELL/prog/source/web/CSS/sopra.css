@@ -34,6 +34,14 @@ a { /* Link Style */
 	color: gray;
 }
 
+.displayOnHover{
+	opacity: 0;
+}
+.kk_titel:hover + .displayOnHover{
+	opacity: 1;
+}
+
+
 label {
 	cursor: pointer;
 	font-size: .9em;

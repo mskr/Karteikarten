@@ -1,7 +1,6 @@
 package com.sopra.team1723.ctrl;
 
 import java.security.*;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -464,13 +463,19 @@ public class StartseitenServlet extends ServletController {
             return false;
         }
     }
-  
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    {
+        doPost(req, resp);
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
         // aktuelle Session holen
         HttpSession aktuelleSession = req.getSession();
-        resp.setContentType("text/json");
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json");
         PrintWriter outWriter = resp.getWriter();
 
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
