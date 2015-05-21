@@ -258,17 +258,45 @@ public class KarteikartenServlet extends ServletController {
         
         JSONObject jo = null;
         
-        String titel = req.getParameter(ParamDefines.Titel);
-        String inhalt = req.getParameter(ParamDefines.Inhalt);
         try{    
-            KarteikartenTyp typ = KarteikartenTyp.valueOf(req.getParameter(ParamDefines.Type));
-            int veranstaltung = Integer.valueOf(req.getParameter(ParamDefines.Veranstaltung));
+            String titel = req.getParameter(ParamDefines.Titel);
+            String inhalt = req.getParameter(ParamDefines.Inhalt);
+                       
+            KarteikartenTyp kkTyp;
+            String typ = req.getParameter(ParamDefines.Type);
+            if(typ.equals(".mp4"))
+                kkTyp = KarteikartenTyp.VIDEO;
+            else if(typ.equals(".jpg") || typ.equals(".png"))
+                kkTyp = KarteikartenTyp.BILD;
+            else if(typ.equals(""))
+                kkTyp = KarteikartenTyp.TEXT;
+            else
+                throw new Exception();
+            
+            int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Veranstaltung));
             
             int vaterKK = Integer.parseInt(req.getParameter(ParamDefines.VaterKK));
             int ueberliegendeBruderKK = Integer.parseInt(req.getParameter(ParamDefines.BruderKK));
             
-            if(vaterKK != -1 && ueberliegendeBruderKK != -1 || vaterKK != 1 && ueberliegendeBruderKK != 1)
+            if(vaterKK == -1 && ueberliegendeBruderKK == -1)
                 throw new Exception();
+                
+            boolean istSatz = false;
+            boolean istLemma = false;
+            boolean istBeweis = false;
+            boolean istDefinition = false;
+            boolean istWichtig = false;
+            boolean istGrundlage = false;
+            boolean istZusatzinfo = false;
+            boolean istExkurs = false;
+            boolean istBeispiel = false;
+            boolean istUebung = false;
+            
+            String[] attribute = req.getParameter(ParamDefines.Attribute).split(",");
+            
+            while()
+                attribute.s
+            
             
             Karteikarte karteikarte = new Karteikarte(titel,inhalt,typ,veranstaltung);
             

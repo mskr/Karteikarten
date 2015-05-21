@@ -20,6 +20,11 @@ function buildKarteikarte(karteikarteJson)
     fillKarteiKarte(kkDom,karteikarteJson);
     
     // Notiz
+    kkDom.find(".kk_notizen_body_wrapper").hide();
+    kkDom.find(".kk_notizen_head").click(function(){
+    	kkDom.find(".kk_notizen_body_wrapper").slideToggle();
+    });
+    
     kkDom.find(".kk_notizen_body").ckeditor(function() {
 
     	// TODO Karteikarte setzen und DANACH change handler registireren
@@ -184,6 +189,14 @@ function setNotiz(kkDom, kkId)
 	    actionLeseNotiz,
 	    function(response) {
 	    	kkDom.find(".kk_notizen_body").val(response[paramInhalt]);
+	    	if(response[paramInhalt].trim() != "")
+	    	{
+	    		kkDom.find(".kk_notizen_head").append(" (!)");
+	    	}
+	    	else
+    		{
+//	    		kkDom.find(".kk_notizen_head").append("( gesetzt )");
+    		}
 	    },
 	    params
 	);
