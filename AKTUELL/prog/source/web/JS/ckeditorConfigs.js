@@ -10,7 +10,6 @@
 var ckEditorKommentarConfig = {
 		height: "100px",
 		removePlugins: 'elementspath',
-		// TODO Formeleditor erlaubt, um formeln im kommentare zu erstellen
 		toolbarGroups: [
 		        		{ name: 'insert' }
 		        		],
@@ -25,12 +24,13 @@ var ckEditorKommentarAntwortConfig = {
 };
 
 var ckEditorNotizConfig = {
-		removePlugins: 'toolbar,elementspath',
-//		resize_maxHeight: "500px",
-		resize_minHeight: "40px",
-//		height: "100%",
-//		autoGrow_onStartup : false,
+		removePlugins: 'elementspath',
+		height: "100px",
 		resize_enabled : false,
+		toolbarGroups: [
+		        		{ name: 'insert' }
+		        		],
+		removeButtons: 'Image,Flash,Table,HorizontalRule',
 }
 
 
