@@ -349,7 +349,7 @@ public class StartseitenServlet extends ServletController {
     {
         // Code von : http://www.tutorialspoint.com/java/java_sending_email.htm
         
-        String username ="sopra2015.team1723@gmx.de";
+        String username ="sopra.ulm@gmx.de";
         String password = "12345678";
         
         // Recipient's email ID needs to be mentioned.
