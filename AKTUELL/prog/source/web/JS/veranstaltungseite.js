@@ -242,6 +242,7 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 kkDiv = $("#kk_all").find("[data-kkid=" + arr[i][paramId] + "]");
                                 if(kkDiv.length)
                                 {
+                                	kkDiv.removeClass("blink");
                                 	$('html,body').animate({
                                         scrollTop: kkDiv.offset().top},
                                         'slow');
@@ -347,7 +348,8 @@ function loadAfterKk(id)
 					$(".kk_load_after").slideUp();
 				}
 				
-				function nextItem(){
+				function nextItem()
+				{
 						o = data.shift();
 						if(o == undefined)
 							return;
@@ -355,7 +357,7 @@ function loadAfterKk(id)
 						domkk = buildKarteikarte(o);
 						domkk.hide();
 						$("#kk_all").append(domkk);
-						domkk.slideDown("fast",function(){
+						domkk.slideDown(function(){
 							nextItem();
 						});
 				}
@@ -388,14 +390,15 @@ function loadPreKk(id)
 					$(".kk_load_pre").slideUp();
 				}
 
-				function nextItem(){
+				function nextItem()
+				{
 					o = data.shift();
 					if(o == undefined)
 						return;
 					domkk = buildKarteikarte(o);
 					domkk.hide();
 					$("#kk_all").prepend(domkk);
-					domkk.slideDown("fast",function(){
+					domkk.slideDown(function(){
 						nextItem();
 					});
 				}
