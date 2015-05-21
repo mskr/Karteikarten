@@ -264,6 +264,12 @@ public class KarteikartenServlet extends ServletController {
             KarteikartenTyp typ = KarteikartenTyp.valueOf(req.getParameter(ParamDefines.Type));
             int veranstaltung = Integer.valueOf(req.getParameter(ParamDefines.Veranstaltung));
             
+            int vaterKK = Integer.parseInt(req.getParameter(ParamDefines.VaterKK));
+            int ueberliegendeBruderKK = Integer.parseInt(req.getParameter(ParamDefines.BruderKK));
+            
+            if(vaterKK != -1 && ueberliegendeBruderKK != -1 || vaterKK != 1 && ueberliegendeBruderKK != 1)
+                throw new Exception();
+            
             Karteikarte karteikarte = new Karteikarte(titel,inhalt,typ,veranstaltung);
             
             if(!istModeratorDozentOderAdmin(aktuellerBenutzer,veranstaltung,dbManager))
@@ -272,13 +278,13 @@ public class KarteikartenServlet extends ServletController {
                 outWriter.print(jo);
                 return;
             }
-            dbManager.schreibeKarteikarte(karteikarte);
+            dbManager.schreibeKarteikarte(karteikarte, vaterKK, ueberliegendeBruderKK);
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             
         } catch(IllegalArgumentException e){
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             
-        } catch(SQLException e){
+        } catch(Exception e){
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
         }
 

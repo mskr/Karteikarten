@@ -10,6 +10,7 @@ import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
 
+import java.sql.Connection;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.DbFalseLoginDataException;
 import com.sopra.team1723.exceptions.DbFalsePasswortException;
@@ -422,8 +423,11 @@ public interface IDatenbankmanager {
      * @param karteik
      * @return ID der gerade eingefügten Karteikarte
      */
-    public int schreibeKarteikarte(Karteikarte karteik) throws SQLException;
-
+    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException;
+    
+    public boolean connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j);
+    
+    public boolean disconnectKk(int vonKK, int zuKK, Connection conNeo4j);
 
     /**
      * Daten der angegebenen Karteikarte werden in der Datenbank geupdatet.
@@ -577,6 +581,6 @@ public interface IDatenbankmanager {
 
     public Kommentar leseKommentar(int kommId, int aktBenutzerID);
 
-    public boolean connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ);
+
     
 }

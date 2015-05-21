@@ -933,18 +933,25 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
         return angemeldet;
     }
-
+    
     @Override
     public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException  {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+        
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        
         PreparedStatement ps = null;
         ResultSet rs = null;
-        conMysql.setAutoCommit(false);
+        
+
         int veranstId = -1;
         try{
+            conMysql.setAutoCommit(false);
+                       
             ps = conMysql.prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
-                    + "BewertungenErlaubt, ModeratorKarteikartenBearbeiten, Ersteller) VALUES(?,?,?,?,?,?,?,?)");
+                    + "BewertungenErlaubt, ModeratorKarteikartenBearbeiten, Ersteller, ErsteKarteikarte) VALUES(?,?,?,?,?,?,?,?,?)");
             ps.setString(1, veranst.getTitel());
             ps.setString(2, veranst.getBeschreibung());
             ps.setString(3, veranst.getSemester());
@@ -987,10 +994,34 @@ public class Datenbankmanager implements IDatenbankmanager {
                 }
                 ps.executeBatch();
             }
+            
+            closeQuietly(ps);
+            closeQuietly(rs);
+            
+            ps = conNeo4j.prepareStatement("CREATE (n) RETURN id(n) AS ID");
+            rs = ps.executeQuery();
+            int insertedKkId;
+            if(rs.next())
+                insertedKkId = rs.getInt("ID");
+            else
+                throw new SQLException();
+            
+            closeQuietly(ps);
+            
+            ps = conMysql.prepareStatement("INSERT INTO karteikarte (ID,Titel,Inhalt,Typ,Veranstaltung"
+                    + " VALUES(?,?,?,?,?");
+            ps.setInt(1, insertedKkId);
+            ps.setString(2, veranst.getTitel());
+            ps.setString(3, "");
+            ps.setString(4, KarteikartenTyp.TEXT.toString());
+            ps.setInt(5, veranstId);
+            
 
+            conNeo4j.commit();
             conMysql.commit();
 
         } catch (SQLException e) {
+            conNeo4j.rollback();
             conMysql.rollback();
             e.printStackTrace();
             if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
@@ -1913,9 +1944,37 @@ public class Datenbankmanager implements IDatenbankmanager {
 
         return karteik;
     }
+    
+    private Integer gibKind(int karteikarte){
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Integer karteik;
+        try {
+            ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->(m)"
+                    + " WHERE id(n) = {1} return id(m) AS ID");
+            ps.setInt(1,karteikarte);
+            rs = ps.executeQuery();
+            if(rs.next())
+                karteik = rs.getInt("ID");
+            else
+                karteik = -1;
+        } catch(SQLException e){
+            karteik = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return karteik;
+    }
 
     @Override
-    public int schreibeKarteikarte(Karteikarte karteik) throws SQLException {
+    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException {
         Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
         Connection conNeo4j = conLockNeo4j.getKey();
 
@@ -1936,6 +1995,33 @@ public class Datenbankmanager implements IDatenbankmanager {
             if(!rs.next())
                 return insertedId;
             insertedId = rs.getInt("Id");
+
+            closeQuietly(ps);
+            
+            if(ueberliegendeBruderKK != -1){
+                Integer unterliegendeBruderKK = gibBruder(ueberliegendeBruderKK);
+                if(unterliegendeBruderKK == null)
+                    throw new SQLException();
+                else if(unterliegendeBruderKK != -1){
+                    disconnectKk(ueberliegendeBruderKK, unterliegendeBruderKK, conNeo4j);
+                    connectKk(insertedId, unterliegendeBruderKK, BeziehungsTyp.H_BROTHER, conNeo4j);
+                }
+                
+                connectKk(ueberliegendeBruderKK, insertedId, BeziehungsTyp.H_BROTHER, conNeo4j);
+
+            } else if(vaterKK != -1){
+                Integer kindKarteikarte = gibKind(vaterKK);
+                if(kindKarteikarte == null)
+                    throw new SQLException();
+                else if(kindKarteikarte != -1){
+                    disconnectKk(vaterKK, kindKarteikarte, conNeo4j);
+                    connectKk(insertedId, kindKarteikarte, BeziehungsTyp.H_BROTHER, conNeo4j);
+                }
+                
+                connectKk(vaterKK, insertedId, BeziehungsTyp.H_CHILD, conNeo4j);
+            } else{
+                throw new SQLException();
+            }
 
             closeQuietly(ps);
 
@@ -2018,7 +2104,11 @@ public class Datenbankmanager implements IDatenbankmanager {
             conNeo4j.setAutoCommit(false);
             conMysql.setAutoCommit(false);
 
-            ps = conNeo4j.prepareStatement("Match(n) WHERE id(n) = {1} DELETE n");
+            ps = conNeo4j.prepareStatement("match p=((n)-[:h_child]->(m)-[:h_child|h_brother*0..]->(o))"
+                    + " where id(n) = {1}"
+                    + " with o,n"
+                    + " match(n-[r1]-()),( o-[r2]-())"
+                    + " delete n,o,r1,r2");
             ps.setInt(1, karteikID);
 
             ps.executeUpdate();
@@ -2582,11 +2672,8 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean connectKk(int vonKK, int zuKK, BeziehungsTyp typ)
-    {
-        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
-        Connection conNeo4j = conLockNeo4j.getKey();
-        
+    public boolean connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j)
+    {        
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try {
@@ -2602,9 +2689,29 @@ public class Datenbankmanager implements IDatenbankmanager {
             e.printStackTrace();
         } finally{
             closeQuietly(ps);
-            conLockNeo4j.getValue().unlock();
         }
 
+        return erfolgreich;
+    }
+    
+    @Override
+    public boolean disconnectKk(int vonKK, int zuKK, Connection conNeo4j)
+    {
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conNeo4j.prepareStatement("MATCH (n)-[r]->(m) "
+                    + "WHERE id(n) = {1} AND id(m) = {2} "
+                    + "DELETE r"); 
+            ps.setInt(1, vonKK);
+            ps.setInt(2, zuKK);
+            ps.executeUpdate();
+        } catch(SQLException e){
+            erfolgreich = false;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+        }
         return erfolgreich;
     }
 }
