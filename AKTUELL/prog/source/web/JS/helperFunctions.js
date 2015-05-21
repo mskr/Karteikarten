@@ -38,6 +38,7 @@ $(document).ready(function() {
 });
 function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
 {
+	$("#dialog_sicher_popup_overlay").css("z-index","4000");
     $("#dialog_sicher").removeClass("hidden");
     $("#dialog_sicher").css({
         top: 0,

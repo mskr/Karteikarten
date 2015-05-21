@@ -121,7 +121,7 @@ public class ParamDefines
     public final static String Veranstaltung = "veranstaltung";
     public final static String Aenderungsdatum = "aenderungsdatum";
     public final static String Bewertung = "bewertung";
-    
+    public final static String UploadID = "uploadID";
     public final static String Reihenfolge = "reihenfolge";
     
     // Kommentare
