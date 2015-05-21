@@ -9,6 +9,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,11 +45,129 @@ public class FileUploadServlet extends ServletController
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) s.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);
+        Part uploadedFile;
+        String fileName;
+        InputStream contentStream;
+
+        ServletContext servletContext;
+        String contextPath;
+        String fileExt;
+
         if(aktuelleAction.equals(ParamDefines.ActionUploadKKBild)){
-        	System.out.println("IMAGE TO UPLOAD");
+        	
+            uploadedFile = req.getPart(ParamDefines.UploadFile);
+            fileName = getFileName(uploadedFile);
+            contentStream = uploadedFile.getInputStream();
+
+            servletContext = getServletContext();
+            contextPath = servletContext.getRealPath(File.separator);
+            fileExt = FilenameUtils.getExtension(fileName);
+            
+            if(fileExt == null || 
+                    (!fileExt.equalsIgnoreCase("jpg") && 
+                    !fileExt.equalsIgnoreCase("jpeg") &&
+                    !fileExt.equalsIgnoreCase("png")))
+            {
+        	JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            }
+            String unixTimestamp = Instant.now().getEpochSecond()+"";
+
+            String UploadID = null;
+            byte[] bytesOfMessage = unixTimestamp.getBytes("UTF-8");
+
+            MessageDigest md;
+			try {
+				md = MessageDigest.getInstance("MD5");
+				md.update(bytesOfMessage);
+				byte[] digest = md.digest();
+				StringBuffer sb = new StringBuffer();
+				for (byte b : digest) {
+					sb.append(String.format("%02x", b & 0xff));
+				}
+				UploadID = sb.toString();
+				System.out.println("uploadid:"+UploadID);
+
+			} catch (NoSuchAlgorithmException e) {
+				JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+			}
+            if(UploadID!=null){
+            	 BufferedImage originalImage = ImageIO.read(contentStream);
+                 String dateiName = UploadID + ".png";
+                 String relativerPfad = dirKKBild + dateiName;
+                 String absolutePath = contextPath + relativerPfad;
+                 ImageIO.write(originalImage, "png", new File(absolutePath));
+                 System.out.println(UploadID);
+                 JSONObject jo = JSONConverter.toJson(UploadID+".png");
+                 outWriter.print(jo);
+            }
+            else{
+            	JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+            }
+           
+            
         }
         else if(aktuelleAction.equals(ParamDefines.ActionUploadKKVideo)){
-        	System.out.println("VIDEO TO UPLOAD");
+        	uploadedFile = req.getPart(ParamDefines.UploadFile);
+            fileName = getFileName(uploadedFile);
+            contentStream = uploadedFile.getInputStream();
+
+            servletContext = getServletContext();
+            contextPath = servletContext.getRealPath(File.separator);
+            fileExt = FilenameUtils.getExtension(fileName);
+            
+            if(fileExt == null || 
+                    (!fileExt.equalsIgnoreCase("mp4")))
+            {
+        	JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            }
+            String unixTimestamp = Instant.now().getEpochSecond()+"";
+
+            String UploadID = null;
+            byte[] bytesOfMessage = unixTimestamp.getBytes("UTF-8");
+
+            MessageDigest md;
+			try {
+				md = MessageDigest.getInstance("MD5");
+				md.update(bytesOfMessage);
+				byte[] digest = md.digest();
+				StringBuffer sb = new StringBuffer();
+				for (byte b : digest) {
+					sb.append(String.format("%02x", b & 0xff));
+				}
+				UploadID = sb.toString();
+				System.out.println("uploadid:"+UploadID);
+
+			} catch (NoSuchAlgorithmException e) {
+				JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+			}
+            if(UploadID!=null){
+                 String dateiName = UploadID + ".mp4";
+                 String relativerPfad = dirKKVideo + dateiName;
+                 String absolutePath = contextPath + relativerPfad;
+                 
+                 FileOutputStream fos = new FileOutputStream(absolutePath);
+                 int b = 0;
+                 while(b != -1){
+
+                     b = contentStream.read();
+                     fos.write(b);
+                 }
+                 int read = 0;
+                 final byte[] bytes = new byte[1024];
+                 while ((read = contentStream.read(bytes)) != -1) {
+                	 fos.write(bytes, 0, read);
+                 }
+                 if (fos != null) {
+                	 fos.close();
+                 }
+                 JSONObject jo = JSONConverter.toJson(UploadID+".mp4");
+                 outWriter.print(jo);
+            }
         }
         else if(aktuelleAction.equals(ParamDefines.ActionUploadProfilBild))
         {
@@ -71,13 +192,13 @@ public class FileUploadServlet extends ServletController
             }
 
             
-            Part uploadedFile = req.getPart(ParamDefines.UploadFile);
-            String fileName = getFileName(uploadedFile);
-            InputStream contentStream = uploadedFile.getInputStream();
+            uploadedFile = req.getPart(ParamDefines.UploadFile);
+            fileName = getFileName(uploadedFile);
+            contentStream = uploadedFile.getInputStream();
 
-            ServletContext servletContext = getServletContext();
-            String contextPath = servletContext.getRealPath(File.separator);
-            String fileExt = FilenameUtils.getExtension(fileName);
+            servletContext = getServletContext();
+            contextPath = servletContext.getRealPath(File.separator);
+            fileExt = FilenameUtils.getExtension(fileName);
             
             if(fileExt == null || 
                     (!fileExt.equalsIgnoreCase("jpg") && 

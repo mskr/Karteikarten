@@ -1062,19 +1062,25 @@ textarea.input_std {
 } #vn_attr_modbearb_erlaubt:before {
 	content: "BEARBEITEN DURCH MODERATOREN ERLAUBT";
 }
-
+#kk_body{
+	width:100%;
+	max-width: 800px;
+	margin: 1em;
+	margin-left: 0;
+}
 #kk_all {
 	position: relative;
 	z-index: 2;
 }
-
 .kk_load{
 	height:30px;
-	weidth:100%;
+	border-radius:50%;
 	cursor:pointer;
-	text-align:center;
+	
 	background: #444;
-	margin-bottom: 1em;
+	width: 4em;
+ 	text-align: center;
+	margin: auto;
 }
 
 #kk_inhaltsverzeichnis:before {
@@ -1164,10 +1170,29 @@ textarea.input_std {
 	color: #800000;
 }
 .kk_titel{
-	text-align: center;
+	text-align: left;
+	margin-left:3.05em;
+	margin-bottom:0.5em;
 	display:block;
-	font-size: 1.3em; 
+	font-size: 1.3em;
 	padding-bottom: 0.5em;
+}
+.form_infotext2{
+	font-size: 2em;
+	color: #A9A9A9;
+}
+.checkboxes{
+	height:16px;
+	width:16px;
+	margin:5px;
+}
+.checkbox_labels{
+	vertical-align:top;
+	font-size:17px;
+}
+.kk_erstellen_zurueck{
+	display:none;
+	font-size: 1.3em; 
 }
 .kk {
 	vertical-align: middle;
@@ -1970,19 +1995,20 @@ select.profil_input {
 	font-size: 0.7em;
 }
 .drop_file_areas{
-	margin: 0;
+	text-align: center;
+	margin: 20px auto;
 	overflow: hidden;
 	min-height: 12em;
 	border: 1px dashed DimGray;
 	border-radius: .3em;
-	width:30%;
+	width:100%;
 }
 .dz-message{
 	cursor:pointer;
 	display:block;
 	text-align: center;
 	margin: 0 auto;
-	margin-top:25%;
+	margin-top:20px;
 }
 #dz_uploaded_file_message{
 	display:none;
@@ -1996,4 +2022,11 @@ select.profil_input {
 	padding:1.5em;
 	border-radius: 1em;
 	width:30%;
+}
+.center{
+	text-align: center;
+	margin: 0 auto;
+}
+.headerKKFont{
+	clear:both;
 }

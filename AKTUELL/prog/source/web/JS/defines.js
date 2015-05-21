@@ -62,6 +62,7 @@ var actionGetKarteikartenKinder = "getKKKinder";
 var actionGetKarteikartenVater = "getKKVater";
 var actionVoteKarteikarteUp = "voteUpKarteik";
 var actionVoteKarteikarteDown = "voteDownKarteik";
+var actionErstelleKarteikarte = "erstelleKarteikarte";
 
 var actionVoteKommentarUp = "voteUpKomm";
 var actionVoteKommentarDown = "voteDownKomm";
@@ -105,6 +106,7 @@ var paramKkText = "TEXT";
 var paramKkBild = "BILD";
 var paramKkUeberschrift = "BILD";
 var paramKkVideo = "VIDEO";
+var paramKkUploadID = "uploadID";
 var paramVeranstaltung = "veranstaltung";
 var paramAenderungsdatum = "aenderungsdatum";
 var paramBewertung = "bewertung";

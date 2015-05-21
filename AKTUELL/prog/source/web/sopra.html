@@ -225,8 +225,13 @@
 		<div id="kk_erstellen_popup_close" class="popup_fenster_close">
 			<span class="octicon octicon-x"></span>
 		</div>
-		<div class="popup_fenster_body">
+		<div id="popup_fenster_body1"class="popup_fenster_body">
 			<input class="input_std popup_input" id="kk_erstellen_titel_input" type="text" placeholder="Titel" required>
+ 			
+ 			<div id="kk_erstellen_text_area">
+ 				<textarea id="kk_erstellen_TA">
+ 				</textarea>
+ 			</div>
  			<div class="drop_file_areas" id="df_area_kk">
 				<form action="/file-upload" class="dropzone" id="file-dropzone">
 					<div class="fallback">
@@ -235,20 +240,30 @@
 			        <div class="dz-message" id="dz_info_message">
 						Drop files here or click to upload.<br>
 					</div>
-					<div class="dz-message" id="dz_uploaded_file_message">
-					</div>
 			    </form>
  			</div>
 		</div>
-		<div class="popup_fenster_body">
-			<span class="form_infotext">Verfassen Sie eine für jeden sichtbare Beschreibung der Veranstaltung.</span>
-			<textarea class="input_std popup_input" id="vn_erstellen_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
+		<div id="popup_fenster_body2" class="popup_fenster_body">
+			<span class="form_infotext2">Fügen sie Attribute zu ihrer Karteikarte hinzu.</span><br>
+			<div id="kkE_attributes">
+				<span><input id="kkE_attr_satz" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_satz">Satz</label></span><br>
+				<span><input id="kkE_attr_lemma" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_lemma">Lemma</label></span><br>
+				<span><input id="kkE_attr_beweis" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_beweis">Beweis</label></span><br>
+				<span><input id="kkE_attr_def" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_def">Definition</label></span><br>
+				<span><input id="kkE_attr_wichtig" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_wichtig">Wichtig</label></span><br>
+				<span><input id="kkE_attr_grundl" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_grundl">Grundlagen</label></span><br>
+				<span><input id="kkE_attr_zusatz" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Zusatzinformation</label></span><br>
+				<span><input id="kkE_attr_exkurs" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Exkurs</label></span><br>
+				<span><input id="kkE_attr_bsp" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Beispiel</label></span><br>
+				<span><input id="kkE_attr_uebung" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Übung</label></span><br>
+			</div>
+
 		</div>
 		<div class="popup_fenster_foot">
-			<span id="vn_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>
-			<span id="vn_erstellen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
-			<span id="vn_erstellen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
-			<span id="vn_erstellen_ok" class="mybutton green">Erstellen</span>
+			<span id="kk_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="kk_erstellen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="kk_erstellen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="kk_erstellen_ok" class="mybutton green">Erstellen</span>
 		</div>
 	</div>
 </div>	
@@ -264,7 +279,11 @@
 		<span><input id="attr_def" type="checkbox" name="attr"><label for="attr_def">Definition</label></span>
 		<span><input id="attr_wichtig" type="checkbox" name="attr"><label for="attr_wichtig">Wichtig</label></span>
 		<span><input id="attr_grundl" type="checkbox" name="attr"><label for="attr_grundl">Grundlagen</label></span>
-		<span><input id="attr_ueberschr" type="checkbox" name="attr"><label for="attr_ueberschr">Überschrift</label></span>
+		<span><input id="attr_zusatz" type="checkbox" name="attr"><label for="attr_ueberschr">Zusatzinformation</label></span>
+		<span><input id="attr_exkurs" type="checkbox" name="attr"><label for="attr_ueberschr">Exkurs</label></span>
+		<span><input id="attr_bsp" type="checkbox" name="attr"><label for="attr_ueberschr">Beispiel</label></span>
+		<span><input id="attr_uebung" type="checkbox" name="attr"><label for="attr_ueberschr">Übung</label></span>
+		
 	</div>
 	<div class="bigtooltip_foot"></div>
 </div>
@@ -612,16 +631,16 @@ Dann aber so leer.
 				</a>
 			</label>
 		</div> -->
-		<!-- <button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button> -->
-		<!-- <button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button> -->
+		<button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button> 
+		<!-- <button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button>-->
 	</div>
 	<div id="kk_inhaltsverzeichnis"></div>
-	<div style="width: 70%;max-width: 800px">
-		<div class = "kk_load kk_load_pre"> ... </div>
+	<div id="kk_body">
+		<div class = "kk_load kk_load_pre"> <span class="mega-octicon octicon-arrow-up"></span> </div>
 		<div id="kk_all">
 			<!-- Karteikartencontainer -->
 		</div>
-		<div class = "kk_load kk_load_after"> ... </div>
+		<div class = "kk_load kk_load_after"> <span class="mega-octicon octicon-arrow-down"></span> </div>
 	</div>
 	
 </div>
@@ -675,27 +694,27 @@ Dann aber so leer.
 					</div>
 				</div>
 			</div>
-			<div style="display:table-row;">
-				<div class="kk_kommbox" style="display:table-cell;">
-					<a class="kk_kommheader">
-						<span class="octicon octicon-comment-discussion"></span> Kommentare
-						(<span class="kk_kommzaehler">0</span>)
-					</a>
-					<div class = "kk_kommbody" style = "display:none">
-						<div class="kk_kommerstellen">
-							<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
-							<a class="komm_submit_bt" style="float: right">Thema erstellen</a>
-						</div><div class="clearfix"></div>
-						<div class="kk_kommList">
-						</div>
-					</div>
-				</div>
+		</div>
+	</div>
+</div>
+<div style = "display:table-row">
+	<div style="display:table-cell;"></div>
+	<div class="kk_kommbox" style="display:table-cell;">
+		<a class="kk_kommheader">
+			<span class="octicon octicon-comment-discussion"></span> Kommentare
+			(<span class="kk_kommzaehler">0</span>)
+		</a>
+		<div class = "kk_kommbody" style = "display:none">
+			<div class="kk_kommerstellen">
+				<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
+				<a class="komm_submit_bt" style="float: right">Thema erstellen</a>
+			</div><div class="clearfix"></div>
+			<div class="kk_kommList">
 			</div>
 		</div>
 	</div>
-</div>	
 </div>
-
+</div>
 <!-- Template Kommentare -->
 <div class="kk_superkomm" id="templateSuperKomm" data-komm-id="" style="display:none">
 	<div class="kk_kommvotes">
