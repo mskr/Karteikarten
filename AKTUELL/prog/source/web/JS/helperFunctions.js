@@ -191,6 +191,9 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
  */
 function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, beforeFunc, completeFunc)
 {
+    
+    console.log("[AJAX] action="+action);
+    
     return $.ajax({
         url: servletUrl,
         data: "action="+action + "&"+ toUrlParamString(params),

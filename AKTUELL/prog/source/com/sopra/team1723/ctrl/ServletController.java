@@ -143,6 +143,9 @@ public abstract class ServletController extends HttpServlet
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json");
+
+        if(DEBUGMODE)
+            printAllParameters(req);
         
         try{
             if(preProcessRequest(req, resp)){
@@ -203,9 +206,6 @@ public abstract class ServletController extends HttpServlet
         HttpSession s = req.getSession();
         if(s.isNew())
             s.setMaxInactiveInterval(sessionTimeoutSek);
-
-        if(DEBUGMODE)
-            printAllParameters(req);
 
         IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);
         if(dbManager == null)

@@ -1635,7 +1635,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(rs);
             conLock.getValue().unlock();
         }
-
+        System.out.println("KARTEIKARTE"+karteikarte);
         return karteikarte;
     }
 
