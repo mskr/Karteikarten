@@ -32,11 +32,16 @@ var actionGetVeranstaltung = "getVeranstaltung";
 var actionAenderePasswort = "aenderePasswort";
 var actionAendereProfil = "aendereProfil";
 var actionUploadProfilBild = "uploadProfilBild";
+var actionUploadKKBild = "uploadKKBild";
+var actionUploadKKVideo = "uploadKKVideo";
 var actionSucheBenVeranst = "sucheBenVeranst";
 var actionSucheBenutzer = "sucheBenutzer";
+var actionSucheStudiengang = "sucheStudiengang";
 var actionErstelleVeranst = "erstelleVeranst";
+var actionBearbeiteVeranst = "bearbeiteVeranst";
 var actionDeleteBenutzer = "deleteBenutzer"; 
 var actionDeleteVn = "vnLoeschen";
+var actionPing = "ping";
 
 
 var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
@@ -50,8 +55,24 @@ var actionLeseBenachrichtungen = "leseBen";
 var actionMarkiereBenGelesen = "benGelesen";
 
 
+var actionGetKarteikartenVorgaenger = "getKkVor";
+var actionGetKarteikartenNachfolger = "getKkNach";
+var actionGetKarteikarteByID = "getKarteikarte";
+var actionGetKarteikartenKinder = "getKKKinder";
+var actionGetKarteikartenVater = "getKKVater";
+var actionVoteKarteikarteUp = "voteUpKarteik";
+var actionVoteKarteikarteDown = "voteDownKarteik";
 
+var actionVoteKommentarUp = "voteUpKomm";
+var actionVoteKommentarDown = "voteDownKomm";
+var actionDeleteKommentar = "deleteKomm";
+var actionErstelleAntwortKommentar = "erstelleAntwKomm";
+var actionErstelleThemaKommentar = "erstelleThemaKomm";
+var actionLeseAntwortKommentar = "leseAntwKomm";
+var actionLeseThemaKommentar = "leseThemaKomm";
 
+var actionSpeichereNotiz = "speichereNotiz";
+var actionLeseNotiz = "leseNotiz";
 // GET/POST- und JSON-Schluessel-Parameter
 // Die folgenden Bereiche koennen sich ueberschneiden...
 // ===========================================================
@@ -80,9 +101,14 @@ var paramGelesen = "gelesen";
 var paramType = "type";
 
 //Karteikarte
+var paramKkText = "TEXT";
+var paramKkBild = "BILD";
+var paramKkUeberschrift = "BILD";
+var paramKkVideo = "VIDEO";
 var paramVeranstaltung = "veranstaltung";
 var paramAenderungsdatum = "aenderungsdatum";
 var paramBewertung = "bewertung";
+var paramIndex = "index"; //bei liste der karteikarten ids: index für reihenfolge
 
 // Veranstaltungen
 var paramTitel = "titel";
@@ -96,6 +122,7 @@ var paramModeratoren = "moderatoren";
 var paramAnzTeilnehmer = "anzTeilnehmer";
 var paramAngemeldet = "angemeldet";
 var paramKennwortGesetzt = "kennwortGesetzt";
+var paramErsteKarteikarte = "ersteKarteikarte";
 
 
 var paramAktSemester = "aktSemester";
@@ -114,16 +141,19 @@ var paramBenKarteikarte = "benKarteikarte";
 var paramBenKommentar = "benKommentar";
 var paramBenProfil = "benProfil";
 
-
-
-
-
+// Kommentare
+var paramHatGevoted = "hatgevotet";
+var paramErstellDatum = "erstellDatum";
+var paramAntwortCount = "antwCount";
+var paramKommentarVaterId = "vaterId";
+var paramKommentarKKid = "kkId";
 
 // Schluesselnamen fuer JSON Objekte
 var keyJsonArrResult = "arrResult";
 var keyJsonObjKlasse = "klasse";
 var keyJsonObjKlasseBenutzer = "klasseBenutzer";
 var keyJsonObjKlasseVeranst = "klasseVeranst";
+var keyJsonObjKlasseStudiengang = "klasseStudiengang";
 var keyJsonObjKlasseKarteikarte = "klasseKarteikarte";
 
 // GET-Parameter fuer den urlHandler.js

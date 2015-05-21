@@ -54,7 +54,8 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
     var clone = $("#dialog_sicher").clone();
     clone.css("visibility","hidden");
     $('body').append(clone);
-    var width = clone.outerWidth();
+    // Breite + Padding !
+    var width = clone.find(".sindSieSicher_head").outerWidth() + 1*clone.find(".sindSieSicher_head").css("padding-left").replace(/[^-\d\.]/g, '');
     clone.remove();
     
     var overflow = pos.left + width - $(window).width();
@@ -69,7 +70,7 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
     $("#dialog_sicher_popup_overlay").fadeIn(300);
     $("#dialog_sicher").fadeIn(300);
 
-    $(".dialog_sicher_frage").text(message);
+    $("#dialog_sicher_frage").text(message);
     
     $("#dialog_sicher_ja").click(function(e) {
         doCriticalThing();
@@ -156,7 +157,7 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
             popupSeitenIterator = 0;
         });
     }
-    
+    submitElem.off();
     submitElem.click(function() {
         if(submitFunc())
         {
@@ -192,7 +193,7 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
 {
     return $.ajax({
         url: servletUrl,
-        data: "action="+action+"&"+toUrlParamString(params),
+        data: "action="+action + "&"+ toUrlParamString(params),
         beforeSend: beforeFunc,
         success: function(jsonResponse) {
             if(verifyResponse(jsonResponse,errorHandlingFunc)) {
@@ -202,6 +203,23 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
         },
         complete: completeFunc
     });
+    
+//    if(params == undefined)
+//		params = {};
+//	params["action"] = action;
+//	
+//    return $.ajax({
+//        url: servletUrl,
+//        data: params,
+//        beforeSend: beforeFunc,
+//        success: function(jsonResponse) {
+//            if(verifyResponse(jsonResponse,errorHandlingFunc)) {
+//            	if(noerrorFunc!= undefined)
+//            		noerrorFunc(jsonResponse);
+//            }
+//        },
+//        complete: completeFunc
+//    });
 }
 
 /**
@@ -227,6 +245,7 @@ function toUrlParamString(paramObj)
     	{
     		for( var i in paramObj[param])
     		{
+    			// ESCAPING WICHTIG! Sonst können wir bspw. keine umlaute übertragen
                 locationSearchTmp += param + "=" + paramObj[param][i] + "&";
     		}
     	}
@@ -298,7 +317,7 @@ function addItemToList(itemMap, container, displayName, data, removeFkt, clickFk
  * @param categoryClassMapping Object, das als Keys die Klassen von Objekten enthaelt, die vom Server als Suchergebnisse kommen (z.B. Benutzer, Veranstaltungen...);
  * Value ist hier jeweils die Kategorie, in die das Objekt eingeordnet werden soll.
  */
-function autoComplete(textInput, categories, categoryClassMapping)
+function autoComplete(textInput, categories, categoryClassMapping, action)
 {
     var suchergHtmlStr = "<div id='suche_ergebnisse_"+textInput.attr("id")+"' class='suche_ergebnisse'>"
                    +         "<div id='sucherg_x_"+textInput.attr("id")+"' class='sucherg_x'><span class='octicon octicon-x'></span></div>";
@@ -337,7 +356,7 @@ function autoComplete(textInput, categories, categoryClassMapping)
             $("#suche_ergebnisse_"+textInput.attr("id")).show();
         }
         suchTimer.reset();
-        suchTimer.set(textInput, categories, categoryClassMapping);
+        suchTimer.set(textInput, action, suchergJQueryObj,  categories, categoryClassMapping);
     });
            
     // Reagiere auf Klick auf das x zum Schliessen des Suchergebniscontainers
@@ -347,7 +366,6 @@ function autoComplete(textInput, categories, categoryClassMapping)
     });
 }
 
-var suchErgIterator = -1;
 var autoCompleteTimerMillis = 400;
 
 /**
@@ -358,24 +376,24 @@ var suchTimer = function(){
     var that = this,
     time = 15,
     timer;
-    that.set = function(textInput, categories, categoryClassMapping) {
+    that.set = function(textInput, action, suchergContainer, categories, categoryClassMapping) {
         timer = setTimeout(function() {
             for(var i in categoryClassMapping)
             {
-                $("#sucherg_"+categoryClassMapping[i]).slideUp("fast").empty();
+            	suchergContainer.find("#sucherg_"+categoryClassMapping[i]).slideUp("fast").empty();
             }
             var params = {};
             params[paramSuchmuster] = textInput.val();
             ajaxCall (
                 suchfeldServlet,
-                actionSucheBenVeranst,
+                action,
                 function(response) {
                     var arrSuchErgebnisse = response[keyJsonArrResult];
-                    fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping);
-                    suchErgIterator = -1;
+                    fillSuchergebnisse(arrSuchErgebnisse,suchergContainer, categories, categoryClassMapping);
+                    suchErgIterator = 0;
                     for(var i in categoryClassMapping)
                     {
-                        $("#sucherg_"+categoryClassMapping[i]).slideDown("fast");
+                    	suchergContainer.find("#sucherg_"+categoryClassMapping[i]).slideDown("fast");
                     }
                 },
                 params
@@ -396,7 +414,7 @@ var suchTimer = function(){
  * @param categories siehe autoComplete
  * @param categoryClassMapping siehe autoComplete
  */
-function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
+function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, categoryClassMapping)
 {
     var isCategoryEmpty = {};
     for(var i in categoryClassMapping)
@@ -410,17 +428,17 @@ function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
         return function() {
             // Fuehre die Funktion aus, die Suchergebnissen in dieser Kategorie zugeordnet wurde
             categories[category](jsonSuchErgebnis);
-            //TODO klappe einfach alle Suchergebnisse ein
-            $(".sucherg_x span").trigger("click");
+            suchergContainer.find(".sucherg_x span").trigger("click");
         }
     }
     for(var i in arrSuchErgebnisse)
     {
-        var jsonSuchErgebnis = arrSuchErgebnisse[i];
+        var jsonSuchErgebnis = arrSuchErgebnisse[i]["key"];
+        var abstand = arrSuchErgebnisse[i]["value"];
         var klasse = jsonSuchErgebnis[keyJsonObjKlasse];
         var category = categoryClassMapping[klasse];
         var id = jsonSuchErgebnis[paramId];
-        var suchErgHtmlString = "<div id='sucherg_"+category+"_"+id+"' class='sucherg_item'>";
+        var suchErgHtmlString = "<div data-abstand = '"+ abstand +"'id='sucherg_"+category+"_"+id+"' class='sucherg_item sucherg_item_"+category+"'>";
         if(klasse == keyJsonObjKlasseBenutzer)
         {
             suchErgHtmlString += "<span class='octicon octicon-person'></span>" +
@@ -429,7 +447,17 @@ function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
         else if(klasse == keyJsonObjKlasseVeranst)
         {
             suchErgHtmlString += "<span class='octicon octicon-podium'></span>" +
-                                 jsonSuchErgebnis[paramTitel];
+                                 jsonSuchErgebnis[paramTitel] +
+                                 "<br>" +
+                                 "<span class='sucherg_item_detail'>" +
+                                 jsonSuchErgebnis[paramErsteller][paramVorname] + " " + jsonSuchErgebnis[paramErsteller][paramNachname] +
+                                 " | " + jsonSuchErgebnis[paramSemester] +
+                                 "</span>";
+        }
+        else if(klasse == keyJsonObjKlasseStudiengang)
+        {
+            suchErgHtmlString += "<span class='octicon octicon-mortar-board'></span>" +
+                                 jsonSuchErgebnis[paramStudiengang];
         }
         // TODO Falls noch andere Objekte als Suchergebnisse kommen koennen, muessen diese hier nachgetragen werden.
         else
@@ -438,22 +466,49 @@ function fillSuchergebnisse(arrSuchErgebnisse, categories, categoryClassMapping)
         }
         suchErgHtmlString +=    "</div>";
         var suchErgJQueryObj = $(suchErgHtmlString);
-        $("#sucherg_"+category).append(suchErgJQueryObj);
+        suchergContainer.find("#sucherg_"+category).append(suchErgJQueryObj);
         isCategoryEmpty[category] = false;
 
         suchErgJQueryObj.click( clickHandler(categories, category, jsonSuchErgebnis) );
-        
     }
+
+    $.each(suchergContainer.find(".sucherg"), function(index, obj) {
+    	var elem = $(obj).find('div').sort( function(a,b)
+	    	{
+    			return $(a).attr("data-abstand") - $(b).attr("data-abstand");
+    		});
+    	$(obj).append(elem);
+	});
+    
+    $(suchergContainer.find(".sucherg_item")[0]).addClass("selected");
+    
+    suchergContainer.find(".sucherg_item").off();
+    suchergContainer.find(".sucherg_item").each(function(i, elem) {
+        $(elem).hover(function(e) {
+            $(e.target).addClass("selected");
+            suchErgIterator = i;
+        }, function(e) {
+            $(e.target).removeClass("selected");
+        });
+    });
+    
+//    var elem = contentDiv.find('div').sort( function(a,b)
+//    		{
+//    			return $(a).attr("data-abstand") - $(b).attr("data-abstand");
+//    		});
+//
+//    contentDiv.append(elem);
     
     for(var i in isCategoryEmpty)
     {
         if(isCategoryEmpty[i])
         {
-            $("#sucherg_"+i).append("<div class='sucherg_leer'>Nichts gefunden.</div>");
+            suchergContainer.find("#sucherg_"+i).append("<div class='sucherg_leer'>Nichts gefunden.</div>");
         }
     }
 }
 
+var suchErgIterator = 0;
 /**
  * Diese Funktion wird von autoComplete genutzt.
  * Sie ermoeglicht es mit der Tastatur in den Suchergebnissen zu navigieren.
@@ -464,15 +519,19 @@ function handlePfeiltastenEvents(pressedKey, suchergJQueryObj) {
     var arr = suchergJQueryObj.find(".sucherg_item");
     if(pressedKey == 40) // Pfeil runter
     {
-        $(arr[suchErgIterator]).css({"background":"none", "color":"#4a4a4a"});
+        $(arr[suchErgIterator]).removeClass("selected");
         if(suchErgIterator+1 < arr.length)
             suchErgIterator++;
+        else
+            suchErgIterator = 0
     }
     else if(pressedKey == 38) // Pfeil hoch
     {
-        $(arr[suchErgIterator]).css({"background":"none", "color":"#4a4a4a"});
+        $(arr[suchErgIterator]).removeClass("selected");
         if(suchErgIterator-1 >= 0)
             suchErgIterator--;
+        else
+            suchErgIterator = arr.length-1;
     }
     else if(pressedKey == 13) // ENTER
     {
@@ -482,5 +541,21 @@ function handlePfeiltastenEvents(pressedKey, suchergJQueryObj) {
     {
         suchergJQueryObj.find(".sucherg_x span").trigger("click");
     }
-    $(arr[suchErgIterator]).css({"background":"#4a4a4a", "color":"white"});
+    $(arr[suchErgIterator]).addClass("selected");
+}
+
+function destroyCKeditors(container)
+{
+	for (var i in CKEDITOR.instances) {
+	    var instance = CKEDITOR.instances[i];
+	    if (instance.container != undefined && jQuery.contains( container, instance.container.$ ) )
+	    {
+	    	 $timeout(function() 
+	    	 {
+	 	    	instance.editor.removeAllListeners();
+		    	instance.destroy();
+	    	   },0);
+	    	 
+	    }
+	}
 }

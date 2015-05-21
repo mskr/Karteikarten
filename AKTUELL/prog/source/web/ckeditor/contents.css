@@ -10,12 +10,12 @@ body
 	font-size: 12px;
 
 	/* Text color */
-	color: #333;
+	color: #ddd;
 
 	/* Remove the background color to make it transparent */
-	background-color: #fff;
+	background-color: #333333 !important;
 
-	margin: 20px;
+	margin: 10px;
 }
 
 .cke_editable
@@ -72,6 +72,10 @@ hr
 	border: 0px;
 	border-top: 1px solid #ccc;
 }
+
+/* img{
+	filter: invert(1);
+} */
 
 img.right
 {

@@ -4,17 +4,17 @@ import java.util.Calendar;
 
 
 public class BenachrNeuerKommentar extends Benachrichtigung{
-    private Kommentar kommentar;
+    private int kommentarID;
     
     public BenachrNeuerKommentar(int id, String inhalt, Calendar erstelldaum, int benutzer, boolean gelesen,
-            Kommentar kommentar)
+            int kommentarID)
     {
         super(id, inhalt, erstelldaum, benutzer, gelesen);
-        this.kommentar = kommentar;
+        this.kommentarID = kommentarID;
     }
 
-    public Kommentar getKommentar()
+    public int getKommentarId()
     {
-        return kommentar;
+        return kommentarID;
     }
 }

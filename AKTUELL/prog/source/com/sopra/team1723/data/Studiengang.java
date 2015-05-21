@@ -38,7 +38,7 @@ public class Studiengang implements IjsonObject
     {
         // Ignore parameter full
         JSONObject jo = new JSONObject();
-        jo.put(ParamDefines.Klasse, ParamDefines.KlasseStudieng);
+        jo.put(ParamDefines.Klasse, ParamDefines.KlasseStudiengang);
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);    
         jo.put(ParamDefines.Studiengang, this.getName());   
 

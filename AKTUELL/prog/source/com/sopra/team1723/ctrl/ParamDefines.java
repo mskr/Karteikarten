@@ -22,9 +22,13 @@ public class ParamDefines
     public final static String ActionAenderePasswort = "aenderePasswort";
     public final static String ActionAendereProfil = "aendereProfil";
     public final static String ActionUploadProfilBild = "uploadProfilBild";
+    public final static String ActionUploadKKBild = "uploadKKBild";
+    public final static String ActionUploadKKVideo = "uploadKKVideo";
     public final static String ActionSucheBenVeranst = "sucheBenVeranst";
     public final static String ActionSucheBenutzer = "sucheBenutzer";
+    public final static String ActionSucheStudiengang = "sucheStudiengang";
     public final static String ActionLoescheVn = "vnLoeschen";
+    public final static String ActionPing = "ping";
 
     
     public final static String ActionGetVeranstaltung = "getVeranstaltung";
@@ -33,6 +37,7 @@ public class ParamDefines
     public final static String LeseVeranstModeStudiengangSemester =             // Liefert alle Veranstaltungen
             "studiengangSemester";                                              // für das gewählte Semester und Studiengang
     public final static String LeseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
+    public final static String ActionVeranstaltungBearbeiten = "bearbeiteVeranst";
 
     public final static String ActionAusschreiben = "ausschreiben";
     public final static String ActionEinschreiben = "einschreiben";
@@ -41,24 +46,41 @@ public class ParamDefines
     public final static String ActionGetStudgVn = "getStudgVn";
     public final static String ActionGetModeratorenVn = "getModVn";
 
-
-    
-
     public final static String ActionLeseBenachrichtungen = "leseBen";
     public final static String ActionMarkiereBenGelesen = "benGelesen";
     public final static String ActionEinlModeratorAnnehmen = "einlModAnnehmen";
     public final static String ActionEinlModeratorAblehnen = "einlModAblehnen";
 
-
+    public final static String ActionGetKarteikartenVorgaenger = "getKkVor";
+    public final static String ActionGetKarteikartenNachfolger = "getKkNach";
+    public final static String ActionGetKarteikarteByID = "getKarteikarte";
+    public final static String ActionGetKarteikartenKinder = "getKKKinder";
+    public final static String ActionGetKarteikartenVater = "getKKVater";
+    public final static String ActionErstelleKarteikarte = "erstelleKarteikarte";
+    
+    public final static String ActionSpeichereNotiz = "speichereNotiz";
+    public final static String ActionLeseNotiz = "leseNotiz";
+    
+    public final static String ActionVoteKommentarUp = "voteUpKomm";
+    public final static String ActionVoteKommentarDown = "voteDownKomm";
+    public final static String ActionDeleteKommentar = "deleteKomm";
+    public final static String ActionErstelleAntwortKommentar = "erstelleAntwKomm";
+    public final static String ActionErstelleThemaKommentar = "erstelleThemaKomm";
+    public final static String ActionLeseAntwortKommentar = "leseAntwKomm";
+    public final static String ActionLeseThemaKommentar = "leseThemaKomm";
+    
+    public final static String ActionVoteKarteikarteUp = "voteUpKarteik";
+    public final static String ActionVoteKarteikarteDown = "voteDownKarteik";
+    
 
     public final static String Klasse = "klasse";
     public final static String KlasseBenutzer = "klasseBenutzer";
     public final static String KlasseVeranst = "klasseVeranst";
-    public final static String KlasseStudieng = "klasseStudieng";
+    public final static String KlasseStudiengang = "klasseStudiengang";
     public final static String KlasseKarteikarte = "klasseKarteikarte";
 
 
-
+    // Parameter für Benutzer
     public final static String Id = "id";
     public final static String Email = "email";
     public final static String EmailNew = "emailNew";
@@ -77,6 +99,7 @@ public class ParamDefines
     public final static String Suchmuster = "suchmuster";
 
 
+    // Parameter für Veranstaltung
     public final static String Titel = "titel";
     public final static String Beschr = "beschr";
     public final static String Semester = "semester";
@@ -90,11 +113,22 @@ public class ParamDefines
     public final static String Angemeldet = "angemeldet";
     public final static String KennwortGesetzt = "kennwortGesetzt";
     
+    
+    // Parameter für Karteikarte  
     public final static String Veranstaltung = "veranstaltung";
     public final static String Aenderungsdatum = "aenderungsdatum";
     public final static String Bewertung = "bewertung";
-
-
+    
+    public final static String Reihenfolge = "reihenfolge";
+    
+    // Kommentare
+    public final static String HatGevoted = "hatgevotet";
+    public final static String ErstellDatum = "erstellDatum";
+    public final static String AntwortCount = "antwCount";
+    public final static String KommentarVaterId = "vaterId";
+    public final static String KommentarKKid = "kkId";
+    
+    // Parameter für Benachrichtigung
     public final static String Inhalt = "inhalt";
     public final static String Gelesen = "gelesen";
     public final static String Type = "type";

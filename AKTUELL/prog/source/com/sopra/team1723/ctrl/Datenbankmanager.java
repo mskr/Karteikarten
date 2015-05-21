@@ -26,6 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.sql.Timestamp;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
 import com.sopra.team1723.exceptions.*;
 
 /**
@@ -33,31 +34,40 @@ import com.sopra.team1723.exceptions.*;
  */
 public class Datenbankmanager implements IDatenbankmanager {
     final int UNIQUE_CONSTRAINT_ERROR = 1062;
-    //private Connection conNeo4j = null;
-    private HashMap<Connection,ReentrantLock> connectionsNeo4j = null;
-    private HashMap<Connection,ReentrantLock> connections = null;
-    private final static int AnzConnections = 5;  
+    private static HashMap<Connection,ReentrantLock> connectionsNeo4j = null;
+    private static HashMap<Connection,ReentrantLock> connections = null;
+    private final static int AnzConnections = 10;  
     /**
      * Implementiert die Methoden des    private ArrayList<Connection> connections = null;
     private ArrayList<ReentrantLock> locks = null; @ref IDatenbankmanager. Bietet eine Schnittstelle zur Datenbank.
      * @throws Exception 
      */
-    public Datenbankmanager() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
-        Class.forName("org.neo4j.jdbc.Driver");
-        //conNeo4j = DriverManager.getConnection("jdbc:neo4j://localhost:7474/");
+    public Datenbankmanager() throws Exception {}
+    
+    static {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("org.neo4j.jdbc.Driver");
+            connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
+            for(int i=0; i<AnzConnections; ++i)
+                connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten","neo4j","hallo123"), new ReentrantLock());
 
-        connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
-        for(int i=0; i<AnzConnections; ++i)
-            connectionsNeo4j.put(DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten","neo4j","hallo123"), new ReentrantLock());
-
-        connections = new HashMap<Connection, ReentrantLock>();
-        for(int i=0; i<AnzConnections; ++i)
-            connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root",""), new ReentrantLock());
-
+            connections = new HashMap<Connection, ReentrantLock>();
+            for(int i=0; i<AnzConnections; ++i)
+                connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra","root",""), new ReentrantLock());
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
-    public Entry<Connection, ReentrantLock> getConnectionNeo4j(){
+    public static Entry<Connection, ReentrantLock> getConnectionNeo4j(){
         Iterator<Entry<Connection,ReentrantLock>> it = connectionsNeo4j.entrySet().iterator();
         Entry<Connection, ReentrantLock> defaultConnection = null;
         while(it.hasNext()){
@@ -74,7 +84,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         return defaultConnection;
     }
 
-    public Entry<Connection, ReentrantLock> getConnection(){
+    public static Entry<Connection, ReentrantLock> getConnection(){
         Iterator<Entry<Connection,ReentrantLock>> it = connections.entrySet().iterator();
         Entry<Connection, ReentrantLock> defaultConnection = null;
         while(it.hasNext()){
@@ -197,12 +207,17 @@ public class Datenbankmanager implements IDatenbankmanager {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
-        System.out.println("------");
+        if(ServletController.DEBUGMODE)
+            System.out.println("------");
         String md5pwd = benutzer.getKennwort();
         String CryptedPW = BCrypt.hashpw(md5pwd, BCrypt.gensalt());
-        System.out.println("------");
-        System.out.println("md5: "+ md5pwd + "crypted: " + CryptedPW);
-        System.out.println("------");
+
+        if(ServletController.DEBUGMODE)
+        {
+            System.out.println("------");
+            System.out.println("md5: "+ md5pwd + "crypted: " + CryptedPW);
+            System.out.println("------");
+        }
         try{
             ps = conMysql.prepareStatement("INSERT INTO benutzer (Vorname,Nachname,Matrikelnummer,eMail,Studiengang,"
                     + "CryptedPW, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, "
@@ -311,8 +326,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         try{
             ps = conMysql.prepareStatement("DELETE FROM benutzer WHERE ID=?");
             ps.setInt(1, benutzerId);    
-            if(ps.executeUpdate()!= 1)
-                return false;
+            ps.executeUpdate();
+
         } catch(SQLException e){
             e.printStackTrace();
             erfolgreich = false;
@@ -330,7 +345,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
-            System.out.println("DB prueft: email="+eMail+", passwort="+passwort);
+            if(ServletController.DEBUGMODE)
+                System.out.println("DB prueft: email="+eMail+", passwort="+passwort);
             ps = conMysql.prepareStatement("SELECT * FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
@@ -339,6 +355,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             }		
             else{
                 String Crypted = rs.getString("CryptedPW");
+                System.out.println("PASSWORT="+passwort+"\nCRYPTED="+Crypted);
                 if(BCrypt.checkpw(passwort, Crypted)==false){
                     throw new DbFalseLoginDataException();
                 }
@@ -420,8 +437,8 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps = conMysql.prepareStatement("UPDATE benutzer SET CryptedPW=? WHERE eMail=?");
             ps.setString(1, neuesPasswort);
             ps.setString(2, eMail);
-            if(ps.executeUpdate()!= 1)
-                return false;
+            ps.executeUpdate();
+
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
@@ -444,8 +461,8 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps = conMysql.prepareStatement("UPDATE benutzer SET Profilbild=? WHERE ID=?");
             ps.setString(1, dateiName);
             ps.setInt(2, benutzerId);
-            if(ps.executeUpdate()!= 1)
-                return false;
+            ps.executeUpdate();
+
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
@@ -806,10 +823,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> ergebnisse = null;
         try{
             ergebnisse = new HashMap<IjsonObject,Integer>();
-            ps = conMysql.prepareStatement("SELECT ID, levenshtein(?,Titel) AS lev FROM Veranstaltung WHERE levenshtein(?,Titel)"
-                    + " BETWEEN 0 AND 5 ORDER BY lev LIMIT 5");
+            ps = conMysql.prepareStatement("SELECT ID, levenshtein(?,Titel) AS lev FROM Veranstaltung ORDER BY lev LIMIT 5");
             ps.setString(1, suchmuster);
-            ps.setString(2, suchmuster);
             rs = ps.executeQuery();
             while(rs.next()){         
                 ergebnisse.put(leseVeranstaltung(rs.getInt("ID")), rs.getInt("lev"));
@@ -838,14 +853,9 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> ergebnisse = null;
         try{
             ergebnisse = new HashMap<IjsonObject,Integer>();
-            ps = conMysql.prepareStatement("SELECT id,min(lev) AS lev FROM( SELECT ID, levenshtein(?,Vorname) AS lev, Vorname"
-                    + " FROM Benutzer WHERE levenshtein(?,Vorname) BETWEEN 0 AND 5 UNION SELECT ID, "
-                    + "levenshtein(?,Nachname) AS lev, Nachname FROM Benutzer WHERE levenshtein(?,Nachname) BETWEEN 0 AND 5)"
-                    + " AS T group by ID ORDER BY lev LIMIT 5 ");
+            ps = conMysql.prepareStatement("SELECT * , levenshtein(?,CONCAT(Vorname,' ',Nachname)) AS lev"
+                    + " FROM Benutzer ORDER BY lev LIMIT 5 ");
             ps.setString(1, suchmuster);
-            ps.setString(2, suchmuster);
-            ps.setString(3, suchmuster);
-            ps.setString(4, suchmuster);
             rs = ps.executeQuery();
             while(rs.next()){         
                 ergebnisse.put(leseBenutzer(rs.getInt("ID")), rs.getInt("lev"));
@@ -863,7 +873,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
         return ergebnisse;
     }
-    
+
     @Override
     public Map<IjsonObject, Integer>  durchsucheDatenbankStudiengang(String suchmuster){
         Entry<Connection,ReentrantLock> conLock = getConnection();
@@ -873,12 +883,13 @@ public class Datenbankmanager implements IDatenbankmanager {
         Map<IjsonObject,Integer> ergebnisse = null;
         try{
             ergebnisse = new HashMap<IjsonObject,Integer>();
-            ps = conMysql.prepareStatement("SELECT Name, levenshtein(?,Name) AS lev FROM Studiengang WHERE levenshtein(?,Name)"
-                    + " BETWEEN 0 AND 5 ORDER BY lev LIMIT 5");
+            ps = conMysql.prepareStatement("SELECT Name, levenshtein(?,Name) AS lev FROM Studiengang ORDER BY lev LIMIT 5");
             ps.setString(1, suchmuster);
-            ps.setString(2, suchmuster);
+            //            ps.setString(2, suchmuster);
             rs = ps.executeQuery();
-            while(rs.next()){         
+            while(rs.next()){
+                if(ServletController.DEBUGMODE)
+                    System.out.println(rs.getString("Name") + " " + suchmuster + " " + rs.getInt("lev"));
                 ergebnisse.put(new Studiengang(rs.getString("Name")), rs.getInt("lev"));
             }
 
@@ -957,25 +968,24 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
 
             if(studiengaenge != null) {
-                for(String stg: studiengaenge){
-                    ps.close();
-
-                    ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");   
+                ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");  
+                for(String stg: studiengaenge){        
                     ps.setInt(1, veranstId);
                     ps.setString(2, stg);
-                    ps.executeUpdate();         
+                    ps.addBatch();        
                 }
+                ps.executeBatch();
+                closeQuietly(ps);
             }
-            
-            if(moderatorenIds != null) {
-                for(int mod : moderatorenIds){
-                    ps.close();
 
-                    ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
+            if(moderatorenIds != null) {
+                ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
+                for(int mod : moderatorenIds){
                     ps.setInt(1, mod);
                     ps.setInt(2, veranstId);
-                    ps.executeUpdate();
+                    ps.addBatch();
                 }
+                ps.executeBatch();
             }
 
             conMysql.commit();
@@ -998,19 +1008,22 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void bearbeiteVeranstaltung(Veranstaltung veranst) throws SQLException, DbUniqueConstraintException {
+    public void bearbeiteVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
-        ResultSet rs = null;
         try{
+            conMysql.setAutoCommit(false);
             ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
                     + "Kennwort=?, KommentareErlaubt=?, BewertungenErlaubt=?, ModeratorKarteikartenBearbeiten=?,"
                     + " Ersteller=?, ErsteKarteikarte=? WHERE ID = ?");
             ps.setString(1, veranst.getTitel());
             ps.setString(2, veranst.getBeschreibung());
             ps.setString(3, veranst.getSemester());
-            ps.setString(4, veranst.getZugangspasswort());
+            if(veranst.getZugangspasswort().equals(""))
+                ps.setNull(4, Types.INTEGER);
+            else
+                ps.setString(4, veranst.getZugangspasswort());
             ps.setBoolean(5, veranst.isKommentareErlaubt());
             ps.setBoolean(6, veranst.isBewertungenErlaubt());
             ps.setBoolean(7, veranst.isModeratorKarteikartenBearbeiten());
@@ -1018,9 +1031,46 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(9,veranst.getErsteKarteikarte());
             ps.setInt(10, veranst.getId());
 
+            ps.executeUpdate();  
+            closeQuietly(ps);
+
+            ps = conMysql.prepareStatement("DELETE FROM veranstaltung_studiengang_zuordnung WHERE Veranstaltung = ?");
+            ps.setInt(1, veranst.getId());
             ps.executeUpdate();
+            closeQuietly(ps);
+
+            if(studiengaenge != null) {
+                ps = conMysql.prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");  
+                for(String stg: studiengaenge){        
+                    ps.setInt(1, veranst.getId());
+                    ps.setString(2, stg);
+                    ps.addBatch();        
+                }
+                ps.executeBatch();
+                closeQuietly(ps);
+            }
+
+            ps = conMysql.prepareStatement("DELETE FROM moderator WHERE Veranstaltung = ?");
+            ps.setInt(1, veranst.getId());
+            ps.executeUpdate();
+            closeQuietly(ps);
+
+
+            if(moderatorenIds != null) {
+                ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
+                for(int mod : moderatorenIds){
+                    ps.setInt(1, mod);
+                    ps.setInt(2, veranst.getId());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+
+            conMysql.commit();
+
 
         } catch (SQLException e) {
+            conMysql.rollback();
             e.printStackTrace();
             if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
@@ -1028,8 +1078,8 @@ public class Datenbankmanager implements IDatenbankmanager {
                 throw e;
 
         } finally{
+            conMysql.setAutoCommit(true);
             closeQuietly(ps);
-            closeQuietly(rs);
             conLock.getValue().unlock();
         }
     }
@@ -1211,7 +1261,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
                 benachrichtigung = new BenachrNeuerKommentar(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"), cal,
-                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseKommentar(rs.getInt("Kommentar")));
+                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), rs.getInt("Kommentar"));
             }
         } catch (SQLException e) {
             benachrichtigung = null;
@@ -1339,7 +1389,7 @@ public class Datenbankmanager implements IDatenbankmanager {
                         + "Kommentar) VALUES (?,?,?);");
                 ps.setInt(1, id);
                 ps.setInt(2, bnk.getBenutzer());
-                ps.setInt(3, bnk.getKommentar().getId());
+                ps.setInt(3, bnk.getKommentarId());
 
             } else if (benachrichtigung instanceof BenachrProfilGeaendert){
                 BenachrProfilGeaendert bpg = (BenachrProfilGeaendert) benachrichtigung;
@@ -1349,21 +1399,21 @@ public class Datenbankmanager implements IDatenbankmanager {
                 ps.setInt(2, bpg.getBenutzer());
                 ps.setInt(3, bpg.getAdmin().getId()); 
 
-            } else {
+            } else if (benachrichtigung instanceof BenachrVeranstAenderung){
                 BenachrVeranstAenderung bv = (BenachrVeranstAenderung) benachrichtigung;
                 ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_veranstaltungsaenderung"
                         + " (Benachrichtigung, Veranstaltung, Benutzer)"
                         + " SELECT ?,?,Benutzer FROM benutzer_veranstaltung_zuordnung AS bvz "
-                        + "JOIN Benutzer AS b ON bvz.Benutzer = b.ID WHERE bvz.Veranstaltung = 1 "
-                        + "AND b.NotifyVeranstAenderung = ?;");
+                        + "JOIN Benutzer AS b ON bvz.Benutzer = b.ID WHERE bvz.Veranstaltung = ? "
+                        + "AND b.NotifyVeranstAenderung = true");
                 ps.setInt(1, id);
                 ps.setInt(2, bv.getVeranstaltung().getId());
                 ps.setInt(3, bv.getVeranstaltung().getId());
             }           
-
-            if(ps.executeUpdate() == 0)                
-                erfolgreich = false;
-
+            // ACHTUNG es kann auch sein, dass keiner Eingeschrieben ist und niemand die benachrichtung erhält!
+//            if(ps.executeUpdate() == 0)                
+//                erfolgreich = false;
+            ps.executeUpdate();
             conMysql.commit();
 
 
@@ -1388,6 +1438,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             }
             catch (SQLException e)
             {
+                erfolgreich = false;
                 e.printStackTrace();
             } 
             finally{
@@ -1489,7 +1540,7 @@ public class Datenbankmanager implements IDatenbankmanager {
         } catch (SQLException e) {
             erfolgreich = false;
             e.printStackTrace();
- 
+
         } finally{
             closeQuietly(ps);
             conLock.getValue().unlock();
@@ -1515,16 +1566,16 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(1, benachrichtigung);
             ps.setInt(2, benutzer);
             ps.executeUpdate();
-            
+
             closeQuietly(ps);
-            
+
             ps = conMysql.prepareStatement("DELETE FROM moderator WHERE Veranstaltung = ANY (SELECT Veranstaltung FROM"
                     + " benachrichtigung_einladung_moderator WHERE Benachrichtigung = ? AND Benutzer = ?) AND Benutzer = ?");
             ps.setInt(1, benachrichtigung);
             ps.setInt(2, benutzer);
             ps.setInt(3, benutzer);
             ps.executeUpdate();
-            
+
             conMysql.commit();
 
         } catch (SQLException e) {
@@ -1589,15 +1640,20 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public Map<Integer,Karteikarte> leseKindKarteikarten(int vaterKarteikID) {
+    public Map<Integer,Tupel<Integer,String>> leseKindKarteikarten(int vaterKarteikID) {
         Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
         Connection conNeo4j = conLockNeo4j.getKey();
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
         PreparedStatement ps = null;
         ResultSet rs = null;
-        HashMap<Integer,Karteikarte> kindKarteikarten = null;
+        PreparedStatement psMysql = null;
+        ResultSet rsMysql = null;
+        HashMap<Integer,Tupel<Integer,String>> kindKarteikarten = null;
         try {
-            kindKarteikarten = new HashMap<Integer, Karteikarte>();
-            ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->()-[:h_brother*0..50]-(m)"
+            kindKarteikarten = new HashMap<Integer, Tupel<Integer,String>>();
+            ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->()-[:h_brother*0..]-(m)"
                     + " WHERE id(n) = {1}"
                     + " return id(m) AS ID");
             ps.setInt(1,vaterKarteikID);
@@ -1606,8 +1662,99 @@ public class Datenbankmanager implements IDatenbankmanager {
 
             int i = 0;
             while(rs.next()) {
-                kindKarteikarten.put(i, leseKarteikarte(rs.getInt("ID")));
+                psMysql = conMysql.prepareStatement("SELECT Titel FROM Karteikarte WHERE ID = ?");
+                psMysql.setInt(1, rs.getInt("ID"));
+                rsMysql = psMysql.executeQuery();
+                if (!rsMysql.next())
+                    return null;
+
+                kindKarteikarten.put(i, new Tupel<Integer, String>(rs.getInt("ID"),rsMysql.getString("Titel")));
                 ++ i;
+                closeQuietly(psMysql);
+                closeQuietly(rsMysql);
+            }
+        } catch (SQLException e) {
+            kindKarteikarten = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            closeQuietly(psMysql);
+            closeQuietly(rsMysql);
+            conLock.getValue().unlock();
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return kindKarteikarten;
+    }
+
+    @Override
+    public Map<Integer,Karteikarte> leseNachfolger(int karteikarte, int anzNachfolger){
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        HashMap<Integer,Karteikarte> kindKarteikarten = new HashMap<Integer, Karteikarte>();
+        try {
+            Integer aktuelleKarteikarte = karteikarte;
+            int i = 0;
+            while(anzNachfolger > 0){
+                ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child*1.."+anzNachfolger+"]->(m)"
+                        + " WHERE id(n) = {1}"
+                        + " return id(m) AS ID");
+                ps.setInt(1,aktuelleKarteikarte);
+
+                rs = ps.executeQuery();
+
+
+                while(rs.next()) {
+                    aktuelleKarteikarte = rs.getInt("ID");
+                    kindKarteikarten.put(i,leseKarteikarte(aktuelleKarteikarte));
+                    --anzNachfolger;
+                    ++i;
+                }
+
+
+                closeQuietly(ps);
+                closeQuietly(rs);
+
+                Integer bruderKarteik;
+                do {
+                    bruderKarteik = gibBruder(aktuelleKarteikarte);
+
+                    if(bruderKarteik == null)
+                        return null;
+                    else if(bruderKarteik == -1){
+                        ps = conNeo4j.prepareStatement("MATCH p=((n)<-[:h_brother*0..]-(m))"
+                                + " WHERE id(n) = {1}"
+                                + " return id(m) AS ID ORDER BY length(p) DESC LIMIT 1");
+                        ps.setInt(1,aktuelleKarteikarte);
+
+                        rs = ps.executeQuery();
+
+                        while(rs.next()) {
+                            aktuelleKarteikarte = rs.getInt("ID");
+                        }
+                        closeQuietly(ps);
+                        closeQuietly(rs);
+                        
+                        Integer vaterKarteikarte = gibVater(aktuelleKarteikarte);
+                        if(vaterKarteikarte == null)
+                            return null;
+                        else if(vaterKarteikarte == -1)
+                            return kindKarteikarten;
+                        else
+                            aktuelleKarteikarte = vaterKarteikarte;
+                    }
+                }
+                while(bruderKarteik == -1);
+
+                kindKarteikarten.put(i,leseKarteikarte(bruderKarteik));
+                aktuelleKarteikarte = bruderKarteik;
+                ++i;
+                --anzNachfolger;
+
             }
         } catch (SQLException e) {
             kindKarteikarten = null;
@@ -1619,6 +1766,152 @@ public class Datenbankmanager implements IDatenbankmanager {
         }
 
         return kindKarteikarten;
+    }
+
+    @Override
+    public Map<Integer,Karteikarte> leseVorgaenger(int karteikarte, int anzVorgänger){
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        HashMap<Integer,Karteikarte> kindKarteikarten = new HashMap<Integer, Karteikarte>();
+        try {
+            Integer aktuelleKarteikarte = karteikarte;
+            int i = 0;
+            while(anzVorgänger > 0){
+                ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_brother]-(m)"
+                        + " WHERE id(n) = {1}"
+                        + " return id(m) AS ID");
+                ps.setInt(1,aktuelleKarteikarte);
+
+                rs = ps.executeQuery();
+
+                closeQuietly(ps);
+                closeQuietly(rs);
+
+                if(!rs.next()) {
+                    aktuelleKarteikarte = gibVater(aktuelleKarteikarte);
+                    if(aktuelleKarteikarte == null)
+                        return null;
+                    else if(aktuelleKarteikarte == -1)
+                        return kindKarteikarten;
+
+                    kindKarteikarten.put(i,leseKarteikarte(aktuelleKarteikarte));
+                    --anzVorgänger;
+                    ++i;
+                    continue;
+                } else{
+                    aktuelleKarteikarte = rs.getInt("ID");
+                }
+
+                boolean abbruch = false;
+                do{
+
+                    ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->(m)"
+                            + " WHERE id(n) = {1}" 
+                            + " return id(m) AS ID");             
+
+                    ps.setInt(1,aktuelleKarteikarte);
+                    rs = ps.executeQuery();
+
+                    if(!rs.next()){
+                        abbruch = true;
+                        kindKarteikarten.put(i,leseKarteikarte(aktuelleKarteikarte));
+                        --anzVorgänger;
+                        ++i;
+                        closeQuietly(ps);
+                        closeQuietly(rs);
+                    } else{
+                        aktuelleKarteikarte = rs.getInt("ID");
+                        closeQuietly(ps);
+                        closeQuietly(rs);
+                        ps = conNeo4j.prepareStatement("MATCH p=((n)-[:h_brother*0..]->(m))"
+                                + " WHERE id(n) = {1}" 
+                                + " return id(m) AS ID ORDER BY length(p) DESC LIMIT 1");             
+
+                        ps.setInt(1,aktuelleKarteikarte);
+                        rs = ps.executeQuery();
+                        
+                        if(rs.next())
+                            aktuelleKarteikarte = rs.getInt("ID");
+                        else
+                            return null;
+                        
+                        closeQuietly(ps);
+                        closeQuietly(rs);
+                    }
+                }
+                while(abbruch == false);
+
+
+            }
+        } catch (SQLException e) {
+            kindKarteikarten = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return kindKarteikarten;
+    }
+
+    private Integer gibBruder(int karteikarte){
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Integer karteik;
+        try {
+            ps = conNeo4j.prepareStatement("MATCH (n)-[:h_brother]->(m)"
+                    + " WHERE id(n) = {1} return id(m) AS ID");
+            ps.setInt(1,karteikarte);
+            rs = ps.executeQuery();
+            if(rs.next())
+                karteik = rs.getInt("ID");
+            else
+                karteik = -1;
+        } catch(SQLException e){
+            karteik = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return karteik;
+    }
+
+    private Integer gibVater(int karteikarte){
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Integer karteik;
+        try {
+            ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_child]-(m)"
+                    + " WHERE id(n) = {1} return id(m) AS ID");
+            ps.setInt(1,karteikarte);
+            rs = ps.executeQuery();
+            if(rs.next())
+                karteik = rs.getInt("ID");
+            else
+                karteik = -1;
+        } catch(SQLException e){
+            karteik = null;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return karteik;
     }
 
     @Override
@@ -1676,75 +1969,450 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public void schreibeErsteKarteikarte(Karteikarte karteik, int sohnKarteikID) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public boolean bearbeiteKarteikarte(Karteikarte karteik) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        PreparedStatement ps = null;
+
+        boolean erfolgreich = true;
+
+        try{
+            ps = conMysql.prepareStatement("UPDATE karteikarte SET "
+                    + "Titel = ?, Inhalt = ?, Typ = ?, Aenderungsdatum = ? WHERE ID = ?");
+            ps.setString(1, karteik.getTitel());
+            ps.setString(2, karteik.getInhalt());
+            ps.setString(3, karteik.getTyp().toString());
+
+            Date today = new java.util.Date();
+            ps.setTimestamp(4,new java.sql.Timestamp(today.getTime()));
+
+            ps.setInt(5, karteik.getId());
+
+            ps.executeUpdate();
+
+        } catch(SQLException e){
+            erfolgreich = false;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
     public boolean loescheKarteikarte(int karteikID) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        PreparedStatement ps = null;
+
+        boolean erfolgreich = true;
+
+        try{
+            conNeo4j.setAutoCommit(false);
+            conMysql.setAutoCommit(false);
+
+            ps = conNeo4j.prepareStatement("Match(n) WHERE id(n) = {1} DELETE n");
+            ps.setInt(1, karteikID);
+
+            ps.executeUpdate();
+
+            closeQuietly(ps);
+
+            ps = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
+            ps.setInt(1, karteikID);
+            ps.executeUpdate();
+
+            conNeo4j.commit();
+            conMysql.commit();
+
+        } catch(SQLException e){
+            try
+            {
+                conNeo4j.rollback();
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally{
+            try
+            {
+                conNeo4j.setAutoCommit(true);
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+
+            closeQuietly(ps);
+            conLockNeo4j.getValue().unlock();
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
-    public boolean bewerteKarteikarte(int karteikID, int bewert, String benutzer) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean bewerteKarteikarte(int karteikID, int bewert, int benutzer) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+
+        boolean erfolgreich = true;
+
+        try{
+            ps = conMysql.prepareStatement("INSERT INTO bewertung_karteikarte (Bewertung,Benutzer,KarteikarteID) VALUES (?,?,?)");
+            ps.setInt(1, bewert);
+            ps.setInt(2, benutzer);
+            ps.setInt(3, karteikID);
+
+            ps.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            erfolgreich = false;
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
-    public boolean hatKarteikarteBewertet(int karteikID, String benutzer) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean hatKarteikarteBewertet(int karteikID, int benutzer){
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try{
+            ps = conMysql.prepareStatement("SELECT ID FROM bewertung_karteikarte WHERE Benutzer = ? AND KarteikarteID = ?");
+            ps.setInt(1, benutzer);
+            ps.setInt(2, karteikID);
+
+            rs = ps.executeQuery();
+            if(rs.next())
+                return true;
+            else
+                return false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+
+        } finally{
+            closeQuietly(rs);
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
     }
 
     @Override
-    public Kommentar[] leseKommentare(int karteikID, int vaterKID) {
-        // TODO Auto-generated method stub
-        return null;
+    public ArrayList<Kommentar> leseThemenKommentare(int karteikID, int aktBenutzerID) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+
+        ArrayList<Kommentar> komms =  new ArrayList<Kommentar>();
+
+        try{
+            String sql = "SELECT * FROM kommentaruebersicht WHERE Karteikarte = ?";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, karteikID);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                GregorianCalendar g = new GregorianCalendar();
+                g.setTime(rs.getTimestamp("erstelldatum"));
+                Kommentar k = new Kommentar(rs.getInt("ID"), 
+                        rs.getString("Inhalt"), 
+                        g, 
+                        leseBenutzer(rs.getInt("Benutzer")), 
+                        rs.getInt("Bewertung"),
+                        hatKommentarBewertet(rs.getInt("ID"),aktBenutzerID), 
+                        -1, 
+                        rs.getInt("Karteikarte"),
+                        rs.getInt("AnzKinder"));
+
+                komms.add(k);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return komms;
+    }
+
+    @Override
+    public Kommentar leseKommentar(int kommId, int aktBenutzerID) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+
+        Kommentar k = null;
+
+        try{
+            String sql = "SELECT * FROM kommentaruebersicht WHERE ID = ?";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, kommId);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+
+                GregorianCalendar g = new GregorianCalendar();
+                g.setTime(rs.getTimestamp("erstelldatum"));
+
+                int vaterID = rs.getInt("VaterKommentar");
+                if(rs.wasNull())
+                    vaterID = -1;
+                int kkId = rs.getInt("Karteikarte");
+                if(rs.wasNull())
+                    kkId = -1;
+
+                k = new Kommentar(rs.getInt("ID"), 
+                        rs.getString("Inhalt"), 
+                        g, 
+                        leseBenutzer(rs.getInt("Benutzer")), 
+                        rs.getInt("Bewertung"),
+                        hatKommentarBewertet(rs.getInt("ID"),aktBenutzerID), 
+                        vaterID, 
+                        kkId,
+                        rs.getInt("AnzKinder"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return k;
+    }
+    @Override
+    public ArrayList<Kommentar> leseAntwortKommentare(int vaterKID, int aktBenutzerID) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+
+        ArrayList<Kommentar> komms =  new ArrayList<Kommentar>();
+
+        try{
+            String sql = "SELECT * FROM kommentaruebersicht WHERE Vaterkommentar = ?";
+            ps = conMysql.prepareStatement(sql);
+            ps.setInt(1, vaterKID);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                GregorianCalendar g = new GregorianCalendar();
+                g.setTime(rs.getTimestamp("erstelldatum"));
+                Kommentar k = new Kommentar(rs.getInt("ID"), 
+                        rs.getString("Inhalt"), 
+                        g, 
+                        leseBenutzer(rs.getInt("Benutzer")), 
+                        rs.getInt("bewertung"),
+                        hatKommentarBewertet(rs.getInt("ID"),aktBenutzerID), 
+                        rs.getInt("VaterKommentar"), 
+                        -1,
+                        0);
+
+                komms.add(k);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return komms;
     }
 
     @Override
     public boolean schreibeKommentar(Kommentar kommentar) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
 
-    @Override
-    public boolean bearbeiteKommentar(Kommentar kommentar) {
-        // TODO Auto-generated method stub
-        return false;
+        // Mindestens eins muss angegeben sein
+        if(kommentar.getKarteikartenID() == -1 && kommentar.getVaterID() == -1)
+        {
+            return false;
+        }
+
+        try{
+            String sql = "INSERT INTO kommentar(Inhalt, Benutzer, Karteikarte, Vaterkommentar) VALUES(?,?,?,?)";
+            ps = conMysql.prepareStatement(sql);
+            ps.setString(1, kommentar.getInhalt());
+            ps.setInt(2, kommentar.getErsteller().getId());
+            // Folgendes nur setzen, wenn nicht -1
+            if(kommentar.getKarteikartenID() == -1)
+                ps.setNull(3,java.sql.Types.INTEGER);
+            else
+                ps.setInt(3, kommentar.getKarteikartenID());
+            if(kommentar.getVaterID() == -1)
+                ps.setNull(4,java.sql.Types.INTEGER);
+            else
+                ps.setInt(4, kommentar.getVaterID());
+
+            ps.executeUpdate();
+
+            closeQuietly(ps);
+
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
     public boolean loescheKommentar(int kommentarID) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+
+        try{
+            String sql = "DELETE FROM kommentar WHERE ID = ?";
+            ps = conMysql.prepareStatement(sql);
+
+            ps.setInt(1, kommentarID);
+
+            ps.executeUpdate();
+
+            closeQuietly(ps);
+
+        } catch (SQLException e) {
+            erfolgreich = false;
+            e.printStackTrace();
+
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
-    public boolean bewerteKommentar(int kommentarID, int bewert, String benutzer) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean bewerteKommentar(int kommentarID, int bewert, int benutzerId) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+
+        try{
+            conMysql.setAutoCommit(false);
+
+            String sql = "INSERT INTO bewertung_kommentar(Bewertung, Benutzer, KommentarID) VALUES(?,?,?)";
+            ps = conMysql.prepareStatement(sql);
+
+            ps.setInt(1, bewert);
+            ps.setInt(2, benutzerId);
+            ps.setInt(3, kommentarID);
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            try
+            {
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {}
+            erfolgreich = false;
+            e.printStackTrace();
+
+        } finally{
+            try
+            {
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e) {}
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
-    public boolean hatKommentarBewertet(int kommentarID, String benutzer) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+    public boolean hatKommentarBewertet(int kommentarID, int benutzerId) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
 
-    @Override
-    public boolean istModerator(Veranstaltung veranst, String benutzerMail) {
-        // TODO Auto-generated method stub
-        return false;
+        try
+        {
+            conMysql.setAutoCommit(false);
+
+            String sql = "SELECT COUNT(*) AS anz FROM bewertung_kommentar WHERE Benutzer = ? AND KommentarID = ?";
+            ps = conMysql.prepareStatement(sql);
+
+            ps.setInt(1, benutzerId);
+            ps.setInt(2, kommentarID);
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            return rs.getInt("anz") > 0;
+        } 
+        catch (SQLException e) {
+            try
+            {
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {}
+            erfolgreich = false;
+            e.printStackTrace();
+        } 
+        finally{
+            try
+            {
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e) {}
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
 
     @Override
@@ -1752,6 +2420,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     DbUniqueConstraintException, DbFalsePasswortException {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
@@ -1790,6 +2459,7 @@ public class Datenbankmanager implements IDatenbankmanager {
     public boolean vonVeranstaltungAbmelden(int veranstaltung, int benutzer) {
         Entry<Connection,ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try{
@@ -1809,42 +2479,132 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public Notiz[] leseNotizen(String erstellerEMail, int karteikID) {
-        // TODO Auto-generated method stub
-        return null;
+    public Notiz leseNotiz(int benutzer, int karteikID) {
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Notiz notiz = null;
+        try{
+            ps = conMysql.prepareStatement("SELECT ID, Inhalt, Benutzer, KarteikarteID FROM Notiz WHERE"
+                    + " Benutzer = ? AND KarteikarteID = ?");
+            ps.setInt(1, benutzer);
+            ps.setInt(2, karteikID);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                notiz = new Notiz(rs.getInt("ID"), rs.getString("Inhalt"),
+                        rs.getInt("Benutzer"), rs.getInt("KarteikarteID"));
+
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        } finally {
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLock.getValue().unlock();
+        }
+        return notiz;
     }
 
     @Override
     public boolean schreibeNotiz(Notiz notiz) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conMysql.prepareStatement("INSERT INTO Notiz (Inhalt,Benutzer,KarteikarteID) VALUES(?,?,?)");
+            ps.setString(1, notiz.getInhalt());
+            ps.setInt(2, notiz.getErsteller());
+            ps.setInt(3, notiz.getKarteikarte());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            erfolgreich = false;
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+        return erfolgreich;
     }
 
     @Override
     public boolean bearbeiteNotiz(Notiz notiz) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean erfolgreich = true;;
+        try{
+            ps = conMysql.prepareStatement("UPDATE Notiz SET Inhalt = ?");
+            ps.setString(1,notiz.getInhalt());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            erfolgreich = false;
+
+        } finally{
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLock.getValue().unlock();
+        }
+        return erfolgreich;
     }
 
     @Override
     public boolean loescheNotiz(int notizID) {
-        // TODO Auto-generated method stub
-        return false;
+        Entry<Connection,ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try{
+            ps = conMysql.prepareStatement("DELETE FROM Notiz WHERE ID=?");
+            ps.setInt(1, notizID);    
+            ps.executeUpdate();
+
+        } catch(SQLException e){
+            e.printStackTrace();
+            erfolgreich = false;
+        } finally{
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+        return erfolgreich;
     }
 
     @Override
-    public boolean rolleZuweisen(String eMail, Nutzerstatus status) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public Kommentar leseKommentar(int id)
+    public boolean connectKk(int vonKK, int zuKK, BeziehungsTyp typ)
     {
-        // TODO Auto-generated method stub
-        return null;
+        Entry<Connection,ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try {
+            ps = conNeo4j.prepareStatement("MATCH (n),(m) "
+                    + "WHERE id(n) = {1} AND id(m) = {2} "
+                    + "CREATE (n)-[:"+typ.toString().toLowerCase()+"]->(m)");
+            ps.setInt(1,vonKK);
+            ps.setInt(2,zuKK);
+            ps.executeUpdate();
+
+        } catch(SQLException e){
+            erfolgreich = false;
+            e.printStackTrace();
+        } finally{
+            closeQuietly(ps);
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return erfolgreich;
     }
-
-
-
 }

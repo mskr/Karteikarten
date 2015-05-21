@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 
+import javax.servlet.FilterChain;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -39,6 +40,8 @@ public abstract class ServletController extends HttpServlet
     protected final String sessionAttributeaktuellerBenutzer = "aktuellerBenutzer";
 
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
+    
+    public static final boolean DEBUGMODE = false;
 
     /**
      *  DateiPfade
@@ -53,38 +56,6 @@ public abstract class ServletController extends HttpServlet
     public ServletController() 
     {
     }
-
-    //    /**
-    //     * Aktuell angemeldeter Benutzer. Null, falls Benutzer nicht angemeldet ist.
-    //     */
-    //    protected Benutzer aktuellerBenutzer = null;
-    //
-    //    /**
-    //     * 
-    //     */
-    //    protected String gewähltesSemester = null;
-    //    
-    //    /**
-    //     * 
-    //     */
-    //    protected IDatenbankmanager dbManager = null;
-    //
-    //    /**
-    //     *  Aktuelle Session.
-    //     */
-    //    protected HttpSession aktuelleSession = null;
-    //
-    //    /**
-    //     *  Print Writer über den Daten an den Client geschrieben werden können
-    //     */
-    //    protected PrintWriter outWriter = null;
-    //
-    //    /**
-    //     * Hier steht die vom ServletController ausgelesene Aktion, die der Client ausführen will.
-    //     */
-    //    protected String aktuelleAction = null;
-
-
     /**
      * Prüft, ob die eMail-Adresse des Benutzers in der aktuellen Session vorhanden ist und ob der Benutzer somit eingeloggt ist.
      * @return
@@ -160,7 +131,7 @@ public abstract class ServletController extends HttpServlet
         else
             return "SoSe"+String.valueOf(aktYear);
     }
-
+    
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
@@ -169,6 +140,10 @@ public abstract class ServletController extends HttpServlet
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json");
+        
         try{
             if(preProcessRequest(req, resp)){
                 // Hole die vom client angefragte Aktion
@@ -199,11 +174,13 @@ public abstract class ServletController extends HttpServlet
     protected boolean preProcessRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
     {
         // Bisschen platz zwischen den Requests
-        System.out.println();
-        System.out.println();
+        if(DEBUGMODE)
+        {
+            System.out.println();
+            System.out.println();
+        }
 
         PrintWriter outWriter = resp.getWriter();
-        resp.setContentType("text/json");
 
         // Prüfen ob session abgelaufen ist
         if (req.getRequestedSessionId() != null && 
@@ -227,7 +204,8 @@ public abstract class ServletController extends HttpServlet
         if(s.isNew())
             s.setMaxInactiveInterval(sessionTimeoutSek);
 
-        printAllParameters(req);
+        if(DEBUGMODE)
+            printAllParameters(req);
 
         IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);
         if(dbManager == null)
@@ -235,7 +213,8 @@ public abstract class ServletController extends HttpServlet
             try
             {
                 dbManager = new Datenbankmanager();
-                System.out.println("Erzeuge neuen Db-Manager.");
+                if(DEBUGMODE)
+                    System.out.println("Erzeuge neuen Db-Manager.");
                 s.setAttribute(sessionAttributeDbManager, dbManager);
             }
             catch (Exception e)

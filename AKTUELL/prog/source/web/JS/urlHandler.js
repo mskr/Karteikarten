@@ -6,8 +6,10 @@
  * 4. Zeigt entsprechende Ansicht an
  * @author mk
  */
-
+var initialURL="";
 $(document).ready(function() {
+	
+	initialURL = History.getState().url;
 	
 	// Initial alles unsichtbar machen
 	$(".mainbox").hide();
@@ -98,6 +100,10 @@ function buildUrlQuery(paramObj)
     //location.search = locationSearchTmp; // Dies laedt auch die Seite neu
     var State =  History.getState();
     History.pushState(null,null, locationSearchTmp);
+    
+    // Beim Seitenwechsel alle Nachrichten verwerfen
+    // TODO Ist das sinvoll?
+    //clearMessageQueue();
 
     // WORKAROUND Wenn zeilseite = aktuelle seite, dann wird die Change Funktion nicht getriggert
     if(State.url.indexOf(locationSearchTmp) >= 0)
@@ -120,11 +126,8 @@ function interpreteUrlQuery(paramObj)
 	// TODO Ãœbler hack ! 
 	// Versteck alle Popupfenster. Wo wÃ¤re das besser ?
 //	$(".popup_fenster").popup('hide');
-
-	$("#vn_kk_ueberscht_box").fadeOut("slow");
 	
 //	$(".mainbox").fadeOut("slow");
-//	$("#mainbox_loadScreen").fadeIn("slow");
     var ziel = paramObj[urlParamLocation];
 	// Benutzer eingeloggt
     if(jsonBenutzer != undefined)
@@ -147,14 +150,12 @@ function interpreteUrlQuery(paramObj)
         }
         
         $.when(ajax1, ajax2).done(function() {
-//        	$("#mainbox_loadScreen").fadeOut("slow");
         	display(ziel);
 		});
     } 
     else 
     { // Benutzer nicht eingeloggt
         $.when(fillStartseite()).done(function() {
-//        	$("#mainbox_loadScreen").fadeOut("slow");
         	display(ansichtStartseite);
 		});
     }
@@ -184,22 +185,18 @@ function getBenutzer()
  */
 function display(ansicht) 
 {
-    // TODO 1) Warum wird das immer mehrmals hintereinander aufgerufen?
-    // TODO 2) Beim Wechsel von Startseite zu Hauptseite wird die mypersonalbox_startseite nicht mehr versteckt
     console.log("GEHE ZU "+ansicht);
     
     // mypersonalbox
     if(ansicht == ansichtStartseite)
     {
-        $("#mypersonalbox_main").fadeOut("slow",function(){
-            $("#mypersonalbox_startseite").fadeIn("slow");
-        });
+        $("#mypersonalbox_main").hide();
+        $("#mypersonalbox_startseite").show();
     }
     else
     {
-        $("#mypersonalbox_startseite").fadeOut("slow",function(){
-            $("#mypersonalbox_main").fadeIn("slow");
-        });
+        $("#mypersonalbox_startseite").hide();
+        $("#mypersonalbox_main").show();
         
     }
     // mainbox
@@ -208,19 +205,20 @@ function display(ansicht)
     if(ansichtIdx != -1)
     {
     	// Alles auÃŸer das neue Ausblenden
-        $(".mainbox").not("#mainbox_"+alleAnsichten[ansichtIdx]).fadeOut("slow", function(){
-            $("#mainbox_"+alleAnsichten[ansichtIdx]).fadeIn("slow");
-        });
+        $(".mainbox").not("#mainbox_"+alleAnsichten[ansichtIdx]).hide();
+        
+        $("#mainbox_"+alleAnsichten[ansichtIdx]).show();
         
         if(ansicht == ansichtVeranstaltungsseite)
         {
-        	$("#vn_kk_ueberscht_box").fadeIn("slow");
+        	$("#vn_kk_ueberscht_box").show();
         }
     }
     else 
     {
         console.log("[urlHandler] Ungueltige Ansicht: "+ansicht);
     }
+    $(document).scrollTop(0);
 }
 /**
  * Diese Funktion setzt die URL und wechselt zum angegebenen Profil

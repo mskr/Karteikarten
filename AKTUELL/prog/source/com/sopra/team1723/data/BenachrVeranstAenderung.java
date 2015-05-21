@@ -1,6 +1,7 @@
 package com.sopra.team1723.data;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 public class BenachrVeranstAenderung extends Benachrichtigung{
@@ -16,6 +17,16 @@ public class BenachrVeranstAenderung extends Benachrichtigung{
     public BenachrVeranstAenderung(String inhalt, Calendar erstelldatum, Veranstaltung veranstaltung){
         this.inhalt = inhalt;
         this.erstelldaum = erstelldatum;
+        this.veranstaltung = veranstaltung;
+        this.id = -1;
+        this.benutzer = -1;
+        this.gelesen = false;
+    }
+    
+    public BenachrVeranstAenderung(Veranstaltung veranstaltung){
+        this.inhalt = "Die Veranstaltung " + veranstaltung.getTitel() + " wurde bearbeitet.";
+        this.erstelldaum = new GregorianCalendar();
+        erstelldaum.setTimeInMillis(System.currentTimeMillis());
         this.veranstaltung = veranstaltung;
         this.id = -1;
         this.benutzer = -1;
