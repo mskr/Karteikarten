@@ -168,6 +168,10 @@ function fillVeranstaltungsSeite(Vid)
 	            element: $("#kk_inhaltsverzeichnis"),
 	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
 	        });
+
+	    	$(".inhaltsvz_kk_erstellen").click(function(){
+	    		 newKarteikarte($(this));
+	    	});
 	    });
         
 	});

@@ -1,11 +1,11 @@
 var UPLOADIDSET = -1;
 var UPLOADTYPE ="";
 
-$(document).ready(function() {
+
 	
 	Dropzone.autoDiscover = false;
 	var UPLOAD_ID;
-    $('#kk_erstellen_bt').click(function() {
+    function newKarteikarte(triggerElem){
     	try{
     		var kk_ck_editor = $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
     	}
@@ -73,10 +73,8 @@ $(document).ready(function() {
     		params[paramInhalt] = escape(text);
     		params[paramAttribute] = escape(attributes);
     		params[paramType] = escape(UPLOADTYPE);
-    		params[paramKkUploadID] = escape(UPLOADIDSET);
-    		console.log("can submit now:"+$(params));
-    		
-    		//submitNewKarteikarte(params)
+    		params[paramKkUploadID] = escape(UPLOADIDSET);	
+    		submitNewKarteikarte(params)
     	}
         function isAnyAttrSelected(){
         	var isTrue = false;
@@ -181,9 +179,7 @@ $(document).ready(function() {
      	
         
         
-    });
-    
-});
+    }
 
 
 
