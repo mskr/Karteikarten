@@ -529,3 +529,19 @@ function handlePfeiltastenEvents(pressedKey, suchergJQueryObj) {
     }
     $(arr[suchErgIterator]).addClass("selected");
 }
+
+function destroyCKeditors(container)
+{
+	for (var i in CKEDITOR.instances) {
+	    var instance = CKEDITOR.instances[i];
+	    if (instance.container != undefined && jQuery.contains( container, instance.container.$ ) )
+	    {
+	    	 $timeout(function() 
+	    	 {
+	 	    	instance.editor.removeAllListeners();
+		    	instance.destroy();
+	    	   },0);
+	    	 
+	    }
+	}
+}
