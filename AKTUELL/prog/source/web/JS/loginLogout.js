@@ -16,7 +16,7 @@ $(document).ready(function() {
              actionLogin,
              function() {
                  $.when(getBenutzer()).done(function(){
-                	 if(initialURL.indexOf("sopra.html")>=0)
+                	 if(initialURL.indexOf("sopra.html")>=0 && initialURL.indexOf("startseite")<0)
                 		 History.back();
                 	 else
                 		 gotoHauptseite();
