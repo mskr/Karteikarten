@@ -355,7 +355,7 @@ public class KarteikartenServlet extends ServletController {
     private boolean istModeratorDozentOderAdmin(Benutzer aktuellerBenutzer, int veranstaltung, IDatenbankmanager dbManager){
         if(aktuellerBenutzer.getId() != dbManager.leseVeranstaltung(veranstaltung).getErsteller().getId() &&
                 !(dbManager.istModerator(aktuellerBenutzer.getId(), veranstaltung)) &&
-                !(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)){
+                !(aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN)){
             return false;
         }
         return true;
