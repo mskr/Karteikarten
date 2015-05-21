@@ -111,6 +111,9 @@ var paramVeranstaltung = "veranstaltung";
 var paramAenderungsdatum = "aenderungsdatum";
 var paramBewertung = "bewertung";
 var paramIndex = "index"; //bei liste der karteikarten ids: index für reihenfolge
+var paramAttribute = "attribute"
+var paramVaterKK = "vaterKK";
+var paramBruderKK = "bruderKK";
 
 // Veranstaltungen
 var paramTitel = "titel";
