@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -16,6 +18,7 @@ import javax.servlet.http.*;
 import org.json.simple.JSONObject;
 
 import com.sopra.team1723.data.*;
+import com.sopra.team1723.data.Karteikarte.AttributTyp;
 
 /**
  * Verwaltet die Karteikarten
@@ -260,16 +263,23 @@ public class KarteikartenServlet extends ServletController {
         
         try{    
             String titel = req.getParameter(ParamDefines.Titel);
-            String inhalt = req.getParameter(ParamDefines.Inhalt);
+            String inhalt = "";
+            String uploadedID = "";
                        
             KarteikartenTyp kkTyp;
             String typ = req.getParameter(ParamDefines.Type);
-            if(typ.equals(".mp4"))
+            if(typ.equals(".mp4")){
                 kkTyp = KarteikartenTyp.VIDEO;
-            else if(typ.equals(".jpg") || typ.equals(".png"))
+                uploadedID = req.getParameter(ParamDefines.UploadID);
+            }
+            else if(typ.equals(".jpg") || typ.equals(".png")){
                 kkTyp = KarteikartenTyp.BILD;
-            else if(typ.equals(""))
+                uploadedID = req.getParameter(ParamDefines.UploadID);
+            }
+            else if(typ.equals("")){
                 kkTyp = KarteikartenTyp.TEXT;
+                inhalt = req.getParameter(ParamDefines.Inhalt);
+            }
             else
                 throw new Exception();
             
@@ -280,25 +290,14 @@ public class KarteikartenServlet extends ServletController {
             
             if(vaterKK == -1 && ueberliegendeBruderKK == -1)
                 throw new Exception();
-                
-            boolean istSatz = false;
-            boolean istLemma = false;
-            boolean istBeweis = false;
-            boolean istDefinition = false;
-            boolean istWichtig = false;
-            boolean istGrundlage = false;
-            boolean istZusatzinfo = false;
-            boolean istExkurs = false;
-            boolean istBeispiel = false;
-            boolean istUebung = false;
+            
+            boolean[] bAttribute = new boolean[AttributTyp.values().length];
             
             String[] attribute = req.getParameter(ParamDefines.Attribute).split(",");
             
-            while()
-                attribute.s
-            
-            
-            Karteikarte karteikarte = new Karteikarte(titel,inhalt,typ,veranstaltung);
+            for(int i=0; i<attribute.length; ++i){
+                bAttribute[i] = Boolean.valueOf(attribute[i]);
+            }
             
             if(!istModeratorDozentOderAdmin(aktuellerBenutzer,veranstaltung,dbManager))
             {
@@ -306,7 +305,41 @@ public class KarteikartenServlet extends ServletController {
                 outWriter.print(jo);
                 return;
             }
-            dbManager.schreibeKarteikarte(karteikarte, vaterKK, ueberliegendeBruderKK);
+            
+            
+            Karteikarte karteikarte = new Karteikarte(titel,inhalt,kkTyp,veranstaltung,bAttribute[0],bAttribute[1],bAttribute[2],
+                    bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6], bAttribute[7], bAttribute[8], bAttribute[9]);   
+
+            int kkID = dbManager.schreibeKarteikarte(karteikarte, vaterKK, ueberliegendeBruderKK);
+            
+            if(kkTyp == KarteikartenTyp.VIDEO || kkTyp == KarteikartenTyp.BILD){
+                String relativerPfad = "";
+                String relativerNeuerPfad = "";
+                if(kkTyp == KarteikartenTyp.VIDEO){
+                    relativerPfad = dirKKVideo + uploadedID + "." + typ;
+                    relativerNeuerPfad = dirKKVideo + kkID + "." + typ;
+                }
+                else{
+                    relativerPfad = dirKKBild + uploadedID + "." + typ;
+                    relativerNeuerPfad = dirKKBild + kkID + "." + typ;
+                }
+               
+                ServletContext servletContext;
+                String contextPath;
+                
+                servletContext = getServletContext();
+                contextPath = servletContext.getRealPath(File.separator);
+                
+                String absolutePath = contextPath + relativerPfad;
+                String absoluteNeuerPfad = contextPath + relativerNeuerPfad;
+                File oldName = new File(absolutePath);
+                File newName = new File(absoluteNeuerPfad);
+                
+                if(!oldName.renameTo(newName)) 
+                    throw new Exception();
+            }
+            
+            
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             
         } catch(IllegalArgumentException e){
