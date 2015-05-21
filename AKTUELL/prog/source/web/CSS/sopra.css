@@ -1062,19 +1062,25 @@ textarea.input_std {
 } #vn_attr_modbearb_erlaubt:before {
 	content: "BEARBEITEN DURCH MODERATOREN ERLAUBT";
 }
-
+#kk_body{
+	width:100%;
+	max-width: 800px;
+	margin: 1em;
+	margin-left: 0;
+}
 #kk_all {
 	position: relative;
 	z-index: 2;
 }
-
 .kk_load{
 	height:30px;
-	weidth:100%;
+	border-radius:50%;
 	cursor:pointer;
-	text-align:center;
+	
 	background: #444;
-	margin-bottom: 1em;
+	width: 4em;
+ 	text-align: center;
+	margin: auto;
 }
 
 #kk_inhaltsverzeichnis:before {
