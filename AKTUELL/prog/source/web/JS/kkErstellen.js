@@ -7,6 +7,10 @@ var UPLOADTYPE ="";
 	var UPLOAD_ID;
     function newKarteikarte(triggerElem){
     	var vater = findVater(triggerElem);
+    	// Spezialfall ganz oben im Baum
+    	if(vater == undefined)
+    		vater = veranstaltungsObject[paramErsteKarteikarte];
+    	
     	var bruder = findBruder(triggerElem);
     	try{
     		var kk_ck_editor = $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
@@ -14,27 +18,50 @@ var UPLOADTYPE ="";
         catch(e){
         	console.log(e);
         }
+        
+        submitFkt = function(){
+        	var text = $("#kk_erstellen_TA").val().trim();
+        	var titel = $("#kk_erstellen_titel_input").val().trim();
+        	var attributes = getSelectedKkAttributes();
+        	console.log(getSelectedKkAttributes());
 
+        	// TODO Das ganze noch so umgestalten, dass man auch nur Überschriften erzeugen kann!
+        	if(titel==""){
+        		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
+        		return false;
+        	}
+//        	if(text == "" && UPLOADIDSET == -1){
+//        		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
+//        		return false;
+//        	}
+        	if(isAnyAttrSelected() == false){
+        		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  function(){
+            		processKKerstellen(text,titel,attributes, bruder, vater);
+            		return true;
+        		}, 0, 0);
+        	}
+        	else{
+        		processKKerstellen(text,titel,attributes, bruder, vater);
+        		return true;
+        	}
+        	return false;
+        }
+        
+        clearFkt = function(){
+        	// TODO beim schließen wieder alles leeren
+        }
+        
         popupFenster(
             $("#kk_erstellen_popup_overlay"), 
             [$('#kk_erstellen_popup_close'),$("#kk_erstellen_cancel")],
-            function() {},
-            $(""),
-            function() {
-            },
-            $(""),
-            $(""),
-            $("")
+            clearFkt,
+            $("#kk_erstellen_ok"),
+            submitFkt,
+            $("#kk_erstellen_titel_input"),
+            $("#kk_erstellen_weiter"),
+            $("#kk_erstellen_zurueck")
         );
-        $("#cke_kk_erstellen_TA").show();
-        $("#kk_erstellen_weiter").click(function(){
-        	$("#popup_fenster_body1").hide(0);
-        	$("#popup_fenster_body2").show(0);
-        });
-        $("#kk_erstellen_zurueck").click(function(){
-        	$("#popup_fenster_body1").show(0);
-        	$("#popup_fenster_body2").hide(0);
-        });
+
         $(".checkbox_labels").click(function(){
         	if($(this).siblings().first().prop("checked")==true ){
         		$(this).siblings().first().prop("checked",false)
@@ -44,40 +71,18 @@ var UPLOADTYPE ="";
         	}
         	
         });
-        $("#kk_erstellen_ok").click(function(){
-        	var text = $("#kk_erstellen_TA").val().trim();
-        	var titel = $("#kk_erstellen_titel_input").val().trim();
-        	var attributes = getSelectedKkAttributes();
-        	console.log(getSelectedKkAttributes());
-        	if(text == ""&& UPLOADIDSET == -1){
-        		showError("Bitte füllen sie ihre Karteikarte mit Text oder laden sie ein Bild/Video hoch.");
-        		return false;
-        	}
-        	if(titel==""){
-        		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
-        		return false;
-        	}
-        	if(isAnyAttrSelected() == false){
-        		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  processKKerstellen, 0, 0)
-        	}
-        	else{
-        		processKKerstellen(text,titel,attributes, bruder, vater);
-        	}
-        	return false;
-   
-        });
         
-
     	function processKKerstellen(text,titel,attributes, bruder, vater){
     		var params = {};
-    		params[paramTitel] = escape(titel);
+    		// Escapen nicht mehr nötig, das macht jquery für uns beim ajax call :)
+    		params[paramTitel] = titel;
     		params[paramVeranstaltung] = veranstaltungsObject[paramId];
-    		params[paramInhalt] = escape(text);
-    		params[paramAttribute] = escape(attributes);
-    		params[paramType] = escape(UPLOADTYPE);
+    		params[paramInhalt] = text;
+    		params[paramAttribute] = attributes;
+    		params[paramType] = UPLOADTYPE;
     		params[paramVaterKK] = vater;
     		params[paramBruderKK] = bruder;
-    		params[paramKkUploadID] = escape(UPLOADIDSET);	
+    		params[paramKkUploadID] = UPLOADIDSET;	
     		submitNewKarteikarte(params)
     	}
         function isAnyAttrSelected(){
@@ -104,7 +109,9 @@ var UPLOADTYPE ="";
         			actionErstelleKarteikarte,
                     function(response) {
                         showInfo("Karteikarte \""+ titel +"\"wurde erfolgreich erzeugt.");
-                     //   fillVeranstaltungsliste();  
+                        // Wir bekommen die eingefügte id zurück
+                        displayKarteikarte(response[paramId]);
+                        initInhaltsverzeichniss();
                     },
                     params
                 );

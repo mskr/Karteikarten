@@ -89,6 +89,7 @@ public class FileUploadServlet extends ServletController
 				System.out.println("uploadid:"+UploadID);
 
 			} catch (NoSuchAlgorithmException e) {
+	            e.printStackTrace();
 				JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
 			}
@@ -142,6 +143,7 @@ public class FileUploadServlet extends ServletController
 				System.out.println("uploadid:"+UploadID);
 
 			} catch (NoSuchAlgorithmException e) {
+	            e.printStackTrace();
 				JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
 			}
@@ -179,6 +181,7 @@ public class FileUploadServlet extends ServletController
             }
             catch(NumberFormatException e)
             {
+                e.printStackTrace();
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return;

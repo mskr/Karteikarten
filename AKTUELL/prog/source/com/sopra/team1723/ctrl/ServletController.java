@@ -41,7 +41,7 @@ public abstract class ServletController extends HttpServlet
 
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
     
-    public static final boolean DEBUGMODE = false;
+    public static final boolean DEBUGMODE = true;
 
     /**
      *  DateiPfade
@@ -223,6 +223,7 @@ public abstract class ServletController extends HttpServlet
             }
             catch (Exception e)
             {
+                e.printStackTrace();
                 dbManager = null;
                 System.err.println("Es Konnte keine Verbindung zur Datenbank hergestellt werden oder ein unerwarteter Fehler ist aufgetreten!");
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);

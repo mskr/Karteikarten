@@ -75,6 +75,7 @@ public class VeranstaltungServlet extends ServletController {
             }
             catch(NumberFormatException e)
             {
+                e.printStackTrace();
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return false;
@@ -119,12 +120,14 @@ public class VeranstaltungServlet extends ServletController {
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }
         catch (DbUniqueConstraintException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError, 
                     "Es existiert schon eine Veranstaltung \""+veranst.getTitel()+"\" im Semester \""+veranst.getSemester()+"\". "
                             + "Bitte kontaktieren Sie einen Administrator oder löschen Sie die andere Veranstaltung, wenn Sie die Berechtigungen besitzen.");
@@ -132,6 +135,7 @@ public class VeranstaltungServlet extends ServletController {
             return false;
         } catch(NumberFormatException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
@@ -139,6 +143,7 @@ public class VeranstaltungServlet extends ServletController {
         // Einschreiben für den Ersteller fehlgeschlagen. Sollte eigentlich nicht passieren
         catch (DbFalsePasswortException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
@@ -167,6 +172,7 @@ public class VeranstaltungServlet extends ServletController {
             }
             catch (SQLException e)
             {
+                e.printStackTrace();
                 JSONObject jo;
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
@@ -271,6 +277,7 @@ public class VeranstaltungServlet extends ServletController {
         }
         catch (NumberFormatException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
@@ -287,6 +294,7 @@ public class VeranstaltungServlet extends ServletController {
             }
             catch (SQLException e)
             {
+                e.printStackTrace();
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return false;
@@ -338,6 +346,7 @@ public class VeranstaltungServlet extends ServletController {
         }
         catch (NumberFormatException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
@@ -382,6 +391,7 @@ public class VeranstaltungServlet extends ServletController {
             }
             catch(NumberFormatException e)
             {
+                e.printStackTrace();
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return false;
@@ -420,12 +430,14 @@ public class VeranstaltungServlet extends ServletController {
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }
         catch (DbUniqueConstraintException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             e.printStackTrace();
@@ -469,23 +481,27 @@ public class VeranstaltungServlet extends ServletController {
         }
         catch (NumberFormatException e)
         {
+            e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }
         catch (DbUniqueConstraintException e)
         {
+            e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             outWriter.print(jo);
         }
         catch (DbFalsePasswortException e)
         {
+            e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
             outWriter.print(jo);
             return false;
@@ -526,6 +542,7 @@ public class VeranstaltungServlet extends ServletController {
         }
         catch (NumberFormatException e)
         {
+            e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;

@@ -100,6 +100,7 @@ public class StartseitenServlet extends ServletController {
         }
         catch (DbFalseLoginDataException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorLoginFailed);
         }
 
@@ -187,6 +188,7 @@ public class StartseitenServlet extends ServletController {
         } 
         catch(NumberFormatException e) 
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
@@ -205,12 +207,14 @@ public class StartseitenServlet extends ServletController {
         }
         catch (DbUniqueConstraintException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorEmailAlreadyInUse);
             outWriter.print(jo);
             return false;
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
@@ -308,6 +312,7 @@ public class StartseitenServlet extends ServletController {
 	        }
         }
         catch(NoSuchAlgorithmException e){
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
         }
 

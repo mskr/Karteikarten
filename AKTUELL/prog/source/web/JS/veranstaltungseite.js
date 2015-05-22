@@ -23,13 +23,36 @@ $(document).ready(function() {
 		})
 	});
 	
-	  // LadeHandler
+	// LadeHandler
     $(".kk_load_pre").click(function(){
-    	loadPreKk($("#kk_all").children().first().attr("data-kkid"))
-    	
+    	id = $("#kk_all").children().first().attr("data-kkid");
+    	if(id != null)
+    		loadPreKk(id);
+    	else{
+			$(".kk_load_pre").slideUp();
+			displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte]);
+    	}
     });    
     $(".kk_load_after").click(function(){
-		loadAfterKk($("#kk_all").children().last().attr("data-kkid"));
+    	id = $("#kk_all").children().last().attr("data-kkid");
+    	if(id != null)
+			loadAfterKk(id);
+    	else
+			$(".kk_load_after").slideUp();
+    });
+    
+    $( window ).resize(function() {    
+    	// Elemente fuer kleine Bildschirme
+        if (window.matchMedia("(max-width: 56em)").matches)
+        {
+            $(".r-suche_etwas_label").hide();
+            $(".r-kk-inhaltsvz-toggle").show();
+        }
+        else
+        {
+            $(".r-suche_etwas_label").hide();
+            $(".r-kk-inhaltsvz-toggle").hide();
+        }
     });
 });
 
@@ -160,7 +183,7 @@ function fillVeranstaltungsSeite(Vid)
 	// Inhaltsverzeichnis aufbauen
 	// warte bis VN Objekt geladen
 	$.when(ajax3).done(function() {
-	    var ajax4 = ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"));
+	    var ajax4 = initInhaltsverzeichniss();
         // Inhaltsverzeichnis im Viewport halten
 	    // warte bis mainbox visible
 	    $.when(ajax1,ajax2,d,ajax4).done(function() {
@@ -168,27 +191,17 @@ function fillVeranstaltungsSeite(Vid)
 	            element: $("#kk_inhaltsverzeichnis"),
 	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
 	        });
-
-	        $(".inhaltsvz_kk_erstellen").unbind("click")
-            $(".inhaltsvz_kk_erstellen").click(function(){
-   	    		 newKarteikarte($(this));
-            });
+	        
+	        registerErstellKkHandler($(".inhaltsvz_kk_erstellen"));
+	       
 	    });
         
 	});
-	
-    // Elemente fuer kleine Bildschirme
-    if (window.matchMedia("(max-width: 56em)").matches)
-    {
-        $(".r-suche_etwas_label").hide();
-        $(".r-kk-inhaltsvz-toggle").show();
-    }
-    else
-    {
-        $(".r-suche_etwas_label").hide();
-        $(".r-kk-inhaltsvz-toggle").hide();
-    }
 	return $.when(ajax1,ajax2,d);
+}
+
+function initInhaltsverzeichniss(){
+	return ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
 }
 
 /**
@@ -212,26 +225,19 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
             function(response) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
-//                console.log("[LOG] arr hat die laenge "+arr.length);
                 // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
                 if(arr.length == 0) {
-//                    console.log("hat keine kinder mehr");
-                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
-                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
-                    $(".inhaltsvz_kk_erstellen").unbind("click")
-                    $(".inhaltsvz_kk_erstellen").click(function(){
-           	    		 newKarteikarte($(this));
-                    });
+                	elem = $("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                    vaterElem.append(elem);
+        	        registerErstellKkHandler(elem);
                 }
                 // andernfalls DOM aufbauen
                 else
                 {
                     // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
-                    vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
-                    $(".inhaltsvz_kk_erstellen").unbind("click")
-                    $(".inhaltsvz_kk_erstellen").click(function(){
-           	    		 newKarteikarte($(this));
-                    });
+                	elem = $("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                    vaterElem.append(elem);
+        	        registerErstellKkHandler(elem);
                     for(var i in arr)
                     {
                         var kkListItem = $("<li><a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
@@ -244,6 +250,7 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 if($(e.target).siblings("ul").length == 0)
                                 {
                                     ladeKindKarteikarten(arr[i][paramId], kkListItem);
+                                    displayKarteikarte(arr[i][paramId]);
                                 }
                                 // Andernfalls klappe Kindkarteikarten ein
                                 else
@@ -251,56 +258,34 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                     $(e.target).siblings("ul").remove();
                                 }
                                 e.stopPropagation();
-                                
-                                // Karteikarte schon in der Liste?
-                                kkDiv = $("#kk_all").find("[data-kkid=" + arr[i][paramId] + "]");
-                                if(kkDiv.length)
-                                {
-                                	kkDiv.removeClass("blink");
-                                	$('html,body').animate({
-                                        scrollTop: kkDiv.offset().top},
-                                        'slow');
-                                }
-                                else
-                                {
-                                	destroyCKeditors($("#kk_all"));
-                                	$("#kk_all").children().fadeOut("slow").promise().done(function(){
-                                		$("#kk_all").empty();
-                                    	showPreAfterLoad();
-
-                                    	var params2 ={};
-                                    	params2[paramId] = arr[i][paramId];
-                                    	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
-                                    		domkk = buildKarteikarte(response);
-                        					domkk.show();
-                        					domkk.css("opacity", "0");
-                                    		$("#kk_all").append(domkk);
-                        					domkk.animate({opacity: 1}, 2000);
-                						
-                                    	}, params2);
-
-                                    	$.when(ajax).done(function(){
-                                    		loadAfterKk(arr[i][paramId]);
-                                    		$(".inhaltsvz_kk_erstellen").unbind("click")
-                                            $(".inhaltsvz_kk_erstellen").click(function(){
-                                   	    		 newKarteikarte($(this));
-                                            });
-                                    	});
-                                	});
-                                	
-                                }
                             });
                         }
                         f(arr, kkListItem, i);
-                        // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
-                        vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
-                        //TODO Click Handler Karteikarte hinzu
+                        // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte                        
+                    	elem = $("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                        vaterElem.append(elem);
+            	        registerErstellKkHandler(elem);
                     }
                 }
             },
             params
     );
 }
+function registerErstellKkHandler(domErstellenLink){
+	// Prüfen ob erlaubt
+    if(jsonBenutzer[paramId] == veranstaltungsObject[paramErsteller][paramId] || 
+    		jsonBenutzer[paramNutzerstatus] == "ADMIN")
+	{
+    	domErstellenLink.find(".inhaltsvz_kk_erstellen").click(function(){
+	    	newKarteikarte($(this));
+        });
+	}
+    else
+    {
+    	domErstellenLink.find(".inhaltsvz_kk_erstellen").attr("style","visibility: hidden");
+    }
+}
+
 
 //sucht Studiengänge, die zur Veranstaltung gehören
 function findStudiengaenge(id){
@@ -342,6 +327,41 @@ function sortiereKarteikartenIDs(jsonKkIDs){
 	for(var i in jsonKkIDs)
 		newIdArray.push(jsonKkIDs[i][paramId]);
 	return newIdArray;
+}
+
+function displayKarteikarte(id){
+    // Karteikarte schon in der Liste?
+    kkDiv = $("#kk_all").find("[data-kkid=" + id + "]");
+    // Existiert ?
+    if(kkDiv.length)
+    {
+    	$('html,body').animate({
+            scrollTop: kkDiv.offset().top},
+            'slow');
+    }
+    else
+    {
+    	destroyCKeditors($("#kk_all"));
+    	$("#kk_all").children().fadeOut("slow").promise().done(function(){
+    		$("#kk_all").empty();
+        	showPreAfterLoad();
+
+        	var params2 ={};
+        	params2[paramId] = id;
+        	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
+        		domkk = buildKarteikarte(response);
+				domkk.show();
+				domkk.css("opacity", "0");
+        		$("#kk_all").append(domkk);
+				domkk.animate({opacity: 1}, 2000);
+        	}, params2);
+
+        	$.when(ajax).done(function(){
+        		loadAfterKk(id);
+        	});
+    	});
+    	
+    }
 }
 displayingAfterKK = false;
 var kkLoadRequest;

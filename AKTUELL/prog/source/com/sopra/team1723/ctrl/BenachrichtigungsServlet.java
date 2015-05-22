@@ -51,6 +51,7 @@ public class BenachrichtigungsServlet extends ServletController
                 }
                 catch (NumberFormatException e)
                 {
+                    e.printStackTrace();
                     jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                     outWriter.print(jo);
                     return;

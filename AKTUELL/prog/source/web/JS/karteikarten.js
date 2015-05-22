@@ -19,6 +19,9 @@ function buildKarteikarte(karteikarteJson)
 
     fillKarteiKarte(kkDom,karteikarteJson);
     
+    if(kkInhalt == "")
+    	return kkDom;
+    
     // Info
     kkDom.find(".kk_info_body_wrapper").hide();
     kkDom.find(".kk_info_head").click(function(){
@@ -48,7 +51,7 @@ function buildKarteikarte(karteikarteJson)
     	f2(this);
     	
 	}, ckEditorNotizConfig);
-    
+    // Voting
     if(karteikarteJson[paramHatGevoted] == true)
     {
     	kkDom.find(".kk_voteup").css("opacity","0.1");
