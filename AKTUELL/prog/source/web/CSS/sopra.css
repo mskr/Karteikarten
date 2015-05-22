@@ -33,6 +33,9 @@ a { /* Link Style */
 } a:hover {
 	color: gray;
 }
+option {
+	background: white;
+}
 
 .displayOnHover{
 	opacity: 0;
@@ -382,10 +385,13 @@ textarea.input_std {
 	height: 100%;
 	padding-top: 1%;
 	background: rgba(0,0,0,.5);
+	overflow: auto;
 }
 
 .autoCompleteWrapper {
 	position: relative;
+} .autoCompleteWrapper:hover > * {
+	background: white;
 }
 
 #loadingDiv {
@@ -411,13 +417,14 @@ textarea.input_std {
 	font-family: monospace;
 	font-size: 5em;
 	-webkit-animation: ajaxloader 1s linear infinite;
-	animation: textloader 1s linear infinite;
+	-moz-animation: ajaxloader 1s linear infinite;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-transform-origin: 50% 47%;
 	-moz-transform-origin: 50% 47%;
-}
-@-webkit-keyframes ajaxloader {
+} @-webkit-keyframes ajaxloader {
+  to { transform: rotate(360deg) }
+} @-moz-keyframes ajaxloader {
   to { transform: rotate(360deg) }
 }
 
@@ -446,7 +453,7 @@ textarea.input_std {
 	top: 0;
 	width: 15em;
 	height: calc(100% - 6em);
-	overflow: hidden;
+	overflow: auto;
 	transition: all .3s;
 }
 
@@ -706,6 +713,15 @@ textarea.input_std {
     flex-shrink: 0;
 }
 
+.hauptseite_head {
+	position: absolute;
+	top: 0;
+	z-index: 11;
+	width: 100%;
+	height: auto;
+	text-align: right;
+}
+
 .suche_etwas {
 	margin: 0;
 	width: 50%;
@@ -718,12 +734,11 @@ textarea.input_std {
 	box-shadow: none;
 } .suche_etwas + .suche_ergebnisse {
 	width: calc(100% - 1.2em);
+	margin-top: -.2em;
 }
 
 #vn_erstellen_bt {
-	position: absolute;
 	z-index: 11;
-	top: 0;
 	right: 1em;
 } #vn_erstellen_bt:after {
 	content: "Veranstaltung erstellen";
@@ -734,7 +749,6 @@ textarea.input_std {
 	position: absolute;
 	z-index: 300;
 	left: 1px;
-	margin-top: -.7em;
 	width: 100%;
 	background: white;
 	color: #4a4a4a;
@@ -770,7 +784,7 @@ textarea.input_std {
 	color: #4a4a4a;
 } .sucherg_item.selected {
 	background: lightgray;
-} .sucherg_item span {
+} .sucherg_item .octicon {
 	margin-right: .5em;
 } .sucherg_item_BENUTZER.selected:after {
 	content: "ZUM PROFIL \2192";
@@ -791,27 +805,50 @@ textarea.input_std {
 }
 
 .itemlist {
+	box-sizing: border-box;
+	width: 100%;
 	margin: 0;
+	padding: .5em;
+	background: white;
 	overflow: hidden;
-	min-height: 2em;
-	border: 1px dashed DimGray;
-	border-radius: .3em;
-}
-.itemListItem {
-	background: #2a2a2a;
+	border-top-left-radius: .3em;
+	border-top-right-radius: .3em;
+	border: 1px solid black;
+	border-bottom: 1px solid lightgray;
+	background: #E8E8E8;
+	box-shadow: inset 0 .5em 1em #c0c0c0;
+	transition: all .5s;
+} .itemlist:empty {
+} .itemlist:empty:before {
+	content: "Noch nichts  gewählt...";
+	color: gray;
+	text-shadow: none;
+	font-size: .8em;
+} .itemlist + input[type="text"] {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-top: none;
+	box-shadow: none;
+} .itemListItem {
+	background: rgba(0,0,0,.8);
 	padding: 0.2em;
 	margin: 0.2em;
  	display: inline-block	!important; 
-	border-radius: 0.5em;
+	border-radius: 1em;
 	white-space: nowrap;
-}
-.itemListItemName
-{
-	margin: 0.3em;
-}
-.itemListItemClose
-{
-	margin: 0.3em;
+	box-shadow: 0 0 1px black;
+} .itemListItemName {
+	margin: 1em;
+} .itemListItemClose {
+	padding: 0.3em;
+	background: black;
+	border-radius: 50%;
+	width: 1em;
+	height: 1em;
+	text-align: center;
+	margin: -.2em;
+} .itemListItemClose:hover {
+	color: red;
 }
 
 .vn_tab_container {
@@ -1614,11 +1651,14 @@ textarea.input_std {
 }  */
 
 .popup_input {
+	box-sizing: border-box;
 	width: 100%;
+	height: 2.9em;
 	margin-top: 0;
 	margin-bottom: .6em;
-} .popup_input[type="text"], .popup_input[type="password"], textarea.popup_input {
-	width: calc(100% - 1.8em);
+} .popup_input + .suche_ergebnisse {
+	margin-top: -.8em;
+	width: calc(100% - 2px);
 }
 
 .profil_head {
@@ -1947,6 +1987,9 @@ select.profil_input {
 	.mainbox {
 		margin-left: 5em;
 		width: calc(100% - 5em);
+	} #mainbox_startseite {
+		margin-left: 21em;
+		width: calc(100% - 21em);
 	}
 	.return {
 		position: fixed;

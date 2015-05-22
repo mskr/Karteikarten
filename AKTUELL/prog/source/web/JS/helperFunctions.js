@@ -8,11 +8,15 @@
  * @param optArray Array mit den Einträgen als String
  * @param slectedOptName Option die gewählt sein soll
  * @param clearFirst Wenn true, dann werden alle alten Optionen erst entfernt
+ * @param placeholder String kann uebergeben werden, falls eine Default Option gesetzt werden soll
  */
-function fillSelectWithOptions(select, optArray, selectedOptName, clearFirst) 
+function fillSelectWithOptions(select, optArray, selectedOptName, clearFirst, placeholder) 
 {
 	if(clearFirst == true)
 		$(select).empty();
+	
+	if(placeholder != undefined)
+	    $(select).append("<option value='' disabled selected>"+placeholder+"</option>");
 
     for(var i in optArray) 
     {
@@ -94,6 +98,9 @@ var popupSeitenIterator = 0;
  */
 function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, submitFunc, focusElem, weiterElem, zurueckElem)
 {
+    // Scrollbar ausserhalb Popup deaktivieren, sodass nur Popup Scrollbar sichtbar
+    $("body").css("overflow","hidden"); 
+    
     var seitenArr = popupOverlayWrapper.find(".popup_fenster_body");
     $(seitenArr[0]).show();
     if(seitenArr.length > 1)
@@ -156,6 +163,7 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
             closeFunc();
             popupSeitenIterator = 0;
+            $("body").css("overflow","auto"); // Scrollbar ausserhalb Popup wieder aktivieren
         });
     }
     submitElem.off();
@@ -393,7 +401,7 @@ var suchTimer = function(){
                 action,
                 function(response) {
                     var arrSuchErgebnisse = response[keyJsonArrResult];
-                    fillSuchergebnisse(arrSuchErgebnisse,suchergContainer, categories, categoryClassMapping);
+                    fillSuchergebnisse(arrSuchErgebnisse,suchergContainer, categories, categoryClassMapping, textInput);
                     suchErgIterator = 0;
                     for(var i in categoryClassMapping)
                     {
@@ -418,7 +426,7 @@ var suchTimer = function(){
  * @param categories siehe autoComplete
  * @param categoryClassMapping siehe autoComplete
  */
-function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, categoryClassMapping)
+function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, categoryClassMapping, textInput)
 {
     var isCategoryEmpty = {};
     for(var i in categoryClassMapping)
@@ -445,13 +453,15 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         var suchErgHtmlString = "<div data-abstand = '"+ abstand +"'id='sucherg_"+category+"_"+id+"' class='sucherg_item sucherg_item_"+category+"'>";
         if(klasse == keyJsonObjKlasseBenutzer)
         {
-            suchErgHtmlString += "<span class='octicon octicon-person'></span>" +
-                                 jsonSuchErgebnis[paramVorname] + " " + jsonSuchErgebnis[paramNachname];
+            suchErgHtmlString += "<span class='octicon octicon-person'></span>" + 
+                                 "<span class='sucherg_item_benutzer_vorname'>" + jsonSuchErgebnis[paramVorname] + "</span>" + 
+                                 " " + 
+                                 "<span class='sucherg_item_benutzer_nachname'>" + jsonSuchErgebnis[paramNachname] + "</span>";
         }
         else if(klasse == keyJsonObjKlasseVeranst)
         {
             suchErgHtmlString += "<span class='octicon octicon-podium'></span>" +
-                                 jsonSuchErgebnis[paramTitel] +
+                                 "<span class='sucherg_item_vn_titel'>" + jsonSuchErgebnis[paramTitel] + "</span>" + 
                                  "<br>" +
                                  "<span class='sucherg_item_detail'>" +
                                  jsonSuchErgebnis[paramErsteller][paramVorname] + " " + jsonSuchErgebnis[paramErsteller][paramNachname] +
@@ -470,6 +480,23 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         }
         suchErgHtmlString +=    "</div>";
         var suchErgJQueryObj = $(suchErgHtmlString);
+        
+        // Hebe exakte Treffer fett hervor
+        switch(textInput.val())
+        {
+            case jsonSuchErgebnis[paramVorname]:
+                suchErgJQueryObj.find(".sucherg_item_benutzer_vorname").css("font-weight","bold");
+                break;
+            case jsonSuchErgebnis[paramNachname]:
+                suchErgJQueryObj.find(".sucherg_item_benutzer_nachname").css("font-weight","bold");
+                break;
+            case jsonSuchErgebnis[paramVorname]+" "+jsonSuchErgebnis[paramNachname]:
+                suchErgJQueryObj.find(".sucherg_item_benutzer_nachname, .sucherg_item_benutzer_vorname").css("font-weight","bold");
+                break;
+            case jsonSuchErgebnis[paramTitel]:
+                suchErgJQueryObj.find(".sucherg_item_vn_titel").css("font-weight","bold");
+        }
+        
         suchergContainer.find("#sucherg_"+category).append(suchErgJQueryObj);
         isCategoryEmpty[category] = false;
 

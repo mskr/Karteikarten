@@ -66,7 +66,7 @@ function fillStartseite() {
         function(response) {
             $("#reg_studiengang").empty();
             var studgArr = response[keyJsonArrResult];
-            fillSelectWithOptions($("#reg_studiengang"), studgArr, "", true);
+            fillSelectWithOptions($("#reg_studiengang"), studgArr, "", true, "Studiengang");
         }
     );
 }
