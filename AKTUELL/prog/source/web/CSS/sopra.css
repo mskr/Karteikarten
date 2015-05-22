@@ -747,13 +747,7 @@ textarea.input_std {
 	box-shadow: 0 .2em .2em black;
 	overflow: hidden;
 	background-clip: padding-box;
-} 
-/*input[type="text"] + .suche_ergebnisse {
-	visibility: hidden;
-} input[type="text"]:focus + .suche_ergebnisse {
-	visibility: visible;
-} */
-input[type="text"]:invalid + .suche_ergebnisse {
+} input[type="text"]:invalid + .suche_ergebnisse {
 	visibility: hidden;
 } .sucherg_x {
 	color: lightgray;

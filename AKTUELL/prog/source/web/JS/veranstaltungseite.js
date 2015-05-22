@@ -207,7 +207,6 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
             function(response) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
-                console.log("[LOG] arr hat die laenge "+arr.length);
                 // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
                 if(arr.length == 0) {
                     console.log("hat keine kinder mehr");
