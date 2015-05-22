@@ -168,6 +168,11 @@ function fillVeranstaltungsSeite(Vid)
 	            element: $("#kk_inhaltsverzeichnis"),
 	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
 	        });
+
+	        $(".inhaltsvz_kk_erstellen").unbind("click")
+            $(".inhaltsvz_kk_erstellen").click(function(){
+   	    		 newKarteikarte($(this));
+            });
 	    });
         
 	});
@@ -212,16 +217,25 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                     console.log("hat keine kinder mehr");
                     // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
                     vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                    $(".inhaltsvz_kk_erstellen").unbind("click")
+                    $(".inhaltsvz_kk_erstellen").click(function(){
+           	    		 newKarteikarte($(this));
+                    });
                 }
                 // andernfalls DOM aufbauen
                 else
                 {
                     // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
                     vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                    $(".inhaltsvz_kk_erstellen").unbind("click")
+                    $(".inhaltsvz_kk_erstellen").click(function(){
+           	    		 newKarteikarte($(this));
+                    });
                     for(var i in arr)
                     {
                         var kkListItem = $("<li><a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
                         vaterElem.append(kkListItem);
+                        
                         // Click Handler
                         var f = function(arr, kkListItem, i) {
                             kkListItem.find("a").click(function(e) {
@@ -264,6 +278,10 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
 
                                     	$.when(ajax).done(function(){
                                     		loadAfterKk(arr[i][paramId]);
+                                    		$(".inhaltsvz_kk_erstellen").unbind("click")
+                                            $(".inhaltsvz_kk_erstellen").click(function(){
+                                   	    		 newKarteikarte($(this));
+                                            });
                                     	});
                                 	});
                                 	

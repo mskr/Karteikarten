@@ -1646,7 +1646,8 @@ public class Datenbankmanager implements IDatenbankmanager {
         Karteikarte karteikarte = null;
         try {
             ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung,"
-                    + " Bewertung FROM karteikarte WHERE ID = ?");
+                    + " Bewertung, Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, Zusatzinformation, Exkurs,"
+                    + " Beispiel, Uebung FROM karteikarte WHERE ID = ?");
             ps.setInt(1,karteikID);
 
             rs = ps.executeQuery();
@@ -1655,7 +1656,9 @@ public class Datenbankmanager implements IDatenbankmanager {
                 cal.setTime(rs.getTimestamp("Aenderungsdatum"));
                 karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), cal,
                         rs.getString("Inhalt"), KarteikartenTyp.valueOf(rs.getString("Typ")), rs.getInt("Veranstaltung"),
-                        rs.getInt("Bewertung"));
+                        rs.getInt("Bewertung"), rs.getBoolean("Satz"), rs.getBoolean("Lemma"), rs.getBoolean("Beweis"),
+                        rs.getBoolean("Definition"), rs.getBoolean("Wichtig"), rs.getBoolean("Grundlagen"), rs.getBoolean("Zusatzinformation"),
+                        rs.getBoolean("Exkurs"), rs.getBoolean("Beispiel"), rs.getBoolean("Uebung"));
             }
 
         } catch (SQLException e) {
