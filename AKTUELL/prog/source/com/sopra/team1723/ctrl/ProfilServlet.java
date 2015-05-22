@@ -82,6 +82,7 @@ public class ProfilServlet extends ServletController {
         }
         catch (NumberFormatException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
@@ -138,6 +139,7 @@ public class ProfilServlet extends ServletController {
         } 
         catch (IllegalArgumentException e) 
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
@@ -174,6 +176,7 @@ public class ProfilServlet extends ServletController {
                 }
                 catch (IllegalArgumentException e)
                 {
+                    e.printStackTrace();
                     jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                     outWriter.print(jo);
                     return false;
@@ -197,11 +200,13 @@ public class ProfilServlet extends ServletController {
         }
         catch(SQLException e)
         {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         } 
         catch(DbUniqueConstraintException e){
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorEmailAlreadyInUse);
             outWriter.print(jo);
             return false;
@@ -240,6 +245,7 @@ public class ProfilServlet extends ServletController {
         	benutzerId = Integer.parseInt(request.getParameter(ParamDefines.Id));
         }
         catch(NumberFormatException e){
+            e.printStackTrace();
         	jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
@@ -341,6 +347,7 @@ public class ProfilServlet extends ServletController {
         }
         catch (NumberFormatException e)
         {
+            e.printStackTrace();
 
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
@@ -410,7 +417,12 @@ public class ProfilServlet extends ServletController {
                         b = dbManager.leseBenutzer(id);
                     }
                     catch (NumberFormatException e)
-                    {}
+                    {
+                        e.printStackTrace();
+                        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                        outWriter.print(jo);
+                        return;
+                    }
                 }
                 else
                 {

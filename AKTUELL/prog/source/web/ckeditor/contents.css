@@ -17,7 +17,11 @@ body
 
 	margin: 10px;
 }
-
+/* Filter latex images*/
+img[src*="gif.latex"] {
+    filter: invert(1);
+	-webkit-filter: invert(1);
+}
 .cke_editable
 {
 	font-size: 13px;
@@ -72,11 +76,6 @@ hr
 	border: 0px;
 	border-top: 1px solid #ccc;
 }
-
-/* img{
-	filter: invert(1);
-} */
-
 img.right
 {
 	border: 1px solid #ccc;

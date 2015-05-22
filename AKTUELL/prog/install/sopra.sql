@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 21. Mai 2015 um 14:39
+-- Erstellungszeit: 22. Mai 2015 um 19:03
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -295,7 +295,7 @@ CREATE TABLE IF NOT EXISTS `bewertung_karteikarte` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=73 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
 
 --
 -- Daten für Tabelle `bewertung_karteikarte`
@@ -401,16 +401,16 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
   `Bewertung` int(11) NOT NULL DEFAULT '0',
   `Aenderungsdatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Veranstaltung` int(11) NOT NULL,
-  `Satz` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
-  `Lemma` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
-  `Beweis` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
-  `Definition` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
-  `Wichtig` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
-  `Grundlagen` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
-  `Zusatzinformation` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
-  `Exkurs` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
-  `Beispiel` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma',
-  `Uebung` tinyint(1) NOT NULL COMMENT 'Karteikarten Attribut Lemma'
+  `Satz` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma',
+  `Lemma` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma',
+  `Beweis` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma',
+  `Definition` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma',
+  `Wichtig` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma',
+  `Grundlagen` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma',
+  `Zusatzinformation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma',
+  `Exkurs` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma',
+  `Beispiel` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma',
+  `Uebung` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -646,7 +646,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `Ersteller` int(11) NOT NULL,
   `Titel` varchar(255) NOT NULL,
   `ErsteKarteikarte` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- Daten für Tabelle `veranstaltung`
@@ -673,7 +673,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=62 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=63 ;
 
 --
 -- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
@@ -884,12 +884,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
 ALTER TABLE `bewertung_karteikarte`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=73;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=74;
 --
 -- AUTO_INCREMENT for table `bewertung_kommentar`
 --
@@ -919,12 +919,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 -- AUTO_INCREMENT for table `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=62;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=63;
 --
 -- Constraints der exportierten Tabellen
 --

@@ -52,6 +52,7 @@ public class KarteikartenServlet extends ServletController {
              karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
          }    
          catch(NumberFormatException e){
+             e.printStackTrace();
              jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
              outWriter.print(jo);
              return;
@@ -85,6 +86,7 @@ public class KarteikartenServlet extends ServletController {
              karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
          }    
          catch(NumberFormatException e){
+             e.printStackTrace();
              jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
              outWriter.print(jo);
              return;
@@ -119,6 +121,7 @@ public class KarteikartenServlet extends ServletController {
             karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
         }    
         catch(NumberFormatException e){
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
@@ -173,6 +176,7 @@ public class KarteikartenServlet extends ServletController {
         }
         catch (NumberFormatException e)
         {
+            e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
@@ -341,11 +345,14 @@ public class KarteikartenServlet extends ServletController {
             
             
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            jo.put(ParamDefines.Id, kkID);  // Schicke die karteikarten id zurück!
             
         } catch(IllegalArgumentException e){
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             
         } catch(Exception e){
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
         }
 
@@ -374,6 +381,7 @@ public class KarteikartenServlet extends ServletController {
             karteikarteId = Integer.parseInt(req.getParameter(ParamDefines.Id));
         }    
         catch(NumberFormatException e){
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
@@ -409,6 +417,7 @@ public class KarteikartenServlet extends ServletController {
             vaterKarteikarte = Integer.parseInt(req.getParameter(ParamDefines.Id));
         }    
         catch(NumberFormatException e){
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
@@ -450,6 +459,7 @@ public class KarteikartenServlet extends ServletController {
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
         }

@@ -44,6 +44,7 @@ public class NotizServlet extends ServletController {
         }
         catch (NumberFormatException e)
         {
+            e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;
@@ -86,6 +87,7 @@ public class NotizServlet extends ServletController {
         }
         catch (NumberFormatException e)
         {
+            e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return false;

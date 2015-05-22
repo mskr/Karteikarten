@@ -949,7 +949,22 @@ public class Datenbankmanager implements IDatenbankmanager {
         int veranstId = -1;
         try{
             conMysql.setAutoCommit(false);
-                       
+            conNeo4j.setAutoCommit(false);
+            
+            
+            ps = conNeo4j.prepareStatement("CREATE (n) RETURN id(n) AS ID");
+            rs = ps.executeQuery();
+            int insertedKkId;
+            if(rs.next())
+                insertedKkId = rs.getInt("ID");
+            else
+                throw new SQLException();
+
+            closeQuietly(ps);
+            closeQuietly(rs);
+            
+            
+            
             ps = conMysql.prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
                     + "BewertungenErlaubt, ModeratorKarteikartenBearbeiten, Ersteller, ErsteKarteikarte) VALUES(?,?,?,?,?,?,?,?,?)");
             ps.setString(1, veranst.getTitel());
@@ -963,6 +978,7 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setBoolean(6, veranst.isBewertungenErlaubt());
             ps.setBoolean(7, veranst.isModeratorKarteikartenBearbeiten());
             ps.setInt(8, veranst.getErsteller().getId());
+            ps.setInt(9, insertedKkId);
 
             ps.executeUpdate();
 
@@ -998,38 +1014,31 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
             closeQuietly(rs);
             
-            ps = conNeo4j.prepareStatement("CREATE (n) RETURN id(n) AS ID");
-            rs = ps.executeQuery();
-            int insertedKkId;
-            if(rs.next())
-                insertedKkId = rs.getInt("ID");
-            else
-                throw new SQLException();
-            
-            closeQuietly(ps);
-            
-            ps = conMysql.prepareStatement("INSERT INTO karteikarte (ID,Titel,Inhalt,Typ,Veranstaltung"
-                    + " VALUES(?,?,?,?,?");
+
+            ps = conMysql.prepareStatement("INSERT INTO karteikarte (ID,Titel,Inhalt,Typ,Veranstaltung)"
+                    + " VALUES(?,?,?,?,?)");
             ps.setInt(1, insertedKkId);
             ps.setString(2, veranst.getTitel());
             ps.setString(3, "");
             ps.setString(4, KarteikartenTyp.TEXT.toString());
             ps.setInt(5, veranstId);
+            ps.executeUpdate();
             
 
             conNeo4j.commit();
             conMysql.commit();
 
         } catch (SQLException e) {
+            e.printStackTrace();
             conNeo4j.rollback();
             conMysql.rollback();
-            e.printStackTrace();
             if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
             else
                 throw e;
         } finally{
             conMysql.setAutoCommit(true);
+            conNeo4j.setAutoCommit(true);
             closeQuietly(ps);
             closeQuietly(rs);
             conLock.getValue().unlock();
