@@ -1,11 +1,13 @@
 var UPLOADIDSET = -1;
 var UPLOADTYPE ="";
 
-$(document).ready(function() {
+
 	
 	Dropzone.autoDiscover = false;
 	var UPLOAD_ID;
-    $('#kk_erstellen_bt').click(function() {
+    function newKarteikarte(triggerElem){
+    	var vater = findVater(triggerElem);
+    	var bruder = findBruder(triggerElem);
     	try{
     		var kk_ck_editor = $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
     	}
@@ -59,24 +61,24 @@ $(document).ready(function() {
         		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  processKKerstellen, 0, 0)
         	}
         	else{
-        		processKKerstellen(text,titel,attributes);
+        		processKKerstellen(text,titel,attributes, bruder, vater);
         	}
         	return false;
    
         });
         
 
-    	function processKKerstellen(text,titel,attributes){
+    	function processKKerstellen(text,titel,attributes, bruder, vater){
     		var params = {};
     		params[paramTitel] = escape(titel);
     		params[paramVeranstaltung] = veranstaltungsObject[paramId];
     		params[paramInhalt] = escape(text);
     		params[paramAttribute] = escape(attributes);
     		params[paramType] = escape(UPLOADTYPE);
-    		params[paramKkUploadID] = escape(UPLOADIDSET);
-    		console.log("can submit now:"+$(params));
-    		
-    		//submitNewKarteikarte(params)
+    		params[paramVaterKK] = vater;
+    		params[paramBruderKK] = bruder;
+    		params[paramKkUploadID] = escape(UPLOADIDSET);	
+    		submitNewKarteikarte(params)
     	}
         function isAnyAttrSelected(){
         	var isTrue = false;
@@ -99,7 +101,7 @@ $(document).ready(function() {
         
         function submitNewKarteikarte(params){
         	var ajax = ajaxCall(karteikartenServlet,
-            		actionErstelleKarteikarte,
+        			actionErstelleKarteikarte,
                     function(response) {
                         showInfo("Karteikarte \""+ titel +"\"wurde erfolgreich erzeugt.");
                      //   fillVeranstaltungsliste();  
@@ -181,11 +183,36 @@ $(document).ready(function() {
      	
         
         
-    });
-    
-});
+    }
 
-
+function findVater(elem){
+	maybeNode = elem.parent().parent().parent().attr("id")
+	if(maybeNode === "kk_inhaltsverzeichnis"){
+		console.log("Vater ist VeranstaltungsKK (erste):"+veranstaltungsObject[paramErsteKarteikarte]);
+		return veranstaltungsObject[paramErsteKarteikarte];
+	}
+	else{
+		maybeNode = elem.parent().parent().prev().data("kkid");
+		console.log("Vater ist eine andere Karteikarte:"+maybeNode);
+	}
+	
+}
+function findBruder(elem){
+	elemBefore = elem.parent().prev();
+	if(elemBefore.length < 1){ //no brother before it, then -1
+		console.log("Kein Bruder gefunden. Daher -1");
+		return -1;
+	}
+	else{
+		id = elemBefore.children().first().data("kkid");
+		console.log("Vorangehender Bruder gefunden: "+id);
+		return id
+	}
+	
+	
+	//2.:
+	elem.parent().prev().children().first().data("kkid");
+}
 
 function isImage(filename) {
     var ext = getExtension(filename);

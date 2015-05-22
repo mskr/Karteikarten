@@ -13,27 +13,12 @@ import com.sopra.team1723.ctrl.ParamDefines;
  */
 public class Karteikarte implements IjsonObject {
 
-    
-    
-
-
-
-	public Karteikarte(String titel,  String inhalt, KarteikartenTyp typ, int veranstaltung)
-    {
-        super();
-        this.id = -1;
-        this.titel = titel;
-        this.aenderungsdatum = Calendar.getInstance();
-        this.inhalt = inhalt;
-        this.typ = typ;
-        this.veranstaltung = veranstaltung;
-        this.bewertung = 0;
-    }
-    
-    
-
-    public Karteikarte(int id, String titel, Calendar aenderungsdatum, String inhalt, KarteikartenTyp typ,
-            int veranstaltung, int bewertung)
+	
+    // Kompletter Konstruktor. Z.B. beim Lesen aus der db verwendet
+    public Karteikarte(int id, String titel, Calendar aenderungsdatum, String inhalt,
+            KarteikartenTyp typ, int veranstaltung, int bewertung, boolean istSatz, boolean istLemma, boolean istBeweis,
+            boolean istDefinition, boolean istWichtig, boolean istGrundlage, boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel,
+            boolean istUebung)
     {
         super();
         this.id = id;
@@ -43,7 +28,52 @@ public class Karteikarte implements IjsonObject {
         this.typ = typ;
         this.veranstaltung = veranstaltung;
         this.bewertung = bewertung;
+        
+        this.istSatz = istSatz;
+        this.istLemma = istLemma;
+        this.istBeweis = istBeweis;
+        this.istDefinition = istDefinition;
+        this.istWichtig = istWichtig;
+        this.istGrundlage = istGrundlage;
+        this.istZusatzinfo = istZusatzinfo;
+        this.istExkurs = istExkurs;
+        this.istBeispiel = istBeispiel;
+        this.istUebung = istUebung;
+        
+        this.hatBewertet = false;
     }
+
+	// Konstruktor der verwendet wird wenn eine Karteikarte erstellt wird.
+    public Karteikarte(String titel, String inhalt, KarteikartenTyp typ, int veranstaltung,
+            boolean istSatz, boolean istLemma, boolean istBeweis, boolean istDefinition, boolean istWichtig, boolean istGrundlage,
+            boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel, boolean istUebung)
+    {
+        super();
+        this.titel = titel;
+        this.inhalt = inhalt;
+        this.typ = typ;
+        this.veranstaltung = veranstaltung;
+        
+        this.istSatz = istSatz;
+        this.istLemma = istLemma;
+        this.istBeweis = istBeweis;
+        this.istDefinition = istDefinition;
+        this.istWichtig = istWichtig;
+        this.istGrundlage = istGrundlage;
+        this.istZusatzinfo = istZusatzinfo;
+        this.istExkurs = istExkurs;
+        this.istBeispiel = istBeispiel;
+        this.istUebung = istUebung;
+        
+        this.id = -1;
+        this.aenderungsdatum = Calendar.getInstance();
+        this.bewertung = 0;
+        this.hatBewertet = false;
+    }
+
+
+
+
 
 
 
@@ -84,6 +114,18 @@ public class Karteikarte implements IjsonObject {
     private int veranstaltung;
     
     private int bewertung;
+    
+    private boolean istSatz;    
+    private boolean istLemma; 
+    private boolean istBeweis;
+    private boolean istDefinition;
+    private boolean istWichtig;
+    private boolean istGrundlage;
+    private boolean istZusatzinfo;
+    private boolean istExkurs;
+    private boolean istBeispiel;
+    private boolean istUebung;
+    
        
     
     public enum BeziehungsTyp {
@@ -96,6 +138,7 @@ public class Karteikarte implements IjsonObject {
     
     public enum AttributTyp {
         SATZ,
+        LEMMA,
         BEWEIS,
         DEFINITION,
         WICHTIG,
@@ -182,6 +225,148 @@ public class Karteikarte implements IjsonObject {
         this.hatBewertet = hatBewertet;
     }
 
+    
+
+    public boolean isIstSatz()
+    {
+        return istSatz;
+    }
+
+
+
+    public void setIstSatz(boolean istSatz)
+    {
+        this.istSatz = istSatz;
+    }
+
+
+
+    public boolean isIstBeweis()
+    {
+        return istBeweis;
+    }
+
+
+
+    public void setIstBeweis(boolean istBeweis)
+    {
+        this.istBeweis = istBeweis;
+    }
+
+
+
+    public boolean isIstDefinition()
+    {
+        return istDefinition;
+    }
+
+
+
+    public void setIstDefinition(boolean istDefinition)
+    {
+        this.istDefinition = istDefinition;
+    }
+
+
+
+    public boolean isIstWichtig()
+    {
+        return istWichtig;
+    }
+
+
+
+    public void setIstWichtig(boolean istWichtig)
+    {
+        this.istWichtig = istWichtig;
+    }
+
+
+
+    public boolean isIstGrundlage()
+    {
+        return istGrundlage;
+    }
+
+
+
+    public void setIstGrundlage(boolean istGrundlage)
+    {
+        this.istGrundlage = istGrundlage;
+    }
+
+
+
+    public boolean isIstExkurs()
+    {
+        return istExkurs;
+    }
+
+
+
+    public void setIstExkurs(boolean istExkurs)
+    {
+        this.istExkurs = istExkurs;
+    }
+
+
+
+    public boolean isIstBeispiel()
+    {
+        return istBeispiel;
+    }
+
+
+
+    public void setIstBeispiel(boolean istBeispiel)
+    {
+        this.istBeispiel = istBeispiel;
+    }
+
+
+
+    public boolean isIstUebung()
+    {
+        return istUebung;
+    }
+
+
+
+    public void setIstUebung(boolean istUebung)
+    {
+        this.istUebung = istUebung;
+    }
+
+
+
+    public boolean isHatBewertet()
+    {
+        return hatBewertet;
+    }
+    
+    
+
+
+
+    public boolean isIstLemma()
+    {
+        return istLemma;
+    }
+
+    public void setIstLemma(boolean istLemma)
+    {
+        this.istLemma = istLemma;
+    }
+
+    public boolean isIstZusatzinfo()
+    {
+        return istZusatzinfo;
+    }
+
+    public void setIstZusatzinfo(boolean istZusatzinfo)
+    {
+        this.istZusatzinfo = istZusatzinfo;
+    }
 
     @Override
     public JSONObject toJSON(boolean full)
