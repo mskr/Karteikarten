@@ -672,6 +672,17 @@ textarea.input_std {
 	margin-left: .5em;
 	color: yellow;
 }
+
+.r-bn_anzahl {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+} .r-bn_anzahl + .mega-octicon {
+	color: yellow;
+} .r-bn_anzahl:empty + .mega-octicon {
+	color: inherit;
+}
+
 .bn_container {
 	height: 100%;
 	max-height: 200px;
@@ -1740,12 +1751,12 @@ textarea.input_std {
 	vertical-align: middle;
 } .profil_kurzinfo {
 	display: inline-block;
+	vertical-align: middle;
 } .profil_benutzername {
 	font-weight: bold;
 } #profil_avatar_aendern_file_name {
 	font-size: .75em;
 } #profil_avatar_submit {
-	position: absolute;
 	margin-top: 1em;
 }
 

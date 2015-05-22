@@ -219,12 +219,12 @@ function updateBenachrichtigungen(newBens)
 	
 	if(ungelesenCount > 0)
 	{
-		$("#bn_anzahl").text("(" + ungelesenCount + " neu)");
+		$(".bn_anzahl").html("<span>(" + ungelesenCount + " neu)</span>");
 		contentDiv.slideDown("slow");
 	}
 	else
 	{
-		$("#bn_anzahl").text("");
+		$(".bn_anzahl").empty();
 	}
 
 	// Neu Sortieren
@@ -242,7 +242,7 @@ function clearBenachrichtigungen()
 	newBnCount = 0;
 	benCount = 0;
 	
-	$("#bn_anzahl").text("");
+	$(".bn_anzahl").empty();
 	var contentDiv = $("#bn_container");
 	
 	// Alle Benachrichtiugngen einklappen und "keine"-span anzeigen
