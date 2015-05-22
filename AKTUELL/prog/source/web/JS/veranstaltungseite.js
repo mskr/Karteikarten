@@ -207,10 +207,10 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
             function(response) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
-                console.log("[LOG] arr hat die laenge "+arr.length);
+//                console.log("[LOG] arr hat die laenge "+arr.length);
                 // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
                 if(arr.length == 0) {
-                    console.log("hat keine kinder mehr");
+//                    console.log("hat keine kinder mehr");
                     // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
                     vaterElem.append("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
                 }
@@ -258,9 +258,11 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                     	params2[paramId] = arr[i][paramId];
                                     	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
                                     		domkk = buildKarteikarte(response);
-                                    		domkk.hide();
+                        					domkk.show();
+                        					domkk.css("opacity", "0");
                                     		$("#kk_all").append(domkk);
-                                    		domkk.slideDown();
+                        					domkk.animate({opacity: 1}, 2000);
+                						
                                     	}, params2);
 
                                     	$.when(ajax).done(function(){
@@ -347,19 +349,24 @@ function loadAfterKk(id)
 				{
 					$(".kk_load_after").slideUp();
 				}
-				
+
+				domms = [];
 				function nextItem()
 				{
 						o = data.shift();
-						if(o == undefined)
+						if(o == undefined){
+							$.each(domms,function(i, obj){
+								domms[i].animate({opacity: 1}, 2000);
+							})
 							return;
+						}
 						
 						domkk = buildKarteikarte(o);
-						domkk.hide();
+						domkk.show();
+						domkk.css("opacity", "0");
 						$("#kk_all").append(domkk);
-						domkk.slideDown(function(){
-							nextItem();
-						});
+						domms.push(domkk);
+						nextItem();
 				}
 				nextItem();
 				displayingAfterKK = false;
@@ -389,18 +396,25 @@ function loadPreKk(id)
 				{
 					$(".kk_load_pre").slideUp();
 				}
+				
+				domms = [];
 
 				function nextItem()
 				{
 					o = data.shift();
-					if(o == undefined)
+
+					if(o == undefined){
+						$.each(domms,function(i, obj){
+							domms[i].animate({opacity: 1}, 2000);
+						})
 						return;
+					}
 					domkk = buildKarteikarte(o);
-					domkk.hide();
+					domkk.show();
+					domkk.css("opacity", "0");
 					$("#kk_all").prepend(domkk);
-					domkk.slideDown(function(){
-						nextItem();
-					});
+					domms.push(domkk);
+					nextItem();
 				}
 				nextItem();
 				

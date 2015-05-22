@@ -13,6 +13,13 @@
 /* Dialoge immer oben*/
 .ui-dialog { z-index: 1000 !important ;}
 
+/* Filter latex images*/
+img[src*="gif.latex"] {
+    filter: invert(1);
+	-webkit-filter: invert(1);
+}
+
+
 body {
 	background: #4a4a4a;
 	color: #e0e0e0;
@@ -1136,11 +1143,13 @@ textarea.input_std {
 } .kk_wrapper:hover .kk_optionen {
 	opacity: 1;
 } .kk_wrapper:hover .kk {
-	background: white;
+	background: #444444;
 }
 
 .kk_votes {
-	width: 4rem;
+	/* width: 4rem; */
+	padding: 0;
+	padding-right: 1em;
 	display: block;
 	float: left;
 	text-shadow: 0px -1px 0px black;
@@ -1178,7 +1187,35 @@ textarea.input_std {
  	cursor: pointer;
 /*  	padding: 0.5em; */
 }
-
+.kk_info_head {
+	color: white;
+	font-weight: bold;
+	text-shadow: 0px -1px 0px black;
+	display: inline-block;
+ 	cursor: pointer;
+/*  	padding: 0.5em; */
+}
+.kk_info {
+	padding: 1em;
+/* 	width: 250px; */
+/* 	min-height: 300px; */
+	font-size: 14px;
+/* 	position: absolute; */
+	z-index: 5;
+/* 	left: calc(4% + 580px); */
+	background: #333333;
+	outline: none;
+	-webkit-border-radius: 0 2px 0 0;
+	-moz-border-radius: 0 2px 0 0;
+	border-radius: 0 2px 0 0;
+	-webkit-box-shadow: 0px 2px 2px #000;
+	-moz-box-shadow: 0px 2px 2px #000;
+	box-shadow: 0px 2px 2px #000;
+/* 	clear: both; */
+	-webkit-transition: width 0.5s;
+} .kk_notizen:focus {
+	color: white;
+}
 .kk_titel{
 	text-align: left;
 	margin-left:3.05em;
@@ -1212,7 +1249,7 @@ textarea.input_std {
  *//* 	width: 100%;
  */	position: relative;
 	z-index: 6;
-	background: #e0e0e0;
+	background: #333333;
 	outline: none;
 	border-bottom: 1px solid #1d1d1d;
 	box-shadow: inset 0px 5px 10px #c0c0c0;
@@ -1221,7 +1258,7 @@ textarea.input_std {
 	transition: background 0.5s;
 } .inhalt_text {
 	font-family: Computer Modern Serif;
-	color: #333333;
+	/* color: #333333; */
 } .inhalt_bild {
 	/* see: http://stackoverflow.com/questions/14142378 */
 	display: inline-flex;
@@ -1463,8 +1500,8 @@ textarea.input_std {
 	color: white;
 	background: #252525;
 } .kk_superkomm img {
-	filter: invert(1);
-	-webkit-filter: invert(1);
+	/* filter: invert(1);
+	-webkit-filter: invert(1); */
 } .kk_subkomm {
 	margin-top: 5px;
 	padding: 6px 10px;

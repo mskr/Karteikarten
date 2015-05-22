@@ -19,6 +19,12 @@ function buildKarteikarte(karteikarteJson)
 
     fillKarteiKarte(kkDom,karteikarteJson);
     
+    // Info
+    kkDom.find(".kk_info_body_wrapper").hide();
+    kkDom.find(".kk_info_head").click(function(){
+    	kkDom.find(".kk_info_body_wrapper").slideToggle();
+    });
+    
     // Notiz
     kkDom.find(".kk_notizen_body_wrapper").hide();
     kkDom.find(".kk_notizen_head").click(function(){
