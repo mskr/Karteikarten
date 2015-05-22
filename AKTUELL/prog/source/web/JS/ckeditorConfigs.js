@@ -7,6 +7,9 @@
  *  										Dadurch kleinere Zeilenabstände, aber nicht recommended laut ckeditor-doku.
  *  toolbarGroups -> Gibt an welche toolbars sichtbar sind und wie sie grupiert sind.
  */
+
+CKEDITOR.env.isCompatible = true;
+
 var ckEditorKommentarConfig = {
 		height: "100px",
 		removePlugins: 'elementspath',
