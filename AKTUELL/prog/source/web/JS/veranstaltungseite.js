@@ -250,13 +250,13 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 if($(e.target).siblings("ul").length == 0)
                                 {
                                     ladeKindKarteikarten(arr[i][paramId], kkListItem);
-                                    displayKarteikarte(arr[i][paramId]);
                                 }
                                 // Andernfalls klappe Kindkarteikarten ein
                                 else
                                 {
                                     $(e.target).siblings("ul").remove();
                                 }
+                                displayKarteikarte(arr[i][paramId]);
                                 e.stopPropagation();
                             });
                         }
