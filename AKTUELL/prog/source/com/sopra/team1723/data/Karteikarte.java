@@ -3,6 +3,7 @@ package com.sopra.team1723.data;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.sopra.team1723.ctrl.IjsonObject;
@@ -384,7 +385,22 @@ public class Karteikarte implements IjsonObject {
         jo.put(ParamDefines.Aenderungsdatum, f.format(this.getAenderungsdatum().getTime()));
         jo.put(ParamDefines.Bewertung, this.getBewertung());
         jo.put(ParamDefines.Inhalt, this.getInhalt());
+        
+        JSONArray arr = new JSONArray();
 
+        arr.add(this.istSatz);
+        arr.add(this.istLemma);
+        arr.add(this.istBeweis);
+        arr.add(this.istDefinition);
+        arr.add(this.istWichtig);
+        arr.add(this.istGrundlage);
+        arr.add(this.istZusatzinfo);
+        arr.add(this.istExkurs);
+        arr.add(this.istBeispiel);
+        arr.add(this.istUebung);
+ 
+        jo.put(ParamDefines.Attribute, arr);
+        
         return jo;
     }
 

@@ -137,9 +137,12 @@ function buildKarteikarte(karteikarteJson)
 
 function fillKarteiKarte(domElem, json){
 	        
-	//set Rating
+	// set Rating
 	domElem.find(".kk_votestat").html(json[paramBewertung]);
 	domElem.find(".kk_titel").text(json[paramTitel]);
+	// Attribute setzen
+	domElem.find(".kk_info_attr").text(createAttrStr(json[paramAttribute]));
+	
 	
 	// detect type and add content
 	switch (json[paramType]) {
@@ -147,7 +150,6 @@ function fillKarteiKarte(domElem, json){
     	domElem.find(".kk_inhalt").addClass("inhalt_text");
     	if(json[paramInhalt].trim() == "")
     	{
-    		domElem.find("div").find("*").off();
     		domElem.find("div").hide();
     	}
     	else
@@ -175,7 +177,41 @@ function fillKarteiKarte(domElem, json){
     	break;
 	}
 }
-
+function createAttrStr(arrAttr){
+	str="";
+	strArr = [];
+	if(arrAttr[0] == true)
+		strArr.push("Satz");
+	if(arrAttr[1] == true)
+		strArr.push("Lemma");
+	if(arrAttr[2] == true)
+		strArr.push("Beweis");
+	if(arrAttr[3] == true)
+		strArr.push("Definition");
+	if(arrAttr[4] == true)
+		strArr.push("Wichtig");
+	if(arrAttr[5] == true)
+		strArr.push("Grundlage");
+	if(arrAttr[6] == true)
+		strArr.push("Zusatzinfo");
+	if(arrAttr[7] == true)
+		strArr.push("Exkurs");
+	if(arrAttr[8] == true)
+		strArr.push("Beispiel");
+	if(arrAttr[9] == true)
+		strArr.push("Übung");
+	
+	if(strArr.length == 0)
+		strArr.push("Keine Attribute angegeben.");
+	
+	for(i in strArr)
+	{
+		str += strArr[i];
+		if(i < strArr-1)
+			str +=",";
+	}
+	return str;
+}
 function getKarteikarteByID(id){
 	var params = {};
     params[paramId] = id;
