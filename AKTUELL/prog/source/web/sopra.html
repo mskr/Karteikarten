@@ -130,13 +130,13 @@
 			<select class="input_std popup_input" id="vn_erstellen_auswahl_semester"></select>
 <!-- 			<select class="input_std popup_input" id="vn_erstellen_auswahl_studiengang" multiple></select>
  -->			
- 			<div class="itemlist" id="vn_erstellen_stg_list"></div>
 			<div class="autoCompleteWrapper">
+ 				<div class="itemlist" id="vn_erstellen_stg_list"></div>
 				<input class="input_std popup_input" id="vn_erstellen_stg_input" type="text" placeholder="Studiengang hinzufügen" required></input>
 			</div>
 			<input class="input_std popup_input" id="vn_erstellen_pass_input" type="password" placeholder="Passwort" required>
-			<div class="itemlist" id="vn_erstellen_mod_list"></div>
 			<div class="autoCompleteWrapper">
+				<div class="itemlist" id="vn_erstellen_mod_list"></div>
 				<input class="input_std popup_input" id="vn_erstellen_mod_input" type="text" placeholder="Moderator hinzufügen" required></input>
 			</div>
 			<div class="flex_container">
@@ -177,16 +177,16 @@
 			<input class="input_std popup_input" id="vn_bearbeiten_titel_input" type="text" placeholder="Titel" required>
 			<select class="input_std popup_input" id="vn_bearbeiten_auswahl_semester"></select>
 			
-			<div class="itemlist" id="vn_bearbeiten_stg_list"></div>
 			<div class="autoCompleteWrapper">
+				<div class="itemlist" id="vn_bearbeiten_stg_list"></div>
 				<input class="input_std popup_input" id="vn_bearbeiten_stg_input" type="text" placeholder="Studiengang hinzufügen" required></input>
 			</div>
 			
 			<label><input id="vn_bearbeiten_passwort_set" type="checkbox"checked> Passwort ist gesetzt</label>
 			<input class="input_std popup_input" id="vn_bearbeiten_pass_input" type="password" placeholder="Passwort" required>
 			
-			<div class="itemlist" id="vn_bearbeiten_mod_list"></div>
 			<div class="autoCompleteWrapper">
+				<div class="itemlist" id="vn_bearbeiten_mod_list"></div>
 				<input class="input_std popup_input" id="vn_bearbeiten_mod_input" type="text" placeholder="Moderator hinzufügen" required></input>
 			</div>
 			
@@ -210,7 +210,7 @@
 			<span id="vn_bearbeiten_cancel" class="mybutton dark flat">Abbrechen</span>
 			<span id="vn_bearbeiten_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
 			<span id="vn_bearbeiten_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
-			<span id="vn_bearbeiten_ok" class="mybutton green">Erstellen</span>
+			<span id="vn_bearbeiten_ok" class="mybutton green">Speichern</span>
 		</div>
 	</div>
 </div>
@@ -346,6 +346,7 @@
 	<label class="r-usercontainer-toggle-off" for="r-usercontainer-toggle-radio-off"></label>
 	<input id="r-bn-toggle-radio" type="radio" name="r-mypersonalbox">
 	<label class="r-bn-toggle tiptrigger tipright" for="r-bn-toggle-radio" data-tooltip="Benachrichtugungen">
+		<span class="r-bn_anzahl bn_anzahl"></span>
 		<span class="mega-octicon octicon-pulse"></span>
 	</label>
 	<input id="r-bn-toggle-radio-off" type="radio" name="r-mypersonalbox">
@@ -403,9 +404,11 @@ Dann aber so leer.
 
 <div id="mainbox_hauptseite" class="mainbox">
 	<div class="autoCompleteWrapper">
-		<input id="suche_global_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Veranstaltungen und Personen finden..." required>
+		<input id="suche_global_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Suche nach Personen und Veranstaltungen..." required>
 	</div>
-	<span id="vn_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span> </span>
+	<div class="hauptseite_head">
+		<span id="vn_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span> </span>
+	</div>
 	
 	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
 <!--	<div class="vn_container" id="vn_container">

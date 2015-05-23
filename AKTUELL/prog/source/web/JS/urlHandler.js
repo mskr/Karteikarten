@@ -127,7 +127,6 @@ function interpreteUrlQuery(paramObj)
 	// Versteck alle Popupfenster. Wo wÃ¤re das besser ?
 //	$(".popup_fenster").popup('hide');
 	
-//	$(".mainbox").fadeOut("slow");
     var ziel = paramObj[urlParamLocation];
 	// Benutzer eingeloggt
     if(jsonBenutzer != undefined)
@@ -141,10 +140,12 @@ function interpreteUrlQuery(paramObj)
         {
             ziel = ansichtHauptseite;                   // Dann gehe zu Hauptseite
             ajax2 = fillHauptseite();
-        } else if(ziel == ansichtProfilseite) 
+        }
+        else if(ziel == ansichtProfilseite) 
         {
         	ajax2 = fillProfilseite();
-        } else if(ziel == ansichtVeranstaltungsseite){
+        }
+        else if(ziel == ansichtVeranstaltungsseite){
         	vid = paramObj[paramId];
         	ajax2 = fillVeranstaltungsSeite(vid);
         }
@@ -153,8 +154,9 @@ function interpreteUrlQuery(paramObj)
         	display(ziel);
 		});
     } 
+    // Benutzer nicht eingeloggt
     else 
-    { // Benutzer nicht eingeloggt
+    {
         $.when(fillStartseite()).done(function() {
         	display(ansichtStartseite);
 		});
@@ -185,7 +187,7 @@ function getBenutzer()
  */
 function display(ansicht) 
 {
-    console.log("GEHE ZU "+ansicht);
+    console.log("[GOTO] "+ansicht);
     
     // mypersonalbox
     if(ansicht == ansichtStartseite)
@@ -199,6 +201,7 @@ function display(ansicht)
         $("#mypersonalbox_main").show();
         
     }
+    
     // mainbox
     var ansichtIdx = alleAnsichten.indexOf(ansicht);
     

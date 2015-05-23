@@ -113,7 +113,7 @@ function showNextMessage()
  * @param errorTxt
  */
 function showError(errorTxt) {
-	console.log("ERROR: " + errorTxt);
+	console.log("[ERROR] " + errorTxt);
 	addMessageToQueue(errorTxt,true);
 	startMessageQueue();
 	

@@ -112,6 +112,7 @@ public class VeranstaltungServlet extends ServletController {
             {
                 for(int i = 0; i < mIds.length;i++)
                 {
+                    dbManager.zuVeranstaltungEinschreiben(veranst.getId(), mIds[i], veranst.getZugangspasswort());
                     dbManager.schreibeBenachrichtigung(new BenachrEinlModerator(mIds[i], veranst));
                 }
             }

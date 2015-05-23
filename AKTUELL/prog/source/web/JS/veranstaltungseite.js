@@ -201,6 +201,7 @@ function fillVeranstaltungsSeite(Vid)
 }
 
 function initInhaltsverzeichniss(){
+    console.log(veranstaltungsObject);
 	return ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
 }
 
