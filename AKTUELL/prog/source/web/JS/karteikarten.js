@@ -236,7 +236,8 @@ function setNotiz(kkDom, kkId)
 	    	kkDom.find(".kk_notizen_body").val(response[paramInhalt]);
 	    	if(response[paramInhalt].trim() != "")
 	    	{
-	    		kkDom.find(".kk_notizen_head").append(" (!)");
+	    		// TODO Unschön
+//	    		kkDom.find(".kk_notizen_head").append(" (!)");
 	    	}
 	    	else
     		{
