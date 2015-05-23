@@ -425,9 +425,9 @@ public interface IDatenbankmanager {
      */
     public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException;
     
-    public boolean connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j);
+    public void connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j) throws SQLException;
     
-    public boolean disconnectKk(int vonKK, int zuKK, Connection conNeo4j);
+    public void disconnectKk(int vonKK, int zuKK, Connection conNeo4j) throws SQLException;
 
     /**
      * Daten der angegebenen Karteikarte werden in der Datenbank geupdatet.

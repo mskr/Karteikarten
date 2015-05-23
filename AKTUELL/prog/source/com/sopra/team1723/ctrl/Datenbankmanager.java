@@ -2037,12 +2037,23 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
 
             ps = conMysql.prepareStatement("INSERT INTO karteikarte(ID,Titel,Inhalt,Typ,"
-                    + "Veranstaltung) VALUES(?,?,?,?,?)");
+                    + "Veranstaltung, Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, "
+                    + " Zusatzinformation, Exkurs, Beispiel, Uebung) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             ps.setInt(1, insertedId);
             ps.setString(2, karteik.getTitel());
             ps.setString(3, karteik.getInhalt());
             ps.setString(4, karteik.getTyp().name());
             ps.setInt(5,karteik.getVeranstaltung());
+            ps.setBoolean(6,karteik.isIstSatz());
+            ps.setBoolean(7,karteik.isIstLemma());
+            ps.setBoolean(8,karteik.isIstBeweis());
+            ps.setBoolean(9,karteik.isIstDefinition());
+            ps.setBoolean(10,karteik.isIstWichtig());
+            ps.setBoolean(11,karteik.isIstGrundlage());
+            ps.setBoolean(12,karteik.isIstZusatzinfo());
+            ps.setBoolean(13,karteik.isIstExkurs());
+            ps.setBoolean(14,karteik.isIstBeispiel());
+            ps.setBoolean(15,karteik.isIstUebung());
             ps.executeUpdate();
 
             conNeo4j.commit();
@@ -2683,10 +2694,9 @@ public class Datenbankmanager implements IDatenbankmanager {
     }
 
     @Override
-    public boolean connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j)
+    public void connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j) throws SQLException
     {        
         PreparedStatement ps = null;
-        boolean erfolgreich = true;
         try {
             ps = conNeo4j.prepareStatement("MATCH (n),(m) "
                     + "WHERE id(n) = {1} AND id(m) = {2} "
@@ -2696,20 +2706,17 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.executeUpdate();
 
         } catch(SQLException e){
-            erfolgreich = false;
-            e.printStackTrace();
+            throw e;
         } finally{
             closeQuietly(ps);
         }
 
-        return erfolgreich;
     }
     
     @Override
-    public boolean disconnectKk(int vonKK, int zuKK, Connection conNeo4j)
+    public void disconnectKk(int vonKK, int zuKK, Connection conNeo4j) throws SQLException
     {
         PreparedStatement ps = null;
-        boolean erfolgreich = true;
         try{
             ps = conNeo4j.prepareStatement("MATCH (n)-[r]->(m) "
                     + "WHERE id(n) = {1} AND id(m) = {2} "
@@ -2718,11 +2725,9 @@ public class Datenbankmanager implements IDatenbankmanager {
             ps.setInt(2, zuKK);
             ps.executeUpdate();
         } catch(SQLException e){
-            erfolgreich = false;
-            e.printStackTrace();
+            throw e;
         } finally{
             closeQuietly(ps);
         }
-        return erfolgreich;
     }
 }
