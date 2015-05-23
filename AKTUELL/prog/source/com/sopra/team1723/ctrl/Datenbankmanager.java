@@ -483,10 +483,14 @@ public class Datenbankmanager implements IDatenbankmanager {
         ResultSet rs = null;
         Veranstaltung veranstaltung = null;
         try{
-            ps = conMysql.prepareStatement("SELECT Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
-                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer,"
-                    + " ErsteKarteikarte FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz "
-                    + "ON v.ID = bvz.Veranstaltung WHERE v.ID=?"); 
+            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
+                    +       "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer,"
+                    +       " ErsteKarteikarte "
+                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz "
+                    + "ON v.ID = bvz.Veranstaltung "
+                    + "GROUP BY v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
+                    +       " ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, ErsteKarteikarte "
+                    + "HAVING v.ID=?"); 
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if(rs.next()){
@@ -508,101 +512,6 @@ public class Datenbankmanager implements IDatenbankmanager {
         return veranstaltung;
     }
 
-    //    @Override
-    //    public List<Veranstaltung> leseAlleVeranstaltungen()
-    //    {
-    //        PreparedStatement ps = null;
-    //        ResultSet rs = null;
-    //        ArrayList<Veranstaltung> veranstaltungen = null;
-    //        try{
-    //            veranstaltungen = new ArrayList<Veranstaltung>();
-    //            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-    //                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
-    //                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
-    //                    + "v.ID = bvz.Veranstaltung GROUP BY v.ID"); 
-    //            rs = ps.executeQuery();
-    //            while(rs.next()){
-    //                veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
-    //                        rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-    //                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-    //                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
-    //            }
-    //        } catch (SQLException e) {
-    //            veranstaltungen = null;
-    //            e.printStackTrace();
-    //
-    //        } finally{
-    //            closeQuietly(ps);
-    //            closeQuietly(rs);
-    //        }
-    //
-    //        return veranstaltungen;
-    //    }
-
-    //    @Override
-    //    public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang)
-    //    {
-    //        PreparedStatement ps = null;
-    //        ResultSet rs = null;
-    //        ArrayList<Veranstaltung> veranstaltungen = null;
-    //        try{
-    //            veranstaltungen = new ArrayList<Veranstaltung>();
-    //            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-    //                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
-    //                    + "FROM benutzer_veranstaltung_zuordnung AS bvz RIGHT OUTER JOIN veranstaltung AS v ON "
-    //                    + "v.ID = bvz.Veranstaltung JOIN veranstaltung_studiengang_zuordnung AS vsz ON v.ID = vsz.Veranstaltung"
-    //                    + " WHERE vsz.Studiengang =? GROUP BY v.ID"); 
-    //            ps.setString(1, studiengang);
-    //            rs = ps.executeQuery();
-    //            while(rs.next()){
-    //                veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
-    //                        rs.getString("Semester"),rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-    //                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-    //                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
-    //            }
-    //        } catch (SQLException e) {
-    //            veranstaltungen = null;
-    //            e.printStackTrace();
-    //
-    //        } finally{
-    //            closeQuietly(ps);
-    //            closeQuietly(rs);
-    //        }
-    //        return veranstaltungen;
-    //    }
-
-
-    //    @Override
-    //    public List<Veranstaltung> leseVeranstaltungenSemester(String semester)
-    //    {
-    //        PreparedStatement ps = null;
-    //        ResultSet rs = null;
-    //        ArrayList<Veranstaltung> veranstaltungen = null;
-    //        try{
-    //            veranstaltungen = new ArrayList<Veranstaltung>();
-    //            ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
-    //                    + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer "
-    //                    + "FROM veranstaltung AS v LEFT OUTER JOIN benutzer_veranstaltung_zuordnung AS bvz ON "
-    //                    + "v.ID = bvz.Veranstaltung WHERE Semester =? GROUP BY v.ID"); 
-    //            ps.setString(1, semester);
-    //            rs = ps.executeQuery();
-    //            while(rs.next()){
-    //                veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"),rs.getString("Titel"),rs.getString("Beschreibung"),
-    //                        semester,rs.getString("Kennwort"),rs.getBoolean("BewertungenErlaubt"),
-    //                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
-    //                        rs.getBoolean("KommentareErlaubt"),rs.getInt("AnzTeilnehmer")));
-    //            }
-    //        } catch (SQLException e) {
-    //            veranstaltungen = null;
-    //            e.printStackTrace();
-    //
-    //        } finally{
-    //            closeQuietly(ps);
-    //            closeQuietly(rs);
-    //        }
-    //
-    //        return veranstaltungen;
-    //    }
 
     @Override
     public List<Veranstaltung> leseVeranstaltungen(String semester, String studiengang)
