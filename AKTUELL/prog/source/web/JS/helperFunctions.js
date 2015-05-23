@@ -159,17 +159,18 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     {
         closeElems[i].off(),
         closeElems[i].click(function() {
+            $("body").css("overflow","auto"); // Scrollbar ausserhalb Popup wieder aktivieren
             popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
             closeFunc();
             popupSeitenIterator = 0;
-            $("body").css("overflow","auto"); // Scrollbar ausserhalb Popup wieder aktivieren
         });
     }
     submitElem.off();
     submitElem.click(function() {
         if(submitFunc())
         {
+            $("body").css("overflow","auto"); // Scrollbar ausserhalb Popup wieder aktivieren
             popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
             closeFunc();
