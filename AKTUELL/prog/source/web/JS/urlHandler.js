@@ -173,7 +173,7 @@ function interpreteUrlQuery(paramObj)
         }
         else if(ziel == ansichtVeranstaltungsseite){
         	vid = paramObj[paramId];
-        	kkId = paramObj["kkId"];
+        	kkId = paramObj[paramURLKkID];
         	ajax2 = fillVeranstaltungsSeite(vid, kkId);
         }
         

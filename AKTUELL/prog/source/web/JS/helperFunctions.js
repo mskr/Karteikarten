@@ -100,6 +100,11 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
 {
     // Scrollbar ausserhalb Popup deaktivieren, sodass nur Popup Scrollbar sichtbar
     $("body").css("overflow","hidden"); 
+
+    if(submitFunc == undefined)
+    	submitFunc = function(){return true;};
+    if(closeFunc == undefined)
+    	closeFunc = function(){return true;};
     
     var seitenArr = popupOverlayWrapper.find(".popup_fenster_body");
     $(seitenArr[0]).show();
@@ -110,43 +115,50 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
             $(seitenArr[i]).hide();
         }
         submitElem.hide();
-        weiterElem.show();
-        zurueckElem.hide();
-        weiterElem.off();
-        weiterElem.click(function() {
-            $(seitenArr[popupSeitenIterator]).slideUp();
-            popupSeitenIterator++;
-            $(seitenArr[popupSeitenIterator]).slideDown();
-            if(popupSeitenIterator > 0)
-            {
-                zurueckElem.show();
-            }
-            if(popupSeitenIterator == seitenArr.length-1)
-            {
-                weiterElem.hide();
-                submitElem.show();
-            }
-        });
-        zurueckElem.off();
-        zurueckElem.click(function() {
-            $(seitenArr[popupSeitenIterator]).slideUp();
-            popupSeitenIterator--;
-            $(seitenArr[popupSeitenIterator]).slideDown();
-            if(popupSeitenIterator == 0)
-            {
-                zurueckElem.hide();
-            }
-            if(popupSeitenIterator < seitenArr.length-1)
-            {
-                weiterElem.show();
-                submitElem.hide();
-            }
-        });
+        if(weiterElem!= undefined){
+        	weiterElem.show();
+
+        	weiterElem.off();
+        	weiterElem.click(function() {
+        		$(seitenArr[popupSeitenIterator]).slideUp();
+        		popupSeitenIterator++;
+        		$(seitenArr[popupSeitenIterator]).slideDown();
+        		if(popupSeitenIterator > 0)
+        		{
+        			zurueckElem.show();
+        		}
+        		if(popupSeitenIterator == seitenArr.length-1)
+        		{
+        			weiterElem.hide();
+        			submitElem.show();
+        		}
+        	});
+        }
+        if(zurueckElem!= undefined){
+        	zurueckElem.hide();
+        	zurueckElem.off();
+        	zurueckElem.click(function() {
+        		$(seitenArr[popupSeitenIterator]).slideUp();
+        		popupSeitenIterator--;
+        		$(seitenArr[popupSeitenIterator]).slideDown();
+        		if(popupSeitenIterator == 0)
+        		{
+        			zurueckElem.hide();
+        		}
+        		if(popupSeitenIterator < seitenArr.length-1)
+        		{
+        			weiterElem.show();
+        			submitElem.hide();
+        		}
+        	});
+        }
     }
     else
     {
-        weiterElem.hide();
-        zurueckElem.hide();
+    	if(weiterElem!= undefined)
+    		weiterElem.hide();
+    	if(zurueckElem!= undefined)
+    		zurueckElem.hide();
     }
     
     popupOverlayWrapper.fadeIn(300);

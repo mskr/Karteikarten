@@ -19,6 +19,36 @@ function buildKarteikarte(karteikarteJson)
 
     fillKarteiKarte(kkDom,karteikarteJson);
     
+    // CopyLink
+    // -> Probleme mit CSS 
+//    var clip = new ZeroClipboard(kkDom.find(".permalink"));
+//    clip.on("ready", function() {
+//      this.on("aftercopy", function(event) {
+//    	  showInfo("URL wurde in die Zwischenablage eingefügt!");
+//      });
+//      
+//      clip.on( "copy", function (event) {
+//    	  var clipboard = event.clipboardData;
+//    	  kkUrl = location.host + location.pathname + "?location=veranstaltungsseite&id="+ veranstaltungsObject[paramId] +
+//			"&"+paramURLKkID+"=" + 	kkId;
+//    	  clipboard.setData( "text/plain", kkUrl );
+//    	});
+//    });
+    // Workaround:
+    kkDom.find(".permalink").click(function(){
+   	 	kkUrl = location.host + location.pathname + "?location=veranstaltungsseite&id="+ veranstaltungsObject[paramId] +
+			"&"+paramURLKkID+"=" + 	kkId;
+   	 	
+    	$("#link_copy_data").html(kkUrl);
+    	
+    	popupFenster($("#link_copy_popup_overlay"), 
+    			[$("#link_copy_ok"), $("#link_copy_popup_close")], function(){$("#link_copy_data").val("");}, 
+    			$("#link_copy_ok"), undefined, 
+    			undefined);
+    	
+    });
+
+    // Überschrift kk
     if(kkInhalt == "")
     	return kkDom;
     
@@ -140,6 +170,7 @@ function fillKarteiKarte(domElem, json){
 	// set Rating
 	domElem.find(".kk_votestat").html(json[paramBewertung]);
 	domElem.find(".kk_titel").text(json[paramTitel]);
+	
 	// Attribute setzen
 	domElem.find(".kk_info_attr").text(createAttrStr(json[paramAttribute]));
 	

@@ -47,6 +47,7 @@
 <!-- Waypoints JS Lib -->
 <script src="JS/jquery.waypoints.min.js"></script>
 <script src="JS/sticky.min.js"></script>
+<script src="zeroclipboard-2.2.0/dist/ZeroClipboard.js"></script>
 <!-- Dropzone.js Skript -->
 <script src="JS/libs/dropzone.js"></script>
 <!-- HTML5-Videoplayer -->
@@ -650,9 +651,9 @@ Dann aber so leer.
 
 <!-- Template Karteikarte -->
 <div id="templatekarteikarte" class="kk_wrapper" style="display:none">
-<span>
+<span class="kk_header">
 	<span class="kk_titel">Karteikarten-Titel</span>
-	<!-- <span class="displayOnHover" style="display:inline-flex">
+	 <span class="displayOnHover" style="display:inline-flex">
 		<a class=" option loeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
 			<span class="octicon octicon-trashcan"></span></a>
 		<a class="option permalink tiptrigger tipabove"
@@ -661,7 +662,7 @@ Dann aber so leer.
 		<a class="option attribute attr_popup_open tiptrigger tipabove"
 			data-tooltip="Attribute ändern"><span
 			class="octicon octicon-checklist"></span></a>
-	</span> -->
+	</span>
 </span>
 <div style = "display:table-row">
 	<div style="display:table-cell;">
@@ -758,7 +759,7 @@ Dann aber so leer.
 	
 	</div>
 </div>
-
+<!-- Template subkommentar -->
 <div class="kk_subkomm" id="templateSubKomm" data-komm-id="" style="display:none">
 	<div class="kk_komm_loeschen">
 		<a><span class="octicon octicon-trashcan"></span></a>
@@ -768,6 +769,28 @@ Dann aber so leer.
 	<div class="clearfix"></div>
 </div>
 
+<!-- LinkCopy Popup Fenster -->
+<div id="link_copy_popup_overlay" class="popup_fenster_overlay">
+	<div id="link_copy_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+<!-- 			<span class="octicon octicon-podium"></span> -->
+			<span class="popup_fenster_ueberschrift">Link kopieren</span>
+		</div>
+		<div id="link_copy_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div class="popup_fenster_body">
+			<div>
+				<h3>Hier ist Ihr Link:</h3><br>
+				<p id="link_copy_data"></p><br>
+				<p>Bitte markieren und mit STRG-C kopieren.</p>
+			</div>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="link_copy_ok" class="mybutton green">Schließen</span>
+		</div>
+	</div>
+</div>
 </body>
 
 </html>
