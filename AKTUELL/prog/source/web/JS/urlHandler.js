@@ -173,7 +173,8 @@ function interpreteUrlQuery(paramObj)
         }
         else if(ziel == ansichtVeranstaltungsseite){
         	vid = paramObj[paramId];
-        	ajax2 = fillVeranstaltungsSeite(vid);
+        	kkId = paramObj["kkId"];
+        	ajax2 = fillVeranstaltungsSeite(vid, kkId);
         }
         
         $.when(ajax1, ajax2).done(function() {

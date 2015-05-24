@@ -596,3 +596,15 @@ function destroyCKeditors(container)
 	    }
 	}
 }
+
+function concatStrArr(strArr, seperator)
+{
+	str = "";
+	for(i in strArr)
+	{
+		str += strArr[i];
+		if(i < strArr.length-1)
+			str += seperator;
+	}
+	return str;
+}

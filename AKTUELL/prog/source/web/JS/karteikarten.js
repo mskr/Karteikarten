@@ -143,6 +143,7 @@ function fillKarteiKarte(domElem, json){
 	// Attribute setzen
 	domElem.find(".kk_info_attr").text(createAttrStr(json[paramAttribute]));
 	
+	fillVerweise(domElem,[{"id":"5","titel":"blabla","type":"zusatz"},{"id":"8","titel":"Hallo123","type":"sonstiges"}]);
 	
 	// detect type and add content
 	switch (json[paramType]) {
@@ -178,7 +179,6 @@ function fillKarteiKarte(domElem, json){
 	}
 }
 function createAttrStr(arrAttr){
-	str="";
 	strArr = [];
 	if(arrAttr[0] == true)
 		strArr.push("Satz");
@@ -204,13 +204,48 @@ function createAttrStr(arrAttr){
 	if(strArr.length == 0)
 		strArr.push("Keine Attribute angegeben.");
 	
-	for(i in strArr)
+	return concatStrArr(strArr, ", ");
+}
+/**
+ * 
+ * @param verweisArr Array aus {paramType, paramId, paramTitel}
+ */
+function fillVerweise(domKk, verweisArr)
+{
+	rel_vor = [];
+	rel_zusatz = [];
+	rel_sonstiges = [];
+	rel_uebung = [];
+	
+	for(i in verweisArr)
 	{
-		str += strArr[i];
-		if(i < strArr-1)
-			str +=",";
+		txt = "<a onclick='displayKarteikarte("+verweisArr[i][paramId]+");'>" + verweisArr[i][paramTitel] +"</a>";
+		
+		if(verweisArr[i][paramType] == "vorraussetzung")
+			rel_vor.push(txt);
+		else if(verweisArr[i][paramType] == "zusatz")
+			rel_zusatz.push(txt);
+		else if(verweisArr[i][paramType] == "sonstiges")
+			rel_sonstiges.push(txt);
+		else if(verweisArr[i][paramType] == "uebung")
+			rel_uebung.push(txt);
 	}
-	return str;
+	
+	if(rel_vor.length == 0)
+		rel_vor.push("Keine Verweise angegeben.");
+	if(rel_zusatz.length == 0)
+		rel_zusatz.push("Keine Verweise angegeben.");
+	if(rel_sonstiges.length == 0)
+		rel_sonstiges.push("Keine Verweise angegeben.");
+	if(rel_uebung.length == 0)
+		rel_uebung.push("Keine Verweise angegeben.");
+	
+
+	domKk.find(".kk_rel_vorraus").html(concatStrArr(rel_vor, ", "));
+	domKk.find(".kk_rel_zusatz").html(concatStrArr(rel_zusatz, ", "));
+	domKk.find(".kk_rel_sonstiges").html(concatStrArr(rel_sonstiges, ", "));
+	domKk.find(".kk_rel_uebung").html(concatStrArr(rel_uebung, ", "));
+	
 }
 function getKarteikarteByID(id){
 	var params = {};

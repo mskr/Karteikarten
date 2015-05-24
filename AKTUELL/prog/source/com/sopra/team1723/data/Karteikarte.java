@@ -134,7 +134,8 @@ public class Karteikarte implements IjsonObject {
         H_BROTHER,
         V_VORRAUSSETZUNG, 
         V_UEBUNG, 
-        V_ZUSATZINFO
+        V_ZUSATZINFO,
+        V_SONSTIGES
     };
     
     public enum AttributTyp {
