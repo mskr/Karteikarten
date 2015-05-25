@@ -111,7 +111,7 @@ var UPLOADTYPE ="";
                         showInfo("Karteikarte \""+ titel +"\"wurde erfolgreich erzeugt.");
                         // Wir bekommen die eingefügte id zurück
                         displayKarteikarte(response[paramId]);
-                        initInhaltsverzeichniss();
+                        initInhaltsverzeichnis();
                     },
                     params
                 );

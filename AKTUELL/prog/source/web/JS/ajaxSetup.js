@@ -24,7 +24,7 @@ $.ajaxSetup({
 		}
 		else if(jqXHR.responseText == "")
 		{
-		    showError("Bitte prüfen Sie Ihre Internetverbindung! Es konnte keine Verbindung zum Server hergestellt werden. Versuche Verbindung wieder herzustellen...");
+		    showError("Es konnte keine Verbindung zum Server hergestellt werden. Versuche Verbindung wieder herzustellen...");
 
 		    if(!connectionCheckRunning)
 		    	checkConnection();
@@ -35,6 +35,10 @@ $.ajaxSetup({
 		}
 		else
 			showError("Unbekannter Fehler. AjaxStatus: "+jqXHR.status+", AjaxTextStatus: "+textStatus+", AjaxErrorCode: "+errorThrown + ", resonseText: " + jqXHR.responseText);
+	},
+	complete: function() {
+	    // Suche nach Formeln, die noch nicht gerendert wurden
+	    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 	}
 });
 

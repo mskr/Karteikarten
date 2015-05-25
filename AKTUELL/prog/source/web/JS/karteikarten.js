@@ -168,16 +168,13 @@ function buildKarteikarte(karteikarteJson)
 	);
 	
 	// Reagiere auf das Scrollen zu dieser Karteikarte
-	var waypoint = new Waypoint({
+	new Waypoint({
 	    element: kkDom,
 	    handler: function(direction) {
-	        console.log("Scrolled to Karteikarte from direction "+direction+" (kkID="+kkDom.attr("data-kkid")+")");
-	        for(var i in inhaltsverzeichnisHighlightedKnoten) {
-	            inhaltsverzeichnisUnhighlightKnoten( inhaltsverzeichnisHighlightedKnoten[i] );
-	        }
+	        inhaltsverzeichnisUnhighlightAll();
 	        inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
 	    }
-	})
+	});
 	
     return kkDom;
 }
@@ -361,7 +358,6 @@ function voteKkDown(kommId)
 }
 
 
-var inhaltsverzeichnisHighlightedKnoten = [];
 
 function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
     // Hole Liste mit Kindern der naechsten Ebene
@@ -374,7 +370,6 @@ function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
         if(currentKkID == kkID)
         {
             inhaltsverzeichnisHighlightKnoten($(elem));
-            inhaltsverzeichnisHighlightedKnoten.push($(elem));
             isFound = true;
             return false; // break loop
         }
@@ -399,13 +394,19 @@ function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
         });
     }
 }
+var inhaltsverzeichnisHighlightedKnoten = [];
 function inhaltsverzeichnisHighlightKnoten(kkKnoten) {
     kkKnoten.css("font-weight","bold");
     kkKnoten.css("color","white");
     kkKnoten.parents("li").css("border-left","2px solid white");
+    inhaltsverzeichnisHighlightedKnoten.push(kkKnoten);
 }
 function inhaltsverzeichnisUnhighlightKnoten(kkKnoten) {
-    kkKnoten.css("font-weight","normal");
-    kkKnoten.css("color","inherit");
-    kkKnoten.parents("li").css("border-left","1px solid #aaa");
+    kkKnoten.removeAttr("style");
+    kkKnoten.parents("li").removeAttr("style");
+}
+function inhaltsverzeichnisUnhighlightAll() {
+    for(var i in inhaltsverzeichnisHighlightedKnoten) {
+        inhaltsverzeichnisUnhighlightKnoten( inhaltsverzeichnisHighlightedKnoten[i] );
+    }
 }

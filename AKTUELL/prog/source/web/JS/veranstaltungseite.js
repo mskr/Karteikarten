@@ -230,21 +230,21 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                 var arr = response[keyJsonArrResult];
                 // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
                 if(arr.length == 0) {
-                	elem = $("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
-                    vaterElem.append(elem);
+                	elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                    elem.appendTo(vaterElem).slideDown();
         	        registerErstellKkHandler(elem);
                 }
                 // andernfalls DOM aufbauen
                 else
                 {
                     // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
-                	elem = $("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
-                    vaterElem.append(elem);
+                    elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                    elem.appendTo(vaterElem).slideDown();
         	        registerErstellKkHandler(elem);
                     for(var i in arr)
                     {
-                        var kkListItem = $("<li><a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
-                        vaterElem.append(kkListItem);
+                        var kkListItem = $("<li style='display:none'><a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
+                        kkListItem.appendTo(vaterElem).slideDown();
                         
                         // Click Handler
                         var f = function(arr, kkListItem, i) {
@@ -257,16 +257,21 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 // Andernfalls klappe Kindkarteikarten ein
                                 else
                                 {
-                                    $(e.target).siblings("ul").remove();
+                                    $(e.target).siblings("ul").slideUp("normal", function() { $(this).remove() });
                                 }
-                                displayKarteikarte(arr[i][paramId]);
+                                // Zur Karteikarte scrollen und im Inhaltsverzeichnis hervorheben
+                                displayKarteikarte(arr[i][paramId], function() {
+                                    inhaltsverzeichnisUnhighlightAll();
+                                    inhaltsverzeichnisHighlightKnoten($(e.target));
+                                });
+                                // Ausbreitung des Events verhindern
                                 e.stopPropagation();
                             });
                         }
                         f(arr, kkListItem, i);
-                        // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte                        
-                    	elem = $("<li><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
-                        vaterElem.append(elem);
+                        // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                        elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                        elem.appendTo(vaterElem).slideDown();
             	        registerErstellKkHandler(elem);
                     }
                 }
@@ -331,15 +336,14 @@ function sortiereKarteikartenIDs(jsonKkIDs){
 	return newIdArray;
 }
 
-function displayKarteikarte(id){
+function displayKarteikarte(id, callback){
     // Karteikarte schon in der Liste?
     kkDiv = $("#kk_all").find("[data-kkid=" + id + "]");
-    // Existiert ?
     if(kkDiv.length)
     {
     	$('html,body').animate({
             scrollTop: kkDiv.offset().top},
-            'slow');
+            'normal', callback);
     }
     else
     {

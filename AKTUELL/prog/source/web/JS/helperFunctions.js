@@ -171,7 +171,7 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     {
         closeElems[i].off(),
         closeElems[i].click(function() {
-            $("body").css("overflow","auto"); // Scrollbar ausserhalb Popup wieder aktivieren
+            $("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
             popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
             closeFunc();
@@ -182,7 +182,7 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     submitElem.click(function() {
         if(submitFunc())
         {
-            $("body").css("overflow","auto"); // Scrollbar ausserhalb Popup wieder aktivieren
+            $("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
             popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
             closeFunc();

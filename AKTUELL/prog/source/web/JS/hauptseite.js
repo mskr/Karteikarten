@@ -214,7 +214,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		"<a class='vn_detail'>" + jsonVeranstObj[paramSemester] + "</a>" +
 		"</span>" +
 		"<div id='"+id+"_mehr_wrapper' class='vn_mehr_wrapper'>" +
-		"	<span class='vn_beschreibung'>" + jsonVeranstObj[paramBeschr] + "</span>" +
+		"	<div class='vn_beschreibung'>" + jsonVeranstObj[paramBeschr] + "</div>" +
 		"	<div class='vn_optionen'>";
 
 		if(jsonVeranstObj[paramAngemeldet] == true)

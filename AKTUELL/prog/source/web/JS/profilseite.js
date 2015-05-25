@@ -40,9 +40,15 @@ $(document).ready(function() {
         $("#profil_avatar_aendern_file_name").html(fileName);
         $("#profil_avatar_aendern_file_name").css("color","yellow");
         if(fileName != "")
-            $("#profil_avatar_submit").fadeIn();
+        {
+            $("#profil_avatar_submit").show("scale");
+            $("#profil_avatar_aendern_file_name").show("scale");
+        }
         else
-            $("#profil_avatar_submit").fadeOut();
+        {
+            $("#profil_avatar_submit").hide("scale");
+            $("#profil_avatar_aendern_file_name").hide("scale");
+        }
     });
     
     getProfilStudiengaenge();
@@ -371,7 +377,8 @@ function registerAvatarAendernEvent() {
     			fileName.toLowerCase().indexOf(".png") < 0)
     	{
     		showError("Leider werden nur die Formate jpg/jpeg, bmp oder png unterstützt.");
-            $("#profil_avatar_submit").fadeOut();
+            $("#profil_avatar_submit").hide("scale");
+            $("#profil_avatar_aendern_file_name").hide("scale");
     	}
     	else
     	{
@@ -410,7 +417,8 @@ function registerAvatarAendernEvent() {
     		    // complete
     		    $("#profil_avatar_submit").val("Avatar ändern");
                 $("#profil_avatar_submit").prop("disabled", false);
-                $("#profil_avatar_submit").fadeOut();
+                $("#profil_avatar_submit").hide("scale");
+                $("#profil_avatar_aendern_file_name").hide("scale");
     		});
     	}
         event.preventDefault();

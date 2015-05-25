@@ -1,3 +1,5 @@
+@import "../fonts/ComputerModern/Serif/cmun-serif.css";
+@import "../fonts/ComputerModern/Serif Slanted/cmun-serif-slanted.css";
 /*
 Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or http://ckeditor.com/license
@@ -6,36 +8,40 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 body
 {
 	/* Font */
-	font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
-	font-size: 12px;
+	font-family: Computer Modern Serif, sans-serif, Arial, Verdana, "Trebuchet MS";
+	font-size: 1em;
 
 	/* Text color */
-	color: #ddd;
+	color: black;
 
 	/* Remove the background color to make it transparent */
-	background-color: #333333 !important;
+	/*background-color: #333333 !important;*/
 
-	margin: 10px;
+	margin: 1em;
 }
-/* Filter latex images*/
+/* Filter latex images
 img[src*="gif.latex"] {
     filter: invert(1);
 	-webkit-filter: invert(1);
-}
+}*/
 .cke_editable
 {
-	font-size: 13px;
 	line-height: 1.6;
 }
 
 blockquote
 {
-	font-style: italic;
-	font-family: Georgia, Times, "Times New Roman", serif;
+	font-family: Computer Modern Serif Slanted, Georgia, Times, "Times New Roman", serif;
 	padding: 2px 0;
-	border-style: solid;
-	border-color: #ccc;
-	border-width: 0;
+} blockquote:before {
+	content: "\201C";
+	position: absolute;
+	top: 0;
+	left: 2rem;
+	font-size: 4rem;
+	font-weight: bold;
+	color: lightgray;
+	text-shadow: 0 -1px gray;
 }
 
 .cke_contents_ltr blockquote
