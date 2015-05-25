@@ -132,6 +132,19 @@ function buildKarteikarte(karteikarteJson)
 	    },
 	    params
 	);
+	
+	// Reagiere auf das Scrollen zu dieser Karteikarte
+	var waypoint = new Waypoint({
+	    element: kkDom,
+	    handler: function(direction) {
+	        console.log("Scrolled to Karteikarte from direction "+direction+" (kkID="+kkDom.attr("data-kkid")+")");
+	        for(var i in inhaltsverzeichnisHighlightedKnoten) {
+	            inhaltsverzeichnisUnhighlightKnoten( inhaltsverzeichnisHighlightedKnoten[i] );
+	        }
+	        inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
+	    }
+	})
+	
     return kkDom;
 }
 
@@ -237,4 +250,54 @@ function voteKkDown(kommId)
 	        function(response) {},
 	        params
 	    );
+}
+
+
+var inhaltsverzeichnisHighlightedKnoten = [];
+
+function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
+    // Hole Liste mit Kindern der naechsten Ebene
+    var kkArr = startElem.find("> ul > li .inhaltsvz_kk_knoten");
+    // Merke mit diesem Flag, ob ID gefunden
+    var isFound = false;
+    // Suche in der aktuellen Ebene nach der ID
+    kkArr.each(function(i, elem) {
+        var currentKkID = $(elem).attr("data-kkid");
+        if(currentKkID == kkID)
+        {
+            inhaltsverzeichnisHighlightKnoten($(elem));
+            inhaltsverzeichnisHighlightedKnoten.push($(elem));
+            isFound = true;
+            return false; // break loop
+        }
+    });
+    // Wenn ID noch nicht gefunden, gehe Ebene tiefer
+    if(!isFound)
+    {
+        kkArr.each(function(i, elem) {
+            var currentKkID = $(elem).attr("data-kkid");
+            // Ist naechste Ebene bereits ausgeklappt starte sofort rekursiven Aufruf
+            if($(kkArr[0]).siblings("ul").length != 0)
+            {
+                inhaltsverzeichnisAufklappenBis($(kkArr[0]).parent("li"), kkID);
+            }
+            // Andernfalls lade naechste Ebene und starte danach rekursiven Aufruf
+            else
+            {
+                $.when( ladeKindKarteikarten(currentKkID, $(kkArr[0]).parent("li")) ).done(function() {
+                    inhaltsverzeichnisAufklappenBis($(kkArr[0]).parent("li"), kkID);
+                });
+            }
+        });
+    }
+}
+function inhaltsverzeichnisHighlightKnoten(kkKnoten) {
+    kkKnoten.css("font-weight","bold");
+    kkKnoten.css("color","white");
+    kkKnoten.parents("li").css("border-left","2px solid white");
+}
+function inhaltsverzeichnisUnhighlightKnoten(kkKnoten) {
+    kkKnoten.css("font-weight","normal");
+    kkKnoten.css("color","inherit");
+    kkKnoten.parents("li").css("border-left","1px solid #aaa");
 }

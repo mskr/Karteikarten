@@ -469,7 +469,7 @@ textarea.input_std {
 	width: 4rem;
 	height: 4rem;
 	border-bottom: 1px solid black;
-	box-shadow: 0 1px 0 DimGray;
+	box-shadow: 0 1px 0 rgba(255,255,255,.1);
 	text-shadow: 0px -1px 0 black;
 } .r-usercontainer-toggle {
 	display: none;
@@ -481,13 +481,14 @@ textarea.input_std {
 	z-index: 100;
 	text-align: center;
 	border-bottom: 1px solid black;
-	box-shadow: 0 1px 0 DimGray;
+	box-shadow: 0 1px 0 rgba(255,255,255,.1);
 	cursor: pointer;
 	text-shadow: 0px -1px 0 black;
 } .r-usercontainer-toggle:hover {
 	background: #242424;
 } #r-usercontainer-toggle-radio:checked ~ .r-usercontainer-toggle {
 	background: black;
+	color: white;
 } .r-bn-toggle {
 	display: none;
 	width: 4rem;
@@ -498,7 +499,7 @@ textarea.input_std {
 	z-index: 100;
 	text-align: center;
 	border-top: 1px solid black;
-	box-shadow: inset 0 1px 0 DimGray;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,.1);
 	cursor: pointer;
 	text-shadow: 0px -1px 0 black;
 } .r-bn-toggle:hover {
@@ -506,21 +507,26 @@ textarea.input_std {
 	box-shadow: none;
 } #r-bn-toggle-radio:checked ~ .r-bn-toggle {
 	background: black;
+	color: white;
 	box-shadow: none;
 } .r-usercontainer-toggle-off {
 	display: none;
-	width: 4rem;
-	height: 4rem;
+	width: calc(100% - 4rem);
+	height: 100%;
 	position: fixed;
-	top: 4rem;
+	top: 0;
+	right: 0;
 	z-index: 101;
+	background: rgba(0,0,0,.2);
 } .r-bn-toggle-off {
 	display: none;
-	width: 4rem;
-	height: 4rem;
+	width: calc(100% - 4rem);
+	height: 100%;
 	position: fixed;
-	bottom: 0;
+	top: 0;
+	right: 0;
 	z-index: 101;
+	background: rgba(0,0,0,.2);
 } #r-usercontainer-toggle-radio {
 	display: none;
 } #r-bn-toggle-radio {
@@ -838,7 +844,7 @@ textarea.input_std {
 	transition: all .5s;
 } .itemlist:empty {
 } .itemlist:empty:before {
-	content: "Noch nichts  gewählt...";
+	content: "Noch nichts  gew\00E4hlt...";
 	color: gray;
 	text-shadow: none;
 	font-size: .8em;
@@ -948,7 +954,10 @@ textarea.input_std {
 	border: none;
 	border-bottom: 1px solid white;
 	font-weight: bold;
-	background: transparent;
+	background-color: transparent;
+	background-image: url(../files/general/select-arrow.png);
+	background-repeat: no-repeat;
+	background-position: right;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	cursor: pointer;
@@ -1101,7 +1110,7 @@ textarea.input_std {
 } #vn_attr_semester:before {
 	content: "SEMESTER";
 } #vn_attr_studgang:before {
-	content: "STUDIENGÄNGE";
+	content: "STUDIENG\00C4NGE";
 } #vn_attr_ersteller:before {
 	content: "DOZENT";
 } #vn_attr_moderatoren:before {
@@ -1123,47 +1132,66 @@ textarea.input_std {
 	position: relative;
 	z-index: 2;
 }
-.kk_load{
-	height:30px;
-	border-radius:50%;
-	cursor:pointer;
-	
-	background: #444;
-	width: 4em;
- 	text-align: center;
+.kk_load {
+	height: 2.5em;
+	border-radius: 50%;
+	cursor: pointer;
+  	background: #333;
+	width: 3em;
+	text-align: center;
 	margin: auto;
+	margin-bottom: 2rem;
+	padding-top: .5em;
+	box-shadow: 0 1px 2px black;
+	border-top: 1px solid #666;
+	text-shadow: 0 -1px black;
+	position: relative;
+	transition: all .1s;
+} .kk_load:hover {
+	background: #666;
+	border-top: 1px solid #999;
+} .kk_load:active {
+	top: .1em;
+	background: #222;
+	border-top: 1px solid black;
+	box-shadow: none;
+} .kk_load.loading {
+	box-shadow: 0 .1em .1em white;
+	-webkit-animation: kk_loading 1s linear infinite;
+	-moz-animation: kk_loading 1s linear infinite;
+} @-webkit-keyframes kk_loading {
+  to { transform: rotate(360deg) }
+} @-moz-keyframes kk_loading {
+  to { transform: rotate(360deg) }
 }
 
+
 #kk_inhaltsverzeichnis:before {
-	margin-left: 1em;
+	margin-left: 1rem;
 	content: "Inhaltsverzeichnis";
 	font-weight: bold;
-	font-size: 1.5em;
+	font-size: 1rem;
 }
 #kk_inhaltsverzeichnis {
 	position: absolute;
 	right: 0;
 	z-index: 3;
-	padding: 1em 1em 1em 0;
 	width: 22em;
 	height: auto;
 	font-size: .8em;
-	background: #333;
 	overflow: auto;
-	border: 1px solid #e0e0e0;
-} #kk_inhaltsverzeichnis > ul {
-	
 } #kk_inhaltsverzeichnis ul {
 	padding-left: 1em;
     list-style: none;
 } #kk_inhaltsverzeichnis ul li {
 	white-space: nowrap;
-	border-left: 1px solid #e0e0e0;
+	border-left: 1px solid #aaa;
 } #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_knoten {
 	
 } #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_knoten:before {
 	content: "\2014";
 	padding-right: .5em;
+	color: #aaa;
 } #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_erstellen {
 	color: LimeGreen;
 	opacity: 0;
@@ -1984,14 +2012,16 @@ select.profil_input {
 		width: 0;
 		padding: 0;
 		margin: 0;
-		border: none;
+		background: #333;
 		transition: all .2s;
 	} .r-kk-inhaltsvz-toggle {
 		display: block;
-	} .r-kk-inhaltsvz-checkbox:checked ~ #mainbox_veranstaltungsseite #kk_inhaltsverzeichnis {
+	} .r-kk-inhaltsvz-checkbox:checked ~ 
+			#mainbox_veranstaltungsseite 
+			#kk_inhaltsverzeichnis {
 		width: calc(100% - 8em);
+		height: calc(100% - 6rem);
 		padding: 1rem;
-		height: 100%;
 		position: fixed;
 		top: 4rem !important;
 		right: 0;
@@ -2044,7 +2074,8 @@ select.profil_input {
 		top: 0;
 		padding-left: 0;
 		text-align: center;
-		padding-top: 1em;
+		padding-top: 1rem;
+		height: 4rem;
 		transition: none;
 	}
 	.bn_full {
@@ -2065,9 +2096,11 @@ select.profil_input {
 		position: fixed;
 		top: 0;
 		left: 4em;
+		z-index: 102;
 		background: #333;
 		padding: 1em;
-		border: 1px solid dimgray;
+		box-shadow: 0 0 2em black;
+		border-radius: 2px;
 	} #r-usercontainer-toggle-radio:checked ~ .r-usercontainer-toggle-off {
 		display: block;
 	} #r-bn-toggle-radio:checked ~ .bn_full {
@@ -2080,7 +2113,8 @@ select.profil_input {
 		padding: 1em;
 		width: 11em;
 		background: #333;
-		border: 1px solid dimgray;
+		box-shadow: 0 0 2em black;
+		border-radius: 2px;
 	} #r-bn-toggle-radio:checked ~ .r-bn-toggle-off {
 		display: block;
 	}

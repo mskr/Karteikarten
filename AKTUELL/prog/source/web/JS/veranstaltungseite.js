@@ -29,7 +29,7 @@ $(document).ready(function() {
     	if(id != null)
     		loadPreKk(id);
     	else{
-			$(".kk_load_pre").slideUp();
+			$(".kk_load_pre").addClass("animated zoomOut").fadeOut();
 			displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte]);
     	}
     });    
@@ -38,21 +38,7 @@ $(document).ready(function() {
     	if(id != null)
 			loadAfterKk(id);
     	else
-			$(".kk_load_after").slideUp();
-    });
-    
-    $( window ).resize(function() {    
-    	// Elemente fuer kleine Bildschirme
-        if (window.matchMedia("(max-width: 56em)").matches)
-        {
-            $(".r-suche_etwas_label").hide();
-            $(".r-kk-inhaltsvz-toggle").show();
-        }
-        else
-        {
-            $(".r-suche_etwas_label").hide();
-            $(".r-kk-inhaltsvz-toggle").hide();
-        }
+			$(".kk_load_after").addClass("animated zoomOut").fadeOut();
     });
 });
 
@@ -120,7 +106,6 @@ function fillVeranstaltungsSeite(Vid)
 					
 					// Wenn alles geladen wurde
 					titel = veranstaltungsObject[paramTitel];
-					console.log(veranstaltungsObject);
 					// Details der VN in DOM einfuegen
 					$("#vn_title").text(titel);
 					$("#vn_attr_semester").text(veranstaltungsObject[paramSemester]);
@@ -138,7 +123,6 @@ function fillVeranstaltungsSeite(Vid)
                     {
                         for(var i = 0; i<veranstaltungsObject[paramModeratoren].length; i++)
                         {
-                            console.log(veranstaltungsObject[paramModeratoren][i]);
                             vnModeratoren += veranstaltungsObject[paramModeratoren][i][paramVorname] +
                                              " " + veranstaltungsObject[paramModeratoren][i][paramNachname];
                             if(i < veranstaltungsObject[paramModeratoren].length-1)
@@ -183,10 +167,10 @@ function fillVeranstaltungsSeite(Vid)
 	// Inhaltsverzeichnis aufbauen
 	// warte bis VN Objekt geladen
 	$.when(ajax3).done(function() {
-	    var ajax4 = initInhaltsverzeichniss();
-        // Inhaltsverzeichnis im Viewport halten
+	    var ajax4 = initInhaltsverzeichnis();
 	    // warte bis mainbox visible
 	    $.when(ajax1,ajax2,d,ajax4).done(function() {
+	        // Inhaltsverzeichnis im Viewport halten
 	        var sticky = new Waypoint.Sticky({
 	            element: $("#kk_inhaltsverzeichnis"),
 	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
@@ -197,11 +181,23 @@ function fillVeranstaltungsSeite(Vid)
 	    });
         
 	});
+      
+    // Elemente fuer kleine Bildschirme
+    if (window.matchMedia("(max-width: 56em)").matches)
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").show();
+    }
+    else
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").hide();
+    }
+    
 	return $.when(ajax1,ajax2,d);
 }
 
-function initInhaltsverzeichniss(){
-    console.log(veranstaltungsObject);
+function initInhaltsverzeichnis(){
 	return ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
 }
 
@@ -313,7 +309,6 @@ function findModeratorenVn(id){
         actionGetModVn, 
         function(response) {
             ModArr = response[keyJsonArrResult];
-            console.log(ModArr);
             veranstaltungsObject[paramModeratoren] = ModArr;
         },
         params
@@ -386,7 +381,7 @@ function loadAfterKk(id)
 				data = response[keyJsonArrResult];
 				if(data.length < 5)
 				{
-					$(".kk_load_after").slideUp();
+					$(".kk_load_after").addClass("animated zoomOut").fadeOut();
 				}
 
 				domms = [];
@@ -410,7 +405,12 @@ function loadAfterKk(id)
 				nextItem();
 				displayingAfterKK = false;
 				
-	}, params2);
+	        }, 
+	        params2,
+            undefined,
+            function() { $(".kk_load_after").addClass("loading").children().hide(); },
+            function() { $(".kk_load_after").removeClass("loading").children().show(); }
+	);
 	return kkLoadRequest;
 }
 displayingPreKK = false;
@@ -433,7 +433,7 @@ function loadPreKk(id)
 				data = response[keyJsonArrResult];
 				if(data.length < 5)
 				{
-					$(".kk_load_pre").slideUp();
+					$(".kk_load_pre").addClass("animated zoomOut").fadeOut();
 				}
 				
 				domms = [];
@@ -459,7 +459,12 @@ function loadPreKk(id)
 				
 				displayingPreKK = false;
         		
-			}, params);
+			}, 
+			params,
+			undefined,
+			function() { $(".kk_load_pre").addClass("loading").children().hide(); },
+			function() { $(".kk_load_pre").removeClass("loading").children().show(); }
+	);
 	return kkLoadRequest;
 }
 

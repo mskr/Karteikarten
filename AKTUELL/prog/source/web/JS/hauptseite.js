@@ -7,34 +7,6 @@ $(document).ready(function() {
 	
     // Setup der Suchfunktion
     registerSuchEvent();
-    
-	
-//    $('#vn_erstellen_popup').popup({
-//    	openelement: '#vn_erstellen_bt',
-//    	closeelement: '#vn_popup_close',
-//    	focuselement: '#vn_titel_input',
-//        blur: false,
-//    	transition: 'all 0.3s',
-//    	onclose : function() {
-//    		if(jsonBenutzer == undefined)
-//    			return;
-//    		
-//    		$("#vn_titel_input").val("");
-//    		// TODO
-////  		$("#vn_erstellen_auswahl_semester [value='" + + "']").prop("selected", true);
-//    		$("#vn_erstellen_auswahl_studiengang [value='" + jsonBenutzer[paramStudiengang]+ "']").prop("selected", true);
-//    		
-//    		$("#vn_pass_input").val("");
-//    		$("#vn_beschr_input").val("");
-//    		$("input[name=vn_bearbeitenMode_radiogb][value='Nur ich']").prop("checked", true);
-//    		$("#vn_komm_erlaubt").prop("checked", true);
-//    		$("#vn_bew_erlaubt").prop("checked", true);
-//    		$("#vn_mod_list").children().remove();
-//			$("#vn_mod_input").val("");
-//			$("#vn_mod_vorschlag").slideUp(100);
-//    		selectedModList = {};
-//    	}
-//    });
 
     // Reagiere auf Aenderung der Studiengangauswahl im Alle-Tab
 	$("#vn_alle_auswahl_studiengang").change(function() {
@@ -47,6 +19,8 @@ $(document).ready(function() {
 		leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
 				   $("#vn_alle_auswahl_studiengang").val());
 	});
+	
+	
 	
 	registerVeranstErzeugeHandler();
 });
@@ -110,8 +84,18 @@ function fillHauptseite()
 	{
 		$("#vn_erstellen_bt").hide();
 	}
-	
-
+	  
+    // Elemente fuer kleine Bildschirme
+    if (window.matchMedia("(max-width: 56em)").matches)
+    {
+        $(".r-suche_etwas_label").show();
+        $(".r-kk-inhaltsvz-toggle").hide();
+    }
+    else
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").hide();
+    }
 
     return $.when(ajax1,ajax2).done(fillVeranstaltungsliste);
 }

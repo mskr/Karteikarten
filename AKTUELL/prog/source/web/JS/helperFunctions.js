@@ -352,7 +352,7 @@ function autoComplete(textInput, categories, categoryClassMapping, action)
         {
             // Sende bei diesen Eingaben keinen Ajax Call
             // sondern navigiere in den Suchergebnissen
-            handlePfeiltastenEvents(event.keyCode, suchergJQueryObj);
+            handlePfeiltastenEvents(event.keyCode, suchergJQueryObj, textInput);
             event.preventDefault();
             return;
         }
@@ -551,7 +551,7 @@ var suchErgIterator = 0;
  * @param pressedKey Keycode
  * @param suchergJQueryObj Container mit Suchergebnissen
  */
-function handlePfeiltastenEvents(pressedKey, suchergJQueryObj) {
+function handlePfeiltastenEvents(pressedKey, suchergJQueryObj, textInput) {
     var arr = suchergJQueryObj.find(".sucherg_item");
     if(pressedKey == 40) // Pfeil runter
     {
@@ -571,7 +571,9 @@ function handlePfeiltastenEvents(pressedKey, suchergJQueryObj) {
     }
     else if(pressedKey == 13) // ENTER
     {
-        $(arr[suchErgIterator]).trigger("click");
+        if(!textInput.val()) {}
+        else
+            $(arr[suchErgIterator]).trigger("click");
     }
     else if(pressedKey == 27) // ESC
     {
