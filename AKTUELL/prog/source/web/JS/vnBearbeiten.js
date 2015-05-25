@@ -54,7 +54,7 @@ $(document).ready(function() {
     	}
 		
 		dialog.find("#vn_bearbeiten_beschr_input").val(veranstaltungsObject[paramBeschr]);
-		dialog.find("#vn_bearbeiten_paswort_set").prop("checked", veranstaltungsObject[paramKennwortGesetzt]);
+		dialog.find("#vn_bearbeiten_passwort_set").prop("checked", veranstaltungsObject[paramKennwortGesetzt]);
 		dialog.find("#vn_bearbeiten_pass_input").val();
 		dialog.find("#vn_bearbeiten_komm_erlaubt").prop("checked", veranstaltungsObject[paramKommentareErlauben]);
 		dialog.find("#vn_bearbeiten_bew_erlaubt").prop("checked", veranstaltungsObject[paramBewertungenErlauben]);
@@ -106,6 +106,7 @@ $(document).ready(function() {
 					beschr = dialog.find("#vn_bearbeiten_beschr_input").val(),
 					moderatorenKkBearbeiten = dialog.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
 					passw = dialog.find("#vn_bearbeiten_pass_input").val(),
+					passChecked = dialog.find("#vn_bearbeiten_passwort_set").is(':checked'),
 					kommentareErlaubt = dialog.find("#vn_bearbeiten_komm_erlaubt").is(':checked'),
 					bewertungenErlaubt = dialog.find("#vn_bearbeiten_bew_erlaubt").is(':checked');
 
@@ -137,14 +138,17 @@ $(document).ready(function() {
 					params[paramModeratorKkBearbeiten] = moderatorenKkBearbeiten;
 					params[paramKommentareErlauben] = kommentareErlaubt;
 					params[paramBewertungenErlauben] = bewertungenErlaubt;
-					params[paramPasswort] = passw;
+					if(passw != "" && passChecked)
+						params[paramPasswort] = passw;
+					else if(!passChecked)
+						params[paramPasswort] = "";
 					params[paramModeratoren] = moderatorenIDs;
 
 					var ajax = ajaxCall(veranstaltungServlet,
 							actionBearbeiteVeranst,
 							function(response) {
 						showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich bearbeitet.");
-						fillVeranstaltungsliste();  
+						gotoVeranstaltung(veranstaltungsObject[paramId]);  
 					},
 					params
 					);

@@ -138,7 +138,7 @@ function handleError(errorCode,msg) {
 			break;
 		case "invalidparam": 
 			if(msg == undefined)
-				showError("Der Server hat ungueltige oder fehlende Parameter erhalten. Bitte machen Sie andere Eingaben!");
+				showError("Der Server hat ungueltige oder fehlende Parameter erhalten. Bitte geben Sie korrekte Daten ein!");
 			else
 				showError(msg);
 			break;

@@ -400,7 +400,6 @@ public class VeranstaltungServlet extends ServletController {
         }
         if(studiengaenge == null || studiengaenge.length == 0||
                 isEmptyAndRemoveSpaces(semester)||
-                zugangspasswort == null||
                 isEmptyAndRemoveSpaces(titel)||
                 isEmpty(beschr))// ||moderatorIds == null)
         {
@@ -415,8 +414,9 @@ public class VeranstaltungServlet extends ServletController {
         v.setModeratorKarteikartenBearbeiten(moderatorKkBearbeiten);
         v.setBewertungenErlaubt(bewertungenErlaubt);
         v.setSemester(semester);
-        v.setErsteller(aktuellerBenutzer);
-        v.setZugangspasswort(zugangspasswort);
+        v.setErsteller(aktuellerBenutzer);  // TODO Notwendig?
+        if(zugangspasswort != null)
+            v.setZugangspasswort(zugangspasswort);
 
         try
         {
