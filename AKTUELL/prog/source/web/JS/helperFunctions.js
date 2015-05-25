@@ -637,8 +637,8 @@ function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator
 	
 	if(checkErsteller)
 	{
-		if(veranstObj[paramErsteller][paramId] != jsonBenutzer[paramId])
-			return false;
+		if(veranstObj[paramErsteller][paramId] == jsonBenutzer[paramId])
+			return true;
 	}
 	
 	if(checkModerator)
@@ -646,6 +646,8 @@ function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator
 		if(veranstObj[paramModeratoren] == undefined || 
 				$.inArray(jsonBenutzer[paramId],veranstObj[paramModeratoren]) == -1)
 				return false;
+		else
+			return true;
 	}
-	return true;
+	return false;
 }
