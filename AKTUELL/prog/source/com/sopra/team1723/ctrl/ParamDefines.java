@@ -57,6 +57,7 @@ public class ParamDefines
     public final static String ActionGetKarteikartenKinder = "getKKKinder";
     public final static String ActionGetKarteikartenVater = "getKKVater";
     public final static String ActionErstelleKarteikarte = "erstelleKarteikarte";
+    public final static String ActionVerweisHinzufuegen = "verweisHinzufuegen";
     
     public final static String ActionSpeichereNotiz = "speichereNotiz";
     public final static String ActionLeseNotiz = "leseNotiz";
@@ -124,6 +125,8 @@ public class ParamDefines
     public final static String Bewertung = "bewertung";
     public final static String UploadID = "uploadID";
     public final static String Reihenfolge = "reihenfolge";
+    public final static String KKVerweisQuelleId = "kkVerweisQuelleId";
+    public final static String KKVerweisZielId = "kkVerweisZielId";
     
     // Kommentare
     public final static String HatGevoted = "hatgevotet";
