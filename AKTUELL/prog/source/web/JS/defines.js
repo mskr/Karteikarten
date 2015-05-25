@@ -102,6 +102,7 @@ var paramGelesen = "gelesen";
 var paramType = "type";
 
 //Karteikarte
+var paramVerweise = "verweise";
 var paramURLKkID = "kkId";
 var paramKkText = "TEXT";
 var paramKkBild = "BILD";

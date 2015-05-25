@@ -19,6 +19,12 @@ function buildKarteikarte(karteikarteJson)
 
     fillKarteiKarte(kkDom,karteikarteJson);
     
+    if(!checkIfAllowedVn(veranstaltungsObject))
+    {
+    	kkDom.find(".bearbeiten").hide();
+    	kkDom.find(".loeschen").hide();
+    }
+
     // CopyLink
     // -> Probleme mit CSS 
 //    var clip = new ZeroClipboard(kkDom.find(".permalink"));
@@ -45,7 +51,6 @@ function buildKarteikarte(karteikarteJson)
     			[$("#link_copy_ok"), $("#link_copy_popup_close")], function(){$("#link_copy_data").val("");}, 
     			$("#link_copy_ok"), undefined, 
     			undefined);
-    	
     });
 
     // Überschrift kk
@@ -65,7 +70,6 @@ function buildKarteikarte(karteikarteJson)
     });
     
     kkDom.find(".kk_notizen_body").ckeditor(function() {
-
     	// TODO Karteikarte setzen und DANACH change handler registireren
     	// Funktioniert irgendwie nicht. Handler wird gesetzt bevor Inhalt gesetzt wurde
     	var f = function(that){
@@ -174,7 +178,8 @@ function fillKarteiKarte(domElem, json){
 	// Attribute setzen
 	domElem.find(".kk_info_attr").text(createAttrStr(json[paramAttribute]));
 	
-	fillVerweise(domElem,[{"id":"5","titel":"blabla","type":"zusatz"},{"id":"8","titel":"Hallo123","type":"sonstiges"}]);
+//	[{"id":"5","titel":"blabla","type":"zusatz"},{"id":"8","titel":"Hallo123","type":"sonstiges"}]
+	fillVerweise(domElem,json[paramVerweise]);
 	
 	// detect type and add content
 	switch (json[paramType]) {

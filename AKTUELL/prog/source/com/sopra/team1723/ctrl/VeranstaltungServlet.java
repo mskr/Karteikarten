@@ -472,8 +472,6 @@ public class VeranstaltungServlet extends ServletController {
         {
             vId = Integer.parseInt(idStr);
 
-            Veranstaltung v = dbManager.leseVeranstaltung(vId); // TODO Kann das weg?
-
             String pw = request.getParameter(ParamDefines.Password);
             dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw);
 
@@ -579,7 +577,8 @@ public class VeranstaltungServlet extends ServletController {
         int veranstID = Integer.parseInt(req.getParameter(ParamDefines.Id));
         
         Veranstaltung v = dbManager.leseVeranstaltung(veranstID);
-        if(v.getErsteller().getId() != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        if(v.getErsteller().getId() != aktuellerBenutzer.getId() &&
+                aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);

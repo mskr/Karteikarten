@@ -620,3 +620,32 @@ function concatStrArr(strArr, seperator)
 	}
 	return str;
 }
+
+function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator){
+	if(checkErsteller == undefined)
+		checkErsteller = true;
+	if(checkAdmin == undefined)
+		checkAdmin = true;
+	if(checkModerator == undefined)
+		checkModerator = true;
+	
+	if(checkAdmin)
+	{
+		if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
+			return true;
+	}
+	
+	if(checkErsteller)
+	{
+		if(veranstObj[paramErsteller][paramId] != jsonBenutzer[paramId])
+			return false;
+	}
+	
+	if(checkModerator)
+	{
+		if(veranstObj[paramModeratoren] == undefined || 
+				$.inArray(jsonBenutzer[paramId],veranstObj[paramModeratoren]) == -1)
+				return false;
+	}
+	return true;
+}

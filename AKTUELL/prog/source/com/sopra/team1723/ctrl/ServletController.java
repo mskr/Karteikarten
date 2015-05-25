@@ -41,7 +41,7 @@ public abstract class ServletController extends HttpServlet
 
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
     
-    public static final boolean DEBUGMODE = true;
+    public static final boolean DEBUGMODE = false;
 
     /**
      *  DateiPfade
