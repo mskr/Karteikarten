@@ -100,6 +100,11 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
 {
     // Scrollbar ausserhalb Popup deaktivieren, sodass nur Popup Scrollbar sichtbar
     $("body").css("overflow","hidden"); 
+
+    if(submitFunc == undefined)
+    	submitFunc = function(){return true;};
+    if(closeFunc == undefined)
+    	closeFunc = function(){return true;};
     
     var seitenArr = popupOverlayWrapper.find(".popup_fenster_body");
     $(seitenArr[0]).show();
@@ -110,43 +115,50 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
             $(seitenArr[i]).hide();
         }
         submitElem.hide();
-        weiterElem.show();
-        zurueckElem.hide();
-        weiterElem.off();
-        weiterElem.click(function() {
-            $(seitenArr[popupSeitenIterator]).slideUp();
-            popupSeitenIterator++;
-            $(seitenArr[popupSeitenIterator]).slideDown();
-            if(popupSeitenIterator > 0)
-            {
-                zurueckElem.show();
-            }
-            if(popupSeitenIterator == seitenArr.length-1)
-            {
-                weiterElem.hide();
-                submitElem.show();
-            }
-        });
-        zurueckElem.off();
-        zurueckElem.click(function() {
-            $(seitenArr[popupSeitenIterator]).slideUp();
-            popupSeitenIterator--;
-            $(seitenArr[popupSeitenIterator]).slideDown();
-            if(popupSeitenIterator == 0)
-            {
-                zurueckElem.hide();
-            }
-            if(popupSeitenIterator < seitenArr.length-1)
-            {
-                weiterElem.show();
-                submitElem.hide();
-            }
-        });
+        if(weiterElem!= undefined){
+        	weiterElem.show();
+
+        	weiterElem.off();
+        	weiterElem.click(function() {
+        		$(seitenArr[popupSeitenIterator]).slideUp();
+        		popupSeitenIterator++;
+        		$(seitenArr[popupSeitenIterator]).slideDown();
+        		if(popupSeitenIterator > 0)
+        		{
+        			zurueckElem.show();
+        		}
+        		if(popupSeitenIterator == seitenArr.length-1)
+        		{
+        			weiterElem.hide();
+        			submitElem.show();
+        		}
+        	});
+        }
+        if(zurueckElem!= undefined){
+        	zurueckElem.hide();
+        	zurueckElem.off();
+        	zurueckElem.click(function() {
+        		$(seitenArr[popupSeitenIterator]).slideUp();
+        		popupSeitenIterator--;
+        		$(seitenArr[popupSeitenIterator]).slideDown();
+        		if(popupSeitenIterator == 0)
+        		{
+        			zurueckElem.hide();
+        		}
+        		if(popupSeitenIterator < seitenArr.length-1)
+        		{
+        			weiterElem.show();
+        			submitElem.hide();
+        		}
+        	});
+        }
     }
     else
     {
-        weiterElem.hide();
-        zurueckElem.hide();
+    	if(weiterElem!= undefined)
+    		weiterElem.hide();
+    	if(zurueckElem!= undefined)
+    		zurueckElem.hide();
     }
     
     popupOverlayWrapper.fadeIn(300);
@@ -159,17 +171,18 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     {
         closeElems[i].off(),
         closeElems[i].click(function() {
+            $("body").css("overflow","auto"); // Scrollbar ausserhalb Popup wieder aktivieren
             popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
             closeFunc();
             popupSeitenIterator = 0;
-            $("body").css("overflow","auto"); // Scrollbar ausserhalb Popup wieder aktivieren
         });
     }
     submitElem.off();
     submitElem.click(function() {
         if(submitFunc())
         {
+            $("body").css("overflow","auto"); // Scrollbar ausserhalb Popup wieder aktivieren
             popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
             closeFunc();
@@ -596,4 +609,47 @@ function destroyCKeditors(container)
 	    	 
 	    }
 	}
+}
+
+function concatStrArr(strArr, seperator)
+{
+	str = "";
+	for(i in strArr)
+	{
+		str += strArr[i];
+		if(i < strArr.length-1)
+			str += seperator;
+	}
+	return str;
+}
+
+function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator){
+	if(checkErsteller == undefined)
+		checkErsteller = true;
+	if(checkAdmin == undefined)
+		checkAdmin = true;
+	if(checkModerator == undefined)
+		checkModerator = true;
+	
+	if(checkAdmin)
+	{
+		if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
+			return true;
+	}
+	
+	if(checkErsteller)
+	{
+		if(veranstObj[paramErsteller][paramId] == jsonBenutzer[paramId])
+			return true;
+	}
+	
+	if(checkModerator)
+	{
+		if(veranstObj[paramModeratoren] == undefined || 
+				$.inArray(jsonBenutzer[paramId],veranstObj[paramModeratoren]) == -1)
+				return false;
+		else
+			return true;
+	}
+	return false;
 }

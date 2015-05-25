@@ -163,6 +163,7 @@ public class KarteikartenServlet extends ServletController {
         
         String karteikIdString = request.getParameter(ParamDefines.Id);
         
+        
         if(isEmpty(karteikIdString))
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
@@ -178,6 +179,13 @@ public class KarteikartenServlet extends ServletController {
         {
             e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
+        if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN &&
+                !pruefeFuerVeranstDerKarteikEingeschrieben(karteikId, request, response))
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
@@ -460,8 +468,10 @@ public class KarteikartenServlet extends ServletController {
         catch (SQLException e)
         {
             e.printStackTrace();
-            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
+            // Nichts zurückgeben!
+//            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+//            outWriter.print(jo);
+            
         }
         return false;
     }

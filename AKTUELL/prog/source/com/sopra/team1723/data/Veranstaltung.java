@@ -282,6 +282,11 @@ public class Veranstaltung implements IjsonObject {
         jo.put(ParamDefines.Titel, this.getTitel()); 
         jo.put(ParamDefines.Beschr, this.getBeschreibung()); 
         jo.put(ParamDefines.Semester, this.getSemester()); 
+        if(getZugangspasswort()== null || getZugangspasswort().equals(""))
+            jo.put(ParamDefines.KennwortGesetzt, false);
+        else
+            jo.put(ParamDefines.KennwortGesetzt, true);
+            
         if(full)
         {
             jo.put(ParamDefines.ErsteKarteikarte, this.ersteKarteikarte);
@@ -292,8 +297,4 @@ public class Veranstaltung implements IjsonObject {
         jo.put(ParamDefines.Ersteller,this.getErsteller().toJSON(full));
         return jo;
     }
-
-
-    
-
 }

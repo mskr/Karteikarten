@@ -400,7 +400,6 @@ public class VeranstaltungServlet extends ServletController {
         }
         if(studiengaenge == null || studiengaenge.length == 0||
                 isEmptyAndRemoveSpaces(semester)||
-                zugangspasswort == null||
                 isEmptyAndRemoveSpaces(titel)||
                 isEmpty(beschr))// ||moderatorIds == null)
         {
@@ -415,8 +414,9 @@ public class VeranstaltungServlet extends ServletController {
         v.setModeratorKarteikartenBearbeiten(moderatorKkBearbeiten);
         v.setBewertungenErlaubt(bewertungenErlaubt);
         v.setSemester(semester);
-        v.setErsteller(aktuellerBenutzer);
-        v.setZugangspasswort(zugangspasswort);
+        v.setErsteller(aktuellerBenutzer);  // TODO Notwendig?
+        if(zugangspasswort != null)
+            v.setZugangspasswort(zugangspasswort);
 
         try
         {
@@ -471,8 +471,6 @@ public class VeranstaltungServlet extends ServletController {
         try
         {
             vId = Integer.parseInt(idStr);
-
-            Veranstaltung v = dbManager.leseVeranstaltung(vId); // TODO Kann das weg?
 
             String pw = request.getParameter(ParamDefines.Password);
             dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw);
@@ -579,7 +577,8 @@ public class VeranstaltungServlet extends ServletController {
         int veranstID = Integer.parseInt(req.getParameter(ParamDefines.Id));
         
         Veranstaltung v = dbManager.leseVeranstaltung(veranstID);
-        if(v.getErsteller().getId() != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        if(v.getErsteller().getId() != aktuellerBenutzer.getId() &&
+                aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);

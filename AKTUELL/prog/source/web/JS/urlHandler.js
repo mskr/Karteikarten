@@ -29,6 +29,34 @@ $(document).ready(function() {
     });
 });
 
+var onResizeHandler = function(){
+	// Elemente fuer kleine Bildschirme
+    if (window.matchMedia("(max-width: 56em)").matches)
+    {
+    	if(window.location.href.indexOf("hauptseite")>=0){
+    		$(".r-suche_etwas_label").show();
+    		$(".r-kk-inhaltsvz-toggle").hide();
+    	}
+    	else if(window.location.href.indexOf("veranstaltungsseite")>=0){
+    		$(".r-kk-inhaltsvz-toggle").show();
+    		$(".r-suche_etwas_label").hide();
+    	}
+    	else
+        {
+            $(".r-suche_etwas_label").hide();
+            $(".r-kk-inhaltsvz-toggle").hide();
+        }
+    }
+    else
+    {
+        $(".r-suche_etwas_label").hide();
+        $(".r-kk-inhaltsvz-toggle").hide();
+    }
+}
+
+$( window ).resize(function() {    
+	onResizeHandler();
+});
 //Der aktuell eingeloggte Benutzer als JSON Objekt.
 var jsonBenutzer;
 
@@ -123,9 +151,7 @@ function buildUrlQuery(paramObj)
 function interpreteUrlQuery(paramObj) 
 {	
 	
-	// TODO Ãœbler hack ! 
-	// Versteck alle Popupfenster. Wo wÃ¤re das besser ?
-//	$(".popup_fenster").popup('hide');
+	onResizeHandler();
 	
     var ziel = paramObj[urlParamLocation];
 	// Benutzer eingeloggt
@@ -147,7 +173,8 @@ function interpreteUrlQuery(paramObj)
         }
         else if(ziel == ansichtVeranstaltungsseite){
         	vid = paramObj[paramId];
-        	ajax2 = fillVeranstaltungsSeite(vid);
+        	kkId = paramObj[paramURLKkID];
+        	ajax2 = fillVeranstaltungsSeite(vid, kkId);
         }
         
         $.when(ajax1, ajax2).done(function() {

@@ -3,6 +3,7 @@ package com.sopra.team1723.data;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.sopra.team1723.ctrl.IjsonObject;
@@ -20,7 +21,7 @@ public class Karteikarte implements IjsonObject {
             boolean istDefinition, boolean istWichtig, boolean istGrundlage, boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel,
             boolean istUebung)
     {
-        super();
+        this();
         this.id = id;
         this.titel = titel;
         this.aenderungsdatum = aenderungsdatum;
@@ -48,7 +49,7 @@ public class Karteikarte implements IjsonObject {
             boolean istSatz, boolean istLemma, boolean istBeweis, boolean istDefinition, boolean istWichtig, boolean istGrundlage,
             boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel, boolean istUebung)
     {
-        super();
+        this();
         this.titel = titel;
         this.inhalt = inhalt;
         this.typ = typ;
@@ -71,16 +72,15 @@ public class Karteikarte implements IjsonObject {
         this.hatBewertet = false;
     }
 
-
-
-
-
-
-
     /**
      * 
      */
     public Karteikarte() {
+        super();
+        // TODO Entfernen
+        setVerweise(new String[]{"zusatz","vorraussetzung","zusatz","zusatz"}, 
+                new String[]{"1","5","9","14"}, 
+                new String[]{"test","test2","test3","test4"});
     }
 
     /**
@@ -126,6 +126,7 @@ public class Karteikarte implements IjsonObject {
     private boolean istBeispiel;
     private boolean istUebung;
     
+    private String[][] verweise = new String[0][0];
        
     
     public enum BeziehungsTyp {
@@ -133,7 +134,8 @@ public class Karteikarte implements IjsonObject {
         H_BROTHER,
         V_VORRAUSSETZUNG, 
         V_UEBUNG, 
-        V_ZUSATZINFO
+        V_ZUSATZINFO,
+        V_SONSTIGES
     };
     
     public enum AttributTyp {
@@ -343,11 +345,23 @@ public class Karteikarte implements IjsonObject {
     {
         return hatBewertet;
     }
-    
-    
 
-
-
+    /**
+     * Erlaubte typen: vorraussetzung, zusatz, sonstiges, uebung
+     * @param verweise
+     */
+    public void setVerweise(String[] types, String[] ids, String[] namen){
+        if(types.length != ids.length && ids.length != namen.length)
+            return;
+        
+        verweise = new String[types.length][3];
+        for(int i = 0; i < types.length;i++)
+        {
+            verweise[i][0] = types[i];
+            verweise[i][1] = ids[i];
+            verweise[i][2] = namen[i];
+        }
+    }
     public boolean isIstLemma()
     {
         return istLemma;
@@ -384,7 +398,32 @@ public class Karteikarte implements IjsonObject {
         jo.put(ParamDefines.Aenderungsdatum, f.format(this.getAenderungsdatum().getTime()));
         jo.put(ParamDefines.Bewertung, this.getBewertung());
         jo.put(ParamDefines.Inhalt, this.getInhalt());
+        
+        JSONArray arr = new JSONArray();
 
+        arr.add(this.istSatz);
+        arr.add(this.istLemma);
+        arr.add(this.istBeweis);
+        arr.add(this.istDefinition);
+        arr.add(this.istWichtig);
+        arr.add(this.istGrundlage);
+        arr.add(this.istZusatzinfo);
+        arr.add(this.istExkurs);
+        arr.add(this.istBeispiel);
+        arr.add(this.istUebung);
+ 
+        jo.put(ParamDefines.Attribute, arr);
+        
+        JSONArray arr2 = new JSONArray();
+        for(String[] verw : verweise){
+            JSONObject o = new JSONObject();
+            o.put(ParamDefines.Type, verw[0]);
+            o.put(ParamDefines.Id, verw[1]);
+            o.put(ParamDefines.Titel, verw[2]);
+            arr2.add(o);
+        }
+        jo.put(ParamDefines.Verweise, arr2);
+        
         return jo;
     }
 

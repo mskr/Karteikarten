@@ -19,6 +19,41 @@ function buildKarteikarte(karteikarteJson)
 
     fillKarteiKarte(kkDom,karteikarteJson);
     
+    if(!checkIfAllowedVn(veranstaltungsObject))
+    {
+    	kkDom.find(".bearbeiten").hide();
+    	kkDom.find(".loeschen").hide();
+    }
+
+    // CopyLink
+    // -> Probleme mit CSS 
+//    var clip = new ZeroClipboard(kkDom.find(".permalink"));
+//    clip.on("ready", function() {
+//      this.on("aftercopy", function(event) {
+//    	  showInfo("URL wurde in die Zwischenablage eingefügt!");
+//      });
+//      
+//      clip.on( "copy", function (event) {
+//    	  var clipboard = event.clipboardData;
+//    	  kkUrl = location.host + location.pathname + "?location=veranstaltungsseite&id="+ veranstaltungsObject[paramId] +
+//			"&"+paramURLKkID+"=" + 	kkId;
+//    	  clipboard.setData( "text/plain", kkUrl );
+//    	});
+//    });
+    // Workaround:
+    kkDom.find(".permalink").click(function(){
+   	 	kkUrl = location.host + location.pathname + "?location=veranstaltungsseite&id="+ veranstaltungsObject[paramId] +
+			"&"+paramURLKkID+"=" + 	kkId;
+   	 	
+    	$("#link_copy_data").html(kkUrl);
+    	
+    	popupFenster($("#link_copy_popup_overlay"), 
+    			[$("#link_copy_ok"), $("#link_copy_popup_close")], function(){$("#link_copy_data").val("");}, 
+    			$("#link_copy_ok"), undefined, 
+    			undefined);
+    });
+
+    // Überschrift kk
     if(kkInhalt == "")
     	return kkDom;
     
@@ -35,7 +70,6 @@ function buildKarteikarte(karteikarteJson)
     });
     
     kkDom.find(".kk_notizen_body").ckeditor(function() {
-
     	// TODO Karteikarte setzen und DANACH change handler registireren
     	// Funktioniert irgendwie nicht. Handler wird gesetzt bevor Inhalt gesetzt wurde
     	var f = function(that){
@@ -150,9 +184,15 @@ function buildKarteikarte(karteikarteJson)
 
 function fillKarteiKarte(domElem, json){
 	        
-	//set Rating
+	// set Rating
 	domElem.find(".kk_votestat").html(json[paramBewertung]);
 	domElem.find(".kk_titel").text(json[paramTitel]);
+	
+	// Attribute setzen
+	domElem.find(".kk_info_attr").text(createAttrStr(json[paramAttribute]));
+	
+//	[{"id":"5","titel":"blabla","type":"zusatz"},{"id":"8","titel":"Hallo123","type":"sonstiges"}]
+	fillVerweise(domElem,json[paramVerweise]);
 	
 	// detect type and add content
 	switch (json[paramType]) {
@@ -160,7 +200,6 @@ function fillKarteiKarte(domElem, json){
     	domElem.find(".kk_inhalt").addClass("inhalt_text");
     	if(json[paramInhalt].trim() == "")
     	{
-    		domElem.find("div").find("*").off();
     		domElem.find("div").hide();
     	}
     	else
@@ -188,7 +227,75 @@ function fillKarteiKarte(domElem, json){
     	break;
 	}
 }
+function createAttrStr(arrAttr){
+	strArr = [];
+	if(arrAttr[0] == true)
+		strArr.push("Satz");
+	if(arrAttr[1] == true)
+		strArr.push("Lemma");
+	if(arrAttr[2] == true)
+		strArr.push("Beweis");
+	if(arrAttr[3] == true)
+		strArr.push("Definition");
+	if(arrAttr[4] == true)
+		strArr.push("Wichtig");
+	if(arrAttr[5] == true)
+		strArr.push("Grundlage");
+	if(arrAttr[6] == true)
+		strArr.push("Zusatzinfo");
+	if(arrAttr[7] == true)
+		strArr.push("Exkurs");
+	if(arrAttr[8] == true)
+		strArr.push("Beispiel");
+	if(arrAttr[9] == true)
+		strArr.push("Übung");
+	
+	if(strArr.length == 0)
+		strArr.push("Keine Attribute angegeben.");
+	
+	return concatStrArr(strArr, ", ");
+}
+/**
+ * 
+ * @param verweisArr Array aus {paramType, paramId, paramTitel}
+ */
+function fillVerweise(domKk, verweisArr)
+{
+	rel_vor = [];
+	rel_zusatz = [];
+	rel_sonstiges = [];
+	rel_uebung = [];
+	
+	for(i in verweisArr)
+	{
+		txt = "<a onclick='displayKarteikarte("+verweisArr[i][paramId]+");'>" + verweisArr[i][paramTitel] +"</a>";
+		
+		if(verweisArr[i][paramType] == "vorraussetzung")
+			rel_vor.push(txt);
+		else if(verweisArr[i][paramType] == "zusatz")
+			rel_zusatz.push(txt);
+		else if(verweisArr[i][paramType] == "sonstiges")
+			rel_sonstiges.push(txt);
+		else if(verweisArr[i][paramType] == "uebung")
+			rel_uebung.push(txt);
+	}
+	
+	if(rel_vor.length == 0)
+		rel_vor.push("Keine Verweise angegeben.");
+	if(rel_zusatz.length == 0)
+		rel_zusatz.push("Keine Verweise angegeben.");
+	if(rel_sonstiges.length == 0)
+		rel_sonstiges.push("Keine Verweise angegeben.");
+	if(rel_uebung.length == 0)
+		rel_uebung.push("Keine Verweise angegeben.");
+	
 
+	domKk.find(".kk_rel_vorraus").html(concatStrArr(rel_vor, ", "));
+	domKk.find(".kk_rel_zusatz").html(concatStrArr(rel_zusatz, ", "));
+	domKk.find(".kk_rel_sonstiges").html(concatStrArr(rel_sonstiges, ", "));
+	domKk.find(".kk_rel_uebung").html(concatStrArr(rel_uebung, ", "));
+	
+}
 function getKarteikarteByID(id){
 	var params = {};
     params[paramId] = id;
@@ -213,7 +320,8 @@ function setNotiz(kkDom, kkId)
 	    	kkDom.find(".kk_notizen_body").val(response[paramInhalt]);
 	    	if(response[paramInhalt].trim() != "")
 	    	{
-	    		kkDom.find(".kk_notizen_head").append(" (!)");
+	    		// TODO Unschön
+//	    		kkDom.find(".kk_notizen_head").append(" (!)");
 	    	}
 	    	else
     		{

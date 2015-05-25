@@ -42,7 +42,7 @@ $(document).ready(function() {
     });
 });
 
-function fillVeranstaltungsSeite(Vid)
+function fillVeranstaltungsSeite(Vid, kkId)
 {
 	showPreAfterLoad();
 	
@@ -98,7 +98,10 @@ function fillVeranstaltungsSeite(Vid)
 			{
 				showError("Sie haben nicht die notwendingen Berechtigungen um diese Seite zu sehen!");
 				gotoHauptseite();
-				return d; // TODO Achtung
+
+				// Deferred Objekt als abgeschlossen markieren.
+				d.resolve();
+				return;
 			}
 			
 			$.when(findStudiengaenge(Vid)).done(function() {
@@ -154,7 +157,10 @@ function fillVeranstaltungsSeite(Vid)
 						$("#kk_erstellen").hide();
 					}
 					
-					loadAfterKk(veranstaltungsObject[paramErsteKarteikarte]);
+					if(kkId == undefined)
+						displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte]);
+					else
+						displayKarteikarte(kkId);
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
@@ -247,13 +253,13 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 if($(e.target).siblings("ul").length == 0)
                                 {
                                     ladeKindKarteikarten(arr[i][paramId], kkListItem);
-                                    displayKarteikarte(arr[i][paramId]);
                                 }
                                 // Andernfalls klappe Kindkarteikarten ein
                                 else
                                 {
                                     $(e.target).siblings("ul").remove();
                                 }
+                                displayKarteikarte(arr[i][paramId]);
                                 e.stopPropagation();
                             });
                         }

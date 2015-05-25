@@ -47,7 +47,7 @@ option {
 .displayOnHover{
 	opacity: 0;
 }
-.kk_titel:hover + .displayOnHover{
+.kk_header:hover > .displayOnHover{
 	opacity: 1;
 }
 .displayOnHover:hover{
@@ -1292,8 +1292,8 @@ textarea.input_std {
 	text-align: left;
 	margin-left: 2em;
 	margin-bottom:0.5em;
-	display:block;
-	font-size: 1.3em;
+/* 	display:block;
+ */	font-size: 1.3em;
 	padding-bottom: 0.5em;
 }
 .form_infotext2{
