@@ -2604,7 +2604,15 @@ public class Datenbankmanager implements IDatenbankmanager {
 
     @Override
     public void connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j) throws SQLException
-    {        
+    {    
+        boolean verbindungAbbauen = false;
+        Entry<Connection,ReentrantLock> conLockNeo4j = null;
+        if(conNeo4j == null){
+            conLockNeo4j = getConnectionNeo4j();
+            conNeo4j = conLockNeo4j.getKey();
+            verbindungAbbauen = true;
+        }
+        
         PreparedStatement ps = null;
         try {
             ps = conNeo4j.prepareStatement("MATCH (n),(m) "
@@ -2618,6 +2626,8 @@ public class Datenbankmanager implements IDatenbankmanager {
             throw e;
         } finally{
             closeQuietly(ps);
+            if(verbindungAbbauen)
+                conLockNeo4j.getValue().unlock();
         }
 
     }
@@ -2639,4 +2649,5 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(ps);
         }
     }
+    
 }
