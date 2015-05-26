@@ -201,6 +201,7 @@ function findVater(elem){
 	else{
 		maybeNode = elem.parent().parent().prev().data("kkid");
 		console.log("Vater ist eine andere Karteikarte:"+maybeNode);
+		return maybeNode;
 	}
 	
 }
@@ -218,7 +219,7 @@ function findBruder(elem){
 	
 	
 	//2.:
-	elem.parent().prev().children().first().data("kkid");
+//	elem.parent().prev().children().first().data("kkid");
 }
 
 function isImage(filename) {
