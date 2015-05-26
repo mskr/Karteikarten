@@ -30,10 +30,10 @@ var UPLOADTYPE ="";
         		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
         		return false;
         	}
-//        	if(text == "" && UPLOADIDSET == -1){
-//        		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
-//        		return false;
-//        	}
+        	if(text == "" && UPLOADIDSET == -1){
+        		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
+        		return false;
+        	}
         	if(isAnyAttrSelected() == false){
         		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  function(){
             		processKKerstellen(text,titel,attributes, bruder, vater);
@@ -48,7 +48,10 @@ var UPLOADTYPE ="";
         }
         
         clearFkt = function(){
-        	// TODO beim schließen wieder alles leeren
+        	$(".checkboxes").prop("checked",false);
+        	$("#kk_erstellen_titel_input").val("");
+        	$("#kk_erstellen_TA").val("");
+        	
         }
         
         popupFenster(
@@ -129,8 +132,6 @@ var UPLOADTYPE ="";
         try{
     		myDropzone = $("#file-dropzone").dropzone({
             url: actionUploadKKBild,
-            acceptedFiles: "image/jpeg,image/png,image/gif,video/mp4",
-            clickable: true,
             maxFilesize: 1,
             autoDiscover :false,
             autoProcessQueue:false,
@@ -168,8 +169,8 @@ var UPLOADTYPE ="";
            		    function successFkt(data){
            		    	UPLOADTYPE = ext;
            		    	$("#cke_kk_erstellen_TA").hide(0);
-               	    	console.log(data);
-               	    	UPLOADIDSET = data;
+               	    	UPLOADIDSET = data.strResult;
+               	    	console.log("Zurückgegebene UploadID:"+UPLOADIDSET);
            		    }
            	    	uploadFile(file, successFkt, uploadAction, params, function(){}, function(){}) 
            	    });
@@ -181,6 +182,7 @@ var UPLOADTYPE ="";
            	    });
            	  }
             }).get(0).dropzone;
+    		$( "#file-dropzone" ).droppable();
         }
         catch(e){
         	myDropzone.removeAllFiles(true);

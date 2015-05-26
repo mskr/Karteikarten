@@ -284,11 +284,12 @@ public class KarteikartenServlet extends ServletController {
 
             KarteikartenTyp kkTyp;
             String typ = req.getParameter(ParamDefines.Type);
-            if(typ.equals(".mp4")){
+            System.out.println("KAREIKARTEN TYPE: "+ typ);
+            if(typ.equals("mp4")){
                 kkTyp = KarteikartenTyp.VIDEO;
                 uploadedID = req.getParameter(ParamDefines.UploadID);
             }
-            else if(typ.equals(".jpg") || typ.equals(".png")){
+            else if(typ.equals("jpg") || typ.equals("png")){
                 kkTyp = KarteikartenTyp.BILD;
                 uploadedID = req.getParameter(ParamDefines.UploadID);
             }
@@ -300,7 +301,7 @@ public class KarteikartenServlet extends ServletController {
                 throw new Exception();
 
             int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Veranstaltung));
-
+            System.out.println("UPLOADED ID: "+ uploadedID);
             int vaterKK = Integer.parseInt(req.getParameter(ParamDefines.VaterKK));
             int ueberliegendeBruderKK = Integer.parseInt(req.getParameter(ParamDefines.BruderKK));
 
@@ -332,11 +333,11 @@ public class KarteikartenServlet extends ServletController {
                 String relativerPfad = "";
                 String relativerNeuerPfad = "";
                 if(kkTyp == KarteikartenTyp.VIDEO){
-                    relativerPfad = dirKKVideo + uploadedID + "." + typ;
+                    relativerPfad = dirKKVideo + uploadedID;
                     relativerNeuerPfad = dirKKVideo + kkID + "." + typ;
                 }
                 else{
-                    relativerPfad = dirKKBild + uploadedID + "." + typ;
+                    relativerPfad = dirKKBild + uploadedID;
                     relativerNeuerPfad = dirKKBild + kkID + "." + typ;
                 }
 
@@ -350,9 +351,22 @@ public class KarteikartenServlet extends ServletController {
                 String absoluteNeuerPfad = contextPath + relativerNeuerPfad;
                 File oldName = new File(absolutePath);
                 File newName = new File(absoluteNeuerPfad);
+                System.out.println("alter Filename: "+ absolutePath);
+                System.out.println("neuer Filename: "+ absoluteNeuerPfad);
+               try{
+            	   if(!oldName.renameTo(newName)){
+            		   System.out.println("RENAME DIDNT WORK");
 
-                if(!oldName.renameTo(newName)) 
-                    throw new Exception();
+            		   throw new Exception();
+            	   }
+               }
+               catch(SecurityException e){
+            	   	e.printStackTrace();
+            	   	System.out.println("SECURITY EXCEPTION");
+               		jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+               		outWriter.print(jo);
+               }
+                	
             }
 
 
