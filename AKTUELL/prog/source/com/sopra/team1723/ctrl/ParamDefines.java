@@ -57,6 +57,7 @@ public class ParamDefines
     public final static String ActionGetKarteikartenKinder = "getKKKinder";
     public final static String ActionGetKarteikartenVater = "getKKVater";
     public final static String ActionErstelleKarteikarte = "erstelleKarteikarte";
+    public final static String ActionErstelleUeberschrift = "erstelleUeberschrift";
     public final static String ActionVerweisHinzufuegen = "verweisHinzufuegen";
     
     public final static String ActionSpeichereNotiz = "speichereNotiz";

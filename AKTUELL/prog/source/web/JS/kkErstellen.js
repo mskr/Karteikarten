@@ -18,28 +18,41 @@ var UPLOADTYPE ="";
         catch(e){
         	console.log(e);
         }
-        
+
+        $("#kk_neuesKapitel").change(function(e){
+    		$("#cke_kk_erstellen_TA").slideToggle(300);
+    		$("#df_area_kk").fadeToggle(300);
+        });
         submitFkt = function(){
         	var text = $("#kk_erstellen_TA").val().trim();
         	var titel = $("#kk_erstellen_titel_input").val().trim();
         	var attributes = getSelectedKkAttributes();
-        	console.log(getSelectedKkAttributes());
 
-        	// TODO Das ganze noch so umgestalten, dass man auch nur Überschriften erzeugen kann!
         	if(titel==""){
         		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
         		return false;
         	}
-//        	if(text == "" && UPLOADIDSET == -1){
-//        		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
-//        		return false;
-//        	}
         	if(isAnyAttrSelected() == false){
         		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  function(){
             		processKKerstellen(text,titel,attributes, bruder, vater);
             		return true;
         		}, 0, 0);
         	}
+        	if($("#kk_neuesKapitel").prop("checked")){
+        		var params = {};
+        		params[paramTitel] = titel;
+        		params[paramVeranstaltung] = veranstaltungsObject[paramId];
+        		params[paramVaterKK] = vater;
+        		params[paramAttribute] = attributes;
+        		params[paramBruderKK] = bruder;
+        		submitNewUeberschriftKarteikarte(params);
+        		return true;
+        	}
+        	if(text == "" && UPLOADIDSET == -1){
+        		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
+        		return false;
+        	}
+        	
         	else{
         		processKKerstellen(text,titel,attributes, bruder, vater);
         		return true;
@@ -48,7 +61,10 @@ var UPLOADTYPE ="";
         }
         
         clearFkt = function(){
-        	// TODO beim schließen wieder alles leeren
+        	$(".checkboxes").prop("checked",false);
+        	$("#kk_erstellen_titel_input").val("");
+        	$("#kk_erstellen_TA").val("");
+        	
         }
         
         popupFenster(
@@ -61,7 +77,6 @@ var UPLOADTYPE ="";
             $("#kk_erstellen_weiter"),
             $("#kk_erstellen_zurueck")
         );
-
         $(".checkbox_labels").click(function(){
         	if($(this).siblings().first().prop("checked")==true ){
         		$(this).siblings().first().prop("checked",false)
@@ -74,7 +89,6 @@ var UPLOADTYPE ="";
         
     	function processKKerstellen(text,titel,attributes, bruder, vater){
     		var params = {};
-    		// Escapen nicht mehr nötig, das macht jquery für uns beim ajax call :)
     		params[paramTitel] = titel;
     		params[paramVeranstaltung] = veranstaltungsObject[paramId];
     		params[paramInhalt] = text;
@@ -116,6 +130,18 @@ var UPLOADTYPE ="";
                     params
                 );
         }
+        function submitNewUeberschriftKarteikarte(params){
+        	var ajax = ajaxCall(karteikartenServlet,
+        			actionErstelleUeberschrift,
+                    function(response) {
+                        showInfo("Übergeordnetes Kapitel \""+ titel +"\"wurde erfolgreich erzeugt.");
+                        // Wir bekommen die eingefügte id zurück
+                        displayKarteikarte(response[paramId]);
+                        initInhaltsverzeichnis();
+                    },
+                    params
+                );
+        }
         
         
         
@@ -129,8 +155,6 @@ var UPLOADTYPE ="";
         try{
     		myDropzone = $("#file-dropzone").dropzone({
             url: actionUploadKKBild,
-            acceptedFiles: "image/jpeg,image/png,image/gif,video/mp4",
-            clickable: true,
             maxFilesize: 1,
             autoDiscover :false,
             autoProcessQueue:false,
@@ -168,8 +192,8 @@ var UPLOADTYPE ="";
            		    function successFkt(data){
            		    	UPLOADTYPE = ext;
            		    	$("#cke_kk_erstellen_TA").hide(0);
-               	    	console.log(data);
-               	    	UPLOADIDSET = data;
+               	    	UPLOADIDSET = data.strResult;
+               	    	console.log("Zurückgegebene UploadID:"+UPLOADIDSET);
            		    }
            	    	uploadFile(file, successFkt, uploadAction, params, function(){}, function(){}) 
            	    });
@@ -181,6 +205,7 @@ var UPLOADTYPE ="";
            	    });
            	  }
             }).get(0).dropzone;
+    		$( "#file-dropzone" ).droppable();
         }
         catch(e){
         	myDropzone.removeAllFiles(true);

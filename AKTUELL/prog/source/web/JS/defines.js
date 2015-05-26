@@ -63,6 +63,7 @@ var actionGetKarteikartenVater = "getKKVater";
 var actionVoteKarteikarteUp = "voteUpKarteik";
 var actionVoteKarteikarteDown = "voteDownKarteik";
 var actionErstelleKarteikarte = "erstelleKarteikarte";
+var actionErstelleUeberschrift = "erstelleUeberschrift";
 
 var actionVoteKommentarUp = "voteUpKomm";
 var actionVoteKommentarDown = "voteDownKomm";
@@ -156,6 +157,7 @@ var paramKommentarVaterId = "vaterId";
 var paramKommentarKKid = "kkId";
 
 // Schluesselnamen fuer JSON Objekte
+var keyJsonStrResult = "arrResult";
 var keyJsonArrResult = "arrResult";
 var keyJsonObjKlasse = "klasse";
 var keyJsonObjKlasseBenutzer = "klasseBenutzer";

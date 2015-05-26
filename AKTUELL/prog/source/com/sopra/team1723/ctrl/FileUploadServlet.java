@@ -100,7 +100,7 @@ public class FileUploadServlet extends ServletController
                  String absolutePath = contextPath + relativerPfad;
                  ImageIO.write(originalImage, "png", new File(absolutePath));
                  System.out.println(UploadID);
-                 JSONObject jo = JSONConverter.toJson(UploadID+".png");
+                 JSONObject jo = JSONConverter.toJson(UploadID);
                  outWriter.print(jo);
             }
             else{
