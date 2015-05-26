@@ -1197,7 +1197,7 @@ textarea.input_std {
 	position: absolute;
 	right: 0;
 	z-index: 3;
-	width: 22em;
+	width: 30em;
 	height: auto;
 	max-height: 100%;
 	font-size: .8em;

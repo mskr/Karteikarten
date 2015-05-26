@@ -52,6 +52,17 @@ function buildKarteikarte(karteikarteJson)
     			$("#link_copy_ok"), undefined, 
     			undefined);
     });
+    
+    
+	// Reagiere auf das Scrollen zu dieser Karteikarte
+	new Waypoint({
+	    element: kkDom,
+	    handler: function(direction) {
+	        inhaltsverzeichnisUnhighlightAll();
+	        inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
+	    }
+	});
+	
 
     // Überschrift kk
     if(kkInhalt == "")
@@ -167,14 +178,7 @@ function buildKarteikarte(karteikarteJson)
 	    params
 	);
 	
-	// Reagiere auf das Scrollen zu dieser Karteikarte
-	new Waypoint({
-	    element: kkDom,
-	    handler: function(direction) {
-	        inhaltsverzeichnisUnhighlightAll();
-	        inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
-	    }
-	});
+
 	
     return kkDom;
 }
