@@ -18,10 +18,23 @@ var UPLOADTYPE ="";
         catch(e){
         	console.log(e);
         }
-
+        
         $("#kk_neuesKapitel").change(function(e){
-    		$("#cke_kk_erstellen_TA").slideToggle(300);
-    		$("#df_area_kk").fadeToggle(300);
+        	if($("#kk_neuesKapitel").prop("checked")==true){
+        		$("#cke_kk_erstellen_TA").slideUp(300);
+        		$("#df_area_kk").fadeOut(300);
+        	}
+        	else{
+        		if($(".dz-filename").length===0){
+        			$("#cke_kk_erstellen_TA").slideDown(300);
+            		$("#df_area_kk").fadeIn(300);
+        		}
+        		else{
+        			$("#df_area_kk").fadeIn(300);
+        		}
+        		
+        	}
+    		
         });
         submitFkt = function(){
         	var text = $("#kk_erstellen_TA").val().trim();
@@ -61,10 +74,13 @@ var UPLOADTYPE ="";
         }
         
         clearFkt = function(){
+        	$("#kk_neuesKapitel").unbind("change");
+        	$("#kk_neuesKapitel").prop("checked",false);
+        	$("#cke_kk_erstellen_TA").fadeIn(0);
+    		$("#df_area_kk").fadeIn(0);
         	$(".checkboxes").prop("checked",false);
         	$("#kk_erstellen_titel_input").val("");
         	$("#kk_erstellen_TA").val("");
-        	
         }
         
         popupFenster(
@@ -153,7 +169,7 @@ var UPLOADTYPE ="";
         
         
         try{
-    		myDropzone = $("#file-dropzone").dropzone({
+    		myDropzone = $("#df_area_kk").dropzone({
             url: actionUploadKKBild,
             maxFilesize: 1,
             autoDiscover :false,

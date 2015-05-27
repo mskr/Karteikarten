@@ -337,8 +337,8 @@ public class KarteikartenServlet extends ServletController {
                     relativerNeuerPfad = dirKKVideo + kkID + "." + typ;
                 }
                 else{
-                    relativerPfad = dirKKBild + uploadedID + "." + typ;
-                    relativerNeuerPfad = dirKKBild + kkID + "." + typ;
+                    relativerPfad = dirKKBild + uploadedID + ".png";
+                    relativerNeuerPfad = dirKKBild + kkID + ".png";
                 }
 
                 ServletContext servletContext;

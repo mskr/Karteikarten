@@ -249,7 +249,9 @@
 						<input name="file" type="file" multiple />
 					</div>
 			        <div class="dz-message" id="dz_info_message">
-						Drop files here or click to upload.<br>
+						Klicken oder ziehen sie eine Datei in das Feld.<br>
+						Sie können keinen Text und eine Datei gleichzeitig verwenden.
+						
 					</div>
 			    </form>
  			</div>
@@ -268,7 +270,14 @@
 				<span><input id="kkE_attr_bsp" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Beispiel</label></span><br>
 				<span><input id="kkE_attr_uebung" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Übung</label></span><br>
 			</div>
-
+			
+			<div class="suche_kk_wrapper">
+				<span class="form_infotext3">Suchen sie nach anderen Karteikarten ihrer Veranstaltung,<br>um sie mit dieser zu verknüpfen.</span><br>
+				<div class="autoCompleteWrapper needMarginTop8">
+					<input id="suche_kk_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Suche nach Karteikarten..." required>
+				</div>
+				
+			</div>
 		</div>
 		<div class="popup_fenster_foot">
 			<span id="kk_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>

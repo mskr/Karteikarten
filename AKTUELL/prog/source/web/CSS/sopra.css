@@ -95,6 +95,17 @@ input[type="radio"], input[type="checkbox"] {
 	border-radius:5px;
 	margin-bottom:8px;
 }
+.suche_kk_wrapper{
+	margin-top:9px;
+	background-color:#333333;
+	padding:12px;
+	border-radius:5px;
+	margin-bottom:8px;
+}
+.needMarginTop8{
+	margin-top:8px;
+	margin-bottom:7px;
+}
 /* Bei allen input_std ist die Hoehe festgelegt, die Breite muss aber einzeln gesetzt werden */
 .input_std {
 	margin: .3em 0;
@@ -158,6 +169,10 @@ textarea.input_std {
 }
 .form_infotext {
 	font-size: .9em;
+	color: #ccc;
+}
+.form_infotext3{
+	font-size: 1.1em;
 	color: #ccc;
 }
 
