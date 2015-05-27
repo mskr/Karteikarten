@@ -39,8 +39,8 @@ function fillKKbearbeitenTemplateWith(json){
 	counter = 0;
 	$("#kkB_attributes").children().each(function(){			//fill with attributes...
 		if(isEven(counter)){
-			console.log("even");
-			console.log($(this).children().first());
+//			console.log("even");
+//			console.log($(this).children().first());
 			if(json[paramAttribute][counter/2]===true){
 				$(this).children().first().prop("checked",true);
 			}
@@ -68,6 +68,8 @@ function fillKKbearbeitenTemplateWith(json){
 		}
 	}
 	else if(json[paramType]=="BILD"){		//bildkarteikarte
+		UPLOADTYPE = "png";
+		UPLOADIDSET = json[paramId];
 		var xhr = $.ajax({
 			  type: "HEAD",
 			  url: "files/images/"+json[paramId]+".png",
@@ -101,6 +103,8 @@ function fillKKbearbeitenTemplateWith(json){
 			});
 	}
 	else if(json[paramType]=="VIDEO"){
+		UPLOADTYPE = "mp4";
+		UPLOADIDSET = json[paramId];
 		var xhr = $.ajax({
 			  type: "HEAD",
 			  url: "files/videos/"+json[paramId]+".mp4",
@@ -141,9 +145,9 @@ function fillKKbearbeitenTemplateWith(json){
 function displayKKtoEdit(KKjson){
 	
 	submitFkt = function(){
-    	var text = $("#kk_erstellen_TA").val().trim();
-    	var titel = $("#kk_erstellen_titel_input").val().trim();
-    	var attributes = getSelectedKkAttributes();
+    	var text = $("#kk_bearbeiten_TA").val().trim();
+    	var titel = $("#kk_bearbeiten_titel_input").val().trim();
+    	var attributes = getSelectedKkBAttributes();
     	var id = KKjson[paramId];
 
     	if(titel==""){
@@ -211,7 +215,7 @@ function displayKKtoEdit(KKjson){
     
     function isAnyAttrSelected(){
     	var isTrue = false;
-    	$("#kkE_attributes").children().filter("span").children().filter("input").each(function(i){
+    	$("#kkB_attributes").children().filter("span").children().filter("input").each(function(i){
     		if($(this).prop("checked")==true){
     			isTrue = true;
     			return false;
@@ -219,9 +223,9 @@ function displayKKtoEdit(KKjson){
     	});
     	return isTrue;
     }
-    function getSelectedKkAttributes(){
+    function getSelectedKkBAttributes(){
     	var str = ""
-    	$("#kkE_attributes").children().filter("span").children().filter("input").each(function(i){
+    	$("#kkB_attributes").children().filter("span").children().filter("input").each(function(i){
     		str = str + $(this).prop("checked")+",";
     	});
     	str =str.substring(0, str.length - 1);
@@ -296,41 +300,43 @@ function appendDropzone(){
     catch(e){
     	myDropzone.removeAllFiles(true);
     }
-    
-    function submitEditUeberschriftKarteikarte(params){
-    	var ajax = ajaxCall(karteikartenServlet,
-    			actionBearbeiteUeberschrift,
-                function(response) {
-                    showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
-                    $("#kk_bearbeiten_popup_overlay").fadeOut(110);
-                    // Wir bekommen die eingefügte id zurück
-                    displayKarteikarte(params[paramId]);
-                    initInhaltsverzeichnis();
-                },
-                params
-            );
-    }
-    function submitEditKarteikarte(params){
-    	var ajax = ajaxCall(karteikartenServlet,
-    			actionBearbeiteKarteikarte,
-                function(response) {
-                    showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
-                    $("#kk_bearbeiten_popup_overlay").fadeOut(110);
-                    // Wir bekommen die eingefügte id zurück
-                    displayKarteikarte(params[paramId]);
-                    initInhaltsverzeichnis();
-                },
-                params
-            );
-    }
-    function processKKbearbeiten(id,text,titel,attributes){
-    	var params = {};
-		params[paramTitel] = titel;
-		params[paramId] = id;
-		params[paramInhalt] = text;
-		params[paramAttribute] = attributes;
-		params[paramType] = UPLOADTYPE;
-		params[paramKkUploadID] = UPLOADIDSET;	
-		submitEditKarteikarte(params)
-    }
+
+
+}
+function submitEditKarteikarte(params){
+	var ajax = ajaxCall(karteikartenServlet,
+			actionBearbeiteKarteikarte,
+            function(response) {
+                showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
+                $("#kk_bearbeiten_popup_overlay").fadeOut(110);
+                // Wir bekommen die eingefügte id zurück
+                displayKarteikarte(params[paramId]);
+                initInhaltsverzeichnis();
+            },
+            params
+        );
+}
+function processKKbearbeiten(id,text,titel,attributes){
+	var params = {};
+	params[paramTitel] = titel;
+	params[paramId] = id;
+	params[paramInhalt] = text;
+	params[paramAttribute] = attributes;
+	params[paramType] = UPLOADTYPE;
+	params[paramKkUploadID] = UPLOADIDSET;	
+	submitEditKarteikarte(params)
+}
+
+function submitEditUeberschriftKarteikarte(params){
+	var ajax = ajaxCall(karteikartenServlet,
+			actionBearbeiteUeberschrift,
+            function(response) {
+                showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
+                $("#kk_bearbeiten_popup_overlay").fadeOut(110);
+                // Wir bekommen die eingefügte id zurück
+                displayKarteikarte(params[paramId]);
+                initInhaltsverzeichnis();
+            },
+            params
+        );
 }
