@@ -59,7 +59,11 @@ function buildKarteikarte(karteikarteJson)
 	    element: kkDom,
 	    handler: function(direction) {
 	        inhaltsverzeichnisUnhighlightAll();
-	        inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
+	        var isFound = inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
+	        if(!isFound || isFound == undefined)
+	        {
+	            //TODO kann nicht sicher sagen, ob etwas gefunden wurde, wieso kommt manchmal undefined zurueck?
+	        }
 	    }
 	});
 	
@@ -364,8 +368,10 @@ function voteKkDown(kommId)
 
 
 function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
+    console.log("[LOG] Versuche bis Kk mit folgender ID aufzuklappen: "+kkID);
     // Hole Liste mit Kindern der naechsten Ebene
     var kkArr = startElem.find("> ul > li .inhaltsvz_kk_knoten");
+    if(kkArr.length == 0) return false;
     // Merke mit diesem Flag, ob ID gefunden
     var isFound = false;
     // Suche in der aktuellen Ebene nach der ID
@@ -373,7 +379,10 @@ function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
         var currentKkID = $(elem).attr("data-kkid");
         if(currentKkID == kkID)
         {
+            // Wenn gefunden Knoten hervorheben
             inhaltsverzeichnisHighlightKnoten($(elem));
+            // Geschwisterknoten einklappen
+            $(elem).parents("li").siblings().find("ul").slideUp("normal", function() { $(this).remove() });
             isFound = true;
             return false; // break loop
         }
@@ -386,16 +395,22 @@ function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
             // Ist naechste Ebene bereits ausgeklappt starte sofort rekursiven Aufruf
             if($(elem).siblings("ul").length != 0)
             {
-                inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
+                isFound = inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
+                return isFound;
             }
             // Andernfalls lade naechste Ebene und starte danach rekursiven Aufruf
             else
             {
                 $.when( ladeKindKarteikarten(currentKkID, $(elem).parent("li")) ).done(function() {
-                    inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
+                    isFound = inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
+                    return isFound;
                 });
             }
         });
+    }
+    else
+    {
+        return true;
     }
 }
 var inhaltsverzeichnisHighlightedKnoten = [];
@@ -413,4 +428,8 @@ function inhaltsverzeichnisUnhighlightAll() {
     for(var i in inhaltsverzeichnisHighlightedKnoten) {
         inhaltsverzeichnisUnhighlightKnoten( inhaltsverzeichnisHighlightedKnoten[i] );
     }
+}
+
+function inhaltsverzeichnisAlleEinklappen() {
+    $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("normal", function() { $(this).remove() });
 }

@@ -1217,11 +1217,11 @@ textarea.input_std {
 }
 
 
-#kk_inhaltsverzeichnis:before {
-	margin-left: 1rem;
-	content: "Inhaltsverzeichnis";
-	font-weight: bold;
+#kk_inhaltsverzeichnis_titel {
+	margin-left: .7rem;
 	font-size: 1rem;
+	color: #aaa;
+	text-shadow: 0px -1px 0px black;
 }
 #kk_inhaltsverzeichnis {
 	position: absolute;
@@ -1667,10 +1667,13 @@ textarea.input_std {
 	opacity: 1;
 } .kk_komm_loeschen a:hover {
 	color: #800000;
-} /* .kk_kommantwort {
+}
+
+/*
+.kk_kommantwort {
 	margin-top: 10px;
 	text-align: left;
-} */ .kk_kommantwort textarea {
+} .kk_kommantwort textarea {
 	padding: 6px 10px;
 	width: calc(100% - 23px);
 	display: inline-block;
@@ -1683,10 +1686,7 @@ textarea.input_std {
 	font-family: 'Open Sans', sans-serif;
 	font-size: 12px;
 	border-left: 3px solid #808080;
-	-webkit-box-shadow: 0px -1px 0px #242424;
-	-moz-box-shadow: 0px -1px 0px #242424;
 	box-shadow: 0px -1px 0px #242424;
-	-webkit-transition: background 0.2s; /* For Safari 3.1 to 6.0 */
 	transition: background 0.2s;
 } .kk_kommantwort textarea:hover {
 	background: #464646;
@@ -1694,8 +1694,6 @@ textarea.input_std {
 	background: #4b4b4b;
 	color: white;
 	border-left: 3px solid white;
-	-webkit-box-shadow: 0px 1px 0px #171717;
-	-moz-box-shadow: 0px 1px 0px #171717;
 	box-shadow: 0px 1px 0px #171717;
 } .kk_kommerstellen {
 	margin: 10px 0;
@@ -1713,10 +1711,7 @@ textarea.input_std {
 	font-family: 'Open Sans', sans-serif;
 	font-size: 12px;
 	border-left: 3px solid #808080;
-	-webkit-box-shadow: 0px 1px 0px #242424;
-	-moz-box-shadow: 0px 1px 0px #242424;
 	box-shadow: 0px 1px 0px #242424;
-	-webkit-transition: background 0.2s; /* For Safari 3.1 to 6.0 */
 	transition: background 0.2s;
 } .kk_kommerstellen textarea:hover {
 	background: #2d2d2d;
@@ -1724,8 +1719,6 @@ textarea.input_std {
 	background: #484848;
 	color: white;
 	border-left: 3px solid white;
-	-webkit-box-shadow: 0px 1px 0px #171717;
-	-moz-box-shadow: 0px 1px 0px #171717;
 	box-shadow: 0px 1px 0px #171717;
 } .kk_kommtoggle {
 	width: 95%;
@@ -1734,6 +1727,11 @@ textarea.input_std {
 	text-align: center;
 	position: absolute;
 	bottom: 3px;
+}
+*/
+
+.kk_kommbox .mathjax_formel {
+	font-size: 20px;
 }
 
 .kk_notizen {
