@@ -220,7 +220,7 @@
 	</div>
 </div>
 
-<!-- Veranstaltung Erstellen Popup Fenster -->
+<!-- Karteikarte Erstellen Popup Fenster -->
 <div id="kk_erstellen_popup_overlay" class="popup_fenster_overlay">
 	<div id="kk_erstellen_popup" class="popup_fenster hidden">
 	 	<div class="popup_fenster_titel">
@@ -236,7 +236,7 @@
  				<span>
  					<input id="kk_neuesKapitel" class="Big_checkbox" type="checkbox" name="attr">
  					<label class="checkbox_labels" for="attr_lemma">
- 						Markieren, wenn sie ein neues übergeordnetes Kapitel erstellen wollen.<br>Diese Karteikarte ist dann Inhaltslos!
+ 						Markieren, wenn sie ein neues übergeordnetes Kapitel erstellen wollen.<br>Diese Karteikarte ist dann inhaltslos!
  					</label>
 				</span>
  			</div>
@@ -286,6 +286,75 @@
 			<span id="kk_erstellen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
 			<span id="kk_erstellen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
 			<span id="kk_erstellen_ok" class="mybutton green">Erstellen</span>
+		</div>
+	</div>
+</div>
+<!-- Karteikarte Bearbeiten Popup Fenster -->
+<div id="kk_bearbeiten_popup_overlay" class="popup_fenster_overlay">
+	<div id="kk_bearbeiten_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+			<span class="octicon octicon-podium"></span>
+			<span class="popup_fenster_ueberschrift"> Karteikarte bearbeiten</span>
+		</div>
+		<div id="kk_bearbeiten_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div id="popup_fenster_body4"class="popup_fenster_body">
+			<input class="input_std popup_input" id="kk_bearbeiten_titel_input" type="text" placeholder="Titel" required>
+ 			<div id="kk_b_neuesKapitel_wrapper">
+ 				<span>
+ 					<input id="kk_jetztNeuesKapitel" class="Big_checkbox" type="checkbox" name="attr">
+ 					<label class="checkbox_labels" for="attr_lemma">
+ 						Markieren, wenn sie diese Karteikarte als übergeordnetes Kapitel verwenden wollen.
+ 					</label>
+				</span>
+ 			</div>
+ 			
+ 			<div id="kk_bearbeiten_text_area">
+ 				<textarea id="kk_bearbeiten_TA">
+ 				</textarea>
+ 			</div>
+ 			<div class="drop_file_areas" id="df_area_kk_b">
+				<form action="/file-upload" class="dropzone" id="file-dropzone">
+					<div class="fallback">
+						<input name="file" type="file" multiple />
+					</div>
+			        <div class="dz-message" id="dz_info_message">
+						Klicken oder ziehen sie eine Datei in das Feld.<br>
+						Sie können keinen Text und eine Datei gleichzeitig verwenden.
+						
+					</div>
+			    </form>
+ 			</div>
+		</div>
+		<div id="popup_fenster_body5" class="popup_fenster_body">
+			<span class="form_infotext2">Ändern sie die Attribute ihrer Karteikarte.</span><br>
+			<div id="kkB_attributes">
+				<span><input id="kkB_attr_lemma" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_lemma">Lemma</label></span><br>
+				<span><input id="kkB_attr_satz" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_satz">Satz</label></span><br>
+				<span><input id="kkB_attr_beweis" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_beweis">Beweis</label></span><br>
+				<span><input id="kkB_attr_def" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_def">Definition</label></span><br>
+				<span><input id="kkB_attr_wichtig" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_wichtig">Wichtig</label></span><br>
+				<span><input id="kkB_attr_grundl" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_grundl">Grundlagen</label></span><br>
+				<span><input id="kkB_attr_zusatz" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Zusatzinformation</label></span><br>
+				<span><input id="kkB_attr_exkurs" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Exkurs</label></span><br>
+				<span><input id="kkB_attr_bsp" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Beispiel</label></span><br>
+				<span><input id="kkB_attr_uebung" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Übung</label></span><br>
+			</div>
+			
+			<div class="suche_kk_wrapper">
+				<span class="form_infotext3">Suchen sie nach anderen Karteikarten ihrer Veranstaltung,<br>um sie mit dieser zu verknüpfen.</span><br>
+				<div class="autoCompleteWrapper needMarginTop8">
+					<input id="suche_kk_b_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Suche nach Karteikarten..." required>
+				</div>
+				
+			</div>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="kk_bearbeiten_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="kk_bearbeiten_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="kk_bearbeiten_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="kk_bearbeiten_ok" class="mybutton green">Änderungen speichern</span>
 		</div>
 	</div>
 </div>	
@@ -673,7 +742,26 @@ Dann aber so leer.
 		<div class = "kk_load kk_load_after"> <span class="mega-octicon octicon-chevron-down"></span> </div>
 	</div>
 </div>
+<!-- Template Dropzone Uploaded Image -->
 
+<div id="kk_b_BildPreviewTemplate" class="dz-preview center dz-image-preview" style="margin: 40px; display:none;">
+	<div class="dz-image">
+		<img data-dz-thumbnail="">
+	</div> 
+	<div class="dz-details">
+		<div class="dz-filename">
+			<span data-dz-name=""></span>
+		</div>
+		<div class="dz-size">
+			<span data-dz-size="">
+			</span>
+		</div>
+	</div>
+		<div class="dz-progress">
+			<span class="dz-upload" data-dz-uploadprogress=""></span>
+		</div>
+	<a id="KKbearbeitenRemoveLink" class="dz-remove" href="javascript:undefined;" data-dz-remove="">Remove file</a>
+</div>
 
 <!-- Template Karteikarte -->
 <div id="templatekarteikarte" class="kk_wrapper" style="display:none">

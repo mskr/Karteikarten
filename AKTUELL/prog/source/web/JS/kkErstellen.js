@@ -45,13 +45,6 @@ var UPLOADTYPE ="";
         		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
         		return false;
         	}
-        	else if(isAnyAttrSelected() == false){
-        		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  function(){
-            		processKKerstellen(text,titel,attributes, bruder, vater);
-            		return true;
-        		}, 0, 0);
-        		return false;
-        	}
         	else if($("#kk_neuesKapitel").prop("checked")){
         		var params = {};
         		params[paramTitel] = titel;
@@ -66,7 +59,13 @@ var UPLOADTYPE ="";
         		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
         		return false;
         	}
-        	
+        	else if(isAnyAttrSelected() == false){
+        		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  function(){
+            		processKKerstellen(text,titel,attributes, bruder, vater);
+            		return true;
+        		}, 0, 0);
+        		return false;
+        	}
         	else{
         		processKKerstellen(text,titel,attributes, bruder, vater);
         		return true;
@@ -93,6 +92,7 @@ var UPLOADTYPE ="";
             $("#kk_erstellen_weiter"),
             $("#kk_erstellen_zurueck")
         );
+        $(".checkbox_labels").unbind("click");
         $(".checkbox_labels").click(function(){
         	if($(this).siblings().first().prop("checked")==true ){
         		$(this).siblings().first().prop("checked",false)
@@ -138,7 +138,7 @@ var UPLOADTYPE ="";
         	var ajax = ajaxCall(karteikartenServlet,
         			actionErstelleKarteikarte,
                     function(response) {
-                        showInfo("Karteikarte \""+ titel +"\"wurde erfolgreich erzeugt.");
+                        showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich erzeugt.");
                         $("#kk_erstellen_popup_overlay").fadeOut(110);
                         // Wir bekommen die eingefügte id zurück
                         displayKarteikarte(response[paramId]);
@@ -151,7 +151,7 @@ var UPLOADTYPE ="";
         	var ajax = ajaxCall(karteikartenServlet,
         			actionErstelleUeberschrift,
                     function(response) {
-                        showInfo("Übergeordnetes Kapitel \""+ titel +"\"wurde erfolgreich erzeugt.");
+                        showInfo("Übergeordnetes Kapitel \""+ params[paramTitel] +"\" wurde erfolgreich erzeugt.");
                         // Wir bekommen die eingefügte id zurück
                         displayKarteikarte(response[paramId]);
                         initInhaltsverzeichnis();

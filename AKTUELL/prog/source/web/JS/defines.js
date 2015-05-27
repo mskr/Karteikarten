@@ -64,6 +64,9 @@ var actionVoteKarteikarteUp = "voteUpKarteik";
 var actionVoteKarteikarteDown = "voteDownKarteik";
 var actionErstelleKarteikarte = "erstelleKarteikarte";
 var actionErstelleUeberschrift = "erstelleUeberschrift";
+var actionBearbeiteKarteikarte = "bearbeiteKarteikarte";
+var actionBearbeiteUeberschrift = "bearbeiteUeberschrift";
+
 
 var actionVoteKommentarUp = "voteUpKomm";
 var actionVoteKommentarDown = "voteDownKomm";
