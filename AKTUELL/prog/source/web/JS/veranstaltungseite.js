@@ -204,6 +204,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
 }
 
 function initInhaltsverzeichnis(){
+    $("#kk_inhaltsverzeichnis_titel").html("<span>Karteikarten in</span><strong> "+veranstaltungsObject[paramTitel]+"</strong>");
 	return ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
 }
 
@@ -261,6 +262,7 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 }
                                 // Zur Karteikarte scrollen und im Inhaltsverzeichnis hervorheben
                                 displayKarteikarte(arr[i][paramId], function() {
+                                    console.log("[LOG] Callback started");
                                     inhaltsverzeichnisUnhighlightAll();
                                     inhaltsverzeichnisHighlightKnoten($(e.target));
                                 });
@@ -348,7 +350,7 @@ function displayKarteikarte(id, callback){
     else
     {
     	destroyCKeditors($("#kk_all"));
-    	$("#kk_all").children().fadeOut("slow").promise().done(function(){
+    	$("#kk_all").children().fadeOut(200).promise().done(function(){
     		$("#kk_all").empty();
         	showPreAfterLoad();
 
@@ -359,11 +361,12 @@ function displayKarteikarte(id, callback){
 				domkk.show();
 				domkk.css("opacity", "0");
         		$("#kk_all").append(domkk);
-				domkk.animate({opacity: 1}, 2000);
+				domkk.animate({opacity: 1}, 200);
         	}, params2);
 
         	$.when(ajax).done(function(){
         		loadAfterKk(id);
+        		if(callback != undefined) callback.call();
         	});
     	});
     	
@@ -400,7 +403,7 @@ function loadAfterKk(id)
 						o = data.shift();
 						if(o == undefined){
 							$.each(domms,function(i, obj){
-								domms[i].animate({opacity: 1}, 2000);
+								domms[i].animate({opacity: 1}, 200);
 							})
 							return;
 						}
@@ -413,6 +416,7 @@ function loadAfterKk(id)
 						nextItem();
 				}
 				nextItem();
+                
 				displayingAfterKK = false;
 				
 	        }, 
@@ -454,7 +458,7 @@ function loadPreKk(id)
 
 					if(o == undefined){
 						$.each(domms,function(i, obj){
-							domms[i].animate({opacity: 1}, 2000);
+							domms[i].animate({opacity: 1}, 200);
 						})
 						return;
 					}
@@ -468,7 +472,7 @@ function loadPreKk(id)
 				nextItem();
 				
 				displayingPreKK = false;
-        		
+				
 			}, 
 			params,
 			undefined,
