@@ -384,15 +384,15 @@ function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
         kkArr.each(function(i, elem) {
             var currentKkID = $(elem).attr("data-kkid");
             // Ist naechste Ebene bereits ausgeklappt starte sofort rekursiven Aufruf
-            if($(kkArr[0]).siblings("ul").length != 0)
+            if($(elem).siblings("ul").length != 0)
             {
-                inhaltsverzeichnisAufklappenBis($(kkArr[0]).parent("li"), kkID);
+                inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
             }
             // Andernfalls lade naechste Ebene und starte danach rekursiven Aufruf
             else
             {
-                $.when( ladeKindKarteikarten(currentKkID, $(kkArr[0]).parent("li")) ).done(function() {
-                    inhaltsverzeichnisAufklappenBis($(kkArr[0]).parent("li"), kkID);
+                $.when( ladeKindKarteikarten(currentKkID, $(elem).parent("li")) ).done(function() {
+                    inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
                 });
             }
         });

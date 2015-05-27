@@ -260,7 +260,7 @@ function findBruder(elem){
 	
 	
 	//2.:
-	elem.parent().prev().children().first().data("kkid");
+//	elem.parent().prev().children().first().data("kkid");
 }
 
 function isImage(filename) {
