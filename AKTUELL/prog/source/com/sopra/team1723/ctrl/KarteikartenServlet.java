@@ -333,8 +333,8 @@ public class KarteikartenServlet extends ServletController {
                 String relativerPfad = "";
                 String relativerNeuerPfad = "";
                 if(kkTyp == KarteikartenTyp.VIDEO){
-                    relativerPfad = dirKKVideo + uploadedID + "." + typ;
-                    relativerNeuerPfad = dirKKVideo + kkID + "." + typ;
+                    relativerPfad = dirKKVideo + uploadedID + ".mp4";
+                    relativerNeuerPfad = dirKKVideo + kkID + ".mp4";
                 }
                 else{
                     relativerPfad = dirKKBild + uploadedID + ".png";

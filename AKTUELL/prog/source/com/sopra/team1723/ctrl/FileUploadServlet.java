@@ -167,7 +167,7 @@ public class FileUploadServlet extends ServletController
                  if (fos != null) {
                 	 fos.close();
                  }
-                 JSONObject jo = JSONConverter.toJson(UploadID+".mp4");
+                 JSONObject jo = JSONConverter.toJson(UploadID);
                  outWriter.print(jo);
             }
         }
