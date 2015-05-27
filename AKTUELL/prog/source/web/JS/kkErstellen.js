@@ -45,13 +45,14 @@ var UPLOADTYPE ="";
         		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
         		return false;
         	}
-        	if(isAnyAttrSelected() == false){
+        	else if(isAnyAttrSelected() == false){
         		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  function(){
             		processKKerstellen(text,titel,attributes, bruder, vater);
             		return true;
         		}, 0, 0);
+        		return false;
         	}
-        	if($("#kk_neuesKapitel").prop("checked")){
+        	else if($("#kk_neuesKapitel").prop("checked")){
         		var params = {};
         		params[paramTitel] = titel;
         		params[paramVeranstaltung] = veranstaltungsObject[paramId];
@@ -61,7 +62,7 @@ var UPLOADTYPE ="";
         		submitNewUeberschriftKarteikarte(params);
         		return true;
         	}
-        	if(text == "" && UPLOADIDSET == -1){
+        	else if(text == "" && UPLOADIDSET == -1){
         		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
         		return false;
         	}
@@ -70,7 +71,6 @@ var UPLOADTYPE ="";
         		processKKerstellen(text,titel,attributes, bruder, vater);
         		return true;
         	}
-        	return false;
         }
         
         clearFkt = function(){
@@ -139,6 +139,7 @@ var UPLOADTYPE ="";
         			actionErstelleKarteikarte,
                     function(response) {
                         showInfo("Karteikarte \""+ titel +"\"wurde erfolgreich erzeugt.");
+                        $("#kk_erstellen_popup_overlay").fadeOut(110);
                         // Wir bekommen die eingefügte id zurück
                         displayKarteikarte(response[paramId]);
                         initInhaltsverzeichnis();

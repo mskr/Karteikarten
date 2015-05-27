@@ -12,7 +12,7 @@ function buildKarteikarte(karteikarteJson)
         kkBewertung = karteikarteJson[paramBewertung],
         kkAenderungsdatum = karteikarteJson[paramAenderungsdatum];
     
-    var kkDom = $("#templatekarteikarte").clone();
+    var kkDom = $("#templatekarteikarte").clone(true,true);
     kkDom.removeAttr("id");
     kkDom.attr("data-kkid", kkId);
     kkDom.show();
