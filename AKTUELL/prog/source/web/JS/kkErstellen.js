@@ -18,10 +18,23 @@ var UPLOADTYPE ="";
         catch(e){
         	console.log(e);
         }
-
+        
         $("#kk_neuesKapitel").change(function(e){
-    		$("#cke_kk_erstellen_TA").slideToggle(300);
-    		$("#df_area_kk").fadeToggle(300);
+        	if($("#kk_neuesKapitel").prop("checked")==true){
+        		$("#cke_kk_erstellen_TA").slideUp(300);
+        		$("#df_area_kk").fadeOut(300);
+        	}
+        	else{
+        		if($(".dz-filename").length===0){
+        			$("#cke_kk_erstellen_TA").slideDown(300);
+            		$("#df_area_kk").fadeIn(300);
+        		}
+        		else{
+        			$("#df_area_kk").fadeIn(300);
+        		}
+        		
+        	}
+    		
         });
         submitFkt = function(){
         	var text = $("#kk_erstellen_TA").val().trim();
@@ -32,13 +45,14 @@ var UPLOADTYPE ="";
         		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
         		return false;
         	}
-        	if(isAnyAttrSelected() == false){
+        	else if(isAnyAttrSelected() == false){
         		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  function(){
             		processKKerstellen(text,titel,attributes, bruder, vater);
             		return true;
         		}, 0, 0);
+        		return false;
         	}
-        	if($("#kk_neuesKapitel").prop("checked")){
+        	else if($("#kk_neuesKapitel").prop("checked")){
         		var params = {};
         		params[paramTitel] = titel;
         		params[paramVeranstaltung] = veranstaltungsObject[paramId];
@@ -48,7 +62,7 @@ var UPLOADTYPE ="";
         		submitNewUeberschriftKarteikarte(params);
         		return true;
         	}
-        	if(text == "" && UPLOADIDSET == -1){
+        	else if(text == "" && UPLOADIDSET == -1){
         		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
         		return false;
         	}
@@ -57,14 +71,16 @@ var UPLOADTYPE ="";
         		processKKerstellen(text,titel,attributes, bruder, vater);
         		return true;
         	}
-        	return false;
         }
         
         clearFkt = function(){
+        	$("#kk_neuesKapitel").unbind("change");
+        	$("#kk_neuesKapitel").prop("checked",false);
+        	$("#cke_kk_erstellen_TA").fadeIn(0);
+    		$("#df_area_kk").fadeIn(0);
         	$(".checkboxes").prop("checked",false);
         	$("#kk_erstellen_titel_input").val("");
         	$("#kk_erstellen_TA").val("");
-        	
         }
         
         popupFenster(
@@ -123,6 +139,7 @@ var UPLOADTYPE ="";
         			actionErstelleKarteikarte,
                     function(response) {
                         showInfo("Karteikarte \""+ titel +"\"wurde erfolgreich erzeugt.");
+                        $("#kk_erstellen_popup_overlay").fadeOut(110);
                         // Wir bekommen die eingefügte id zurück
                         displayKarteikarte(response[paramId]);
                         initInhaltsverzeichnis();
@@ -153,9 +170,10 @@ var UPLOADTYPE ="";
         
         
         try{
-    		myDropzone = $("#file-dropzone").dropzone({
+    		myDropzone = $("#df_area_kk").dropzone({
             url: actionUploadKKBild,
             maxFilesize: 1,
+            acceptedFiles: ".jpeg,.jpg,.png,.mp4",
             autoDiscover :false,
             autoProcessQueue:false,
             createImageThumbnails: true,
