@@ -653,3 +653,12 @@ function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator
 	}
 	return false;
 }
+
+function myRound(zahl,n){
+    var faktor;
+    faktor = Math.pow(10,n);
+    return(Math.round(zahl * faktor) / faktor);
+}
+function isEven(n) {
+	return n == parseFloat(n)? !(n%2) : void 0;
+}

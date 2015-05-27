@@ -106,6 +106,12 @@ input[type="radio"], input[type="checkbox"] {
 	margin-top:8px;
 	margin-bottom:7px;
 }
+#kk_b_neuesKapitel_wrapper{
+	background-color:#333333;
+	padding:8px;
+	border-radius:5px;
+	margin-bottom:8px;
+}
 /* Bei allen input_std ist die Hoehe festgelegt, die Breite muss aber einzeln gesetzt werden */
 .input_std {
 	margin: .3em 0;
