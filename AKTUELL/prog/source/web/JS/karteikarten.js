@@ -368,7 +368,7 @@ function voteKkDown(kommId)
 
 
 function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
-    console.log("[LOG] Versuche bis Kk mit folgender ID aufzuklappen: "+kkID);
+    console.log(kkID);
     // Hole Liste mit Kindern der naechsten Ebene
     var kkArr = startElem.find("> ul > li .inhaltsvz_kk_knoten");
     if(kkArr.length == 0) return false;
@@ -393,7 +393,7 @@ function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
         kkArr.each(function(i, elem) {
             var currentKkID = $(elem).attr("data-kkid");
             // Ist naechste Ebene bereits ausgeklappt starte sofort rekursiven Aufruf
-            if($(elem).siblings("ul").length != 0)
+            if($(elem).siblings("ul").size() > 0)
             {
                 isFound = inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
                 return isFound;
