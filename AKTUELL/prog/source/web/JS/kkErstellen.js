@@ -172,6 +172,7 @@ var UPLOADTYPE ="";
     		myDropzone = $("#df_area_kk").dropzone({
             url: actionUploadKKBild,
             maxFilesize: 1,
+            acceptedFiles: ".jpeg,.jpg,.png,.mp4",
             autoDiscover :false,
             autoProcessQueue:false,
             createImageThumbnails: true,
