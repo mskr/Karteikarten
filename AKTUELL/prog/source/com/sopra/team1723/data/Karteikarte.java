@@ -19,7 +19,7 @@ public class Karteikarte implements IjsonObject {
     public Karteikarte(int id, String titel, Calendar aenderungsdatum, String inhalt,
             KarteikartenTyp typ, int veranstaltung, int bewertung, boolean istSatz, boolean istLemma, boolean istBeweis,
             boolean istDefinition, boolean istWichtig, boolean istGrundlage, boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel,
-            boolean istUebung)
+            boolean istUebung, ArrayList<String[]> verweise)
     {
         this();
         this.id = id;
@@ -42,6 +42,8 @@ public class Karteikarte implements IjsonObject {
         this.istUebung = istUebung;
         
         this.hatBewertet = false;
+        
+        this.verweise = verweise;
     }
     
 	// Konstruktor der verwendet wird wenn eine Karteikarte erstellt wird.

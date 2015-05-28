@@ -1868,6 +1868,25 @@ public class Datenbankmanager implements IDatenbankmanager
         Karteikarte karteikarte = null;
         try
         {
+           
+            ps = conNeo4j.prepareStatement("MATCH(n)-[r:V_VORRAUSSETZUNG|V_UEBUNG|V_ZUSATZINFO|V_SONSTIGES]->(m)"
+                    + " WHERE id(n) = {1} RETURN id(m) AS zielID, type(r) AS Typ");
+            ps.setInt(1, karteikID);
+            rs = ps.executeQuery();
+            ArrayList<String[]> verweise = new ArrayList<String[]>();
+            while(rs.next()){
+                ps2 = conMysql.prepareStatement("SELECT Titel FROM Karteikarte WHERE ID = ?");
+                ps2.setInt(1, rs.getInt("zielID"));
+                rs2 = ps2.executeQuery();
+                if(!rs2.next())
+                    return null;
+                String[] verweis = {rs.getString("Typ"), String.valueOf(rs.getInt("zielID")), rs2.getString("Titel")};
+                verweise.add(verweis);
+            }
+            
+            closeQuietly(ps);
+            closeQuietly(rs);
+            
             ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung,"
                     + " Bewertung, Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, Zusatzinformation, Exkurs,"
                     + " Beispiel, Uebung FROM karteikarte WHERE ID = ?");
@@ -1875,8 +1894,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             rs = ps.executeQuery();
             if (rs.next())
-            {
-                ps2 = conNeo4j.prepareStatement("MATCH(n)-[r:V_VORRAUSSETZUNG|V_UEBUNG|V_ZUSATZINFO|V_SONSTIGES]->(m) WHERE id(n) = {1} RETURN m");
+            {            
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getTimestamp("Aenderungsdatum"));
                 karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), cal, rs.getString("Inhalt"),
@@ -1884,7 +1902,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         rs.getInt("Bewertung"), rs.getBoolean("Satz"), rs.getBoolean("Lemma"), rs.getBoolean("Beweis"),
                         rs.getBoolean("Definition"), rs.getBoolean("Wichtig"), rs.getBoolean("Grundlagen"),
                         rs.getBoolean("Zusatzinformation"), rs.getBoolean("Exkurs"), rs.getBoolean("Beispiel"),
-                        rs.getBoolean("Uebung"));
+                        rs.getBoolean("Uebung"), verweise);
             }
 
         }

@@ -741,42 +741,7 @@ public class KarteikartenServlet extends ServletController {
         return false;
     }
 
-<<<<<<< HEAD
-=======
-    private void verweisHinzufuegen(HttpServletRequest req, HttpServletResponse resp) throws IOException{
-        HttpSession aktuelleSession = req.getSession();
-        PrintWriter outWriter = resp.getWriter();
-        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
-        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
-        JSONObject jo = null;
-
-        try{
-            int verweisQuelleId = Integer.parseInt(req.getParameter(ParamDefines.KKVerweisQuelleId));
-            int verweisZielId = Integer.parseInt(req.getParameter(ParamDefines.KKVerweisZielId));
-            BeziehungsTyp verweisTyp = BeziehungsTyp.valueOf(req.getParameter(ParamDefines.Type));
-
-            dbManager.connectKk(verweisQuelleId, verweisZielId, verweisTyp, null);
-        }    
-        catch(NumberFormatException e){
-            e.printStackTrace();
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            outWriter.print(jo);
-            return;
-        } 
-        catch(IllegalArgumentException e){
-            e.printStackTrace();
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            outWriter.print(jo);
-            return;
-        }
-        catch(Exception e){
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-            return;
-        }
-
-    }
     private void exportSkript(HttpServletRequest req, HttpServletResponse resp) throws IOException{
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
@@ -824,7 +789,6 @@ public class KarteikartenServlet extends ServletController {
 
     }
 
->>>>>>> branch 'master' of https://pmgit.informatik.uni-ulm.de/softwaregrundprojekt-2014-2015/team17.git
     @Override
     protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
     IOException
