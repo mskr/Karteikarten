@@ -185,10 +185,8 @@ public class ProfilServlet extends ServletController {
                 benutzer = new Benutzer(id, emailNew, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus, 
                         bNotifyVeranstAenderung, bNotifyKarteikartenAenderung, eNotifyKommentare);
 
-                dbManager.bearbeiteBenutzerAdmin(benutzer);
+                dbManager.bearbeiteBenutzerAdmin(benutzer, aktuellerBenutzer);
                 
-                if(id!=aktuellerBenutzer.getId())
-                    dbManager.schreibeBenachrichtigung(new BenachrProfilGeaendert(new GregorianCalendar(), id, aktuellerBenutzer));
             }
             // Normaler benutzer Speichern
             else
