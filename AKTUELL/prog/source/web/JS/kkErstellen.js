@@ -25,7 +25,9 @@ var UPLOADTYPE ="";
         		$("#df_area_kk").fadeOut(300);
         	}
         	else{
-        		if($(".dz-filename").length===0){
+    			//TODO CKeditor bleibt immer weg
+        		// Prüfen ob == statt === das problem behoben hat.
+        		if($(".dz-filename").length==0){
         			$("#cke_kk_erstellen_TA").slideDown(300);
             		$("#df_area_kk").fadeIn(300);
         		}
