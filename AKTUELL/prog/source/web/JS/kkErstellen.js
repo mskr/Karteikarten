@@ -143,7 +143,7 @@ var UPLOADTYPE ="";
                         showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich erzeugt.");
                         $("#kk_erstellen_popup_overlay").fadeOut(110);
                         // Wir bekommen die eingefügte id zurück
-                        displayKarteikarte(response[paramId]);
+                        displayKarteikarte(response[paramId], null, false);
                         initInhaltsverzeichnis();
                     },
                     params
@@ -155,7 +155,7 @@ var UPLOADTYPE ="";
                     function(response) {
                         showInfo("Übergeordnetes Kapitel \""+ params[paramTitel] +"\" wurde erfolgreich erzeugt.");
                         // Wir bekommen die eingefügte id zurück
-                        displayKarteikarte(response[paramId]);
+                        displayKarteikarte(response[paramId], null, false);
                         initInhaltsverzeichnis();
                     },
                     params
@@ -206,7 +206,7 @@ var UPLOADTYPE ="";
            	    	$(".dz-error-mark").remove();
            	    	$(".dz-success-mark").remove();
            	    	$(".dz-preview").css("margin","40px");
-           	    	clone = $(".dz-size");
+           	    	clone = $(".dz-size").first();
            	    	$(".dz-size").remove();
            	    	$(".dz-details").append(clone);
            		    function successFkt(data){
