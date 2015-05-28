@@ -12,7 +12,7 @@ CKEDITOR.env.isCompatible = true;
 
 var ckEditorKommentarConfig = {
 		height: "100px",
-		removePlugins: 'elementspath',
+		removePlugins: 'elementspath,autogrow',
 		toolbarGroups: [
 		        		{ name: 'insert' }
 		        		],
@@ -22,12 +22,12 @@ var ckEditorKommentarConfig = {
 
 var ckEditorKommentarAntwortConfig = {
 		height: "60px",
-		removePlugins: 'toolbar,elementspath',
+		removePlugins: 'toolbar,autogrow,elementspath',
 		resize_enabled : false,
 };
 
 var ckEditorNotizConfig = {
-		removePlugins: 'elementspath',
+		removePlugins: 'elementspath,autogrow',
 		height: "100px",
 		resize_enabled : false,
 		toolbarGroups: [

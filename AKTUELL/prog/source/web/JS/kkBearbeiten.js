@@ -2,9 +2,10 @@ var myDropzone;
 var UPLOADIDSET = -1;
 var UPLOADTYPE ="";
 $(document).ready(function(){
-	$(".KKbearbeiten").click(function(){
-		processKK_editClick($(this));
-	});
+	// Nicht hier sondern beim erstellen. Neue Karteikarten werden sonst nicht beachtet !
+//	$(".KKbearbeiten").click(function(){
+//		processKK_editClick($(this));
+//	});
 });
 
 function processKK_editClick(triggerElem){
