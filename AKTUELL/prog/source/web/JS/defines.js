@@ -66,6 +66,7 @@ var actionErstelleKarteikarte = "erstelleKarteikarte";
 var actionErstelleUeberschrift = "erstelleUeberschrift";
 var actionBearbeiteKarteikarte = "bearbeiteKarteikarte";
 var actionBearbeiteUeberschrift = "bearbeiteUeberschrift";
+var actionExportSkript = "exportSkript";
 
 
 var actionVoteKommentarUp = "voteUpKomm";

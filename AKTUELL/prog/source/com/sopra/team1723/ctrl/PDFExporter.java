@@ -30,7 +30,7 @@ import org.jsoup.select.NodeVisitor;
 
 import com.sopra.team1723.data.Karteikarte;
 
-public class PDFExporter implements Runnable
+public class PDFExporter
 {
     private String         servletContextPath;
     private String         fileName;
@@ -40,19 +40,15 @@ public class PDFExporter implements Runnable
     private String         dataStr               = "";
     private boolean        dataStrOpened         = false;
     private boolean        texFileCreated        = false;
-    private boolean        pdfCreated            = false;
     private boolean        cleaned               = false;
-    private String         newLineWithSeparation = System.getProperty("line.separator");
+    private String         newLineWithSeparation = "\n";
 
     private String         Titel                 = "";
     private String         Author                = "";
 
     private ProcessBuilder pb;
-    private Process        p;
+    private PDFExportThreadHandler peth;
 
-    // TODO
-    // servletContext = getServletContext();
-    // contextPath = servletContext.getRealPath(File.separator);
     public PDFExporter(String workingDir, String servletContextPath)
     {
         this.workingDir = workingDir + "/";
@@ -70,7 +66,8 @@ public class PDFExporter implements Runnable
         fileName = subFolder + ".pdf";
         if (!(new File(this.workingDir + subFolder)).mkdirs())
             System.out.println("Kann subfolder " + subFolder + " nicht erstellen!");
-
+        
+        createHeader();
     }
 
     public void setInfo(String Author, String Titel)
@@ -193,34 +190,19 @@ public class PDFExporter implements Runnable
         return true;
     }
 
-    private boolean convertFile()
+    private boolean startConvertFile()
     {
-        if (!texFileCreated || cleaned)
+        if (!texFileCreated || cleaned || peth != null)
             return false;
 
         pb = new ProcessBuilder("pdflatex", "-synctex=1", "-interaction=nonstopmode", workingDir + subFolder + "/"
                 + texFileName);
         pb.directory(new File(workingDir + subFolder));
-        try
-        {
-            System.out.println("Start pdflatex-Process and wait for finish...");
-            System.out.println();
-            pb.redirectErrorStream(true);
-            p = pb.start();
-            new Thread(this).start();
-            int res = p.waitFor();
-            if (res != 0)
-            {
-                System.out.println("Errorcode von pdflatex: " + res);
-                return false;
-            }
-            System.out.println("Finished...");
-        }
-        catch (IOException | InterruptedException ex)
-        {
-            ex.printStackTrace();
-            return false;
-        }
+        pb.redirectErrorStream(true);
+        
+        peth = new PDFExportThreadHandler(this, pb);
+        new Thread(peth).start();
+        
         return true;
     }
 
@@ -262,7 +244,6 @@ public class PDFExporter implements Runnable
         else
         {
             String data = kk.getInhalt();
-
             return putStrIntoChapter(depth, kk.getTitel(), transformHTMLToLaTeX(data));
         }
     }
@@ -278,47 +259,56 @@ public class PDFExporter implements Runnable
     {
         List<Element> nodes = n.children();
         String result = "";
+
+        if (!n.nodeName().equals("body"))
+        {
+//            for (int i = 0; i < depth; i++)
+//                System.out.print("  ");
+//            System.out.println("<" + n.nodeName() + ">");
+            result += mapHTMLTagToLaTeXTag(n.nodeName(), true) + " ";
+            
+        }
+        
         if (nodes.size() == 0)
         {
             String content = n.text();
-            for (int i = 0; i < depth; i++)
-                System.out.print("  ");
-            System.out.println(content);
+//            for (int i = 0; i < depth; i++)
+//                System.out.print("  ");
+//            System.out.println(content);
 
-            result += mapHTMLTagToLaTeXTag(n.nodeName(), true) + " "+ newLineWithSeparation;
             result += content;
-            result += mapHTMLTagToLaTeXTag(n.nodeName(), false) + " "+ newLineWithSeparation;
         }
         else
         {
             for (Element n2 : nodes)
             {
-                if (!n.nodeName().equals("body"))
-                {
-                    for (int i = 0; i < depth; i++)
-                        System.out.print("  ");
-                    System.out.println("<" + n.nodeName() + ">");
-                }
-                if (!mapHTMLTagToLaTeXTag(n.nodeName(), true).equals(""))
-                {
-                    result += mapHTMLTagToLaTeXTag(n.nodeName(), true) + " " + newLineWithSeparation;
-                    result += recursiveTransformHTLMtoLatex(n2, depth + 1);
-                    result += mapHTMLTagToLaTeXTag(n.nodeName(), false) + " "+ newLineWithSeparation;
-                }
-                else
-                {
-                    result += recursiveTransformHTLMtoLatex(n2, depth + 1);
-                }
-
-                if (!n.nodeName().equals("body"))
-                {
-                    for (int i = 0; i < depth; i++)
-                        System.out.print("  ");
-                    System.out.println("</" + n.nodeName() + ">");
-                }
+                result += recursiveTransformHTLMtoLatex(n2, depth + 1);
             }
         }
+        
+        if (!n.nodeName().equals("body"))
+        {
+//            for (int i = 0; i < depth; i++)
+//                System.out.print("  ");
+//            System.out.println("</" + n.nodeName() + ">");
+            result += mapHTMLTagToLaTeXTag(n.nodeName(), false);
+        }
         return result;
+    }
+    
+    private String replaceInvalidChars(String html)
+    {
+        // TODO 
+        html = html.replace("\"", "\\grqq ");
+        html = html.replace("ä", "\"a");
+        html = html.replace("ö", "\"o");
+        html = html.replace("ü", "\"u");
+        html = html.replace("Ä", "\"A");
+        html = html.replace("Ö", "\"O");
+        html = html.replace("Ü", "\"U");
+        html = html.replace("ß", "\"s");
+        System.out.println(html);
+        return html;
     }
 
     private String mapHTMLTagToLaTeXTag(String nodeNameHTML, boolean begin)
@@ -328,7 +318,7 @@ public class PDFExporter implements Runnable
         {
             case "br":
                 if (begin)
-                    res = "\\newline";
+                    res = "\\newline"+ newLineWithSeparation;
                 else
                     res = "";
                 break;
@@ -370,21 +360,21 @@ public class PDFExporter implements Runnable
                 break;
             case "ol":
                 if (begin)
-                    res = "\\begin{enumerate}";
+                    res = "\\begin{enumerate}"+ newLineWithSeparation;
                 else
-                    res = "\\end{enumerate}";
+                    res = "\\end{enumerate}"+ newLineWithSeparation;
                 break;
             case "ul":
                 if (begin)
-                    res = "\\begin{itemize}";
+                    res = "\\begin{itemize}"+ newLineWithSeparation;
                 else
-                    res = "\\end{itemize}";
+                    res = "\\end{itemize}"+ newLineWithSeparation;
                 break;
             case "li":
                 if (begin)
                     res = "\\item";
                 else
-                    res = "";
+                    res = ""+ newLineWithSeparation;
                 break;
 
             default:
@@ -397,6 +387,8 @@ public class PDFExporter implements Runnable
     private String putStrIntoChapter(int chapterDepth, String title, String data)
     {
         String newData = null;
+        title = replaceInvalidChars(title);
+        data = replaceInvalidChars(data);
         switch (chapterDepth)
         {
             case 0:
@@ -447,61 +439,41 @@ public class PDFExporter implements Runnable
 
     }
 
-    public String convertToPDFFile()
+    public boolean startConvertToPDFFile()
     {
         if (!createAndCloseFile())
-            return null;
+            return false;
 
         // 2 Mal kompilieren !
-        if (!convertFile())
-            return null;
-        if (!convertFile())
-            return null;
+        startConvertFile();
 
-        cleanUp();
+        return true;
 
+    }
+    public String getFileName()
+    {
         return fileName;
     }
 
     /**
      * Entfernt den temporären Ordner und, dass nur noch die PDF übrig ist.
      */
-    public void cleanUp()
+    public void cleanUp(boolean copyPossible)
     {
-        if ((!pdfCreated && !texFileCreated) || cleaned)
+        if (!texFileCreated || cleaned)
             return;
 
         try
         {
             // Copy nach oben
-            FileUtils.copyFile(new File(workingDir + subFolder + "/" + fileName), new File(workingDir + fileName));
+            if(copyPossible)
+                FileUtils.copyFile(new File(workingDir + subFolder + "/" + fileName), new File(workingDir + fileName));
             FileUtils.deleteDirectory(new File(workingDir + subFolder));
             cleaned = true;
         }
         catch (IOException e)
         {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void run()
-    {
-        InputStream is = p.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-        while (p.isAlive())
-        {
-            try
-            {
-                String line = reader.readLine();
-                if (line != null)
-                    System.err.println(line);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
         }
     }
 }

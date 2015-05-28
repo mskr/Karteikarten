@@ -467,3 +467,12 @@ function inhaltsverzeichnisUnhighlightAll() {
 function inhaltsverzeichnisAlleEinklappen() {
     $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("normal", function() { $(this).remove() });
 }
+
+function exportKkVonVn(vnId)
+{
+	params = {};
+	params[paramId] = vnId;
+	return ajaxCall(karteikartenServlet, actionExportSkript, function(){
+		
+	}, params);
+}
