@@ -1236,7 +1236,7 @@ textarea.input_std {
 	position: absolute;
 }
 
-#kk_verweise_baum {
+.kk_verweise_baum {
 	position: relative;
 }
 
@@ -1274,11 +1274,18 @@ textarea.input_std {
 	height: 0 !important;
 }
 
-#kk_verweise_baum ul {
+.kk_verweise_baum ul {
 	list-style: none;
 	padding-left: 1.5em;
-} #kk_verweise_baum > ul {
+} .kk_verweise_baum > ul {
 	padding: 0;
+}
+
+/* KK Verweise Tabs */
+.kk_verweise_radio {
+	display: none;
+} .kk_verweise_label {
+	float: left;
 }
 
 .kk_wrapper {
@@ -1628,7 +1635,16 @@ textarea.input_std {
 	display: inline-block;
 	font-size: 14px;
 /* 	cursor: default; */
-} .kk_superkomm {
+} 
+.kk_komm_profilBild {
+	float: left;
+	margin-right: 1em;
+	border-radius: 50%;
+	border: 2px solid #e0e0e0;
+	box-shadow: 0 2px 2px black;
+}
+
+.kk_superkomm {
 	margin: 10px 0;
 	padding: 6px 10px;
 	font-size: 12px;
@@ -1644,10 +1660,10 @@ textarea.input_std {
 } .kk_superkomm:hover {
 	color: white;
 	background: #252525;
-} .kk_superkomm img {
+}/*  .kk_superkomm img {
 	filter: invert(1);
 	-webkit-filter: invert(1);
-} .kk_subkomm {
+}  */.kk_subkomm {
 	margin-top: 5px;
 	padding: 6px 10px;
 	background: #3b3b3b;

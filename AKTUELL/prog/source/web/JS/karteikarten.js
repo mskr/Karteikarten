@@ -215,7 +215,7 @@ function fillKarteiKarte(domElem, json){
     case paramKkBild:
     	domElem.find(".kk_inhalt").addClass("inhalt_bild");
     	image = $(document.createElement("img"));
-    	image.attr("src","files/images/"+json[paramId]+".png");
+    	image.attr("src","files/images/"+json[paramId]+".png?"+CryptoJS.MD5(new Date().getTime()+""));
     	image.attr("onerror","this.src='files/general/default.png'");
     	domElem.find(".inhalt_bild").html(image);
     	break;
@@ -273,7 +273,7 @@ function fillVerweise(domKk, verweisArr)
 	
 	for(i in verweisArr)
 	{
-		txt = "<a onclick='displayKarteikarte("+verweisArr[i][paramId]+");'>" + verweisArr[i][paramTitel] +"</a>";
+		txt = "<a onclick='displayKarteikarte("+verweisArr[i][paramId]+", null, false);'>" + verweisArr[i][paramTitel] +"</a>";
 		
 		if(verweisArr[i][paramType] == "vorraussetzung")
 			rel_vor.push(txt);

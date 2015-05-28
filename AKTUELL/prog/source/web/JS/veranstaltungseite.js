@@ -30,7 +30,7 @@ $(document).ready(function() {
     		loadPreKk(id);
     	else{
 			$(".kk_load_pre").addClass("animated zoomOut").fadeOut();
-			displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte]);
+			displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], null, false);
     	}
     });    
     $(".kk_load_after").click(function(){
@@ -158,9 +158,9 @@ function fillVeranstaltungsSeite(Vid, kkId)
 					}
 					
 					if(kkId == undefined)
-						displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte]);
+						displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], null, false);
 					else
-						displayKarteikarte(kkId);
+						displayKarteikarte(kkId, null, false);
 					
 					// Deferred Objekt als abgeschlossen markieren.
 					d.resolve();
@@ -369,10 +369,11 @@ function sortiereKarteikartenIDs(jsonKkIDs){
 	return newIdArray;
 }
 
-function displayKarteikarte(id, callback){
+function displayKarteikarte(id, callback,reload){
+	//reload = true, wenn neu geladen werden soll
     // Karteikarte schon in der Liste?
     kkDiv = $("#kk_all").find("[data-kkid=" + id + "]");
-    if(kkDiv.length)
+    if(kkDiv.length&&!reload)
     {
     	$('html,body').animate({
             scrollTop: kkDiv.offset().top},
@@ -380,6 +381,11 @@ function displayKarteikarte(id, callback){
     }
     else
     {
+    	if(reload){
+    		kkDiv.remove();
+    	}
+    	
+    	
     	destroyCKeditors($("#kk_all"));
     	$("#kk_all").children().fadeOut(200).promise().done(function(){
     		$("#kk_all").empty();
