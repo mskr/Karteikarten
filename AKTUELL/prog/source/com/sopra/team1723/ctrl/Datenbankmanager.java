@@ -2354,15 +2354,24 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             ps = conMysql.prepareStatement("UPDATE karteikarte SET "
-                    + "Titel = ?, Inhalt = ?, Typ = ?, Aenderungsdatum = ? WHERE ID = ?");
+                    + "Titel = ?, Inhalt = ?, Typ = ?, Aenderungsdatum = ?, Satz = ?, Lemma = ?, Beweis = ?,"
+                    + " Definition = ?, Wichtig = ?, Grundlagen = ?, Zusatzinformation = ?, Exkurs = ?,"
+                    + " Beispiel = ?, Uebung = ? WHERE ID = ?");
             ps.setString(1, karteik.getTitel());
             ps.setString(2, karteik.getInhalt());
             ps.setString(3, karteik.getTyp().toString());
-
-            Date today = new java.util.Date();
-            ps.setTimestamp(4, new java.sql.Timestamp(today.getTime()));
-
-            ps.setInt(5, karteik.getId());
+            ps.setTimestamp(4, new Timestamp(new GregorianCalendar().getTimeInMillis()));
+            ps.setBoolean(5, karteik.isIstSatz());
+            ps.setBoolean(6, karteik.isIstLemma());
+            ps.setBoolean(7, karteik.isIstBeweis());
+            ps.setBoolean(8, karteik.isIstDefinition());
+            ps.setBoolean(9, karteik.isIstWichtig());
+            ps.setBoolean(10, karteik.isIstGrundlage());
+            ps.setBoolean(11, karteik.isIstZusatzinfo());
+            ps.setBoolean(12, karteik.isIstExkurs());
+            ps.setBoolean(13, karteik.isIstBeispiel());
+            ps.setBoolean(14, karteik.isIstUebung());
+            ps.setInt(15, karteik.getId());
 
             ps.executeUpdate();
 
