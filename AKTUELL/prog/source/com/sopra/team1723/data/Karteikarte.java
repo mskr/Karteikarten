@@ -19,7 +19,7 @@ public class Karteikarte implements IjsonObject {
     public Karteikarte(int id, String titel, Calendar aenderungsdatum, String inhalt,
             KarteikartenTyp typ, int veranstaltung, int bewertung, boolean istSatz, boolean istLemma, boolean istBeweis,
             boolean istDefinition, boolean istWichtig, boolean istGrundlage, boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel,
-            boolean istUebung)
+            boolean istUebung, ArrayList<String[]> verweise)
     {
         this();
         this.id = id;
@@ -42,12 +42,14 @@ public class Karteikarte implements IjsonObject {
         this.istUebung = istUebung;
         
         this.hatBewertet = false;
+        
+        this.verweise = verweise;
     }
     
 	// Konstruktor der verwendet wird wenn eine Karteikarte erstellt wird.
     public Karteikarte(String titel, String inhalt, KarteikartenTyp typ, int veranstaltung,
             boolean istSatz, boolean istLemma, boolean istBeweis, boolean istDefinition, boolean istWichtig, boolean istGrundlage,
-            boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel, boolean istUebung)
+            boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel, boolean istUebung, ArrayList<String[]> verweise)
     {
         this();
         this.titel = titel;
@@ -70,6 +72,8 @@ public class Karteikarte implements IjsonObject {
         this.aenderungsdatum = Calendar.getInstance();
         this.bewertung = 0;
         this.hatBewertet = false;
+        
+        this.verweise = verweise;
     }
  // Konstruktor der verwendet wird wenn eine Karteikarte bearbeitet wird.
     public Karteikarte(int id, String titel, String inhalt, KarteikartenTyp typ, int veranstaltung,
@@ -156,7 +160,7 @@ public class Karteikarte implements IjsonObject {
     private boolean istBeispiel;
     private boolean istUebung;
     
-    private String[][] verweise = new String[0][0];
+    private ArrayList<String[]> verweise;
        
     
     public enum BeziehungsTyp {
@@ -384,14 +388,19 @@ public class Karteikarte implements IjsonObject {
         if(types.length != ids.length && ids.length != namen.length)
             return;
         
-        verweise = new String[types.length][3];
+        verweise = new ArrayList<String[]>();
         for(int i = 0; i < types.length;i++)
         {
-            verweise[i][0] = types[i];
-            verweise[i][1] = ids[i];
-            verweise[i][2] = namen[i];
+            String[] verweis = {types[i],ids[i],namen[i]};
+            verweise.add(verweis);
         }
     }
+    
+    public ArrayList<String[]> getVerweise()
+    {
+        return verweise;
+    }
+
     public boolean isIstLemma()
     {
         return istLemma;

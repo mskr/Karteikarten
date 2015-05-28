@@ -1855,13 +1855,38 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Karteikarte leseKarteikarte(int karteikID)
     {
+        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
+        
+        PreparedStatement ps2 = null;
+        ResultSet rs2 = null;
         Karteikarte karteikarte = null;
         try
         {
+           
+            ps = conNeo4j.prepareStatement("MATCH(n)-[r:V_VORRAUSSETZUNG|V_UEBUNG|V_ZUSATZINFO|V_SONSTIGES]->(m)"
+                    + " WHERE id(n) = {1} RETURN id(m) AS zielID, type(r) AS Typ");
+            ps.setInt(1, karteikID);
+            rs = ps.executeQuery();
+            ArrayList<String[]> verweise = new ArrayList<String[]>();
+            while(rs.next()){
+                ps2 = conMysql.prepareStatement("SELECT Titel FROM Karteikarte WHERE ID = ?");
+                ps2.setInt(1, rs.getInt("zielID"));
+                rs2 = ps2.executeQuery();
+                if(!rs2.next())
+                    return null;
+                String[] verweis = {rs.getString("Typ"), String.valueOf(rs.getInt("zielID")), rs2.getString("Titel")};
+                verweise.add(verweis);
+            }
+            
+            closeQuietly(ps);
+            closeQuietly(rs);
+            
             ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung,"
                     + " Bewertung, Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, Zusatzinformation, Exkurs,"
                     + " Beispiel, Uebung FROM karteikarte WHERE ID = ?");
@@ -1869,7 +1894,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             rs = ps.executeQuery();
             if (rs.next())
-            {
+            {            
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getTimestamp("Aenderungsdatum"));
                 karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), cal, rs.getString("Inhalt"),
@@ -1877,7 +1902,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         rs.getInt("Bewertung"), rs.getBoolean("Satz"), rs.getBoolean("Lemma"), rs.getBoolean("Beweis"),
                         rs.getBoolean("Definition"), rs.getBoolean("Wichtig"), rs.getBoolean("Grundlagen"),
                         rs.getBoolean("Zusatzinformation"), rs.getBoolean("Exkurs"), rs.getBoolean("Beispiel"),
-                        rs.getBoolean("Uebung"));
+                        rs.getBoolean("Uebung"), verweise);
             }
 
         }
@@ -1890,6 +1915,8 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
+            closeQuietly(ps2);
+            closeQuietly(rs2);
             conLock.getValue().unlock();
         }
         return karteikarte;
@@ -2237,7 +2264,7 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException
+    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException, IllegalArgumentException
     {
         Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
         Connection conNeo4j = conLockNeo4j.getKey();
@@ -2293,6 +2320,10 @@ public class Datenbankmanager implements IDatenbankmanager
             else
             {
                 throw new SQLException();
+            }
+            
+            for(int i=0 ; i<karteik.getVerweise().size(); ++i){
+                connectKk(karteik.getId(), Integer.valueOf(karteik.getVerweise().get(i)[1]), BeziehungsTyp.valueOf(karteik.getVerweise().get(i)[2]), conNeo4j);
             }
 
             closeQuietly(ps);
@@ -3060,7 +3091,7 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public void connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j) throws SQLException
+    public void connectKk(int vonKK, int zuKK, BeziehungsTyp typ, Connection conNeo4j) throws SQLException
     {
         boolean verbindungAbbauen = false;
         Entry<Connection, ReentrantLock> conLockNeo4j = null;

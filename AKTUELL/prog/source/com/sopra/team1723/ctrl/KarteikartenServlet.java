@@ -495,10 +495,19 @@ public class KarteikartenServlet extends ServletController {
                 outWriter.print(jo);
                 return;
             }
+            
+            ArrayList<String[]> verweiseArray = new ArrayList<String[]>();
+            Map<String,String[]> verweise = req.getParameterMap();
+            for(String verweisTyp : verweise.keySet()){
+                for(String zielIds : verweise.get(verweisTyp)){
+                    String[] verweis = {verweisTyp, zielIds, ""};
+                    verweiseArray.add(verweis);
+                }
+            }
 
 
             Karteikarte karteikarte = new Karteikarte(titel,inhalt,kkTyp,veranstaltung,bAttribute[0],bAttribute[1],bAttribute[2],
-                    bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6], bAttribute[7], bAttribute[8], bAttribute[9]);   
+                    bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6], bAttribute[7], bAttribute[8], bAttribute[9], verweiseArray);   
 
             int kkID = dbManager.schreibeKarteikarte(karteikarte, vaterKK, ueberliegendeBruderKK);
 
@@ -592,9 +601,17 @@ public class KarteikartenServlet extends ServletController {
                 return;
             }
 
+            ArrayList<String[]> verweiseArray = new ArrayList<String[]>();
+            Map<String,String[]> verweise = req.getParameterMap();
+            for(String verweisTyp : verweise.keySet()){
+                for(String zielIds : verweise.get(verweisTyp)){
+                    String[] verweis = {verweisTyp, zielIds, ""};
+                    verweiseArray.add(verweis);
+                }
+            }
 
             Karteikarte karteikarte = new Karteikarte(titel,inhalt,kkTyp,veranstaltung,bAttribute[0],bAttribute[1],bAttribute[2],
-                    bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6], bAttribute[7], bAttribute[8], bAttribute[9]);   
+                    bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6], bAttribute[7], bAttribute[8], bAttribute[9], verweiseArray);   
 
             int kkID = dbManager.schreibeKarteikarte(karteikarte, vaterKK, ueberliegendeBruderKK);
 
@@ -724,40 +741,7 @@ public class KarteikartenServlet extends ServletController {
         return false;
     }
 
-    private void verweisHinzufuegen(HttpServletRequest req, HttpServletResponse resp) throws IOException{
-        HttpSession aktuelleSession = req.getSession();
-        PrintWriter outWriter = resp.getWriter();
-        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
-        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
-        JSONObject jo = null;
-
-        try{
-            int verweisQuelleId = Integer.parseInt(req.getParameter(ParamDefines.KKVerweisQuelleId));
-            int verweisZielId = Integer.parseInt(req.getParameter(ParamDefines.KKVerweisZielId));
-            BeziehungsTyp verweisTyp = BeziehungsTyp.valueOf(req.getParameter(ParamDefines.Type));
-
-            dbManager.connectKk(verweisQuelleId, verweisZielId, verweisTyp, null);
-        }    
-        catch(NumberFormatException e){
-            e.printStackTrace();
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            outWriter.print(jo);
-            return;
-        } 
-        catch(IllegalArgumentException e){
-            e.printStackTrace();
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            outWriter.print(jo);
-            return;
-        }
-        catch(Exception e){
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-            return;
-        }
-
-    }
     private void exportSkript(HttpServletRequest req, HttpServletResponse resp) throws IOException{
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
@@ -854,9 +838,6 @@ public class KarteikartenServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionVoteKarteikarteDown))
         {
             karteikarteBewerten(req,resp,-1);
-        }
-        else if(aktuelleAction.equals(ParamDefines.ActionVerweisHinzufuegen)){
-            verweisHinzufuegen(req, resp);
         }
         else if(aktuelleAction.equals(ParamDefines.ActionExportSkript)){
             exportSkript(req, resp);
