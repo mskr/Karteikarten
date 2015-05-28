@@ -24,7 +24,11 @@ function buildKarteikarte(karteikarteJson)
     	kkDom.find(".bearbeiten").hide();
     	kkDom.find(".loeschen").hide();
     }
-
+    
+    kkDom.find(".KKbearbeiten").click(function(){
+		processKK_editClick($(this));
+	});
+    
     // CopyLink
     // -> Probleme mit CSS 
 //    var clip = new ZeroClipboard(kkDom.find(".permalink"));
@@ -59,17 +63,13 @@ function buildKarteikarte(karteikarteJson)
 	    element: kkDom,
 	    handler: function(direction) {
 	        inhaltsverzeichnisUnhighlightAll();
-	        var isFound = inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
-	        if(!isFound || isFound == undefined)
-	        {
-	            //TODO kann nicht sicher sagen, ob etwas gefunden wurde, wieso kommt manchmal undefined zurueck?
-	        }
+	        inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
 	    }
 	});
 	
 
     // Überschrift kk
-    if(kkInhalt == "")
+    if(kkInhalt == "" && kkType == paramKkText)
     	return kkDom;
     
     // Info
@@ -366,12 +366,52 @@ function voteKkDown(kommId)
 }
 
 
+//function inhaltsvzAufklappenBis(startElem, kkID, i)
+//{
+//    var kkArr = startElem.find("> ul > li > .inhaltsvz_kk_knoten");
+//    if(kkArr.size() == 0)
+//    {
+//        return false;
+//    }
+//    elem = kkArr[i];
+//    if($(elem).data("kkid") == kkID)
+//    {
+//        inhaltsverzeichnisHighlightKnoten($(elem));
+//        $(elem).parents("li").siblings().find("ul").slideUp("normal", function() { $(this).remove() });
+//        return true;
+//    }
+//    else
+//    {
+//        if( inhaltsvzAufklappenBis($(elem).parent("li"), kkID, i) )
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            $.when( ladeKindKarteikarten($(elem).data("kkid"), $(elem).parent("li")) ).done(function() {
+//                if( inhaltsvzAufklappenBis($(elem).parent("li"), kkID, i) )
+//                {
+//                    return true;
+//                }
+//                else
+//                {
+//                    if(i < kkArr.length-1)
+//                        return inhaltsvzAufklappenBis(startElem, kkID, i+1);
+//                    else
+//                        return false;
+//                }
+//            });
+//        }
+//    }
+//    // TODO Funktion darf nicht returnen bevor der Callback von $.when().done oben feuert! Wie geht das?
+//}
 
-function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
-    console.log("[LOG] Versuche bis Kk mit folgender ID aufzuklappen: "+kkID);
+
+function inhaltsverzeichnisAufklappenBis(startElem, kkID)
+{
     // Hole Liste mit Kindern der naechsten Ebene
     var kkArr = startElem.find("> ul > li .inhaltsvz_kk_knoten");
-    if(kkArr.length == 0) return false;
+    if(kkArr.length == 0) return;
     // Merke mit diesem Flag, ob ID gefunden
     var isFound = false;
     // Suche in der aktuellen Ebene nach der ID
@@ -393,24 +433,18 @@ function inhaltsverzeichnisAufklappenBis(startElem, kkID) {
         kkArr.each(function(i, elem) {
             var currentKkID = $(elem).attr("data-kkid");
             // Ist naechste Ebene bereits ausgeklappt starte sofort rekursiven Aufruf
-            if($(elem).siblings("ul").length != 0)
+            if($(elem).siblings("ul").size() > 0)
             {
-                isFound = inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
-                return isFound;
+                inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
             }
             // Andernfalls lade naechste Ebene und starte danach rekursiven Aufruf
             else
             {
                 $.when( ladeKindKarteikarten(currentKkID, $(elem).parent("li")) ).done(function() {
-                    isFound = inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
-                    return isFound;
+                    inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
                 });
             }
         });
-    }
-    else
-    {
-        return true;
     }
 }
 var inhaltsverzeichnisHighlightedKnoten = [];

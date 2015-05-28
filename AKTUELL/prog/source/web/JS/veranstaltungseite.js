@@ -262,7 +262,6 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 }
                                 // Zur Karteikarte scrollen und im Inhaltsverzeichnis hervorheben
                                 displayKarteikarte(arr[i][paramId], function() {
-                                    console.log("[LOG] Callback started");
                                     inhaltsverzeichnisUnhighlightAll();
                                     inhaltsverzeichnisHighlightKnoten($(e.target));
                                 });

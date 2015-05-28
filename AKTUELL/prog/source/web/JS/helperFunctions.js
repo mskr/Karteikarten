@@ -99,7 +99,7 @@ var popupSeitenIterator = 0;
 function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, submitFunc, focusElem, weiterElem, zurueckElem)
 {
     // Scrollbar ausserhalb Popup deaktivieren, sodass nur Popup Scrollbar sichtbar
-    $("body").css("overflow","hidden"); 
+    $("body").css("overflow-y","hidden");
 
     if(submitFunc == undefined)
     	submitFunc = function(){return true;};
