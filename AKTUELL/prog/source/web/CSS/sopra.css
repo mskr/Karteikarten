@@ -83,7 +83,7 @@ label {
 }
 
 input[type="radio"], input[type="checkbox"] {
-    margin-right: 10px;
+    margin-right: .5em;
 }
 .Big_checkbox{
 	height:25px;
@@ -1217,14 +1217,7 @@ textarea.input_std {
 }
 
 
-#kk_inhaltsverzeichnis_titel {
-	margin-left: .7rem;
-	font-size: 1rem;
-	color: #aaa;
-	text-shadow: 0px -1px 0px black;
-}
-#kk_inhaltsverzeichnis {
-	position: absolute;
+.kk_baum {
 	right: 0;
 	z-index: 3;
 	width: 30em;
@@ -1232,6 +1225,26 @@ textarea.input_std {
 	max-height: 100%;
 	font-size: .8em;
 	overflow: auto;
+}
+
+.kk_baum_keine_kinder {
+	font-style: italic;
+	color: gray;
+}
+
+#kk_inhaltsverzeichnis {
+	position: absolute;
+}
+
+#kk_verweise_baum {
+	position: relative;
+}
+
+#kk_inhaltsverzeichnis_titel {
+	margin-left: .7rem;
+	font-size: 1rem;
+	color: #aaa;
+	text-shadow: 0px -1px 0px black;
 } #kk_inhaltsverzeichnis ul {
 	padding-left: 1em;
     list-style: none;
@@ -1252,11 +1265,20 @@ textarea.input_std {
 } #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_erstellen:before {
 	content: "\2192";
 	padding-right: .5em;
-} #kk_inhaltsverzeichnis.stuck {
+}
+
+#kk_inhaltsverzeichnis.stuck {
     position: fixed !important;
     top: 0;
 } .inhaltsverzeichnis-sticky-wrapper {
 	height: 0 !important;
+}
+
+#kk_verweise_baum ul {
+	list-style: none;
+	padding-left: 1.5em;
+} #kk_verweise_baum > ul {
+	padding: 0;
 }
 
 .kk_wrapper {

@@ -440,7 +440,7 @@ function inhaltsverzeichnisAufklappenBis(startElem, kkID)
             // Andernfalls lade naechste Ebene und starte danach rekursiven Aufruf
             else
             {
-                $.when( ladeKindKarteikarten(currentKkID, $(elem).parent("li")) ).done(function() {
+                $.when( ladeInhaltsverzeichnisKinder(currentKkID, $(elem).parent("li")) ).done(function() {
                     inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
                 });
             }

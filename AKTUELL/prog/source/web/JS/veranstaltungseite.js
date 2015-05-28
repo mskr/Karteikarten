@@ -205,7 +205,17 @@ function fillVeranstaltungsSeite(Vid, kkId)
 
 function initInhaltsverzeichnis(){
     $("#kk_inhaltsverzeichnis_titel").html("<span>Karteikarten in</span><strong> "+veranstaltungsObject[paramTitel]+"</strong>");
-	return ladeKindKarteikarten(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
+	return ladeInhaltsverzeichnisKinder(veranstaltungsObject[paramErsteKarteikarte], $("#kk_inhaltsverzeichnis"))
+}
+
+function ladeInhaltsverzeichnisKinder(vaterId, vaterElem) {
+    return ladeKindKarteikarten(vaterId, vaterElem, true, function() {
+        // Bei Klick auf Knoten im Inhaltsverzeichnis hervorheben udn zur Karteikarte scrollen 
+        displayKarteikarte(arr[i][paramId], function() {
+            inhaltsverzeichnisUnhighlightAll();
+            inhaltsverzeichnisHighlightKnoten($(e.target));
+        });
+    });
 }
 
 /**
@@ -214,9 +224,13 @@ function initInhaltsverzeichnis(){
  * der beim Klick auf ein ListItem rekursiv dessen direkte Kinder laedt usw.
  * @param vaterId ID der Vaterkarteikarte
  * @param vaterElem jQuery Objekt. Container, in den die Unordered List eingefuegt wird.
+ * @param zeigeErstellButtons Boolean. Gibt an ob die Buttons zum Erstellen neuer KKs angezeigt werden.
+ * @param extraClickFunction Funktion, die <i>zusaetzlich</i> zum Ein-/Ausklappen ausgefuehrt werden soll.
+ * @param zeigeCheckboxes Boolean. Gibt an ob vor jedem Karteikarten-Knoten eine Checkbox platziert werden soll.
+ * Diese Checkbox wird ein Attribut "data-kkid" mit der Karteikarten-ID haben.
  * @returns Ajax Objekt
  */
-function ladeKindKarteikarten(vaterId, vaterElem) {
+function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClickFunction, zeigeCheckboxes) {
     var params = {};
     params[paramId] = vaterId;
     // Evntl bestehende Kindkarteikarten aushaengen
@@ -230,21 +244,40 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
                 // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
-                if(arr.length == 0) {
-                	elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                if(arr.length == 0)
+                {
+                    if(!zeigeErstellButtons)
+                    {
+                        elem = $("<li class='kk_baum_keine_kinder'>Nichts anzuzeigen</li>");
+                    }
+                    else
+                    {
+                        elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                        registerErstellKkHandler(elem);
+                    }
                     elem.appendTo(vaterElem).slideDown();
-        	        registerErstellKkHandler(elem);
                 }
                 // andernfalls DOM aufbauen
                 else
                 {
                     // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
-                    elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
-                    elem.appendTo(vaterElem).slideDown();
-        	        registerErstellKkHandler(elem);
+                    if(zeigeErstellButtons)
+                    {
+                        elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                        elem.appendTo(vaterElem).slideDown();
+            	        registerErstellKkHandler(elem);
+                    }
                     for(var i in arr)
                     {
-                        var kkListItem = $("<li style='display:none'><a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>");
+                        var kkListItem = "<li style='display:none'>";
+                        if(zeigeCheckboxes)
+                        {
+                            // Kind Karteikarte mit Checkbox in den DOM haengen
+                            kkListItem += "<input type='checkbox' data-kkid='"+arr[i][paramId]+"'>";
+                        }
+                        // Kind Karteikarte ohne Checkbox in den DOM haengen
+                        kkListItem += "<a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>";
+                        kkListItem = $(kkListItem);
                         kkListItem.appendTo(vaterElem).slideDown();
                         
                         // Click Handler
@@ -253,27 +286,26 @@ function ladeKindKarteikarten(vaterId, vaterElem) {
                                 // Falls noch nicht geschehen, lade Kindkarteikarten rekursiv
                                 if($(e.target).siblings("ul").length == 0)
                                 {
-                                    ladeKindKarteikarten(arr[i][paramId], kkListItem);
+                                    ladeKindKarteikarten(arr[i][paramId], kkListItem, zeigeErstellButtons, extraClickFunction, zeigeCheckboxes);
                                 }
                                 // Andernfalls klappe Kindkarteikarten ein
                                 else
                                 {
                                     $(e.target).siblings("ul").slideUp("normal", function() { $(this).remove() });
                                 }
-                                // Zur Karteikarte scrollen und im Inhaltsverzeichnis hervorheben
-                                displayKarteikarte(arr[i][paramId], function() {
-                                    inhaltsverzeichnisUnhighlightAll();
-                                    inhaltsverzeichnisHighlightKnoten($(e.target));
-                                });
+                                extraClickFunction.call();
                                 // Ausbreitung des Events verhindern
                                 e.stopPropagation();
                             });
                         }
                         f(arr, kkListItem, i);
                         // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
-                        elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
-                        elem.appendTo(vaterElem).slideDown();
-            	        registerErstellKkHandler(elem);
+                        if(zeigeErstellButtons)
+                        {
+                            elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
+                            elem.appendTo(vaterElem).slideDown();
+                	        registerErstellKkHandler(elem);
+                        }
                     }
                 }
             },

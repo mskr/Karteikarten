@@ -224,7 +224,6 @@
 <div id="kk_erstellen_popup_overlay" class="popup_fenster_overlay">
 	<div id="kk_erstellen_popup" class="popup_fenster hidden">
 	 	<div class="popup_fenster_titel">
-			<span class="octicon octicon-podium"></span>
 			<span class="popup_fenster_ueberschrift"> Karteikarte erstellen</span>
 		</div>
 		<div id="kk_erstellen_popup_close" class="popup_fenster_close">
@@ -272,13 +271,18 @@
 				<span><input id="kkE_attr_bsp" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Beispiel</label></span><br>
 				<span><input id="kkE_attr_uebung" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Übung</label></span><br>
 			</div>
-			
+		</div>
+		<div id="popup_fenster_body3" class="popup_fenster_body">
+			<!--
 			<div class="suche_kk_wrapper">
 				<span class="form_infotext3">Suchen sie nach anderen Karteikarten ihrer Veranstaltung,<br>um sie mit dieser zu verknüpfen.</span><br>
 				<div class="autoCompleteWrapper needMarginTop8">
 					<input id="suche_kk_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Suche nach Karteikarten..." required>
 				</div>
-				
+			</div>
+			-->
+			<div id="kk_verweise_baum" class="kk_baum">
+				<!-- Baum zum Auswaehlen der Verlinkungen hier -->
 			</div>
 		</div>
 		<div class="popup_fenster_foot">
@@ -730,7 +734,7 @@ Dann aber so leer.
 		<button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button>
 	</div>
 -->
-	<div id="kk_inhaltsverzeichnis">
+	<div id="kk_inhaltsverzeichnis" class="kk_baum">
 		<div id="kk_inhaltsverzeichnis_titel"></div>
 		<!-- Inhaltsverzeichnis hier -->
 	</div>
