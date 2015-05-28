@@ -69,8 +69,6 @@ function fillKKbearbeitenTemplateWith(json){
 		}
 	}
 	else if(json[paramType]=="BILD"){		//bildkarteikarte
-		UPLOADTYPE = "png";
-		UPLOADIDSET = json[paramId];
 		var xhr = $.ajax({
 			  type: "HEAD",
 			  url: "files/images/"+json[paramId]+".png",
@@ -104,8 +102,6 @@ function fillKKbearbeitenTemplateWith(json){
 			});
 	}
 	else if(json[paramType]=="VIDEO"){
-		UPLOADTYPE = "mp4";
-		UPLOADIDSET = json[paramId];
 		var xhr = $.ajax({
 			  type: "HEAD",
 			  url: "files/videos/"+json[paramId]+".mp4",
@@ -158,9 +154,10 @@ function displayKKtoEdit(KKjson){
     	else if($("#kk_jetztNeuesKapitel").prop("checked")){
     		var params = {};
     		params[paramTitel] = titel;
-    		params[paramId] = kkjson[paramId];
+    		params[paramId] = KKjson[paramId];
     		params[paramAttribute] = attributes;
-    		params[paramBruderKK] = bruder;
+    		params[paramType] = "TEXT";
+    		params[paramVeranstaltung] = veranstaltungsObject[paramId];
     		submitEditUeberschriftKarteikarte(params);
     		return true;
     	}
@@ -277,7 +274,7 @@ function appendDropzone(){
        	    	$(".dz-error-mark").remove();
        	    	$(".dz-success-mark").remove();
        	    	$(".dz-preview").css("margin","40px");
-       	    	clone = $(".dz-size");
+       	    	clone = $(".dz-size").first();
        	    	$(".dz-size").remove();
        	    	$(".dz-details").append(clone);
        		    function successFkt(data){
@@ -311,7 +308,7 @@ function submitEditKarteikarte(params){
                 showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
                 $("#kk_bearbeiten_popup_overlay").fadeOut(110);
                 // Wir bekommen die eingefügte id zurück
-                displayKarteikarte(params[paramId]);
+                displayKarteikarte(params[paramId], null, true);
                 initInhaltsverzeichnis();
             },
             params
@@ -324,7 +321,9 @@ function processKKbearbeiten(id,text,titel,attributes){
 	params[paramInhalt] = text;
 	params[paramAttribute] = attributes;
 	params[paramType] = UPLOADTYPE;
-	params[paramKkUploadID] = UPLOADIDSET;	
+	params[paramKkUploadID] = UPLOADIDSET;
+	params[paramVeranstaltung] = veranstaltungsObject[paramId];
+
 	submitEditKarteikarte(params)
 }
 
@@ -335,7 +334,7 @@ function submitEditUeberschriftKarteikarte(params){
                 showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
                 $("#kk_bearbeiten_popup_overlay").fadeOut(110);
                 // Wir bekommen die eingefügte id zurück
-                displayKarteikarte(params[paramId]);
+                displayKarteikarte(params[paramId], null, true);
                 initInhaltsverzeichnis();
             },
             params

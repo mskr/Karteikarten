@@ -43,7 +43,7 @@ public class Karteikarte implements IjsonObject {
         
         this.hatBewertet = false;
     }
-
+    
 	// Konstruktor der verwendet wird wenn eine Karteikarte erstellt wird.
     public Karteikarte(String titel, String inhalt, KarteikartenTyp typ, int veranstaltung,
             boolean istSatz, boolean istLemma, boolean istBeweis, boolean istDefinition, boolean istWichtig, boolean istGrundlage,
@@ -71,7 +71,37 @@ public class Karteikarte implements IjsonObject {
         this.bewertung = 0;
         this.hatBewertet = false;
     }
+ // Konstruktor der verwendet wird wenn eine Karteikarte bearbeitet wird.
+    public Karteikarte(int id, String titel, String inhalt, KarteikartenTyp typ, int veranstaltung,
+            boolean istSatz, boolean istLemma, boolean istBeweis, boolean istDefinition, boolean istWichtig, boolean istGrundlage,
+            boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel, boolean istUebung)
+    {
+        this();
+        this.titel = titel;
+        this.inhalt = inhalt;
+        this.typ = typ;
+        this.veranstaltung = veranstaltung;
+        
+        this.istSatz = istSatz;
+        this.istLemma = istLemma;
+        this.istBeweis = istBeweis;
+        this.istDefinition = istDefinition;
+        this.istWichtig = istWichtig;
+        this.istGrundlage = istGrundlage;
+        this.istZusatzinfo = istZusatzinfo;
+        this.istExkurs = istExkurs;
+        this.istBeispiel = istBeispiel;
+        this.istUebung = istUebung;
+        
+        this.id = id;
+        this.aenderungsdatum = Calendar.getInstance();
+        this.bewertung = 0;
+        this.hatBewertet = false;
+    }
 
+    /**
+     * 
+     */
     /**
      * 
      */
