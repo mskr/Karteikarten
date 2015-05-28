@@ -24,7 +24,11 @@ function buildKarteikarte(karteikarteJson)
     	kkDom.find(".bearbeiten").hide();
     	kkDom.find(".loeschen").hide();
     }
-
+    
+    kkDom.find(".KKbearbeiten").click(function(){
+		processKK_editClick($(this));
+	});
+    
     // CopyLink
     // -> Probleme mit CSS 
 //    var clip = new ZeroClipboard(kkDom.find(".permalink"));
@@ -65,7 +69,7 @@ function buildKarteikarte(karteikarteJson)
 	
 
     // Überschrift kk
-    if(kkInhalt == "")
+    if(kkInhalt == "" && kkType == paramKkText)
     	return kkDom;
     
     // Info
