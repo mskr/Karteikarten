@@ -60,6 +60,7 @@ public class ParamDefines
     public final static String ActionErstelleUeberschrift = "erstelleUeberschrift";
     public final static String ActionBearbeiteUeberschrift = "bearbeiteUeberschrift";
     public final static String ActionBearbeiteKarteikarte = "bearbeiteKarteikarte";
+    public final static String ActionExportSkript = "exportSkript";
 
    
     public final static String ActionSpeichereNotiz = "speichereNotiz";
