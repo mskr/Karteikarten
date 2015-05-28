@@ -157,6 +157,7 @@ function createAndFillKommentar(kommObj, isAntwortKommentar, domVater)
 		gotoProfil(kommErsteller[paramId]);
 	});
 	domKomm.find(".kommDatum").html(kommObj[paramErstellDatum]);
+	domKomm.find(".kk_komm_profilBild").attr("src",kommErsteller[paramProfilBild]);
 	
 	// TODO Was ist mit Moderatoren?
 	if(kommErsteller[paramId] == jsonBenutzer[paramId] || 
