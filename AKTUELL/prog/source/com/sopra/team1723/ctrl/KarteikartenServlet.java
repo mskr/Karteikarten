@@ -758,7 +758,52 @@ public class KarteikartenServlet extends ServletController {
         }
 
     }
+    private void exportSkript(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
+        JSONObject jo = null;
+
+        ServletContext servletContext = getServletContext();
+        String contextPath = servletContext.getRealPath(File.separator);
+
+        int vnId = -1;
+        try
+        {
+            vnId = Integer.parseInt(req.getParameter(ParamDefines.Id));
+        }
+        catch (NumberFormatException e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
+
+        Veranstaltung v = dbManager.leseVeranstaltung(vnId);
+        
+        PDFExporter pexp = new PDFExporter(contextPath + "/pdfExports", contextPath);
+        appendKKExportRecursive(dbManager,pexp,0,v.getErsteKarteikarte());
+        pexp.startConvertToPDFFile();
+//        System.out.println("PDF erzeugt: "+ filename);
+    }
+    private void appendKKExportRecursive(IDatenbankmanager dbManager, PDFExporter pexp, int depth, int vaterKkId)
+    {
+        Map<Integer, Tupel<Integer, String>>  kkList = dbManager.leseKindKarteikarten(vaterKkId);
+        // Vater hinzufügen
+        Karteikarte k = dbManager.leseKarteikarte(vaterKkId);
+        pexp.appendKarteikarte(k, depth);
+        
+        int i = 0;
+        for(; i< kkList.size();i++)
+        {
+            Tupel<Integer, String> tu =  kkList.get(i);
+            appendKKExportRecursive(dbManager,pexp,depth+1,tu.x);
+        }
+
+    }
 
     @Override
     protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -812,6 +857,9 @@ public class KarteikartenServlet extends ServletController {
         }
         else if(aktuelleAction.equals(ParamDefines.ActionVerweisHinzufuegen)){
             verweisHinzufuegen(req, resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionExportSkript)){
+            exportSkript(req, resp);
         }
         else
         {

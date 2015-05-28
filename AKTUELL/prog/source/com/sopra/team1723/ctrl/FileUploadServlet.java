@@ -107,8 +107,6 @@ public class FileUploadServlet extends ServletController
             	JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
             }
-           
-            
         }
         else if(aktuelleAction.equals(ParamDefines.ActionUploadKKVideo)){
         	uploadedFile = req.getPart(ParamDefines.UploadFile);
