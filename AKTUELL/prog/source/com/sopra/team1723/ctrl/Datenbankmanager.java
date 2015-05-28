@@ -924,23 +924,34 @@ public class Datenbankmanager implements IDatenbankmanager {
             closeQuietly(rs);
             
 
-            ps = conMysql.prepareStatement("INSERT INTO karteikarte (ID,Titel,Inhalt,Typ,Veranstaltung)"
-                    + " VALUES(?,?,?,?,?)");
+            ps = conMysql.prepareStatement("INSERT INTO karteikarte (ID,Titel,Inhalt,Typ,Veranstaltung, "
+                    + "Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, "
+                    + " Zusatzinformation, Exkurs, Beispiel, Uebung) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             ps.setInt(1, insertedKkId);
             ps.setString(2, veranst.getTitel());
             ps.setString(3, "");
             ps.setString(4, KarteikartenTyp.TEXT.toString());
             ps.setInt(5, veranstId);
+            ps.setBoolean(6, false);
+            ps.setBoolean(7, false);
+            ps.setBoolean(8, false);
+            ps.setBoolean(9, false);
+            ps.setBoolean(10, false);
+            ps.setBoolean(11, false);
+            ps.setBoolean(12, false);
+            ps.setBoolean(13, false);
+            ps.setBoolean(14, false);
+            ps.setBoolean(15, false);
             ps.executeUpdate();
-            
+                        
 
             conNeo4j.commit();
             conMysql.commit();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            conNeo4j.rollback();
             conMysql.rollback();
+            conNeo4j.rollback();
             if(UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
             else
