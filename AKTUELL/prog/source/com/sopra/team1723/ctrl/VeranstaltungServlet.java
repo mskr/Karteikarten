@@ -107,17 +107,6 @@ public class VeranstaltungServlet extends ServletController {
         try
         {
             veranst.setId(dbManager.schreibeVeranstaltung(veranst,studiengaenge,mIds));
-        
-            if(mIds != null)
-            {
-                for(int i = 0; i < mIds.length;i++)
-                {
-                    dbManager.zuVeranstaltungEinschreiben(veranst.getId(), mIds[i], veranst.getZugangspasswort());
-                    dbManager.schreibeBenachrichtigung(new BenachrEinlModerator(mIds[i], veranst));
-                }
-            }
-            
-            dbManager.zuVeranstaltungEinschreiben(veranst.getId(), aktuellerBenutzer.getId(), veranst.getZugangspasswort());
         }
         catch (SQLException e)
         {
@@ -421,13 +410,6 @@ public class VeranstaltungServlet extends ServletController {
         try
         {
             dbManager.bearbeiteVeranstaltung(v,studiengaenge,mIds);
-            BenachrVeranstAenderung bva = new BenachrVeranstAenderung(v);
-            if(!dbManager.schreibeBenachrichtigung(bva))
-            {
-                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-                outWriter.print(jo);
-                return false;
-            }
         }
         catch (SQLException e)
         {
@@ -473,7 +455,7 @@ public class VeranstaltungServlet extends ServletController {
             vId = Integer.parseInt(idStr);
 
             String pw = request.getParameter(ParamDefines.Password);
-            dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw);
+            dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw, null);
 
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             outWriter.print(jo);

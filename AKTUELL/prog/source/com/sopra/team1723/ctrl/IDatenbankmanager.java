@@ -80,7 +80,7 @@ public interface IDatenbankmanager {
      * @param benutzer-Objket, das in der Datenbank geupdatet wird 
      * @throws DbUniqueConstraintException, SQLException
      */
-    public void bearbeiteBenutzerAdmin(Benutzer benutzer) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzerAdmin(Benutzer benutzer, Benutzer aktuellerBenutzer) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Entfernt den Benutzer aus der Datenbank. 
@@ -215,7 +215,8 @@ public interface IDatenbankmanager {
      * Veranstaltung werden.
      * @return gibt die ID der soeben eingefügten Veranstaltung zurück.
      */
-    public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException;
+    public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) 
+            throws SQLException, DbUniqueConstraintException, DbFalsePasswortException;
 
     /**
      * Daten der angegebenen Veranstaltung werden in der Datenbank
@@ -363,7 +364,7 @@ public interface IDatenbankmanager {
      * standardmäßig auf false.
      * @return Liefert bei Erfolg true zurück und bei einem Fehler false.
      */
-    public boolean schreibeBenachrichtigung(Benachrichtigung benachrichtigung);
+    public void schreibeBenachrichtigung(Benachrichtigung benachrichtigung, Connection conMysql) throws SQLException;
 
     /**
      * Setzt das Attribut gelesen der Benachrichtigung auf true.
@@ -530,7 +531,7 @@ public interface IDatenbankmanager {
      * @param kennwort für den Zugang zur Veranstaltung
      * @throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
      */
-    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort) throws SQLException, 
+    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort, Connection conMysql) throws SQLException, 
     DbUniqueConstraintException, DbFalsePasswortException;
 
     /**
