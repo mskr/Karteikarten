@@ -281,26 +281,29 @@
 				</div>
 			</div>
 			-->
-			<input type="radio" id="kk_erstellen_verweise_voraussetzung_radio" class="kk_erstellen_verweise_radio">
-			<input type="radio" id="kk_erstellen_verweise_weiterfuehrend_radio" class="kk_erstellen_verweise_radio">
-			<input type="radio" id="kk_erstellen_verweise_uebung_radio" class="kk_erstellen_verweise_radio">
-			<input type="radio" id="kk_erstellen_verweise_sonstige_radio" class="kk_erstellen_verweise_radio">
-			<label for="kk_erstellen_verweise_voraussetzung_radio" class="kk_erstellen_verweise_label">
-				Voraussetzung
-			</label>
-			<label for="kk_erstellen_verweise_weiterfuehrend_radio" class="kk_erstellen_verweise_label">
-				Weiterführend
-			</label>
-			<label for="kk_erstellen_verweise_uebung_radio" class="kk_erstellen_verweise_label">
-				Übung
-			</label>
-			<label for="kk_erstellen_verweise_sonstige_radio" class="kk_erstellen_verweise_label">
-				Sonstige
-			</label>
-			<div id="kk_erstellen_verweise_baum_voraussetzung" class="kk_baum kk_verweise_baum"></div>
-			<div id="kk_erstellen_verweise_baum_weiterfuehrend" class="kk_baum kk_verweise_baum"></div>
-			<div id="kk_erstellen_verweise_baum_uebung" class="kk_baum kk_verweise_baum"></div>
-			<div id="kk_erstellen_verweise_baum_sonstige" class="kk_baum kk_verweise_baum"></div>
+			<div class="form_infotext">Wenn Sie möchten können Sie ihre Karteikarte mit anderen Karteikarten verlinken.</div>
+			<div class="kk_verweise_wrapper">
+				<input type="radio" id="kk_erstellen_verweise_voraussetzung_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio" checked>
+				<label for="kk_erstellen_verweise_voraussetzung_radio" class="kk_verweise_label">
+					Voraussetzung
+				</label>
+				<input type="radio" id="kk_erstellen_verweise_weiterfuehrend_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio">
+				<label for="kk_erstellen_verweise_weiterfuehrend_radio" class="kk_verweise_label">
+					Weiterführend
+				</label>
+				<input type="radio" id="kk_erstellen_verweise_uebung_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio">
+				<label for="kk_erstellen_verweise_uebung_radio" class="kk_verweise_label">
+					Übung
+				</label>
+				<input type="radio" id="kk_erstellen_verweise_sonstige_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio">
+				<label for="kk_erstellen_verweise_sonstige_radio" class="kk_verweise_label">
+					Sonstige
+				</label>
+				<div id="kk_erstellen_verweise_baum_voraussetzung" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
+				<div id="kk_erstellen_verweise_baum_weiterfuehrend" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
+				<div id="kk_erstellen_verweise_baum_uebung" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
+				<div id="kk_erstellen_verweise_baum_sonstige" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
+			</div>
 		</div>
 		<div class="popup_fenster_foot">
 			<span id="kk_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>

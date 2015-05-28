@@ -209,7 +209,7 @@ function initInhaltsverzeichnis(){
 }
 
 function ladeInhaltsverzeichnisKinder(vaterId, vaterElem) {
-    return ladeKindKarteikarten(vaterId, vaterElem, true, function() {
+    return ladeKindKarteikarten(vaterId, vaterElem, true, function(arr, kkListItem, i, e) {
         // Bei Klick auf Knoten im Inhaltsverzeichnis hervorheben udn zur Karteikarte scrollen 
         displayKarteikarte(arr[i][paramId], function() {
             inhaltsverzeichnisUnhighlightAll();
@@ -226,6 +226,11 @@ function ladeInhaltsverzeichnisKinder(vaterId, vaterElem) {
  * @param vaterElem jQuery Objekt. Container, in den die Unordered List eingefuegt wird.
  * @param zeigeErstellButtons Boolean. Gibt an ob die Buttons zum Erstellen neuer KKs angezeigt werden.
  * @param extraClickFunction Funktion, die <i>zusaetzlich</i> zum Ein-/Ausklappen ausgefuehrt werden soll.
+ * Diese Funktion erhaelt folgende Parameter:
+ * arr = Array der Kindkarteikarten der angeklickten Karteikarte als JSON Objekte
+ * kkListItem = Das Listitem der Karteikarte die gerade eingefuegt wird
+ * i = Der Index der Karteikarte die gerade eingefuegt wird im Array arr
+ * e = Das Click-Event
  * @param zeigeCheckboxes Boolean. Gibt an ob vor jedem Karteikarten-Knoten eine Checkbox platziert werden soll.
  * Diese Checkbox wird ein Attribut "data-kkid" mit der Karteikarten-ID haben.
  * @returns Ajax Objekt
@@ -293,7 +298,7 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
                                 {
                                     $(e.target).siblings("ul").slideUp("normal", function() { $(this).remove() });
                                 }
-                                extraClickFunction.call();
+                                extraClickFunction(arr, kkListItem, i, e);
                                 // Ausbreitung des Events verhindern
                                 e.stopPropagation();
                             });

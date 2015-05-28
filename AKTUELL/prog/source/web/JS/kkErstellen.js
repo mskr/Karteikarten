@@ -39,15 +39,19 @@ function newKarteikarte(triggerElem){
 		
     });
     
-    ladeKindKarteikarten(
-            veranstaltungsObject[paramErsteKarteikarte], 
-            $("#kk_verweise_baum"), 
-            false, 
-            function() {
-                // kk knoten clicked
-            }, 
-            true
-    );
+    
+    // KK Verweis Baeume initialisieren
+    $(".kk_erstellen_verweise_baum").each(function() {
+        ladeKindKarteikarten(
+                veranstaltungsObject[paramErsteKarteikarte], 
+                $(this), 
+                false, 
+                function() {
+                    // kk knoten clicked
+                }, 
+                true
+        );
+    });
     
     submitFkt = function() {
     	var text = $("#kk_erstellen_TA").val().trim();
@@ -125,7 +129,7 @@ function newKarteikarte(triggerElem){
 		params[paramType] = UPLOADTYPE;
 		params[paramVaterKK] = vater;
 		params[paramBruderKK] = bruder;
-		params[paramKkUploadID] = UPLOADIDSET;	
+		params[paramKkUploadID] = UPLOADIDSET;
 		submitNewKarteikarte(params)
 	}
     function isAnyAttrSelected(){

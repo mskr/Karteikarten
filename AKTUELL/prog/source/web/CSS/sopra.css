@@ -1236,10 +1236,6 @@ textarea.input_std {
 	position: absolute;
 }
 
-.kk_verweise_baum {
-	position: relative;
-}
-
 #kk_inhaltsverzeichnis_titel {
 	margin-left: .7rem;
 	font-size: 1rem;
@@ -1282,10 +1278,44 @@ textarea.input_std {
 }
 
 /* KK Verweise Tabs */
-.kk_verweise_radio {
+.kk_verweise_wrapper {
+	position: relative;
+} .kk_verweise_radio {
 	display: none;
 } .kk_verweise_label {
-	float: left;
+	display: inline-block;
+	padding: .5em 1em;
+	margin-top: 1em;
+	position: relative;
+	z-index: 9;
+} .kk_verweise_baum {
+	display: none;
+	position: relative;
+	width: 100%;
+	background: #333;
+	padding: 2em;
+	box-sizing: border-box;
+	border-bottom: 1px solid rgba(255,255,255,.3);
+	box-shadow: inset 0 2px 0 rgba(0,0,0,.3);
+	z-index: 8;
+} .kk_verweise_radio:checked + .kk_verweise_label {
+	color: white;
+	font-weight: bold;
+	background: #333;
+	top: 1px;
+	border-top: 1px solid rgba(0,0,0,.3);
+} #kk_erstellen_verweise_voraussetzung_radio:checked 
+  ~ #kk_erstellen_verweise_baum_voraussetzung {
+	display: block;
+} #kk_erstellen_verweise_weiterfuehrend_radio:checked 
+  ~ #kk_erstellen_verweise_baum_weiterfuehrend {
+  	display: block;
+} #kk_erstellen_verweise_uebung_radio:checked 
+  ~ #kk_erstellen_verweise_baum_uebung {
+  	display: block;
+} #kk_erstellen_verweise_sonstige_radio:checked 
+  ~ #kk_erstellen_verweise_baum_sonstige {
+  	display: block;
 }
 
 .kk_wrapper {
