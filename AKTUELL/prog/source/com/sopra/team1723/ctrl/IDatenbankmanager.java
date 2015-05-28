@@ -424,7 +424,7 @@ public interface IDatenbankmanager {
      * @param karteik
      * @return ID der gerade eingefügten Karteikarte
      */
-    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException;
+    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException, IllegalArgumentException;
     
     public void connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j) throws SQLException;
     

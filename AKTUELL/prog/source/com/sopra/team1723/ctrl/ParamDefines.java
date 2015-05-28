@@ -61,7 +61,6 @@ public class ParamDefines
     public final static String ActionBearbeiteUeberschrift = "bearbeiteUeberschrift";
     public final static String ActionBearbeiteKarteikarte = "bearbeiteKarteikarte";
 
-    public final static String ActionVerweisHinzufuegen = "verweisHinzufuegen";
    
     public final static String ActionSpeichereNotiz = "speichereNotiz";
     public final static String ActionLeseNotiz = "leseNotiz";
@@ -129,8 +128,12 @@ public class ParamDefines
     public final static String Bewertung = "bewertung";
     public final static String UploadID = "uploadID";
     public final static String Reihenfolge = "reihenfolge";
-    public final static String KKVerweisQuelleId = "kkVerweisQuelleId";
-    public final static String KKVerweisZielId = "kkVerweisZielId";
+    public final static String V_Voraussetzung = "V_Voraussetzung";
+    public final static String V_Uebung = "V_Uebung";
+    public final static String V_Zusatzinfo = "V_Zusatzinfo";
+    public final static String V_Sonstiges = "V_Sonstiges";
+
+    
     
     // Kommentare
     public final static String HatGevoted = "hatgevotet";

@@ -1855,10 +1855,16 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Karteikarte leseKarteikarte(int karteikID)
     {
+        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
+        
+        PreparedStatement ps2 = null;
+        ResultSet rs2 = null;
         Karteikarte karteikarte = null;
         try
         {
@@ -1870,6 +1876,7 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             if (rs.next())
             {
+                ps2 = conNeo4j.prepareStatement("MATCH(n)-[r:V_VORRAUSSETZUNG|V_UEBUNG|V_ZUSATZINFO|V_SONSTIGES]->(m) WHERE id(n) = {1} RETURN m");
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getTimestamp("Aenderungsdatum"));
                 karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), cal, rs.getString("Inhalt"),
@@ -1890,6 +1897,8 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
+            closeQuietly(ps2);
+            closeQuietly(rs2);
             conLock.getValue().unlock();
         }
         return karteikarte;
@@ -2237,7 +2246,7 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException
+    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException, IllegalArgumentException
     {
         Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
         Connection conNeo4j = conLockNeo4j.getKey();
@@ -2293,6 +2302,10 @@ public class Datenbankmanager implements IDatenbankmanager
             else
             {
                 throw new SQLException();
+            }
+            
+            for(int i=0 ; i<karteik.getVerweise().size(); ++i){
+                connectKk(karteik.getId(), Integer.valueOf(karteik.getVerweise().get(i)[1]), BeziehungsTyp.valueOf(karteik.getVerweise().get(i)[2]), conNeo4j);
             }
 
             closeQuietly(ps);
@@ -3060,7 +3073,7 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public void connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j) throws SQLException
+    public void connectKk(int vonKK, int zuKK, BeziehungsTyp typ, Connection conNeo4j) throws SQLException
     {
         boolean verbindungAbbauen = false;
         Entry<Connection, ReentrantLock> conLockNeo4j = null;
