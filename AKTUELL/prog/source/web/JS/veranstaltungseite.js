@@ -40,7 +40,58 @@ $(document).ready(function() {
     	else
 			$(".kk_load_after").addClass("animated zoomOut").fadeOut();
     });
+    
+    
+    
+    $("#kk_export").click(function(){
+    	popupFenster($("#kk_export_popup_overlay"), 
+    			[$("#kk_export_cancel"),$("#kk_export_popup_close"),$("#kk_export_ok")], 
+    			function(){
+		    		$(".kk_export_pdf_link").attr("href","");
+		    		$(".kk_export_tex_link").attr("href","");
+		    		$("#kk_export_popup").find(".kk_export_files").hide();
+		    		$("#kk_export_popup").find("#kk_start_export").show();
+		    		$("#kk_export_popup").find("#kk_start_export").html("PDF erstellen");
+		    		$("#kk_export_popup").find(".load_kk_export").hide();
+		    		$("#kk_export_popup").find("#kk_export_zurueck").show();
+    			}, 
+    			$("#kk_export_ok"), 
+    			function(){
+    				return true;
+    			}, 
+    			undefined, 
+    			$("#kk_export_weiter"), 
+    			$("#kk_export_zurueck"))
+    });
+    
+    $("#kk_start_export").click(function() {
+		exportKkVonVn(veranstaltungsObject[paramId]);
+	})
 });
+
+function exportKkVonVn(vnId)
+{
+	$("#kk_export_popup").find("#kk_start_export").html("Erstelle PDF....");
+	$("#kk_export_popup").find(".load_kk_export").slideDown();
+	$("#kk_export_popup").find("#kk_export_zurueck").hide();
+	
+	options = [];
+	options.push($('#kk_export_opt_notizen').is(':checked'));
+	options.push($('#kk_export_opt_komm').is(':checked'));
+	options.push($('#kk_export_opt_attrAnz').is(':checked'));
+	
+	params = {};
+	params[paramId] = vnId;
+	params[paramExportOptions] = options;
+	return ajaxCall(karteikartenServlet, actionExportSkript, function(response){
+		$(".kk_export_pdf_link").attr("href",response[paramPDFFileName]);
+		$(".kk_export_tex_link").attr("href",response[paramTexFileName]);
+		$("#kk_export_popup").find("#kk_start_export").slideUp();
+		$("#kk_export_popup").find(".kk_export_files").slideDown();
+	}, params, function() {
+		$("#kk_export_ok").trigger("click");
+	}, undefined, undefined, 20000);
+}
 
 function fillVeranstaltungsSeite(Vid, kkId)
 {

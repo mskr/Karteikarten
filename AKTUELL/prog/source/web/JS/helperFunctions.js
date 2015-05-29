@@ -211,12 +211,14 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
  * @param completeFunc ist eine Funktion, die bei complete ausgefuehrt wird (kann optional uebergeben werden).
  * @returns Ajax Objekt, das Informatioen ueber den Antwortstatus enthaelt.
  */
-function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, beforeFunc, completeFunc)
+function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, beforeFunc, completeFunc, timeOut)
 {
-    
-//    console.log("[AJAX] action="+action);
+    console.log("[AJAX] action="+action);
+    if(timeOut == undefined)
+    	timeOut = 6000;
     
     return $.ajax({
+    	timeout: timeOut,
         url: servletUrl,
         data: "action="+action + "&"+ toUrlParamString(params),
         beforeSend: beforeFunc,

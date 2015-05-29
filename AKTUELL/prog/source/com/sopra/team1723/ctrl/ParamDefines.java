@@ -188,6 +188,9 @@ public class ParamDefines
     public final static String jsonArrResult = "arrResult";
     public final static String jsonStrResult = "strResult";
 
+    public final static String PDFFileName = "pdfFileName";
+    public final static String TexFileName = "texFileName";
+    public final static String ExportOptions = "exportOptions";
 
 
     public static Calendar WiSeBeginn = Calendar.getInstance();

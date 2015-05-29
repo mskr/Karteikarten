@@ -654,7 +654,8 @@ Dann aber so leer.
 			<span id="vn_attr_kommentare_erlaubt"></span><br>
 			<span id="vn_attr_modbearb_erlaubt"></span><br>
 		</div>
-		<button id="vn_bearbeiten" class="mybutton dark flat"><span class="octicon octicon-pencil"></span></button>
+		<button id="vn_bearbeiten" class="mybutton dark flat"><span class="octicon octicon-pencil"></span> Bearbeiten</button>
+		<button id="kk_export" class="mybutton dark flat"><span class="octicon octicon-cloud-download"></span> Exportieren</button>
 	</div>
 <!--
 	<input id="r-kk_toolbar_toggle_checkbox" class="r-kk_toolbar_toggle" type="checkbox">
@@ -914,6 +915,54 @@ Dann aber so leer.
 		</div>
 		<div class="popup_fenster_foot">
 			<span id="link_copy_ok" class="mybutton green">Schließen</span>
+		</div>
+	</div>
+</div>
+
+<!-- Karteikarten Export Popup -->
+<div id="kk_export_popup_overlay" class="popup_fenster_overlay">
+	<div id="kk_export_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+			<span class="octicon octicon-podium"></span>
+			<span class="popup_fenster_ueberschrift"> Karteikarten exportieren</span>
+		</div>
+		<div id="kk_export_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div class="popup_fenster_body">
+			<h2>Information</h2>
+			<p>Hier können Sie ein Vorlesungsscript als PDF oder Tex file exportieren.<br> 
+			Bitte beachten Sie: Video-Karteikarten werden beim Export nicht konvertiert.</p>
+			<br>
+			<h2>Einstellungen</h2>
+			<p>Nehmen Sie hier alle Einstellungen für den Export vor.</p>
+			<fieldset>
+    			<legend>Export-Daten</legend>
+				<input type="checkbox" id="kk_export_opt_kk" disabled checked="checked"><label for="kk_export_opt_kk">Karteikarteninhalt exportieren</label><br>
+				<input type="checkbox" id="kk_export_opt_notizen"><label for="kk_export_opt_notizen">Notizen exportieren</label><br>
+				<input type="checkbox" id="kk_export_opt_komm"><label for="kk_export_opt_komm">Kommentare exportieren</label><br>
+				<input type="checkbox" id="kk_export_opt_attrAnz"><label for="kk_export_opt_attrAnz">Attribute anzeigen</label><br>
+			</fieldset>
+		</div>
+		<div class="popup_fenster_body" style="text-align:center">
+			<span id="kk_start_export" class="mybutton green">PDF erstellen</span>
+			<div class="load_kk_export" style="display:none">
+				
+			</div>
+			<div class="kk_export_files" style="display:none">
+				<p> Hier finden Sie Ihre exportierten Dateien:</p>
+				<span><a class = "kk_export_pdf_link" target="_blank" href="">
+				<span class="mega-octicon really-more-mega octicon-cloud-download"></span><br>
+				PDF-Datei</a></span><br>
+				<span><a class = "kk_export_tex_link" target="_blank" href=""><span class="mega-octicon really-more-mega octicon-cloud-download"></span><br>
+				TEX-Datei</a></span>
+			</div>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="kk_export_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="kk_export_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="kk_export_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="kk_export_ok" class="mybutton green">Schließen</span>
 		</div>
 	</div>
 </div>

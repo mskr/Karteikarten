@@ -112,6 +112,13 @@
         <url-pattern>/BenachrichtigungsServlet</url-pattern>
     </servlet-mapping>
     
+    <listener>
+    <description>sessionListener</description>
+    <listener-class>
+        com.sopra.team1723.ctrl.SopraSessionListener
+    </listener-class>
+	</listener>
+    
     
 <!--     Rewriting-Filter hinzufuegen -->
 <filter>

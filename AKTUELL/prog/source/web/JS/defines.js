@@ -140,6 +140,9 @@ var paramAngemeldet = "angemeldet";
 var paramKennwortGesetzt = "kennwortGesetzt";
 var paramErsteKarteikarte = "ersteKarteikarte";
 
+var paramPDFFileName = "pdfFileName";
+var paramTexFileName = "texFileName";
+var paramExportOptions = "exportOptions";
 
 var paramAktSemester = "aktSemester";
 var paramGewaehltesStudiengang = "gewaehlterStudiengang";
@@ -172,6 +175,7 @@ var keyJsonObjKlasseBenutzer = "klasseBenutzer";
 var keyJsonObjKlasseVeranst = "klasseVeranst";
 var keyJsonObjKlasseStudiengang = "klasseStudiengang";
 var keyJsonObjKlasseKarteikarte = "klasseKarteikarte";
+
 
 // GET-Parameter fuer den urlHandler.js
 var urlParamLocation = "location";
