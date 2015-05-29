@@ -29,6 +29,7 @@ import org.jsoup.select.Elements;
 import org.jsoup.select.NodeVisitor;
 
 import com.sopra.team1723.data.Karteikarte;
+import com.sopra.team1723.data.Veranstaltung;
 
 public class PDFExporter
 {
@@ -43,15 +44,20 @@ public class PDFExporter
     private boolean        cleaned               = false;
     private String         newLineWithSeparation = "\n";
 
-    private String         Titel                 = "";
-    private String         Author                = "";
-
     private ProcessBuilder pb;
     private PDFExportThreadHandler peth;
-
-    public PDFExporter(String workingDir, String servletContextPath)
+    private Veranstaltung vn;
+    private boolean exportNotizen = false;
+    private boolean exportKommentare = false;
+    private boolean exportAttribute = false;
+    
+    public PDFExporter(String workingDir, String servletContextPath, Veranstaltung vn, boolean exportNotizen, boolean exportKommentare, boolean exportAttribute)
     {
+        this.exportNotizen = exportNotizen;
+        this.exportKommentare = exportKommentare;
+        this.exportAttribute = exportAttribute;
         this.workingDir = workingDir + "/";
+        this.vn = vn;
         this.servletContextPath = servletContextPath;
 
         if (!new File(workingDir).exists())
@@ -70,11 +76,11 @@ public class PDFExporter
         createHeader();
     }
 
-    public void setInfo(String Author, String Titel)
-    {
-        this.Titel = Titel;
-        this.Author = Author;
-    }
+//    public void setInfo(String Author, String Titel)
+//    {
+//        this.Titel = Titel;
+//        this.Author = Author;
+//    }
 
     public boolean createHeader()
     {
@@ -136,11 +142,11 @@ public class PDFExporter
                 + "\\subject{eLearning-PDF-Export}"
                 + newLineWithSeparation
                 + "\\title{"
-                + Titel
+                + vn.getTitel()
                 + "}"
                 + newLineWithSeparation
                 + "\\author{"
-                + Author
+                + vn.getErsteller().getVorname() + " " + vn.getErsteller().getNachname() 
                 + "}"
                 + newLineWithSeparation
                 + "% Hart rein coden oder \\today"
@@ -186,7 +192,6 @@ public class PDFExporter
             System.out.println("Fehler beim schreiben der TexDatei.");
             ex.printStackTrace();
         }
-
         return true;
     }
 
@@ -216,22 +221,25 @@ public class PDFExporter
         {
             case VIDEO:
                 System.out.println("Video KK - nicht unterstützt");
-                return false; // Nicht unterstützt
+                dataStr += "Video " + replaceInvalidChars(kk.getTitel() + " (Übersprungen)") + newLineWithSeparation;
+                break;
             case BILD:
-                System.out.println("Bild KK");
                 String Strkk = createBildKKLatexStr(kk, depth);
                 dataStr += Strkk + newLineWithSeparation;
                 break;
             case TEXT:
-                System.out.println("Text kk");
                 String Strkk1 = createTextKKLatexStr(kk, depth);
                 dataStr += Strkk1 + newLineWithSeparation;
                 break;
 
             default:
                 return false;
-        }
+        }        
         return true;
+    }
+    public PDFExportThreadHandler getExecutor()
+    {
+        return peth;
     }
 
     private String createTextKKLatexStr(Karteikarte kk, int depth)
@@ -239,18 +247,18 @@ public class PDFExporter
 
         if (kk.getTitel().equals(""))
         {
-            return putStrIntoChapter(depth, kk.getTitel(), "");
+            return putStrIntoChapter(depth, kk, "");
         }
         else
         {
             String data = kk.getInhalt();
-            return putStrIntoChapter(depth, kk.getTitel(), transformHTMLToLaTeX(data));
+            return putStrIntoChapter(depth, kk, transformHTMLToLaTeX(data));
         }
     }
 
     private String transformHTMLToLaTeX(String html)
     {
-        Document doc = Jsoup.parseBodyFragment(html);
+        Document doc = Jsoup.parse("<html><body>" + html + "</body></html>");
         String latexStr = recursiveTransformHTLMtoLatex(doc.body(), 0);
         return latexStr;
     }
@@ -260,14 +268,15 @@ public class PDFExporter
         List<Element> nodes = n.children();
         String result = "";
 
+
         if (!n.nodeName().equals("body"))
         {
 //            for (int i = 0; i < depth; i++)
 //                System.out.print("  ");
 //            System.out.println("<" + n.nodeName() + ">");
-            result += mapHTMLTagToLaTeXTag(n.nodeName(), true) + " ";
-            
+            result += mapHTMLTagToLaTeXTag(n, true) + " ";
         }
+        
         
         if (nodes.size() == 0)
         {
@@ -291,7 +300,7 @@ public class PDFExporter
 //            for (int i = 0; i < depth; i++)
 //                System.out.print("  ");
 //            System.out.println("</" + n.nodeName() + ">");
-            result += mapHTMLTagToLaTeXTag(n.nodeName(), false);
+            result += mapHTMLTagToLaTeXTag(n, false);
         }
         return result;
     }
@@ -311,10 +320,10 @@ public class PDFExporter
         return html;
     }
 
-    private String mapHTMLTagToLaTeXTag(String nodeNameHTML, boolean begin)
+    private String mapHTMLTagToLaTeXTag(Node node, boolean begin)
     {
         String res = "";
-        switch (nodeNameHTML.toLowerCase())
+        switch (node.nodeName().toLowerCase())
         {
             case "br":
                 if (begin)
@@ -376,6 +385,16 @@ public class PDFExporter
                 else
                     res = ""+ newLineWithSeparation;
                 break;
+            case "h1":
+            case "h2":
+            case "h3":
+            case "h4":
+            case "h5":
+                if (begin)
+                    res = "\\textbf{";
+                else
+                    res = "}"+ newLineWithSeparation;
+                break;
 
             default:
                 res = "";
@@ -384,27 +403,27 @@ public class PDFExporter
         return res;
     }
 
-    private String putStrIntoChapter(int chapterDepth, String title, String data)
+    private String putStrIntoChapter(int chapterDepth, Karteikarte kk, String data)
     {
         String newData = null;
-        title = replaceInvalidChars(title);
+        String title = replaceInvalidChars(kk.getTitel()) ;
         data = replaceInvalidChars(data);
         switch (chapterDepth)
         {
             case 0:
-                newData = "\\chapter{" + title + "}" + newLineWithSeparation;
+                newData = "\\chapter["+ title +"]{" + title + createAttribute(kk) + "}" + newLineWithSeparation;
                 break;
             case 1:
-                newData = "\\section{" + title + "}" + newLineWithSeparation;
+                newData = "\\section["+ title +"]{" + title + createAttribute(kk) + "}" + newLineWithSeparation;
                 break;
             case 2:
-                newData = "\\subsection{" + title + "}" + newLineWithSeparation;
+                newData = "\\subsection["+ title +"]{" + title + createAttribute(kk) + "}" + newLineWithSeparation;
                 break;
             case 3:
-                newData = "\\subsubsection{" + title + "}" + newLineWithSeparation;
+                newData = "\\subsubsection["+ title +"]{" + title + createAttribute(kk) + "}" + newLineWithSeparation;
                 break;
             case 4:
-                newData = "\\paragraph{" + title + "}" + newLineWithSeparation;
+                newData = "\\paragraph["+ title +"]{" + title + createAttribute(kk) + "}" + newLineWithSeparation;
                 break;
 
             default:
@@ -425,9 +444,10 @@ public class PDFExporter
 
             String latexStr = "\\begin{figure}[H] " + newLineWithSeparation + "  \\centering" + newLineWithSeparation
                     + "  \\includegraphics[width=0.5\\linewidth]{" + kk.getId() + ".png}" + newLineWithSeparation
-                    + "  \\caption{" + kk.getTitel() + "}" + newLineWithSeparation + "  \\label{fig:kk_bild"
+                    + "  \\caption{" + kk.getTitel() + createAttribute(kk) + "}" + newLineWithSeparation + "  \\label{fig:kk_bild"
                     + kk.getId() + "}" + newLineWithSeparation + "\\end{figure}" + newLineWithSeparation;
-
+            
+            
             // TODO Bilder mit überschrift ?
             return latexStr;// putStrIntoChapter(depth,kk.getTitel(), latexStr);
         }
@@ -436,9 +456,40 @@ public class PDFExporter
             e.printStackTrace();
         }
         return "";
-
     }
 
+    public String createAttribute(Karteikarte kk)
+    {
+        if(!exportAttribute)
+            return "";
+        
+        String tmp = "\\protect\\footnote{Attribute: ";
+        int cnt = 0;
+        if(kk.isIstSatz())
+            tmp += (cnt++==0?"":", ") + "Satz";
+        if(kk.isIstBeweis())
+            tmp += (cnt++==0?"":", ") + "Beweis";
+        if(kk.isIstDefinition())
+            tmp += (cnt++==0?"":", ") + "Definition";
+        if(kk.isIstWichtig())
+            tmp += (cnt++==0?"":", ") + "Wichtig";
+        if(kk.isIstGrundlage())
+            tmp += (cnt++==0?"":", ") + "Grundlage";
+        if(kk.isIstZusatzinfo())
+            tmp += (cnt++==0?"":", ") + "Zusatzinfo";
+        if(kk.isIstExkurs())
+            tmp += (cnt++==0?"":", ") + "Exkurs";
+        if(kk.isIstBeispiel())
+            tmp += (cnt++==0?"":", ") + "Beispiel";
+        if(kk.isIstUebung())
+            tmp += (cnt++==0?"":", ") + "Uebung";
+        
+        tmp += "}";
+        if(cnt>0)
+            return tmp;
+        else
+            return "";
+    }
     public boolean startConvertToPDFFile()
     {
         if (!createAndCloseFile())
@@ -450,9 +501,24 @@ public class PDFExporter
         return true;
 
     }
-    public String getFileName()
+    public String getPDFFileName()
     {
         return fileName;
+    }
+    public String getTexFileName()
+    {
+        return texFileName;
+    }
+    
+    public void deleteFiles()
+    {
+        if(!peth.creationFinished())
+            return;
+        
+        if(peth.creationSucessfull())
+            FileUtils.deleteQuietly(new File(workingDir + subFolder + "/" + fileName));
+        
+        FileUtils.deleteQuietly(new File(workingDir + subFolder + "/" + texFileName));
     }
 
     /**
@@ -468,6 +534,10 @@ public class PDFExporter
             // Copy nach oben
             if(copyPossible)
                 FileUtils.copyFile(new File(workingDir + subFolder + "/" + fileName), new File(workingDir + fileName));
+            
+            // Tex file immer sichern
+            FileUtils.copyFile(new File(workingDir + subFolder + "/" + texFileName), new File(workingDir + texFileName));
+            
             FileUtils.deleteDirectory(new File(workingDir + subFolder));
             cleaned = true;
         }

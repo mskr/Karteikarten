@@ -32,12 +32,12 @@ public class PDFExportThreadHandler implements Runnable
     {
         try
         {
-            int runCnt = 0;
+            int copileRunNr = 0;
             int res = 0;
-            for(; runCnt < 2; runCnt++)
+            for(; copileRunNr < 2; copileRunNr++)
             {
                 
-                System.out.println(String.valueOf(runCnt+1) + ".Run of pdflatex-Process and wait for finish...");
+                System.out.println(String.valueOf(copileRunNr+1) + ".Run of pdflatex-Process and wait for finish...");
                 Process p = pb.start();
                 
                 new Thread(new Runnable() {
@@ -62,11 +62,10 @@ public class PDFExportThreadHandler implements Runnable
                 }).start();
                 
                res = p.waitFor();
-               System.out.println(String.valueOf(runCnt+1) + ".Run Finished..."); 
-               if(res < 0)
+               System.out.println(String.valueOf(copileRunNr+1) + ".Run Finished..."); 
+               if(res != 0)
                    break;
             }
-            creationFinised = true;
             if (res != 0)
             {
                 System.out.println("Errorcode von pdflatex: " + res);
@@ -76,13 +75,15 @@ public class PDFExportThreadHandler implements Runnable
             {
                 creationSucessfull = true;
             }
-            pe.cleanUp(creationSucessfull);
         }
         catch (IOException | InterruptedException ex)
         {
-            creationFinised = true;
             creationSucessfull = false;
             ex.printStackTrace();
+        }
+        finally{
+            creationFinised = true;
+            pe.cleanUp(creationSucessfull);
         }
     }
 

@@ -34,14 +34,15 @@ public abstract class ServletController extends HttpServlet
      *  Session Attribute, die verwendet werden
      */
     //    protected final String sessionAttributeEMail = "eMail";
-    protected final String sessionAttributeUserID = "UserID";
-    protected final String sessionAttributeGewähltesSemester = "gewähltesSemester";
-    protected final String sessionAttributeDbManager = "dbManager";
-    protected final String sessionAttributeaktuellerBenutzer = "aktuellerBenutzer";
+    protected final static String sessionAttributeUserID = "UserID";
+    protected final static String sessionAttributeGewähltesSemester = "gewähltesSemester";
+    protected final static String sessionAttributeDbManager = "dbManager";
+    protected final static String sessionAttributeaktuellerBenutzer = "aktuellerBenutzer";
+    public final static String sessionAttributePDFExporter = "pdfExporter";
 
     protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
     
-    public static final boolean DEBUGMODE = false;
+    public static final boolean DEBUGMODE = true;
 
     /**
      *  DateiPfade
@@ -59,6 +60,7 @@ public abstract class ServletController extends HttpServlet
      */
     public ServletController() 
     {
+        
     }
     /**
      * Prüft, ob die eMail-Adresse des Benutzers in der aktuellen Session vorhanden ist und ob der Benutzer somit eingeloggt ist.

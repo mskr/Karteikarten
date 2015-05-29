@@ -753,6 +753,13 @@ public class KarteikartenServlet extends ServletController {
         ServletContext servletContext = getServletContext();
         String contextPath = servletContext.getRealPath(File.separator);
 
+        String[] options = req.getParameterValues(ParamDefines.ExportOptions);
+        if(options == null)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
         int vnId = -1;
         try
         {
@@ -767,17 +774,56 @@ public class KarteikartenServlet extends ServletController {
         }
 
         Veranstaltung v = dbManager.leseVeranstaltung(vnId);
+        String PDFPfad = "pdfExports";
         
-        PDFExporter pexp = new PDFExporter(contextPath + "/pdfExports", contextPath);
+        // Prüfen, ob noch alte dateien erzeugt wurden
+        PDFExporter pexp = (PDFExporter) aktuelleSession.getAttribute(sessionAttributePDFExporter);
+        if(pexp != null)
+            pexp.cleanUp(true);
+        
+        pexp = new PDFExporter(contextPath + "/" + PDFPfad, contextPath, v,
+                Boolean.valueOf(options[0]),
+                Boolean.valueOf(options[1]),
+                Boolean.valueOf(options[2]));
+        
         appendKKExportRecursive(dbManager,pexp,0,v.getErsteKarteikarte());
         pexp.startConvertToPDFFile();
-//        System.out.println("PDF erzeugt: "+ filename);
+        
+        // Warten bis fertig
+        while(!pexp.getExecutor().creationFinished()){
+            try
+            {
+                Thread.sleep(1000);
+            }catch (InterruptedException e){}
+        }
+        System.out.println("Fertig.");
+        if(pexp.getExecutor().creationSucessfull())
+        {
+            System.out.println("Erfolgreich.");
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            jo.put(ParamDefines.PDFFileName, PDFPfad + "/" + pexp.getPDFFileName());
+            jo.put(ParamDefines.TexFileName, PDFPfad + "/" + pexp.getTexFileName());
+            
+            // In session speichern
+            aktuelleSession.setAttribute(sessionAttributePDFExporter, pexp);
+        }
+        else
+        {
+            System.out.println("nicht erfolgreich.");
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError, "Fehler beim Erzeugen der PDF. Bitte versuchen Sie es erneut.");
+        }
+        
+        outWriter.print(jo);
     }
     private void appendKKExportRecursive(IDatenbankmanager dbManager, PDFExporter pexp, int depth, int vaterKkId)
     {
         Map<Integer, Tupel<Integer, String>>  kkList = dbManager.leseKindKarteikarten(vaterKkId);
+        if(kkList == null)
+            return;
         // Vater hinzufügen
         Karteikarte k = dbManager.leseKarteikarte(vaterKkId);
+        if(k == null)
+            return;
         pexp.appendKarteikarte(k, depth);
         
         int i = 0;

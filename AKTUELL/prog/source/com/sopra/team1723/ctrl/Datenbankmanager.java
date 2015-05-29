@@ -2343,9 +2343,9 @@ public class Datenbankmanager implements IDatenbankmanager
                 throw new SQLException();
             }
             
-            for(int i=0 ; i<karteik.getVerweise().size(); ++i){
-                connectKk(karteik.getId(), Integer.valueOf(karteik.getVerweise().get(i)[1]), BeziehungsTyp.valueOf(karteik.getVerweise().get(i)[2]), conNeo4j);
-            }
+//            for(int i=0 ; i<karteik.getVerweise().size(); ++i){
+//                connectKk(karteik.getId(), Integer.valueOf(karteik.getVerweise().get(i)[1]), BeziehungsTyp.valueOf(karteik.getVerweise().get(i)[2]), conNeo4j);
+//            }
 
             closeQuietly(ps);
 
