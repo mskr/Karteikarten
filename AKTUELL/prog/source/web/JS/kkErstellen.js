@@ -5,7 +5,8 @@ var UPLOADTYPE ="";
 	
 Dropzone.autoDiscover = false;
 var UPLOAD_ID;
-function newKarteikarte(triggerElem){
+function newKarteikarte(triggerElem) {
+    
 	var vater = findVater(triggerElem);
 	// Spezialfall ganz oben im Baum
 	if(vater == undefined)
@@ -39,19 +40,90 @@ function newKarteikarte(triggerElem){
 		
     });
     
+    // Sammle Ajax Objekte aller Verweis Baeume
+    var verwBaeumeAjaxCalls = [];
     
-    // KK Verweis Baeume initialisieren
     $(".kk_erstellen_verweise_baum").each(function() {
-        ladeKindKarteikarten(
+        // Verweis Baeume initialisieren
+        baumWurzelAjax = ladeKindKarteikarten(
                 veranstaltungsObject[paramErsteKarteikarte], 
                 $(this), 
                 false, 
-                function() {
-                    // kk knoten clicked
+                function(arr, kkListItem, i, e, ajax, klappeAus) {
+                    if(klappeAus)
+                    {
+                        $.when(ajax).done(function() {
+                            // Change Handler fuer die Checkboxes der bei Klick geladenen Kinder
+                            kkListItem.find("> ul input[type='checkbox']").change(function(e) {
+                                var verwBaum = $(e.target).parents(".kk_verweise_baum");
+                                var verwTyp = verwBaum.attr("id").split("_")[4];
+                                var isHinzu = $(e.target).prop("checked");
+                                var zielKkId = $(e.target).data("kkid");
+                                verweiseVonBenutzerGeaendert(verwTyp, isHinzu, zielKkId);
+                            });
+                        });
+                    }
                 }, 
                 true
         );
+        verwBaeumeAjaxCalls.push(baumWurzelAjax);
     });
+    
+    // Warte darauf, dass die Wurzel-Ebene aller Verweise Baeume geladen wurde
+    $.when.apply(null, verwBaeumeAjaxCalls).done(function() {
+        // Change Handler fuer die Checkboxes der Wurzel-Ebene
+        $("#kk_erstellen_verweise_baum_voraussetzung").find("input[type='checkbox']").change(function(e) {
+            var verwBaum = $(e.target).parents(".kk_verweise_baum");
+            var verwTyp = verwBaum.attr("id").split("_")[4];
+            var isHinzu = $(e.target).prop("checked");
+            var zielKkId = $(e.target).data("kkid");
+            verweiseVonBenutzerGeaendert(verwTyp, isHinzu, zielKkId);
+        });
+    });
+    
+    var verweisVoraussetzungArr = [];
+    var verweisWeiterfuehrendArr = [];
+    var verweisUebungArr = [];
+    var verweisSonstigesArr = [];
+    function verweiseVonBenutzerGeaendert(verweisTyp, isHinzu, zielKkId)
+    {
+        switch(verweisTyp)
+        {
+            case "voraussetzung":
+                if(isHinzu)
+                    verweisVoraussetzungArr.push(zielKkId);
+                else
+                    verweisVoraussetzungArr = jQuery.grep(verweisVoraussetzungArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+                break;
+            case "weiterfuehrend":
+                if(isHinzu)
+                    verweisWeiterfuehrendArr.push(zielKkId);
+                else
+                    verweisWeiterfuehrendArr = jQuery.grep(verweisWeiterfuehrendArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+                break;
+            case "uebung":
+                if(isHinzu)
+                    verweisUebungArr.push(zielKkId);
+                else
+                    verweisUebungArr = jQuery.grep(verweisUebungArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+                break;
+            case "sonstige":
+                if(isHinzu)
+                    verweisSonstigesArr.push(zielKkId);
+                else
+                    verweisSonstigesArr = jQuery.grep(verweisSonstigesArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+        }
+    }
+    
+    //TODO Verweis Baeume zerstoeren wenn Popup geschlossen wird
     
     submitFkt = function() {
     	var text = $("#kk_erstellen_TA").val().trim();
@@ -59,7 +131,7 @@ function newKarteikarte(triggerElem){
     	var attributes = getSelectedKkAttributes();
 
     	if(titel==""){
-    		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
+    		showError("Bitte geben Sie ihrer Karteikarte einen Titel.");
     		return false;
     	}
     	else if($("#kk_neuesKapitel").prop("checked")){
@@ -84,7 +156,8 @@ function newKarteikarte(triggerElem){
     		return false;
     	}
     	else{
-    		processKKerstellen(text,titel,attributes, bruder, vater);
+    		processKKerstellen(text,titel,attributes, bruder, vater, 
+    	            verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
     		return true;
     	}
     }
@@ -97,6 +170,8 @@ function newKarteikarte(triggerElem){
     	$(".checkboxes").prop("checked",false);
     	$("#kk_erstellen_titel_input").val("");
     	$("#kk_erstellen_TA").val("");
+    	// Zerstoere Verweis Baeume mit allen Handlern
+    	$("#kk_erstellen_popup").find(".kk_verweise_baum").remove();
     }
     
     popupFenster(
@@ -120,7 +195,8 @@ function newKarteikarte(triggerElem){
     	
     });
     
-	function processKKerstellen(text,titel,attributes, bruder, vater){
+	function processKKerstellen(text,titel,attributes, bruder, vater, 
+	        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr){
 		var params = {};
 		params[paramTitel] = titel;
 		params[paramVeranstaltung] = veranstaltungsObject[paramId];
@@ -130,6 +206,10 @@ function newKarteikarte(triggerElem){
 		params[paramVaterKK] = vater;
 		params[paramBruderKK] = bruder;
 		params[paramKkUploadID] = UPLOADIDSET;
+		params[paramVerweisVoraussetzung] = verweisVoraussetzungArr;
+        params[paramVerweisWeiterfuehrend] = verweisWeiterfuehrendArr;
+        params[paramVerweisUebung] = verweisUebungArr;
+        params[paramVerweisSonstiges] = verweisSonstigesArr;
 		submitNewKarteikarte(params)
 	}
     function isAnyAttrSelected(){
@@ -243,12 +323,10 @@ function newKarteikarte(triggerElem){
 function findVater(elem){
 	maybeNode = elem.parent().parent().parent().attr("id")
 	if(maybeNode === "kk_inhaltsverzeichnis"){
-		console.log("Vater ist VeranstaltungsKK (erste):"+veranstaltungsObject[paramErsteKarteikarte]);
 		return veranstaltungsObject[paramErsteKarteikarte];
 	}
 	else{
 		maybeNode = elem.parent().parent().prev().data("kkid");
-		console.log("Vater ist eine andere Karteikarte:"+maybeNode);
 		return maybeNode;
 	}
 	
@@ -257,12 +335,10 @@ function findVater(elem){
 function findBruder(elem){
 	elemBefore = elem.parent().prev();
 	if(elemBefore.length < 1){ //no brother before it, then -1
-		console.log("Kein Bruder gefunden. Daher -1");
 		return -1;
 	}
 	else{
 		id = elemBefore.children().first().data("kkid");
-		console.log("Vorangehender Bruder gefunden: "+id);
 		return id
 	}
 	//2.:

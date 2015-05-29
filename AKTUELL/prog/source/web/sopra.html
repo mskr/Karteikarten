@@ -235,7 +235,9 @@
  				<span>
  					<input id="kk_neuesKapitel" class="Big_checkbox" type="checkbox" name="attr">
  					<label class="checkbox_labels" for="attr_lemma">
- 						Markieren, wenn sie ein neues übergeordnetes Kapitel erstellen wollen.<br>Diese Karteikarte ist dann inhaltslos!
+ 						Markieren, wenn sie ein neues übergeordnetes Kapitel erstellen wollen.
+ 						<br>
+ 						Diese Karteikarte ist dann inhaltslos!
  					</label>
 				</span>
  			</div>
@@ -281,7 +283,13 @@
 				</div>
 			</div>
 			-->
-			<div class="form_infotext">Wenn Sie möchten können Sie ihre Karteikarte mit anderen Karteikarten verlinken.</div>
+			<div class="form_infotext">
+				Wenn Sie möchten können Sie ihre Karteikarte mit anderen Karteikarten verlinken.
+				<br>
+				Wählen Sie zunächst die Art der Verlinkung und markieren Sie dann beliebig viele Karteikarte, die Ziel Ihrer Verlinkung sind.
+				<br>
+				Hinweis: Durch Klicken auf Karteikarten können Sie deren direkt untergeordnete Karteikarten anzeigen bzw. ausblenden.
+			</div>
 			<div class="kk_verweise_wrapper">
 				<input type="radio" id="kk_erstellen_verweise_voraussetzung_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio" checked>
 				<label for="kk_erstellen_verweise_voraussetzung_radio" class="kk_verweise_label">
@@ -297,7 +305,7 @@
 				</label>
 				<input type="radio" id="kk_erstellen_verweise_sonstige_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio">
 				<label for="kk_erstellen_verweise_sonstige_radio" class="kk_verweise_label">
-					Sonstige
+					Sonstiges
 				</label>
 				<div id="kk_erstellen_verweise_baum_voraussetzung" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
 				<div id="kk_erstellen_verweise_baum_weiterfuehrend" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
@@ -524,31 +532,6 @@ Dann aber so leer.
 	<div class="hauptseite_head">
 		<span id="vn_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span> </span>
 	</div>
-	
-	<!-- Tabs erstellt nach dieser Anleitung: http://css-tricks.com/functional-css-tabs-revisited/ -->
-<!--	<div class="vn_container" id="vn_container">
-		<div class="vn_tab meine_vn">
-			<input class="vn_tabradio" type="radio" id="tab-1" name="group1" checked>
-			<label class="meine_vn_tablabel vn_tablabel" for="tab-1"><span class="mega-octicon octicon-home"></span></label>
-			<div class="vn_tabcontent" id="vn_tabcontent_meine">
-				<div class="vn_toolbar">Hier finden Sie Veranstaltungen, in die Sie eingeschrieben sind.</div>
-				
-			</div>
-		</div>
-		<div class="vn_tab alle_vn">
-			<input class="vn_tabradio" type="radio" id="tab-2" name="group1">
-			<label class="alle_vn_tablabel vn_tablabel" for="tab-2"><span class="mega-octicon octicon-list-unordered"></span></label>
-			<div class="vn_tabcontent" id="vn_tabcontent_alle">
-				<div class="vn_toolbar">
-					Hier finden Sie alle Veranstaltungen im System.<br>
-					<select id="vn_alle_auswahl_semester"></select>
-					<select id="vn_alle_auswahl_studiengang"></select>
-				</div>
-				
-			</div>
-		</div>
-	</div> -->
-	
 	<div class="vn_tab_container">
 		<input id="vn_tab_meine" type="radio" name="vn_tab_set" class="vn_tab_meine_radio" checked>
 		<label for="vn_tab_meine" class="vn_tab_meine_label"><span class="mega-octicon octicon-home"></span> Meine</label>
@@ -563,7 +546,7 @@ Dann aber so leer.
 			</div>
 			<div id="vn_tabcontent_alle" class="vn_tabcontent_alle">
 				<div class="vn_toolbar">
-					Hier finden Sie alle Veranstaltungen im System.<br>
+					Hier finden Sie alle Veranstaltungen im System. Bitte wählen Sie ein Semester und einen Studiengang.<br>
 					<select id="vn_alle_auswahl_semester"></select>
 					<select id="vn_alle_auswahl_studiengang"></select>
 				</div>
@@ -571,7 +554,6 @@ Dann aber so leer.
 			</div>
 		</div>
 	</div>
-	
 	<div class="impressum">
 		Uni Ulm <br> 
 		WiSe 14/15 <br> 

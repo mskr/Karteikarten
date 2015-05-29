@@ -209,13 +209,13 @@ function initInhaltsverzeichnis(){
 }
 
 function ladeInhaltsverzeichnisKinder(vaterId, vaterElem) {
-    return ladeKindKarteikarten(vaterId, vaterElem, true, function(arr, kkListItem, i, e) {
-        // Bei Klick auf Knoten im Inhaltsverzeichnis hervorheben udn zur Karteikarte scrollen 
+    return ladeKindKarteikarten(vaterId, vaterElem, true, function(arr, kkListItem, i, e, ajax, klappeAus) {
+        // Bei Klick auf Knoten zur Kk scrollen und im Inhaltsvz hervorheben
         displayKarteikarte(arr[i][paramId], function() {
             inhaltsverzeichnisUnhighlightAll();
             inhaltsverzeichnisHighlightKnoten($(e.target));
         });
-    });
+    }, false);
 }
 
 /**
@@ -227,10 +227,14 @@ function ladeInhaltsverzeichnisKinder(vaterId, vaterElem) {
  * @param zeigeErstellButtons Boolean. Gibt an ob die Buttons zum Erstellen neuer KKs angezeigt werden.
  * @param extraClickFunction Funktion, die <i>zusaetzlich</i> zum Ein-/Ausklappen ausgefuehrt werden soll.
  * Diese Funktion erhaelt folgende Parameter:
- * arr = Array der Kindkarteikarten der angeklickten Karteikarte als JSON Objekte
- * kkListItem = Das Listitem der Karteikarte die gerade eingefuegt wird
- * i = Der Index der Karteikarte die gerade eingefuegt wird im Array arr
- * e = Das Click-Event
+ * <ul>
+ * <li>arr = Array der vom Server empfangenen Kindkarteikarten (als JSON) auf Ebene des angeklickten Elements.</li>
+ * <li>kkListItem = JQuery Object. Listitem, das die angeklickte Karteikarte wrappt.</li>
+ * <li>i = Index der angeklickten Karteikarte im Array arr. Folglich liefert arr[i] die angeklickte Karteikarte als JSON.</li>
+ * <li>e = Click-Event</li>
+ * <li>ajax = JQuery Deferred Object. Resolved, wenn Kinder der angeklickten Karteikarte geladen.</li>
+ * <li>klappeAus = Boolean. True, wenn Kinder durch den Klick ausgeklappt werden. False, wenn sie eingeklappt werden.</li>
+ * </ul>
  * @param zeigeCheckboxes Boolean. Gibt an ob vor jedem Karteikarten-Knoten eine Checkbox platziert werden soll.
  * Diese Checkbox wird ein Attribut "data-kkid" mit der Karteikarten-ID haben.
  * @returns Ajax Objekt
@@ -248,12 +252,12 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
             function(response) {
                 // neu geladene Kindkarteikarten holen
                 var arr = response[keyJsonArrResult];
-                // falls keine Kindkarteikarten vorhanden, biete Neuerstellung an
+                // Erstell Button, falls keine Kinder vorhanden
                 if(arr.length == 0)
                 {
                     if(!zeigeErstellButtons)
                     {
-                        elem = $("<li class='kk_baum_keine_kinder'>Nichts anzuzeigen</li>");
+                        elem = $("<li style='display:none class='kk_baum_keine_kinder'>Nichts anzuzeigen</li>");
                     }
                     else
                     {
@@ -265,7 +269,7 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
                 // andernfalls DOM aufbauen
                 else
                 {
-                    // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                    // Erstell Button vor Kk
                     if(zeigeErstellButtons)
                     {
                         elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
@@ -277,34 +281,39 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
                         var kkListItem = "<li style='display:none'>";
                         if(zeigeCheckboxes)
                         {
-                            // Kind Karteikarte mit Checkbox in den DOM haengen
+                            // Kind Karteikarte mit Checkbox
                             kkListItem += "<input type='checkbox' data-kkid='"+arr[i][paramId]+"'>";
                         }
-                        // Kind Karteikarte ohne Checkbox in den DOM haengen
+                        // Kind Karteikarte ohne Checkbox
                         kkListItem += "<a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>";
                         kkListItem = $(kkListItem);
                         kkListItem.appendTo(vaterElem).slideDown();
                         
-                        // Click Handler
+                        // Click Handler fuer Kk Knoten
                         var f = function(arr, kkListItem, i) {
                             kkListItem.find("a").click(function(e) {
-                                // Falls noch nicht geschehen, lade Kindkarteikarten rekursiv
+                                var klappeAus;
+                                var ajax;
+                                // Lade Kindkarteikarten rekursiv, falls noch nicht geschehen
                                 if($(e.target).siblings("ul").length == 0)
                                 {
-                                    ladeKindKarteikarten(arr[i][paramId], kkListItem, zeigeErstellButtons, extraClickFunction, zeigeCheckboxes);
+                                    ajax = ladeKindKarteikarten(arr[i][paramId], kkListItem, zeigeErstellButtons, extraClickFunction, zeigeCheckboxes);
+                                    klappeAus = true;
                                 }
-                                // Andernfalls klappe Kindkarteikarten ein
+                                // Andernfalls Kindkarteikarten einklappen und aushaengen
                                 else
                                 {
                                     $(e.target).siblings("ul").slideUp("normal", function() { $(this).remove() });
+                                    klappeAus = false;
                                 }
-                                extraClickFunction(arr, kkListItem, i, e);
+                                // Vom Aufrufer definierte Funktion ausfuehren
+                                extraClickFunction(arr, kkListItem, i, e, ajax, klappeAus);
                                 // Ausbreitung des Events verhindern
                                 e.stopPropagation();
                             });
                         }
                         f(arr, kkListItem, i);
-                        // Pseudo-Kind zum Hinzufuegen einer neuen Karteikarte
+                        // Erstell Button nach Kk
                         if(zeigeErstellButtons)
                         {
                             elem = $("<li style='display:none'><a class='inhaltsvz_kk_erstellen'>Erstellen</a></li>");
@@ -317,6 +326,7 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
             params
     );
 }
+
 function registerErstellKkHandler(domErstellenLink){
 	// Prüfen ob erlaubt
     if(jsonBenutzer[paramId] == veranstaltungsObject[paramErsteller][paramId] || 
@@ -374,7 +384,7 @@ function sortiereKarteikartenIDs(jsonKkIDs){
 	return newIdArray;
 }
 
-function displayKarteikarte(id, callback,reload){
+function displayKarteikarte(id, callback, reload){
 	//reload = true, wenn neu geladen werden soll
     // Karteikarte schon in der Liste?
     kkDiv = $("#kk_all").find("[data-kkid=" + id + "]");
@@ -386,11 +396,10 @@ function displayKarteikarte(id, callback,reload){
     }
     else
     {
-    	if(reload){
+    	if(reload)
+    	{
     		kkDiv.remove();
     	}
-    	
-    	
     	destroyCKeditors($("#kk_all"));
     	$("#kk_all").children().fadeOut(200).promise().done(function(){
     		$("#kk_all").empty();
@@ -408,10 +417,9 @@ function displayKarteikarte(id, callback,reload){
 
         	$.when(ajax).done(function(){
         		loadAfterKk(id);
-        		if(callback != undefined) callback.call();
+        		if(callback != undefined) callback();
         	});
     	});
-    	
     }
 }
 displayingAfterKK = false;

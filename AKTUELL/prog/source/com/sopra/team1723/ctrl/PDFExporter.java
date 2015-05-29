@@ -1,32 +1,13 @@
 package com.sopra.team1723.ctrl;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.nio.file.WatchEvent.Kind;
-import java.nio.file.WatchEvent.Modifier;
-import java.util.Iterator;
 import java.util.List;
-
-import javafx.scene.shape.Line;
-import jdk.internal.org.xml.sax.InputSource;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
-import org.jsoup.select.Elements;
-import org.jsoup.select.NodeVisitor;
 
 import com.sopra.team1723.data.Karteikarte;
 

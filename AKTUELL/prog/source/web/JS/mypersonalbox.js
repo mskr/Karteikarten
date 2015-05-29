@@ -12,6 +12,24 @@ $(document).ready(function() {
 	$(".bn_header").click(function() {
 		$(".bn_container").slideToggle("slow");
 	});
+	
+	$(".r-usercontainer-toggle").click(function(e) {
+	    if($("#r-usercontainer-toggle-radio").prop("checked"))
+	    {
+	        $("#r-usercontainer-toggle-radio").prop("checked",false);
+            e.preventDefault();
+            e.stopPropagation();
+	    }
+	});
+	
+	$(".r-bn-toggle").click(function(e) {
+	    if($("#r-bn-toggle-radio").prop("checked"))
+	    {
+            $("#r-bn-toggle-radio").prop("checked", false);
+            e.preventDefault();
+            e.stopPropagation();
+	    }
+	});
 
 });
 

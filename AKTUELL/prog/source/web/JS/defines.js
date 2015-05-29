@@ -108,6 +108,10 @@ var paramType = "type";
 
 //Karteikarte
 var paramVerweise = "verweise";
+var paramVerweisVoraussetzung = "V_Voraussetzung";
+var paramVerweisWeiterfuehrend = "V_Zusatzinfo";
+var paramVerweisUebung = "V_Uebung";
+var paramVerweisSonstiges = "V_Sonstiges";
 var paramURLKkID = "kkId";
 var paramKkText = "TEXT";
 var paramKkBild = "BILD";
