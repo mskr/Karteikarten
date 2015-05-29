@@ -96,6 +96,16 @@ public class Datenbankmanager implements IDatenbankmanager
                     || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
                 defaultConnection = connection;
         }
+        System.out.println("Keine Neo4j Connection frei! Warte in Queue");
+        try
+        {
+            throw new Exception("No Connection free");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        
         defaultConnection.getValue().lock();
         return defaultConnection;
     }
@@ -117,6 +127,16 @@ public class Datenbankmanager implements IDatenbankmanager
                     || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
                 defaultConnection = connection;
         }
+        System.out.println("Keine SQL Connection frei! Warte in Queue.");
+        try
+        {
+            throw new Exception("No Connection free");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        
         defaultConnection.getValue().lock();
         return defaultConnection;
     }
@@ -1918,6 +1938,7 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(ps2);
             closeQuietly(rs2);
             conLock.getValue().unlock();
+            conLockNeo4j.getValue().unlock();
         }
         return karteikarte;
     }
