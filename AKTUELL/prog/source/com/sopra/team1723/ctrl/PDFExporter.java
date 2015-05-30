@@ -10,6 +10,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 
 import com.sopra.team1723.data.Karteikarte;
+import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
+import com.sopra.team1723.data.Tripel;
 import com.sopra.team1723.data.Veranstaltung;
 
 public class PDFExporter
@@ -31,12 +33,16 @@ public class PDFExporter
     private boolean exportNotizen = false;
     private boolean exportKommentare = false;
     private boolean exportAttribute = false;
+    private boolean exportVerweise = false;
     
-    public PDFExporter(String workingDir, String servletContextPath, Veranstaltung vn, boolean exportNotizen, boolean exportKommentare, boolean exportAttribute)
+    public PDFExporter(String workingDir, String servletContextPath, Veranstaltung vn, 
+            boolean exportNotizen, boolean exportKommentare, boolean exportAttribute, boolean exportVerweise)
     {
         this.exportNotizen = exportNotizen;
         this.exportKommentare = exportKommentare;
         this.exportAttribute = exportAttribute;
+        this.exportVerweise = exportVerweise;
+        
         this.workingDir = workingDir + "/";
         this.vn = vn;
         this.servletContextPath = servletContextPath;
@@ -495,11 +501,12 @@ public class PDFExporter
     {
         if(!peth.creationFinished())
             return;
+        System.out.println("Lösche erstellte Dateien.");
         
         if(peth.creationSucessfull())
-            FileUtils.deleteQuietly(new File(workingDir + subFolder + "/" + fileName));
+            FileUtils.deleteQuietly(new File(workingDir + fileName));
         
-        FileUtils.deleteQuietly(new File(workingDir + subFolder + "/" + texFileName));
+        FileUtils.deleteQuietly(new File(workingDir + texFileName));
     }
 
     /**

@@ -896,11 +896,12 @@ public class KarteikartenServlet extends ServletController
 
         // Prüfen, ob noch alte dateien erzeugt wurden
         PDFExporter pexp = (PDFExporter) aktuelleSession.getAttribute(sessionAttributePDFExporter);
+        System.out.println("Last exporter: " + pexp);
         if (pexp != null)
-            pexp.cleanUp(true);
+            pexp.deleteFiles();
 
         pexp = new PDFExporter(contextPath + "/" + PDFPfad, contextPath, v, Boolean.valueOf(options[0]),
-                Boolean.valueOf(options[1]), Boolean.valueOf(options[2]));
+                Boolean.valueOf(options[1]), Boolean.valueOf(options[2]),Boolean.valueOf(options[3]));
 
         appendKKExportRecursive(dbManager, pexp, 0, v.getErsteKarteikarte());
         pexp.startConvertToPDFFile();
@@ -943,6 +944,7 @@ public class KarteikartenServlet extends ServletController
             return;
         // Vater hinzufügen
         Karteikarte k = dbManager.leseKarteikarte(vaterKkId);
+        
         if (k == null)
             return;
         pexp.appendKarteikarte(k, depth);

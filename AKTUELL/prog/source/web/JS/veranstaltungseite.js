@@ -93,6 +93,7 @@ function exportKkVonVn(vnId)
 	options.push($('#kk_export_opt_notizen').is(':checked'));
 	options.push($('#kk_export_opt_komm').is(':checked'));
 	options.push($('#kk_export_opt_attrAnz').is(':checked'));
+	options.push($('#kk_export_opt_Querverweise').is(':checked'));
 	
 	params = {};
 	params[paramId] = vnId;
