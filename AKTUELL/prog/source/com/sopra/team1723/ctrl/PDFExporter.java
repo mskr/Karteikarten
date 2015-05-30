@@ -3,6 +3,7 @@ package com.sopra.team1723.ctrl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -12,6 +13,7 @@ import org.jsoup.nodes.*;
 import com.sopra.team1723.data.Karteikarte;
 import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
 import com.sopra.team1723.data.Tripel;
+import com.sopra.team1723.data.Tupel;
 import com.sopra.team1723.data.Veranstaltung;
 
 public class PDFExporter
@@ -221,8 +223,97 @@ public class PDFExporter
 
             default:
                 return false;
-        }        
+        }
+        
+        dataStr+=exportVerweise(kk);
+                
         return true;
+    }
+    
+    private String exportVerweise(Karteikarte kk)
+    {
+        ArrayList<Tripel<BeziehungsTyp, Integer, String>> arr = new ArrayList<>();
+        arr.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.V_VORRAUSSETZUNG, 28, "Blablablabla"));
+        arr.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.V_VORRAUSSETZUNG, 13, "Blablablabla"));
+        kk.setVerweise(arr);
+        if(!exportVerweise ||  kk.getVerweise().size() == 0)
+            return "";
+        
+        String dataStr = "\\paragraph{Querverweise}" + newLineWithSeparation
+                + "\\begin{description}" + newLineWithSeparation;
+
+        ArrayList<Tupel<Integer, String>> vorraussetzung = new ArrayList<>();
+        ArrayList<Tupel<Integer, String>> zusatz = new ArrayList<>();
+        ArrayList<Tupel<Integer, String>> sonstiges = new ArrayList<>();
+        ArrayList<Tupel<Integer, String>> uebung = new ArrayList<>();
+        
+        for( Tripel<BeziehungsTyp, Integer, String> v: kk.getVerweise())
+        {
+            if(v.x == BeziehungsTyp.V_VORRAUSSETZUNG)
+                vorraussetzung.add(new Tupel<Integer, String>(v.y, v.z));
+            else if(v.x == BeziehungsTyp.V_UEBUNG)
+                uebung.add(new Tupel<Integer, String>(v.y, v.z));
+            else if(v.x == BeziehungsTyp.V_SONSTIGES)
+                sonstiges.add(new Tupel<Integer, String>(v.y, v.z));
+            else if(v.x == BeziehungsTyp.V_ZUSATZINFO)
+                zusatz.add(new Tupel<Integer, String>(v.y, v.z));
+        }
+
+        if (vorraussetzung.size() > 0)
+        {
+            dataStr += "\\item[Vorraussetzung:]" + newLineWithSeparation;
+
+            for (int i = 0; i < vorraussetzung.size(); i++)
+            {
+                Tupel<Integer, String> t = vorraussetzung.get(i);
+                dataStr += "\\nameref{kk_" + t.x +"}";
+                if (i < vorraussetzung.size() - 1)
+                    dataStr += ", ";
+            }
+            dataStr += newLineWithSeparation;
+        }
+        if (uebung.size() > 0)
+        {
+            dataStr += "\\item[\"Ubung:]" + newLineWithSeparation;
+
+            for (int i = 0; i < uebung.size(); i++)
+            {
+                Tupel<Integer, String> t = uebung.get(i);
+                dataStr += "\\nameref{kk_" + t.x +"}";
+                if (i < uebung.size() - 1)
+                    dataStr += ", ";
+            }
+            dataStr += newLineWithSeparation;
+        }
+        if (zusatz.size() > 0)
+        {
+            dataStr += "\\item[Zusatzinfo:]" + newLineWithSeparation;
+
+            for (int i = 0; i < zusatz.size(); i++)
+            {
+                Tupel<Integer, String> t = zusatz.get(i);
+                dataStr += "\\nameref{kk_" + t.x +"}";
+                if (i < zusatz.size() - 1)
+                    dataStr += ", ";
+            }
+            dataStr += newLineWithSeparation;
+        }
+        if (sonstiges.size() > 0)
+        {
+            dataStr += "\\item[Sonstiges:]" + newLineWithSeparation;
+
+            for (int i = 0; i < sonstiges.size(); i++)
+            {
+                Tupel<Integer, String> t = sonstiges.get(i);
+                dataStr += "\\nameref{kk_" + t.x +"}";
+                if (i < sonstiges.size() - 1)
+                    dataStr += ", ";
+            }
+            dataStr += newLineWithSeparation;
+        }
+
+        dataStr +=  "\\end{description}" + newLineWithSeparation;
+        return dataStr;
     }
     public PDFExportThreadHandler getExecutor()
     {
@@ -417,6 +508,7 @@ public class PDFExporter
                 newData = "";
                 break;
         }
+        newData += "\\label{kk_" + kk.getId() + "}";
         return newData + newLineWithSeparation + data;
     }
 
@@ -431,7 +523,7 @@ public class PDFExporter
 
             String latexStr = "\\begin{figure}[H] " + newLineWithSeparation + "  \\centering" + newLineWithSeparation
                     + "  \\includegraphics[width=0.5\\linewidth]{" + kk.getId() + ".png}" + newLineWithSeparation
-                    + "  \\caption{" + kk.getTitel() + createAttribute(kk) + "}" + newLineWithSeparation + "  \\label{fig:kk_bild"
+                    + "  \\caption{" + kk.getTitel() + createAttribute(kk) + "}" + newLineWithSeparation + "  \\label{kk_"
                     + kk.getId() + "}" + newLineWithSeparation + "\\end{figure}" + newLineWithSeparation;
             
             

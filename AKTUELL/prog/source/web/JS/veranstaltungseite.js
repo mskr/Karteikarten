@@ -101,10 +101,17 @@ function exportKkVonVn(vnId)
 	return ajaxCall(karteikartenServlet, actionExportSkript, function(response){
 		$(".kk_export_pdf_link").attr("href",response[paramPDFFileName]);
 		$(".kk_export_tex_link").attr("href",response[paramTexFileName]);
+		$(".kk_export_pdf_link").show();
 		$("#kk_export_popup").find("#kk_start_export").slideUp();
 		$("#kk_export_popup").find(".kk_export_files").slideDown();
-	}, params, function() {
-		$("#kk_export_ok").trigger("click");
+		$("#kk_export_error").hide();
+	}, params, function(error, response) {
+		$("#kk_export_error").slideDown();
+		$(".kk_export_pdf_link").hide();
+		$(".kk_export_tex_link").attr("href",response[paramTexFileName]);
+		$("#kk_export_popup").find("#kk_start_export").slideUp();
+		$("#kk_export_popup").find(".kk_export_files").slideDown();
+		
 	}, undefined, undefined, 20000);
 }
 
