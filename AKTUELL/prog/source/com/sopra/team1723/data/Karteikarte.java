@@ -19,7 +19,7 @@ public class Karteikarte implements IjsonObject {
     public Karteikarte(int id, String titel, Calendar aenderungsdatum, String inhalt,
             KarteikartenTyp typ, int veranstaltung, int bewertung, boolean istSatz, boolean istLemma, boolean istBeweis,
             boolean istDefinition, boolean istWichtig, boolean istGrundlage, boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel,
-            boolean istUebung, ArrayList<String[]> verweise)
+            boolean istUebung, ArrayList<Tripel<BeziehungsTyp,Integer,String>> verweise)
     {
         this();
         this.id = id;
@@ -49,7 +49,7 @@ public class Karteikarte implements IjsonObject {
 	// Konstruktor der verwendet wird wenn eine Karteikarte erstellt wird.
     public Karteikarte(String titel, String inhalt, KarteikartenTyp typ, int veranstaltung,
             boolean istSatz, boolean istLemma, boolean istBeweis, boolean istDefinition, boolean istWichtig, boolean istGrundlage,
-            boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel, boolean istUebung, ArrayList<String[]> verweise)
+            boolean istZusatzinfo, boolean istExkurs, boolean istBeispiel, boolean istUebung, ArrayList<Tripel<BeziehungsTyp,Integer,String>> verweise)
     {
         this();
         this.titel = titel;
@@ -111,10 +111,8 @@ public class Karteikarte implements IjsonObject {
      */
     public Karteikarte() {
         super();
-        // TODO Entfernen
-        setVerweise(new String[]{"zusatz","vorraussetzung","zusatz","zusatz"}, 
-                new String[]{"1","5","9","14"}, 
-                new String[]{"test","test2","test3","test4"});
+
+
     }
 
     /**
@@ -160,7 +158,7 @@ public class Karteikarte implements IjsonObject {
     private boolean istBeispiel;
     private boolean istUebung;
     
-    private ArrayList<String[]> verweise;
+    private ArrayList<Tripel<BeziehungsTyp,Integer,String>> verweise;
        
     
     public enum BeziehungsTyp {
@@ -384,19 +382,11 @@ public class Karteikarte implements IjsonObject {
      * Erlaubte typen: vorraussetzung, zusatz, sonstiges, uebung
      * @param verweise
      */
-    public void setVerweise(String[] types, String[] ids, String[] namen){
-        if(types.length != ids.length && ids.length != namen.length)
-            return;
-        
-        verweise = new ArrayList<String[]>();
-        for(int i = 0; i < types.length;i++)
-        {
-            String[] verweis = {types[i],ids[i],namen[i]};
-            verweise.add(verweis);
-        }
+    public void setVerweise(ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise){
+        this.verweise = verweise;
     }
     
-    public ArrayList<String[]> getVerweise()
+    public ArrayList<Tripel<BeziehungsTyp, Integer, String>> getVerweise()
     {
         return verweise;
     }
@@ -454,11 +444,11 @@ public class Karteikarte implements IjsonObject {
         jo.put(ParamDefines.Attribute, arr);
         
         JSONArray arr2 = new JSONArray();
-        for(String[] verw : verweise){
+        for(Tripel<BeziehungsTyp,Integer,String> verw : verweise){
             JSONObject o = new JSONObject();
-            o.put(ParamDefines.Type, verw[0]);
-            o.put(ParamDefines.Id, verw[1]);
-            o.put(ParamDefines.Titel, verw[2]);
+            o.put(ParamDefines.Type, verw.x);
+            o.put(ParamDefines.Id, verw.y);
+            o.put(ParamDefines.Titel, verw.z);
             arr2.add(o);
         }
         jo.put(ParamDefines.Verweise, arr2);

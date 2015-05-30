@@ -1450,8 +1450,11 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
+                
+                Karteikarte kk = leseKarteikarte(rs.getInt("Karteikarte"));
+                
                 benachrichtigung = new BenachrKarteikAenderung(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
-                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseKarteikarte(rs.getInt("Karteikarte")));
+                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), kk);
             }
         }
         catch (SQLException e)
@@ -1893,15 +1896,15 @@ public class Datenbankmanager implements IDatenbankmanager
                     + " WHERE id(n) = {1} RETURN id(m) AS zielID, type(r) AS Typ");
             ps.setInt(1, karteikID);
             rs = ps.executeQuery();
-            ArrayList<String[]> verweise = new ArrayList<String[]>();
+            ArrayList<Tripel<BeziehungsTyp,Integer,String>> verweise = new ArrayList<Tripel<BeziehungsTyp,Integer,String>>();
             while(rs.next()){
                 ps2 = conMysql.prepareStatement("SELECT Titel FROM Karteikarte WHERE ID = ?");
                 ps2.setInt(1, rs.getInt("zielID"));
                 rs2 = ps2.executeQuery();
                 if(!rs2.next())
                     return null;
-                String[] verweis = {rs.getString("Typ"), String.valueOf(rs.getInt("zielID")), rs2.getString("Titel")};
-                verweise.add(verweis);
+                verweise.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.valueOf(rs.getString("Typ")), 
+                        rs.getInt("zielID"), rs2.getString("Titel")));
             }
             
             closeQuietly(ps);
@@ -1928,6 +1931,10 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
+            karteikarte = null;
+            e.printStackTrace();
+        }
+        catch(IllegalArgumentException e){
             karteikarte = null;
             e.printStackTrace();
         }
@@ -2022,7 +2029,10 @@ public class Datenbankmanager implements IDatenbankmanager
                 while (rs.next())
                 {
                     aktuelleKarteikarte = rs.getInt("ID");
-                    kindKarteikarten.put(i, leseKarteikarte(aktuelleKarteikarte));
+                    Karteikarte aktKarteik = leseKarteikarte(aktuelleKarteikarte);
+                    if(aktKarteik == null)
+                        return null;
+                    kindKarteikarten.put(i, aktKarteik);
                     --anzNachfolger;
                     ++i;
                 }
@@ -2063,7 +2073,10 @@ public class Datenbankmanager implements IDatenbankmanager
                 }
                 while (bruderKarteik == -1);
 
-                kindKarteikarten.put(i, leseKarteikarte(bruderKarteik));
+                Karteikarte bruderKk = leseKarteikarte(bruderKarteik);
+                if(bruderKk == null)
+                    return null;
+                kindKarteikarten.put(i, bruderKk);
                 aktuelleKarteikarte = bruderKarteik;
                 ++i;
                 --anzNachfolger;
@@ -2117,7 +2130,10 @@ public class Datenbankmanager implements IDatenbankmanager
                     else if (aktuelleKarteikarte == -1)
                         return kindKarteikarten;
 
-                    kindKarteikarten.put(i, leseKarteikarte(aktuelleKarteikarte));
+                    Karteikarte aktKarteik = leseKarteikarte(aktuelleKarteikarte);
+                    if(aktKarteik == null)
+                        return null;
+                    kindKarteikarten.put(i, aktKarteik);
                     --anzVorgänger;
                     ++i;
                     continue;
@@ -2140,7 +2156,11 @@ public class Datenbankmanager implements IDatenbankmanager
                     if (!rs.next())
                     {
                         abbruch = true;
-                        kindKarteikarten.put(i, leseKarteikarte(aktuelleKarteikarte));
+                        
+                        Karteikarte aktKarteik = leseKarteikarte(aktuelleKarteikarte);
+                        if(aktKarteik == null)
+                            return null;
+                        kindKarteikarten.put(i, aktKarteik);
                         --anzVorgänger;
                         ++i;
                         closeQuietly(ps);
@@ -2285,7 +2305,7 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException, IllegalArgumentException
+    public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException
     {
         Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
         Connection conNeo4j = conLockNeo4j.getKey();
@@ -2308,6 +2328,7 @@ public class Datenbankmanager implements IDatenbankmanager
             if (!rs.next())
                 return insertedId;
             insertedId = rs.getInt("Id");
+            karteik.setId(insertedId);
 
             closeQuietly(ps);
 
@@ -2343,9 +2364,9 @@ public class Datenbankmanager implements IDatenbankmanager
                 throw new SQLException();
             }
             
-//            for(int i=0 ; i<karteik.getVerweise().size(); ++i){
-//                connectKk(karteik.getId(), Integer.valueOf(karteik.getVerweise().get(i)[1]), BeziehungsTyp.valueOf(karteik.getVerweise().get(i)[2]), conNeo4j);
-//            }
+            for(int i=0 ; i<karteik.getVerweise().size(); ++i){
+                connectKk(karteik.getId(), karteik.getVerweise().get(i).y, karteik.getVerweise().get(i).x, conNeo4j);
+            }
 
             closeQuietly(ps);
 

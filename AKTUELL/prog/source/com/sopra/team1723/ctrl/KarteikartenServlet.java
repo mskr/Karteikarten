@@ -27,23 +27,27 @@ import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
 /**
  * Verwaltet die Karteikarten
  */
-public class KarteikartenServlet extends ServletController {
+public class KarteikartenServlet extends ServletController
+{
 
     /**
      * Verwaltet die Karteikarten
      */
-    public KarteikartenServlet() {
+    public KarteikartenServlet()
+    {
     }
+
     /**
      * Aus der Datenbank wird mit Hilfe der KarteikartenID die Informationen
-     * bezuglich der Karteikarte gelesen und zuruckgegeben. Falls
-     * es diese Karteikarte in der Datenbank nicht gibt, gibt die Methode
-     * false zuruck
-     * @param request 
-     * @param response 
+     * bezuglich der Karteikarte gelesen und zuruckgegeben. Falls es diese
+     * Karteikarte in der Datenbank nicht gibt, gibt die Methode false zuruck
+     * 
+     * @param request
+     * @param response
      * @return
      */
-    private void getKarteikarteByID(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    private void getKarteikarteByID(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -52,32 +56,35 @@ public class KarteikartenServlet extends ServletController {
         JSONObject jo;
 
         int karteikartenID = -1;
-        try{
+        try
+        {
             karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
-        }    
-        catch(NumberFormatException e){
+        }
+        catch (NumberFormatException e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
 
-        if(!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response) &&
-                aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN){
+        if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response)
+                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
         Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
-        Kk.setHatBewertet(dbManager.hatKarteikarteBewertet(karteikartenID  , aktuellerBenutzer.getId()));
+        Kk.setHatBewertet(dbManager.hatKarteikarteBewertet(karteikartenID, aktuellerBenutzer.getId()));
         jo = Kk.toJSON(true);
 
         outWriter.print(jo);
 
-
     }
 
-    private void getKarteikarteVorgaenger(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    private void getKarteikarteVorgaenger(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -86,33 +93,43 @@ public class KarteikartenServlet extends ServletController {
         JSONObject jo;
 
         int karteikartenID = -1;
-        try{
+        try
+        {
             karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
-        }    
-        catch(NumberFormatException e){
+        }
+        catch (NumberFormatException e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
 
-        if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN &&
-                !pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response))
+        if (aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN
+                && !pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response))
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
         // TODO
-        Map<Integer,Karteikarte> Kks = dbManager.leseVorgaenger(karteikartenID, 5);
-        List<Karteikarte> kk = new ArrayList<Karteikarte>(Kks.values());
-        for(Karteikarte k :kk)
-            k.setHatBewertet(dbManager.hatKarteikarteBewertet(k.getId()  , aktuellerBenutzer.getId()));
+        Map<Integer, Karteikarte> Kks = dbManager.leseVorgaenger(karteikartenID, 5);
+        if (Kks == null)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+        }
 
-        jo =  JSONConverter.toJson(kk, true);
+        List<Karteikarte> kk = new ArrayList<Karteikarte>(Kks.values());
+        for (Karteikarte k : kk)
+            k.setHatBewertet(dbManager.hatKarteikarteBewertet(k.getId(), aktuellerBenutzer.getId()));
+
+        jo = JSONConverter.toJson(kk, true);
         outWriter.print(jo);
     }
-    private void getKarteikarteNachfolger(HttpServletRequest request, HttpServletResponse response) throws IOException{
+
+    private void getKarteikarteNachfolger(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -121,45 +138,57 @@ public class KarteikartenServlet extends ServletController {
         JSONObject jo;
 
         int karteikartenID = -1;
-        try{
+        try
+        {
             karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
-        }    
-        catch(NumberFormatException e){
+        }
+        catch (NumberFormatException e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
 
-        if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN &&
-                !pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response))
+        if (aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN
+                && !pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response))
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
 
-        Map<Integer,Karteikarte> Kks = dbManager.leseNachfolger(karteikartenID, 5);
-        List<Karteikarte> kk = new ArrayList<Karteikarte>(Kks.values());
-        for(Karteikarte k :kk){
-            System.out.println(k.getId());
-            k.setHatBewertet(dbManager.hatKarteikarteBewertet(k.getId()  , aktuellerBenutzer.getId()));
+        Map<Integer, Karteikarte> Kks = dbManager.leseNachfolger(karteikartenID, 5);
+        if (Kks == null)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
         }
-        jo =  JSONConverter.toJson(kk, true);
+
+        List<Karteikarte> kk = new ArrayList<Karteikarte>(Kks.values());
+        for (Karteikarte k : kk)
+        {
+            System.out.println(k.getId());
+            k.setHatBewertet(dbManager.hatKarteikarteBewertet(k.getId(), aktuellerBenutzer.getId()));
+        }
+        jo = JSONConverter.toJson(kk, true);
         outWriter.print(jo);
     }
 
     /**
-     * Aus der Datenbank wird die gewunschte Karteikarte gelesen. Der
-     * Benutzer kann diese nun mit einer Zahl bewerten. die Bewertung
-     * wird dann in der Datenbank gespeichert.Falls es diese Karteikarte
-     * in der Datenbank nicht gibt, gibt die Methode false zuruck
-     * @param request 
-     * @param response 
+     * Aus der Datenbank wird die gewunschte Karteikarte gelesen. Der Benutzer
+     * kann diese nun mit einer Zahl bewerten. die Bewertung wird dann in der
+     * Datenbank gespeichert.Falls es diese Karteikarte in der Datenbank nicht
+     * gibt, gibt die Methode false zuruck
+     * 
+     * @param request
+     * @param response
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
-    private void karteikarteBewerten(HttpServletRequest request, HttpServletResponse response, int bewertung) throws IOException {
+    private void karteikarteBewerten(HttpServletRequest request, HttpServletResponse response, int bewertung)
+            throws IOException
+    {
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -167,8 +196,7 @@ public class KarteikartenServlet extends ServletController {
 
         String karteikIdString = request.getParameter(ParamDefines.Id);
 
-
-        if(isEmpty(karteikIdString))
+        if (isEmpty(karteikIdString))
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
@@ -186,14 +214,14 @@ public class KarteikartenServlet extends ServletController {
             outWriter.print(jo);
             return;
         }
-        if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN &&
-                !pruefeFuerVeranstDerKarteikEingeschrieben(karteikId, request, response))
+        if (aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN
+                && !pruefeFuerVeranstDerKarteikEingeschrieben(karteikId, request, response))
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
-        if(dbManager.bewerteKarteikarte(karteikId, bewertung, aktuellerBenutzer.getId()))
+        if (dbManager.bewerteKarteikarte(karteikId, bewertung, aktuellerBenutzer.getId()))
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             outWriter.print(jo);
@@ -209,40 +237,46 @@ public class KarteikartenServlet extends ServletController {
 
     /**
      * Aus der Datenbank wird mit Hilfe der KarteikartenID die Informationen
-     * bezuglich der Karteikarte gelesen und zuruckgegeben. Der
-     * Benutzer kann diese nun andern und die geanderten Daten werden
-     * in der Datenbank abgespeichert.Falls es diese Karteikarte in der
-     * Datenbank nicht gibt, gibt die Methode false zuruck
-     * @param request 
-     * @param response 
+     * bezuglich der Karteikarte gelesen und zuruckgegeben. Der Benutzer kann
+     * diese nun andern und die geanderten Daten werden in der Datenbank
+     * abgespeichert.Falls es diese Karteikarte in der Datenbank nicht gibt,
+     * gibt die Methode false zuruck
+     * 
+     * @param request
+     * @param response
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
-    private boolean karteikarteBearbeiten(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    	HttpSession aktuelleSession = req.getSession();
+    private boolean karteikarteBearbeiten(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
         JSONObject jo = null;
 
-        try{    
+        try
+        {
             String titel = req.getParameter(ParamDefines.Titel);
             String inhalt = "";
             String uploadedID = "";
             int kkID = Integer.parseInt(req.getParameter(ParamDefines.Id));
             KarteikartenTyp kkTyp;
             String typ = req.getParameter(ParamDefines.Type);
-            System.out.println("KAREIKARTEN TYPE: "+ typ);
-            if(typ.equals("mp4")){
+            System.out.println("KAREIKARTEN TYPE: " + typ);
+            if (typ.equals("mp4"))
+            {
                 kkTyp = KarteikartenTyp.VIDEO;
                 uploadedID = req.getParameter(ParamDefines.UploadID);
             }
-            else if(typ.equals("jpg") || typ.equals("png")){
+            else if (typ.equals("jpg") || typ.equals("png"))
+            {
                 kkTyp = KarteikartenTyp.BILD;
                 uploadedID = req.getParameter(ParamDefines.UploadID);
             }
-            else if(typ.equals("")){
+            else if (typ.equals(""))
+            {
                 kkTyp = KarteikartenTyp.TEXT;
                 inhalt = req.getParameter(ParamDefines.Inhalt);
             }
@@ -255,30 +289,34 @@ public class KarteikartenServlet extends ServletController {
 
             String[] attribute = req.getParameter(ParamDefines.Attribute).split(",");
 
-            for(int i=0; i<attribute.length; ++i){
+            for (int i = 0; i < attribute.length; ++i)
+            {
                 bAttribute[i] = Boolean.valueOf(attribute[i]);
             }
 
-            if(!istModeratorDozentOderAdmin(aktuellerBenutzer,veranstaltung,dbManager))
+            if (!istModeratorDozentOderAdmin(aktuellerBenutzer, veranstaltung, dbManager))
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
                 outWriter.print(jo);
                 return false;
             }
 
+            Karteikarte karteikarte = new Karteikarte(kkID, titel, inhalt, kkTyp, veranstaltung, bAttribute[0],
+                    bAttribute[1], bAttribute[2], bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6],
+                    bAttribute[7], bAttribute[8], bAttribute[9]);
 
-            Karteikarte karteikarte = new Karteikarte(kkID, titel,inhalt,kkTyp,veranstaltung,bAttribute[0],bAttribute[1],bAttribute[2],
-                    bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6], bAttribute[7], bAttribute[8], bAttribute[9]);   
-
-           System.out.println(karteikarte.toString());
-            if(kkTyp == KarteikartenTyp.VIDEO || kkTyp == KarteikartenTyp.BILD){
+            System.out.println(karteikarte.toString());
+            if (kkTyp == KarteikartenTyp.VIDEO || kkTyp == KarteikartenTyp.BILD)
+            {
                 String relativerPfad = "";
                 String relativerNeuerPfad = "";
-                if(kkTyp == KarteikartenTyp.VIDEO){
+                if (kkTyp == KarteikartenTyp.VIDEO)
+                {
                     relativerPfad = dirKKVideo + uploadedID + ".mp4";
                     relativerNeuerPfad = dirKKVideo + kkID + ".mp4";
                 }
-                else{
+                else
+                {
                     relativerPfad = dirKKBild + uploadedID + ".png";
                     relativerNeuerPfad = dirKKBild + kkID + ".png";
                 }
@@ -291,46 +329,55 @@ public class KarteikartenServlet extends ServletController {
 
                 String absolutePath = contextPath + relativerPfad;
                 String absoluteNeuerPfad = contextPath + relativerNeuerPfad;
-                
-                //delete old file first if exists, check absoluteNeuerPfad therefore
+
+                // delete old file first if exists, check absoluteNeuerPfad
+                // therefore
                 File f = new File(absoluteNeuerPfad);
-                if(f.exists() && !f.isDirectory()) {
-                	//delete if exists
-                	f.delete();
+                if (f.exists() && !f.isDirectory())
+                {
+                    // delete if exists
+                    f.delete();
                 }
-                
+
                 File oldName = new File(absolutePath);
                 File newName = new File(absoluteNeuerPfad);
-                System.out.println("alter Filename: "+ absolutePath);
-                System.out.println("neuer Filename: "+ absoluteNeuerPfad);
-               try{
-            	   if(!oldName.renameTo(newName)){
-            		   System.out.println("RENAME DIDNT WORK");
+                System.out.println("alter Filename: " + absolutePath);
+                System.out.println("neuer Filename: " + absoluteNeuerPfad);
+                try
+                {
+                    if (!oldName.renameTo(newName))
+                    {
+                        System.out.println("RENAME DIDNT WORK");
 
-            		   throw new Exception();
-            	   }
-               }
-               catch(SecurityException e){
-            	   	e.printStackTrace();
-            	   	System.out.println("SECURITY EXCEPTION");
-               		jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-               		outWriter.print(jo);
-               }
-               boolean result = dbManager.bearbeiteKarteikarte(karteikarte);
-               if(!result){
-               	jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-              		outWriter.print(jo);
-               }
+                        throw new Exception();
+                    }
+                }
+                catch (SecurityException e)
+                {
+                    e.printStackTrace();
+                    System.out.println("SECURITY EXCEPTION");
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                    outWriter.print(jo);
+                }
+                boolean result = dbManager.bearbeiteKarteikarte(karteikarte);
+                if (!result)
+                {
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                    outWriter.print(jo);
+                }
             }
-
 
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
 
-        } catch(IllegalArgumentException e){
+        }
+        catch (IllegalArgumentException e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
 
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
         }
@@ -339,110 +386,8 @@ public class KarteikartenServlet extends ServletController {
         return true;
     }
 
-    private boolean ueberschriftBearbeiten(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    	 HttpSession aktuelleSession = req.getSession();
-         PrintWriter outWriter = resp.getWriter();
-         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
-         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
-
-         JSONObject jo = null;
-
-         try{    
-             String titel = req.getParameter(ParamDefines.Titel);
-             String inhalt ="";
-             KarteikartenTyp kkTyp = KarteikartenTyp.TEXT;
-             String typ = req.getParameter(ParamDefines.Type);
-             int kkID = Integer.parseInt(req.getParameter(ParamDefines.Id));
-             int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Veranstaltung));
-            
-
-             boolean[] bAttribute = new boolean[AttributTyp.values().length];
-
-             String[] attribute = req.getParameter(ParamDefines.Attribute).split(",");
-
-             for(int i=0; i<attribute.length; ++i){
-                 bAttribute[i] = Boolean.valueOf(attribute[i]);
-             }
-
-             if(!istModeratorDozentOderAdmin(aktuellerBenutzer,veranstaltung,dbManager))
-             {
-                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
-                 outWriter.print(jo);
-                 return false;
-             }
-
-
-             Karteikarte karteikarte = new Karteikarte(kkID,titel,inhalt,kkTyp,veranstaltung,bAttribute[0],bAttribute[1],bAttribute[2],
-                     bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6], bAttribute[7], bAttribute[8], bAttribute[9]);   
-
-             boolean result = dbManager.bearbeiteKarteikarte(karteikarte);
-             if(!result){
-                  jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-                  outWriter.print(jo);
-                  return false;
-             }
-
-
-             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
-             jo.put(ParamDefines.Id, kkID);  // Schicke die karteikarten id zurück!
-
-         } catch(IllegalArgumentException e){
-             e.printStackTrace();
-             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-             outWriter.print(jo);
-             return false;
-
-         } catch(Exception e){
-             e.printStackTrace();
-             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-             outWriter.print(jo);
-             return false;
-         }
-
-         outWriter.print(jo);
-         return true;
-     }
-
-    private boolean karteikarteLoeschen(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
-    }
-
-    /**
-     * @param request 
-     * @param response 
-     * @return
-     */
-    private boolean exportiereKarteikarten(HttpServletRequest request, HttpServletResponse response) {
-        // TODO implement here
-        return false;
-    }
-
-    /**
-     * @param vater 
-     * @param dateiname 
-     * @param bilder 
-     * @param notizen 
-     * @param kommentare 
-     * @param querverweise 
-     * @return
-     */
-    private File exportiereKarteikarten(Karteikarte vater, String dateiname, boolean bilder, boolean notizen, boolean kommentare, boolean querverweise) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * Ein Benutzer erstellt eine Karteikarte und weist ihr verschiedene
-     * Eigenschaften zu. Die Karteikarte bekommt eine individuelle ID.
-     * Auerdem wird gepruft ob es bereits eine Karteikarte mit dem selben
-     * Inhalt gibt.
-     * @param request 
-     * @param response 
-     * @return
-     * @throws IOException 
-     */
-    private void erstelleKarteikarte(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private boolean ueberschriftBearbeiten(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -450,23 +395,141 @@ public class KarteikartenServlet extends ServletController {
 
         JSONObject jo = null;
 
-        try{    
+        try
+        {
+            String titel = req.getParameter(ParamDefines.Titel);
+            String inhalt = "";
+            KarteikartenTyp kkTyp = KarteikartenTyp.TEXT;
+            String typ = req.getParameter(ParamDefines.Type);
+            int kkID = Integer.parseInt(req.getParameter(ParamDefines.Id));
+            int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Veranstaltung));
+
+            boolean[] bAttribute = new boolean[AttributTyp.values().length];
+
+            String[] attribute = req.getParameter(ParamDefines.Attribute).split(",");
+
+            for (int i = 0; i < attribute.length; ++i)
+            {
+                bAttribute[i] = Boolean.valueOf(attribute[i]);
+            }
+
+            if (!istModeratorDozentOderAdmin(aktuellerBenutzer, veranstaltung, dbManager))
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+                outWriter.print(jo);
+                return false;
+            }
+
+            Karteikarte karteikarte = new Karteikarte(kkID, titel, inhalt, kkTyp, veranstaltung, bAttribute[0],
+                    bAttribute[1], bAttribute[2], bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6],
+                    bAttribute[7], bAttribute[8], bAttribute[9]);
+
+            boolean result = dbManager.bearbeiteKarteikarte(karteikarte);
+            if (!result)
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+                return false;
+            }
+
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            jo.put(ParamDefines.Id, kkID); // Schicke die karteikarten id
+                                           // zurück!
+
+        }
+        catch (IllegalArgumentException e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+
+        outWriter.print(jo);
+        return true;
+    }
+
+    private boolean karteikarteLoeschen(HttpServletRequest request, HttpServletResponse response)
+    {
+        // TODO implement here
+        return false;
+    }
+
+    /**
+     * @param request
+     * @param response
+     * @return
+     */
+    private boolean exportiereKarteikarten(HttpServletRequest request, HttpServletResponse response)
+    {
+        // TODO implement here
+        return false;
+    }
+
+    /**
+     * @param vater
+     * @param dateiname
+     * @param bilder
+     * @param notizen
+     * @param kommentare
+     * @param querverweise
+     * @return
+     */
+    private File exportiereKarteikarten(Karteikarte vater, String dateiname, boolean bilder, boolean notizen,
+            boolean kommentare, boolean querverweise)
+    {
+        // TODO implement here
+        return null;
+    }
+
+    /**
+     * Ein Benutzer erstellt eine Karteikarte und weist ihr verschiedene
+     * Eigenschaften zu. Die Karteikarte bekommt eine individuelle ID. Auerdem
+     * wird gepruft ob es bereits eine Karteikarte mit dem selben Inhalt gibt.
+     * 
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    private void erstelleKarteikarte(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+
+        JSONObject jo = null;
+
+        try
+        {
             String titel = req.getParameter(ParamDefines.Titel);
             String inhalt = "";
             String uploadedID = "";
 
             KarteikartenTyp kkTyp;
             String typ = req.getParameter(ParamDefines.Type);
-            System.out.println("KAREIKARTEN TYPE: "+ typ);
-            if(typ.equals("mp4")){
+            System.out.println("KAREIKARTEN TYPE: " + typ);
+            if (typ.equals("mp4"))
+            {
                 kkTyp = KarteikartenTyp.VIDEO;
                 uploadedID = req.getParameter(ParamDefines.UploadID);
             }
-            else if(typ.equals("jpg") || typ.equals("png")){
+            else if (typ.equals("jpg") || typ.equals("png"))
+            {
                 kkTyp = KarteikartenTyp.BILD;
                 uploadedID = req.getParameter(ParamDefines.UploadID);
             }
-            else if(typ.equals("")){
+            else if (typ.equals(""))
+            {
                 kkTyp = KarteikartenTyp.TEXT;
                 inhalt = req.getParameter(ParamDefines.Inhalt);
             }
@@ -474,51 +537,61 @@ public class KarteikartenServlet extends ServletController {
                 throw new Exception();
 
             int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Veranstaltung));
-            System.out.println("UPLOADED ID: "+ uploadedID);
+            System.out.println("UPLOADED ID: " + uploadedID);
             int vaterKK = Integer.parseInt(req.getParameter(ParamDefines.VaterKK));
             int ueberliegendeBruderKK = Integer.parseInt(req.getParameter(ParamDefines.BruderKK));
 
-            if(vaterKK == -1 && ueberliegendeBruderKK == -1)
+            if (vaterKK == -1 && ueberliegendeBruderKK == -1)
                 throw new Exception();
 
             boolean[] bAttribute = new boolean[AttributTyp.values().length];
 
             String[] attribute = req.getParameter(ParamDefines.Attribute).split(",");
 
-            for(int i=0; i<attribute.length; ++i){
+            for (int i = 0; i < attribute.length; ++i)
+            {
                 bAttribute[i] = Boolean.valueOf(attribute[i]);
             }
 
-            if(!istModeratorDozentOderAdmin(aktuellerBenutzer,veranstaltung,dbManager))
+            if (!istModeratorDozentOderAdmin(aktuellerBenutzer, veranstaltung, dbManager))
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
                 outWriter.print(jo);
                 return;
             }
-            
-            ArrayList<String[]> verweiseArray = new ArrayList<String[]>();
-            Map<String,String[]> verweise = req.getParameterMap();
-            for(String verweisTyp : verweise.keySet()){
-                for(String zielIds : verweise.get(verweisTyp)){
-                    String[] verweis = {verweisTyp, zielIds, ""};
-                    verweiseArray.add(verweis);
-                }
-            }
 
+            String[] v_uebung = req.getParameterValues(ParamDefines.V_Uebung);
+            String[] v_voraussetzung = req.getParameterValues(ParamDefines.V_Voraussetzung);
+            String[] v_zusatzinfo = req.getParameterValues(ParamDefines.V_Zusatzinfo);
+            String[] v_sonstiges = req.getParameterValues(ParamDefines.V_Sonstiges);
 
-            Karteikarte karteikarte = new Karteikarte(titel,inhalt,kkTyp,veranstaltung,bAttribute[0],bAttribute[1],bAttribute[2],
-                    bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6], bAttribute[7], bAttribute[8], bAttribute[9], verweiseArray);   
+            ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
+            if (v_voraussetzung != null)
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_VORRAUSSETZUNG, v_voraussetzung));
+            if (v_uebung != null)
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_UEBUNG, v_uebung));
+            if (v_zusatzinfo != null)
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_ZUSATZINFO, v_zusatzinfo));
+            if (v_sonstiges != null)
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_SONSTIGES, v_sonstiges));
+
+            Karteikarte karteikarte = new Karteikarte(titel, inhalt, kkTyp, veranstaltung, bAttribute[0],
+                    bAttribute[1], bAttribute[2], bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6],
+                    bAttribute[7], bAttribute[8], bAttribute[9], verweise);
 
             int kkID = dbManager.schreibeKarteikarte(karteikarte, vaterKK, ueberliegendeBruderKK);
 
-            if(kkTyp == KarteikartenTyp.VIDEO || kkTyp == KarteikartenTyp.BILD){
+            if (kkTyp == KarteikartenTyp.VIDEO || kkTyp == KarteikartenTyp.BILD)
+            {
                 String relativerPfad = "";
                 String relativerNeuerPfad = "";
-                if(kkTyp == KarteikartenTyp.VIDEO){
+                if (kkTyp == KarteikartenTyp.VIDEO)
+                {
                     relativerPfad = dirKKVideo + uploadedID + ".mp4";
                     relativerNeuerPfad = dirKKVideo + kkID + ".mp4";
                 }
-                else{
+                else
+                {
                     relativerPfad = dirKKBild + uploadedID + ".png";
                     relativerNeuerPfad = dirKKBild + kkID + ".png";
                 }
@@ -533,40 +606,60 @@ public class KarteikartenServlet extends ServletController {
                 String absoluteNeuerPfad = contextPath + relativerNeuerPfad;
                 File oldName = new File(absolutePath);
                 File newName = new File(absoluteNeuerPfad);
-                System.out.println("alter Filename: "+ absolutePath);
-                System.out.println("neuer Filename: "+ absoluteNeuerPfad);
-               try{
-            	   if(!oldName.renameTo(newName)){
-            		   System.out.println("RENAME DIDNT WORK");
+                System.out.println("alter Filename: " + absolutePath);
+                System.out.println("neuer Filename: " + absoluteNeuerPfad);
+                try
+                {
+                    if (!oldName.renameTo(newName))
+                    {
+                        System.out.println("RENAME DIDNT WORK");
 
-            		   throw new Exception();
-            	   }
-               }
-               catch(SecurityException e){
-            	   	e.printStackTrace();
-            	   	System.out.println("SECURITY EXCEPTION");
-               		jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-               		outWriter.print(jo);
-               }
-                	
+                        throw new Exception();
+                    }
+                }
+                catch (SecurityException e)
+                {
+                    e.printStackTrace();
+                    System.out.println("SECURITY EXCEPTION");
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                    outWriter.print(jo);
+                }
+
             }
 
-
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
-            jo.put(ParamDefines.Id, kkID);  // Schicke die karteikarten id zurück!
+            jo.put(ParamDefines.Id, kkID); // Schicke die karteikarten id
+                                           // zurück!
 
-        } catch(IllegalArgumentException e){
+        }
+        catch (IllegalArgumentException e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
 
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
         }
 
         outWriter.print(jo);
     }
-    private void erstelleUeberschrift(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+    private ArrayList<Tripel<BeziehungsTyp, Integer, String>> konvertVerweise(BeziehungsTyp typ, String[] zielIds)
+            throws IllegalArgumentException
+    {
+        ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
+        for (int i = 0; i < zielIds.length; ++i)
+        {
+            verweise.add(new Tripel<BeziehungsTyp, Integer, String>(typ, Integer.valueOf(zielIds[i]), ""));
+        }
+        return verweise;
+    }
+
+    private void erstelleUeberschrift(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -574,57 +667,65 @@ public class KarteikartenServlet extends ServletController {
 
         JSONObject jo = null;
 
-        try{    
+        try
+        {
             String titel = req.getParameter(ParamDefines.Titel);
-            String inhalt ="";
+            String inhalt = "";
             KarteikartenTyp kkTyp = KarteikartenTyp.TEXT;
             String typ = req.getParameter(ParamDefines.Type);
             int veranstaltung = Integer.parseInt(req.getParameter(ParamDefines.Veranstaltung));
             int vaterKK = Integer.parseInt(req.getParameter(ParamDefines.VaterKK));
             int ueberliegendeBruderKK = Integer.parseInt(req.getParameter(ParamDefines.BruderKK));
 
-            if(vaterKK == -1 && ueberliegendeBruderKK == -1)
+            if (vaterKK == -1 && ueberliegendeBruderKK == -1)
                 throw new Exception();
 
             boolean[] bAttribute = new boolean[AttributTyp.values().length];
 
             String[] attribute = req.getParameter(ParamDefines.Attribute).split(",");
 
-            for(int i=0; i<attribute.length; ++i){
+            for (int i = 0; i < attribute.length; ++i)
+            {
                 bAttribute[i] = Boolean.valueOf(attribute[i]);
             }
 
-            if(!istModeratorDozentOderAdmin(aktuellerBenutzer,veranstaltung,dbManager))
+            if (!istModeratorDozentOderAdmin(aktuellerBenutzer, veranstaltung, dbManager))
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
                 outWriter.print(jo);
                 return;
             }
 
-            ArrayList<String[]> verweiseArray = new ArrayList<String[]>();
-            Map<String,String[]> verweise = req.getParameterMap();
-            for(String verweisTyp : verweise.keySet()){
-                for(String zielIds : verweise.get(verweisTyp)){
-                    String[] verweis = {verweisTyp, zielIds, ""};
-                    verweiseArray.add(verweis);
-                }
-            }
+            String[] v_voraussetzung = req.getParameterValues(ParamDefines.V_Voraussetzung);
+            String[] v_uebung = req.getParameterValues(ParamDefines.V_Uebung);
+            String[] v_zusatzinfo = req.getParameterValues(ParamDefines.V_Zusatzinfo);
+            String[] v_sonstiges = req.getParameterValues(ParamDefines.V_Sonstiges);
 
-            Karteikarte karteikarte = new Karteikarte(titel,inhalt,kkTyp,veranstaltung,bAttribute[0],bAttribute[1],bAttribute[2],
-                    bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6], bAttribute[7], bAttribute[8], bAttribute[9], verweiseArray);   
+            ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
+            verweise.addAll(konvertVerweise(BeziehungsTyp.V_VORRAUSSETZUNG, v_voraussetzung));
+            verweise.addAll(konvertVerweise(BeziehungsTyp.V_UEBUNG, v_uebung));
+            verweise.addAll(konvertVerweise(BeziehungsTyp.V_ZUSATZINFO, v_zusatzinfo));
+            verweise.addAll(konvertVerweise(BeziehungsTyp.V_SONSTIGES, v_sonstiges));
+
+            Karteikarte karteikarte = new Karteikarte(titel, inhalt, kkTyp, veranstaltung, bAttribute[0],
+                    bAttribute[1], bAttribute[2], bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6],
+                    bAttribute[7], bAttribute[8], bAttribute[9], verweise);
 
             int kkID = dbManager.schreibeKarteikarte(karteikarte, vaterKK, ueberliegendeBruderKK);
 
-
-
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
-            jo.put(ParamDefines.Id, kkID);  // Schicke die karteikarten id zurück!
+            jo.put(ParamDefines.Id, kkID); // Schicke die karteikarten id
+                                           // zurück!
 
-        } catch(IllegalArgumentException e){
+        }
+        catch (IllegalArgumentException e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
 
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
         }
@@ -632,16 +733,20 @@ public class KarteikartenServlet extends ServletController {
         outWriter.print(jo);
     }
 
-    private boolean istModeratorDozentOderAdmin(Benutzer aktuellerBenutzer, int veranstaltung, IDatenbankmanager dbManager){
-        if(aktuellerBenutzer.getId() != dbManager.leseVeranstaltung(veranstaltung).getErsteller().getId() &&
-                !(dbManager.istModerator(aktuellerBenutzer.getId(), veranstaltung)) &&
-                !(aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN)){
+    private boolean istModeratorDozentOderAdmin(Benutzer aktuellerBenutzer, int veranstaltung,
+            IDatenbankmanager dbManager)
+    {
+        if (aktuellerBenutzer.getId() != dbManager.leseVeranstaltung(veranstaltung).getErsteller().getId()
+                && !(dbManager.istModerator(aktuellerBenutzer.getId(), veranstaltung))
+                && !(aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN))
+        {
             return false;
         }
         return true;
     }
 
-    private void leseKarteikarte(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+    private void leseKarteikarte(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -650,25 +755,29 @@ public class KarteikartenServlet extends ServletController {
         JSONObject jo = null;
         int karteikarteId = -1;
 
-        try{
+        try
+        {
             karteikarteId = Integer.parseInt(req.getParameter(ParamDefines.Id));
-        }    
-        catch(NumberFormatException e){
+        }
+        catch (NumberFormatException e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
 
-        if(!pruefeFuerVeranstDerKarteikEingeschrieben(karteikarteId, req, resp) &&
-                aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN){
+        if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikarteId, req, resp)
+                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
 
         Karteikarte karteikarte = dbManager.leseKarteikarte(karteikarteId);
-        if(karteikarte == null){
+        if (karteikarte == null)
+        {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return;
@@ -678,7 +787,8 @@ public class KarteikartenServlet extends ServletController {
 
     }
 
-    private void leseKarteikartenKinder(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+    private void leseKarteikartenKinder(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -686,26 +796,30 @@ public class KarteikartenServlet extends ServletController {
 
         JSONObject jo = null;
         int vaterKarteikarte = -1;
-        try{
+        try
+        {
             vaterKarteikarte = Integer.parseInt(req.getParameter(ParamDefines.Id));
-        }    
-        catch(NumberFormatException e){
+        }
+        catch (NumberFormatException e)
+        {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
 
-        if(!pruefeFuerVeranstDerKarteikEingeschrieben(vaterKarteikarte, req, resp) &&
-                aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN){
+        if (!pruefeFuerVeranstDerKarteikEingeschrieben(vaterKarteikarte, req, resp)
+                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
 
-        Map<Integer,Tupel<Integer,String>> kindKarteikarten = dbManager.leseKindKarteikarten(vaterKarteikarte);
+        Map<Integer, Tupel<Integer, String>> kindKarteikarten = dbManager.leseKindKarteikarten(vaterKarteikarte);
 
-        if(kindKarteikarten == null){
+        if (kindKarteikarten == null)
+        {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return;
@@ -716,7 +830,9 @@ public class KarteikartenServlet extends ServletController {
 
     }
 
-    private boolean pruefeFuerVeranstDerKarteikEingeschrieben(int karteikarte, HttpServletRequest req, HttpServletResponse resp) throws IOException{
+    private boolean pruefeFuerVeranstDerKarteikEingeschrieben(int karteikarte, HttpServletRequest req,
+            HttpServletResponse resp) throws IOException
+    {
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -725,7 +841,8 @@ public class KarteikartenServlet extends ServletController {
         try
         {
             Karteikarte kk = dbManager.leseKarteikarte(karteikarte);
-            if(kk == null) {
+            if (kk == null)
+            {
                 return false;
             }
             return dbManager.angemeldet(aktuellerBenutzer.getId(), kk.getVeranstaltung());
@@ -734,15 +851,16 @@ public class KarteikartenServlet extends ServletController {
         {
             e.printStackTrace();
             // Nichts zurückgeben!
-            //            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            //            outWriter.print(jo);
+            // JSONObject jo =
+            // JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            // outWriter.print(jo);
 
         }
         return false;
     }
 
-
-    private void exportSkript(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+    private void exportSkript(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
@@ -754,7 +872,7 @@ public class KarteikartenServlet extends ServletController {
         String contextPath = servletContext.getRealPath(File.separator);
 
         String[] options = req.getParameterValues(ParamDefines.ExportOptions);
-        if(options == null)
+        if (options == null)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
@@ -775,117 +893,120 @@ public class KarteikartenServlet extends ServletController {
 
         Veranstaltung v = dbManager.leseVeranstaltung(vnId);
         String PDFPfad = "pdfExports";
-        
+
         // Prüfen, ob noch alte dateien erzeugt wurden
         PDFExporter pexp = (PDFExporter) aktuelleSession.getAttribute(sessionAttributePDFExporter);
-        if(pexp != null)
+        if (pexp != null)
             pexp.cleanUp(true);
-        
-        pexp = new PDFExporter(contextPath + "/" + PDFPfad, contextPath, v,
-                Boolean.valueOf(options[0]),
-                Boolean.valueOf(options[1]),
-                Boolean.valueOf(options[2]));
-        
-        appendKKExportRecursive(dbManager,pexp,0,v.getErsteKarteikarte());
+
+        pexp = new PDFExporter(contextPath + "/" + PDFPfad, contextPath, v, Boolean.valueOf(options[0]),
+                Boolean.valueOf(options[1]), Boolean.valueOf(options[2]));
+
+        appendKKExportRecursive(dbManager, pexp, 0, v.getErsteKarteikarte());
         pexp.startConvertToPDFFile();
-        
+
         // Warten bis fertig
-        while(!pexp.getExecutor().creationFinished()){
+        while (!pexp.getExecutor().creationFinished())
+        {
             try
             {
                 Thread.sleep(1000);
-            }catch (InterruptedException e){}
+            }
+            catch (InterruptedException e)
+            {}
         }
         System.out.println("Fertig.");
-        if(pexp.getExecutor().creationSucessfull())
+        if (pexp.getExecutor().creationSucessfull())
         {
             System.out.println("Erfolgreich.");
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             jo.put(ParamDefines.PDFFileName, PDFPfad + "/" + pexp.getPDFFileName());
             jo.put(ParamDefines.TexFileName, PDFPfad + "/" + pexp.getTexFileName());
-            
+
             // In session speichern
             aktuelleSession.setAttribute(sessionAttributePDFExporter, pexp);
         }
         else
         {
             System.out.println("nicht erfolgreich.");
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError, "Fehler beim Erzeugen der PDF. Bitte versuchen Sie es erneut.");
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError,
+                    "Fehler beim Erzeugen der PDF. Bitte versuchen Sie es erneut.");
         }
-        
+
         outWriter.print(jo);
     }
+
     private void appendKKExportRecursive(IDatenbankmanager dbManager, PDFExporter pexp, int depth, int vaterKkId)
     {
-        Map<Integer, Tupel<Integer, String>>  kkList = dbManager.leseKindKarteikarten(vaterKkId);
-        if(kkList == null)
+        Map<Integer, Tupel<Integer, String>> kkList = dbManager.leseKindKarteikarten(vaterKkId);
+        if (kkList == null)
             return;
         // Vater hinzufügen
         Karteikarte k = dbManager.leseKarteikarte(vaterKkId);
-        if(k == null)
+        if (k == null)
             return;
         pexp.appendKarteikarte(k, depth);
-        
+
         int i = 0;
-        for(; i< kkList.size();i++)
+        for (; i < kkList.size(); i++)
         {
-            Tupel<Integer, String> tu =  kkList.get(i);
-            appendKKExportRecursive(dbManager,pexp,depth+1,tu.x);
+            Tupel<Integer, String> tu = kkList.get(i);
+            appendKKExportRecursive(dbManager, pexp, depth + 1, tu.x);
         }
 
     }
 
     @Override
-    protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-    IOException
+    protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException
     {
         HttpSession aktuelleSession = req.getSession();
         PrintWriter outWriter = resp.getWriter();
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
-
-        if(aktuelleAction.equals(ParamDefines.ActionGetKarteikartenKinder))
+        if (aktuelleAction.equals(ParamDefines.ActionGetKarteikartenKinder))
         {
-            leseKarteikartenKinder(req,resp);
-        } 
-        else if(aktuelleAction.equals(ParamDefines.ActionGetKarteikarteByID))
-        {
-            getKarteikarteByID(req,resp);
+            leseKarteikartenKinder(req, resp);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionErstelleKarteikarte))
+        else if (aktuelleAction.equals(ParamDefines.ActionGetKarteikarteByID))
         {
-            erstelleKarteikarte(req,resp);
+            getKarteikarteByID(req, resp);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionErstelleUeberschrift))
+        else if (aktuelleAction.equals(ParamDefines.ActionErstelleKarteikarte))
         {
-            erstelleUeberschrift(req,resp);
+            erstelleKarteikarte(req, resp);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionBearbeiteKarteikarte))
+        else if (aktuelleAction.equals(ParamDefines.ActionErstelleUeberschrift))
         {
-        	karteikarteBearbeiten(req,resp);
+            erstelleUeberschrift(req, resp);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionBearbeiteUeberschrift))
+        else if (aktuelleAction.equals(ParamDefines.ActionBearbeiteKarteikarte))
         {
-            ueberschriftBearbeiten(req,resp);
+            karteikarteBearbeiten(req, resp);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionGetKarteikartenNachfolger))
+        else if (aktuelleAction.equals(ParamDefines.ActionBearbeiteUeberschrift))
         {
-            getKarteikarteNachfolger(req,resp);
+            ueberschriftBearbeiten(req, resp);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionGetKarteikartenVorgaenger))
+        else if (aktuelleAction.equals(ParamDefines.ActionGetKarteikartenNachfolger))
         {
-            getKarteikarteVorgaenger(req,resp);
-        } 
-        else if(aktuelleAction.equals(ParamDefines.ActionVoteKarteikarteUp))
+            getKarteikarteNachfolger(req, resp);
+        }
+        else if (aktuelleAction.equals(ParamDefines.ActionGetKarteikartenVorgaenger))
+        {
+            getKarteikarteVorgaenger(req, resp);
+        }
+        else if (aktuelleAction.equals(ParamDefines.ActionVoteKarteikarteUp))
         {
             karteikarteBewerten(req, resp, 1);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionVoteKarteikarteDown))
+        else if (aktuelleAction.equals(ParamDefines.ActionVoteKarteikarteDown))
         {
-            karteikarteBewerten(req,resp,-1);
+            karteikarteBewerten(req, resp, -1);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionExportSkript)){
+        else if (aktuelleAction.equals(ParamDefines.ActionExportSkript))
+        {
             exportSkript(req, resp);
         }
         else
