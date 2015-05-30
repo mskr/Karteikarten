@@ -1452,6 +1452,8 @@ public class Datenbankmanager implements IDatenbankmanager
                 cal.setTime(rs.getDate("Erstelldatum"));
                 
                 Karteikarte kk = leseKarteikarte(rs.getInt("Karteikarte"));
+                if(kk == null)
+                    return null;
                 
                 benachrichtigung = new BenachrKarteikAenderung(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
                         cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), kk);
@@ -1892,7 +1894,8 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
            
-            ps = conNeo4j.prepareStatement("MATCH(n)-[r:V_VORRAUSSETZUNG|V_UEBUNG|V_ZUSATZINFO|V_SONSTIGES]->(m)"
+            ps = conNeo4j.prepareStatement("MATCH(n)-[r:"+BeziehungsTyp.V_VORRAUSSETZUNG.toString().toLowerCase()+"|"+BeziehungsTyp.V_UEBUNG.toString().toLowerCase()+"|"
+                    + ""+BeziehungsTyp.V_ZUSATZINFO.toString().toLowerCase()+"|"+BeziehungsTyp.V_SONSTIGES.toString().toLowerCase()+"]->(m)"
                     + " WHERE id(n) = {1} RETURN id(m) AS zielID, type(r) AS Typ");
             ps.setInt(1, karteikID);
             rs = ps.executeQuery();
