@@ -163,6 +163,7 @@ public class KarteikartenServlet extends ServletController
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
+            return;
         }
 
         List<Karteikarte> kk = new ArrayList<Karteikarte>(Kks.values());
