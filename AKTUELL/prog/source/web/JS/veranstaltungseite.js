@@ -67,6 +67,20 @@ $(document).ready(function() {
     $("#kk_start_export").click(function() {
 		exportKkVonVn(veranstaltungsObject[paramId]);
 	})
+	
+	    // CopyLink
+    // -> Probleme mit CSS 
+    var clip = new ZeroClipboard($("#link_copy_to_cb"));
+    clip.on("ready", function() {
+      this.on("aftercopy", function(event) {
+    	  showInfo("URL wurde in die Zwischenablage eingefügt!");
+      });
+      
+      clip.on( "copy", function (event) {
+    	  var clipboard = event.clipboardData;
+    	  clipboard.setData( "text/plain", $("#link_copy_data").text());
+    	});
+    });
 });
 
 function exportKkVonVn(vnId)

@@ -29,21 +29,6 @@ function buildKarteikarte(karteikarteJson)
 		processKK_editClick($(this));
 	});
     
-    // CopyLink
-    // -> Probleme mit CSS 
-//    var clip = new ZeroClipboard(kkDom.find(".permalink"));
-//    clip.on("ready", function() {
-//      this.on("aftercopy", function(event) {
-//    	  showInfo("URL wurde in die Zwischenablage eingefügt!");
-//      });
-//      
-//      clip.on( "copy", function (event) {
-//    	  var clipboard = event.clipboardData;
-//    	  kkUrl = location.host + location.pathname + "?location=veranstaltungsseite&id="+ veranstaltungsObject[paramId] +
-//			"&"+paramURLKkID+"=" + 	kkId;
-//    	  clipboard.setData( "text/plain", kkUrl );
-//    	});
-//    });
     // Workaround:
     kkDom.find(".permalink").click(function(){
    	 	kkUrl = location.host + location.pathname + "?location=veranstaltungsseite&id="+ veranstaltungsObject[paramId] +
