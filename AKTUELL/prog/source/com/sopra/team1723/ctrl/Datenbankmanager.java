@@ -1906,7 +1906,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 rs2 = ps2.executeQuery();
                 if(!rs2.next())
                     return null;
-                verweise.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.valueOf(rs.getString("Typ")), 
+                verweise.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.valueOf(rs.getString("Typ").toUpperCase()), 
                         rs.getInt("zielID"), rs2.getString("Titel")));
             }
             
