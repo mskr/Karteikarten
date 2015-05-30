@@ -274,14 +274,14 @@ function fillVerweise(domKk, verweisArr)
 	for(i in verweisArr)
 	{
 		txt = "<a onclick='displayKarteikarte("+verweisArr[i][paramId]+", null, false);'>" + verweisArr[i][paramTitel] +"</a>";
-		
-		if(verweisArr[i][paramType] == "vorraussetzung")
+
+		if(verweisArr[i][paramType] == "V_VORRAUSSETZUNG")
 			rel_vor.push(txt);
-		else if(verweisArr[i][paramType] == "zusatz")
+		else if(verweisArr[i][paramType] == "V_UEBUNG")
 			rel_zusatz.push(txt);
-		else if(verweisArr[i][paramType] == "sonstiges")
+		else if(verweisArr[i][paramType] == "V_ZUSATZINFO")
 			rel_sonstiges.push(txt);
-		else if(verweisArr[i][paramType] == "uebung")
+		else if(verweisArr[i][paramType] == " V_SONSTIGES")
 			rel_uebung.push(txt);
 	}
 	
