@@ -40,6 +40,13 @@ function newKarteikarte(triggerElem) {
 		
     });
     
+    //== Code fuer die Verweise START ==
+    
+    var verweisVoraussetzungArr = [];
+    var verweisWeiterfuehrendArr = [];
+    var verweisUebungArr = [];
+    var verweisSonstigesArr = [];
+    
     // Sammle Ajax Objekte aller Verweis Baeume
     var verwBaeumeAjaxCalls = [];
     
@@ -53,6 +60,12 @@ function newKarteikarte(triggerElem) {
                     if(klappeAus)
                     {
                         $.when(ajax).done(function() {
+                            // Checkboxen mit den Arrays synchronisieren
+                            kkListItem.find("> ul input[type='checkbox']").each(function(index, elem) {
+                                var verwBaum = $(elem).parents(".kk_verweise_baum");
+                                var verwTyp = verwBaum.attr("id").split("_")[4];
+                                syncCheckboxWithArray(verwTyp, $(elem).data("kkid"), $(elem));
+                            });
                             // Change Handler fuer die Checkboxes der bei Klick geladenen Kinder
                             kkListItem.find("> ul input[type='checkbox']").change(function(e) {
                                 var verwBaum = $(e.target).parents(".kk_verweise_baum");
@@ -72,7 +85,7 @@ function newKarteikarte(triggerElem) {
     // Warte darauf, dass die Wurzel-Ebene aller Verweise Baeume geladen wurde
     $.when.apply(null, verwBaeumeAjaxCalls).done(function() {
         // Change Handler fuer die Checkboxes der Wurzel-Ebene
-        $("#kk_erstellen_verweise_baum_voraussetzung").find("input[type='checkbox']").change(function(e) {
+        $(".kk_erstellen_verweise_baum input[type='checkbox']").change(function(e) {
             var verwBaum = $(e.target).parents(".kk_verweise_baum");
             var verwTyp = verwBaum.attr("id").split("_")[4];
             var isHinzu = $(e.target).prop("checked");
@@ -81,10 +94,28 @@ function newKarteikarte(triggerElem) {
         });
     });
     
-    var verweisVoraussetzungArr = [];
-    var verweisWeiterfuehrendArr = [];
-    var verweisUebungArr = [];
-    var verweisSonstigesArr = [];
+    function syncCheckboxWithArray(verweisTyp, zielKkId, checkbox)
+    {
+        switch(verweisTyp)
+        {
+            case "voraussetzung":
+                if(jQuery.inArray(zielKkId, verweisVoraussetzungArr) != -1)
+                    checkbox.prop("checked", true);
+                break;
+            case "weiterfuehrend":
+                if(jQuery.inArray(zielKkId, verweisWeiterfuehrendArr) != -1)
+                    checkbox.prop("checked", true);
+                break;
+            case "uebung":
+                if(jQuery.inArray(zielKkId, verweisUebungArr) != -1)
+                    checkbox.prop("checked", true);
+                break;
+            case "sonstige":
+                if(jQuery.inArray(zielKkId, verweisSonstigesArr) != -1)
+                    checkbox.prop("checked", true);
+        }
+    }
+    
     function verweiseVonBenutzerGeaendert(verweisTyp, isHinzu, zielKkId)
     {
         switch(verweisTyp)
@@ -121,9 +152,14 @@ function newKarteikarte(triggerElem) {
                         return elem != zielKkId;
                     });
         }
+        console.log("verweisVoraussetzungArr="+verweisVoraussetzungArr);
+        console.log("verweisWeiterfuehrendArr="+verweisWeiterfuehrendArr);
+        console.log("verweisUebungArr="+verweisUebungArr);
+        console.log("verweisSonstigesArr="+verweisSonstigesArr);
+        
     }
-    
-    //TODO Verweis Baeume zerstoeren wenn Popup geschlossen wird
+
+    //== Code fuer die Verweise ENDE ==
     
     submitFkt = function() {
     	var text = $("#kk_erstellen_TA").val().trim();
@@ -150,7 +186,8 @@ function newKarteikarte(triggerElem) {
     	}
     	else if(isAnyAttrSelected() == false){
     		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  function(){
-        		processKKerstellen(text,titel,attributes, bruder, vater);
+    		    processKKerstellen(text,titel,attributes, bruder, vater, 
+                        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
         		return true;
     		}, 0, 0);
     		return false;
