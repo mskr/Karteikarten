@@ -446,7 +446,7 @@ public class Karteikarte implements IjsonObject {
         JSONArray arr2 = new JSONArray();
         for(Tripel<BeziehungsTyp,Integer,String> verw : verweise){
             JSONObject o = new JSONObject();
-            o.put(ParamDefines.Type, verw.x);
+            o.put(ParamDefines.Type, verw.x.toString());
             o.put(ParamDefines.Id, verw.y);
             o.put(ParamDefines.Titel, verw.z);
             arr2.add(o);
