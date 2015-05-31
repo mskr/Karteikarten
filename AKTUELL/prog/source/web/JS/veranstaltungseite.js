@@ -53,7 +53,11 @@ $(document).ready(function() {
 		    		$("#kk_export_popup").find("#kk_start_export").show();
 		    		$("#kk_export_popup").find("#kk_start_export").html("PDF erstellen");
 		    		$("#kk_export_popup").find(".load_kk_export").hide();
-		    		$("#kk_export_popup").find("#kk_export_zurueck").show();
+		    		$("#kk_export_popup").find("#kk_export_zurueck").show();	
+		    		
+		    		$('#kk_export_opt_notizen').prop('checked', false);
+		    		$('#kk_export_opt_attrAnz').prop('checked', false);
+		    		$('#kk_export_opt_Querverweise').prop('checked', false);
     			}, 
     			$("#kk_export_ok"), 
     			function(){
@@ -68,8 +72,7 @@ $(document).ready(function() {
 		exportKkVonVn(veranstaltungsObject[paramId]);
 	})
 	
-	    // CopyLink
-    // -> Probleme mit CSS 
+	// CopyLink
     var clip = new ZeroClipboard($("#link_copy_to_cb"));
     clip.on("ready", function() {
       this.on("aftercopy", function(event) {
@@ -91,8 +94,8 @@ function exportKkVonVn(vnId)
 	
 	options = [];
 	options.push($('#kk_export_opt_notizen').is(':checked'));
-	options.push($('#kk_export_opt_komm').is(':checked'));
 	options.push($('#kk_export_opt_attrAnz').is(':checked'));
+	options.push($('#kk_export_opt_Querverweise').is(':checked'));
 	
 	params = {};
 	params[paramId] = vnId;
@@ -100,10 +103,18 @@ function exportKkVonVn(vnId)
 	return ajaxCall(karteikartenServlet, actionExportSkript, function(response){
 		$(".kk_export_pdf_link").attr("href",response[paramPDFFileName]);
 		$(".kk_export_tex_link").attr("href",response[paramTexFileName]);
+		$(".kk_export_pdf_link").show();
 		$("#kk_export_popup").find("#kk_start_export").slideUp();
 		$("#kk_export_popup").find(".kk_export_files").slideDown();
-	}, params, function() {
-		$("#kk_export_ok").trigger("click");
+		$("#kk_export_error").hide();
+		
+	}, params, function(error, response) {
+		$("#kk_export_error").slideDown();
+		$(".kk_export_pdf_link").hide();
+		$(".kk_export_tex_link").attr("href",response[paramTexFileName]);
+		$("#kk_export_popup").find("#kk_start_export").slideUp();
+		$("#kk_export_popup").find(".kk_export_files").slideDown();
+		
 	}, undefined, undefined, 20000);
 }
 

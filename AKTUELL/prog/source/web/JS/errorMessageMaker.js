@@ -210,7 +210,7 @@ function verifyResponse(jsonResponse, specialErrorHandlingFkt)
 		var processed = false;
 		
 		if(specialErrorHandlingFkt != undefined)
-			processed = specialErrorHandlingFkt(jsonResponse["error"]);
+			processed = specialErrorHandlingFkt(jsonResponse["error"], jsonResponse);
 		
 		if(!processed)
 			handleError(jsonResponse["error"], jsonResponse[errorMsg]);	

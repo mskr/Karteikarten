@@ -3087,8 +3087,10 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean erfolgreich = true;;
         try
         {
-            ps = conMysql.prepareStatement("UPDATE Notiz SET Inhalt = ?");
+            ps = conMysql.prepareStatement("UPDATE Notiz SET Inhalt = ? WHERE Benutzer = ? AND KarteikarteID = ?");
             ps.setString(1, notiz.getInhalt());
+            ps.setInt(2, notiz.getErsteller());
+            ps.setInt(3, notiz.getKarteikarte());
 
             ps.executeUpdate();
 

@@ -20,7 +20,6 @@ public class SopraSessionListener implements HttpSessionListener
         // Prüfen, ob noch alte dateien erzeugt wurden
         PDFExporter pexp = (PDFExporter) arg0.getSession().getAttribute(ServletController.sessionAttributePDFExporter);
         if(pexp != null){
-            System.out.println("Files gelöscht.");
             pexp.deleteFiles();
         }
         arg0.getSession().setAttribute(ServletController.sessionAttributePDFExporter,null);

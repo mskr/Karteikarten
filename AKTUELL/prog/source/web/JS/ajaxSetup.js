@@ -14,7 +14,7 @@ $.ajaxSetup({
 	timeout: 6000,
 	error: function(jqXHR, textStatus, errorThrown) { 
 
-		console.log("AJAX-ERROR: " + textStatus + " " + errorThrown);
+//		console.log("AJAX-ERROR: " + textStatus + " " + errorThrown);
 		
 		if(textStatus == "timeout")
 		{
