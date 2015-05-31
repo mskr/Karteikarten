@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -12,6 +14,7 @@ import org.jsoup.nodes.*;
 
 import com.sopra.team1723.data.Karteikarte;
 import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
+import com.sopra.team1723.data.Notiz;
 import com.sopra.team1723.data.Tripel;
 import com.sopra.team1723.data.Tupel;
 import com.sopra.team1723.data.Veranstaltung;
@@ -27,21 +30,107 @@ public class PDFExporter
     private boolean        dataStrOpened         = false;
     private boolean        texFileCreated        = false;
     private boolean        cleaned               = false;
-    private String         newLineWithSeparation = "\n";
 
     private ProcessBuilder pb;
     private PDFExportThreadHandler peth;
     private Veranstaltung vn;
     private boolean exportNotizen = false;
-    private boolean exportKommentare = false;
     private boolean exportAttribute = false;
     private boolean exportVerweise = false;
     
+    private static String  newLineWithSeparation = "\n";
+    
+    private static Map<Character, String> charReplaceList = new HashMap<>();
+    private static Map<String, Tupel<String, String>> tagReplaceList = new HashMap<>();
+    static{
+        // Zeichen wird ersetzt durch....
+        charReplaceList.put('\"', "\\grqq ");
+        charReplaceList.put('ä', "\"a");
+        charReplaceList.put('ö', "\"o");
+        charReplaceList.put('ü', "\"u");
+        charReplaceList.put('Ä', "\"A");
+        charReplaceList.put('Ö', "\"O");
+        charReplaceList.put('Ü', "\"U");
+        charReplaceList.put('ß', "\"s");
+        charReplaceList.put('#', "\\#");
+        charReplaceList.put('%', "\\%");
+        charReplaceList.put('~', "\\~");
+//        charReplaceList.put("€", "\\texteuro"));        // Extra package
+        charReplaceList.put('{', "\\{");
+        charReplaceList.put('}', "\\}");
+        charReplaceList.put('[', "\\[");
+        charReplaceList.put(']', "\\]");
+        charReplaceList.put('$', "\\$");
+        charReplaceList.put('§', "\\§");
+        charReplaceList.put('<', "\\textless ");
+        charReplaceList.put('>', "\\textgreater ");
+        charReplaceList.put('_', "\\_");
+        charReplaceList.put('\\', "\\textbackslash ");  // Konflikt mit anderen Regeln
+
+        
+        // HTML Tag wird ersetzt durch Start und Ende Tag in Latex
+        tagReplaceList.put("br", new Tupel<String, String>(
+                "\\newline"+ newLineWithSeparation,
+                ""));
+        tagReplaceList.put("span", new Tupel<String, String>(
+                "",
+                ""));
+        tagReplaceList.put("strong", new Tupel<String, String>(
+                "\\textbf{",
+                "}"));
+        tagReplaceList.put("em", new Tupel<String, String>(
+                "\\textit{",
+                "}"));
+        tagReplaceList.put("u", new Tupel<String, String>(
+                "\\textsuperscript{",
+                "}"));
+        tagReplaceList.put("sub", new Tupel<String, String>(
+                "\\textsubscript{",
+                "\\textsubscript{"));
+        tagReplaceList.put("ol", new Tupel<String, String>(
+                "\\begin{enumerate}"+ newLineWithSeparation,
+                "\\end{enumerate}"+ newLineWithSeparation));
+        tagReplaceList.put("ul", new Tupel<String, String>(
+                "\\begin{itemize}"+ newLineWithSeparation,
+                "\\end{itemize}"+ newLineWithSeparation));
+        tagReplaceList.put("li", new Tupel<String, String>(
+                "\\item",
+                ""+ newLineWithSeparation));
+        tagReplaceList.put("h1", new Tupel<String, String>(
+                "\\textbf{",
+                "}"+ newLineWithSeparation));
+        tagReplaceList.put("h2", new Tupel<String, String>(
+                "\\textbf{",
+                "}"+ newLineWithSeparation));
+        tagReplaceList.put("h3", new Tupel<String, String>(
+                "\\textbf{",
+                "}"+ newLineWithSeparation));
+        tagReplaceList.put("h4", new Tupel<String, String>(
+                "\\textbf{",
+                "}"+ newLineWithSeparation));
+        tagReplaceList.put("h5", new Tupel<String, String>(
+                "\\textbf{",
+                "}"+ newLineWithSeparation));
+        
+        
+        tagReplaceList.put("hr", new Tupel<String, String>(
+                "\\hrule" + newLineWithSeparation,
+                ""));
+        
+        // Tabellen Mapping muss abgefangen werden
+        tagReplaceList.put("table", new Tupel<String, String>(
+                "\\begin{tabular}","\\end{tabular}"+ newLineWithSeparation));
+        tagReplaceList.put("td", new Tupel<String, String>(
+                "",""));
+        tagReplaceList.put("tr", new Tupel<String, String>(
+                "","\\\\"+ newLineWithSeparation + "\\hline" + newLineWithSeparation));
+    }
+    
+    
     public PDFExporter(String workingDir, String servletContextPath, Veranstaltung vn, 
-            boolean exportNotizen, boolean exportKommentare, boolean exportAttribute, boolean exportVerweise)
+            boolean exportNotizen, boolean exportAttribute, boolean exportVerweise)
     {
         this.exportNotizen = exportNotizen;
-        this.exportKommentare = exportKommentare;
         this.exportAttribute = exportAttribute;
         this.exportVerweise = exportVerweise;
         
@@ -62,7 +151,8 @@ public class PDFExporter
         if (!(new File(this.workingDir + subFolder)).mkdirs())
             System.out.println("Kann subfolder " + subFolder + " nicht erstellen!");
         
-        createHeader();
+        dataStr = createHeader();
+        dataStr += createVnInhalt();
     }
 
 //    public void setInfo(String Author, String Titel)
@@ -71,10 +161,10 @@ public class PDFExporter
 //        this.Author = Author;
 //    }
 
-    public boolean createHeader()
+    public String createHeader()
     {
         if (dataStrOpened || cleaned)
-            return false;
+            return "";
 
         dataStrOpened = true;
         String header = "\\documentclass[12pt]{scrreprt}"
@@ -153,11 +243,20 @@ public class PDFExporter
                 + "% Hier erscheint das Inhaltsverzeichnis (Nach dem hinzufügen 2 mal kompilieren)"
                 + newLineWithSeparation + "\\tableofcontents" + newLineWithSeparation;
 
-        dataStr = header;
-        System.out.println("Header hinzugefügt");
-        return true;
+        return header;
     }
+    private String createVnInhalt()
+    {
 
+        if (!dataStrOpened || cleaned)
+            return "";
+        
+        String data = "\\chapter{Veranstaltungsbeschreibung}" + newLineWithSeparation 
+                + transformHTMLToLaTeX(vn.getBeschreibung())+ newLineWithSeparation
+                + "\\newpage";
+
+        return data;
+    }
     private boolean createAndCloseFile()
     {
         if (!dataStrOpened || cleaned)
@@ -200,9 +299,9 @@ public class PDFExporter
         return true;
     }
 
-    public boolean appendKarteikarte(Karteikarte kk, int depth)
+    public boolean appendKarteikarte(Karteikarte kk, int depth, Notiz n)
     {
-        if (texFileCreated || cleaned || !dataStrOpened)
+        if (texFileCreated || cleaned || !dataStrOpened || depth < 0)
             return false;
 
         System.out.println("Append KK: " + kk.getTitel());
@@ -225,17 +324,19 @@ public class PDFExporter
                 return false;
         }
         
-        dataStr+=exportVerweise(kk);
+        dataStr+=exportVerweise(kk) + newLineWithSeparation;
+        
+        if(exportNotizen && n != null && !n.getInhalt().equals(""))
+        {
+            dataStr += "\\paragraph{Notizen}" + newLineWithSeparation
+                    +  transformHTMLToLaTeX(n.getInhalt())  + newLineWithSeparation;
+        }
                 
         return true;
     }
     
     private String exportVerweise(Karteikarte kk)
     {
-        ArrayList<Tripel<BeziehungsTyp, Integer, String>> arr = new ArrayList<>();
-        arr.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.V_VORRAUSSETZUNG, 28, "Blablablabla"));
-        arr.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.V_VORRAUSSETZUNG, 13, "Blablablabla"));
-        kk.setVerweise(arr);
         if(!exportVerweise ||  kk.getVerweise().size() == 0)
             return "";
         
@@ -361,9 +462,14 @@ public class PDFExporter
             String content = n.text();
 //            for (int i = 0; i < depth; i++)
 //                System.out.print("  ");
-//            System.out.println(content);
-
-            result += content;
+            // System.out.println(content);
+            if (n.attr("class").equals("mathjax_formel"))
+            {
+                System.out.println("Skip replacing. Formel gefunden");
+                result += content;
+            }
+            else
+                result += replaceInvalidChars(content);
         }
         else
         {
@@ -385,107 +491,70 @@ public class PDFExporter
     
     private String replaceInvalidChars(String html)
     {
-        // TODO 
-        html = html.replace("\"", "\\grqq ");
-        html = html.replace("ä", "\"a");
-        html = html.replace("ö", "\"o");
-        html = html.replace("ü", "\"u");
-        html = html.replace("Ä", "\"A");
-        html = html.replace("Ö", "\"O");
-        html = html.replace("Ü", "\"U");
-        html = html.replace("ß", "\"s");
-        System.out.println(html);
-        return html;
+        String result = "";
+        for(int i = 0; i < html.length(); i++)
+        {
+            String replacer = charReplaceList.get(html.charAt(i));
+            if(replacer == null)
+                result += html.charAt(i);
+            else
+                result += replacer;
+        }
+        return result;
     }
 
     private String mapHTMLTagToLaTeXTag(Node node, boolean begin)
     {
-        String res = "";
-        switch (node.nodeName().toLowerCase())
+        Tupel<String, String> replacer = tagReplaceList.get(node.nodeName().toLowerCase());
+        if(replacer==null)
+            return "";
+        
+        if(node.nodeName().toLowerCase().equals("table"))
         {
-            case "br":
-                if (begin)
-                    res = "\\newline"+ newLineWithSeparation;
-                else
-                    res = "";
-                break;
-            // case "p":
-            // if(begin)
-            // res = "\\paragraph{";
-            // else
-            // res = "}";
-            // break;
-            case "span":
-                if (begin)
-                    res = "";
-                else
-                    res = "";
-                break;
-            case "strong":
-                if (begin)
-                    res = "\\textbf{";
-                else
-                    res = " }";
-                break;
-            case "em":
-                if (begin)
-                    res = "\\textit{";
-                else
-                    res = "}";
-                break;
-            case "u":
-                if (begin)
-                    res = "\\textsuperscript{";
-                else
-                    res = "}";
-                break;
-            case "sub":
-                if (begin)
-                    res = "\\textsubscript{";
-                else
-                    res = "}";
-                break;
-            case "ol":
-                if (begin)
-                    res = "\\begin{enumerate}"+ newLineWithSeparation;
-                else
-                    res = "\\end{enumerate}"+ newLineWithSeparation;
-                break;
-            case "ul":
-                if (begin)
-                    res = "\\begin{itemize}"+ newLineWithSeparation;
-                else
-                    res = "\\end{itemize}"+ newLineWithSeparation;
-                break;
-            case "li":
-                if (begin)
-                    res = "\\item";
-                else
-                    res = ""+ newLineWithSeparation;
-                break;
-            case "h1":
-            case "h2":
-            case "h3":
-            case "h4":
-            case "h5":
-                if (begin)
-                    res = "\\textbf{";
-                else
-                    res = "}"+ newLineWithSeparation;
-                break;
-
-            default:
-                res = "";
-                break;
+            if(begin)
+            {
+                int colCnt = node.childNode(0).childNodeSize();
+                String tableConfig = "{|";
+                for(int i = 0; i < colCnt; i++)
+                {
+                    tableConfig += "c|";
+                }
+                tableConfig += "}";
+                
+                return replacer.x + tableConfig + newLineWithSeparation;
+            }
+            else 
+                return replacer.y;  
         }
-        return res;
+        else if(node.nodeName().toLowerCase().equals("td"))
+        {
+            if(begin)
+            {
+                int idx = node.siblingIndex();
+                if(idx == 0)
+                    return replacer.x;
+                else
+                    return " & " + replacer.x;
+            }
+            else 
+                return replacer.y;  
+        }
+        else
+        {
+            if(begin)
+                return replacer.x;
+            else 
+                return replacer.y;
+        }
+        
+        
     }
 
     private String putStrIntoChapter(int chapterDepth, Karteikarte kk, String data)
     {
         String newData = null;
-        String title = replaceInvalidChars(kk.getTitel()) ;
-        data = replaceInvalidChars(data);
+        String title = replaceInvalidChars(kk.getTitel());
+        
         switch (chapterDepth)
         {
             case 0:
@@ -523,7 +592,7 @@ public class PDFExporter
 
             String latexStr = "\\begin{figure}[H] " + newLineWithSeparation + "  \\centering" + newLineWithSeparation
                     + "  \\includegraphics[width=0.5\\linewidth]{" + kk.getId() + ".png}" + newLineWithSeparation
-                    + "  \\caption{" + kk.getTitel() + createAttribute(kk) + "}" + newLineWithSeparation + "  \\label{kk_"
+                    + "  \\caption{" + replaceInvalidChars(kk.getTitel()) + createAttribute(kk) + "}" + newLineWithSeparation + "  \\label{kk_"
                     + kk.getId() + "}" + newLineWithSeparation + "\\end{figure}" + newLineWithSeparation;
             
             

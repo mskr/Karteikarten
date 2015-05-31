@@ -902,9 +902,10 @@ public class KarteikartenServlet extends ServletController
             pexp.deleteFiles();
 
         pexp = new PDFExporter(contextPath + "/" + PDFPfad, contextPath, v, Boolean.valueOf(options[0]),
-                Boolean.valueOf(options[1]), Boolean.valueOf(options[2]),Boolean.valueOf(options[3]));
+                 Boolean.valueOf(options[1]),Boolean.valueOf(options[2]));
 
-        appendKKExportRecursive(dbManager, pexp, 0, v.getErsteKarteikarte());
+        // Tiefe = -1 sorgt dafür, dass die oberste KK übersprungen wird.
+        appendKKExportRecursive(dbManager, pexp, -1, v.getErsteKarteikarte(), aktuellerBenutzer.getId());
         pexp.startConvertToPDFFile();
 
         // Warten bis fertig
@@ -933,28 +934,32 @@ public class KarteikartenServlet extends ServletController
             System.out.println("nicht erfolgreich.");
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError,
                     "Fehler beim Erzeugen der PDF. Bitte versuchen Sie es erneut.");
+            jo.put(ParamDefines.TexFileName, PDFPfad + "/" + pexp.getTexFileName());
         }
 
         outWriter.print(jo);
     }
 
-    private void appendKKExportRecursive(IDatenbankmanager dbManager, PDFExporter pexp, int depth, int vaterKkId)
+    private void appendKKExportRecursive(IDatenbankmanager dbManager, PDFExporter pexp, int depth, int vaterKkId, int benutzerId)
     {
-        Map<Integer, Tupel<Integer, String>> kkList = dbManager.leseKindKarteikarten(vaterKkId);
-        if (kkList == null)
-            return;
         // Vater hinzufügen
         Karteikarte k = dbManager.leseKarteikarte(vaterKkId);
         
         if (k == null)
             return;
-        pexp.appendKarteikarte(k, depth);
+        
+        Notiz n = dbManager.leseNotiz(benutzerId, k.getId());
+        pexp.appendKarteikarte(k, depth, n);
 
+        Map<Integer, Tupel<Integer, String>> kkList = dbManager.leseKindKarteikarten(vaterKkId);
+        if (kkList == null)
+            return;
+        
         int i = 0;
         for (; i < kkList.size(); i++)
         {
             Tupel<Integer, String> tu = kkList.get(i);
-            appendKKExportRecursive(dbManager, pexp, depth + 1, tu.x);
+            appendKKExportRecursive(dbManager, pexp, depth + 1, tu.x, benutzerId);
         }
 
     }
