@@ -1293,6 +1293,18 @@ textarea.input_std {
 } #kk_erstellen_verweise_sonstige_radio:checked 
   ~ #kk_erstellen_verweise_baum_sonstige {
   	display: block;
+} #kk_bearbeiten_verweise_voraussetzung_radio:checked 
+  ~ #kk_bearbeiten_verweise_baum_voraussetzung {
+	display: block;
+} #kk_bearbeiten_verweise_weiterfuehrend_radio:checked 
+  ~ #kk_bearbeiten_verweise_baum_weiterfuehrend {
+  	display: block;
+} #kk_bearbeiten_verweise_uebung_radio:checked 
+  ~ #kk_bearbeiten_verweise_baum_uebung {
+  	display: block;
+} #kk_bearbeiten_verweise_sonstige_radio:checked 
+  ~ #kk_bearbeiten_verweise_baum_sonstige {
+  	display: block;
 }
 
 .kk_wrapper {

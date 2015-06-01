@@ -169,12 +169,13 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     
     for(var i in closeElems)
     {
-        closeElems[i].off(),
+        closeElems[i].off();
         closeElems[i].click(function() {
             $("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
-            popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
-            closeFunc();
+            popupOverlayWrapper.fadeOut(300, function() {
+                
+            });
             popupSeitenIterator = 0;
         });
     }
