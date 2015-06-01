@@ -4,6 +4,8 @@
 
 $(document).ready(function() {
     $("#registrieren_form").submit(function(event) {
+        // Verhindert das normale Absenden des Formulars
+        event.preventDefault();
         // Textfelder auslesen
         var email = $("#login_email").val();
         if(validateEmail(email))
@@ -15,7 +17,7 @@ $(document).ready(function() {
             if(pass == passwdh)
             {
             	// pass wird vor verschicken mit md5 gehasht
-                pass = CryptoJS.MD5(pass);
+                pass = escape(CryptoJS.MD5(pass));
                 var vorname = $("#reg_vorname").val();
                 var nachname = $("#reg_nachname").val();
                 var matnr = $("#reg_matnr").val();
@@ -51,8 +53,6 @@ $(document).ready(function() {
             $("#login_email").css("border","4px solid IndianRed");
             showError("Bitte prüfen Sie Ihre Email-Adresse.");
         }
-        // Verhindert das normale Absenden des Formulars
-        event.preventDefault();
     });
 });
 

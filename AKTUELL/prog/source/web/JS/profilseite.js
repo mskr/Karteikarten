@@ -321,7 +321,7 @@ function registerProfilSpeichernEvents() {
             var params = {};
             params[paramPasswortNew] = escape(pwNeu);
             params[paramPasswort] = escape(pwAlt);
-            params[paramId] = escape(currentProfilID);
+            params[paramId] = currentProfilID;
             ajaxCall(
                 profilServlet,
                 actionAenderePasswort,

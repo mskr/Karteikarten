@@ -83,7 +83,7 @@ function addBenachrichtigung(ben)
 	else if(type == paramBenTypeKommentar)
 	{
 		onClickfkt = function() {
-			gotoVeranstaltung(ben[paramBenVeranst][paramId], ben[paramKkId]);
+			gotoVeranstaltung(ben[paramVnId], ben[paramKkId]);
 		};
 	}
 	else if(type == paramBenTypeModerator)
