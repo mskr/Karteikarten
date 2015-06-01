@@ -250,7 +250,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
 	
 	// Inhaltsverzeichnis aufbauen
 	// warte bis VN Objekt geladen
-	$.when(ajax1).done(function() {
+	$.when(ajax1,d).done(function() {
 	    var ajax4 = undefined;
 	    if(!veranstaltungsObject[paramAngemeldet])
 	        return;
@@ -412,8 +412,7 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
 
 function registerErstellKkHandler(domErstellenLink){
 	// Prüfen ob erlaubt
-    if(jsonBenutzer[paramId] == veranstaltungsObject[paramErsteller][paramId] || 
-    		jsonBenutzer[paramNutzerstatus] == "ADMIN")
+    if(checkIfAllowedVn(veranstaltungsObject))
 	{
     	domErstellenLink.find(".inhaltsvz_kk_erstellen").click(function(){
 	    	newKarteikarte($(this));
