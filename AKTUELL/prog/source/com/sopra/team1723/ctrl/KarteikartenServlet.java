@@ -568,7 +568,7 @@ public class KarteikartenServlet extends ServletController
 
             ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
             if (v_voraussetzung != null)
-                verweise.addAll(konvertVerweise(BeziehungsTyp.V_VORRAUSSETZUNG, v_voraussetzung));
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_VORAUSSETZUNG, v_voraussetzung));
             if (v_uebung != null)
                 verweise.addAll(konvertVerweise(BeziehungsTyp.V_UEBUNG, v_uebung));
             if (v_zusatzinfo != null)
@@ -704,7 +704,7 @@ public class KarteikartenServlet extends ServletController
 
             ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
             if (v_voraussetzung != null)
-                verweise.addAll(konvertVerweise(BeziehungsTyp.V_VORRAUSSETZUNG, v_voraussetzung));
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_VORAUSSETZUNG, v_voraussetzung));
             if (v_uebung != null)
                 verweise.addAll(konvertVerweise(BeziehungsTyp.V_UEBUNG, v_uebung));
             if (v_zusatzinfo != null)
@@ -802,8 +802,8 @@ public class KarteikartenServlet extends ServletController
         JSONObject jo = null;
         int vaterKarteikarte = -1;
         try
-        {
-            vaterKarteikarte = Integer.parseInt(req.getParameter(ParamDefines.Id));
+        {            vaterKarteikarte = Integer.parseInt(req.getParameter(ParamDefines.Id));
+
         }
         catch (NumberFormatException e)
         {

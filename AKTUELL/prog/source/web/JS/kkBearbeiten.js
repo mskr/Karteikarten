@@ -137,6 +137,148 @@ function fillKKbearbeitenTemplateWith(json){
 	else{
 		showError("Interner Fehler beim Laden der Karteikarte. Wenden sie sich an einen Administrator.")
 	}
+    
+    //== Code fuer die Verweise START ==
+    
+    var verweisVoraussetzungArr = [];
+    var verweisWeiterfuehrendArr = [];
+    var verweisUebungArr = [];
+    var verweisSonstigesArr = [];
+    
+    // Arrays mit aktuellen Verweisen fuellen
+    for(var index in json[paramVerweise])
+    {
+        switch(json[paramVerweise][index][paramType].toLowerCase())
+        {
+            case paramVerweisVoraussetzung.toLowerCase():
+                verweisVoraussetzungArr.push(json[paramVerweise][index][paramId]);
+                break;
+            case paramVerweisWeiterfuehrend.toLowerCase():
+                verweisWeiterfuehrendArr.push(json[paramVerweise][index][paramId]);
+                break;
+            case paramVerweisUebung.toLowerCase():
+                verweisUebungArr.push(json[paramVerweise][index][paramId]);
+                break;
+            case paramVerweisSonstiges.toLowerCase():
+                verweisSonstigesArr.push(json[paramVerweise][index][paramId]);
+        }
+    }
+    
+    // Sammle Ajax Objekte aller Verweis Baeume
+    var verwBaeumeAjaxCalls = [];
+    
+    $(".kk_bearbeiten_verweise_baum").each(function() {
+        // Verweis Baeume initialisieren
+        baumWurzelAjax = ladeKindKarteikarten(
+                veranstaltungsObject[paramErsteKarteikarte], 
+                $(this), 
+                false, 
+                function(arr, kkListItem, i, e, ajax, klappeAus) {
+                    if(klappeAus)
+                    {
+                        $.when(ajax).done(function() {
+                            // Checkboxen mit den Arrays synchronisieren
+                            kkListItem.find("> ul input[type='checkbox']").each(function(index, elem) {
+                                var verwBaum = $(elem).parents(".kk_verweise_baum");
+                                var verwTyp = verwBaum.attr("id").split("_")[4];
+                                syncCheckboxWithArray(verwTyp, $(elem).data("kkid"), $(elem));
+                            });
+                            // Change Handler fuer die Checkboxes der bei Klick geladenen Kinder
+                            kkListItem.find("> ul input[type='checkbox']").change(function(e) {
+                                var verwBaum = $(e.target).parents(".kk_verweise_baum");
+                                var verwTyp = verwBaum.attr("id").split("_")[4];
+                                var isHinzu = $(e.target).prop("checked");
+                                var zielKkId = $(e.target).data("kkid");
+                                verweiseVonBenutzerGeaendert(verwTyp, isHinzu, zielKkId);
+                            });
+                        });
+                    }
+                }, 
+                true
+        );
+        verwBaeumeAjaxCalls.push(baumWurzelAjax);
+    });
+    
+    // Warte darauf, dass die Wurzel-Ebene aller Verweise Baeume geladen wurde
+    $.when.apply(null, verwBaeumeAjaxCalls).done(function() {
+        $(".kk_bearbeiten_verweise_baum input[type='checkbox']").each(function(index, elem) {
+            var verwBaum = $(elem).parents(".kk_verweise_baum");
+            var verwTyp = verwBaum.attr("id").split("_")[4];
+            syncCheckboxWithArray(verwTyp, $(elem).data("kkid"), $(elem));
+        });
+        // Change Handler fuer die Checkboxes der Wurzel-Ebene
+        $(".kk_bearbeiten_verweise_baum input[type='checkbox']").change(function(e) {
+            var verwBaum = $(e.target).parents(".kk_verweise_baum");
+            var verwTyp = verwBaum.attr("id").split("_")[4];
+            var isHinzu = $(e.target).prop("checked");
+            var zielKkId = $(e.target).data("kkid");
+            verweiseVonBenutzerGeaendert(verwTyp, isHinzu, zielKkId);
+        });
+    });
+    
+    function syncCheckboxWithArray(verweisTyp, zielKkId, checkbox)
+    {
+        switch(verweisTyp)
+        {
+            case "voraussetzung":
+                if(jQuery.inArray(zielKkId, verweisVoraussetzungArr) != -1)
+                    checkbox.prop("checked", true);
+                break;
+            case "weiterfuehrend":
+                if(jQuery.inArray(zielKkId, verweisWeiterfuehrendArr) != -1)
+                    checkbox.prop("checked", true);
+                break;
+            case "uebung":
+                if(jQuery.inArray(zielKkId, verweisUebungArr) != -1)
+                    checkbox.prop("checked", true);
+                break;
+            case "sonstige":
+                if(jQuery.inArray(zielKkId, verweisSonstigesArr) != -1)
+                    checkbox.prop("checked", true);
+        }
+    }
+    
+    function verweiseVonBenutzerGeaendert(verweisTyp, isHinzu, zielKkId)
+    {
+        switch(verweisTyp)
+        {
+            case "voraussetzung":
+                if(isHinzu)
+                    verweisVoraussetzungArr.push(zielKkId);
+                else
+                    verweisVoraussetzungArr = jQuery.grep(verweisVoraussetzungArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+                break;
+            case "weiterfuehrend":
+                if(isHinzu)
+                    verweisWeiterfuehrendArr.push(zielKkId);
+                else
+                    verweisWeiterfuehrendArr = jQuery.grep(verweisWeiterfuehrendArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+                break;
+            case "uebung":
+                if(isHinzu)
+                    verweisUebungArr.push(zielKkId);
+                else
+                    verweisUebungArr = jQuery.grep(verweisUebungArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+                break;
+            case "sonstige":
+                if(isHinzu)
+                    verweisSonstigesArr.push(zielKkId);
+                else
+                    verweisSonstigesArr = jQuery.grep(verweisSonstigesArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+        }
+        
+    }
+
+    //== Code fuer die Verweise ENDE ==
+    
 	displayKKtoEdit(json);
 }
 function displayKKtoEdit(KKjson){
@@ -186,6 +328,8 @@ function displayKKtoEdit(KKjson){
     	$(".checkboxes").prop("checked",false);
     	$("#kk_bearbeiten_titel_input").val("");
     	$("#kk_bearbeiten_TA").val("");
+        // Zerstoere Verweis Baeume mit allen Handlern
+        $("#kk_bearbeiten_popup").find(".kk_verweise_baum").remove();
     }
 	
 	popupFenster(

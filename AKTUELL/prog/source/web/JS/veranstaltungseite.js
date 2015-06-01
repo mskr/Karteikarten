@@ -120,14 +120,100 @@ function exportKkVonVn(vnId)
 
 function fillVeranstaltungsSeite(Vid, kkId)
 {
-	showPreAfterLoad();
-	
-	// Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
-	d = jQuery.Deferred();
+    // Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
+    d = jQuery.Deferred();
+    
+    var params = {};
+    params[paramId] = Vid;
+    var ajax1 = ajaxCall(veranstaltungServlet,
+        actionGetVeranstaltung,
+        function(response) 
+        {
+            veranstaltungsObject = response;
+            
+            if(!veranstaltungsObject[paramAngemeldet] && jsonBenutzer[paramNutzerstatus] != "ADMIN" )
+            {
+                showError("Sie haben nicht die notwendingen Berechtigungen um diese Seite zu sehen!");
+                gotoHauptseite();
+
+                // Deferred Objekt als abgeschlossen markieren.
+                d.resolve();
+                return;
+            }
+            
+            $.when(findStudiengaenge(Vid)).done(function() {
+                $.when(findModeratorenVn(Vid)).done(function() {
+                    
+                    // Wenn alles geladen wurde
+                    titel = veranstaltungsObject[paramTitel];
+                    // Details der VN in DOM einfuegen
+                    $("#vn_title").text(titel);
+                    $("#vn_attr_semester").text(veranstaltungsObject[paramSemester]);
+                    var vnStudiengaenge = "";
+                    for(var i = 0; i<veranstaltungsObject[paramStudiengang].length; i++)
+                    {
+                        vnStudiengaenge += veranstaltungsObject[paramStudiengang][i];
+                        if(i < veranstaltungsObject[paramStudiengang].length-1)
+                            vnStudiengaenge += ", ";
+                    }
+                    $("#vn_attr_studgang").text(vnStudiengaenge);
+                    $("#vn_attr_ersteller").text(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
+                    var vnModeratoren = "";
+                    if(veranstaltungsObject[paramModeratoren].length > 0)
+                    {
+                        for(var i = 0; i<veranstaltungsObject[paramModeratoren].length; i++)
+                        {
+                            vnModeratoren += veranstaltungsObject[paramModeratoren][i][paramVorname] +
+                                             " " + veranstaltungsObject[paramModeratoren][i][paramNachname];
+                            if(i < veranstaltungsObject[paramModeratoren].length-1)
+                                vnModeratoren += ", ";
+                        }
+                    }
+                    else
+                    {
+                        vnModeratoren += "-";
+                    }
+                    $("#vn_attr_moderatoren").text(vnModeratoren);
+                    $("#vn_attr_bewertungen_erlaubt").text(veranstaltungsObject[paramBewertungenErlauben] ? "ja" : "nein");
+                    $("#vn_attr_kommentare_erlaubt").text(veranstaltungsObject[paramKommentareErlauben] ? "ja" : "nein");
+                    $("#vn_attr_modbearb_erlaubt").text(veranstaltungsObject[paramModeratorKkBearbeiten] ? "ja" : "nein");
+                    
+                    document.title = titel;
+                    
+                    
+                    if(veranstaltungsObject[paramErsteller][paramId] == jsonBenutzer[paramId] || jsonBenutzer[paramNutzerstatus] == "ADMIN")
+                    {
+                        $("#vn_loeschen").show();
+                        $("#vn_bearbeiten").show();
+                        $("#kk_erstellen").show();
+                    }
+                    else
+                    {
+                        $("#vn_loeschen").hide();
+                        $("#vn_bearbeiten").hide();
+                        $("#kk_erstellen").hide();
+                    }
+                    
+                    if(kkId == undefined)
+                        displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], null, false);
+                    else
+                        displayKarteikarte(kkId, null, false);
+                    
+                    // Deferred Objekt als abgeschlossen markieren.
+                    d.resolve();
+                });
+            });
+        },
+        params
+    );
+    
     destroyCKeditors($("#kk_all"));
+    
+    showPreAfterLoad();
+    
 	$("#kk_all").empty();
 	// Studiengänge in auswahlliste anzeigen
-	var ajax1 = ajaxCall(startseitenServlet,
+	var ajax2 = ajaxCall(startseitenServlet,
 			actionGetStudiengaenge,
 			function(response) 
 			{
@@ -137,7 +223,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
 	); 
 
 	// Semester in auswahlliste anzeigen
-	var ajax2 =  ajaxCall(startseitenServlet,
+	var ajax3 =  ajaxCall(startseitenServlet,
 			actionGetSemester,
 			function(response) 
 			{
@@ -162,96 +248,14 @@ function fillVeranstaltungsSeite(Vid, kkId)
 			}
 	);
 	
-	var params = {};
-	params[paramId] = Vid;
-	var ajax3 = ajaxCall(veranstaltungServlet,
-		actionGetVeranstaltung,
-		function(response) 
-		{
-			veranstaltungsObject = response;
-			
-			if(veranstaltungsObject[paramAngemeldet] == false && jsonBenutzer[paramNutzerstatus] != "ADMIN" )
-			{
-				showError("Sie haben nicht die notwendingen Berechtigungen um diese Seite zu sehen!");
-				gotoHauptseite();
-
-				// Deferred Objekt als abgeschlossen markieren.
-				d.resolve();
-				return;
-			}
-			
-			$.when(findStudiengaenge(Vid)).done(function() {
-				$.when(findModeratorenVn(Vid)).done(function() {
-					
-					// Wenn alles geladen wurde
-					titel = veranstaltungsObject[paramTitel];
-					// Details der VN in DOM einfuegen
-					$("#vn_title").text(titel);
-					$("#vn_attr_semester").text(veranstaltungsObject[paramSemester]);
-					var vnStudiengaenge = "";
-					for(var i = 0; i<veranstaltungsObject[paramStudiengang].length; i++)
-					{
-					    vnStudiengaenge += veranstaltungsObject[paramStudiengang][i];
-	                    if(i < veranstaltungsObject[paramStudiengang].length-1)
-	                        vnStudiengaenge += ", ";
-					}
-					$("#vn_attr_studgang").text(vnStudiengaenge);
-                    $("#vn_attr_ersteller").text(veranstaltungsObject[paramErsteller][paramVorname] + " " + veranstaltungsObject[paramErsteller][paramNachname]);
-                    var vnModeratoren = "";
-                    if(veranstaltungsObject[paramModeratoren].length > 0)
-                    {
-                        for(var i = 0; i<veranstaltungsObject[paramModeratoren].length; i++)
-                        {
-                            vnModeratoren += veranstaltungsObject[paramModeratoren][i][paramVorname] +
-                                             " " + veranstaltungsObject[paramModeratoren][i][paramNachname];
-                            if(i < veranstaltungsObject[paramModeratoren].length-1)
-                                vnModeratoren += ", ";
-                        }
-                    }
-                    else
-                    {
-                        vnModeratoren += "-";
-                    }
-                    $("#vn_attr_moderatoren").text(vnModeratoren);
-                    $("#vn_attr_bewertungen_erlaubt").text(veranstaltungsObject[paramBewertungenErlauben] ? "ja" : "nein");
-                    $("#vn_attr_kommentare_erlaubt").text(veranstaltungsObject[paramKommentareErlauben] ? "ja" : "nein");
-                    $("#vn_attr_modbearb_erlaubt").text(veranstaltungsObject[paramModeratorKkBearbeiten] ? "ja" : "nein");
-                    
-                    document.title = titel;
-					
-					
-					if(veranstaltungsObject[paramErsteller][paramId] == jsonBenutzer[paramId] || jsonBenutzer[paramNutzerstatus] == "ADMIN")
-					{
-						$("#vn_loeschen").show();
-						$("#vn_bearbeiten").show();
-						$("#kk_erstellen").show();
-					}
-					else
-					{
-						$("#vn_loeschen").hide();
-						$("#vn_bearbeiten").hide();
-						$("#kk_erstellen").hide();
-					}
-					
-					if(kkId == undefined)
-						displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], null, false);
-					else
-						displayKarteikarte(kkId, null, false);
-					
-					// Deferred Objekt als abgeschlossen markieren.
-					d.resolve();
-				});
-			});
-		},
-		params
-	);
-	
 	// Inhaltsverzeichnis aufbauen
 	// warte bis VN Objekt geladen
-	$.when(ajax3).done(function() {
-	    var ajax4 = initInhaltsverzeichnis();
+	$.when(ajax1).done(function() {
+	    var ajax4 = undefined;
+	    if(veranstaltungsObject[paramAngemeldet])
+	        ajax4 = initInhaltsverzeichnis();
 	    // warte bis mainbox visible
-	    $.when(ajax1,ajax2,d,ajax4).done(function() {
+	    $.when(ajax2,ajax3,d,ajax4).done(function() {
 	        // Inhaltsverzeichnis im Viewport halten
 	        var sticky = new Waypoint.Sticky({
 	            element: $("#kk_inhaltsverzeichnis"),
@@ -333,7 +337,7 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
                 {
                     if(!zeigeErstellButtons)
                     {
-                        elem = $("<li style='display:none class='kk_baum_keine_kinder'>Nichts anzuzeigen</li>");
+                        elem = $("<li style='display:none' class='kk_baum_keine_kinder'>Nichts anzuzeigen</li>");
                     }
                     else
                     {
@@ -509,6 +513,7 @@ function loadAfterKk(id)
 	
 	var params2 ={};
 	params2[paramId] = id;
+	
 	kkLoadRequest = ajaxCall(karteikartenServlet,
 			actionGetKarteikartenNachfolger, 
 			function(response){

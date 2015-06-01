@@ -152,10 +152,6 @@ function newKarteikarte(triggerElem) {
                         return elem != zielKkId;
                     });
         }
-        console.log("verweisVoraussetzungArr="+verweisVoraussetzungArr);
-        console.log("verweisWeiterfuehrendArr="+verweisWeiterfuehrendArr);
-        console.log("verweisUebungArr="+verweisUebungArr);
-        console.log("verweisSonstigesArr="+verweisSonstigesArr);
         
     }
 
@@ -200,14 +196,14 @@ function newKarteikarte(triggerElem) {
     }
     
     clearFkt = function(){
-    	$("#kk_neuesKapitel").unbind("change");
-    	$("#kk_neuesKapitel").prop("checked",false);
-    	$("#cke_kk_erstellen_TA").fadeIn(0);
-		$("#df_area_kk").fadeIn(0);
-    	$(".checkboxes").prop("checked",false);
+    	$("#kk_neuesKapitel").off();
+    	$("#cke_kk_erstellen_TA").show();
+		$("#df_area_kk").show();
+    	$("#kk_erstellen_popup input[type='checkbox']").prop("checked",false);
     	$("#kk_erstellen_titel_input").val("");
     	$("#kk_erstellen_TA").val("");
     	// Zerstoere Verweis Baeume mit allen Handlern
+    	//TODO Nicht den ganzen Container!
     	$("#kk_erstellen_popup").find(".kk_verweise_baum").remove();
     }
     

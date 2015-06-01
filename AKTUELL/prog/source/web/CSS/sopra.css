@@ -53,6 +53,11 @@ a { /* Link Style */
 } a:hover {
 	color: gray;
 }
+
+p {
+	margin-bottom: .6em;
+}
+
 option {
 	background: white;
 }
@@ -85,33 +90,7 @@ label {
 input[type="radio"], input[type="checkbox"] {
     margin-right: .5em;
 }
-.Big_checkbox{
-	height:25px;
-	width:25px;
-}
-#kk_neuesKapitel_wrapper{
-	background-color:#333333;
-	padding:8px;
-	border-radius:5px;
-	margin-bottom:8px;
-}
-.suche_kk_wrapper{
-	margin-top:9px;
-	background-color:#333333;
-	padding:12px;
-	border-radius:5px;
-	margin-bottom:8px;
-}
-.needMarginTop8{
-	margin-top:8px;
-	margin-bottom:7px;
-}
-#kk_b_neuesKapitel_wrapper{
-	background-color:#333333;
-	padding:8px;
-	border-radius:5px;
-	margin-bottom:8px;
-}
+
 /* Bei allen input_std ist die Hoehe festgelegt, die Breite muss aber einzeln gesetzt werden */
 .input_std {
 	margin: .3em 0;
@@ -173,12 +152,9 @@ textarea.input_std {
 } textarea.input_std:hover::-webkit-scrollbar-thumb {
 	background-color: rgba(0,0,0,1);
 }
+
 .form_infotext {
 	font-size: .9em;
-	color: #ccc;
-}
-.form_infotext3{
-	font-size: 1.1em;
 	color: #ccc;
 }
 
@@ -999,11 +975,12 @@ textarea.input_std {
 	font-weight: bold;
 	background-color: transparent;
 	background-image: url(../files/general/select-arrow.png);
-	background-size: .8em;
+	background-size: 1em;
 	background-repeat: no-repeat;
-	background-position: right;
+	background-position: left;
 	-webkit-appearance: none;
 	-moz-appearance: none;
+	padding-left: 1em;
 	cursor: pointer;
 	transition: all .2s;
 } .vn_toolbar select:hover {
@@ -1405,23 +1382,6 @@ textarea.input_std {
 /* 	display:block;
  */	font-size: 1.3em;
 	padding-bottom: 0.5em;
-}
-.form_infotext2{
-	font-size: 2em;
-	color: #A9A9A9;
-}
-.checkboxes{
-	height:16px;
-	width:16px;
-	margin:5px;
-}
-.checkbox_labels{
-	vertical-align:top;
-	font-size:17px;
-}
-.kk_erstellen_zurueck{
-	display:none;
-	font-size: 1.3em; 
 }
 .kk {
 	vertical-align: middle;

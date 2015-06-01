@@ -209,11 +209,12 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
  * (dann wird der Default-Error-Text fuer den jeweiligen Code auf der GUI angezeigt).
  * @param beforeFunc ist eine Funktion, die beforeSend ausgefuehrt wird (kann optional uebergeben werden).
  * @param completeFunc ist eine Funktion, die bei complete ausgefuehrt wird (kann optional uebergeben werden).
+ * @param timeOut in Millisekunden
  * @returns Ajax Objekt, das Informatioen ueber den Antwortstatus enthaelt.
  */
 function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, beforeFunc, completeFunc, timeOut)
 {
-    console.log("[AJAX] action="+action);
+//    console.log("[AJAX] action="+action);
     if(timeOut == undefined)
     	timeOut = 6000;
     
@@ -371,11 +372,13 @@ function autoComplete(textInput, categories, categoryClassMapping, action)
             event.preventDefault();
             return;
         }
+        // Wurde das letzte Zeichen aus dem Textfeld geloescht,
+        // entferne die Suchergebnisse aus allen Kategorien
         if(textInput.val() == "")
         {
             for(var i in categoryClassMapping)
             {
-                $("#sucherg_"+categoryClassMapping[i]).slideUp("fast").empty();
+                $("#sucherg_"+categoryClassMapping[i]).empty();
             }
         }
         if($("#suche_ergebnisse_"+textInput.attr("id")).is(":hidden"))
@@ -405,10 +408,12 @@ var suchTimer = function(){
     timer;
     that.set = function(textInput, action, suchergContainer, categories, categoryClassMapping) {
         timer = setTimeout(function() {
+            // Alte Suchergebnisse entfernen
             for(var i in categoryClassMapping)
             {
-            	suchergContainer.find("#sucherg_"+categoryClassMapping[i]).slideUp("fast").empty();
+            	suchergContainer.find("#sucherg_"+categoryClassMapping[i]).empty();
             }
+            // Neue Suchergebnisse laden
             var params = {};
             params[paramSuchmuster] = textInput.val();
             ajaxCall (
@@ -418,10 +423,6 @@ var suchTimer = function(){
                     var arrSuchErgebnisse = response[keyJsonArrResult];
                     fillSuchergebnisse(arrSuchErgebnisse,suchergContainer, categories, categoryClassMapping, textInput);
                     suchErgIterator = 0;
-                    for(var i in categoryClassMapping)
-                    {
-                    	suchergContainer.find("#sucherg_"+categoryClassMapping[i]).slideDown("fast");
-                    }
                 },
                 params
             );

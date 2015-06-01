@@ -198,10 +198,10 @@ public interface IDatenbankmanager {
     public Boolean istModerator(int benutzer, int veranstaltung);
 
     /**
-     * Holt alle Studiengaenge zu der angegebenen Veranstaltung aus der Datenbank.
-     * @param veranstaltung referenziert eindeutig eine Veranstaltung
-     * @return Liste der Studiengänge zu dieser Veranstaltung. Wird die Veranstaltung von keinem Studiengang
-     * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
+     * Prüft, ob ein Benutzer in eine Veranstaltung eingeschrieben ist.
+     * @param benutzer
+     * @param veranstaltung
+     * @return true, falls eingeschrieben, false andernfalls.
      */
     public boolean angemeldet(int benutzer, int veranstaltung) throws SQLException;
 

@@ -1894,7 +1894,7 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
            
-            ps = conNeo4j.prepareStatement("MATCH(n)-[r:"+BeziehungsTyp.V_VORRAUSSETZUNG.toString().toLowerCase()+"|"+BeziehungsTyp.V_UEBUNG.toString().toLowerCase()+"|"
+            ps = conNeo4j.prepareStatement("MATCH(n)-[r:"+BeziehungsTyp.V_VORAUSSETZUNG.toString().toLowerCase()+"|"+BeziehungsTyp.V_UEBUNG.toString().toLowerCase()+"|"
                     + ""+BeziehungsTyp.V_ZUSATZINFO.toString().toLowerCase()+"|"+BeziehungsTyp.V_SONSTIGES.toString().toLowerCase()+"]->(m)"
                     + " WHERE id(n) = {1} RETURN id(m) AS zielID, type(r) AS Typ");
             ps.setInt(1, karteikID);
