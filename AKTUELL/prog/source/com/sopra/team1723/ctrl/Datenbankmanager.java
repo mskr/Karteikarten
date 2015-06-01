@@ -1493,10 +1493,18 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             if (rs.next())
             {
+                Kommentar kommentar = leseKommentar(rs.getInt("Kommentar"));
+                Kommentar vaterKommentar = kommentar;
+                if(kommentar.getVaterID() != -1)
+                     vaterKommentar = leseKommentar(kommentar.getVaterID());
+                if(vaterKommentar == null)
+                    return null;
+                Karteikarte karteik = leseKarteikarte(vaterKommentar.getKarteikartenID());
+                
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
                 benachrichtigung = new BenachrNeuerKommentar(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
-                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), rs.getInt("Kommentar"));
+                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), rs.getInt("Kommentar"), karteik.getId());
             }
         }
         catch (SQLException e)
@@ -1668,10 +1676,9 @@ public class Datenbankmanager implements IDatenbankmanager
 
                 ps.executeUpdate();
                 
-                Kommentar vaterKommentar = kommentar;
-                if(kommentar.getVaterID() != -1)
-                     vaterKommentar = leseKommentar(kommentar.getVaterID());
-                Karteikarte karteik = leseKarteikarte(vaterKommentar.getKarteikartenID());
+                Karteikarte karteik = leseKarteikarte(kommentar.getKarteikartenID());
+                if(karteik == null)
+                    throw new SQLException();
                 ps = conMysql
                         .prepareStatement("INSERT INTO benachrichtigung_neuer_kommentar (Benachrichtigung, Benutzer,"
                                 + "Kommentar) SELECT DISTINCT ?,bvz.Benutzer, ? FROM benutzer_veranstaltung_zuordnung AS bvz "
