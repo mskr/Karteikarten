@@ -562,10 +562,10 @@ public class KarteikartenServlet extends ServletController
                 return;
             }
 
-            String[] v_uebung = req.getParameterValues(ParamDefines.V_Uebung);
-            String[] v_voraussetzung = req.getParameterValues(ParamDefines.V_Voraussetzung);
-            String[] v_zusatzinfo = req.getParameterValues(ParamDefines.V_Zusatzinfo);
-            String[] v_sonstiges = req.getParameterValues(ParamDefines.V_Sonstiges);
+            String[] v_uebung = req.getParameterValues(ParamDefines.V_Uebung + "[]");
+            String[] v_voraussetzung = req.getParameterValues(ParamDefines.V_Voraussetzung + "[]");
+            String[] v_zusatzinfo = req.getParameterValues(ParamDefines.V_Zusatzinfo + "[]");
+            String[] v_sonstiges = req.getParameterValues(ParamDefines.V_Sonstiges + "[]");
 
             ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
             if (v_voraussetzung != null)
@@ -698,10 +698,10 @@ public class KarteikartenServlet extends ServletController
                 return;
             }
 
-            String[] v_voraussetzung = req.getParameterValues(ParamDefines.V_Voraussetzung);
-            String[] v_uebung = req.getParameterValues(ParamDefines.V_Uebung);
-            String[] v_zusatzinfo = req.getParameterValues(ParamDefines.V_Zusatzinfo);
-            String[] v_sonstiges = req.getParameterValues(ParamDefines.V_Sonstiges);
+            String[] v_voraussetzung = req.getParameterValues(ParamDefines.V_Voraussetzung + "[]");
+            String[] v_uebung = req.getParameterValues(ParamDefines.V_Uebung + "[]");
+            String[] v_zusatzinfo = req.getParameterValues(ParamDefines.V_Zusatzinfo + "[]");
+            String[] v_sonstiges = req.getParameterValues(ParamDefines.V_Sonstiges + "[]");
 
             ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
             if (v_voraussetzung != null)
@@ -888,9 +888,10 @@ public class KarteikartenServlet extends ServletController
         ServletContext servletContext = getServletContext();
         String contextPath = servletContext.getRealPath(File.separator);
 
-        String[] options = req.getParameterValues(ParamDefines.ExportOptions);
+        String[] options = req.getParameterValues(ParamDefines.ExportOptions+ "[]");
         if (options == null)
         {
+            System.out.println("Optionen fehlen");
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
