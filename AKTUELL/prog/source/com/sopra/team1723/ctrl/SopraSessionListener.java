@@ -1,5 +1,9 @@
 package com.sopra.team1723.ctrl;
 
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
@@ -10,7 +14,6 @@ public class SopraSessionListener implements HttpSessionListener
     public void sessionCreated(HttpSessionEvent arg0)
     {
         System.out.println("[SessionListener] Created Session");
-        
     }
 
     @Override

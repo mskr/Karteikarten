@@ -1613,9 +1613,9 @@ public class Datenbankmanager implements IDatenbankmanager
                 transaktion = false;
                 conMysql.setAutoCommit(false);
             }
-            ps = conMysql.prepareStatement("INSERT INTO benachrichtigung (Inhalt, Erstelldatum) VALUES (?,?); ");
+            ps = conMysql.prepareStatement("INSERT INTO benachrichtigung (Inhalt, Erstelldatum) VALUES (?,NOW); ");
             ps.setString(1, benachrichtigung.getInhalt());
-            ps.setTimestamp(2, new Timestamp(benachrichtigung.getErstelldaum().getTimeInMillis()));
+//            ps.setTimestamp(2, new Timestamp(benachrichtigung.getErstelldaum().getTimeInMillis()));
             ps.executeUpdate();
             closeQuietly(ps);
 
