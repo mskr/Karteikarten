@@ -107,12 +107,13 @@ var paramGelesen = "gelesen";
 var paramType = "type";
 
 //Karteikarte
+var paramURLKkID = "kkId";
+var paramKkId = paramURLKkID;		// Wenn mehrere IDs bertragen werden
 var paramVerweise = "verweise";
 var paramVerweisVoraussetzung = "V_Voraussetzung";
 var paramVerweisWeiterfuehrend = "V_Zusatzinfo";
 var paramVerweisUebung = "V_Uebung";
 var paramVerweisSonstiges = "V_Sonstiges";
-var paramURLKkID = "kkId";
 var paramKkText = "TEXT";
 var paramKkBild = "BILD";
 var paramKkUeberschrift = "BILD";
@@ -127,6 +128,7 @@ var paramVaterKK = "vaterKK";
 var paramBruderKK = "bruderKK";
 
 // Veranstaltungen
+var paramVnId = "vnId";		// Wenn mehrere IDs bertragen werden
 var paramTitel = "titel";
 var paramBeschr = "beschr";
 var paramSemester = "semester";

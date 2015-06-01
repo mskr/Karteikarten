@@ -105,6 +105,7 @@ public class ParamDefines
 
 
     // Parameter für Veranstaltung
+    public final static String VnId = "vnId";     
     public final static String Titel = "titel";
     public final static String Beschr = "beschr";
     public final static String Semester = "semester";
@@ -120,6 +121,7 @@ public class ParamDefines
     
     
     // Parameter für Karteikarte  
+    public final static String KkId = "kkId";      
     public final static String Verweise = "verweise";
     public final static String VaterKK = "vaterKK";
     public final static String BruderKK = "bruderKK";
