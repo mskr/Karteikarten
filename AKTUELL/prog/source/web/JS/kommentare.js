@@ -63,8 +63,7 @@ function fillHauptKommentar(domKomm, kommObj, domKK)
 	}
 
 	var kommErsteller = kommObj[paramErsteller];
-	if(kommErsteller[paramId] == jsonBenutzer[paramId] || 
-			jsonBenutzer[paramNutzerstatus] == "ADMIN" )
+	if(kommErsteller[paramId] == jsonBenutzer[paramId] || checkIfAllowedVn(veranstaltungsObject,false))
 	{
 		// Löschen handler
 		domKomm.find(".kk_komm_loeschen").click(function() {
@@ -118,8 +117,7 @@ function fillAntKomm(domKomm, kommObj, domVaterKomm)
 {
 	var kommErsteller = kommObj[paramErsteller];
 	
-	if(kommErsteller[paramId] == jsonBenutzer[paramId] || 
-			jsonBenutzer[paramNutzerstatus] == "ADMIN" )
+	if(kommErsteller[paramId] == jsonBenutzer[paramId] || checkIfAllowedVn(veranstaltungsObject,false) )
 	{
 		domKomm.find(".kk_komm_loeschen").off("click");
 		domKomm.find(".kk_komm_loeschen").click(function() {
@@ -160,8 +158,7 @@ function createAndFillKommentar(kommObj, isAntwortKommentar, domVater)
 	domKomm.find(".kk_komm_profilBild").attr("src",kommErsteller[paramProfilBild]);
 	
 	// TODO Was ist mit Moderatoren?
-	if(kommErsteller[paramId] == jsonBenutzer[paramId] || 
-			jsonBenutzer[paramNutzerstatus] == "ADMIN" )
+	if(kommErsteller[paramId] == jsonBenutzer[paramId] || checkIfAllowedVn(veranstaltungsObject,false))
 	{
 	}
 	else

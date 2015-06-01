@@ -78,11 +78,13 @@ function addBenachrichtigung(ben)
 	var onClickfkt = function() {};
 	if(type == paramBenTypeKarteikarte)
 	{
-
+		// TODO
 	}
 	else if(type == paramBenTypeKommentar)
 	{
-
+		onClickfkt = function() {
+			gotoVeranstaltung(ben[paramBenVeranst][paramId], ben[paramKkId]);
+		};
 	}
 	else if(type == paramBenTypeModerator)
 	{

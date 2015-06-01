@@ -290,15 +290,22 @@ public class KommentarServlet extends ServletController {
             return false;
         }
         
-        Kommentar k = dbManager.leseKommentar(kommId);
-        if(k == null)
+        Kommentar komm = dbManager.leseKommentar(kommId);
+        if(komm == null)
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Dieser Kommentar existiert nicht!");
             outWriter.print(jo);
             return false;
         }
-        if(k.getErsteller().getId() != aktuellerBenutzer.getId() 
-                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        Kommentar vaterKomm = komm;
+        if(komm.getVaterID() != -1)
+            vaterKomm = dbManager.leseKommentar(komm.getVaterID());
+        
+        Karteikarte kk = dbManager.leseKarteikarte(vaterKomm.getKarteikartenID());
+        
+        
+        if(komm.getErsteller().getId() != aktuellerBenutzer.getId() 
+                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN && !dbManager.istModerator(aktuellerBenutzer.getId() , kk.getVeranstaltung()))
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);

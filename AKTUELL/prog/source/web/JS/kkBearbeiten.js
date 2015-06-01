@@ -11,7 +11,8 @@ $(document).ready(function(){
 function processKK_editClick(triggerElem){
 	id = triggerElem.parent().parent().parent().parent().data("kkid");
 	var params = {};
-    params[paramId] = id;
+    params[paramKkId] = id;
+    params[paramVnId] = veranstaltungsObject[paramId];
     karteikarteJSON = {};
     return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
         function(response) {
@@ -27,21 +28,21 @@ function fillKKbearbeitenTemplateWith(json){
 	appendDropzone();
 	$("#kk_jetztNeuesKapitel").unbind("change");
 	$("#kk_jetztNeuesKapitel").change(function(e){
-    	if($("#kk_jetztNeuesKapitel").prop("checked")==true){
-    		$("#kk_bearbeiten_text_area").slideUp(300);
-    		$("#df_area_kk_b").fadeOut(300);
+    	if($("#kk_jetztNeuesKapitel").prop("checked")==true)
+    	{
+    		$("#kk_bearbeiten_text_area").hide();
+    		$("#df_area_kk_b").hide();
     	}
-    	else{
-			$("#kk_bearbeiten_text_area").slideDown(300);
-			$("#df_area_kk_b").fadeIn(300);
+    	else
+    	{
+			$("#kk_bearbeiten_text_area").show();
+			$("#df_area_kk_b").show();
     	}
 		
     });
 	counter = 0;
 	$("#kkB_attributes").children().each(function(){			//fill with attributes...
 		if(isEven(counter)){
-//			console.log("even");
-//			console.log($(this).children().first());
 			if(json[paramAttribute][counter/2]===true){
 				$(this).children().first().prop("checked",true);
 			}
@@ -53,7 +54,6 @@ function fillKKbearbeitenTemplateWith(json){
 		
 	});
 	
-	console.log(json);
 	$("#kk_bearbeiten_titel_input").val(json[paramTitel]);
 	if(json[paramType]=="TEXT"){
 		if(json[paramInhalt]==""){		//überschrift
@@ -329,7 +329,7 @@ function displayKKtoEdit(KKjson){
     	$("#kk_bearbeiten_titel_input").val("");
     	$("#kk_bearbeiten_TA").val("");
         // Zerstoere Verweis Baeume mit allen Handlern
-        $("#kk_bearbeiten_popup").find(".kk_verweise_baum").remove();
+        $("#kk_bearbeiten_popup").find(".kk_verweise_baum").empty();
     }
 	
 	popupFenster(

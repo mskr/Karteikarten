@@ -14,27 +14,22 @@ function newKarteikarte(triggerElem) {
 	
 	var bruder = findBruder(triggerElem);
 	try{
-		var kk_ck_editor = $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
+	    var kk_ck_editor = $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
 	}
     catch(e){
     	console.log(e);
     }
     
-    $("#kk_neuesKapitel").change(function(e){
-    	if($("#kk_neuesKapitel").prop("checked")==true){
-    		$("#cke_kk_erstellen_TA").slideUp(300);
-    		$("#df_area_kk").fadeOut(300);
+    $("#kk_neuesKapitel").change(function(e) {
+    	if($("#kk_neuesKapitel").prop("checked"))
+    	{
+    		$("#kk_erstellen_text_area").hide();
+    		$("#df_area_kk").hide();
     	}
-    	else{
-			//TODO CKeditor bleibt immer weg
-    		// Prüfen ob == statt === das problem behoben hat.
-    		if($(".dz-filename").length==0){
-    			$("#cke_kk_erstellen_TA").slideDown(300);
-        		$("#df_area_kk").fadeIn(300);
-    		}
-    		else{
-    			$("#df_area_kk").fadeIn(300);
-    		}
+    	else
+    	{
+            $("#kk_erstellen_text_area").show();
+            $("#df_area_kk").show();
     		
     	}
 		
@@ -203,8 +198,7 @@ function newKarteikarte(triggerElem) {
     	$("#kk_erstellen_titel_input").val("");
     	$("#kk_erstellen_TA").val("");
     	// Zerstoere Verweis Baeume mit allen Handlern
-    	//TODO Nicht den ganzen Container!
-    	$("#kk_erstellen_popup").find(".kk_verweise_baum").remove();
+    	$("#kk_erstellen_popup").find(".kk_verweise_baum").empty();
     }
     
     popupFenster(

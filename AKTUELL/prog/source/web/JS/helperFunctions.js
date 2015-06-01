@@ -169,12 +169,13 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     
     for(var i in closeElems)
     {
-        closeElems[i].off(),
+        closeElems[i].off();
         closeElems[i].click(function() {
             $("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
-            popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
-            closeFunc();
+            popupOverlayWrapper.fadeOut(300, function() {
+                
+            });
             popupSeitenIterator = 0;
         });
     }
@@ -649,11 +650,16 @@ function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator
 	
 	if(checkModerator)
 	{
-		if(veranstObj[paramModeratoren] == undefined || 
-				$.inArray(jsonBenutzer[paramId],veranstObj[paramModeratoren]) == -1)
-				return false;
-		else
-			return true;
+		if(veranstObj[paramModeratoren] == undefined)
+			return false;
+		else{
+			for(i in veranstObj[paramModeratoren])
+			{
+				if(veranstObj[paramModeratoren][i][paramId] == jsonBenutzer[paramId])
+					return true;
+			}
+		}
+			return false;
 	}
 	return false;
 }
