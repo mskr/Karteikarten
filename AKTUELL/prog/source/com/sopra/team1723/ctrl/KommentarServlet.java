@@ -290,7 +290,7 @@ public class KommentarServlet extends ServletController {
             return false;
         }
         
-        Kommentar komm = dbManager.leseKommentar(kommId, aktuellerBenutzer.getId());
+        Kommentar komm = dbManager.leseKommentar(kommId);
         if(komm == null)
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Dieser Kommentar existiert nicht!");
@@ -299,7 +299,7 @@ public class KommentarServlet extends ServletController {
         }
         Kommentar vaterKomm = komm;
         if(komm.getVaterID() != -1)
-            vaterKomm = dbManager.leseKommentar(komm.getVaterID(), aktuellerBenutzer.getId());
+            vaterKomm = dbManager.leseKommentar(komm.getVaterID());
         
         Karteikarte kk = dbManager.leseKarteikarte(vaterKomm.getKarteikartenID());
         
