@@ -1504,7 +1504,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
                 benachrichtigung = new BenachrNeuerKommentar(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
-                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), rs.getInt("Kommentar"), karteik.getId());
+                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), rs.getInt("Kommentar"), karteik);
             }
         }
         catch (SQLException e)
@@ -1675,10 +1675,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 ps.setInt(5, bnk.getBenutzer());
 
                 ps.executeUpdate();
-                
-                Karteikarte karteik = leseKarteikarte(bnk.getKarteikarteID());
-                if(karteik == null)
-                    throw new SQLException();
+
                 ps = conMysql
                         .prepareStatement("INSERT INTO benachrichtigung_neuer_kommentar (Benachrichtigung, Benutzer,"
                                 + "Kommentar) SELECT DISTINCT ?,bvz.Benutzer, ? FROM benutzer_veranstaltung_zuordnung AS bvz "
@@ -1686,7 +1683,7 @@ public class Datenbankmanager implements IDatenbankmanager
                                 + "b.NotifyKommentare = 'VERANSTALTUNG_TEILGENOMMEN' AND b.ID != ?");
                 ps.setInt(1, id);
                 ps.setInt(2, bnk.getKommentarId());
-                ps.setInt(3, karteik.getVeranstaltung());
+                ps.setInt(3, bnk.getKarteikarte().getVeranstaltung());
                 ps.setInt(4, bnk.getBenutzer());
             }
             else if (benachrichtigung instanceof BenachrProfilGeaendert)

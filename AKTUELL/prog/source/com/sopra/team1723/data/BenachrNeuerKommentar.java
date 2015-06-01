@@ -6,14 +6,14 @@ import java.util.GregorianCalendar;
 
 public class BenachrNeuerKommentar extends Benachrichtigung{
     private int kommentarID;
-    private int karteikarteID;
+    private Karteikarte karteikarte;
     
     public BenachrNeuerKommentar(int id, String inhalt, Calendar erstelldaum, int benutzer, boolean gelesen,
-            int kommentarID, int karteikarteID)
+            int kommentarID, Karteikarte karteikarte)
     {
         super(id, inhalt, erstelldaum, benutzer, gelesen);
         this.kommentarID = kommentarID;
-        this.karteikarteID = karteikarteID;
+        this.karteikarte = karteikarte;
     }
 
     
@@ -21,7 +21,7 @@ public class BenachrNeuerKommentar extends Benachrichtigung{
     {
         super(-1, "Es wurde eine neuer Kommentar zur Karteikarte \""+k.getTitel()+"\" verfasst.", new GregorianCalendar(), benutzer, false);
         this.kommentarID = kommentarID;
-        this.karteikarteID = k.getId();
+        this.karteikarte = k;
     }
 
     
@@ -31,9 +31,9 @@ public class BenachrNeuerKommentar extends Benachrichtigung{
     }
 
 
-    public int getKarteikarteID()
+    public Karteikarte getKarteikarte()
     {
-        return karteikarteID;
+        return karteikarte;
     }
     
     
