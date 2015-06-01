@@ -289,7 +289,12 @@ public class VeranstaltungServlet extends ServletController {
                 outWriter.print(jo);
                 return false;
             }
-            jo = v.toJSON(angem);
+            
+            if(aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+                jo = v.toJSON(angem);
+            else
+                jo = v.toJSON(true);
+            
             jo.put(ParamDefines.Angemeldet,angem);
 
             outWriter.print(jo);

@@ -350,7 +350,7 @@ public class PDFExporter
         
         for( Tripel<BeziehungsTyp, Integer, String> v: kk.getVerweise())
         {
-            if(v.x == BeziehungsTyp.V_VORRAUSSETZUNG)
+            if(v.x == BeziehungsTyp.V_VORAUSSETZUNG)
                 vorraussetzung.add(new Tupel<Integer, String>(v.y, v.z));
             else if(v.x == BeziehungsTyp.V_UEBUNG)
                 uebung.add(new Tupel<Integer, String>(v.y, v.z));

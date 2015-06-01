@@ -157,7 +157,7 @@
 			</div>
 		</div>
 		<div class="popup_fenster_body">
-			<span class="form_infotext">Verfassen Sie eine für jeden sichtbare Beschreibung der Veranstaltung.</span>
+			<p class="form_infotext">Verfassen Sie eine für jeden sichtbare Beschreibung der Veranstaltung.</p>
 			<textarea class="input_std popup_input" id="vn_erstellen_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
 		</div>
 		<div class="popup_fenster_foot">
@@ -231,17 +231,12 @@
 		</div>
 		<div id="popup_fenster_body1"class="popup_fenster_body">
 			<input class="input_std popup_input" id="kk_erstellen_titel_input" type="text" placeholder="Titel" required>
- 			<div id="kk_neuesKapitel_wrapper">
- 				<span>
- 					<input id="kk_neuesKapitel" class="Big_checkbox" type="checkbox" name="attr">
- 					<label class="checkbox_labels" for="attr_lemma">
- 						Markieren, wenn sie ein neues übergeordnetes Kapitel erstellen wollen.
- 						<br>
- 						Diese Karteikarte ist dann inhaltslos!
- 					</label>
-				</span>
- 			</div>
- 			
+ 			<p>
+				<input id="kk_neuesKapitel" type="checkbox" name="attr">
+				<label for="kk_neuesKapitel">
+					Überschrift erstellen
+				</label>
+ 			</p>
  			<div id="kk_erstellen_text_area">
  				<textarea id="kk_erstellen_TA">
  				</textarea>
@@ -260,29 +255,21 @@
  			</div>
 		</div>
 		<div id="popup_fenster_body2" class="popup_fenster_body">
-			<span class="form_infotext2">Fügen sie Attribute zu ihrer Karteikarte hinzu.</span><br>
+			<p class="form_infotext">Fügen sie Attribute zu ihrer Karteikarte hinzu.</p>
 			<div id="kkE_attributes">
-				<span><input id="kkE_attr_lemma" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_lemma">Lemma</label></span><br>
-				<span><input id="kkE_attr_satz" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_satz">Satz</label></span><br>
-				<span><input id="kkE_attr_beweis" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_beweis">Beweis</label></span><br>
-				<span><input id="kkE_attr_def" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_def">Definition</label></span><br>
-				<span><input id="kkE_attr_wichtig" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_wichtig">Wichtig</label></span><br>
-				<span><input id="kkE_attr_grundl" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_grundl">Grundlagen</label></span><br>
-				<span><input id="kkE_attr_zusatz" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Zusatzinformation</label></span><br>
-				<span><input id="kkE_attr_exkurs" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Exkurs</label></span><br>
-				<span><input id="kkE_attr_bsp" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Beispiel</label></span><br>
-				<span><input id="kkE_attr_uebung" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Übung</label></span><br>
+				<span><input id="kkE_attr_lemma" type="checkbox" name="attr"><label for="kkE_attr_lemma">Lemma</label></span><br>
+				<span><input id="kkE_attr_satz" type="checkbox" name="attr"><label for="kkE_attr_satz">Satz</label></span><br>
+				<span><input id="kkE_attr_beweis" type="checkbox" name="attr"><label for="kkE_attr_beweis">Beweis</label></span><br>
+				<span><input id="kkE_attr_def" type="checkbox" name="attr"><label for="kkE_attr_def">Definition</label></span><br>
+				<span><input id="kkE_attr_wichtig" type="checkbox" name="attr"><label for="kkE_attr_wichtig">Wichtig</label></span><br>
+				<span><input id="kkE_attr_grundl" type="checkbox" name="attr"><label for="kkE_attr_grundl">Grundlagen</label></span><br>
+				<span><input id="kkE_attr_zusatz" type="checkbox" name="attr"><label for="kkE_attr_zusatz">Zusatzinformation</label></span><br>
+				<span><input id="kkE_attr_exkurs" type="checkbox" name="attr"><label for="kkE_attr_exkurs">Exkurs</label></span><br>
+				<span><input id="kkE_attr_bsp" type="checkbox" name="attr"><label for="kkE_attr_bsp">Beispiel</label></span><br>
+				<span><input id="kkE_attr_uebung" type="checkbox" name="attr"><label for="kkE_attr_uebung">Übung</label></span><br>
 			</div>
 		</div>
 		<div id="popup_fenster_body3" class="popup_fenster_body">
-			<!--
-			<div class="suche_kk_wrapper">
-				<span class="form_infotext3">Suchen sie nach anderen Karteikarten ihrer Veranstaltung,<br>um sie mit dieser zu verknüpfen.</span><br>
-				<div class="autoCompleteWrapper needMarginTop8">
-					<input id="suche_kk_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Suche nach Karteikarten..." required>
-				</div>
-			</div>
-			-->
 			<div class="form_infotext">
 				Wenn Sie möchten können Sie ihre Karteikarte mit anderen Karteikarten verlinken.
 				<br>
@@ -325,7 +312,6 @@
 <div id="kk_bearbeiten_popup_overlay" class="popup_fenster_overlay">
 	<div id="kk_bearbeiten_popup" class="popup_fenster hidden">
 	 	<div class="popup_fenster_titel">
-			<span class="octicon octicon-podium"></span>
 			<span class="popup_fenster_ueberschrift"> Karteikarte bearbeiten</span>
 		</div>
 		<div id="kk_bearbeiten_popup_close" class="popup_fenster_close">
@@ -333,15 +319,12 @@
 		</div>
 		<div id="popup_fenster_body4"class="popup_fenster_body">
 			<input class="input_std popup_input" id="kk_bearbeiten_titel_input" type="text" placeholder="Titel" required>
- 			<div id="kk_b_neuesKapitel_wrapper">
- 				<span>
- 					<input id="kk_jetztNeuesKapitel" class="Big_checkbox" type="checkbox" name="attr">
- 					<label class="checkbox_labels" for="attr_lemma">
- 						Markieren, wenn sie diese Karteikarte als übergeordnetes Kapitel verwenden wollen.
- 					</label>
-				</span>
- 			</div>
- 			
+ 			<p>
+				<input id="kk_jetztNeuesKapitel" type="checkbox" name="attr">
+				<label for="kk_jetztNeuesKapitel">
+					Diese Karteikarte als Überschrift verwenden.
+				</label>
+ 			</p>
  			<div id="kk_bearbeiten_text_area">
  				<textarea id="kk_bearbeiten_TA">
  				</textarea>
@@ -360,26 +343,49 @@
  			</div>
 		</div>
 		<div id="popup_fenster_body5" class="popup_fenster_body">
-			<span class="form_infotext2">Ändern sie die Attribute ihrer Karteikarte.</span><br>
+			<p class="form_infotext">Ändern sie die Attribute ihrer Karteikarte.</p>
 			<div id="kkB_attributes">
-				<span><input id="kkB_attr_lemma" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_lemma">Lemma</label></span><br>
-				<span><input id="kkB_attr_satz" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_satz">Satz</label></span><br>
-				<span><input id="kkB_attr_beweis" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_beweis">Beweis</label></span><br>
-				<span><input id="kkB_attr_def" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_def">Definition</label></span><br>
-				<span><input id="kkB_attr_wichtig" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_wichtig">Wichtig</label></span><br>
-				<span><input id="kkB_attr_grundl" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_grundl">Grundlagen</label></span><br>
-				<span><input id="kkB_attr_zusatz" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Zusatzinformation</label></span><br>
-				<span><input id="kkB_attr_exkurs" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Exkurs</label></span><br>
-				<span><input id="kkB_attr_bsp" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Beispiel</label></span><br>
-				<span><input id="kkB_attr_uebung" class="checkboxes" type="checkbox" name="attr"><label class="checkbox_labels" for="attr_ueberschr">Übung</label></span><br>
+				<span><input id="kkB_attr_lemma" type="checkbox" name="attr"><label for="kkB_attr_lemma">Lemma</label></span><br>
+				<span><input id="kkB_attr_satz" type="checkbox" name="attr"><label for="kkB_attr_satz">Satz</label></span><br>
+				<span><input id="kkB_attr_beweis" type="checkbox" name="attr"><label for="kkB_attr_beweis">Beweis</label></span><br>
+				<span><input id="kkB_attr_def" type="checkbox" name="attr"><label for="kkB_attr_def">Definition</label></span><br>
+				<span><input id="kkB_attr_wichtig" type="checkbox" name="attr"><label for="kkB_attr_wichtig">Wichtig</label></span><br>
+				<span><input id="kkB_attr_grundl" type="checkbox" name="attr"><label for="kkB_attr_grundl">Grundlagen</label></span><br>
+				<span><input id="kkB_attr_zusatz" type="checkbox" name="attr"><label for="kkB_attr_zusatz">Zusatzinformation</label></span><br>
+				<span><input id="kkB_attr_exkurs" type="checkbox" name="attr"><label for="kkB_attr_exkurs">Exkurs</label></span><br>
+				<span><input id="kkB_attr_bsp" type="checkbox" name="attr"><label for="kkB_attr_bsp">Beispiel</label></span><br>
+				<span><input id="kkB_attr_uebung" type="checkbox" name="attr"><label for="kkB_attr_uebung">Übung</label></span><br>
 			</div>
-			
-			<div class="suche_kk_wrapper">
-				<span class="form_infotext3">Suchen sie nach anderen Karteikarten ihrer Veranstaltung,<br>um sie mit dieser zu verknüpfen.</span><br>
-				<div class="autoCompleteWrapper needMarginTop8">
-					<input id="suche_kk_b_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Suche nach Karteikarten..." required>
-				</div>
-				
+		</div>
+		<div id="popup_fenster_body6" class="popup_fenster_body">
+			<div class="form_infotext">
+				Wenn Sie möchten können Sie ihre Karteikarte mit anderen Karteikarten verlinken.
+				<br>
+				Wählen Sie zunächst die Art der Verlinkung und markieren Sie dann beliebig viele Karteikarte, die Ziel Ihrer Verlinkung sind.
+				<br>
+				Hinweis: Durch Klicken auf Karteikarten können Sie deren direkt untergeordnete Karteikarten anzeigen bzw. ausblenden.
+			</div>
+			<div class="kk_verweise_wrapper">
+				<input type="radio" id="kk_bearbeiten_verweise_voraussetzung_radio" class="kk_verweise_radio" name="kk_bearbeiten_verweise_radio" checked>
+				<label for="kk_bearbeiten_verweise_voraussetzung_radio" class="kk_verweise_label">
+					Voraussetzung
+				</label>
+				<input type="radio" id="kk_bearbeiten_verweise_weiterfuehrend_radio" class="kk_verweise_radio" name="kk_bearbeiten_verweise_radio">
+				<label for="kk_bearbeiten_verweise_weiterfuehrend_radio" class="kk_verweise_label">
+					Weiterführend
+				</label>
+				<input type="radio" id="kk_bearbeiten_verweise_uebung_radio" class="kk_verweise_radio" name="kk_bearbeiten_verweise_radio">
+				<label for="kk_bearbeiten_verweise_uebung_radio" class="kk_verweise_label">
+					Übung
+				</label>
+				<input type="radio" id="kk_bearbeiten_verweise_sonstige_radio" class="kk_verweise_radio" name="kk_bearbeiten_verweise_radio">
+				<label for="kk_bearbeiten_verweise_sonstige_radio" class="kk_verweise_label">
+					Sonstiges
+				</label>
+				<div id="kk_bearbeiten_verweise_baum_voraussetzung" class="kk_baum kk_verweise_baum kk_bearbeiten_verweise_baum"></div>
+				<div id="kk_bearbeiten_verweise_baum_weiterfuehrend" class="kk_baum kk_verweise_baum kk_bearbeiten_verweise_baum"></div>
+				<div id="kk_bearbeiten_verweise_baum_uebung" class="kk_baum kk_verweise_baum kk_bearbeiten_verweise_baum"></div>
+				<div id="kk_bearbeiten_verweise_baum_sonstige" class="kk_baum kk_verweise_baum kk_bearbeiten_verweise_baum"></div>
 			</div>
 		</div>
 		<div class="popup_fenster_foot">
