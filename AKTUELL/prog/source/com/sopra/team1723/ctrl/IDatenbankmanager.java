@@ -580,7 +580,9 @@ public interface IDatenbankmanager {
      * @return
      */
 
-    public Kommentar leseKommentar(int kommId, int aktBenutzerID);
+    public Kommentar leseKommentar(int kommId);
+    
+
 
 
     

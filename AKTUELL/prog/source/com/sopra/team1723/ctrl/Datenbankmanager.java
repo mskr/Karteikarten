@@ -1613,9 +1613,8 @@ public class Datenbankmanager implements IDatenbankmanager
                 transaktion = false;
                 conMysql.setAutoCommit(false);
             }
-            ps = conMysql.prepareStatement("INSERT INTO benachrichtigung (Inhalt, Erstelldatum) VALUES (?,NOW); ");
+            ps = conMysql.prepareStatement("INSERT INTO benachrichtigung (Inhalt) VALUES (?); ");
             ps.setString(1, benachrichtigung.getInhalt());
-//            ps.setTimestamp(2, new Timestamp(benachrichtigung.getErstelldaum().getTimeInMillis()));
             ps.executeUpdate();
             closeQuietly(ps);
 
@@ -1653,13 +1652,35 @@ public class Datenbankmanager implements IDatenbankmanager
             else if (benachrichtigung instanceof BenachrNeuerKommentar)
             {
                 BenachrNeuerKommentar bnk = (BenachrNeuerKommentar) benachrichtigung;
+                Kommentar kommentar = leseKommentarIntern(bnk.getKommentarId(), conMysql);
+                if(kommentar == null)
+                    throw new SQLException();
                 ps = conMysql
                         .prepareStatement("INSERT INTO benachrichtigung_neuer_kommentar (Benachrichtigung, Benutzer,"
-                                + "Kommentar) VALUES (?,?,?);");
+                                + "Kommentar) SELECT DISTINCT ?,k.Benutzer,? FROM Kommentar AS k JOIN Benutzer AS b ON "
+                                + "k.Benutzer = b.ID WHERE (k.Vaterkommentar = ? OR k.ID = ?) AND b.NotifyKommentare = 'DISKUSSION_TEILGENOMMEN' "
+                                + "AND b.ID != ?");
                 ps.setInt(1, id);
-                ps.setInt(2, bnk.getBenutzer());
-                ps.setInt(3, bnk.getKommentarId());
+                ps.setInt(2, bnk.getKommentarId());
+                ps.setInt(3, kommentar.getVaterID());
+                ps.setInt(4, kommentar.getVaterID());
+                ps.setInt(5, bnk.getBenutzer());
 
+                ps.executeUpdate();
+                
+                Kommentar vaterKommentar = kommentar;
+                if(kommentar.getVaterID() != -1)
+                     vaterKommentar = leseKommentar(kommentar.getVaterID());
+                Karteikarte karteik = leseKarteikarte(vaterKommentar.getKarteikartenID());
+                ps = conMysql
+                        .prepareStatement("INSERT INTO benachrichtigung_neuer_kommentar (Benachrichtigung, Benutzer,"
+                                + "Kommentar) SELECT DISTINCT ?,bvz.Benutzer, ? FROM benutzer_veranstaltung_zuordnung AS bvz "
+                                + "JOIN Benutzer AS b ON bvz.Benutzer = b.ID WHERE bvz.Veranstaltung = ? AND "
+                                + "b.NotifyKommentare = 'VERANSTALTUNG_TEILGENOMMEN' AND b.ID != ?");
+                ps.setInt(1, id);
+                ps.setInt(2, bnk.getKommentarId());
+                ps.setInt(3, karteik.getVeranstaltung());
+                ps.setInt(4, bnk.getBenutzer());
             }
             else if (benachrichtigung instanceof BenachrProfilGeaendert)
             {
@@ -2647,11 +2668,7 @@ public class Datenbankmanager implements IDatenbankmanager
         return komms;
     }
 
-    @Override
-    public Kommentar leseKommentar(int kommId, int aktBenutzerID)
-    {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+    private Kommentar leseKommentarIntern(int kommId, Connection conMysql){
         PreparedStatement ps = null;
 
         Kommentar k = null;
@@ -2677,7 +2694,7 @@ public class Datenbankmanager implements IDatenbankmanager
                     kkId = -1;
 
                 k = new Kommentar(rs.getInt("ID"), rs.getString("Inhalt"), g, leseBenutzer(rs.getInt("Benutzer")),
-                        rs.getInt("Bewertung"), hatKommentarBewertet(rs.getInt("ID"), aktBenutzerID), vaterID, kkId,
+                        rs.getInt("Bewertung"), hatKommentarBewertet(rs.getInt("ID"), rs.getInt("Benutzer")), vaterID, kkId,
                         rs.getInt("AnzKinder"));
             }
 
@@ -2690,8 +2707,20 @@ public class Datenbankmanager implements IDatenbankmanager
         finally
         {
             closeQuietly(ps);
-            conLock.getValue().unlock();
         }
+
+        return k;
+    }
+    
+    @Override
+    public Kommentar leseKommentar(int kommId)
+    {
+        Entry<Connection, ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        Kommentar k = leseKommentarIntern(kommId, conMysql);
+
+        conLock.getValue().unlock();
 
         return k;
     }
@@ -2744,6 +2773,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
+        ResultSet rs = null;
         boolean erfolgreich = true;
 
         // Mindestens eins muss angegeben sein
@@ -2754,6 +2784,8 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
+           conMysql.setAutoCommit(false);
+            
             String sql = "INSERT INTO kommentar(Inhalt, Benutzer, Karteikarte, Vaterkommentar) VALUES(?,?,?,?)";
             ps = conMysql.prepareStatement(sql);
             ps.setString(1, kommentar.getInhalt());
@@ -2769,19 +2801,49 @@ public class Datenbankmanager implements IDatenbankmanager
                 ps.setInt(4, kommentar.getVaterID());
 
             ps.executeUpdate();
-
             closeQuietly(ps);
+            
+            ps = conMysql.prepareStatement("SELECT LAST_INSERT_ID();");
+            rs = ps.executeQuery();
+            if (!rs.next())
+                throw new SQLException();
+            int kommentarId = rs.getInt(1);
+            
+            Karteikarte karteik = null;
+            if(kommentar.getVaterID() != -1){
+                Kommentar vaterKommentar = leseKommentar(kommentar.getVaterID());
+                karteik = leseKarteikarte(vaterKommentar.getKarteikartenID());
+            }
+            else
+                karteik = leseKarteikarte(kommentar.getKarteikartenID());
+            
+            if(karteik == null)
+                return false;
+            
+            schreibeBenachrichtigung(new BenachrNeuerKommentar(kommentar.getErsteller().getId(),karteik, kommentarId), conMysql);
+            
+            conMysql.commit();
 
         }
         catch (SQLException e)
         {
             erfolgreich = false;
+            try
+            {
+                conMysql.rollback();
+            }
+            catch (SQLException e1)
+            {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
             e.printStackTrace();
 
         }
         finally
         {
             closeQuietly(ps);
+            closeQuietly(rs);
             conLock.getValue().unlock();
         }
 
@@ -3192,5 +3254,6 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(ps);
         }
     }
+
 
 }
