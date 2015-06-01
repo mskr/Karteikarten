@@ -70,14 +70,18 @@ public class KarteikartenServlet extends ServletController
             return;
         }
         
-        if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response)
-                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
+        Veranstaltung vn = dbManager.leseVeranstaltung(Kk.getVeranstaltung());
+        
+        if(!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response) 
+                && vn.getErsteller().getId() != aktuellerBenutzer.getId() 
+                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN 
+                && !dbManager.istModerator(aktuellerBenutzer.getId() , Kk.getVeranstaltung()))
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
-        Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
         
         if(Kk == null || Kk.getVeranstaltung() != vnId)
         {

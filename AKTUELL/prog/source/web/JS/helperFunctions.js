@@ -174,7 +174,7 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
             $("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
             popupOverlayWrapper.fadeOut(300, function() {
-                
+                closeFunc();
             });
             popupSeitenIterator = 0;
         });
