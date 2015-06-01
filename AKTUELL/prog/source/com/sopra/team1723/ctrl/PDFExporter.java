@@ -521,7 +521,8 @@ public class PDFExporter
                 }
                 tableConfig += "}";
                 
-                return replacer.x + tableConfig + newLineWithSeparation;
+                return replacer.x + tableConfig + newLineWithSeparation +
+                        "\\hline" + newLineWithSeparation;
             }
             else 
                 return replacer.y;  
@@ -592,7 +593,7 @@ public class PDFExporter
 
             String latexStr = "\\begin{figure}[H] " + newLineWithSeparation + "  \\centering" + newLineWithSeparation
                     + "  \\includegraphics[width=0.5\\linewidth]{" + kk.getId() + ".png}" + newLineWithSeparation
-                    + "  \\caption{" + replaceInvalidChars(kk.getTitel()) + createAttribute(kk) + "}" + newLineWithSeparation + "  \\label{kk_"
+                    + "  \\caption[" + replaceInvalidChars(kk.getTitel()) +"]{" + replaceInvalidChars(kk.getTitel()) + createAttribute(kk) + "}" + newLineWithSeparation + "  \\label{kk_"
                     + kk.getId() + "}" + newLineWithSeparation + "\\end{figure}" + newLineWithSeparation;
             
             

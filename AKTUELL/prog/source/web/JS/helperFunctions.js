@@ -218,27 +218,10 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
     if(timeOut == undefined)
     	timeOut = 6000;
     
-    return $.ajax({
-    	timeout: timeOut,
-        url: servletUrl,
-        data: "action="+action + "&"+ toUrlParamString(params),
-        beforeSend: beforeFunc,
-        success: function(jsonResponse) {
-            if(verifyResponse(jsonResponse,errorHandlingFunc)) {
-            	if(noerrorFunc!= undefined)
-            		noerrorFunc(jsonResponse);
-            }
-        },
-        complete: completeFunc
-    });
-    
-//    if(params == undefined)
-//		params = {};
-//	params["action"] = action;
-//	
 //    return $.ajax({
+//    	timeout: timeOut,
 //        url: servletUrl,
-//        data: params,
+//        data: "action="+action + "&"+ toUrlParamString(params),
 //        beforeSend: beforeFunc,
 //        success: function(jsonResponse) {
 //            if(verifyResponse(jsonResponse,errorHandlingFunc)) {
@@ -248,6 +231,24 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
 //        },
 //        complete: completeFunc
 //    });
+    
+    if(params == undefined)
+		params = {};
+	params["action"] = action;
+	
+    return $.ajax({
+    	timeout: timeOut,
+        url: servletUrl,
+        data: params,
+        beforeSend: beforeFunc,
+        success: function(jsonResponse) {
+            if(verifyResponse(jsonResponse,errorHandlingFunc)) {
+            	if(noerrorFunc!= undefined)
+            		noerrorFunc(jsonResponse);
+            }
+        },
+        complete: completeFunc
+    });
 }
 
 /**
