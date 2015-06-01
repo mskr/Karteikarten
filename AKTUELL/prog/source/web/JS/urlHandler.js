@@ -265,11 +265,13 @@ function gotoProfil(benutzerID)
  * Diese Funktion setzt die URL und wechselt zur angegebenen Veranstaltung
  * @param veranstId
  */
-function gotoVeranstaltung(veranstId)
+function gotoVeranstaltung(veranstId, kkId)
 {
 	var paramObj = {};
 	paramObj[urlParamLocation] = ansichtVeranstaltungsseite;
 	paramObj[urlParamId] = veranstId;
+	if(kkId != undefined)
+		paramObj[paramURLKkID] = kkId;
 	buildUrlQuery(paramObj);
 }
 /**

@@ -11,7 +11,8 @@ $(document).ready(function(){
 function processKK_editClick(triggerElem){
 	id = triggerElem.parent().parent().parent().parent().data("kkid");
 	var params = {};
-    params[paramId] = id;
+    params[paramKkId] = id;
+    params[paramVnId] = veranstaltungsObject[paramId];
     karteikarteJSON = {};
     return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
         function(response) {

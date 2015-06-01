@@ -649,11 +649,16 @@ function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator
 	
 	if(checkModerator)
 	{
-		if(veranstObj[paramModeratoren] == undefined || 
-				$.inArray(jsonBenutzer[paramId],veranstObj[paramModeratoren]) == -1)
-				return false;
-		else
-			return true;
+		if(veranstObj[paramModeratoren] == undefined)
+			return false;
+		else{
+			for(i in veranstObj[paramModeratoren])
+			{
+				if(veranstObj[paramModeratoren][i][paramId] == jsonBenutzer[paramId])
+					return true;
+			}
+		}
+			return false;
 	}
 	return false;
 }
