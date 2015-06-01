@@ -37,9 +37,17 @@ $.ajaxSetup({
 			showError("Unbekannter Fehler. AjaxStatus: "+jqXHR.status+", AjaxTextStatus: "+textStatus+", AjaxErrorCode: "+errorThrown + ", resonseText: " + jqXHR.responseText);
 	},
 	complete: function() {
-	    // Suche nach Formeln, die noch nicht gerendert wurden
-	    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+		if (typeof MathJax != 'undefined') {
+			// Suche nach Formeln, die noch nicht gerendert wurden
+			MathJax.Hub.Queue([ "Typeset", MathJax.Hub ]);
+		}
 	}
+});
+
+$(document).ready(function(){
+	// Meldung zeigen, wenn Mathjax nicht geladen werden konnte
+	if (typeof MathJax == 'undefined')
+		showError("MathJax nicht geladen. Formeln können nicht konvertiert werden.");
 });
 
 var connectionCheckRunning = false;
