@@ -128,11 +128,11 @@ $(document).ready(function() {
 					params[paramId] = veranstaltungsObject[paramId]
 					params[paramTitel] = titel;
 					params[paramSemester] = semester;
-	                params[paramStudiengang] = "";
+	                params[paramStudiengang] = [];
 	                
 	                for(var i in selectedStudiengaenge)
 	            	{
-	                	params[paramStudiengang] += selectedStudiengaenge[i][paramStudiengang] + ",";
+	                	params[paramStudiengang].push(selectedStudiengaenge[i][paramStudiengang]);
 	            	}
 					params[paramBeschr] = beschr;
 					params[paramModeratorKkBearbeiten] = moderatorenKkBearbeiten;

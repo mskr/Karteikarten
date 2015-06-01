@@ -41,12 +41,6 @@ $(document).ready(function() {
                     kommentareErlaubt = dialog.find("#vn_erstellen_komm_erlaubt").is(':checked'),
                     bewertungenErlaubt = dialog.find("#vn_erstellen_bew_erlaubt").is(':checked');
                 
-                var moderatorenIDs = [];
-                
-                for( var key in selectedModList)
-                {
-                    moderatorenIDs.push(selectedModList[key][paramId]);
-                }
                 
                 // Fehlerprüfung
                 if(titel == "" || beschr == "" || $.isEmptyObject(selectedStudiengaenge))
@@ -58,11 +52,11 @@ $(document).ready(function() {
                 var params = {};
                 params[paramTitel] = titel;
                 params[paramSemester] = semester;
-                params[paramStudiengang] = "";
+                params[paramStudiengang] = [];
                 
                 for(var i in selectedStudiengaenge)
             	{
-                	params[paramStudiengang] += selectedStudiengaenge[i][paramStudiengang] + ",";
+                	params[paramStudiengang].push(selectedStudiengaenge[i][paramStudiengang]);
             	}
                 	
                 params[paramBeschr] = beschr;
@@ -70,8 +64,11 @@ $(document).ready(function() {
                 params[paramKommentareErlauben] = kommentareErlaubt;
                 params[paramBewertungenErlauben] = bewertungenErlaubt;
                 params[paramPasswort] = passw;
-                params[paramModeratoren] = moderatorenIDs;
-                
+                params[paramModeratoren] = [];
+                for( var key in selectedModList)
+                {
+                	params[paramModeratoren].push(selectedModList[key][paramId]);
+                }
                 var ajax = ajaxCall(veranstaltungServlet,
                         actionErstelleVeranst,
                         function(response) {

@@ -243,7 +243,8 @@ public class JSONConverter
             {
                 BenachrNeuerKommentar b = (BenachrNeuerKommentar) ben;
                 j.put(ParamDefines.Type, ParamDefines.benTypeKommentar);
-                j.put(ParamDefines.KkId, b.getKarteikarteID());
+                j.put(ParamDefines.KkId, b.getKarteikarte().getId());               
+                j.put(ParamDefines.VnId, b.getKarteikarte().getVeranstaltung());
 //                j.put(ParamDefines.benKommentar, toJson(b.getKommentar()));
             }
             else  if (ben instanceof BenachrVeranstAenderung)
