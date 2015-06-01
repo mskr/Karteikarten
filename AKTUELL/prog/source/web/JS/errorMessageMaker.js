@@ -187,6 +187,8 @@ function handleError(errorCode,msg) {
 				showError("Diese Aktion ist nicht erlaubt. Sie haben womöglich nicht die nötigen Berechtigungen.");
 			else
 				showError(msg);
+			
+			gotoHauptseite();
 			break;
 		default: 
 			if(msg == undefined)

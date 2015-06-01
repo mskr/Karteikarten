@@ -288,7 +288,8 @@ function fillVerweise(domKk, verweisArr)
 }
 function getKarteikarteByID(id){
 	var params = {};
-    params[paramId] = id;
+    params[paramKkId] = id;
+    params[paramVnId] = veranstaltungsObject[paramId];
     karteikarteJSON = {};
     return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
         function(response) {

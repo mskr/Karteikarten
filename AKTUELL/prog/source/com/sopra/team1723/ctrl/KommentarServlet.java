@@ -290,7 +290,7 @@ public class KommentarServlet extends ServletController {
             return false;
         }
         
-        Kommentar k = dbManager.leseKommentar(kommId, aktuellerBenutzer.getId());
+        Kommentar k = dbManager.leseKommentar(kommId);
         if(k == null)
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Dieser Kommentar existiert nicht!");

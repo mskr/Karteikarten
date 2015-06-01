@@ -56,9 +56,11 @@ public class KarteikartenServlet extends ServletController
         JSONObject jo;
 
         int karteikartenID = -1;
+        int vnId = -1;
         try
         {
-            karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
+            karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.KkId));
+            vnId = Integer.parseInt(request.getParameter(ParamDefines.VnId));
         }
         catch (NumberFormatException e)
         {
@@ -67,7 +69,7 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-
+        
         if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response)
                 && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
@@ -76,11 +78,17 @@ public class KarteikartenServlet extends ServletController
             return;
         }
         Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
+        
+        if(Kk == null || Kk.getVeranstaltung() != vnId)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return;
+        }
         Kk.setHatBewertet(dbManager.hatKarteikarteBewertet(karteikartenID, aktuellerBenutzer.getId()));
         jo = Kk.toJSON(true);
 
         outWriter.print(jo);
-
     }
 
     private void getKarteikarteVorgaenger(HttpServletRequest request, HttpServletResponse response) throws IOException
@@ -93,9 +101,11 @@ public class KarteikartenServlet extends ServletController
         JSONObject jo;
 
         int karteikartenID = -1;
+        int vnId = -1;
         try
         {
-            karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
+            karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.KkId));
+            vnId = Integer.parseInt(request.getParameter(ParamDefines.VnId));
         }
         catch (NumberFormatException e)
         {
@@ -104,9 +114,17 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
+        
 
         if (aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN
                 && !pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response))
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return;
+        }
+        Karteikarte Kk  = dbManager.leseKarteikarte(karteikartenID);
+        if(Kk == null || Kk.getVeranstaltung() != vnId)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
@@ -138,9 +156,11 @@ public class KarteikartenServlet extends ServletController
         JSONObject jo;
 
         int karteikartenID = -1;
+        int vnId = -1;
         try
         {
-            karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.Id));
+            karteikartenID = Integer.parseInt(request.getParameter(ParamDefines.KkId));
+            vnId = Integer.parseInt(request.getParameter(ParamDefines.VnId));
         }
         catch (NumberFormatException e)
         {
@@ -157,7 +177,15 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-
+        
+        Karteikarte Kk  = dbManager.leseKarteikarte(karteikartenID);
+        if(Kk == null || Kk.getVeranstaltung() != vnId)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return;
+        }
+        
         Map<Integer, Karteikarte> Kks = dbManager.leseNachfolger(karteikartenID, 5);
         if (Kks == null)
         {
@@ -465,33 +493,6 @@ public class KarteikartenServlet extends ServletController
     }
 
     /**
-     * @param request
-     * @param response
-     * @return
-     */
-    private boolean exportiereKarteikarten(HttpServletRequest request, HttpServletResponse response)
-    {
-        // TODO implement here
-        return false;
-    }
-
-    /**
-     * @param vater
-     * @param dateiname
-     * @param bilder
-     * @param notizen
-     * @param kommentare
-     * @param querverweise
-     * @return
-     */
-    private File exportiereKarteikarten(Karteikarte vater, String dateiname, boolean bilder, boolean notizen,
-            boolean kommentare, boolean querverweise)
-    {
-        // TODO implement here
-        return null;
-    }
-
-    /**
      * Ein Benutzer erstellt eine Karteikarte und weist ihr verschiedene
      * Eigenschaften zu. Die Karteikarte bekommt eine individuelle ID. Auerdem
      * wird gepruft ob es bereits eine Karteikarte mit dem selben Inhalt gibt.
@@ -758,11 +759,12 @@ public class KarteikartenServlet extends ServletController
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
         JSONObject jo = null;
-        int karteikarteId = -1;
-
+        int karteikartenID = -1;
+        int vnId = -1;
         try
         {
-            karteikarteId = Integer.parseInt(req.getParameter(ParamDefines.Id));
+            karteikartenID = Integer.parseInt(req.getParameter(ParamDefines.KkId));
+            vnId = Integer.parseInt(req.getParameter(ParamDefines.VnId));
         }
         catch (NumberFormatException e)
         {
@@ -771,24 +773,24 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-
-        if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikarteId, req, resp)
+        
+        if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, req, resp)
                 && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
-
-        Karteikarte karteikarte = dbManager.leseKarteikarte(karteikarteId);
-        if (karteikarte == null)
+        Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
+        
+        if(Kk == null || Kk.getVeranstaltung() != vnId)
         {
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
 
-        outWriter.print(karteikarte.toJSON(true));
+        outWriter.print(Kk.toJSON(true));
 
     }
 
@@ -800,10 +802,12 @@ public class KarteikartenServlet extends ServletController
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
         JSONObject jo = null;
-        int vaterKarteikarte = -1;
+        int karteikartenID = -1;
+        int vnId = -1;
         try
-        {            vaterKarteikarte = Integer.parseInt(req.getParameter(ParamDefines.Id));
-
+        {
+            karteikartenID = Integer.parseInt(req.getParameter(ParamDefines.KkId));
+            vnId = Integer.parseInt(req.getParameter(ParamDefines.VnId));
         }
         catch (NumberFormatException e)
         {
@@ -812,16 +816,24 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-
-        if (!pruefeFuerVeranstDerKarteikEingeschrieben(vaterKarteikarte, req, resp)
+        
+        if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, req, resp)
                 && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
+        Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
+        
+        if(Kk == null || Kk.getVeranstaltung() != vnId)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return;
+        }
 
-        Map<Integer, Tupel<Integer, String>> kindKarteikarten = dbManager.leseKindKarteikarten(vaterKarteikarte);
+        Map<Integer, Tupel<Integer, String>> kindKarteikarten = dbManager.leseKindKarteikarten(karteikartenID);
 
         if (kindKarteikarten == null)
         {

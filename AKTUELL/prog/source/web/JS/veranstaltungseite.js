@@ -195,9 +195,9 @@ function fillVeranstaltungsSeite(Vid, kkId)
                     }
                     
                     if(kkId == undefined)
-                        displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], null, false);
+                        displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], undefined, false);
                     else
-                        displayKarteikarte(kkId, null, false);
+                        displayKarteikarte(kkId, undefined, false);
                     
                     // Deferred Objekt als abgeschlossen markieren.
                     d.resolve();
@@ -252,8 +252,10 @@ function fillVeranstaltungsSeite(Vid, kkId)
 	// warte bis VN Objekt geladen
 	$.when(ajax1).done(function() {
 	    var ajax4 = undefined;
-	    if(veranstaltungsObject[paramAngemeldet])
-	        ajax4 = initInhaltsverzeichnis();
+	    if(!veranstaltungsObject[paramAngemeldet])
+	        return;
+	    	
+	    ajax4 = initInhaltsverzeichnis();
 	    // warte bis mainbox visible
 	    $.when(ajax2,ajax3,d,ajax4).done(function() {
 	        // Inhaltsverzeichnis im Viewport halten
@@ -321,7 +323,8 @@ function ladeInhaltsverzeichnisKinder(vaterId, vaterElem) {
  */
 function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClickFunction, zeigeCheckboxes) {
     var params = {};
-    params[paramId] = vaterId;
+    params[paramKkId] = vaterId;
+    params[paramVnId] = veranstaltungsObject[paramId];
     // Evntl bestehende Kindkarteikarten aushaengen
     vaterElem.find("ul").remove();
     // Neue Liste aufbauen
@@ -486,19 +489,22 @@ function displayKarteikarte(id, callback, reload){
         	showPreAfterLoad();
 
         	var params2 ={};
-        	params2[paramId] = id;
+            params2[paramKkId] = id;
+            params2[paramVnId] = veranstaltungsObject[paramId];
         	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
         		domkk = buildKarteikarte(response);
 				domkk.show();
 				domkk.css("opacity", "0");
         		$("#kk_all").append(domkk);
 				domkk.animate({opacity: 1}, 200);
+
+	        	loadAfterKk(id);
+	        	if(callback != undefined) 
+	        		callback();
+
         	}, params2);
 
-        	$.when(ajax).done(function(){
-        		loadAfterKk(id);
-        		if(callback != undefined) callback();
-        	});
+        
     	});
     }
 }
@@ -512,7 +518,8 @@ function loadAfterKk(id)
 	}
 	
 	var params2 ={};
-	params2[paramId] = id;
+    params2[paramKkId] = id;
+    params2[paramVnId] = veranstaltungsObject[paramId];
 	
 	kkLoadRequest = ajaxCall(karteikartenServlet,
 			actionGetKarteikartenNachfolger, 
@@ -566,7 +573,8 @@ function loadPreKk(id)
 		kkLoadRequest = null;
 	}
 	var params ={};
-	params[paramId] = id;
+    params[paramKkId] = id;
+    params[paramVnId] = veranstaltungsObject[paramId];
 	kkLoadRequest = ajaxCall(karteikartenServlet, 
 			actionGetKarteikartenVorgaenger, 
 			function(response)
