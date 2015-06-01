@@ -1676,7 +1676,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
                 ps.executeUpdate();
                 
-                Karteikarte karteik = leseKarteikarte(kommentar.getKarteikartenID());
+                Karteikarte karteik = leseKarteikarte(bnk.getKarteikarteID());
                 if(karteik == null)
                     throw new SQLException();
                 ps = conMysql
