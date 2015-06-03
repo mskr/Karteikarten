@@ -166,28 +166,27 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     if(focusElem != undefined)
     	focusElem.focus();
     
+    generalCloseFkt = function(){
+    	$("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
+        popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
+        popupOverlayWrapper.fadeOut(300,function(){
+            closeFunc();
+        });
+        popupSeitenIterator = 0;
+    }
+    
     for(var i in closeElems)
     {
         closeElems[i].off();
         closeElems[i].click(function() {
-            $("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
-            popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
-            popupOverlayWrapper.fadeOut(300, function() {
-                closeFunc();
-            });
-            popupSeitenIterator = 0;
+        	generalCloseFkt();
         });
     }
     submitElem.off();
     submitElem.click(function() {
         if(submitFunc())
         {
-            $("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
-            popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
-            popupOverlayWrapper.fadeOut(300, function() {
-                closeFunc();
-            });
-            popupSeitenIterator = 0;
+        	generalCloseFkt();
         }
     });
     

@@ -302,7 +302,7 @@ public class VeranstaltungServlet extends ServletController {
         }
         else
         {
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Diese Veranstaltung existiert nicht (mehr)!");
             outWriter.print(jo);
             return false;
         }

@@ -15,7 +15,7 @@ public class BenachrEinlModerator extends Benachrichtigung{
     }
     
     public BenachrEinlModerator(int benutzer,  Veranstaltung veranstaltung){
-        this.inhalt = "Sie werden zur Veranstaltung " + veranstaltung.getTitel() + " als "
+        this.inhalt = "Sie wurden zur Veranstaltung " + veranstaltung.getTitel() + " als "
                 + "Moderator hinzugefügt!";
         this.erstelldaum = Calendar.getInstance();
         this.benutzer = benutzer;
