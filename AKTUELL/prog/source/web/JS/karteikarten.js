@@ -48,9 +48,14 @@ function buildKarteikarte(karteikarteJson)
 	    element: kkDom,
 	    handler: function(direction) {
 	        inhaltsverzeichnisUnhighlightAll();
-	        inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
+	        var kkID = kkDom.attr("data-kkid");
+	        if(kkID != veranstaltungsObject[paramErsteKarteikarte])
+	            inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkID);
+	        else
+	            $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("fast", function() { $(this).remove() });
 	    }
 	});
+    
 
     // Überschrift kk
     if(kkInhalt == "" && kkType == paramKkText)
