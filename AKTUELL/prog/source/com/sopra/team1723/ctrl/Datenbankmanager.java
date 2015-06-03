@@ -2447,7 +2447,6 @@ public class Datenbankmanager implements IDatenbankmanager
     {
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
-
         PreparedStatement ps = null;
 
         boolean erfolgreich = true;
@@ -2473,7 +2472,6 @@ public class Datenbankmanager implements IDatenbankmanager
             ps.setBoolean(13, karteik.isIstBeispiel());
             ps.setBoolean(14, karteik.isIstUebung());
             ps.setInt(15, karteik.getId());
-
             ps.executeUpdate();
 
         }

@@ -371,7 +371,6 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
                         kkListItem += "<a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel]+"</a></li>";
                         kkListItem = $(kkListItem);
                         kkListItem.appendTo(vaterElem).slideDown();
-                        
                         // Click Handler fuer Kk Knoten
                         var f = function(arr, kkListItem, i) {
                             kkListItem.find("a").click(function(e) {

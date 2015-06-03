@@ -44,14 +44,13 @@ function buildKarteikarte(karteikarteJson)
     
     
 	// Reagiere auf das Scrollen zu dieser Karteikarte
-	new Waypoint({
+	var waypoint = new Waypoint({
 	    element: kkDom,
 	    handler: function(direction) {
 	        inhaltsverzeichnisUnhighlightAll();
 	        inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
 	    }
 	});
-	
 
     // Überschrift kk
     if(kkInhalt == "" && kkType == paramKkText)

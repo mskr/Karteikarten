@@ -12,7 +12,6 @@ $(document).ready(function() {
             function() {
             	var editor = $('#vn_erstellen_beschr_input').ckeditorGet();
             	editor.destroy();
-
             	var dialog = $("#vn_erstellen_popup");
             	dialog.find("#vn_erstellen_titel_input").val("");
 //            	dialog.find("#vn_erstellen_auswahl_semester").val(jsonBenutzer[paramSemester]);
@@ -24,11 +23,9 @@ $(document).ready(function() {
             	dialog.find("#vn_erstellen_komm_erlaubt").prop("checked", true);
             	dialog.find("#vn_erstellen_bew_erlaubt").prop("checked", true);
             	$("#vn_erstellen_mod_input").val("");
-            	$("#vn_erstellen_mod_bearb").prop("checked", true); // TODO Radio Button wird nicht gecheckt
-
+            	$("#vn_erstellen_mod_bearb").prop("checked", true);
             	selectedModList = {};
             	$("#vn_erstellen_mod_list").empty();
-
             },
             $("#vn_erstellen_ok"),
             function() {

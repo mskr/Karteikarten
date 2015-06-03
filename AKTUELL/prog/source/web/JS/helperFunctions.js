@@ -115,9 +115,8 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
             $(seitenArr[i]).hide();
         }
         submitElem.hide();
-        if(weiterElem!= undefined){
+        if(weiterElem != undefined){
         	weiterElem.show();
-
         	weiterElem.off();
         	weiterElem.click(function() {
         		$(seitenArr[popupSeitenIterator]).slideUp();
@@ -184,9 +183,10 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
         if(submitFunc())
         {
             $("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
-            popupOverlayWrapper.fadeOut(300);
             popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
-            closeFunc();
+            popupOverlayWrapper.fadeOut(300, function() {
+                closeFunc();
+            });
             popupSeitenIterator = 0;
         }
     });
