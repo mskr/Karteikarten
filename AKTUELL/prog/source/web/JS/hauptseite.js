@@ -20,13 +20,13 @@ $(document).ready(function() {
 				   $("#vn_alle_auswahl_studiengang").val());
 	});
 	
-	
-	
 	registerVeranstErzeugeHandler();
 });
 
 function fillHauptseite() 
 {
+    Waypoint.destroyAll();
+    
 	// Studiengänge in auswahlliste anzeigen
 	var ajax1 = ajaxCall(startseitenServlet,
 		actionGetStudiengaenge,

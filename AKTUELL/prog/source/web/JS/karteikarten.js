@@ -44,7 +44,7 @@ function buildKarteikarte(karteikarteJson)
     
     
 	// Reagiere auf das Scrollen zu dieser Karteikarte
-	var waypoint = new Waypoint({
+    new Waypoint({
 	    element: kkDom,
 	    handler: function(direction) {
 	        inhaltsverzeichnisUnhighlightAll();

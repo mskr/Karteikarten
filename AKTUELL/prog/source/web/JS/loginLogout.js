@@ -37,7 +37,7 @@ $(document).ready(function() {
         event.preventDefault();
     });
     
-    $(".logout").click(function() {
+    $("#logout").click(function() {
         ajaxCall(
             startseitenServlet,
             actionLogout,

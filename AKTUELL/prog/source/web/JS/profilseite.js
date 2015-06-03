@@ -59,7 +59,9 @@ $(document).ready(function() {
  * Zeigt die Daten des Benutzers im Profil an
  * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
  */
-function fillProfilseite() {
+function fillProfilseite() 
+{
+    Waypoint.destroyAll();
     
     currentProfilID = getUrlParameterByName(urlParamId);
     

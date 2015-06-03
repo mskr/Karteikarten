@@ -46,7 +46,10 @@ $(document).ready(function() {
  * Im Falle der Startseite werden die verfuegbaren Studiengaenge
  * geholt und in das select-Element eingeordnet.
  */
-function fillStartseite() {
+function fillStartseite() 
+{
+    Waypoint.destroyAll();
+    
 	document.title = "Sopra Login";
 
     // Elemente fuer kleine Bildschirme
