@@ -101,6 +101,7 @@ public class Karteikarte implements IjsonObject {
         this.aenderungsdatum = Calendar.getInstance();
         this.bewertung = 0;
         this.hatBewertet = false;
+        this.verweise = verweise;
     }
 
     /**
