@@ -292,6 +292,17 @@ public class KarteikartenServlet extends ServletController
             String inhalt = "";
             String uploadedID = "";
             int kkID = Integer.parseInt(req.getParameter(ParamDefines.Id));
+            
+            Karteikarte k = dbManager.leseKarteikarte(kkID);
+            Veranstaltung v = dbManager.leseVeranstaltung(k.getVeranstaltung());
+            
+            if(v.getErsteKarteikarte() == kkID)
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed, "Sie können die oberste Karteikarte nicht bearbeiten.");
+                outWriter.print(jo);
+                return false;
+            }
+            
             KarteikartenTyp kkTyp;
             String typ = req.getParameter(ParamDefines.Type);
             if (typ.equals("mp4"))
