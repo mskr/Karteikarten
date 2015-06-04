@@ -853,6 +853,54 @@ public class KarteikartenServlet extends ServletController
         outWriter.print(jo);
 
     }
+    
+
+
+    private void loescheKk(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+
+        JSONObject jo = null;
+        int karteikartenID = -1;
+        try
+        {
+            karteikartenID = Integer.parseInt(req.getParameter(ParamDefines.Id));
+        }
+        catch (NumberFormatException e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
+        
+        Karteikarte k = dbManager.leseKarteikarte(karteikartenID);
+        Veranstaltung v = dbManager.leseVeranstaltung(k.getVeranstaltung());
+        
+        
+        if (!(dbManager.istModerator(aktuellerBenutzer.getId(), v.getId()) && v.isModeratorKarteikartenBearbeiten()) && 
+                v.getErsteller().getId() != aktuellerBenutzer.getId() &&
+                aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return;
+        }
+        
+        if(dbManager.loescheKarteikarte(karteikartenID))
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+        }
+        else
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+        }
+        outWriter.print(jo);
+
+    }
 
     private boolean pruefeFuerVeranstDerKarteikEingeschrieben(int karteikarte, HttpServletRequest req,
             HttpServletResponse resp) throws IOException
@@ -1042,6 +1090,10 @@ public class KarteikartenServlet extends ServletController
         else if (aktuelleAction.equals(ParamDefines.ActionExportSkript))
         {
             exportSkript(req, resp);
+        }
+        else if (aktuelleAction.equals(ParamDefines.ActionDeleteKk))
+        {
+            loescheKk(req, resp);
         }
         else
         {

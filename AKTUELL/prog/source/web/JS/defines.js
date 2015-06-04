@@ -42,7 +42,7 @@ var actionBearbeiteVeranst = "bearbeiteVeranst";
 var actionDeleteBenutzer = "deleteBenutzer"; 
 var actionDeleteVn = "vnLoeschen";
 var actionPing = "ping";
-
+var actionDeleteKk = "kkLoeschen";
 
 var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
 var leseVeranstMode = "mode";                        // Liefert Veranstaltungen

@@ -59,7 +59,7 @@ $(document).ready(function() {
 		    		$('#kk_export_opt_attrAnz').prop('checked', false);
 		    		$('#kk_export_opt_Querverweise').prop('checked', false);
     			}, 
-    			$("#kk_export_ok"), 
+    			$("#kk_export_ok"),
     			function(){
     				return true;
     			}, 
@@ -68,7 +68,7 @@ $(document).ready(function() {
     			$("#kk_export_zurueck"))
     });
     
-    $("#kk_start_export").click(function() {
+    $("#kk_start_export").one("click", function() {
 		exportKkVonVn(veranstaltungsObject[paramId]);
 	})
 	
@@ -115,7 +115,11 @@ function exportKkVonVn(vnId)
 		$("#kk_export_popup").find("#kk_start_export").slideUp();
 		$("#kk_export_popup").find(".kk_export_files").slideDown();
 		
-	}, undefined, undefined, 20000);
+	}, undefined, function(){		    		
+		$("#kk_start_export").one("click", function() {
+		    exportKkVonVn(veranstaltungsObject[paramId]);
+		    });
+		}, 20000);
 }
 
 function fillVeranstaltungsSeite(Vid, kkId)

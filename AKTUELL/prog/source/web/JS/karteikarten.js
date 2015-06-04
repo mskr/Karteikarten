@@ -29,6 +29,18 @@ function buildKarteikarte(karteikarteJson)
 		processKK_editClick($(this));
 	});
     
+    kkDom.find(".KKloeschen").click(function(){
+    	sindSieSicher(kkDom.find(".KKloeschen"), "Wollen Sie diese Karteikarte wirklich löschen?", function(){
+    		var params = {};
+    		params[paramId] = kkId;
+    		ajaxCall(karteikartenServlet, actionDeleteKk, function(){
+    			kkDom.find("*").off();
+    			kkDom.slideUp();
+    			showInfo("Karteikarte gelöscht.");
+    		}, params);
+    	});
+    });
+    
     // Workaround:
     kkDom.find(".permalink").click(function(){
    	 	kkUrl = location.host + location.pathname + "?location=veranstaltungsseite&id="+ veranstaltungsObject[paramId] +
