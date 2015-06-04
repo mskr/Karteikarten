@@ -312,17 +312,11 @@ function displayKKtoEdit(KKjson){
     		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
     		return false;
     	}
-    	else if(isAnyAttrSelected() == false){
-    		sindSieSicher($("#kk_bearbeiten_ok"), "Wollen sie eine Karteikarte ohne Attribute abspeichern?",  function(){
-        		processKKbearbeiten(id,text,titel,attributes);
-        		return true;
-    		}, 0, 0);
-    		return false;
-    	}
     	else{
     		if($("#kk_neuesKapitel").prop("checked"))
     			text = "";
-    		processKKbearbeiten(id,text,titel,attributes);
+    		processKKbearbeiten(id,text,titel,attributes,
+    		        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
     		return true;
     	}
     }
@@ -456,7 +450,8 @@ function appendDropzone(){
     	myDropzone.removeAllFiles(true);
     }
 }
-function processKKbearbeiten(id,text,titel,attributes){
+function processKKbearbeiten(id,text,titel,attributes,
+        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr)
 	var params = {};
 	params[paramTitel] = titel;
 	params[paramId] = id;
@@ -465,7 +460,10 @@ function processKKbearbeiten(id,text,titel,attributes){
 	params[paramType] = UPLOADTYPE;
 	params[paramKkUploadID] = UPLOADIDSET;
 	params[paramVeranstaltung] = veranstaltungsObject[paramId];
-
+    params[paramVerweisVoraussetzung] = verweisVoraussetzungArr;
+    params[paramVerweisWeiterfuehrend] = verweisWeiterfuehrendArr;
+    params[paramVerweisUebung] = verweisUebungArr;
+    params[paramVerweisSonstiges] = verweisSonstigesArr;
 	submitEditKarteikarte(params)
 }
 function submitEditKarteikarte(params){
@@ -475,7 +473,7 @@ function submitEditKarteikarte(params){
             function(response) {
                 showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
                 displayKarteikarte(params[paramId], null, true);
-                //initInhaltsverzeichnis();
+                initInhaltsverzeichnis();
             },
             params
         );
