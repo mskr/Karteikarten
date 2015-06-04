@@ -320,6 +320,8 @@ function displayKKtoEdit(KKjson){
     		return false;
     	}
     	else{
+    		if($("#kk_neuesKapitel").prop("checked"))
+    			text = "";
     		processKKbearbeiten(id,text,titel,attributes);
     		return true;
     	}
@@ -400,45 +402,52 @@ function appendDropzone(){
             init: function() {
             	myDropzone = this;
            	 	$(".dz-error-message").remove();
-       	    this.on("addedfile", function(file) {
-       	    	var ext = file.name.substr(file.name.lastIndexOf('.') + 1);
-       	    	console.log(ext);
-       	    	uploadAction = false;
-       	    	if(ext=="png"||ext=="jpg"){
-       	    		uploadAction = actionUploadKKBild;
-       	    	}
-       	    	else if(ext=="mp4"){
-       	    		uploadAction = actionUploadKKVideo;
-       	    	}
-       	    	else{
-       	    		showError("Bitte verwenden sie für Bilder .png oder .jpg und für Videos .mp4 als Format!");
-       	         	myDropzone.removeAllFiles(true);
-       	    		return false;
-       	    	}
-       	    	var params = {};
-       	    	$("#df_area_kk_b").find(".dz-message").hide(0);
-       	    	$(".dz-preview").addClass("center");
-       	    	$(".dz-error-message").remove();
-       	    	$(".dz-error-mark").remove();
-       	    	$(".dz-success-mark").remove();
-       	    	$(".dz-preview").css("margin","40px");
-       	    	clone = $(".dz-size").first();
-       	    	$(".dz-size").remove();
-       	    	$(".dz-details").append(clone);
-       		    function successFkt(data){
-       		    	UPLOADTYPE = ext;
-       		    	$("#cke_kk_erstellen_TA").hide(0);
-           	    	UPLOADIDSET = data.strResult;
-           	    	console.log("Zurückgegebene UploadID:"+UPLOADIDSET);
-       		    }
-       	    	uploadFile(file, successFkt, uploadAction, params, function(){}, function(){}) 
-       	    });
-       	    this.on("removedfile", function(file) {
-       	    	$("#df_area_kk_b").find(".dz-message").show(0);
-       	    	$("#cke_kk_erstellen_TA").show(0);
-       	    	UPLOADTYPE = "";
-       	    	UPLOADIDSET = -1;
-       	    });
+           	 	
+           	 	
+	       	    this.on("addedfile", function(file) {
+	       	    	
+	       	    	var ext = file.name.substr(file.name.lastIndexOf('.') + 1);
+	       	    	console.log(ext);
+	       	    	uploadAction = false;
+	       	    	if(ext=="png"||ext=="jpg"||ext=="jpeg"){
+	       	    		uploadAction = actionUploadKKBild;
+	       	    	}
+	       	    	else if(ext=="mp4"){
+	       	    		uploadAction = actionUploadKKVideo;
+	       	    	}
+	       	    	else{
+	       	    		showError("Bitte verwenden sie für Bilder .png oder .jpg und für Videos .mp4 als Format!");
+	       	         	myDropzone.removeAllFiles(true);
+	       	    		return false;
+	       	    	}
+	       	    	
+	       	    	var params = {};
+	       	    	$("#df_area_kk_b").find(".dz-message").hide();
+	       	    	$(".dz-preview").addClass("center");
+	       	    	$(".dz-error-message").remove();
+	       	    	$(".dz-error-mark").remove();
+	       	    	$(".dz-success-mark").remove();
+	       	    	$(".dz-preview").css("margin","40px");
+	       	    	clone = $(".dz-size").first();
+	       	    	$(".dz-size").remove();
+	       	    	$(".dz-details").append(clone);
+	       	    	
+	       		    function successFkt(data){
+	       		    	UPLOADTYPE = ext;
+	       		    	$("#cke_kk_erstellen_TA").hide();
+	           	    	UPLOADIDSET = data.strResult;
+	           	    	console.log("Zurückgegebene UploadID:"+UPLOADIDSET);
+	       		    }
+	       	    	uploadFile(file, successFkt, uploadAction, params) 
+	       	    });
+	       	    
+	       	    this.on("removedfile", function(file) {
+	       	    	$("#df_area_kk_b").find(".dz-message").show();
+	       	    	$("#cke_kk_erstellen_TA").show();
+	       	    	UPLOADTYPE = "";
+	       	    	UPLOADIDSET = -1;
+	       	    });
+	       	    
        	  }
         }).get(0).dropzone;
 		$( "#file-dropzone" ).droppable();
@@ -446,8 +455,6 @@ function appendDropzone(){
     catch(e){
     	myDropzone.removeAllFiles(true);
     }
-
-
 }
 function processKKbearbeiten(id,text,titel,attributes){
 	var params = {};
