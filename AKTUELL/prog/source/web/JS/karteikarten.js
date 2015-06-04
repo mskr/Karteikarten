@@ -19,7 +19,8 @@ function buildKarteikarte(karteikarteJson)
 
     fillKarteiKarte(kkDom,karteikarteJson);
     
-    if(!checkIfAllowedVn(veranstaltungsObject))
+    if(!checkIfAllowedVn(veranstaltungsObject)
+    		||veranstaltungsObject[paramErsteKarteikarte] == kkId)
     {
     	kkDom.find(".bearbeiten").hide();
     	kkDom.find(".loeschen").hide();
@@ -36,6 +37,7 @@ function buildKarteikarte(karteikarteJson)
     		ajaxCall(karteikartenServlet, actionDeleteKk, function(){
     			kkDom.find("*").off();
     			kkDom.slideUp();
+    	    	initInhaltsverzeichnis();
     			showInfo("Karteikarte gelöscht.");
     		}, params);
     	});
