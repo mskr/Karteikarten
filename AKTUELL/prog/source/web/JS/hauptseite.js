@@ -316,6 +316,7 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     }
     else
     {
+        // TODO Admin soll sich ohne PW einschreiben koennen!
         // EINSCHREIBEN
         button.click(function() {
             if(jsonVeranstObj[paramKennwortGesetzt])
