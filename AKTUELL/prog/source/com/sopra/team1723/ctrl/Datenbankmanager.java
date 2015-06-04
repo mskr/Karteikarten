@@ -2509,8 +2509,17 @@ public class Datenbankmanager implements IDatenbankmanager
             conNeo4j.setAutoCommit(false);
             conMysql.setAutoCommit(false);
 
-            ps = conNeo4j.prepareStatement("match p=((n)-[:h_child]->(m)-[:h_child|h_brother*0..]->(o))"
-                    + " where id(n) = {1}" + " with o,n" + " match(n-[r1]-()),( o-[r2]-())" + " delete n,o,r1,r2");
+            ps = conNeo4j.prepareStatement("match (n)-[:h_child]->(m)"
+                    + " with n "
+                    + " match (n)-[r]-() "
+                    + " delete n,r");
+            
+            ps = conNeo4j.prepareStatement("match p=((n)-[:h_child|h_brother*0..]->(m))"
+                                        + " where id(n) = {1}" 
+                                        + " with m" 
+                                        + " match (m)-[r]-()" 
+                                        + " delete m,r "
+                                        + "return id(m)");
             ps.setInt(1, karteikID);
 
             ps.executeUpdate();
