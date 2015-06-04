@@ -268,11 +268,11 @@ function fillVerweise(domKk, verweisArr)
 		if(verweisArr[i][paramType] == "V_VORAUSSETZUNG")
 			rel_vor.push(txt);
 		else if(verweisArr[i][paramType] == "V_UEBUNG")
-			rel_zusatz.push(txt);
-		else if(verweisArr[i][paramType] == "V_ZUSATZINFO")
-			rel_sonstiges.push(txt);
-		else if(verweisArr[i][paramType] == " V_SONSTIGES")
 			rel_uebung.push(txt);
+		else if(verweisArr[i][paramType] == "V_ZUSATZINFO")
+			rel_zusatz.push(txt);
+		else if(verweisArr[i][paramType] == "V_SONSTIGES")
+			rel_sonstiges.push(txt);
 	}
 	
 	if(rel_vor.length == 0)
