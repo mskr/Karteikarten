@@ -330,10 +330,25 @@ public class KarteikartenServlet extends ServletController
                 outWriter.print(jo);
                 return false;
             }
+            
+            String[] v_uebung = req.getParameterValues(ParamDefines.V_Uebung + "[]");
+            String[] v_voraussetzung = req.getParameterValues(ParamDefines.V_Voraussetzung + "[]");
+            String[] v_zusatzinfo = req.getParameterValues(ParamDefines.V_Zusatzinfo + "[]");
+            String[] v_sonstiges = req.getParameterValues(ParamDefines.V_Sonstiges + "[]");
+
+            ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
+            if (v_voraussetzung != null)
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_VORAUSSETZUNG, v_voraussetzung));
+            if (v_uebung != null)
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_UEBUNG, v_uebung));
+            if (v_zusatzinfo != null)
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_ZUSATZINFO, v_zusatzinfo));
+            if (v_sonstiges != null)
+                verweise.addAll(konvertVerweise(BeziehungsTyp.V_SONSTIGES, v_sonstiges));
 
             Karteikarte karteikarte = new Karteikarte(kkID, titel, inhalt, kkTyp, veranstaltung, bAttribute[0],
                     bAttribute[1], bAttribute[2], bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6],
-                    bAttribute[7], bAttribute[8], bAttribute[9]);
+                    bAttribute[7], bAttribute[8], bAttribute[9], verweise);
 
             if (kkTyp == KarteikartenTyp.VIDEO || kkTyp == KarteikartenTyp.BILD)
             {
