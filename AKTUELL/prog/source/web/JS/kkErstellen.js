@@ -151,7 +151,7 @@ function newKarteikarte(triggerElem) {
     //== Code fuer die Verweise ENDE ==
     
     submitFkt = function() {
-    	var text = $("#kk_erstellen_TA").val().trim();
+    	var text = $("#kk_neuesKapitel").prop("checked") ? "" : $("#kk_erstellen_TA").val().trim();
     	var titel = $("#kk_erstellen_titel_input").val().trim();
     	var attributes = getSelectedKkAttributes();
     	if(titel=="")
@@ -166,8 +166,6 @@ function newKarteikarte(triggerElem) {
     	}
     	else
     	{
-    		if($("#kk_neuesKapitel").prop("checked"))
-    			text = "";
     		processKKerstellen(text,titel,attributes, bruder, vater, 
     	            verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
     		return true;

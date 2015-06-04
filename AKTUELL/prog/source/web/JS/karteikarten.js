@@ -26,7 +26,7 @@ function buildKarteikarte(karteikarteJson)
     	kkDom.find(".loeschen").hide();
     }
     
-    kkDom.find(".KKbearbeiten").click(function(){
+    kkDom.find(".KKbearbeiten").click(function() {
 		processKK_editClick($(this));
 	});
     

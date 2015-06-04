@@ -2270,6 +2270,39 @@ public class Datenbankmanager implements IDatenbankmanager
 
         return karteik;
     }
+    
+    private Integer gibAelterenBruder(int karteikarte)
+    {
+        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Integer karteik;
+        try
+        {
+            ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_brother]-(m)" + " WHERE id(n) = {1} return id(m) AS ID");
+            ps.setInt(1, karteikarte);
+            rs = ps.executeQuery();
+            if (rs.next())
+                karteik = rs.getInt("ID");
+            else
+                karteik = -1;
+        }
+        catch (SQLException e)
+        {
+            karteik = null;
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeQuietly(ps);
+            closeQuietly(rs);
+            conLockNeo4j.getValue().unlock();
+        }
+
+        return karteik;
+    }
 
     private Integer gibVater(int karteikarte)
     {
@@ -2570,6 +2603,31 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
+            Integer bruder = gibBruder(karteikID);
+            if(bruder == null)
+                throw new SQLException();
+            
+            if(bruder != -1){
+                Integer aeltererBruder = gibAelterenBruder(karteikID);
+                
+                if(aeltererBruder == null)
+                    throw new SQLException();
+                else if(aeltererBruder != -1)
+                    connectKk(aeltererBruder, bruder, BeziehungsTyp.H_BROTHER, conNeo4j);
+                else{
+                    Integer vater = gibVater(karteikID);
+                    if(vater == null || vater == -1)
+                        throw new SQLException();
+                    else
+                        connectKk(vater, bruder, BeziehungsTyp.H_CHILD, conNeo4j);
+                }              
+            }
+
+           
+            psMysql = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
+            psMysql.setInt(1, karteikID);
+            psMysql.executeUpdate();
+            
             ps = conNeo4j.prepareStatement("match(n) "
                     + "where id(n) = {1} "
                     + "OPTIONAL match n-[r]-() "
