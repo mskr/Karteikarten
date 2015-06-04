@@ -24,19 +24,23 @@ function processKK_editClick(triggerElem){
 }
 function fillKKbearbeitenTemplateWith(json){
 	$("#df_area_kk_b").find("#kk_b_BildPreviewTemplate").remove();
-	$("#df_area_kk_b").find(".dz-message").show(0);
+	$("#df_area_kk_b").find(".dz-message").show();
 	appendDropzone();
-	$("#kk_jetztNeuesKapitel").unbind("change");
+	$("#kk_jetztNeuesKapitel ~ label").html("Diese Karteikarte als Überschrift verwenden.");
+	$("#kk_jetztNeuesKapitel").off();
 	$("#kk_jetztNeuesKapitel").change(function(e){
     	if($("#kk_jetztNeuesKapitel").prop("checked")==true)
     	{
     		$("#kk_bearbeiten_text_area").hide();
     		$("#df_area_kk_b").hide();
+    		$("#kk_jetztNeuesKapitel ~ label").append(
+    		        "<span style='color:yellow'><br><span class='octicon octicon-alert'></span> Inhalt geht verloren</span>");
     	}
     	else
     	{
 			$("#kk_bearbeiten_text_area").show();
 			$("#df_area_kk_b").show();
+		    $("#kk_jetztNeuesKapitel ~ label").html("Diese Karteikarte als Überschrift verwenden.");
     	}
 		
     });
@@ -284,7 +288,8 @@ function fillKKbearbeitenTemplateWith(json){
 function displayKKtoEdit(KKjson){
 	
 	submitFkt = function(){
-    	var text = $("#kk_bearbeiten_TA").val().trim();
+        // Wenn die KK zu einer Ueberschrift gemacht wurde, einfach Inhaltstext = Leerstring
+    	var text = $("#kk_jetztNeuesKapitel").prop("checked") ? "" : $("#kk_bearbeiten_TA").val().trim();
     	var titel = $("#kk_bearbeiten_titel_input").val().trim();
     	var attributes = getSelectedKkBAttributes();
     	var id = KKjson[paramId];
@@ -293,22 +298,22 @@ function displayKKtoEdit(KKjson){
     		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
     		return false;
     	}
-    	else if($("#kk_jetztNeuesKapitel").prop("checked")){
-    		var params = {};
-    		params[paramTitel] = titel;
-    		params[paramId] = KKjson[paramId];
-    		params[paramAttribute] = attributes;
-    		params[paramType] = "TEXT";
-    		params[paramVeranstaltung] = veranstaltungsObject[paramId];
-    		submitEditUeberschriftKarteikarte(params);
-    		return true;
-    	}
-    	else if(text == "" && UPLOADIDSET == -1){
+//    	else if($("#kk_jetztNeuesKapitel").prop("checked")){
+//    		var params = {};
+//    		params[paramTitel] = titel;
+//    		params[paramId] = KKjson[paramId];
+//    		params[paramAttribute] = attributes;
+//    		params[paramType] = "TEXT";
+//    		params[paramVeranstaltung] = veranstaltungsObject[paramId];
+//    		submitEditUeberschriftKarteikarte(params);
+//    		return true;
+//    	}
+    	else if(text == "" && UPLOADIDSET == -1 && !$("#kk_jetztNeuesKapitel").prop("checked")){
     		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
     		return false;
     	}
     	else if(isAnyAttrSelected() == false){
-    		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute abspeichern?",  function(){
+    		sindSieSicher($("#kk_bearbeiten_ok"), "Wollen sie eine Karteikarte ohne Attribute abspeichern?",  function(){
         		processKKbearbeiten(id,text,titel,attributes);
         		return true;
     		}, 0, 0);
@@ -321,11 +326,10 @@ function displayKKtoEdit(KKjson){
     }
     
     clearFkt = function(){
-    	$("#kk_jetztNeuesKapitel").unbind("change");
-    	$("#kk_jetztNeuesKapitel").prop("checked",false);
-    	$("#cke_kk_b_erstellen_TA").fadeIn(0);
-		$("#df_area_kk_b").fadeIn(0);
-    	$(".checkboxes").prop("checked",false);
+    	$("#kk_jetztNeuesKapitel").off();
+    	$("#kk_bearbeiten_text_area").show();
+		$("#df_area_kk_b").show();
+        $("#kk_bearbeiten_popup input[type='checkbox']").prop("checked",false);
     	$("#kk_bearbeiten_titel_input").val("");
     	$("#kk_bearbeiten_TA").val("");
         // Zerstoere Verweis Baeume mit allen Handlern
@@ -445,19 +449,6 @@ function appendDropzone(){
 
 
 }
-function submitEditKarteikarte(params){
-	var ajax = ajaxCall(karteikartenServlet,
-			actionBearbeiteKarteikarte,
-            function(response) {
-                showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
-                $("#kk_bearbeiten_popup_overlay").fadeOut(110);
-                // Wir bekommen die eingefügte id zurück
-                displayKarteikarte(params[paramId], null, true);
-                initInhaltsverzeichnis();
-            },
-            params
-        );
-}
 function processKKbearbeiten(id,text,titel,attributes){
 	var params = {};
 	params[paramTitel] = titel;
@@ -470,17 +461,29 @@ function processKKbearbeiten(id,text,titel,attributes){
 
 	submitEditKarteikarte(params)
 }
-
-function submitEditUeberschriftKarteikarte(params){
-	var ajax = ajaxCall(karteikartenServlet,
-			actionBearbeiteUeberschrift,
+function submitEditKarteikarte(params){
+    console.log("Sende AJAX: Param Inhalt = " + params[paramInhalt]);
+    var ajax = ajaxCall(karteikartenServlet,
+            actionBearbeiteKarteikarte,
             function(response) {
                 showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
-                $("#kk_bearbeiten_popup_overlay").fadeOut(110);
-                // Wir bekommen die eingefügte id zurück
                 displayKarteikarte(params[paramId], null, true);
-                initInhaltsverzeichnis();
+                //initInhaltsverzeichnis();
             },
             params
         );
 }
+
+//function submitEditUeberschriftKarteikarte(params){
+//	var ajax = ajaxCall(karteikartenServlet,
+//			actionBearbeiteUeberschrift,
+//            function(response) {
+//                showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
+//                $("#kk_bearbeiten_popup_overlay").fadeOut(110);
+//                // Wir bekommen die eingefügte id zurück
+//                displayKarteikarte(params[paramId], null, true);
+//                //initInhaltsverzeichnis();
+//            },
+//            params
+//        );
+//}

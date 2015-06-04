@@ -115,9 +115,8 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
             $(seitenArr[i]).hide();
         }
         submitElem.hide();
-        if(weiterElem!= undefined){
+        if(weiterElem != undefined){
         	weiterElem.show();
-
         	weiterElem.off();
         	weiterElem.click(function() {
         		$(seitenArr[popupSeitenIterator]).slideUp();
