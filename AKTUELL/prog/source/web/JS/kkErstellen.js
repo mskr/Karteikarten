@@ -30,9 +30,7 @@ function newKarteikarte(triggerElem) {
     	{
             $("#kk_erstellen_text_area").show();
             $("#df_area_kk").show();
-    		
     	}
-		
     });
     
     //== Code fuer die Verweise START ==
@@ -168,6 +166,8 @@ function newKarteikarte(triggerElem) {
     	}
     	else
     	{
+    		if($("#kk_neuesKapitel").prop("checked"))
+    			text = "";
     		processKKerstellen(text,titel,attributes, bruder, vater, 
     	            verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
     		return true;
@@ -263,47 +263,53 @@ function newKarteikarte(triggerElem) {
         addRemoveLinks: true,
             init: function() {
             	var myDropzone = this;
-           	 $(".dz-error-message").remove();
-       	    this.on("addedfile", function(file) {
-       	    	var ext = file.name.substr(file.name.lastIndexOf('.') + 1);
-       	    	console.log(ext);
-       	    	uploadAction = false;
-       	    	if(ext=="png"||ext=="jpg"){
-       	    		uploadAction = actionUploadKKBild;
-       	    	}
-       	    	else if(ext=="mp4"){
-       	    		uploadAction = actionUploadKKVideo;
-       	    	}
-       	    	else{
-       	    		showError("Bitte verwenden sie für Bilder .png oder .jpg und für Videos .mp4 als Format!");
-       	         	myDropzone.removeAllFiles(true);
-       	    		return false;
-       	    	}
-       	    	var params = {};
-       	    	$("#dz_info_message").hide(0);
-       	    	$(".dz-preview").addClass("center");
-       	    	$(".dz-error-message").remove();
-       	    	$(".dz-error-mark").remove();
-       	    	$(".dz-success-mark").remove();
-       	    	$(".dz-preview").css("margin","40px");
-       	    	clone = $(".dz-size");
-       	    	$(".dz-size").remove();
-       	    	$(".dz-details").append(clone);
-       		    function successFkt(data){
-       		    	UPLOADTYPE = ext;
-       		    	$("#cke_kk_erstellen_TA").hide(0);
-           	    	UPLOADIDSET = data.strResult;
-           	    	console.log("Zurückgegebene UploadID:"+UPLOADIDSET);
-       		    }
-       	    	uploadFile(file, successFkt, uploadAction, params, function(){}, function(){}) 
-       	    });
-       	    this.on("removedfile", function(file) {
-       	    	$("#dz_info_message").show(0);
-       	    	$("#cke_kk_erstellen_TA").show(0);
-       	    	UPLOADTYPE = "";
-       	    	UPLOADIDSET = -1;
-       	    });
-       	  }
+            	
+	           	$(".dz-error-message").remove();
+	           	
+	       	    this.on("addedfile", function(file) {
+	       	    	
+	       	    	var ext = file.name.substr(file.name.lastIndexOf('.') + 1);
+	       	    	console.log(ext);
+	       	    	var uploadAction = false;
+	       	    	if(ext=="png"||ext=="jpg"||ext=="jpeg"){
+	       	    		uploadAction = actionUploadKKBild;
+	       	    	}
+	       	    	else if(ext=="mp4"){
+	       	    		uploadAction = actionUploadKKVideo;
+	       	    	}
+	       	    	else{
+	       	    		showError("Bitte verwenden sie für Bilder .png oder .jpg und für Videos .mp4 als Format!");
+	       	         	myDropzone.removeAllFiles(true);
+	       	    		return false;
+	       	    	}
+	       	    	
+	       	    	var params = {};
+	       	    	$("#dz_info_message").hide();
+	       	    	$(".dz-preview").addClass("center");
+	       	    	$(".dz-error-message").remove();
+	       	    	$(".dz-error-mark").remove();
+	       	    	$(".dz-success-mark").remove();
+	       	    	$(".dz-preview").css("margin","40px");
+	       	    	clone = $(".dz-size");
+	       	    	$(".dz-size").remove();
+	       	    	$(".dz-details").append(clone);
+	       	    	
+	       		    function successFkt(data){
+	       		    	UPLOADTYPE = ext;
+	       		    	$("#cke_kk_erstellen_TA").hide();
+	           	    	UPLOADIDSET = data.strResult;
+	           	    	console.log("Zurückgegebene UploadID:"+UPLOADIDSET);
+	       		    }
+	       	    	uploadFile(file, successFkt, uploadAction, params);
+	       	    });
+	       	    
+	       	    this.on("removedfile", function(file) {
+	       	    	$("#dz_info_message").show();
+	       	    	$("#cke_kk_erstellen_TA").show();
+	       	    	UPLOADTYPE = "";
+	       	    	UPLOADIDSET = -1;
+	       	    });
+	       	  }
         }).get(0).dropzone;
 		$( "#file-dropzone" ).droppable();
     }

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -45,6 +47,9 @@ public class PDFExporter
     private boolean                                   exportVerweise        = false;
 
     private static String                             newLineWithSeparation = "\n";
+    
+    // Lebenszeit der erzeugten Dateien
+    private static int                                fileDuration          = 4 * 60 * 1000;
 
     private static Map<Character, String>             charReplaceList       = new HashMap<>();
     private static Map<String, Tupel<String, String>> tagReplaceList        = new HashMap<>();
@@ -810,12 +815,21 @@ public class PDFExporter
             // Copy nach oben
             if (copyPossible)
                 FileUtils.copyFile(new File(workingDir + subFolder + "/" + fileName), new File(workingDir + fileName));
-
+            
             // Tex file immer sichern
-            FileUtils
-                    .copyFile(new File(workingDir + subFolder + "/" + texFileName), new File(workingDir + texFileName));
-
+            FileUtils.copyFile(new File(workingDir + subFolder + "/" + texFileName), new File(workingDir + texFileName));
+            
             FileUtils.deleteDirectory(new File(workingDir + subFolder));
+            
+            // Timer für das löschen der Dateien
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    deleteFiles();
+                }
+              }, fileDuration);
+            
             cleaned = true;
         }
         catch (IOException e)

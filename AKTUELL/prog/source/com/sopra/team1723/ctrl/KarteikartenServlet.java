@@ -292,6 +292,17 @@ public class KarteikartenServlet extends ServletController
             String inhalt = "";
             String uploadedID = "";
             int kkID = Integer.parseInt(req.getParameter(ParamDefines.Id));
+            
+            Karteikarte k = dbManager.leseKarteikarte(kkID);
+            Veranstaltung v = dbManager.leseVeranstaltung(k.getVeranstaltung());
+            
+            if(v.getErsteKarteikarte() == kkID)
+            {
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed, "Sie können die oberste Karteikarte nicht bearbeiten.");
+                outWriter.print(jo);
+                return false;
+            }
+            
             KarteikartenTyp kkTyp;
             String typ = req.getParameter(ParamDefines.Type);
             if (typ.equals("mp4"))
@@ -506,12 +517,6 @@ public class KarteikartenServlet extends ServletController
 //        outWriter.print(jo);
 //        return true;
 //    }
-
-    private boolean karteikarteLoeschen(HttpServletRequest request, HttpServletResponse response)
-    {
-        // TODO implement here
-        return false;
-    }
 
     /**
      * Ein Benutzer erstellt eine Karteikarte und weist ihr verschiedene
@@ -894,6 +899,13 @@ public class KarteikartenServlet extends ServletController
         
         Karteikarte k = dbManager.leseKarteikarte(karteikartenID);
         Veranstaltung v = dbManager.leseVeranstaltung(k.getVeranstaltung());
+        
+        if(v.getErsteKarteikarte() == karteikartenID)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed, "Sie können die oberste Karteikarte nicht löschen.");
+            outWriter.print(jo);
+            return;
+        }
         
         
         if (!(dbManager.istModerator(aktuellerBenutzer.getId(), v.getId()) && v.isModeratorKarteikartenBearbeiten()) && 
