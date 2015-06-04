@@ -105,7 +105,7 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             e.printStackTrace();
         }
-        
+
         defaultConnection.getValue().lock();
         return defaultConnection;
     }
@@ -136,7 +136,7 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             e.printStackTrace();
         }
-        
+
         defaultConnection.getValue().lock();
         return defaultConnection;
     }
@@ -1264,8 +1264,8 @@ public class Datenbankmanager implements IDatenbankmanager
             }
 
             BenachrVeranstAenderung bva = new BenachrVeranstAenderung(veranst);
-            schreibeBenachrichtigung(bva,conMysql);
-            
+            schreibeBenachrichtigung(bva, conMysql);
+
             conMysql.commit();
 
         }
@@ -1450,11 +1450,11 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
-                
+
                 Karteikarte kk = leseKarteikarte(rs.getInt("Karteikarte"));
-                if(kk == null)
+                if (kk == null)
                     return null;
-                
+
                 benachrichtigung = new BenachrKarteikAenderung(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
                         cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), kk);
             }
@@ -1495,12 +1495,12 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 Kommentar kommentar = leseKommentar(rs.getInt("Kommentar"));
                 Kommentar vaterKommentar = kommentar;
-                if(kommentar.getVaterID() != -1)
-                     vaterKommentar = leseKommentar(kommentar.getVaterID());
-                if(vaterKommentar == null)
+                if (kommentar.getVaterID() != -1)
+                    vaterKommentar = leseKommentar(kommentar.getVaterID());
+                if (vaterKommentar == null)
                     return null;
                 Karteikarte karteik = leseKarteikarte(vaterKommentar.getKarteikartenID());
-                
+
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getDate("Erstelldatum"));
                 benachrichtigung = new BenachrNeuerKommentar(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
@@ -1661,7 +1661,7 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 BenachrNeuerKommentar bnk = (BenachrNeuerKommentar) benachrichtigung;
                 Kommentar kommentar = leseKommentarIntern(bnk.getKommentarId(), conMysql);
-                if(kommentar == null)
+                if (kommentar == null)
                     throw new SQLException();
                 ps = conMysql
                         .prepareStatement("INSERT INTO benachrichtigung_neuer_kommentar (Benachrichtigung, Benutzer,"
@@ -1731,7 +1731,8 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(ps);
             closeQuietly(rs);
 
-            if (!transaktion){
+            if (!transaktion)
+            {
                 conMysql.setAutoCommit(true);
                 conLock.getValue().unlock();
             }
@@ -1907,37 +1908,40 @@ public class Datenbankmanager implements IDatenbankmanager
     {
         Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
         Connection conNeo4j = conLockNeo4j.getKey();
-        
+
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
-        
+
         PreparedStatement ps2 = null;
         ResultSet rs2 = null;
         Karteikarte karteikarte = null;
         try
         {
-           
-            ps = conNeo4j.prepareStatement("MATCH(n)-[r:"+BeziehungsTyp.V_VORAUSSETZUNG.toString().toLowerCase()+"|"+BeziehungsTyp.V_UEBUNG.toString().toLowerCase()+"|"
-                    + ""+BeziehungsTyp.V_ZUSATZINFO.toString().toLowerCase()+"|"+BeziehungsTyp.V_SONSTIGES.toString().toLowerCase()+"]->(m)"
+
+            ps = conNeo4j.prepareStatement("MATCH(n)-[r:" + BeziehungsTyp.V_VORAUSSETZUNG.toString().toLowerCase()
+                    + "|" + BeziehungsTyp.V_UEBUNG.toString().toLowerCase() + "|" + ""
+                    + BeziehungsTyp.V_ZUSATZINFO.toString().toLowerCase() + "|"
+                    + BeziehungsTyp.V_SONSTIGES.toString().toLowerCase() + "]->(m)"
                     + " WHERE id(n) = {1} RETURN id(m) AS zielID, type(r) AS Typ");
             ps.setInt(1, karteikID);
             rs = ps.executeQuery();
-            ArrayList<Tripel<BeziehungsTyp,Integer,String>> verweise = new ArrayList<Tripel<BeziehungsTyp,Integer,String>>();
-            while(rs.next()){
+            ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
+            while (rs.next())
+            {
                 ps2 = conMysql.prepareStatement("SELECT Titel FROM Karteikarte WHERE ID = ?");
                 ps2.setInt(1, rs.getInt("zielID"));
                 rs2 = ps2.executeQuery();
-                if(!rs2.next())
+                if (!rs2.next())
                     return null;
-                verweise.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.valueOf(rs.getString("Typ").toUpperCase()), 
-                        rs.getInt("zielID"), rs2.getString("Titel")));
+                verweise.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.valueOf(rs.getString(
+                        "Typ").toUpperCase()), rs.getInt("zielID"), rs2.getString("Titel")));
             }
-            
+
             closeQuietly(ps);
             closeQuietly(rs);
-            
+
             ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung,"
                     + " Bewertung, Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, Zusatzinformation, Exkurs,"
                     + " Beispiel, Uebung FROM karteikarte WHERE ID = ?");
@@ -1945,7 +1949,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             rs = ps.executeQuery();
             if (rs.next())
-            {            
+            {
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(rs.getTimestamp("Aenderungsdatum"));
                 karteikarte = new Karteikarte(karteikID, rs.getString("Titel"), cal, rs.getString("Inhalt"),
@@ -1962,7 +1966,8 @@ public class Datenbankmanager implements IDatenbankmanager
             karteikarte = null;
             e.printStackTrace();
         }
-        catch(IllegalArgumentException e){
+        catch (IllegalArgumentException e)
+        {
             karteikarte = null;
             e.printStackTrace();
         }
@@ -2058,7 +2063,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 {
                     aktuelleKarteikarte = rs.getInt("ID");
                     Karteikarte aktKarteik = leseKarteikarte(aktuelleKarteikarte);
-                    if(aktKarteik == null)
+                    if (aktKarteik == null)
                         return null;
                     kindKarteikarten.put(i, aktKarteik);
                     --anzNachfolger;
@@ -2102,7 +2107,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 while (bruderKarteik == -1);
 
                 Karteikarte bruderKk = leseKarteikarte(bruderKarteik);
-                if(bruderKk == null)
+                if (bruderKk == null)
                     return null;
                 kindKarteikarten.put(i, bruderKk);
                 aktuelleKarteikarte = bruderKarteik;
@@ -2159,7 +2164,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         return kindKarteikarten;
 
                     Karteikarte aktKarteik = leseKarteikarte(aktuelleKarteikarte);
-                    if(aktKarteik == null)
+                    if (aktKarteik == null)
                         return null;
                     kindKarteikarten.put(i, aktKarteik);
                     --anzVorgänger;
@@ -2184,9 +2189,9 @@ public class Datenbankmanager implements IDatenbankmanager
                     if (!rs.next())
                     {
                         abbruch = true;
-                        
+
                         Karteikarte aktKarteik = leseKarteikarte(aktuelleKarteikarte);
-                        if(aktKarteik == null)
+                        if (aktKarteik == null)
                             return null;
                         kindKarteikarten.put(i, aktKarteik);
                         --anzVorgänger;
@@ -2391,8 +2396,9 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 throw new SQLException();
             }
-            
-            for(int i=0 ; i<karteik.getVerweise().size(); ++i){
+
+            for (int i = 0; i < karteik.getVerweise().size(); ++i)
+            {
                 connectKk(karteik.getId(), karteik.getVerweise().get(i).y, karteik.getVerweise().get(i).x, conNeo4j);
             }
 
@@ -2447,12 +2453,18 @@ public class Datenbankmanager implements IDatenbankmanager
     {
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+        
+        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
         PreparedStatement ps = null;
 
         boolean erfolgreich = true;
 
         try
         {
+            conMysql.setAutoCommit(false);
+            conNeo4j.setAutoCommit(false);
+            
             ps = conMysql.prepareStatement("UPDATE karteikarte SET "
                     + "Titel = ?, Inhalt = ?, Typ = ?, Aenderungsdatum = ?, Satz = ?, Lemma = ?, Beweis = ?,"
                     + " Definition = ?, Wichtig = ?, Grundlagen = ?, Zusatzinformation = ?, Exkurs = ?,"
@@ -2473,17 +2485,44 @@ public class Datenbankmanager implements IDatenbankmanager
             ps.setBoolean(14, karteik.isIstUebung());
             ps.setInt(15, karteik.getId());
             ps.executeUpdate();
+            
+            closeQuietly(ps);
+            
+            ps = conNeo4j.prepareStatement("match n-[r:" + BeziehungsTyp.V_VORAUSSETZUNG.toString().toLowerCase()
+                    + "|" + BeziehungsTyp.V_UEBUNG.toString().toLowerCase() + "|" + ""
+                    + BeziehungsTyp.V_ZUSATZINFO.toString().toLowerCase() + "|"
+                    + BeziehungsTyp.V_SONSTIGES.toString().toLowerCase() + "]->() "
+                    + "where id(n) = {1} "
+                    + "delete r");
+            ps.setInt(1, karteik.getId());
+            ps.executeUpdate();
+            
+            for(Tripel<BeziehungsTyp,Integer,String> verweis : karteik.getVerweise()){
+                connectKk(karteik.getId(), verweis.y, verweis.x, conNeo4j);
+            }
 
+            conNeo4j.commit();
+            conMysql.commit();
         }
         catch (SQLException e)
         {
             erfolgreich = false;
             e.printStackTrace();
+            try
+            {
+                conMysql.rollback();
+                conNeo4j.rollback();
+            }
+            catch (SQLException e1)
+            {
+                e1.printStackTrace();
+            }
         }
         finally
         {
             closeQuietly(ps);
             conLock.getValue().unlock();
+            conLockNeo4j.getValue().unlock();
         }
 
         return erfolgreich;
@@ -2499,6 +2538,8 @@ public class Datenbankmanager implements IDatenbankmanager
         Connection conMysql = conLock.getKey();
 
         PreparedStatement ps = null;
+        ResultSet rs = null;
+        PreparedStatement psMysql = null;
 
         boolean erfolgreich = true;
 
@@ -2507,26 +2548,40 @@ public class Datenbankmanager implements IDatenbankmanager
             conNeo4j.setAutoCommit(false);
             conMysql.setAutoCommit(false);
 
-            ps = conNeo4j.prepareStatement("match (n)-[:h_child]->(m)"
-                    + " with n "
-                    + " match (n)-[r]-() "
-                    + " delete n,r");
-            
-            ps = conNeo4j.prepareStatement("match p=((n)-[:h_child|h_brother*0..]->(m))"
-                                        + " where id(n) = {1}" 
-                                        + " with m" 
-                                        + " match (m)-[r]-()" 
-                                        + " delete m,r "
-                                        + "return id(m)");
+            ps = conNeo4j.prepareStatement("match p=((n)-[:h_child]->(m)-[:h_child|h_brother*0..]->(o))" + " where id(n) = {1}"
+                    + " with o" + " match (o)-[r]-()" + " delete o,r " + "return distinct(id(o)) AS ID_o");
             ps.setInt(1, karteikID);
+            rs = ps.executeQuery();
 
-            ps.executeUpdate();
+            psMysql = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
+            boolean loescheInMysql = rs.next();
+            if (loescheInMysql)
+            {
+                do
+                {
+                    psMysql.setInt(1, rs.getInt("ID_o"));
+                    psMysql.addBatch();
+                }
+                while (rs.next());
+
+                psMysql.executeBatch();
+                closeQuietly(psMysql);
+            }
 
             closeQuietly(ps);
 
-            ps = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
+            ps = conNeo4j.prepareStatement("match(n) "
+                    + "where id(n) = {1} "
+                    + "OPTIONAL match n-[r]-() "
+                    + "delete n,r");
             ps.setInt(1, karteikID);
             ps.executeUpdate();
+            closeQuietly(ps);
+
+            psMysql = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
+            psMysql.setInt(1, karteikID);
+            psMysql.executeUpdate();
+
 
             conNeo4j.commit();
             conMysql.commit();
@@ -2534,6 +2589,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             try
             {
                 conNeo4j.rollback();
@@ -2543,7 +2599,6 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 e1.printStackTrace();
             }
-            e.printStackTrace();
         }
         finally
         {
@@ -2558,6 +2613,8 @@ public class Datenbankmanager implements IDatenbankmanager
             }
 
             closeQuietly(ps);
+            closeQuietly(rs);
+            closeQuietly(psMysql);
             conLockNeo4j.getValue().unlock();
             conLock.getValue().unlock();
         }
@@ -2679,7 +2736,8 @@ public class Datenbankmanager implements IDatenbankmanager
         return komms;
     }
 
-    private Kommentar leseKommentarIntern(int kommId, Connection conMysql){
+    private Kommentar leseKommentarIntern(int kommId, Connection conMysql)
+    {
         PreparedStatement ps = null;
 
         Kommentar k = null;
@@ -2705,8 +2763,8 @@ public class Datenbankmanager implements IDatenbankmanager
                     kkId = -1;
 
                 k = new Kommentar(rs.getInt("ID"), rs.getString("Inhalt"), g, leseBenutzer(rs.getInt("Benutzer")),
-                        rs.getInt("Bewertung"), hatKommentarBewertet(rs.getInt("ID"), rs.getInt("Benutzer")), vaterID, kkId,
-                        rs.getInt("AnzKinder"));
+                        rs.getInt("Bewertung"), hatKommentarBewertet(rs.getInt("ID"), rs.getInt("Benutzer")), vaterID,
+                        kkId, rs.getInt("AnzKinder"));
             }
 
         }
@@ -2722,7 +2780,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
         return k;
     }
-    
+
     @Override
     public Kommentar leseKommentar(int kommId)
     {
@@ -2795,8 +2853,8 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
-           conMysql.setAutoCommit(false);
-            
+            conMysql.setAutoCommit(false);
+
             String sql = "INSERT INTO kommentar(Inhalt, Benutzer, Karteikarte, Vaterkommentar) VALUES(?,?,?,?)";
             ps = conMysql.prepareStatement(sql);
             ps.setString(1, kommentar.getInhalt());
@@ -2813,26 +2871,28 @@ public class Datenbankmanager implements IDatenbankmanager
 
             ps.executeUpdate();
             closeQuietly(ps);
-            
+
             ps = conMysql.prepareStatement("SELECT LAST_INSERT_ID();");
             rs = ps.executeQuery();
             if (!rs.next())
                 throw new SQLException();
             int kommentarId = rs.getInt(1);
-            
+
             Karteikarte karteik = null;
-            if(kommentar.getVaterID() != -1){
+            if (kommentar.getVaterID() != -1)
+            {
                 Kommentar vaterKommentar = leseKommentar(kommentar.getVaterID());
                 karteik = leseKarteikarte(vaterKommentar.getKarteikartenID());
             }
             else
                 karteik = leseKarteikarte(kommentar.getKarteikartenID());
-            
-            if(karteik == null)
+
+            if (karteik == null)
                 return false;
-            
-            schreibeBenachrichtigung(new BenachrNeuerKommentar(kommentar.getErsteller().getId(),karteik, kommentarId), conMysql);
-            
+
+            schreibeBenachrichtigung(new BenachrNeuerKommentar(kommentar.getErsteller().getId(), karteik, kommentarId),
+                    conMysql);
+
             conMysql.commit();
 
         }
@@ -3265,6 +3325,5 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(ps);
         }
     }
-
 
 }
