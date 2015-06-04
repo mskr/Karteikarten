@@ -163,7 +163,7 @@ function buildKarteikarte(karteikarteJson)
 				    kommentarServlet,
 				    actionLeseThemaKommentar,
 				    function(response) {
-				    	arr = response[keyJsonArrResult];
+				    	var arr = response[keyJsonArrResult];
 				        showHauptKommentare(kkDom,arr);
 				    },
 				    params
