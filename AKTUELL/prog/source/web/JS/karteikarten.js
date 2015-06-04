@@ -44,14 +44,18 @@ function buildKarteikarte(karteikarteJson)
     
     
 	// Reagiere auf das Scrollen zu dieser Karteikarte
-	new Waypoint({
+    new Waypoint({
 	    element: kkDom,
 	    handler: function(direction) {
 	        inhaltsverzeichnisUnhighlightAll();
-	        inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkDom.attr("data-kkid"));
+	        var kkID = kkDom.attr("data-kkid");
+	        if(kkID != veranstaltungsObject[paramErsteKarteikarte])
+	            inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkID);
+	        else
+	            $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("fast", function() { $(this).remove() });
 	    }
 	});
-	
+    
 
     // Überschrift kk
     if(kkInhalt == "" && kkType == paramKkText)
@@ -260,7 +264,7 @@ function fillVerweise(domKk, verweisArr)
 	{
 		txt = "<a onclick='displayKarteikarte("+verweisArr[i][paramId]+", null, false);'>" + verweisArr[i][paramTitel] +"</a>";
 
-		if(verweisArr[i][paramType] == "V_VORRAUSSETZUNG")
+		if(verweisArr[i][paramType] == "V_VORAUSSETZUNG")
 			rel_vor.push(txt);
 		else if(verweisArr[i][paramType] == "V_UEBUNG")
 			rel_zusatz.push(txt);

@@ -53,7 +53,7 @@ public class VeranstaltungServlet extends ServletController {
             return false;
         }
 
-        String[] studiengaenge = request.getParameter(ParamDefines.Studiengang).split(",");
+        String[] studiengaenge = request.getParameterValues(ParamDefines.Studiengang+ "[]");
         String semester = request.getParameter(ParamDefines.Semester);
         String titel = request.getParameter(ParamDefines.Titel);
         String beschr = request.getParameter(ParamDefines.Beschr);
@@ -62,7 +62,7 @@ public class VeranstaltungServlet extends ServletController {
         boolean bewertungenErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.BewertungenErlauben));
         boolean moderatorKkBearbeiten = Boolean.parseBoolean(request.getParameter(ParamDefines.ModeratorKkBearbeiten));
 
-        String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren);
+        String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren+ "[]");
         int[] mIds = null;
         
         if(moderatorIds != null)
@@ -302,7 +302,7 @@ public class VeranstaltungServlet extends ServletController {
         }
         else
         {
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Diese Veranstaltung existiert nicht (mehr)!");
             outWriter.print(jo);
             return false;
         }
@@ -364,7 +364,7 @@ public class VeranstaltungServlet extends ServletController {
             return false;
         }
 
-        String[] studiengaenge = request.getParameter(ParamDefines.Studiengang).split(",");
+        String[] studiengaenge = request.getParameterValues(ParamDefines.Studiengang + "[]");
         String semester = request.getParameter(ParamDefines.Semester);
         String titel = request.getParameter(ParamDefines.Titel);
         String beschr = request.getParameter(ParamDefines.Beschr);
@@ -373,7 +373,7 @@ public class VeranstaltungServlet extends ServletController {
         boolean bewertungenErlaubt = Boolean.parseBoolean(request.getParameter(ParamDefines.BewertungenErlauben));
         boolean moderatorKkBearbeiten = Boolean.parseBoolean(request.getParameter(ParamDefines.ModeratorKkBearbeiten));
 
-        String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren);
+        String[] moderatorIds = request.getParameterValues(ParamDefines.Moderatoren+ "[]");
         int[] mIds = null;
         
         if(moderatorIds != null)

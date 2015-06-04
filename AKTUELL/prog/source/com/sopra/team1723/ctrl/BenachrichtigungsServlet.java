@@ -58,8 +58,9 @@ public class BenachrichtigungsServlet extends ServletController
                 }
                 
                 if(!dbManager.markiereBenAlsGelesen(benID, aktuellerBenutzer.getId())){
-                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError,"Diese Benachrichtigung existiert nicht (mehr)!");
                     outWriter.print(jo);
+                    return;
                 }
                     
                 

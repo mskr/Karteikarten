@@ -9,7 +9,7 @@ $(document).ready(function() {
         var pass = $("#login_pass").val();
         pass = CryptoJS.MD5(pass);
         var params = {};
-        params[paramEmail] = escape(email);
+        params[paramEmail] = email;
         params[paramPasswort] = escape(pass);
         ajaxCall(
              startseitenServlet,
@@ -37,7 +37,7 @@ $(document).ready(function() {
         event.preventDefault();
     });
     
-    $(".logout").click(function() {
+    $("#logout").click(function() {
         ajaxCall(
             startseitenServlet,
             actionLogout,

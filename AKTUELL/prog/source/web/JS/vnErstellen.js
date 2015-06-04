@@ -12,7 +12,6 @@ $(document).ready(function() {
             function() {
             	var editor = $('#vn_erstellen_beschr_input').ckeditorGet();
             	editor.destroy();
-
             	var dialog = $("#vn_erstellen_popup");
             	dialog.find("#vn_erstellen_titel_input").val("");
 //            	dialog.find("#vn_erstellen_auswahl_semester").val(jsonBenutzer[paramSemester]);
@@ -24,11 +23,9 @@ $(document).ready(function() {
             	dialog.find("#vn_erstellen_komm_erlaubt").prop("checked", true);
             	dialog.find("#vn_erstellen_bew_erlaubt").prop("checked", true);
             	$("#vn_erstellen_mod_input").val("");
-            	$("#vn_erstellen_mod_bearb").prop("checked", true); // TODO Radio Button wird nicht gecheckt
-
+            	$("#vn_erstellen_mod_bearb").prop("checked", true);
             	selectedModList = {};
             	$("#vn_erstellen_mod_list").empty();
-
             },
             $("#vn_erstellen_ok"),
             function() {
@@ -41,12 +38,6 @@ $(document).ready(function() {
                     kommentareErlaubt = dialog.find("#vn_erstellen_komm_erlaubt").is(':checked'),
                     bewertungenErlaubt = dialog.find("#vn_erstellen_bew_erlaubt").is(':checked');
                 
-                var moderatorenIDs = [];
-                
-                for( var key in selectedModList)
-                {
-                    moderatorenIDs.push(selectedModList[key][paramId]);
-                }
                 
                 // Fehlerprüfung
                 if(titel == "" || beschr == "" || $.isEmptyObject(selectedStudiengaenge))
@@ -58,11 +49,11 @@ $(document).ready(function() {
                 var params = {};
                 params[paramTitel] = titel;
                 params[paramSemester] = semester;
-                params[paramStudiengang] = "";
+                params[paramStudiengang] = [];
                 
                 for(var i in selectedStudiengaenge)
             	{
-                	params[paramStudiengang] += selectedStudiengaenge[i][paramStudiengang] + ",";
+                	params[paramStudiengang].push(selectedStudiengaenge[i][paramStudiengang]);
             	}
                 	
                 params[paramBeschr] = beschr;
@@ -70,8 +61,11 @@ $(document).ready(function() {
                 params[paramKommentareErlauben] = kommentareErlaubt;
                 params[paramBewertungenErlauben] = bewertungenErlaubt;
                 params[paramPasswort] = passw;
-                params[paramModeratoren] = moderatorenIDs;
-                
+                params[paramModeratoren] = [];
+                for( var key in selectedModList)
+                {
+                	params[paramModeratoren].push(selectedModList[key][paramId]);
+                }
                 var ajax = ajaxCall(veranstaltungServlet,
                         actionErstelleVeranst,
                         function(response) {

@@ -124,7 +124,7 @@
 <div id="vn_erstellen_popup_overlay" class="popup_fenster_overlay">
 	<div id="vn_erstellen_popup" class="popup_fenster hidden">
 	 	<div class="popup_fenster_titel">
-			<span class="octicon octicon-podium"></span>
+			<span class="octicon octicon-plus"></span>
 			<span class="popup_fenster_ueberschrift"> Veranstaltung erstellen</span>
 		</div>
 		<div id="vn_erstellen_popup_close" class="popup_fenster_close">
@@ -172,7 +172,7 @@
 <div id="vn_bearbeiten_popup_overlay" class="popup_fenster_overlay">
 	<div id="vn_bearbeiten_popup" class="popup_fenster hidden">
 	 	<div class="popup_fenster_titel">
-			<span class="octicon octicon-podium"></span>
+			<span class="octicon octicon-pencil"></span>
 			<span class="popup_fenster_ueberschrift"> Veranstaltung bearbeiten</span>
 		</div>
 		<div id="vn_bearbeiten_popup_close" class="popup_fenster_close">
@@ -276,6 +276,7 @@
 				<br>
 				Wählen Sie zunächst die Art der Verlinkung und markieren Sie dann beliebig viele Karteikarte, die Ziel Ihrer Verlinkung sind.
 				<br>
+				<span class="octicon octicon-info"></span> 
 				Hinweis: Durch Klicken auf Karteikarten können Sie deren direkt untergeordnete Karteikarten anzeigen bzw. ausblenden.
 			</div>
 			<div class="kk_verweise_wrapper">
@@ -324,7 +325,7 @@
  			<p>
 				<input id="kk_jetztNeuesKapitel" type="checkbox" name="attr">
 				<label for="kk_jetztNeuesKapitel">
-					Diese Karteikarte als Überschrift verwenden.
+					<!-- Labeltext und ggf. Warnung, dass Inhalt verloren geht hier durch JS gesetzt -->
 				</label>
  			</p>
  			<div id="kk_bearbeiten_text_area">
@@ -634,9 +635,9 @@ Dann aber so leer.
 		<div id="profil_passwort" class="profil_passwort card flex_elem">
 			<form id="profil_passwort_form">
 				<div class="card_title">Passwort ändern</div>
+				<div><span><label class="profil_label" for="profil_passwort_alt_input">Altes Passwort</label><input id="profil_passwort_alt_input" class="profil_input" type="password" required></span></div>
 				<div><span><label class="profil_label" for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" class="profil_input" type="password" required></span></div>
 				<div><span><label class="profil_label" for="profil_passwort_wdh_input">Passwort wiederholen</label><input id="profil_passwort_wdh_input" class="profil_input" type="password" required></span></div>
-				<div><span><label class="profil_label" for="profil_passwort_alt_input">Altes Passwort</label><input id="profil_passwort_alt_input" class="profil_input" type="password" required></span></div>
 				<input id="profil_passwort_speichern" class="mybutton dark" type="submit" value="Speichern">
 			</form>
 		</div>
@@ -665,86 +666,7 @@ Dann aber so leer.
 		<button id="vn_bearbeiten" class="mybutton dark flat"><span class="octicon octicon-pencil"></span> Bearbeiten</button>
 		<button id="kk_export" class="mybutton dark flat"><span class="octicon octicon-cloud-download"></span> Exportieren</button>
 	</div>
-<!--
-	<input id="r-kk_toolbar_toggle_checkbox" class="r-kk_toolbar_toggle" type="checkbox">
-	<label id="r-kk_toolbar_toggle" class="r-kk_toolbar_toggle" for="r-kk_toolbar_toggle_checkbox">
-		<span class="octicon octicon-tools"></span> TOOLS<span class="octicon octicon-triangle-down"></span>
-	</label>
-	<div class="kk_toolbar">
- 		<div class="mybuttongroup filtern" grouplabel="Filter">
-			<input id="filter0" type="radio" name="group_filtern" checked>
-			<label for="filter0">
-				<a class="groupelem left alle tiptrigger tipbelow" data-tooltip="Alle">
-					<span class="octicon octicon-versions"></span>
-				</a>
-			</label>
-			<input id="filter1" type="radio" name="group_filtern">
-			<label for="filter1">
-				<a class="groupelem middle wichtig tiptrigger tipbelow" data-tooltip="Wichtig">
-					<span class="octicon octicon-star"></span>
-				</a>
-			</label>
-			<input id="filter2" type="radio" name="group_filtern">
-			<label for="filter2">
-				<a class="groupelem middle bilder tiptrigger tipbelow" data-tooltip="Bilder">
-					<span class="octicon octicon-device-camera"></span>
-				</a>
-			</label>
-			<input id="filter3" type="radio" name="group_filtern">
-			<label for="filter3">
-				<a class="groupelem middle videos tiptrigger tipbelow" data-tooltip="Videos">
-					<span class="octicon octicon-device-camera-video"></span>
-				</a>
-			</label>
-			<input id="filter4" type="radio" name="group_filtern">
-			<label for="filter4">
-				<input class="input_std groupelem_input right filterstring" type="text" placeholder="Karteikarten filtern..." required autofocus>
-			</label>
-		</div>
-		<div class="mybuttongroup sortieren" grouplabel="Sortieren">
-			<input id="sortier0" type="radio" name="group_sortieren" checked>
-			<label for="sortier0">
-				<a class="groupelem left roterfaden tiptrigger tipbelow" data-tooltip="Standard">
-					<span class="octicon octicon-ellipsis"></span>
-				</a>
-			</label>
-			<input id="sortier1" type="radio" name="group_sortieren">
-			<label for="sortier1">
-				<a class="groupelem middle beliebt tiptrigger tipbelow" data-tooltip="Upvotes">
-					<span class="octicon octicon-triangle-up"></span>
-				</a>
-			</label>
-			<input id="sortier2" type="radio" name="group_sortieren">
-			<label for="sortier2">
-				<a class="groupelem right neueste tiptrigger tipbelow" data-tooltip="Neu">
-					<span class="octicon octicon-clock"></span>
-				</a>
-			</label>
-		</div>
-		<div class="mybuttongroup ansicht" grouplabel="Ansicht">
-			<input id="ansicht0" type="radio" name="group_ansicht" checked>
-			<label for="ansicht0">
-				<a class="groupelem left lese tiptrigger tipbelow" data-tooltip="Lesen">
-					<span class="octicon octicon-book"></span>
-				</a>
-			</label>
-			<input id="ansicht1" type="radio" name="group_ansicht">
-			<label for="ansicht1">
-				<a class="groupelem middle baum tiptrigger tipbelow" data-tooltip="Baum">
-					<span class="octicon octicon-unfold"></span>
-				</a>
-			</label>
-			<input id="ansicht2" type="radio" name="group_ansicht">
-			<label for="ansicht2">
-				<a class="groupelem right graph tiptrigger tipbelow" data-tooltip="Graph">
-					<span class="octicon octicon-git-merge"></span>
-				</a>
-			</label>
-		</div>
- 		<button id="kk_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span></button> 
-		<button id="kk_export_bt" class="mybutton dark"><span class="octicon octicon-cloud-download"></span></button>
-	</div>
--->
+
 	<div id="kk_inhaltsverzeichnis" class="kk_baum">
 		<div id="kk_inhaltsverzeichnis_titel"></div>
 		<!-- Inhaltsverzeichnis hier -->

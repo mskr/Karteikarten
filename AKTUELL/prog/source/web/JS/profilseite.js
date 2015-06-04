@@ -59,7 +59,9 @@ $(document).ready(function() {
  * Zeigt die Daten des Benutzers im Profil an
  * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
  */
-function fillProfilseite() {
+function fillProfilseite() 
+{
+    Waypoint.destroyAll();
     
     currentProfilID = getUrlParameterByName(urlParamId);
     
@@ -321,7 +323,7 @@ function registerProfilSpeichernEvents() {
             var params = {};
             params[paramPasswortNew] = escape(pwNeu);
             params[paramPasswort] = escape(pwAlt);
-            params[paramId] = escape(currentProfilID);
+            params[paramId] = currentProfilID;
             ajaxCall(
                 profilServlet,
                 actionAenderePasswort,

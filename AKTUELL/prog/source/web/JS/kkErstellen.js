@@ -156,34 +156,18 @@ function newKarteikarte(triggerElem) {
     	var text = $("#kk_erstellen_TA").val().trim();
     	var titel = $("#kk_erstellen_titel_input").val().trim();
     	var attributes = getSelectedKkAttributes();
-
-    	if(titel==""){
+    	if(titel=="")
+    	{
     		showError("Bitte geben Sie ihrer Karteikarte einen Titel.");
     		return false;
     	}
-    	else if($("#kk_neuesKapitel").prop("checked")){
-    		var params = {};
-    		params[paramTitel] = titel;
-    		params[paramVeranstaltung] = veranstaltungsObject[paramId];
-    		params[paramVaterKK] = vater;
-    		params[paramAttribute] = attributes;
-    		params[paramBruderKK] = bruder;
-    		submitNewUeberschriftKarteikarte(params);
-    		return true;
-    	}
-    	else if(text == "" && UPLOADIDSET == -1){
-    		showError("Bitte füllen sie ihre Karteikarte mit einem Text aus oder laden sie ein Bild/Video hoch.");
+    	else if(text == "" && UPLOADIDSET == -1 && !$("#kk_neuesKapitel").prop("checked"))
+    	{
+    		showError("Bitte füllen sie ihre Karteikarte mit einem Inhalt.");
     		return false;
     	}
-    	else if(isAnyAttrSelected() == false){
-    		sindSieSicher($("#kk_erstellen_ok"), "Wollen sie eine Karteikarte ohne Attribute erstellen?",  function(){
-    		    processKKerstellen(text,titel,attributes, bruder, vater, 
-                        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
-        		return true;
-    		}, 0, 0);
-    		return false;
-    	}
-    	else{
+    	else
+    	{
     		processKKerstellen(text,titel,attributes, bruder, vater, 
     	            verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
     		return true;
@@ -192,7 +176,7 @@ function newKarteikarte(triggerElem) {
     
     clearFkt = function(){
     	$("#kk_neuesKapitel").off();
-    	$("#cke_kk_erstellen_TA").show();
+    	$("#kk_erstellen_text_area").show();
 		$("#df_area_kk").show();
     	$("#kk_erstellen_popup input[type='checkbox']").prop("checked",false);
     	$("#kk_erstellen_titel_input").val("");
@@ -211,19 +195,10 @@ function newKarteikarte(triggerElem) {
         $("#kk_erstellen_weiter"),
         $("#kk_erstellen_zurueck")
     );
-    $(".checkbox_labels").unbind("click");
-    $(".checkbox_labels").click(function(){
-    	if($(this).siblings().first().prop("checked")==true ){
-    		$(this).siblings().first().prop("checked",false)
-    	}
-    	else{
-    		$(this).siblings().first().prop("checked",true);
-    	}
-    	
-    });
     
 	function processKKerstellen(text,titel,attributes, bruder, vater, 
-	        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr){
+	        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr)
+	{
 		var params = {};
 		params[paramTitel] = titel;
 		params[paramVeranstaltung] = veranstaltungsObject[paramId];
@@ -239,7 +214,9 @@ function newKarteikarte(triggerElem) {
         params[paramVerweisSonstiges] = verweisSonstigesArr;
 		submitNewKarteikarte(params)
 	}
-    function isAnyAttrSelected(){
+	
+    function isAnyAttrSelected()
+    {
     	var isTrue = false;
     	$("#kkE_attributes").children().filter("span").children().filter("input").each(function(i){
     		if($(this).prop("checked")==true){
@@ -249,7 +226,9 @@ function newKarteikarte(triggerElem) {
     	});
     	return isTrue;
     }
-    function getSelectedKkAttributes(){
+    
+    function getSelectedKkAttributes()
+    {
     	var str = ""
     	$("#kkE_attributes").children().filter("span").children().filter("input").each(function(i){
     		str = str + $(this).prop("checked")+",";
@@ -258,25 +237,12 @@ function newKarteikarte(triggerElem) {
     	return str;
     }
     
-    function submitNewKarteikarte(params){
+    function submitNewKarteikarte(params)
+    {
     	var ajax = ajaxCall(karteikartenServlet,
     			actionErstelleKarteikarte,
                 function(response) {
                     showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich erzeugt.");
-                    $("#kk_erstellen_popup_overlay").fadeOut(110);
-                    // Wir bekommen die eingefügte id zurück
-                    displayKarteikarte(response[paramId]);
-                    initInhaltsverzeichnis();
-                },
-                params
-            );
-    }
-    function submitNewUeberschriftKarteikarte(params){
-    	var ajax = ajaxCall(karteikartenServlet,
-    			actionErstelleUeberschrift,
-                function(response) {
-                    showInfo("Übergeordnetes Kapitel \""+ params[paramTitel] +"\" wurde erfolgreich erzeugt.");
-                    // Wir bekommen die eingefügte id zurück
                     displayKarteikarte(response[paramId]);
                     initInhaltsverzeichnis();
                 },
@@ -284,8 +250,8 @@ function newKarteikarte(triggerElem) {
             );
     }
     
-    
-    try{
+    try
+    {
 		myDropzone = $("#df_area_kk").dropzone({
         url: actionUploadKKBild,
         maxFilesize: 1,
@@ -341,30 +307,44 @@ function newKarteikarte(triggerElem) {
         }).get(0).dropzone;
 		$( "#file-dropzone" ).droppable();
     }
-    catch(e){
+    catch(e)
+    {
     	myDropzone.removeAllFiles(true);
     }
     	
 }
 
-function findVater(elem){
+/**
+ * Hilfsmethode fuer das Erstellen von Karteikarten mittels Inhaltsverzeichnis.
+ * @param elem jQuery Object. Ein Erstellen Button im Inhaltsverzeichnis.
+ * @returns ID der Vaterkarteikarte
+ */
+function findVater(elem)
+{
 	maybeNode = elem.parent().parent().parent().attr("id")
 	if(maybeNode === "kk_inhaltsverzeichnis"){
 		return veranstaltungsObject[paramErsteKarteikarte];
 	}
-	else{
+	else
+	{
 		maybeNode = elem.parent().parent().prev().data("kkid");
 		return maybeNode;
 	}
-	
 }
 
-function findBruder(elem){
+/**
+ * Hilfsmethode fuer das Erstellen von Karteikarten mittels Inhaltsverzeichnis.
+ * @param elem jQuery Object. Ein Erstellen Button im Inhaltsverzeichnis.
+ * @returns ID der vorhergehenden Bruderkarteikarte
+ */
+function findBruder(elem)
+{
 	elemBefore = elem.parent().prev();
 	if(elemBefore.length < 1){ //no brother before it, then -1
 		return -1;
 	}
-	else{
+	else
+	{
 		id = elemBefore.children().first().data("kkid");
 		return id
 	}
@@ -372,23 +352,25 @@ function findBruder(elem){
 //	elem.parent().prev().children().first().data("kkid");
 }
 
-function isImage(filename) {
+function isImage(filename) 
+{
     var ext = getExtension(filename);
     switch (ext.toLowerCase()) {
-    case 'jpg':
-    case 'png':
-        //etc
-        return true;
+        case 'jpg':
+        case 'png':
+            //etc
+            return true;
     }
     return false;
 }
 
-function isVideo(filename) {
+function isVideo(filename) 
+{
     var ext = getExtension(filename);
     switch (ext.toLowerCase()) {
-    case 'mp4':
-        // etc
-        return true;
+        case 'mp4':
+            // etc
+            return true;
     }
     return false;
 }
