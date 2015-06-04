@@ -625,6 +625,6 @@ function loadPreKk(id)
 
 function showPreAfterLoad()
 {
-	$(".kk_load_after").show();
-	$(".kk_load_pre").show();
+	$(".kk_load_after").removeClass("animated").removeClass("zoomOut").show();
+	$(".kk_load_pre").removeClass("animated").removeClass("zoomOut").show();
 }

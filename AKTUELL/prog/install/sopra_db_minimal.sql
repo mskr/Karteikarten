@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 22. Mai 2015 um 19:03
+-- Erstellungszeit: 04. Jun 2015 um 12:24
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -75,51 +75,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 `ID` int(11) NOT NULL,
   `Inhalt` mediumtext NOT NULL,
   `Erstelldatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=77 ;
-
---
--- Daten für Tabelle `benachrichtigung`
---
-
-INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
-(1, 'Einladung als Moderator für die Vorlesung Softwaretechnik', '2015-04-22 14:15:42'),
-(2, 'Einladung als Moderator für die Vorlesung Algorithmen und Datenstrukturen', '2015-04-22 14:15:47'),
-(3, 'Prüfungstermine sind nun in der Beschreibung bekannt gegeben', '2015-04-22 14:15:53'),
-(40, '', '2015-03-28 22:39:30'),
-(41, 'Sie werden zur Veranstaltung test als Moderator eingeladen', '2015-05-03 08:56:44'),
-(42, 'Sie werden zur Veranstaltung qwerwqer als Moderator eingeladen', '2015-05-18 12:41:35'),
-(43, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 05:57:20'),
-(44, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 05:59:59'),
-(45, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 06:00:47'),
-(46, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 14:15:56'),
-(47, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 14:16:08'),
-(48, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 14:16:22'),
-(49, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 14:17:24'),
-(50, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 14:18:29'),
-(51, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 14:19:01'),
-(53, 'Die Veranstaltung asdfsadf wurde bearbeitet.', '2015-05-19 14:21:50'),
-(54, 'Die Veranstaltung  wurde bearbeitet.', '2015-05-19 14:23:49'),
-(55, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:24:45'),
-(56, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:27:44'),
-(57, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:28:11'),
-(58, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:28:46'),
-(59, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:29:09'),
-(60, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:30:43'),
-(61, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:38:39'),
-(62, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:38:54'),
-(64, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:41:55'),
-(65, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:42:06'),
-(66, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:42:46'),
-(67, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:43:57'),
-(68, 'Die Veranstaltung  wurde bearbeitet.', '2015-05-19 14:45:25'),
-(69, 'Die Veranstaltung ??yxcvxycv wurde bearbeitet.', '2015-05-19 14:46:56'),
-(70, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-19 14:47:44'),
-(71, 'Die Veranstaltung   wurde bearbeitet.', '2015-05-19 14:48:28'),
-(72, 'Die Veranstaltung  ???????dasfsdf wurde bearbeitet.', '2015-05-19 14:48:51'),
-(73, 'Die Veranstaltung  ???????dasfsdf wurde bearbeitet.', '2015-05-19 14:49:03'),
-(74, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-20 14:00:12'),
-(75, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-20 14:01:58'),
-(76, 'Die Veranstaltung ???sdfsadfasdf wurde bearbeitet.', '2015-05-20 14:02:53');
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
 
 -- --------------------------------------------------------
 
@@ -134,15 +90,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
   `Veranstaltung` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
   `Angenommen` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
-
---
--- Daten für Tabelle `benachrichtigung_einladung_moderator`
---
-
-INSERT INTO `benachrichtigung_einladung_moderator` (`ID`, `Benachrichtigung`, `Benutzer`, `Veranstaltung`, `Gelesen`, `Angenommen`) VALUES
-(1, 1, 4, 1, 1, 0),
-(2, 2, 6, 4, 1, 0);
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -186,13 +134,6 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_profil_geaendert` (
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
---
--- Daten für Tabelle `benachrichtigung_profil_geaendert`
---
-
-INSERT INTO `benachrichtigung_profil_geaendert` (`ID`, `Benachrichtigung`, `Benutzer`, `Admin`, `Gelesen`) VALUES
-(3, 40, 6, 2, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -205,14 +146,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_veranstaltungsaenderung` (
   `Veranstaltung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
-
---
--- Daten für Tabelle `benachrichtigung_veranstaltungsaenderung`
---
-
-INSERT INTO `benachrichtigung_veranstaltungsaenderung` (`ID`, `Benachrichtigung`, `Veranstaltung`, `Benutzer`, `Gelesen`) VALUES
-(1, 3, 1, 5, 0);
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -233,23 +167,14 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
   `NotifyVeranstAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `CryptedPW` varchar(60) NOT NULL COMMENT 'hash = salt(29 Zeichen) + crypted (Rest)'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Daten für Tabelle `benutzer`
 --
 
 INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Matrikelnummer`, `Studiengang`, `Nutzerstatus`, `NotifyKommentare`, `NotifyVeranstAenderung`, `NotifyKarteikartenAenderung`, `CryptedPW`) VALUES
-(1, 'abc@def.de', 'abc', 'def', 'default.png', 123, 'Informatik', 'STUDENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
-(2, 'admin@blablub.de', 'Der', 'Admin', 'default.png', 222222, 'Sonstiges', 'ADMIN', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
-(3, 'alber.einstein@uni-ulm.de', 'Albert', 'Einstein', 'default.png', 333333, 'Physik', 'DOZENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
-(4, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', 'default.png', 12345, 'Informatik', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 0, 1, '$2a$10$M99vE1vmcU6eJy4qKpYOrOWJK4ba9bAfljcV8FJGaxM8EltiPPvge'),
-(5, 'marius.kircher@uni-ulm.de', 'Marius', 'Kircher', 'default.png', 111111, 'Medieninformatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
-(6, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 828584, 'Informatik', 'STUDENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
-(7, 'heinz.harald@uni-ulm.de', 'Heinz Harald', 'Haraldson', 'default.png', 123456, 'Chemie', 'STUDENT', 'KEINE', 0, 0, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
-(8, 'julius.friedrich@uni-ulm.de', 'Julius', 'Friedrich', 'default.png', 841963, 'Informatik', 'ADMIN', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
-(12, 'jhdazw3jio@euhw.de', 'ejwahuwdi', 'juwia', 'default.png', 187372, 'Biologie', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK'),
-(13, 'felixrottler@gmx.de', 'Felix', 'Rottler', 'default.png', 193182, 'Medieninformatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$RRbFAzRfSguYO/GWHVOTT.dA7wnAIKXyKCwDD0gDWQlnvEArGWspK');
+(1, 'admin@sopra.de', 'Der', 'Admin', 'default.png', 0, 'Sonstiges', 'ADMIN', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$QsVI0z2TUIdYSDi39XCiJ.n0WoTiAqaGNzUywpARCOTziN6vqHeB2');
 
 -- --------------------------------------------------------
 
@@ -261,28 +186,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
-
---
--- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
---
-
-INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
-(4, 1, 2),
-(7, 1, 4),
-(9, 2, 3),
-(16, 2, 7),
-(5, 3, 5),
-(1, 4, 1),
-(8, 4, 6),
-(2, 5, 1),
-(3, 6, 1),
-(10, 6, 2),
-(6, 6, 4),
-(12, 6, 7),
-(15, 8, 1),
-(14, 8, 5),
-(13, 8, 7);
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=38 ;
 
 -- --------------------------------------------------------
 
@@ -295,51 +199,7 @@ CREATE TABLE IF NOT EXISTS `bewertung_karteikarte` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
-
---
--- Daten für Tabelle `bewertung_karteikarte`
---
-
-INSERT INTO `bewertung_karteikarte` (`ID`, `Bewertung`, `Benutzer`, `KarteikarteID`) VALUES
-(1, 1, 1, 0),
-(4, 1, 2, 0),
-(6, -1, 1, 1),
-(9, 1, 1, 2),
-(10, 1, 1, 4),
-(11, 1, 1, 5),
-(13, 1, 4, 5),
-(18, 1, 7, 5),
-(23, 1, 13, 5),
-(26, 1, 4, 6),
-(27, 1, 7, 6),
-(30, 1, 8, 6),
-(31, 1, 2, 6),
-(32, 1, 6, 6),
-(33, 2, 8, 7),
-(38, 2, 7, 7),
-(41, 2, 6, 8),
-(43, 2, 8, 8),
-(49, 2, 5, 9),
-(50, 2, 6, 9),
-(52, 2, 8, 9),
-(54, 2, 4, 9),
-(55, 2, 1, 9),
-(56, 2, 3, 9),
-(58, 2, 8, 10),
-(59, 2, 2, 10),
-(60, 2, 7, 10),
-(61, 2, 3, 10),
-(62, 2, 6, 10),
-(63, 2, 4, 10),
-(65, 1, 4, 26),
-(66, -1, 4, 21),
-(67, 1, 4, 22),
-(68, 1, 4, 23),
-(69, 1, 4, 25),
-(70, 1, 4, 20),
-(71, 1, 4, 24),
-(72, -1, 4, 2);
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=84 ;
 
 --
 -- Trigger `bewertung_karteikarte`
@@ -367,26 +227,6 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
   `KommentarID` int(11) NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
---
--- Daten für Tabelle `bewertung_kommentar`
---
-
-INSERT INTO `bewertung_kommentar` (`ID`, `Bewertung`, `Benutzer`, `KommentarID`) VALUES
-(1, 1, 5, 1),
-(2, -1, 3, 2),
-(3, 1, 3, 1),
-(4, -5, 1, 2),
-(5, 1, 4, 4),
-(6, 1, 2, 4),
-(7, -1, 4, 8),
-(8, -1, 4, 9),
-(10, 1, 4, 3),
-(12, 1, 4, 16),
-(13, -1, 4, 14),
-(14, 1, 4, 17),
-(15, 1, 4, 19),
-(16, -1, 4, 22);
-
 -- --------------------------------------------------------
 
 --
@@ -413,40 +253,6 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
   `Uebung` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Karteikarten Attribut Lemma'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Daten für Tabelle `karteikarte`
---
-
-INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderungsdatum`, `Veranstaltung`, `Satz`, `Lemma`, `Beweis`, `Definition`, `Wichtig`, `Grundlagen`, `Zusatzinformation`, `Exkurs`, `Beispiel`, `Uebung`) VALUES
-(0, 'Softwaretechnik I', '', 'TEXT', 2, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(1, 'Einführung und Motivation', '', 'TEXT', -1, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(2, 'Grundlagen', '', 'TEXT', 0, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(3, 'System-Engineering', '', 'TEXT', 0, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(4, 'Organisatorisches', '', 'TEXT', 1, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(5, 'Bedeutung von Software', '', 'TEXT', 4, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(6, 'Software-Probleme, "Software-Krise"', '', 'TEXT', 5, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(7, 'Software als Wirtschaftsfaktor', '', 'TEXT', 4, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(8, 'Grundbegriffe', '', 'TEXT', 4, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(9, 'Übungsaufgaben', '', 'TEXT', 12, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(10, 'Einfache Übungsaufgaben', '', 'TEXT', 12, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(11, 'Mittelschwere Übungsaufgaben', '', 'TEXT', 0, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(12, 'Schwierige Übungsaufgaben', '', 'TEXT', 0, '2015-04-30 22:00:00', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(13, 'Software Engineering – gestern und heute', '......', 'TEXT', 0, '2015-05-20 15:11:47', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(14, 'Software Engineering – morgen', '.........', 'TEXT', 0, '2015-05-20 15:12:16', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(15, 'Modelle und Modellierung', '..........', 'TEXT', 0, '2015-05-20 15:14:09', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(16, 'System', '..........', 'TEXT', 0, '2015-05-20 15:15:18', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(17, 'Bedeutung einiger Folienmarkierungen', '..........', 'TEXT', 0, '2015-05-20 15:17:38', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(18, 'Hauptsächliche Hintergrund-Literatur', '..........', 'TEXT', 0, '2015-05-20 15:18:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(19, 'Weitere Literatur I', '.......', 'TEXT', 0, '2015-05-20 15:19:04', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(20, 'Test1', '', 'BILD', -8, '2015-05-11 12:23:39', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(21, 'Test2', '', 'VIDEO', -4, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(22, 'Test3', 'dies ist ein beispielinhalt von test3', 'TEXT', -2, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(23, 'Test4', 'dies ist ein beispielinhalt von test4', 'TEXT', -2, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(24, 'Test5', 'dies ist ein beispielinhalt von test5', 'TEXT', -2, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(25, 'Test6', 'dies ist ein beispielinhalt von test6', 'TEXT', -2, '2015-05-11 12:25:28', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(26, 'test7', 'dies ist ein beispielinhalt von test7', 'TEXT', -2, '2015-05-17 15:09:38', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(27, 'Charakteristika der Software-Erstellung', '....', 'TEXT', 0, '2015-05-20 15:22:19', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -461,29 +267,6 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
   `Karteikarte` int(11) DEFAULT NULL,
   `Vaterkommentar` int(11) DEFAULT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
-
---
--- Daten für Tabelle `kommentar`
---
-
-INSERT INTO `kommentar` (`ID`, `Inhalt`, `Erstelldatum`, `Benutzer`, `Karteikarte`, `Vaterkommentar`) VALUES
-(1, 'sdfgsdfgsdfgdsfgsdfgsdfg', '2015-05-11 12:49:50', 3, 2, NULL),
-(2, 'asdfasdfasdfasdf', '2015-05-11 12:50:14', 5, NULL, 1),
-(3, 'ewr', '2015-05-11 13:44:12', 5, 2, NULL),
-(4, 'Das ist aber ein interessantes Thema ! :o', '2015-05-12 17:45:09', 4, 26, NULL),
-(5, 'Ja finde ich auch !', '2015-05-12 17:45:32', 2, NULL, 4),
-(6, 'Haha !', '2015-05-12 17:45:41', 4, NULL, 4),
-(7, 'Was gibts denn da zu lachen ! -.-', '2015-05-12 17:46:58', 2, NULL, 4),
-(8, 'Ich wollte nur mal Hallo sagen !', '2015-05-12 17:48:04', 4, 21, NULL),
-(9, '<p>Was f&uuml;r ein m&uuml;ll!</p>\n', '2015-05-13 20:13:24', 4, 26, NULL),
-(14, '<p>aSDs</p>\n', '2015-05-19 08:04:44', 4, 6, NULL),
-(16, '<p>asdsdf</p>\n', '2015-05-19 08:05:09', 4, 6, NULL),
-(17, '<p>asdf</p>\n', '2015-05-19 16:10:25', 4, 5, NULL),
-(18, '<p>sdaf</p>\n', '2015-05-19 16:10:43', 4, NULL, 16),
-(19, '<p>dgdh</p>\n', '2015-05-20 17:31:31', 4, 19, NULL),
-(20, '<p>fhgh</p>\n', '2015-05-20 17:31:34', 4, NULL, 19),
-(21, '<p>ghdgh</p>\n', '2015-05-20 17:31:35', 4, NULL, 19),
-(22, '<p>fghj</p>\n', '2015-05-20 17:31:43', 4, 19, NULL);
 
 -- --------------------------------------------------------
 
@@ -538,17 +321,7 @@ CREATE TABLE IF NOT EXISTS `moderator` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
-
---
--- Daten für Tabelle `moderator`
---
-
-INSERT INTO `moderator` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
-(1, 4, 1),
-(2, 6, 4),
-(3, 1, 1),
-(4, 5, 4);
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -561,18 +334,7 @@ CREATE TABLE IF NOT EXISTS `notiz` (
   `Inhalt` text NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
-
---
--- Daten für Tabelle `notiz`
---
-
-INSERT INTO `notiz` (`ID`, `Inhalt`, `Benutzer`, `KarteikarteID`) VALUES
-(2, '<p>Das muss ich mir gut merken !!</p>\n', 4, 21),
-(3, '<p>Das muss ich mir gut merken !!</p>\n', 4, 26),
-(4, '<p>Das muss ich mir gut merken !!</p>\n', 4, 23),
-(5, '<p>Das muss ich mir gut merken !!</p>\n', 4, 22),
-(6, '<p>sdfgsdfgdsfg</p>\n', 4, 4);
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -583,22 +345,17 @@ INSERT INTO `notiz` (`ID`, `Inhalt`, `Benutzer`, `KarteikarteID`) VALUES
 CREATE TABLE IF NOT EXISTS `semester` (
 `ID` int(11) NOT NULL,
   `Name` varchar(30) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
 -- Daten für Tabelle `semester`
 --
 
 INSERT INTO `semester` (`ID`, `Name`) VALUES
-(1, 'SoSe2013'),
-(2, 'WiSe2013/14'),
-(3, 'SoSe2014'),
-(4, 'WiSe2014/15'),
-(5, 'SoSe2015'),
-(6, 'WiSe2015/16'),
-(7, 'SoSe2016'),
-(8, 'WiSe2016/17'),
-(9, 'SoSe2017');
+(11, 'WiSe2014/15'),
+(12, 'SoSe2015'),
+(13, 'WiSe2015/16'),
+(14, 'SoSe2016');
 
 -- --------------------------------------------------------
 
@@ -617,17 +374,10 @@ CREATE TABLE IF NOT EXISTS `studiengang` (
 INSERT INTO `studiengang` (`Name`) VALUES
 ('Biologie'),
 ('Chemie'),
-('Chemie Ingenieure'),
-('Elektrotechnik'),
 ('Informatik'),
-('Informationssystemtechnik'),
-('Mathematik'),
 ('Medieninformatik'),
-('Medizin'),
 ('Physik'),
-('Softwareengeneering'),
-('Sonstiges'),
-('Wirtschaftsmathematik');
+('Sonstiges');
 
 -- --------------------------------------------------------
 
@@ -648,21 +398,6 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `ErsteKarteikarte` int(11) DEFAULT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
---
--- Daten für Tabelle `veranstaltung`
---
-
-INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `KommentareErlaubt`, `BewertungenErlaubt`, `ModeratorKarteikartenBearbeiten`, `Ersteller`, `Titel`, `ErsteKarteikarte`) VALUES
-(1, 'Softwaretechnik Vorlesung', 'WiSe2014/15', '1234', 1, 1, 1, 5, 'Softwaretechnik', 0),
-(2, 'Softwaretechnik Vorlesung', 'WiSe2015/16', '1234', 1, 1, 1, 4, 'Softwaretechnik', 0),
-(3, 'Medizin I', 'SoSe2013', '1234', 1, 0, 0, 2, 'Medizin I', 0),
-(4, 'Algorithmen und Datenstrukturen Vorlesung', 'WiSe2014/15', '1234', 1, 0, 1, 6, 'Algorithmen und Datenstrukture', 0),
-(5, 'Physik I für Ingenieure Vorlesung', 'SoSe2015', '1234', 1, 0, 0, 3, 'Physik I für Ingenieure', 0),
-(6, 'Latex Kurs', 'WiSe2014/15', '1234', 1, 1, 1, 2, 'Latex Kurs', 0),
-(7, 'Softwaregrundproekt', 'SoSe2015', NULL, 1, 1, 1, 6, 'Sopra', 0),
-(8, 'Grundlagen der Betriebssysteme Vorlesung', 'WiSe2014/15', NULL, 1, 0, 0, 5, 'Grundlagen der Betriebssysteme', 0),
-(9, 'nur für pimmelberger', 'SoSe2015', 'pimmelberger', 1, 1, 1, 8, 'Digitale Medien', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -673,34 +408,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=63 ;
-
---
--- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
---
-
-INSERT INTO `veranstaltung_studiengang_zuordnung` (`ID`, `Veranstaltung`, `Studiengang`) VALUES
-(1, 1, 'Informatik'),
-(2, 1, 'Medieninformatik'),
-(3, 1, 'Softwareengeneering'),
-(4, 2, 'Informatik'),
-(5, 2, 'Medieninformatik'),
-(6, 2, 'Softwareengeneering'),
-(9, 4, 'Informatik'),
-(10, 4, 'Medieninformatik'),
-(11, 5, 'Physik'),
-(12, 5, 'Informatik'),
-(13, 5, 'Elektrotechnik'),
-(14, 5, 'Informationssystemtechnik'),
-(15, 6, 'Sonstiges'),
-(16, 3, 'Biologie'),
-(17, 3, 'Medizin'),
-(18, 7, 'Informatik'),
-(19, 7, 'Medieninformatik'),
-(20, 7, 'Softwareengeneering'),
-(21, 8, 'Informatik'),
-(22, 8, 'Medieninformatik'),
-(23, 9, 'Medieninformatik');
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=33 ;
 
 -- --------------------------------------------------------
 
@@ -849,12 +557,12 @@ ALTER TABLE `veranstaltung_studiengang_zuordnung`
 -- AUTO_INCREMENT for table `benachrichtigung`
 --
 ALTER TABLE `benachrichtigung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=77;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=93;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_einladung_moderator`
 --
 ALTER TABLE `benachrichtigung_einladung_moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_karteikartenaenderung`
 --
@@ -874,22 +582,22 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 -- AUTO_INCREMENT for table `benachrichtigung_veranstaltungsaenderung`
 --
 ALTER TABLE `benachrichtigung_veranstaltungsaenderung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `benutzer`
 --
 ALTER TABLE `benutzer`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
 ALTER TABLE `bewertung_karteikarte`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=74;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=84;
 --
 -- AUTO_INCREMENT for table `bewertung_kommentar`
 --
@@ -904,17 +612,17 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 -- AUTO_INCREMENT for table `moderator`
 --
 ALTER TABLE `moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `notiz`
 --
 ALTER TABLE `notiz`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `semester`
 --
 ALTER TABLE `semester`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `veranstaltung`
 --
@@ -924,7 +632,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 -- AUTO_INCREMENT for table `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=63;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
 --
 -- Constraints der exportierten Tabellen
 --
