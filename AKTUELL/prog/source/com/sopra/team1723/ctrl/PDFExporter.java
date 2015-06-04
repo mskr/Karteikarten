@@ -497,9 +497,9 @@ public class PDFExporter
             result += mapHTMLTagToLaTeXTag(n, true) + " ";
         }
 
+        String content = n.ownText();
         if (nodes.size() == 0)
         {
-            String content = n.text();
             if (n.attr("class").equals("mathjax_formel"))
             {
                 System.out.println("Skip replacing. Formel gefunden");
@@ -510,6 +510,7 @@ public class PDFExporter
         }
         else
         {
+            result += replaceInvalidChars(content) + newLineWithSeparation;
             for (Element n2 : nodes)
             {
                 result += recursiveTransformHTLMtoLatex(n2, depth + 1);
