@@ -33,7 +33,13 @@ $(document).ready(function() {
 			categoryClassMapping,
 			actionSucheBenutzer
 	);
-
+	
+    $("#vn_bearbeiten_pass_input").change(function(){
+    	if($("#vn_bearbeiten_pass_input").val() != "")
+    		$("#vn_bearbeiten_passwort_set").prop("checked",true);
+    	else
+    		$("#vn_bearbeiten_passwort_set").prop("checked",false);
+    });
     
 	$('#vn_bearbeiten').click(function() {
 		

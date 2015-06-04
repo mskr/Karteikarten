@@ -492,12 +492,6 @@ public class KarteikartenServlet extends ServletController
 //        return true;
 //    }
 
-    private boolean karteikarteLoeschen(HttpServletRequest request, HttpServletResponse response)
-    {
-        // TODO implement here
-        return false;
-    }
-
     /**
      * Ein Benutzer erstellt eine Karteikarte und weist ihr verschiedene
      * Eigenschaften zu. Die Karteikarte bekommt eine individuelle ID. Auerdem
@@ -879,6 +873,13 @@ public class KarteikartenServlet extends ServletController
         
         Karteikarte k = dbManager.leseKarteikarte(karteikartenID);
         Veranstaltung v = dbManager.leseVeranstaltung(k.getVeranstaltung());
+        
+        if(v.getErsteKarteikarte() == karteikartenID)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed, "Sie können die oberste Karteikarte nicht löschen.");
+            outWriter.print(jo);
+            return;
+        }
         
         
         if (!(dbManager.istModerator(aktuellerBenutzer.getId(), v.getId()) && v.isModeratorKarteikartenBearbeiten()) && 
