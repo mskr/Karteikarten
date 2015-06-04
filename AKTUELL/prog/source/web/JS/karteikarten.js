@@ -29,6 +29,18 @@ function buildKarteikarte(karteikarteJson)
 		processKK_editClick($(this));
 	});
     
+    kkDom.find(".KKloeschen").click(function(){
+    	sindSieSicher(kkDom.find(".KKloeschen"), "Wollen Sie diese Karteikarte wirklich löschen?", function(){
+    		var params = {};
+    		params[paramId] = kkId;
+    		ajaxCall(karteikartenServlet, actionDeleteKk, function(){
+    			kkDom.find("*").off();
+    			kkDom.slideUp();
+    			showInfo("Karteikarte gelöscht.");
+    		}, params);
+    	});
+    });
+    
     // Workaround:
     kkDom.find(".permalink").click(function(){
    	 	kkUrl = location.host + location.pathname + "?location=veranstaltungsseite&id="+ veranstaltungsObject[paramId] +
@@ -206,6 +218,7 @@ function fillKarteiKarte(domElem, json){
     	image = $(document.createElement("img"));
     	image.attr("src","files/images/"+json[paramId]+".png?"+CryptoJS.MD5(new Date().getTime()+""));
     	image.attr("onerror","this.src='files/general/default.png'");
+    	image.css("max-width","100%");
     	domElem.find(".inhalt_bild").html(image);
     	break;
     case paramKkVideo:
@@ -267,11 +280,11 @@ function fillVerweise(domKk, verweisArr)
 		if(verweisArr[i][paramType] == "V_VORAUSSETZUNG")
 			rel_vor.push(txt);
 		else if(verweisArr[i][paramType] == "V_UEBUNG")
-			rel_zusatz.push(txt);
-		else if(verweisArr[i][paramType] == "V_ZUSATZINFO")
-			rel_sonstiges.push(txt);
-		else if(verweisArr[i][paramType] == " V_SONSTIGES")
 			rel_uebung.push(txt);
+		else if(verweisArr[i][paramType] == "V_ZUSATZINFO")
+			rel_zusatz.push(txt);
+		else if(verweisArr[i][paramType] == "V_SONSTIGES")
+			rel_sonstiges.push(txt);
 	}
 	
 	if(rel_vor.length == 0)

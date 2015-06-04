@@ -99,8 +99,9 @@ public class PDFExporter
                 + newLineWithSeparation, newLineWithSeparation + "\\end{quote}" + newLineWithSeparation));
 
         // Tabellen Mapping muss abgefangen werden
-        tagReplaceList.put("table", new Tupel<String, String>("newLineWithSeparation + \\begin{tabular}",
-                "\\end{tabular}" + newLineWithSeparation));
+        tagReplaceList.put("table", new Tupel<String, String>("\\begin{table}[H]" + newLineWithSeparation,
+                "\\end{tabular}" + newLineWithSeparation + "\\end{table}"
+                        + newLineWithSeparation));
         tagReplaceList.put("td", new Tupel<String, String>("", ""));
         tagReplaceList.put("tr", new Tupel<String, String>("", "\\\\" + newLineWithSeparation + "\\hline"
                 + newLineWithSeparation));
@@ -545,7 +546,7 @@ public class PDFExporter
      * @param begin
      * @return
      */
-    private String mapHTMLTagToLaTeXTag(Node node, boolean begin)
+    private String mapHTMLTagToLaTeXTag(Element node, boolean begin)
     {
         Tupel<String, String> replacer = tagReplaceList.get(node.nodeName().toLowerCase());
         if (replacer == null)
@@ -560,7 +561,17 @@ public class PDFExporter
         {
             if (begin)
             {
-                int colCnt = node.childNode(0).childNodeSize();
+
+                int colCnt = 0;
+                String caption = null;
+
+                colCnt = node.getElementsByTag("tbody").get(0).child(0).getElementsByTag("td").size();
+
+                if (node.getElementsByTag("caption").size() != 0)
+                {
+                    caption = node.getElementsByTag("caption").first().text();
+                }
+
                 String tableConfig = "{|";
                 for (int i = 0; i < colCnt; i++)
                 {
@@ -568,11 +579,19 @@ public class PDFExporter
                 }
                 tableConfig += "}";
 
-                return replacer.x + tableConfig + newLineWithSeparation + "\\hline" + newLineWithSeparation;
+                if (caption == null)
+                    return replacer.x + "\\centering" + newLineWithSeparation + "\\begin{tabular}" + newLineWithSeparation + tableConfig
+                            + newLineWithSeparation + "\\hline" + newLineWithSeparation;
+                else
+                    return replacer.x + "\\caption{" + replaceInvalidChars(caption) + "}" + newLineWithSeparation
+                            + "\\centering" + newLineWithSeparation + "\\begin{tabular}" + newLineWithSeparation
+                            + tableConfig + newLineWithSeparation + "\\hline" + newLineWithSeparation;
             }
             else
                 return replacer.y;
         }
+        else if (node.nodeName().toLowerCase().equals("caption"))
+            return "";
         else if (node.nodeName().toLowerCase().equals("td"))
         {
             if (begin)

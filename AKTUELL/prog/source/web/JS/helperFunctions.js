@@ -162,12 +162,13 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     
     popupOverlayWrapper.fadeIn(300);
     popupOverlayWrapper.find(".popup_fenster").removeClass("hidden");
+	console.log("Show popup.");
     
     if(focusElem != undefined)
     	focusElem.focus();
     
     generalCloseFkt = function(){
-    	$("body").css("overflow-y","scroll"); // Scrollbar ausserhalb Popup wieder aktivieren
+    	$("body").removeAttr("style"); // Scrollbar ausserhalb Popup wieder aktivieren
         popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
         popupOverlayWrapper.fadeOut(300,function(){
             closeFunc();
@@ -179,6 +180,7 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     {
         closeElems[i].off();
         closeElems[i].click(function() {
+        	console.log("Close popup.");
         	generalCloseFkt();
         });
     }
@@ -186,10 +188,10 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     submitElem.click(function() {
         if(submitFunc())
         {
+        	console.log("Close popup after submit.");
         	generalCloseFkt();
         }
     });
-    
 }
 
 /**

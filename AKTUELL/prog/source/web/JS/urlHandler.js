@@ -15,16 +15,22 @@ $(document).ready(function() {
 	$(".mainbox").hide();
 	$(".mypersonalbox").hide();
 	
-    // TODO So wird das Benutzerobjekt nur einmal initial zu beginn geladen
-    // Was passiert aber, wenn sich das profil geÃ¤ndert hat?
     $.when(getBenutzer()).done(function(a1) {
-        var urlQuery = parseUrlQuery(undefined);    
-        interpreteUrlQuery(urlQuery);
+    	var firstRunFinished = false;
+    	// zu Beginn warten bis ALLE Ajax-Calls fertig sind
+    	$( document ).ajaxStop(function() {
+    		if(!firstRunFinished)
+    		{
+				var urlQuery = parseUrlQuery();
+				interpreteUrlQuery(urlQuery);
+				firstRunFinished = true;
+    		}
+    	});
     });
     
     // Auf zurÃ¼ck und vorwÃ¤rts im browser reagieren
     History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
-        var urlQuery = parseUrlQuery(undefined);
+        var urlQuery = parseUrlQuery();
         interpreteUrlQuery(urlQuery);
     });
 });

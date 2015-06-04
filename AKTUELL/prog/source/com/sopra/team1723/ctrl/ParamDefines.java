@@ -29,6 +29,7 @@ public class ParamDefines
     public final static String ActionSucheStudiengang = "sucheStudiengang";
     public final static String ActionLoescheVn = "vnLoeschen";
     public final static String ActionPing = "ping";
+    public final static String ActionDeleteKk = "kkLoeschen";
 
     
     public final static String ActionGetVeranstaltung = "getVeranstaltung";

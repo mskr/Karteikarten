@@ -107,6 +107,7 @@ function getProfilStudiengaenge() {
 				    	for(var i in studgArr) {
 				    		$("#profil_studiengang_input").append("<option>"+studgArr[i]+"</option>");
 				    	}
+				    	console.log("Studiengaenge geladen");
 			    	}
 		    	);
 }
@@ -137,6 +138,7 @@ function fillMyProfil(isAdmin)
     $("#profil_matnr_input").val(jsonBenutzer[paramMatrikelNr]);
     $("#profil_rolle_input").val(jsonBenutzer[paramNutzerstatus]);
 	$("#profil_studiengang_input").val(jsonBenutzer[paramStudiengang]);
+	console.log("Setzte studiengang auf " + jsonBenutzer[paramStudiengang]);
     
     switch(jsonBenutzer[paramNotifyKommentare])
     {
