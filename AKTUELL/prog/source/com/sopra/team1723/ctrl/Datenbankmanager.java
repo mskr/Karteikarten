@@ -1155,13 +1155,13 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 for (int i = 0; i < moderatorenIds.length; i++)
                 {
-                    zuVeranstaltungEinschreiben(veranstId, moderatorenIds[i], veranst.getZugangspasswort(), conMysql);
+                    zuVeranstaltungEinschreiben(veranstId, moderatorenIds[i], veranst.getZugangspasswort(), conMysql, false);
                     schreibeBenachrichtigung(new BenachrEinlModerator(moderatorenIds[i], veranst), conMysql);
                 }
             }
 
             zuVeranstaltungEinschreiben(veranstId, veranst.getErsteller().getId(), veranst.getZugangspasswort(),
-                    conMysql);
+                    conMysql, false); // ignoriere isAdmin, da Passwort ohnehin korrekt
 
             conNeo4j.commit();
             conMysql.commit();
@@ -3112,7 +3112,7 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort, Connection conMysql)
+    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort, Connection conMysql, boolean isAdmin)
             throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
     {
         Entry<Connection, ReentrantLock> conLock = null;
@@ -3133,9 +3133,7 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             if (rs.next())
             {
-                // TODO rs.getString("Kennwort") kann null sein obwohl die
-                // Veranstaltung ein Kennwort hat.
-                if (rs.getString("Kennwort") != null && rs.getString("Kennwort").equals(kennwort) == false)
+                if (rs.getString("Kennwort") != null && rs.getString("Kennwort").equals(kennwort) == false && !isAdmin)
                     throw new DbFalsePasswortException();
             }
             closeQuietly(ps);

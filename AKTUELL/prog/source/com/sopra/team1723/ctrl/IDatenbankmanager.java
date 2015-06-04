@@ -531,7 +531,7 @@ public interface IDatenbankmanager {
      * @param kennwort für den Zugang zur Veranstaltung
      * @throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
      */
-    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort, Connection conMysql) throws SQLException, 
+    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort, Connection conMysql, boolean isAdmin) throws SQLException, 
     DbUniqueConstraintException, DbFalsePasswortException;
 
     /**
