@@ -190,7 +190,6 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
         	generalCloseFkt();
         }
     });
-    
 }
 
 /**

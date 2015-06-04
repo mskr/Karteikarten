@@ -202,6 +202,7 @@ function fillKarteiKarte(domElem, json){
     	image = $(document.createElement("img"));
     	image.attr("src","files/images/"+json[paramId]+".png?"+CryptoJS.MD5(new Date().getTime()+""));
     	image.attr("onerror","this.src='files/general/default.png'");
+    	image.css("max-width","100%");
     	domElem.find(".inhalt_bild").html(image);
     	break;
     case paramKkVideo:
