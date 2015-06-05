@@ -830,12 +830,12 @@ textarea.input_std {
 } .sucherg_item .octicon {
 	margin-right: .5em;
 } .sucherg_item_BENUTZER.selected:after {
-	content: "ZUM PROFIL \2192";
+	content: " ZUM PROFIL \21B5";
 	float: right;
 	font-size: .8em;
 	font-weight: bold;
 } .sucherg_item_VERANSTALTUNGEN.selected:after {
-	content: "VERANSTALTUNG FINDEN \2192";
+	content: " VERANSTALTUNG FINDEN \21B5";
 	float: right;
 	font-size: .8em;
 	font-weight: bold;
