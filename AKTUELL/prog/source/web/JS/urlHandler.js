@@ -158,6 +158,8 @@ function interpreteUrlQuery(paramObj)
 {	
 	
 	onResizeHandler();
+	// Alle Waypoints deaktivieren
+    Waypoint.destroyAll();
 	
     var ziel = paramObj[urlParamLocation];
 	// Benutzer eingeloggt

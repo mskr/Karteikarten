@@ -1582,7 +1582,7 @@ public class Datenbankmanager implements IDatenbankmanager
             if (rs.next())
             {
                 Calendar cal = new GregorianCalendar();
-                cal.setTime(rs.getDate("Erstelldatum"));
+                System.out.println(cal.toString());
                 benachrichtigung = new BenachrVeranstAenderung(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
                         cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"),
                         leseVeranstaltung(rs.getInt("Veranstaltung")));
