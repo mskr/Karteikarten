@@ -23,13 +23,15 @@ function newKarteikarte(triggerElem) {
     $("#kk_neuesKapitel").change(function(e) {
     	if($("#kk_neuesKapitel").prop("checked"))
     	{
-    		$("#kk_erstellen_text_area").hide();
-    		$("#df_area_kk").hide();
+//    		$("#kk_erstellen_text_area").hide();
+//    		$("#df_area_kk").hide();
+    		$("#kk_erstellen_content").hide();
     	}
     	else
     	{
-            $("#kk_erstellen_text_area").show();
-            $("#df_area_kk").show();
+//            $("#kk_erstellen_text_area").show();
+//            $("#df_area_kk").show();
+    		$("#kk_erstellen_content").show();
     	}
     });
     
@@ -179,6 +181,7 @@ function newKarteikarte(triggerElem) {
     	$("#kk_erstellen_popup input[type='checkbox']").prop("checked",false);
     	$("#kk_erstellen_titel_input").val("");
     	$("#kk_erstellen_TA").val("");
+        myDropzone.removeAllFiles(true);
     	// Zerstoere Verweis Baeume mit allen Handlern
     	$("#kk_erstellen_popup").find(".kk_verweise_baum").empty();
     }
@@ -294,7 +297,7 @@ function newKarteikarte(triggerElem) {
 	       	    	
 	       		    function successFkt(data){
 	       		    	UPLOADTYPE = ext;
-	       		    	$("#cke_kk_erstellen_TA").hide();
+//	       		    	$("#cke_kk_erstellen_TA").hide();
 	           	    	UPLOADIDSET = data.strResult;
 	           	    	console.log("Zurückgegebene UploadID:"+UPLOADIDSET);
 	       		    }
@@ -303,7 +306,7 @@ function newKarteikarte(triggerElem) {
 	       	    
 	       	    this.on("removedfile", function(file) {
 	       	    	$("#dz_info_message").show();
-	       	    	$("#cke_kk_erstellen_TA").show();
+//	       	    	$("#cke_kk_erstellen_TA").show();
 	       	    	UPLOADTYPE = "";
 	       	    	UPLOADIDSET = -1;
 	       	    });

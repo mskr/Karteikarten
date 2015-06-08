@@ -299,7 +299,7 @@ public class KarteikartenServlet extends ServletController
         try
         {
             String titel = req.getParameter(ParamDefines.Titel);
-            String inhalt = "";
+            String inhalt = req.getParameter(ParamDefines.Inhalt);
             String uploadedID = "";
             int kkID = Integer.parseInt(req.getParameter(ParamDefines.Id));
             
@@ -328,7 +328,6 @@ public class KarteikartenServlet extends ServletController
             else if (typ.equals(""))
             {
                 kkTyp = KarteikartenTyp.TEXT;
-                inhalt = req.getParameter(ParamDefines.Inhalt);
             }
             else
                 throw new Exception();
@@ -486,7 +485,7 @@ public class KarteikartenServlet extends ServletController
         try
         {
             String titel = req.getParameter(ParamDefines.Titel);
-            String inhalt = "";
+            String inhalt =  req.getParameter(ParamDefines.Inhalt);
             String uploadedID = "";
 
             KarteikartenTyp kkTyp;
@@ -504,7 +503,6 @@ public class KarteikartenServlet extends ServletController
             else if (typ.equals(""))
             {
                 kkTyp = KarteikartenTyp.TEXT;
-                inhalt = req.getParameter(ParamDefines.Inhalt);
             }
             else
                 throw new Exception();

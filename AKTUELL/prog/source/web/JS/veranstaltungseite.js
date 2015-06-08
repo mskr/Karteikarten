@@ -26,16 +26,15 @@ $(document).ready(function() {
 	// LadeHandler
     $(".kk_load_pre").click(function(){
     	id = $("#kk_all").children().first().attr("data-kkid");
-    	if(id != null)
+    	if(id != undefined)
     		loadPreKk(id);
     	else{
 			$(".kk_load_pre").addClass("animated zoomOut").fadeOut();
-			displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], null, false);
     	}
     });    
     $(".kk_load_after").click(function(){
     	id = $("#kk_all").children().last().attr("data-kkid");
-    	if(id != null)
+    	if(id != undefined)
 			loadAfterKk(id);
     	else
 			$(".kk_load_after").addClass("animated zoomOut").fadeOut();
@@ -150,6 +149,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
                     
                     // Wenn alles geladen wurde
                     titel = veranstaltungsObject[paramTitel];
+                    document.title = titel;
                     // Details der VN in DOM einfuegen
                     $("#vn_title").text(titel);
                     $("#vn_attr_semester").text(veranstaltungsObject[paramSemester]);
@@ -196,7 +196,6 @@ function fillVeranstaltungsSeite(Vid, kkId)
                     else
                         $("#vn_rechte_info").text("Als Student haben Sie keine besonderen Berechtigungen in dieser Veranstaltung.");
                     
-                    document.title = titel;
                     
                     if(veranstaltungsObject[paramErsteller][paramId] == jsonBenutzer[paramId] || jsonBenutzer[paramNutzerstatus] == "ADMIN")
                     {
@@ -223,10 +222,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
         },
         params
     );
-    
     destroyCKeditors($("#kk_all"));
-    
-    showPreAfterLoad();
     
 	$("#kk_all").empty();
 	// Studiengänge in auswahlliste anzeigen
@@ -248,19 +244,19 @@ function fillVeranstaltungsSeite(Vid, kkId)
 		
 				var studgArr = response[keyJsonArrResult];
 				var aktSemesterString = response[paramAktSemester];
-				var aktSemesterDI = 1; //default, falls kein match
+				var aktSemesterId = studgArr[0][paramId]; //default, falls kein match
 		
 				for(var i in studgArr) {
 					$("#vn_bearbeiten_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
 					if(aktSemesterString==studgArr[i][paramSemester]){
-						aktSemesterDI = Number(i)+1;
+						aktSemesterId = studgArr[i][paramId];
 					}
 				}
 				$("#vn_bearbeiten_auswahl_semester").find("option").sort(function(a,b) {
 					return $(a).data('semesterid') > $(b).data('semesterid');
 				}).appendTo('#vn_bearbeiten_auswahl_semester');
 		
-				$("[data-semesterid='"+aktSemesterDI+"']").prop('selected', true);
+//				$("[data-semesterid='"+aktSemesterId+"']").prop('selected', true);
 				$("#vn_bearbeiten_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
 			}
 	);
@@ -505,6 +501,24 @@ function displayKarteikarte(id, callback, reload){
     	$("#kk_all").children().fadeOut(200).promise().done(function(){
     		$("#kk_all").empty();
         	showPreAfterLoad();
+        	// Prüfen ob vorgänger vorhanden sind
+        	// TODO Tut nicht
+//        	var params ={};
+//            params[paramKkId] = id;
+//            params[paramVnId] = veranstaltungsObject[paramId];
+//
+//        	kkLoadRequest = ajaxCall(karteikartenServlet, 
+//        			actionGetKarteikartenVorgaenger, 
+//        			function(response)
+//        			{
+//		        		data = response[keyJsonArrResult];
+//						if(data.length == 0)
+//						{
+//							$(".kk_load_pre").hide();
+//						}
+//        			},
+//        			params
+//        	);
 
         	var params2 ={};
             params2[paramKkId] = id;

@@ -31,15 +31,17 @@ function kkBearbeiten(kkJSON)
 	$("#kk_jetztNeuesKapitel").change(function(e) {
     	if($("#kk_jetztNeuesKapitel").prop("checked")==true)
     	{
-    		$("#kk_bearbeiten_text_area").hide();
-    		$("#df_area_kk_b").hide();
+    		$("#kk_bearbeiten_content").hide();
+//    		$("#kk_bearbeiten_text_area").hide();
+//    		$("#df_area_kk_b").hide();
     		$("#kk_jetztNeuesKapitel ~ label").append(
     		        "<span style='color:yellow'><br><span class='octicon octicon-alert'></span> Inhalt geht verloren</span>");
     	}
     	else
     	{
-			$("#kk_bearbeiten_text_area").show();
-			$("#df_area_kk_b").show();
+    		$("#kk_bearbeiten_content").show();
+//			$("#kk_bearbeiten_text_area").show();
+//			$("#df_area_kk_b").show();
 		    $("#kk_jetztNeuesKapitel ~ label").html("Diese Karteikarte als Überschrift verwenden.");
     	}
 		
@@ -54,18 +56,20 @@ function kkBearbeiten(kkJSON)
 	});
 	
 	$("#kk_bearbeiten_titel_input").val(kkJSON[paramTitel]);
+	$("#kk_bearbeiten_TA").val(kkJSON[paramInhalt]);
 	if(kkJSON[paramType]=="TEXT")
 	{
 		if(kkJSON[paramInhalt]==""){		//überschrift
 			$("#kk_jetztNeuesKapitel").prop("checked",true);
-			$("#kk_bearbeiten_text_area").hide(0);
-			$("#df_area_kk_b").hide(0);
+//			$("#kk_bearbeiten_text_area").hide(0);
+//			$("#df_area_kk_b").hide(0);
+    		$("#kk_bearbeiten_content").hide();
 		}
 		else{							//textkarteikarte
 			$("#kk_jetztNeuesKapitel").prop("checked",false);
-			$("#kk_bearbeiten_text_area").show(0);
-			$("#df_area_kk_b").show(0);
-			$("#kk_bearbeiten_TA").val(kkJSON[paramInhalt]);
+//			$("#kk_bearbeiten_text_area").show(0);
+//			$("#df_area_kk_b").show(0);
+    		$("#kk_bearbeiten_content").show();
 		}
 	}
 	else if(kkJSON[paramType]=="BILD")
@@ -78,6 +82,7 @@ function kkBearbeiten(kkJSON)
 			    size = String(xhr.getResponseHeader('Content-Length')/1000);
 			    size = myRound(size,2);
 			    domElem = $("#kk_b_BildPreviewTemplate").clone();
+			    domElem.find(".dz-size").remove();
 			    domElem.find(".dz-size").children().first().html("<strong>"+size+"</strong> KB");
 			    domElem.css("display","block");
 			    
@@ -112,6 +117,7 @@ function kkBearbeiten(kkJSON)
 			    size = String(xhr.getResponseHeader('Content-Length')/1000);
 			    size = myRound(size,2);
 			    domElem = $("#kk_b_BildPreviewTemplate").clone();
+			    domElem.find(".dz-size").remove();
 			    domElem.find(".dz-size").children().first().html("<strong>"+size+"</strong> KB");
 			    domElem.css("display","block");
 			    
@@ -316,6 +322,7 @@ function kkBearbeiten(kkJSON)
         $("#kk_bearbeiten_popup input[type='checkbox']").prop("checked",false);
     	$("#kk_bearbeiten_titel_input").val("");
     	$("#kk_bearbeiten_TA").val("");
+    	myDropzone.removeAllFiles(true);
         // Zerstoere Verweis Baeume mit allen Handlern
         $("#kk_bearbeiten_popup").find(".kk_verweise_baum").empty();
     }

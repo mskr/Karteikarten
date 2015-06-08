@@ -146,9 +146,9 @@
 			</div>
 			<div class="flex_container">
 				<div class="popup_fenster_spalte" id="vn_erstellen_bearbeiten_mode">
-					<span class="form_infotext">Wer darf bearbeiten?</span>
-					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_keiner_bearb" value = "Nur ich" type="radio"checked>Nur ich</label></span>
-					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_mod_bearb" value = "Ich und Moderatoren"type="radio">Ich und Moderatoren</label></span>
+					<span class="form_infotext">Moderatoren können:</span>
+					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_keiner_bearb" type="radio"checked>nur Diskussionen verwalten</label></span>
+					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_mod_bearb" type="radio">Karteikarten und Diskussionen verwalten</label></span>
 				</div>
 				<div class="popup_fenster_spalte">
 					<span><label><input id="vn_erstellen_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
@@ -238,21 +238,25 @@
 					Überschrift erstellen
 				</label>
  			</p>
- 			<div id="kk_erstellen_text_area">
- 				<textarea id="kk_erstellen_TA">
- 				</textarea>
- 			</div>
- 			<div class="drop_file_areas" id="df_area_kk">
-				<form action="/file-upload" class="dropzone" id="file-dropzone">
-					<div class="fallback">
-						<input name="file" type="file" multiple />
-					</div>
-			        <div class="dz-message" id="dz_info_message">
-						Klicken oder ziehen sie eine Datei in das Feld.<br>
-						Sie können keinen Text und eine Datei gleichzeitig verwenden.
-						
-					</div>
-			    </form>
+ 			<div id="kk_erstellen_content">
+ 				<p>Fügen Sie entweder Text hinzu um eine Text-Karteikarte zu erzeugen oder laden 
+ 				Sie ein Bild/Video hoch (Text ist dann optional und wird als Bildunterschrift verwendet.)</p>
+	 			<div id="kk_erstellen_text_area">
+	 				<textarea id="kk_erstellen_TA">
+	 				</textarea>
+	 			</div>
+	 			<div class="drop_file_areas" id="df_area_kk">
+					<form action="/file-upload" class="dropzone" id="file-dropzone">
+						<div class="fallback">
+							<input name="file" type="file" />
+						</div>
+				        <div class="dz-message" id="dz_info_message">
+							Klicken oder ziehen sie eine Datei in das Feld.<br>
+							Sie können keinen Text und eine Datei gleichzeitig verwenden.
+							
+						</div>
+				    </form>
+	 			</div>
  			</div>
 		</div>
 		<div id="popup_fenster_body2" class="popup_fenster_body">
@@ -328,21 +332,25 @@
 					<!-- Labeltext und ggf. Warnung, dass Inhalt verloren geht hier durch JS gesetzt -->
 				</label>
  			</p>
- 			<div id="kk_bearbeiten_text_area">
- 				<textarea id="kk_bearbeiten_TA">
- 				</textarea>
- 			</div>
- 			<div class="drop_file_areas" id="df_area_kk_b">
-				<form action="/file-upload" class="dropzone" id="file-dropzone">
-					<div class="fallback">
-						<input name="file" type="file" multiple />
-					</div>
-			        <div class="dz-message" id="dz_info_message">
-						Klicken oder ziehen sie eine Datei in das Feld.<br>
-						Sie können keinen Text und eine Datei gleichzeitig verwenden.
-						
-					</div>
-			    </form>
+ 			<div id="kk_bearbeiten_content">
+ 				<p>Fügen Sie entweder Text hinzu um eine Text-Karteikarte zu erzeugen oder laden 
+ 				Sie ein Bild/Video hoch (Text ist dann optional und wird als Bildunterschrift verwendet.)</p>
+	 			<div id="kk_bearbeiten_text_area">
+	 				<textarea id="kk_bearbeiten_TA">
+	 				</textarea>
+	 			</div>
+	 			<div class="drop_file_areas" id="df_area_kk_b">
+					<form action="/file-upload" class="dropzone" id="file-dropzone">
+						<div class="fallback">
+							<input name="file" type="file" />
+						</div>
+				        <div class="dz-message" id="dz_info_message">
+							Klicken oder ziehen sie eine Datei in das Feld.<br>
+							Sie können keinen Text und eine Datei gleichzeitig verwenden.
+							
+						</div>
+				    </form>
+	 			</div>
  			</div>
 		</div>
 		<div id="popup_fenster_body5" class="popup_fenster_body">
