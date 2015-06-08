@@ -218,7 +218,7 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
  */
 function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, beforeFunc, completeFunc, timeOut)
 {
-//    console.log("[AJAX] action="+action);
+    console.log("[AJAX] action="+action);
     if(timeOut == undefined)
     	timeOut = 6000;
     
