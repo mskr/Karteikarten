@@ -426,9 +426,16 @@ public class VeranstaltungServlet extends ServletController {
         catch (DbUniqueConstraintException e)
         {
             e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Der Titel dieser Veranstaltung "
+                    + "existiert in diesem Semester bereits. Bitte wählen Sie einen anderen!");
+            outWriter.print(jo);
+            return false;
+        }
+        catch (DbFalsePasswortException e)
+        {
+            e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
-            e.printStackTrace();
             return false;
         }
 
@@ -460,7 +467,7 @@ public class VeranstaltungServlet extends ServletController {
             vId = Integer.parseInt(idStr);
 
             String pw = request.getParameter(ParamDefines.Password);
-            dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw, null, aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN);
+            dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw, aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN);
 
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             outWriter.print(jo);

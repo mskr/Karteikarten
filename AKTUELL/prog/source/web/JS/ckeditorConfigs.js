@@ -13,22 +13,26 @@ CKEDITOR.disableAutoInline = true;
 
 var ckEditorKommentarConfig = {
 		height: "100px",
-		removePlugins: 'elementspath,autogrow',
 		toolbarGroups: [
+		                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
 		        		{ name: 'insert' }
 		        		],
-		removeButtons: 'Image,Flash,Table,HorizontalRule',
 		resize_enabled : false,
-};
-
-var ckEditorKommentarAntwortConfig = {
-		height: "60px",
-		removePlugins: 'toolbar,autogrow,elementspath',
-		resize_enabled : false,
+        removeButtons: 
+            "Image," +
+    		"Flash," +
+    		"Table," +
+    		"HorizontalRule," +
+            "Maximize," +
+            "Format," +
+            "Strike," +
+            "Subscript," +
+            "Superscript," +
+            "Blockquote",
+        removePlugins: 'elementspath, autogrow, maximize, toolbarswitch'
 };
 
 var ckEditorNotizConfig = {
-		removePlugins: 'elementspath',
         resize_enabled : false,
 		autoGrow_minHeight: 50,
         autoGrow_onStartup: true,
@@ -52,7 +56,8 @@ var ckEditorNotizConfig = {
 			"Strike," +
 			"Subscript," +
 			"Superscript," +
-			"Blockquote"
+			"Blockquote,",
+		removePlugins: 'elementspath, maximize, toolbarswitch'
 };
 
 
@@ -69,5 +74,5 @@ var ckEditorVnErstellenConfig = {
 		{ name: 'others' },
 		],
 		removeButtons: 'Styles',
-		removePlugins: 'elementspath'
+		removePlugins: 'elementspath, toolbarswitch, format'
 };

@@ -21,20 +21,26 @@ function buildKarteikarte(karteikarteJson)
     
     // Rechte pruefen
     
-    // Wenn Benutzer kein Admin oder Ersteller 
-    // oder handelt es sich um die Root-Karteikarte: Verberge Bearbeiten- und Loeschen-Buttons
+    // Wenn Benutzer kein Admin oder Ersteller oder es handelt es sich um die Root-Karteikarte: 
+    // Verberge Bearbeiten- und Loeschen-Buttons
     if(!checkIfAllowedVn(veranstaltungsObject, true, true, false) ||
             veranstaltungsObject[paramErsteKarteikarte] == kkId)
     {
         kkDom.find(".KKbearbeiten").hide();
         kkDom.find(".KKloeschen").hide();
     }
-    // Wenn Benutzer Moderator ohne Bearbeitungsrechte: Verberge Bearbeiten- und Loeschen-Buttons
+    // Wenn Benutzer Moderator ohne Bearbeitungsrechte: Verberge Buttons
     if(checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
                 !veranstaltungsObject[paramModeratorKkBearbeiten])
     {
         kkDom.find(".KKbearbeiten").hide();
         kkDom.find(".KKloeschen").hide();
+    }
+    // Wenn Benutzer Moderator mit Bearbeitungsrechten: Zeige Buttons wieder an.
+    else if(checkIfAllowedVn(veranstaltungsObject, false, false, true))
+    {
+        kkDom.find(".KKbearbeiten").show();
+        kkDom.find(".KKloeschen").show();
     }
     // Wenn Bewertungen fuer diese Veranstaltung nicht erlaubt: Verberge Bewertungsbuttons
     if(!veranstaltungsObject[paramBewertungenErlauben])
@@ -164,7 +170,7 @@ function buildKarteikarte(karteikarteJson)
 		});
     }
     
-    // Notizen aufklappen
+    // Notizen einklappen
     kkDom.find(".kk_notizen_head").click(function(e){
         var radioID = $(e.target).attr("for");
         if($("#"+radioID).prop("checked"))
@@ -175,7 +181,7 @@ function buildKarteikarte(karteikarteJson)
         }
     });
     
-    // Kommentare aufklappen
+    // Kommentare einklappen
     kkDom.find(".kk_kommheader").click(function(e){
         var radioID = $(e.target).attr("for");
         if($("#"+radioID).prop("checked"))
@@ -185,29 +191,30 @@ function buildKarteikarte(karteikarteJson)
             e.stopPropagation();
         }
     });
-    
-    // Neues Thema Handler
-//    kkDom.find(".antw").ckeditor(ckEditorKommentarConfig);
-    
+
+    // Erzeuge ckEditor
+    kkDom.find(".kk_kommerstellen .antw").ckeditor(ckEditorKommentarConfig);
+
+    // Neues Thema absenden Handler
     kkDom.find(".komm_submit_bt").click(function(){
-		if(kkDom.find(".antw").val().trim() == "")
+		if(kkDom.find(".antw").ckeditorGet().getData().trim() == "")
 		{
 			showError("Bitte geben sie etwas in das Kommentarfeld ein.");
 			return;
 		}
-		$.when(erstelleNeuesThemaKk(karteikarteJson[paramId], kkDom.find(".antw").val())).done(function(){
-			kkDom.find(".antw").val("");
-			 var params = {};
-			    params[paramId] = kkId;
-				ajaxCall(
-				    kommentarServlet,
-				    actionLeseThemaKommentar,
-				    function(response) {
-				    	var arr = response[keyJsonArrResult];
-				        showHauptKommentare(kkDom,arr);
-				    },
-				    params
-				);
+		$.when(erstelleNeuesThemaKk(karteikarteJson[paramId], kkDom.find(".antw").ckeditorGet().getData())).done(function(){
+		    kkDom.find(".antw").ckeditorGet().setData("");
+			var params = {};
+			params[paramId] = kkId;
+			ajaxCall(
+			    kommentarServlet,
+			    actionLeseThemaKommentar,
+			    function(response) {
+			    	var arr = response[keyJsonArrResult];
+			        showHauptKommentare(kkDom,arr);
+			    },
+			    params
+			);
 		});
 	});
     
@@ -539,4 +546,3 @@ function inhaltsverzeichnisUnhighlightAll() {
 function inhaltsverzeichnisAlleEinklappen() {
     $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("normal", function() { $(this).remove() });
 }
-
