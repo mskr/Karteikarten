@@ -151,7 +151,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
-            // ignored
+            e.printStackTrace();
         }
 
     }
@@ -166,7 +166,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
-            // ignored
+            e.printStackTrace();
         }
     }
 
@@ -180,7 +180,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
-            // ignored
+            e.printStackTrace();
         }
     }
 
@@ -235,6 +235,17 @@ public class Datenbankmanager implements IDatenbankmanager
     {
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+        try
+        {
+            return leseBenutzerWrapper(id, conMysql);
+        }
+        finally
+        {
+            conLock.getValue().unlock();
+        }
+    }
+    
+    private Benutzer leseBenutzerWrapper(int id, Connection conMysql){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Benutzer benutzer = null;
@@ -266,7 +277,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return benutzer;
@@ -395,7 +405,7 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(ps);
 
             if (benutzer.getId() != aktuellerBenutzer.getId())
-                schreibeBenachrichtigung(new BenachrProfilGeaendert(new GregorianCalendar(), benutzer.getId(),
+                schreibeBenachrichtigungWrapper(new BenachrProfilGeaendert(new GregorianCalendar(), benutzer.getId(),
                         aktuellerBenutzer), conMysql);
 
             conMysql.commit();
@@ -620,6 +630,18 @@ public class Datenbankmanager implements IDatenbankmanager
     {
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+        try
+        {
+            return leseVeranstaltungWrapper(id, conMysql);
+        }
+        finally
+        {
+            conLock.getValue().unlock();
+        }
+
+    }
+    
+    private Veranstaltung leseVeranstaltungWrapper(int id, Connection conMysql){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Veranstaltung veranstaltung = null;
@@ -637,9 +659,12 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             if (rs.next())
             {
+                Benutzer ersteller = leseBenutzerWrapper(rs.getInt("Ersteller"),conMysql);
+                if(ersteller == null)
+                    return null;
                 veranstaltung = new Veranstaltung(id, rs.getString("Titel"), rs.getString("Beschreibung"),
                         rs.getString("Semester"), rs.getString("Kennwort"), rs.getBoolean("BewertungenErlaubt"),
-                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), leseBenutzer(rs.getInt("Ersteller")),
+                        rs.getBoolean("ModeratorKarteikartenBearbeiten"), ersteller,
                         rs.getBoolean("KommentareErlaubt"), rs.getInt("AnzTeilnehmer"), rs.getInt("ErsteKarteikarte"));
             }
         }
@@ -653,7 +678,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return veranstaltung;
@@ -681,10 +705,13 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             while (rs.next())
             {
+                Benutzer ersteller = leseBenutzerWrapper(rs.getInt("Ersteller"), conMysql);
+                if(ersteller == null)
+                    return null;
                 veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"), rs.getString("Titel"), rs
                         .getString("Beschreibung"), rs.getString("Semester"), rs.getString("Kennwort"), rs
                         .getBoolean("BewertungenErlaubt"), rs.getBoolean("ModeratorKarteikartenBearbeiten"),
-                        leseBenutzer(rs.getInt("Ersteller")), rs.getBoolean("KommentareErlaubt"), rs
+                        ersteller, rs.getBoolean("KommentareErlaubt"), rs
                                 .getInt("AnzTeilnehmer"), rs.getInt("ErsteKarteikarte")));
             }
         }
@@ -725,10 +752,13 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             while (rs.next())
             {
+                Benutzer ersteller = leseBenutzerWrapper(rs.getInt("Ersteller"), conMysql);
+                if(ersteller == null)
+                    return null;
                 veranstaltungen.add(new Veranstaltung(rs.getInt("ID"), rs.getString("Titel"), rs
                         .getString("Beschreibung"), rs.getString("Semester"), rs.getString("Kennwort"), rs
                         .getBoolean("BewertungenErlaubt"), rs.getBoolean("ModeratorKarteikartenBearbeiten"),
-                        leseBenutzer(rs.getInt("Ersteller")), rs.getBoolean("KommentareErlaubt"), rs
+                        ersteller, rs.getBoolean("KommentareErlaubt"), rs
                                 .getInt("AnzTeilnehmer"), rs.getInt("ErsteKarteikarte")));
             }
         }
@@ -826,7 +856,7 @@ public class Datenbankmanager implements IDatenbankmanager
         return studiengaenge;
     }
 
-    public Boolean istModeratorWrapper(int benutzer, int veranstaltung, Connection conMysql){
+    private Boolean istModeratorWrapper(int benutzer, int veranstaltung, Connection conMysql){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Boolean istModerator = false;
@@ -929,7 +959,10 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             while (rs.next())
             {
-                ergebnisse.put(leseVeranstaltung(rs.getInt("ID")), rs.getInt("lev"));
+                Veranstaltung veranst = leseVeranstaltungWrapper(rs.getInt("ID"),conMysql);
+                if(veranst == null)
+                    return null;
+                ergebnisse.put(veranst, rs.getInt("lev"));
             }
 
         }
@@ -965,7 +998,10 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             while (rs.next())
             {
-                ergebnisse.put(leseBenutzer(rs.getInt("ID")), rs.getInt("lev"));
+                Benutzer benutzer = leseBenutzerWrapper(rs.getInt("ID"),conMysql);
+                if(benutzer == null)
+                    return null;
+                ergebnisse.put(benutzer, rs.getInt("lev"));
             }
 
         }
@@ -1163,7 +1199,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
                     zuVeranstaltungEinschreiben(veranstId, moderatorenIds[i], veranst.getZugangspasswort(), conMysql,
                             false);
-                    schreibeBenachrichtigung(new BenachrEinlModerator(moderatorenIds[i], veranst), conMysql);
+                    schreibeBenachrichtigungWrapper(new BenachrEinlModerator(moderatorenIds[i], veranst), conMysql);
                 }
                 ps.executeBatch();
 
@@ -1265,7 +1301,7 @@ public class Datenbankmanager implements IDatenbankmanager
                     if(istModerator == null)
                         throw new SQLException();
                     if (!istModerator)
-                        schreibeBenachrichtigung(new BenachrEinlModerator(moderatorenIds[i], veranst), conMysql);
+                        schreibeBenachrichtigungWrapper(new BenachrEinlModerator(moderatorenIds[i], veranst), conMysql);
                 }
 
                 ps = conMysql.prepareStatement("DELETE FROM moderator WHERE Veranstaltung = ?");
@@ -1300,7 +1336,7 @@ public class Datenbankmanager implements IDatenbankmanager
             }
 
             BenachrVeranstAenderung bva = new BenachrVeranstAenderung(veranst);
-            schreibeBenachrichtigung(bva, conMysql);
+            schreibeBenachrichtigungWrapper(bva, conMysql);
 
             conMysql.commit();
 
@@ -1406,20 +1442,42 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             String tabelle;
             int id;
+            
+            Benachrichtigung benachrichtigung;
             while (rs.next())
             {
                 tabelle = rs.getString("Tabelle");
                 id = rs.getInt("ID");
-                if (tabelle.equals("benachrichtigung_einladung_moderator"))
-                    aktBenachrichtigungen.add(leseBenachrEinlModerator(id));
-                else if (tabelle.equals("benachrichtigung_karteikartenaenderung"))
-                    aktBenachrichtigungen.add(leseBenachrKarteikAenderung(id));
-                else if (tabelle.equals("benachrichtigung_neuer_kommentar"))
-                    aktBenachrichtigungen.add(leseBenachrNeuerKommentar(id));
-                else if (tabelle.equals("benachrichtigung_profil_geaendert"))
-                    aktBenachrichtigungen.add(leseBenachrProfilGeaendert(id));
-                else
-                    aktBenachrichtigungen.add(leseBenachrVeranstAenderung(id));
+                if (tabelle.equals("benachrichtigung_einladung_moderator")){
+                    benachrichtigung = leseBenachrEinlModerator(id,conMysql);
+                    if(benachrichtigung == null)
+                        return null;
+                    aktBenachrichtigungen.add(benachrichtigung);
+                }
+                else if (tabelle.equals("benachrichtigung_karteikartenaenderung")){
+                    benachrichtigung = leseBenachrKarteikAenderung(id,conMysql);
+                    if(benachrichtigung == null)
+                        return null;
+                    aktBenachrichtigungen.add(benachrichtigung);
+                }
+                else if (tabelle.equals("benachrichtigung_neuer_kommentar")){
+                    benachrichtigung = leseBenachrNeuerKommentar(id,conMysql);
+                    if(benachrichtigung == null)
+                        return null;
+                    aktBenachrichtigungen.add(benachrichtigung);
+                }
+                else if (tabelle.equals("benachrichtigung_profil_geaendert")){
+                    benachrichtigung = leseBenachrProfilGeaendert(id,conMysql);
+                    if(benachrichtigung == null)
+                        return null;
+                    aktBenachrichtigungen.add(benachrichtigung);
+                }
+                else{
+                    benachrichtigung = leseBenachrVeranstAenderung(id,conMysql);
+                    if(benachrichtigung == null)
+                        return null;
+                    aktBenachrichtigungen.add(benachrichtigung);
+                }
             }
 
         }
@@ -1437,11 +1495,8 @@ public class Datenbankmanager implements IDatenbankmanager
         return aktBenachrichtigungen;
     }
 
-    @Override
-    public BenachrEinlModerator leseBenachrEinlModerator(int id)
+    private BenachrEinlModerator leseBenachrEinlModerator(int id, Connection conMysql)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrEinlModerator benachrichtigung = null;
@@ -1457,8 +1512,12 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 Calendar cal = new GregorianCalendar();
                 rs.getTimestamp("Erstelldatum", cal);
+                
+                Veranstaltung veranst = leseVeranstaltungWrapper(rs.getInt("Veranstaltung"),conMysql);
+                if(veranst == null)
+                    return null;
                 benachrichtigung = new BenachrEinlModerator(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"), cal,
-                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseVeranstaltung(rs.getInt("Veranstaltung")),
+                        rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), veranst,
                         rs.getBoolean("Angenommen"));
             }
         }
@@ -1472,17 +1531,16 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
     }
 
-    @Override
-    public BenachrKarteikAenderung leseBenachrKarteikAenderung(int id)
+    private BenachrKarteikAenderung leseBenachrKarteikAenderung(int id, Connection conMysql)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrKarteikAenderung benachrichtigung = null;
@@ -1498,7 +1556,7 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 Calendar cal = new GregorianCalendar();
                 rs.getTimestamp("Erstelldatum", cal);
-                Karteikarte kk = leseKarteikarte(rs.getInt("Karteikarte"));
+                Karteikarte kk = leseKarteikarteWrapper(rs.getInt("Karteikarte"),conMysql,conNeo4j);
                 if (kk == null)
                     return null;
 
@@ -1516,17 +1574,16 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
     }
 
-    @Override
-    public BenachrNeuerKommentar leseBenachrNeuerKommentar(int id)
+    private BenachrNeuerKommentar leseBenachrNeuerKommentar(int id, Connection conMysql)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+        
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrNeuerKommentar benachrichtigung = null;
@@ -1546,7 +1603,9 @@ public class Datenbankmanager implements IDatenbankmanager
                     vaterKommentar = leseKommentar(kommentar.getVaterID());
                 if (vaterKommentar == null)
                     return null;
-                Karteikarte karteik = leseKarteikarte(vaterKommentar.getKarteikartenID());
+                Karteikarte karteik = leseKarteikarteWrapper(vaterKommentar.getKarteikartenID(), conMysql, conNeo4j);
+                if(karteik == null)
+                    return null;
 
                 Calendar cal = new GregorianCalendar();
                 rs.getTimestamp("Erstelldatum", cal);
@@ -1564,17 +1623,13 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
     }
 
-    @Override
-    public BenachrProfilGeaendert leseBenachrProfilGeaendert(int id)
+    private BenachrProfilGeaendert leseBenachrProfilGeaendert(int id, Connection conMysql)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrProfilGeaendert benachrichtigung = null;
@@ -1590,8 +1645,13 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 Calendar cal = new GregorianCalendar();
                 rs.getTimestamp("Erstelldatum", cal);
+                
+                Benutzer admin = leseBenutzerWrapper(rs.getInt("Admin"),conMysql);
+                if(admin == null)
+                    return null;
+                
                 benachrichtigung = new BenachrProfilGeaendert(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
-                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), leseBenutzer(rs.getInt("Admin")));
+                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), admin);
             }
         }
         catch (SQLException e)
@@ -1604,17 +1664,13 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
     }
 
-    @Override
-    public BenachrVeranstAenderung leseBenachrVeranstAenderung(int id)
+    private BenachrVeranstAenderung leseBenachrVeranstAenderung(int id, Connection conMysql)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
         ResultSet rs = null;
         BenachrVeranstAenderung benachrichtigung = null;
@@ -1630,9 +1686,12 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 Calendar cal = new GregorianCalendar();
                 rs.getTimestamp("Erstelldatum", cal);
+                
+                Veranstaltung veranst = leseVeranstaltungWrapper(rs.getInt("Veranstaltung"),conMysql);
+                if(veranst == null)
+                    return null;
                 benachrichtigung = new BenachrVeranstAenderung(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
-                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"),
-                        leseVeranstaltung(rs.getInt("Veranstaltung")));
+                        cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"),veranst);
             }
         }
         catch (SQLException e)
@@ -1645,29 +1704,45 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return benachrichtigung;
     }
 
     @Override
-    public void schreibeBenachrichtigung(Benachrichtigung benachrichtigung, Connection conMysql) throws SQLException
+    public void schreibeBenachrichtigung(Benachrichtigung benachrichtigung) throws SQLException
     {
-        Entry<Connection, ReentrantLock> conLock = null;
-        boolean transaktion = true;
+        Entry<Connection, ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
 
+        try
+        {
+
+            conMysql.setAutoCommit(false);
+            schreibeBenachrichtigungWrapper(benachrichtigung, conMysql);
+
+            conMysql.commit();
+
+        }
+        catch (SQLException e)
+        {
+            conMysql.rollback();
+            throw e;
+        }
+        finally
+        {
+
+            conMysql.setAutoCommit(true);
+            conLock.getValue().unlock();
+        }
+
+    }
+    
+    private void schreibeBenachrichtigungWrapper(Benachrichtigung benachrichtigung, Connection conMysql) throws SQLException{
         PreparedStatement ps = null;
         ResultSet rs = null;
         try
         {
-            if (conMysql == null)
-            {
-                conLock = getConnection();
-                conMysql = conLock.getKey();
-                transaktion = false;
-                conMysql.setAutoCommit(false);
-            }
             ps = conMysql.prepareStatement("INSERT INTO benachrichtigung (Inhalt) VALUES (?); ");
             ps.setString(1, benachrichtigung.getInhalt());
             ps.executeUpdate();
@@ -1707,7 +1782,7 @@ public class Datenbankmanager implements IDatenbankmanager
             else if (benachrichtigung instanceof BenachrNeuerKommentar)
             {
                 BenachrNeuerKommentar bnk = (BenachrNeuerKommentar) benachrichtigung;
-                Kommentar kommentar = leseKommentarIntern(bnk.getKommentarId(), conMysql);
+                Kommentar kommentar = leseKommentarWrapper(bnk.getKommentarId(), conMysql);
                 if (kommentar == null)
                     throw new SQLException();
                 ps = conMysql
@@ -1762,14 +1837,9 @@ public class Datenbankmanager implements IDatenbankmanager
             // erfolgreich = false;
             ps.executeUpdate();
 
-            if (!transaktion)
-                conMysql.commit();
-
         }
         catch (SQLException e)
         {
-            conMysql.rollback();
-
             e.printStackTrace();
             throw e;
         }
@@ -1777,14 +1847,7 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-
-            if (!transaktion)
-            {
-                conMysql.setAutoCommit(true);
-                conLock.getValue().unlock();
-            }
         }
-
     }
 
     public boolean markiereBenAlsGelesen(int benID, int benutzerID)
@@ -1844,6 +1907,7 @@ public class Datenbankmanager implements IDatenbankmanager
         catch (SQLException e)
         {
             e.printStackTrace();
+            return false;
 
         }
         finally
@@ -1958,6 +2022,19 @@ public class Datenbankmanager implements IDatenbankmanager
 
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+        try
+        {
+            return leseKarteikarteWrapper(karteikID, conMysql, conNeo4j);
+        }
+
+        finally
+        {
+            conLock.getValue().unlock();
+            conLockNeo4j.getValue().unlock();
+        }
+    }
+    
+    private Karteikarte leseKarteikarteWrapper(int karteikID, Connection conMysql, Connection conNeo4j){
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -2024,8 +2101,6 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(rs);
             closeQuietly(ps2);
             closeQuietly(rs2);
-            conLock.getValue().unlock();
-            conLockNeo4j.getValue().unlock();
         }
         return karteikarte;
     }
@@ -2090,6 +2165,9 @@ public class Datenbankmanager implements IDatenbankmanager
     {
         Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
         Connection conNeo4j = conLockNeo4j.getKey();
+        
+        Entry<Connection, ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -2109,7 +2187,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 while (rs.next())
                 {
                     aktuelleKarteikarte = rs.getInt("ID");
-                    Karteikarte aktKarteik = leseKarteikarte(aktuelleKarteikarte);
+                    Karteikarte aktKarteik = leseKarteikarteWrapper(aktuelleKarteikarte,conMysql,conNeo4j);
                     if (aktKarteik == null)
                         return null;
                     kindKarteikarten.put(i, aktKarteik);
@@ -2123,7 +2201,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 Integer bruderKarteik;
                 do
                 {
-                    bruderKarteik = gibBruder(aktuelleKarteikarte);
+                    bruderKarteik = gibBruder(aktuelleKarteikarte, conNeo4j);
 
                     if (bruderKarteik == null)
                         return null;
@@ -2142,7 +2220,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         closeQuietly(ps);
                         closeQuietly(rs);
 
-                        Integer vaterKarteikarte = gibVater(aktuelleKarteikarte);
+                        Integer vaterKarteikarte = gibVater(aktuelleKarteikarte, conNeo4j);
                         if (vaterKarteikarte == null)
                             return null;
                         else if (vaterKarteikarte == -1)
@@ -2153,7 +2231,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 }
                 while (bruderKarteik == -1);
 
-                Karteikarte bruderKk = leseKarteikarte(bruderKarteik);
+                Karteikarte bruderKk = leseKarteikarteWrapper(bruderKarteik,conMysql,conNeo4j);
                 if (bruderKk == null)
                     return null;
                 kindKarteikarten.put(i, bruderKk);
@@ -2172,6 +2250,7 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
             conLockNeo4j.getValue().unlock();
         }
 
@@ -2183,6 +2262,9 @@ public class Datenbankmanager implements IDatenbankmanager
     {
         Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
         Connection conNeo4j = conLockNeo4j.getKey();
+        
+        Entry<Connection, ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -2204,13 +2286,13 @@ public class Datenbankmanager implements IDatenbankmanager
 
                 if (!rs.next())
                 {
-                    aktuelleKarteikarte = gibVater(aktuelleKarteikarte);
+                    aktuelleKarteikarte = gibVater(aktuelleKarteikarte, conNeo4j);
                     if (aktuelleKarteikarte == null)
                         return null;
                     else if (aktuelleKarteikarte == -1)
                         return kindKarteikarten;
 
-                    Karteikarte aktKarteik = leseKarteikarte(aktuelleKarteikarte);
+                    Karteikarte aktKarteik = leseKarteikarteWrapper(aktuelleKarteikarte, conMysql, conNeo4j);
                     if (aktKarteik == null)
                         return null;
                     kindKarteikarten.put(i, aktKarteik);
@@ -2237,7 +2319,7 @@ public class Datenbankmanager implements IDatenbankmanager
                     {
                         abbruch = true;
 
-                        Karteikarte aktKarteik = leseKarteikarte(aktuelleKarteikarte);
+                        Karteikarte aktKarteik = leseKarteikarteWrapper(aktuelleKarteikarte, conMysql, conNeo4j);
                         if (aktKarteik == null)
                             return null;
                         kindKarteikarten.put(i, aktKarteik);
@@ -2279,17 +2361,15 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
+            conLock.getValue().unlock();
             conLockNeo4j.getValue().unlock();
         }
 
         return kindKarteikarten;
     }
 
-    private Integer gibBruder(int karteikarte)
+    private Integer gibBruder(int karteikarte, Connection conNeo4j)
     {
-        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
-        Connection conNeo4j = conLockNeo4j.getKey();
-
         PreparedStatement ps = null;
         ResultSet rs = null;
         Integer karteik;
@@ -2312,17 +2392,13 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLockNeo4j.getValue().unlock();
         }
 
         return karteik;
     }
 
-    private Integer gibAelterenBruder(int karteikarte)
+    private Integer gibAelterenBruder(int karteikarte, Connection conNeo4j)
     {
-        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
-        Connection conNeo4j = conLockNeo4j.getKey();
-
         PreparedStatement ps = null;
         ResultSet rs = null;
         Integer karteik;
@@ -2345,17 +2421,13 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLockNeo4j.getValue().unlock();
         }
 
         return karteik;
     }
 
-    private Integer gibVater(int karteikarte)
+    private Integer gibVater(int karteikarte, Connection conNeo4j)
     {
-        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
-        Connection conNeo4j = conLockNeo4j.getKey();
-
         PreparedStatement ps = null;
         ResultSet rs = null;
         Integer karteik;
@@ -2378,17 +2450,13 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLockNeo4j.getValue().unlock();
         }
 
         return karteik;
     }
 
-    private Integer gibKind(int karteikarte)
+    private Integer gibKind(int karteikarte, Connection conNeo4j)
     {
-        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
-        Connection conNeo4j = conLockNeo4j.getKey();
-
         PreparedStatement ps = null;
         ResultSet rs = null;
         Integer karteik;
@@ -2411,7 +2479,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLockNeo4j.getValue().unlock();
         }
 
         return karteik;
@@ -2447,7 +2514,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             if (ueberliegendeBruderKK != -1)
             {
-                Integer unterliegendeBruderKK = gibBruder(ueberliegendeBruderKK);
+                Integer unterliegendeBruderKK = gibBruder(ueberliegendeBruderKK, conNeo4j);
                 if (unterliegendeBruderKK == null)
                     throw new SQLException();
                 else if (unterliegendeBruderKK != -1)
@@ -2461,7 +2528,7 @@ public class Datenbankmanager implements IDatenbankmanager
             }
             else if (vaterKK != -1)
             {
-                Integer kindKarteikarte = gibKind(vaterKK);
+                Integer kindKarteikarte = gibKind(vaterKK, conNeo4j);
                 if (kindKarteikarte == null)
                     throw new SQLException();
                 else if (kindKarteikarte != -1)
@@ -2652,13 +2719,13 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
-            Integer bruder = gibBruder(karteikID);
+            Integer bruder = gibBruder(karteikID, conNeo4j);
             if (bruder == null)
                 throw new SQLException();
 
             if (bruder != -1)
             {
-                Integer aeltererBruder = gibAelterenBruder(karteikID);
+                Integer aeltererBruder = gibAelterenBruder(karteikID, conNeo4j);
 
                 if (aeltererBruder == null)
                     throw new SQLException();
@@ -2666,7 +2733,7 @@ public class Datenbankmanager implements IDatenbankmanager
                     connectKk(aeltererBruder, bruder, BeziehungsTyp.H_BROTHER, conNeo4j);
                 else
                 {
-                    Integer vater = gibVater(karteikID);
+                    Integer vater = gibVater(karteikID, conNeo4j);
                     if (vater == null || vater == -1)
                         throw new SQLException();
                     else
@@ -2819,9 +2886,16 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 GregorianCalendar g = new GregorianCalendar();
                 g.setTime(rs.getTimestamp("erstelldatum"));
+                
+                Benutzer benutzer = leseBenutzerWrapper(rs.getInt("Benutzer"), conMysql);
+                if(benutzer == null)
+                    return null;
+                Boolean hatKommentarBewertet = hatKommentarBewertetWrapper(rs.getInt("ID"), aktBenutzerID, conMysql);
+                if(hatKommentarBewertet == null)
+                    return null;
+                
                 Kommentar k = new Kommentar(rs.getInt("ID"), rs.getString("Inhalt"), g,
-                        leseBenutzer(rs.getInt("Benutzer")), rs.getInt("Bewertung"), hatKommentarBewertet(
-                                rs.getInt("ID"), aktBenutzerID), -1, rs.getInt("Karteikarte"), rs.getInt("AnzKinder"));
+                        benutzer, rs.getInt("Bewertung"), hatKommentarBewertet, -1, rs.getInt("Karteikarte"), rs.getInt("AnzKinder"));
 
                 komms.add(k);
             }
@@ -2841,7 +2915,7 @@ public class Datenbankmanager implements IDatenbankmanager
         return komms;
     }
 
-    private Kommentar leseKommentarIntern(int kommId, Connection conMysql)
+    private Kommentar leseKommentarWrapper(int kommId, Connection conMysql)
     {
         PreparedStatement ps = null;
 
@@ -2867,8 +2941,16 @@ public class Datenbankmanager implements IDatenbankmanager
                 if (rs.wasNull())
                     kkId = -1;
 
-                k = new Kommentar(rs.getInt("ID"), rs.getString("Inhalt"), g, leseBenutzer(rs.getInt("Benutzer")),
-                        rs.getInt("Bewertung"), hatKommentarBewertet(rs.getInt("ID"), rs.getInt("Benutzer")), vaterID,
+                Benutzer benutzer = leseBenutzerWrapper(rs.getInt("Benutzer"),conMysql);
+                if(benutzer == null)
+                    return null;
+                
+                Boolean hatKommentarBewertet = hatKommentarBewertetWrapper(rs.getInt("ID"), rs.getInt("Benutzer"), conMysql);
+                if(hatKommentarBewertet == null)
+                    return null;
+                
+                k = new Kommentar(rs.getInt("ID"), rs.getString("Inhalt"), g, benutzer,
+                        rs.getInt("Bewertung"),hatKommentarBewertet , vaterID,
                         kkId, rs.getInt("AnzKinder"));
             }
 
@@ -2892,7 +2974,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
 
-        Kommentar k = leseKommentarIntern(kommId, conMysql);
+        Kommentar k = leseKommentarWrapper(kommId, conMysql);
 
         conLock.getValue().unlock();
 
@@ -2919,9 +3001,17 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 GregorianCalendar g = new GregorianCalendar();
                 g.setTime(rs.getTimestamp("erstelldatum"));
+                
+                Benutzer benutzer = leseBenutzerWrapper(rs.getInt("Benutzer"), conMysql);
+                if(benutzer == null)
+                    return null;
+                
+                Boolean hatKommentarBewertet = hatKommentarBewertetWrapper(rs.getInt("ID"), aktBenutzerID, conMysql);
+                if(hatKommentarBewertet == null)
+                    return null;
+                
                 Kommentar k = new Kommentar(rs.getInt("ID"), rs.getString("Inhalt"), g,
-                        leseBenutzer(rs.getInt("Benutzer")), rs.getInt("bewertung"), hatKommentarBewertet(
-                                rs.getInt("ID"), aktBenutzerID), rs.getInt("VaterKommentar"), -1, 0);
+                        benutzer, rs.getInt("bewertung"),hatKommentarBewertet , rs.getInt("VaterKommentar"), -1, 0);
 
                 komms.add(k);
             }
@@ -2944,6 +3034,9 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public boolean schreibeKommentar(Kommentar kommentar)
     {
+        Entry<Connection, ReentrantLock> conLockNeo4j = getConnectionNeo4j();
+        Connection conNeo4j = conLockNeo4j.getKey();
+
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
         PreparedStatement ps = null;
@@ -2987,17 +3080,19 @@ public class Datenbankmanager implements IDatenbankmanager
             if (kommentar.getVaterID() != -1)
             {
                 Kommentar vaterKommentar = leseKommentar(kommentar.getVaterID());
-                karteik = leseKarteikarte(vaterKommentar.getKarteikartenID());
+                karteik = leseKarteikarteWrapper(vaterKommentar.getKarteikartenID(),conMysql, conNeo4j);
             }
             else
-                karteik = leseKarteikarte(kommentar.getKarteikartenID());
+                karteik = leseKarteikarteWrapper(kommentar.getKarteikartenID(), conMysql, conNeo4j);
 
             if (karteik == null)
-                return false;
+                throw new SQLException();
 
-            Veranstaltung v = leseVeranstaltung(karteik.getVeranstaltung());
+            Veranstaltung veranst = leseVeranstaltungWrapper(karteik.getVeranstaltung(),conMysql);
+            if(veranst == null)
+                throw new SQLException();
             
-            schreibeBenachrichtigung(new BenachrNeuerKommentar(kommentar.getErsteller().getId(), karteik,v, kommentarId),
+            schreibeBenachrichtigungWrapper(new BenachrNeuerKommentar(kommentar.getErsteller().getId(), karteik,veranst, kommentarId),
                     conMysql);
 
             conMysql.commit();
@@ -3012,7 +3107,6 @@ public class Datenbankmanager implements IDatenbankmanager
             }
             catch (SQLException e1)
             {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
             e.printStackTrace();
@@ -3020,9 +3114,18 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         finally
         {
+            try
+            {
+                conMysql.setAutoCommit(true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
             closeQuietly(ps);
             closeQuietly(rs);
             conLock.getValue().unlock();
+            conLockNeo4j.getValue().unlock();
         }
 
         return erfolgreich;
@@ -3113,17 +3216,31 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public boolean hatKommentarBewertet(int kommentarID, int benutzerId)
+    public Boolean hatKommentarBewertet(int kommentarID, int benutzerId)
     {
         Entry<Connection, ReentrantLock> conLock = getConnection();
         Connection conMysql = conLock.getKey();
+
+        try
+        {
+            Boolean hatKommentarBewertet = hatKommentarBewertetWrapper(kommentarID, benutzerId, conMysql);
+            if(hatKommentarBewertet == null)
+                return null;
+            return hatKommentarBewertet; 
+        }
+        finally
+        {
+            conLock.getValue().unlock();
+        }
+
+    }
+    
+    private Boolean hatKommentarBewertetWrapper(int kommentarID, int benutzerId, Connection conMysql){
         PreparedStatement ps = null;
         boolean erfolgreich = true;
 
         try
         {
-            conMysql.setAutoCommit(false);
-
             String sql = "SELECT COUNT(*) AS anz FROM bewertung_kommentar WHERE Benutzer = ? AND KommentarID = ?";
             ps = conMysql.prepareStatement(sql);
 
@@ -3136,25 +3253,12 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
-            try
-            {
-                conMysql.rollback();
-            }
-            catch (SQLException e1)
-            {}
             erfolgreich = false;
             e.printStackTrace();
         }
         finally
         {
-            try
-            {
-                conMysql.setAutoCommit(true);
-            }
-            catch (SQLException e)
-            {}
             closeQuietly(ps);
-            conLock.getValue().unlock();
         }
 
         return erfolgreich;

@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import org.json.simple.JSONObject;
 
 import java.sql.Connection;
+
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.DbFalseLoginDataException;
 import com.sopra.team1723.exceptions.DbFalsePasswortException;
@@ -187,7 +188,7 @@ public interface IDatenbankmanager {
      * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<String> leseStudiengaenge(int veranstaltung);
-
+    
     /**
      * Prüft ob der Benutzer Moderator dieser Veranstaltung ist.
      * @param benutzer referenziert eindeutig einen Benutzer
@@ -318,46 +319,6 @@ public interface IDatenbankmanager {
      * wird eine leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
      */
     public List<Benachrichtigung> leseBenachrichtigungen(int benutzer, int limit);
-
-    /**
-     * Holt eine Benachrichtigung für eine Einladung als Moderator aus der Datenbank
-     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrEinlModerator Objekt. Bei einem Fehler oder wenn keine
-     * Benachrichtigung gefunden wird kommt null zurück.
-     */
-    public BenachrEinlModerator leseBenachrEinlModerator(int id);
-
-    /**
-     * Holt eine Benachrichtigung für eine Karteikartenänderung aus der Datenbank
-     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrKarteikAenderung Objekt. Bei einem Fehler oder wenn keine
-     * Benachrichtigung gefunden wird kommt null zurück.
-     */
-    public BenachrKarteikAenderung leseBenachrKarteikAenderung(int id);
-
-    /**
-     * Holt eine Benachrichtigung für einen neuen Kommentar aus der Datenbank
-     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrNeuerKommentar Objekt. Bei einem Fehler oder wenn keine
-     * Benachrichtigung gefunden wird kommt null zurück.
-     */
-    public BenachrNeuerKommentar leseBenachrNeuerKommentar(int id);
-
-    /**
-     * Holt eine Benachrichtigung für ein geändertes Profil aus der Datenbank
-     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrProfilGeaendert Objekt. Bei einem Fehler oder wenn keine
-     * Benachrichtigung gefunden wird kommt null zurück.
-     */
-    public BenachrProfilGeaendert leseBenachrProfilGeaendert(int id);
-
-    /**
-     * Holt eine Benachrichtigung für eine Veranstaltungsänderung aus der Datenbank
-     * @param id referenziert eindeutig eine Benachrichtigung dieses Typs 
-     * @return BenachrVeranstAenderung Objekt. Bei einem Fehler oder wenn keine
-     * Benachrichtigung gefunden wird kommt null zurück.
-     */
-    public BenachrVeranstAenderung leseBenachrVeranstAenderung(int id);
     
     /**
      * Schreibt die Benachrichtigung in die Datenbank
@@ -365,7 +326,7 @@ public interface IDatenbankmanager {
      * standardmäßig auf false.
      * @return Liefert bei Erfolg true zurück und bei einem Fehler false.
      */
-    public void schreibeBenachrichtigung(Benachrichtigung benachrichtigung, Connection conMysql) throws SQLException;
+    public void schreibeBenachrichtigung(Benachrichtigung benachrichtigung) throws SQLException;
 
     /**
      * Setzt das Attribut gelesen der Benachrichtigung auf true.
@@ -518,7 +479,7 @@ public interface IDatenbankmanager {
      * @param benutzer 
      * @return
      */
-    public boolean hatKommentarBewertet(int kommentarID, int benutzerId);
+    public Boolean hatKommentarBewertet(int kommentarID, int benutzerId);
 
 
     /**
