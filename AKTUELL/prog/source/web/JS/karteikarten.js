@@ -21,20 +21,20 @@ function buildKarteikarte(karteikarteJson)
     
     // Rechte pruefen
     
-    // Wenn Benutzer kein Admin oder Ersteller ...
-    if(!checkIfAllowedVn(veranstaltungsObject, true, true, false))
+    // Wenn Benutzer kein Admin oder Ersteller 
+    // oder handelt es sich um die Root-Karteikarte: Verberge Bearbeiten- und Loeschen-Buttons
+    if(!checkIfAllowedVn(veranstaltungsObject, true, true, false) ||
+            veranstaltungsObject[paramErsteKarteikarte] == kkId)
     {
-        //... und kein Moderator ...
-        //... oder Moderator ohne Bearbeitungsrechte ...
-        // oder handelt es sich um die Root-Karteikarte: Verberge Bearbeiten- und Loeschen-Buttons
-        if(!checkIfAllowedVn(veranstaltungsObject, false, false, true) ||
-                (checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
-                !veranstaltungsObject[paramModeratorKkBearbeiten]) ||
-                veranstaltungsObject[paramErsteKarteikarte] == kkId)
-        {
-            kkDom.find(".KKbearbeiten").hide();
-            kkDom.find(".KKloeschen").hide();
-        }
+        kkDom.find(".KKbearbeiten").hide();
+        kkDom.find(".KKloeschen").hide();
+    }
+    // Wenn Benutzer Moderator ohne Bearbeitungsrechte: Verberge Bearbeiten- und Loeschen-Buttons
+    if(checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
+                !veranstaltungsObject[paramModeratorKkBearbeiten])
+    {
+        kkDom.find(".KKbearbeiten").hide();
+        kkDom.find(".KKloeschen").hide();
     }
     // Wenn Bewertungen fuer diese Veranstaltung nicht erlaubt: Verberge Bewertungsbuttons
     if(!veranstaltungsObject[paramBewertungenErlauben])
@@ -166,7 +166,6 @@ function buildKarteikarte(karteikarteJson)
     
     // Notizen aufklappen
     kkDom.find(".kk_notizen_head").click(function(e){
-//        kkDom.find(".kk_notizen_body_wrapper").slideToggle();
         var radioID = $(e.target).attr("for");
         if($("#"+radioID).prop("checked"))
         {
@@ -178,7 +177,6 @@ function buildKarteikarte(karteikarteJson)
     
     // Kommentare aufklappen
     kkDom.find(".kk_kommheader").click(function(e){
-//        kkDom.find(".kk_kommbody").slideToggle("slow");
         var radioID = $(e.target).attr("for");
         if($("#"+radioID).prop("checked"))
         {

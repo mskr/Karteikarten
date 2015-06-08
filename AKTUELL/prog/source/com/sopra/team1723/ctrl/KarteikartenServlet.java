@@ -198,7 +198,6 @@ public class KarteikartenServlet extends ServletController
         List<Karteikarte> kk = new ArrayList<Karteikarte>(Kks.values());
         for (Karteikarte k : kk)
         {
-            System.out.println(k.getId());
             k.setHatBewertet(dbManager.hatKarteikarteBewertet(k.getId(), aktuellerBenutzer.getId()));
         }
         jo = JSONConverter.toJson(kk, true);
@@ -588,21 +587,16 @@ public class KarteikartenServlet extends ServletController
                 String absoluteNeuerPfad = contextPath + relativerNeuerPfad;
                 File oldName = new File(absolutePath);
                 File newName = new File(absoluteNeuerPfad);
-                System.out.println("alter Filename: " + absolutePath);
-                System.out.println("neuer Filename: " + absoluteNeuerPfad);
                 try
                 {
                     if (!oldName.renameTo(newName))
                     {
-                        System.out.println("RENAME DIDNT WORK");
-
                         throw new Exception();
                     }
                 }
                 catch (SecurityException e)
                 {
                     e.printStackTrace();
-                    System.out.println("SECURITY EXCEPTION");
                     jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                     outWriter.print(jo);
                 }
@@ -847,7 +841,6 @@ public class KarteikartenServlet extends ServletController
         String[] options = req.getParameterValues(ParamDefines.ExportOptions+ "[]");
         if (options == null)
         {
-            System.out.println("Optionen fehlen");
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;

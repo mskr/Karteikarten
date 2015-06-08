@@ -1307,6 +1307,19 @@ textarea.input_std {
 	display: table;
 }
 
+.kk_ueberschrift_titel {
+	font-size: 1.5em;
+	border-bottom: 1px solid rgba(0,0,0,.3);
+	box-shadow: 0 1px 0 rgba(255,255,255,.2);
+	padding-bottom: .3em;
+	text-shadow: 0 -2px 0 black;
+}
+
+.kk_titel {
+	padding-bottom: .3em;
+	text-shadow: 0 -1px 0 black;
+} 
+
 .kk_buttonbar {
 	display:table-cell;
 	padding: 0 1em;
@@ -1353,9 +1366,7 @@ textarea.input_std {
 	width: 100%;
 }
 
-.kk_titel {
-	
-} .kk_titel .kk_buttonbar {
+.kk_titel .kk_buttonbar {
 	/* Nur in Smartphoneansicht */
 	display: none;
 } .kk_titel .kk_buttonbar * {
@@ -1414,6 +1425,7 @@ textarea.input_std {
 	background: white;
 	color: #333;
 	position: relative;
+	top: -1px;
 	font-size: .8em;
 	border-top: 1px dashed lightgray;
 	box-shadow: 0px 2px 2px black;
@@ -1462,6 +1474,7 @@ textarea.input_std {
 	display: table-cell;
 	position: relative;
 	top: 1em;
+	overflow: hidden;
 }
 
 /* Kommentare und Notizen Tabs */
@@ -1486,10 +1499,9 @@ textarea.input_std {
 	padding: .6em;
 	color: white;
 	font-weight: bold;
-} .kk_komm_radio:checked ~ .kk_kommbox {
-	display: block;
-} .kk_notizen_radio:checked ~ .kk_notizen {
-	display: block;
+} .kk_komm_radio:checked ~ .kk_kommbox, 
+  .kk_notizen_radio:checked ~ .kk_notizen {
+  	display: block;
 } .kk_kommbox, .kk_notizen {
 	display: none;
 	position: relative;
