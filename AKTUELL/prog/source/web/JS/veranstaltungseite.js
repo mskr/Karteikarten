@@ -343,7 +343,7 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
     params[paramKkId] = vaterId;
     params[paramVnId] = veranstaltungsObject[paramId];
     // Evntl bestehende Kindkarteikarten aushaengen
-    vaterElem.find("ul").remove();
+    vaterElem.find("ul").hide();//remove(); //TODO
     // Neue Liste aufbauen
     vaterElem = vaterElem.append("<ul></ul>").find("ul");
     return ajaxCall(
@@ -511,7 +511,7 @@ function displayKarteikarte(id, callback, reload){
             params2[paramVnId] = veranstaltungsObject[paramId];
         	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
         		domkk = buildKarteikarte(response);
-				domkk.show();
+                domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 				domkk.css("opacity", "0");
         		$("#kk_all").append(domkk);
 				domkk.animate({opacity: 1}, 200);
@@ -558,7 +558,7 @@ function loadAfterKk(id)
 						if(o == undefined)
 							return;
 						domkk = buildKarteikarte(o);
-						domkk.show();
+						domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 //						domkk.addClass("animated slideIn"); //TODO
 						$("#kk_all").append(domkk);
 						domms.push(domkk);
@@ -613,7 +613,7 @@ function loadPreKk(id)
 						return;
 					}
 					domkk = buildKarteikarte(o);
-					domkk.show();
+                    domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 					domkk.css("opacity", "0");
 					$("#kk_all").prepend(domkk);
 					domms.push(domkk);

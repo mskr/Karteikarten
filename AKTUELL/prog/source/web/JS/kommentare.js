@@ -78,37 +78,42 @@ function fillHauptKommentar(domKomm, kommObj, domKK)
 			});
 		});
 	}
-
-//	domKomm.find(".antw").ckeditor(ckEditorKommentarAntwortConfig);
+	
 	setupAntwAnz(domKomm, kommObj[paramAntwortCount]);
 
 	// Antworten anzeigen
 	domKomm.find(".antwAnzeigen").click(function(){
 		// Aufgeklappt ?
 		isAufgeklappt = domKomm.find(".subkommentare").is(':visible') ;
-		if (isAufgeklappt) 
+		if (isAufgeklappt)
 		{
-		    domKomm.find(".kk_kommantwort").slideUp();
+		    domKomm.find(".kk_kommantwort").slideUp(function() {
+	            // Zerstoere ckEditor
+	            domKomm.find(".antw").ckeditorGet().destroy();
+		    });
 			hideAntworten(domKomm);
 		}
 		// Zugeklappt ?
 		else if (!isAufgeklappt) 
 		{
-            domKomm.find(".kk_kommantwort").slideDown();
+            domKomm.find(".kk_kommantwort").slideDown(function() {
+                // Erzeuge ckEditor
+                domKomm.find(".antw").ckeditor(ckEditorKommentarConfig);
+            });
 			showAntworten(domKomm,kommObj[paramId]);
 		}
 	});
 	
-	// Antworten handler
+	// Antwort absenden Handler
 	domKomm.find(".komm_submit_bt").click(function(){
-		if(domKomm.find(".antw").val().trim() == "")
+		if(domKomm.find(".antw").ckeditorGet().getData().trim() == "")
 		{
 			showError("Bitte geben Sie etwas in das Antwortfeld ein.");
 			return;
 		}
 
-		$.when(sendeAntwortKomm(kommObj[paramId], domKomm.find(".antw").val())).done(function() {
-			domKomm.find(".antw").val("");
+		$.when(sendeAntwortKomm(kommObj[paramId], domKomm.find(".antw").ckeditorGet().getData())).done(function() {
+		    domKomm.find(".antw").ckeditorGet().setData("");
 			showAntworten(domKomm,kommObj[paramId]);
 		});
 
@@ -288,10 +293,11 @@ function sendeAntwortKomm(hautpKommId, text)
 	var params = {};
     params[paramId] = hautpKommId;
     params[paramInhalt] = text;
-	return ajaxCall(kommentarServlet, actionErstelleAntwortKommentar, 
+	return ajaxCall(kommentarServlet, 
+	        actionErstelleAntwortKommentar, 
 	        function(response) {},
 	        params
-	    );
+	);
 }
 function erstelleNeuesThemaKk(kkId, text)
 {
