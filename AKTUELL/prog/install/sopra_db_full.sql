@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 04. Jun 2015 um 16:04
+-- Erstellungszeit: 08. Jun 2015 um 12:21
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 `ID` int(11) NOT NULL,
   `Inhalt` mediumtext NOT NULL,
   `Erstelldatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Daten für Tabelle `benachrichtigung`
@@ -84,7 +84,11 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
 (1, 'Ihr Profil wurde geändert!', '2015-06-04 13:17:57'),
 (2, 'Sie wurden zur Veranstaltung Softwaretechnik II als Moderator hinzugefügt!', '2015-06-04 13:21:47'),
-(3, 'Die Veranstaltung Softwaretechnik II wurde bearbeitet.', '2015-06-04 13:29:03');
+(3, 'Die Veranstaltung Softwaretechnik II wurde bearbeitet.', '2015-06-04 13:29:03'),
+(4, 'Es wurde eine neuer Kommentar zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-08 08:07:16'),
+(5, 'Es wurde eine neuer Kommentar zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-08 08:15:56'),
+(6, 'Es wurde eine neuer Kommentar zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-08 08:19:42'),
+(7, 'Es wurde eine neuer Kommentar in der Veranstaltung "Softwaretechnik II" zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-08 09:39:51');
 
 -- --------------------------------------------------------
 
@@ -134,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_neuer_kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Kommentar` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -198,15 +202,15 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
   `NotifyVeranstAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `CryptedPW` varchar(60) NOT NULL COMMENT 'hash = salt(29 Zeichen) + crypted (Rest)'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Daten für Tabelle `benutzer`
 --
 
 INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Matrikelnummer`, `Studiengang`, `Nutzerstatus`, `NotifyKommentare`, `NotifyVeranstAenderung`, `NotifyKarteikartenAenderung`, `CryptedPW`) VALUES
-(1, 'admin@sopra.de', 'Der', 'Admin', 'default.png', 0, 'Sonstiges', 'ADMIN', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$MlwSUah1sDIHq5WztuxO8O/iW02X9/w1/J3PWkwSIhoMG0d6RieFC'),
-(2, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', 'default.png', 1234567, 'Informatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$tzvmaerwHkDXK/JH1rnAHul9tNg7UuBKsTGDj3C9nCHi6z6Iyonhm'),
+(1, 'admin@sopra.de', 'Der', 'Admin', 'default.png', 0, 'Sonstiges', 'ADMIN', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$AoMut6JI4GkLJZxbnqGMkeMC/ozfbynBdKZr90N5Wjs2CJ7aR59oi'),
+(2, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', 'default.png', 1234567, 'Informatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$a7C2vqqPpl0GiF1D5gTKXO/3EdVTIWGgGN9v7Az7x24W6vECiTLaC'),
 (3, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 815, 'Informatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3/LOgBMsK8Lu2fYo3j0WLOIjrCC/w/MTjBit.aezhz9ED.apKE5hS'),
 (4, 'mk@ulm.de', 'Marius', 'Kircher', 'default.png', 123456, 'Medieninformatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$7LlnqoZqrmtgSH4tHVdMjOFT50RwLillAq0p3Z.nz87tjTgHzxn9O'),
 (5, 'helmut.partsch@uni-ulm.de', 'Helmut', 'Partsch', 'default.png', 2345678, 'Sonstiges', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3s5UOGTQ6PtnW144JmofdOJKzk7WBYDPSEsbb3vrNl281tAJDrPbq');
@@ -221,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -229,6 +233,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 
 INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
 (2, 1, 2),
+(5, 2, 2),
 (4, 4, 2),
 (3, 5, 2);
 
@@ -269,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KommentarID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -337,7 +342,7 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Karteikarte` int(11) DEFAULT NULL,
   `Vaterkommentar` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -575,7 +580,7 @@ ALTER TABLE `benachrichtigung_veranstaltungsaenderung`
 -- Indexes for table `benutzer`
 --
 ALTER TABLE `benutzer`
- ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `eMail` (`eMail`), ADD KEY `Studiengang` (`Studiengang`);
+ ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `eMail` (`eMail`), ADD UNIQUE KEY `Matrikelnummer` (`Matrikelnummer`), ADD UNIQUE KEY `Matrikelnummer_2` (`Matrikelnummer`), ADD UNIQUE KEY `Matrikelnummer_3` (`Matrikelnummer`), ADD KEY `Studiengang` (`Studiengang`);
 
 --
 -- Indexes for table `benutzer_veranstaltung_zuordnung`
@@ -651,7 +656,7 @@ ALTER TABLE `veranstaltung_studiengang_zuordnung`
 -- AUTO_INCREMENT for table `benachrichtigung`
 --
 ALTER TABLE `benachrichtigung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_einladung_moderator`
 --
@@ -666,7 +671,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `benachrichtigung_neuer_kommentar`
 --
 ALTER TABLE `benachrichtigung_neuer_kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_profil_geaendert`
 --
@@ -681,12 +686,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 -- AUTO_INCREMENT for table `benutzer`
 --
 ALTER TABLE `benutzer`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
@@ -696,12 +701,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `bewertung_kommentar`
 --
 ALTER TABLE `bewertung_kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `kommentar`
 --
 ALTER TABLE `kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `moderator`
 --

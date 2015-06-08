@@ -220,7 +220,6 @@ public class JSONConverter
             j.put(ParamDefines.Gelesen, ben.isGelesen());
             SimpleDateFormat d = new SimpleDateFormat("HH:mm dd.MM.yyyy");
             String s = d.format(ben.getErstelldaum().getTime());
-            System.out.println(s);
             j.put(ParamDefines.benErstelldaum, s);            
             
             if (ben instanceof BenachrProfilGeaendert)

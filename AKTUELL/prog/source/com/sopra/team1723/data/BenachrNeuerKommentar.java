@@ -17,9 +17,9 @@ public class BenachrNeuerKommentar extends Benachrichtigung{
     }
 
     
-    public BenachrNeuerKommentar(int benutzer, Karteikarte k, int kommentarID)
+    public BenachrNeuerKommentar(int benutzer, Karteikarte k, Veranstaltung v, int kommentarID)
     {
-        super(-1, "Es wurde eine neuer Kommentar zur Karteikarte \""+k.getTitel()+"\" verfasst.", new GregorianCalendar(), benutzer, false);
+        super(-1, "Es wurde eine neuer Kommentar in der Veranstaltung \""+ v.getTitel() +"\" zur Karteikarte \""+k.getTitel()+"\" verfasst.", new GregorianCalendar(), benutzer, false);
         this.kommentarID = kommentarID;
         this.karteikarte = k;
     }

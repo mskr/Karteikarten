@@ -208,7 +208,13 @@ public class StartseitenServlet extends ServletController {
         catch (DbUniqueConstraintException e)
         {
             e.printStackTrace();
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorEmailAlreadyInUse);
+            if(e.getSpalte().equals("email"))
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam,"Entschuldigung, diese E-Mail Adresse ist bereits vergeben.");
+            else if(e.getSpalte().equals("matrikelnummer"))
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Entschuldigung, diese Matrikelnummer ist bereits vergeben.");
+            else 
+                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Entschuldigung, diese Daten sind bereits vergeben.");
+            
             outWriter.print(jo);
             return false;
         }
