@@ -22,6 +22,7 @@ var actionLogin = "login";
 var actionLogout = "logout";
 var actionRegister = "registrieren";
 var actionResetPasswort = "resetPasswort";
+var actionDeleteBenutzerBild = "deleteBenutzerBild";
 var actionGetBenutzer = "getBenutzer";
 var actionGetStudiengaenge = "getStudiengaenge";
 var actionGetStudgVn = "getStudgVn";

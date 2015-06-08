@@ -379,7 +379,51 @@ public class ProfilServlet extends ServletController {
         }
         
     }
+    private boolean benutzerBildLoeschen(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession aktuelleSession = request.getSession();
+        PrintWriter outWriter = response.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
 
+        JSONObject jo;
+        
+        
+        String userId = request.getParameter(ParamDefines.Id);
+        int id = 0;
+        try
+        {
+            id = Integer.parseInt(userId);
+        }
+        catch (NumberFormatException e)
+        {
+            e.printStackTrace();
+
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        if(id != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        if(dbManager.loescheProfilBild(id))
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+            outWriter.print(jo);
+            return true;
+        }
+        else
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+        
+    }
     @Override
     protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException,
     IOException
@@ -457,6 +501,10 @@ public class ProfilServlet extends ServletController {
         else if(aktuelleAction.equals(ParamDefines.ActionDeleteBenutzer))
         {
             benutzerLoeschen(req, resp);
+        }
+        else if(aktuelleAction.equals(ParamDefines.ActionDeleteBenutzerBild))
+        {
+            benutzerBildLoeschen(req, resp);
         }
         else
         {

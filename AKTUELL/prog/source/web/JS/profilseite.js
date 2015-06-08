@@ -50,7 +50,23 @@ $(document).ready(function() {
             $("#profil_avatar_aendern_file_name").hide("scale");
         }
     });
-    
+    $("#profil_avatar_loeschen_bt").click(function(){
+    	sindSieSicher($("#profil_avatar_loeschen_bt"), "Wollen sie das Bild wirklich löschen?",function(){
+		    var params = {};
+		    params[paramId] = currentProfilID;
+			ajaxCall(
+			    profilServlet,
+			    actionDeleteBenutzerBild,
+			    function() {
+			        showInfo("Ihr Profilbild wurde erfolgreich gelöscht!");
+			        $(".profil_avatar_img").attr("src","files/profilBilder/default.png");
+			        $(".user_MyProfilBild").attr("src","files/profilBilder/default.png");
+			        $("#profil_avatar_loeschen_bt").hide();
+			    },
+			    params
+			);
+		}, "bottom","left");
+    });
     getProfilStudiengaenge();
     registerProfilSpeichernEvents();
     registerAvatarAendernEvent();
@@ -127,9 +143,14 @@ function fillMyProfil(isAdmin)
 	
 	$(".profil_benutzername").text(jsonBenutzer[paramVorname] +" "+jsonBenutzer[paramNachname]);
 	$(".profil_avatar_img").attr("src", jsonBenutzer[paramProfilBild]);
-	
+	console.log(jsonBenutzer[paramProfilBild]);
+	if(jsonBenutzer[paramProfilBild].indexOf("default")==-1){
+		$("#profil_avatar_loeschen_bt").show();
+	}
+	else{
+		$("#profil_avatar_loeschen_bt").hide();
+	}
     $(".profil_loeschen").show();
-
     $("#profil_email").show();
     $("#profil_matrikelnummer").show();
     $("#profil_email_input").val(jsonBenutzer[paramEmail]);
@@ -175,7 +196,7 @@ function fillOtherProfil(benutzer, isAdmin)
 	UserName = benutzer[paramVorname]+" "+benutzer[paramNachname];
 	document.title = UserName;
 
-	
+	$("#profil_avatar_loeschen_bt").hide();
 	$(".profil_benutzername").text(benutzer[paramVorname] +" "+benutzer[paramNachname]);
 	$(".profil_avatar_img").attr("src", benutzer[paramProfilBild]);
 

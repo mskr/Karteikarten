@@ -69,7 +69,12 @@ public interface IDatenbankmanager {
      * @return true, falls kein Fehler auftritt, false bei einem Fehler
      */
     public boolean aendereProfilBild(int benutzerId, String dateiName);
-
+    /**
+     * Löscht das Profilbild eines Benutzers in der Datenbank.
+     * @param benutzerId referenziert eindeutig den Benutzer
+     * @return true, falls kein Fehler auftritt, false bei einem Fehler
+     */
+    public boolean loescheProfilBild(int benutzerId);
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt
      * {@link #passwortAendern(String, String)}. Diese Methode wird verwendet, wenn

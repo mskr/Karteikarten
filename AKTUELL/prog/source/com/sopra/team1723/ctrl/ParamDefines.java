@@ -15,6 +15,7 @@ public class ParamDefines
     public final static String ActionRegister = "registrieren";
     public final static String ActionResetPasswort = "resetPasswort";
     public final static String ActionDeleteBenutzer = "deleteBenutzer";
+    public final static String ActionDeleteBenutzerBild = "deleteBenutzerBild";
     public final static String ActionGetBenutzer = "getBenutzer";
     public final static String ActionGetOtherBenutzer = "getOtherBenutzer";
     public final static String ActionGetStudiengaenge = "getStudiengaenge";
