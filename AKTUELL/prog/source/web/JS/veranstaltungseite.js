@@ -486,6 +486,11 @@ function sortiereKarteikartenIDs(jsonKkIDs){
 
 function displayKarteikarte(id, callback, reload){
 	//reload = true, wenn neu geladen werden soll
+	if(id == undefined)
+	{
+		console.log("Kk id bei displayKarteikarte ist undefined. Warscheinlich keine Berechtigung. Sollte nicht passieren.");
+		gotoHauptseite();
+	}
     // Karteikarte schon in der Liste?
     kkDiv = $("#kk_all").find("[data-kkid=" + id + "]");
     if(kkDiv.length&&!reload)
@@ -496,10 +501,6 @@ function displayKarteikarte(id, callback, reload){
     }
     else
     {
-    	if(reload)
-    	{
-    		kkDiv.remove();
-    	}
     	destroyCKeditors($("#kk_all"));
     	$("#kk_all").children().fadeOut(200).promise().done(function(){
     		$("#kk_all").empty();
@@ -520,8 +521,6 @@ function displayKarteikarte(id, callback, reload){
 	        		callback();
 
         	}, params2);
-
-        
     	});
     }
 }
