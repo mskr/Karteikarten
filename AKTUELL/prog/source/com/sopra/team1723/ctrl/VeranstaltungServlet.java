@@ -467,7 +467,7 @@ public class VeranstaltungServlet extends ServletController {
             vId = Integer.parseInt(idStr);
 
             String pw = request.getParameter(ParamDefines.Password);
-            dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw, null, aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN);
+            dbManager.zuVeranstaltungEinschreiben(vId, aktuellerBenutzer.getId(), pw, aktuellerBenutzer.getNutzerstatus() == Nutzerstatus.ADMIN);
 
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
             outWriter.print(jo);

@@ -1197,7 +1197,7 @@ public class Datenbankmanager implements IDatenbankmanager
                     ps.setInt(2, veranstId);
                     ps.addBatch();
 
-                    zuVeranstaltungEinschreiben(veranstId, moderatorenIds[i], veranst.getZugangspasswort(), conMysql,
+                    zuVeranstaltungEinschreibenWrapper(veranstId, moderatorenIds[i], veranst.getZugangspasswort(), conMysql,
                             false);
                     schreibeBenachrichtigungWrapper(new BenachrEinlModerator(moderatorenIds[i], veranst), conMysql);
                 }
@@ -1205,7 +1205,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             }
 
-            zuVeranstaltungEinschreiben(veranstId, veranst.getErsteller().getId(), veranst.getZugangspasswort(),
+            zuVeranstaltungEinschreibenWrapper(veranstId, veranst.getErsteller().getId(), veranst.getZugangspasswort(),
                     conMysql, false); // ignoriere isAdmin, da Passwort ohnehin
                                       // korrekt
 
@@ -1327,7 +1327,7 @@ public class Datenbankmanager implements IDatenbankmanager
                     ps.setInt(2, veranst.getId());
                     ps.addBatch();
 
-                    zuVeranstaltungEinschreiben(veranst.getId(), moderatorenIds[i], veranst.getZugangspasswort(),
+                    zuVeranstaltungEinschreibenWrapper(veranst.getId(), moderatorenIds[i], veranst.getZugangspasswort(),
                             conMysql, false);
 
                 }
@@ -3265,18 +3265,37 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort, Connection conMysql,
+    public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort, boolean isAdmin) 
+            throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
+    {
+        Entry<Connection, ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+
+        try{
+            zuVeranstaltungEinschreibenWrapper(veranstaltung, benutzer, kennwort, conMysql, isAdmin);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            if (UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
+                throw new DbUniqueConstraintException();
+            else
+                throw e;
+        }
+        catch (DbFalsePasswortException e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
+        finally
+        {
+           conLock.getValue().unlock();
+        }
+    }
+    
+    private void zuVeranstaltungEinschreibenWrapper(int veranstaltung, int benutzer, String kennwort, Connection conMysql,
             boolean isAdmin) throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
     {
-        Entry<Connection, ReentrantLock> conLock = null;
-        boolean transaktion = true;
-        if (conMysql == null)
-        {
-            conLock = getConnection();
-            conMysql = conLock.getKey();
-            transaktion = false;
-        }
-
         PreparedStatement ps = null;
         ResultSet rs = null;
         try
@@ -3314,8 +3333,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            if (!transaktion)
-                conLock.getValue().unlock();
         }
     }
 
