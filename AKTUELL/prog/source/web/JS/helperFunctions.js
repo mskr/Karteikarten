@@ -80,6 +80,8 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
     $("#dialog_sicher_ja").click(function(e) {
         doCriticalThing();
     });
+    
+    $("#dialog_sicher_ja").focus();
 }
 
 var popupSeitenIterator = 0;
@@ -204,8 +206,8 @@ function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
  * um etwa eine Lade-Meldung auf der GUI anzuzeigen.
  * @param servletUrl ist ein String, der das richtige Servlet adressiert.
  * @param action ist ein String, der als Kommando fuer den Server fungiert.
- * @param params ist ein Objekt mit Parameternamen und jeweiligem Wert, die vom Server ausgelesen werden.
  * @param noerrorFunc ist eine Funktion, die bei einer Antwort mit errCode == 'noerror' ausgefuehrt wird.
+ * @param params ist ein Objekt mit Parameternamen und jeweiligem Wert, die vom Server ausgelesen werden.
  * @param errorHandlingFunc ist eine Funktion, die bei einer Antwort mit errCode != 'noerror' ausgefuehrt wird (kann optional uebergeben werden).
  * Achtung: Die errorHandlingFunc muss true zurueckgeben, falls der Error behandelt werden konnte und false andernfalls 
  * (dann wird der Default-Error-Text fuer den jeweiligen Code auf der GUI angezeigt).
@@ -629,6 +631,15 @@ function concatStrArr(strArr, seperator)
 	return str;
 }
 
+/**
+ * Ueberprueft ob der aktuell eingeloggte Benutzer
+ * bestimmte Rechte in einer Veranstaltung besitzt
+ * @param veranstObj Veranstaltung fuer die Rechte geprueft werden sollen
+ * @param checkErsteller Boolean. Gibt an, ob auf Erstellerrechte geprueft werden soll.
+ * @param checkAdmin Boolean. Gibt an, ob auf Administratorrechte geprueft werden soll.
+ * @param checkModerator Boolean. Gibt an, ob auf Moderatorenrechte geprueft werden soll.
+ * @returns {Boolean} True wenn der aktuelle Benutzer die entsprechenden Rechte besitzt.
+ */
 function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator){
 	if(checkErsteller == undefined)
 		checkErsteller = true;

@@ -311,8 +311,12 @@ public class Datenbankmanager implements IDatenbankmanager
         catch (SQLException e)
         {
             e.printStackTrace();
-            if (UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
-                throw new DbUniqueConstraintException();
+            if (UNIQUE_CONSTRAINT_ERROR == e.getErrorCode()){
+                if(e.getMessage().toLowerCase().contains("matrikelnummer"))
+                    throw new DbUniqueConstraintException("matrikelnummer");
+                else if(e.getMessage().toLowerCase().contains("email"))
+                    throw new DbUniqueConstraintException("email");
+            }
             else
                 throw e;
         }

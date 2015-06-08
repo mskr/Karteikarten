@@ -9,11 +9,10 @@ $(document).ready(function(){
 });
 
 function processKK_editClick(triggerElem){
-	id = triggerElem.parent().parent().parent().parent().data("kkid");
+	id = triggerElem.parents(".kk_wrapper").data("kkid");
 	var params = {};
     params[paramKkId] = id;
     params[paramVnId] = veranstaltungsObject[paramId];
-    karteikarteJSON = {};
     return ajaxCall(karteikartenServlet, actionGetKarteikarteByID, 
         function(response) {
 			kkBearbeiten(response);
@@ -46,20 +45,12 @@ function kkBearbeiten(kkJSON)
 		
     });
 	
-	var counter = 0;
-	$("#kkB_attributes").children().each(function(){			//fill with attributes...
-		if(isEven(counter))
+	// Attribute anhaken
+	$("#kkB_attributes input[type='checkbox']").each(function(i, elem) {
+		if(kkJSON[paramAttribute][i])
 		{
-			if(kkJSON[paramAttribute][counter/2]===true)
-			{
-				$(this).children().first().prop("checked",true);
-			}
-			else
-			{
-				$(this).children().first().prop("checked",false);
-			}
+		    $(elem).prop("checked", true);
 		}
-		counter++;
 	});
 	
 	$("#kk_bearbeiten_titel_input").val(kkJSON[paramTitel]);
@@ -355,10 +346,10 @@ function kkBearbeiten(kkJSON)
     function isAnyAttrSelected()
     {
     	var isTrue = false;
-    	$("#kkB_attributes").children().filter("span").children().filter("input").each(function(i){
-    		if($(this).prop("checked")==true){
+    	$("#kkB_attributes input[type='checkbox']").each(function(i, elem) {
+    		if($(elem).prop("checked")){
     			isTrue = true;
-    			return false;
+    			return false; // break loop
     		}
     	});
     	return isTrue;
@@ -367,10 +358,10 @@ function kkBearbeiten(kkJSON)
     function getSelectedKkBAttributes()
     {
     	var str = ""
-    	$("#kkB_attributes").children().filter("span").children().filter("input").each(function(i){
-    		str = str + $(this).prop("checked")+",";
+    	$("#kkB_attributes input[type='checkbox']").each(function(i, elem) {
+    		str = str + $(elem).prop("checked") + ",";
     	});
-    	str =str.substring(0, str.length - 1);
+    	str = str.substring(0, str.length - 1);
     	return str;
     }
     

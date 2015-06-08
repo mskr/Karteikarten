@@ -25,6 +25,7 @@ $(document).ready(function() {
 
 function fillHauptseite() 
 {
+	document.title = "Veranstaltungen";
     Waypoint.destroyAll();
     
 	// Studiengänge in auswahlliste anzeigen
@@ -50,14 +51,13 @@ function fillHauptseite()
 			
 			var studgArr = response[keyJsonArrResult];
 			var aktSemesterString = response[paramAktSemester];
-			var aktSemesterDI = 1; //default, falls kein match
-			document.title = "Veranstaltungen";
+			var aktSemesterId = studgArr[0][paramId]; //default, falls kein match
 
 			for(var i in studgArr) {
 				$("#vn_alle_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
 				$("#vn_erstellen_auswahl_semester").append("<option data-semesterid='"+ studgArr[i][paramId] +"' value='"+studgArr[i][paramSemester]+"'>"+studgArr[i][paramSemester]+"</option>");
 				if(aktSemesterString==studgArr[i][paramSemester]){
-					aktSemesterDI = Number(i)+1;
+					aktSemesterId = studgArr[i][paramId];
 				}
 			}
 			
@@ -70,7 +70,7 @@ function fillHauptseite()
 				return $(a).data('semesterid') > $(b).data('semesterid');
 			}).appendTo('#vn_erstellen_auswahl_semester');
 			
-			$("[data-semesterid='"+aktSemesterDI+"']").prop('selected', true);
+			$("[data-semesterid='"+aktSemesterId+"']").prop('selected', true);
 			$("#vn_erstellen_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
 	
 		}

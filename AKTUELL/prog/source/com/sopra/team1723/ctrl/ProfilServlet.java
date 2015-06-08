@@ -236,7 +236,6 @@ public class ProfilServlet extends ServletController {
         
         String cryptedNewPW = BCrypt.hashpw(neuesPasswort, BCrypt.gensalt());
         
-        String altesPasswort = request.getParameter(ParamDefines.Password);
         // Nutze diese Methode auch, wenn ein Admin die Email eines anderen Benutzers aendert
         int benutzerId;
         try{
@@ -248,7 +247,9 @@ public class ProfilServlet extends ServletController {
             outWriter.print(jo);
             return false;
         }
-        String benutzerMail = aktuellerBenutzer.geteMail();
+        
+        Benutzer user = dbManager.leseBenutzer(benutzerId);
+        String benutzerMail = user.geteMail();
 
         try
         {
@@ -267,9 +268,8 @@ public class ProfilServlet extends ServletController {
             // Eigenes Profil
             else
             {
-                // Nochmal mit richtiger groß und kleinschreibung holen
-               
                 // Prüfen ob altes Passwort richtig
+                String altesPasswort = request.getParameter(ParamDefines.Password);
                 dbManager.pruefeLogin(benutzerMail, altesPasswort);
             }
             // neues Passwort angegeben ?

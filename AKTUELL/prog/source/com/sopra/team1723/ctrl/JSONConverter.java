@@ -218,7 +218,7 @@ public class JSONConverter
             j.put(ParamDefines.Id, ben.getId());
             j.put(ParamDefines.Inhalt, ben.getInhalt());
             j.put(ParamDefines.Gelesen, ben.isGelesen());
-            SimpleDateFormat d = new SimpleDateFormat("hh:mm dd.MM.yyyy");
+            SimpleDateFormat d = new SimpleDateFormat("HH:mm dd.MM.yyyy");
             String s = d.format(ben.getErstelldaum().getTime());
             j.put(ParamDefines.benErstelldaum, s);            
             

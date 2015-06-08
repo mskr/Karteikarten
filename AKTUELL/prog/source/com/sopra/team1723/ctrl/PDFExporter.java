@@ -81,6 +81,7 @@ public class PDFExporter
                                                        // Regeln
 
         // HTML Tag wird ersetzt durch Start und Ende Tag in Latex
+        tagReplaceList.put("p", new Tupel<String, String>("", newLineWithSeparation+newLineWithSeparation));
         tagReplaceList.put("br", new Tupel<String, String>("\\newline" + newLineWithSeparation, ""));
         tagReplaceList.put("span", new Tupel<String, String>("", ""));
         tagReplaceList.put("strong", new Tupel<String, String>("\\textbf{", "}"));
@@ -93,7 +94,7 @@ public class PDFExporter
                 + newLineWithSeparation, "\\end{enumerate}" + newLineWithSeparation));
         tagReplaceList.put("ul", new Tupel<String, String>(newLineWithSeparation + "\\begin{itemize}"
                 + newLineWithSeparation, "\\end{itemize}" + newLineWithSeparation));
-        tagReplaceList.put("li", new Tupel<String, String>("\\item", "" + newLineWithSeparation));
+        tagReplaceList.put("li", new Tupel<String, String>("\\item ", newLineWithSeparation));
         tagReplaceList.put("h1", new Tupel<String, String>("\\textbf{", "}" + newLineWithSeparation));
         tagReplaceList.put("h2", new Tupel<String, String>("\\textbf{", "}" + newLineWithSeparation));
         tagReplaceList.put("h3", new Tupel<String, String>("\\textbf{", "}" + newLineWithSeparation));
@@ -494,7 +495,8 @@ public class PDFExporter
 
         if (!n.nodeName().equals("body"))
         {
-            result += mapHTMLTagToLaTeXTag(n, true) + " ";
+            String tag = mapHTMLTagToLaTeXTag(n, true);
+            result += tag;
         }
 
         String content = n.ownText();
@@ -510,7 +512,7 @@ public class PDFExporter
         }
         else
         {
-            result += replaceInvalidChars(content) + newLineWithSeparation;
+            result += replaceInvalidChars(content);
             for (Element n2 : nodes)
             {
                 result += recursiveTransformHTLMtoLatex(n2, depth + 1);
@@ -519,7 +521,8 @@ public class PDFExporter
 
         if (!n.nodeName().equals("body"))
         {
-            result += mapHTMLTagToLaTeXTag(n, false);
+            String tag = mapHTMLTagToLaTeXTag(n, false);
+            result += tag;
         }
         return result;
     }

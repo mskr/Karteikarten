@@ -61,8 +61,6 @@ $(document).ready(function() {
  */
 function fillProfilseite() 
 {
-    Waypoint.destroyAll();
-    
     currentProfilID = getUrlParameterByName(urlParamId);
     
     if(currentProfilID == jsonBenutzer[paramId])
@@ -123,6 +121,8 @@ function fillMyProfil(isAdmin)
 	$(".profil_loeschen").show();
 	$("#profil_einstellungen").show();
 	$("#profil_passwort ").show();
+	$("#profil_pw_alt_div").show();
+	$("#profil_passwort_alt_input").prop("required",true);
 	$("#profil_daten_speichern").show();
 	
 	$(".profil_benutzername").text(jsonBenutzer[paramVorname] +" "+jsonBenutzer[paramNachname]);
@@ -207,7 +207,9 @@ function fillOtherProfil(benutzer, isAdmin)
 		$(".profil_avatar_overlay").hide();
 		$(".profil_loeschen").hide();
 		$("#profil_einstellungen").hide();
-		$("#profil_passwort ").hide();
+		$("#profil_pw_alt_div").show();
+		$("#profil_passwort_alt_input").prop("required",true);
+		$("#profil_passwort").hide();
 		$("#profil_daten_speichern").hide();
 
 	    $("#profil_email_input").val("");
@@ -228,7 +230,9 @@ function fillOtherProfil(benutzer, isAdmin)
 		$(".profil_avatar_overlay").show();
 		$(".profil_loeschen").show();
 		$("#profil_einstellungen").show();
-		$("#profil_passwort ").show();
+		$("#profil_passwort").show();
+		$("#profil_passwort_alt_input").prop("required",false);
+		$("#profil_pw_alt_div").hide();
 		$("#profil_daten_speichern").show();
 
 	    $("#profil_email_input").val(benutzer[paramEmail]);
@@ -324,13 +328,17 @@ function registerProfilSpeichernEvents() {
         	
             var params = {};
             params[paramPasswortNew] = escape(pwNeu);
-            params[paramPasswort] = escape(pwAlt);
+            if(jsonBenutzer[paramNutzerstatus] != "ADMIN")
+            	params[paramPasswort] = escape(pwAlt);
             params[paramId] = currentProfilID;
             ajaxCall(
                 profilServlet,
                 actionAenderePasswort,
                 function(response) {
                     showInfo("Änderungen gespeichert.");
+                    $("#profil_passwort_alt_input").removeAttr("style");
+                    $("#profil_passwort_wdh_input").removeAttr("style");
+                    $("#profil_passwort_input").removeAttr("style");
                     fillProfilseite();
                 },
                 params,

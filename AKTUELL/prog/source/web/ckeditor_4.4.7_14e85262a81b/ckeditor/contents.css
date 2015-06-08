@@ -7,26 +7,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 body
 {
-	/* Font */
 	font-family: Computer Modern Serif, sans-serif, Arial, Verdana, "Trebuchet MS";
 	font-size: 1em;
-
-	/* Text color */
 	color: black;
-
-	/* Remove the background color to make it transparent */
-	/*background-color: #333333 !important;*/
-
 	margin: 1em;
-	
 	overflow-y: auto;
 }
-
-/* Filter latex images
-img[src*="gif.latex"] {
-    filter: invert(1);
-	-webkit-filter: invert(1);
-}*/
 
 .cke_editable
 {

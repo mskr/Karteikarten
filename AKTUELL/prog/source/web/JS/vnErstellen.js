@@ -105,7 +105,6 @@ function registerVeranstErzeugeHandler() {
                             jsonSuchErgebnis[paramStudiengang], 
                             jsonSuchErgebnis, undefined,undefined
                     );
-                    $("#vn_erstellen_stg_list").focus(); //TODO geht nicht
                 }
             },
             categoryClassMapping,
@@ -122,7 +121,6 @@ function registerVeranstErzeugeHandler() {
                             jsonSuchErgebnis[paramVorname] + " " + jsonSuchErgebnis[paramNachname], 
                             jsonSuchErgebnis, undefined,undefined
                     );
-                    $("#vn_erstellen_mod_list").focus(); //TODO geht nicht
                 }
             },
             categoryClassMapping,

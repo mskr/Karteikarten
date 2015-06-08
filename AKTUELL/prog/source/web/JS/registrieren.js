@@ -33,6 +33,7 @@ $(document).ready(function() {
                     startseitenServlet,
                     actionRegister,
                     function() {
+                    	$(".login_input").removeAttr("style");
                         showInfo("Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.");
                     },
                     params

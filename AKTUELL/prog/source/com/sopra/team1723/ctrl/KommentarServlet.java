@@ -52,6 +52,17 @@ public class KommentarServlet extends ServletController {
             return false;
         }
         
+        // Rechte pruefen
+        Kommentar kommVater = dbManager.leseKommentar(kommVaterId);
+        Karteikarte karteikarte = dbManager.leseKarteikarte(kommVater.getKarteikartenID());
+        Veranstaltung veranstaltung = dbManager.leseVeranstaltung(karteikarte.getVeranstaltung());
+        if(!veranstaltung.isKommentareErlaubt())
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return false;
+        }
+        
         Kommentar k = new Kommentar(kommInhalt, aktuellerBenutzer, kommVaterId, -1,0);
         if(dbManager.schreibeKommentar(k))
         {
@@ -92,6 +103,16 @@ public class KommentarServlet extends ServletController {
         {
             e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return false;
+        }
+        
+        // Rechte pruefen
+        Karteikarte karteikarte = dbManager.leseKarteikarte(kommKKId);
+        Veranstaltung veranstaltung = dbManager.leseVeranstaltung(karteikarte.getVeranstaltung());
+        if(!veranstaltung.isKommentareErlaubt())
+        {
+            JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return false;
         }
