@@ -331,6 +331,7 @@ function kkBearbeiten(kkJSON)
     	$("#kk_bearbeiten_text_area").show();
 		$("#df_area_kk_b").show();
         $("#kk_bearbeiten_popup input[type='checkbox']").prop("checked",false);
+		$("#kk_bearbeiten_content").show();
     	$("#kk_bearbeiten_titel_input").val("");
     	$("#kk_bearbeiten_TA").val("");
     	kkBearbeitenDropZone.removeAllFiles(true);
@@ -409,13 +410,13 @@ function processKKbearbeiten(id,text,titel,attributes,
     params[paramVerweisUebung] = verweisUebungArr;
     params[paramVerweisSonstiges] = verweisSonstigesArr;
     
-    if(kkBearbeitenDropZone.files.length==0){
+    if(kkBearbeitenDropZone.files.length==0 || $("#kk_jetztNeuesKapitel").prop("checked")){
 		params[paramType] = "";
 		params[paramKkUploadID] = -1;
     }
     else if(kkBearbeitenDropZone.files[0].fromServer)
     {
-		params[paramType] = "nothing";
+		params[paramType] = "doNothing";
 		params[paramKkUploadID] = -1;
 	}
     else

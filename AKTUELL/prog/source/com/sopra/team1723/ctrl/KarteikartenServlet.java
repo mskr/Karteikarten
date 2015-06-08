@@ -789,6 +789,28 @@ public class KarteikartenServlet extends ServletController
         
         if(dbManager.loescheKarteikarte(karteikartenID))
         {
+            String relativerPfad = "";
+            if (k.getTyp() == KarteikartenTyp.VIDEO)
+            {
+                relativerPfad = dirKKVideo + karteikartenID + ".mp4";
+            }
+            else
+            {
+                relativerPfad = dirKKBild + karteikartenID + ".png";
+            }
+
+            ServletContext servletContext;
+            String contextPath;
+
+            servletContext = getServletContext();
+            contextPath = servletContext.getRealPath(File.separator);
+
+            String absolutePfad = contextPath + relativerPfad;
+            File newName = new File(absolutePfad);
+
+            // Datei mit id namen löschen
+            FileUtils.deleteQuietly(newName);
+                    
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         }
         else
