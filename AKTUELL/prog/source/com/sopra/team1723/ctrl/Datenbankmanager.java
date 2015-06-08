@@ -2995,7 +2995,9 @@ public class Datenbankmanager implements IDatenbankmanager
             if (karteik == null)
                 return false;
 
-            schreibeBenachrichtigung(new BenachrNeuerKommentar(kommentar.getErsteller().getId(), karteik, kommentarId),
+            Veranstaltung v = leseVeranstaltung(karteik.getVeranstaltung());
+            
+            schreibeBenachrichtigung(new BenachrNeuerKommentar(kommentar.getErsteller().getId(), karteik,v, kommentarId),
                     conMysql);
 
             conMysql.commit();
