@@ -15,6 +15,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONObject;
 
@@ -99,6 +102,15 @@ public class FileUploadServlet extends ServletController
                  String relativerPfad = dirKKBild + dateiName;
                  String absolutePath = contextPath + relativerPfad;
                  ImageIO.write(originalImage, "png", new File(absolutePath));
+                 
+                 Timer timer = new Timer();
+                 timer.schedule(new TimerTask() {
+                     @Override
+                     public void run() {
+                         FileUtils.deleteQuietly(new File(absolutePath));
+                     }
+                   }, 60*60*1000);
+                 
                  System.out.println(UploadID);
                  JSONObject jo = JSONConverter.toJson(UploadID);
                  outWriter.print(jo);
@@ -167,6 +179,14 @@ public class FileUploadServlet extends ServletController
                  }
                  JSONObject jo = JSONConverter.toJson(UploadID);
                  outWriter.print(jo);
+
+                 Timer timer = new Timer();
+                 timer.schedule(new TimerTask() {
+                     @Override
+                     public void run() {
+                         FileUtils.deleteQuietly(new File(absolutePath));
+                     }
+                   }, 60*60*1000);
             }
         }
         else if(aktuelleAction.equals(ParamDefines.ActionUploadProfilBild))

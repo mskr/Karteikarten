@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 
 import com.sopra.team1723.data.*;
@@ -300,11 +301,11 @@ public class KarteikartenServlet extends ServletController
         {
             String titel = req.getParameter(ParamDefines.Titel);
             String inhalt = req.getParameter(ParamDefines.Inhalt);
-            String uploadedID = "";
+            String uploadedID = req.getParameter(ParamDefines.UploadID);
             int kkID = Integer.parseInt(req.getParameter(ParamDefines.Id));
             
-            Karteikarte k = dbManager.leseKarteikarte(kkID);
-            Veranstaltung v = dbManager.leseVeranstaltung(k.getVeranstaltung());
+            Karteikarte oldKk = dbManager.leseKarteikarte(kkID);
+            Veranstaltung v = dbManager.leseVeranstaltung(oldKk.getVeranstaltung());
             
             if(v.getErsteKarteikarte() == kkID)
             {
@@ -318,16 +319,18 @@ public class KarteikartenServlet extends ServletController
             if (typ.equals("mp4"))
             {
                 kkTyp = KarteikartenTyp.VIDEO;
-                uploadedID = req.getParameter(ParamDefines.UploadID);
             }
-            else if (typ.equals("jpg") || typ.equals("png"))
+            else if (typ.equals("jpg") || typ.equals("jepg") || typ.equals("png"))
             {
                 kkTyp = KarteikartenTyp.BILD;
-                uploadedID = req.getParameter(ParamDefines.UploadID);
             }
             else if (typ.equals(""))
             {
                 kkTyp = KarteikartenTyp.TEXT;
+            }
+            else if (typ.equals("nothing"))
+            {
+                kkTyp = oldKk.getTyp();
             }
             else
                 throw new Exception();
@@ -378,72 +381,73 @@ public class KarteikartenServlet extends ServletController
                     bAttribute[1], bAttribute[2], bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6],
                     bAttribute[7], bAttribute[8], bAttribute[9], verweise);
 
-            if (kkTyp == KarteikartenTyp.VIDEO || kkTyp == KarteikartenTyp.BILD)
+           
+            // Kein text mehr und dateien müssen geändert werden?
+
+            String relativerPfad = "";
+            String relativerNeuerPfad = "";
+            if (kkTyp == KarteikartenTyp.VIDEO)
             {
-                String relativerPfad = "";
-                String relativerNeuerPfad = "";
-                if (kkTyp == KarteikartenTyp.VIDEO)
-                {
-                    relativerPfad = dirKKVideo + uploadedID + ".mp4";
-                    relativerNeuerPfad = dirKKVideo + kkID + ".mp4";
-                }
-                else
-                {
-                    relativerPfad = dirKKBild + uploadedID + ".png";
-                    relativerNeuerPfad = dirKKBild + kkID + ".png";
-                }
+                relativerPfad = dirKKVideo + uploadedID + ".mp4";
+                relativerNeuerPfad = dirKKVideo + kkID + ".mp4";
+            }
+            else
+            {
+                relativerPfad = dirKKBild + uploadedID + ".png";
+                relativerNeuerPfad = dirKKBild + kkID + ".png";
+            }
 
-                ServletContext servletContext;
-                String contextPath;
+            ServletContext servletContext;
+            String contextPath;
 
-                servletContext = getServletContext();
-                contextPath = servletContext.getRealPath(File.separator);
+            servletContext = getServletContext();
+            contextPath = servletContext.getRealPath(File.separator);
 
-                String absolutePath = contextPath + relativerPfad;
-                String absoluteNeuerPfad = contextPath + relativerNeuerPfad;
+            String absolutePath = contextPath + relativerPfad;
+            String absoluteNeuerPfad = contextPath + relativerNeuerPfad;
+            File oldName = new File(absolutePath);
+            File newName = new File(absoluteNeuerPfad);
 
-                // delete old file first if exists, check absoluteNeuerPfad
-                // therefore
-                File f = new File(absoluteNeuerPfad);
-                if (f.exists() && !f.isDirectory())
-                {
-                    // delete if exists
-                    f.delete();
-                }
+            // Datei löschen
+            if (typ.equals("") && uploadedID.equals("-1"))
+            {
+                // Datei mit id namen löschen
+                FileUtils.deleteQuietly(newName);
+            }
+            // Nichts tun
+            else if (typ.equals("nothing") && uploadedID.equals("-1"))
+            {
 
-                File oldName = new File(absolutePath);
-                File newName = new File(absoluteNeuerPfad);
+            }
+            // Datei updaten
+            else
+            {
                 try
                 {
+                    FileUtils.deleteQuietly(newName);
                     if (!oldName.renameTo(newName))
                     {
                         throw new Exception();
                     }
                 }
-                catch (SecurityException e)
+                catch (Exception e)
                 {
                     e.printStackTrace();
                     jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                     outWriter.print(jo);
                 }
-                boolean result = dbManager.bearbeiteKarteikarte(karteikarte);
-                if (!result)
-                {
-
-                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-                    outWriter.print(jo);
-                }
             }
-            else
+            
+            
+
+            boolean result = dbManager.bearbeiteKarteikarte(karteikarte);
+            if (!result)
             {
-                boolean result = dbManager.bearbeiteKarteikarte(karteikarte);
-                if (!result)
-                {
-                    jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-                    outWriter.print(jo);
-                }
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+                return true;
             }
-
+            
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
 
         }

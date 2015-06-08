@@ -1,10 +1,9 @@
-var UPLOADIDSET = -1;
-var UPLOADTYPE ="";
+
+$(document).ready(function(){
+	kkErstellenDropZone = $("#df_area_kk").dropzone(myDropzoneConfig).get(0).dropzone;
+});
 
 
-	
-Dropzone.autoDiscover = false;
-var UPLOAD_ID;
 function newKarteikarte(triggerElem) {
     
 	var vater = findVater(triggerElem);
@@ -161,15 +160,20 @@ function newKarteikarte(triggerElem) {
     		showError("Bitte geben Sie ihrer Karteikarte einen Titel.");
     		return false;
     	}
-    	else if(text == "" && UPLOADIDSET == -1 && !$("#kk_neuesKapitel").prop("checked"))
+    	else if(text == "" && kkErstellenDropZone.files.length == 0 && !$("#kk_neuesKapitel").prop("checked"))
     	{
     		showError("Bitte füllen sie ihre Karteikarte mit einem Inhalt.");
     		return false;
     	}
+    	else if(uploadInProgress)
+		{
+    		showError("Bitte warten. Datei wird hochgeladen.");
+    		return false;
+		}
     	else
     	{
     		processKKerstellen(text,titel,attributes, bruder, vater, 
-    	            verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
+    				verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
     		return true;
     	}
     }
@@ -181,7 +185,7 @@ function newKarteikarte(triggerElem) {
     	$("#kk_erstellen_popup input[type='checkbox']").prop("checked",false);
     	$("#kk_erstellen_titel_input").val("");
     	$("#kk_erstellen_TA").val("");
-        myDropzone.removeAllFiles(true);
+    	kkErstellenDropZone.removeAllFiles(true);
     	// Zerstoere Verweis Baeume mit allen Handlern
     	$("#kk_erstellen_popup").find(".kk_verweise_baum").empty();
     }
@@ -251,74 +255,7 @@ function newKarteikarte(triggerElem) {
             );
     }
     
-    try
-    {
-		myDropzone = $("#df_area_kk").dropzone({
-        url: actionUploadKKBild,
-        maxFilesize: 1,
-        acceptedFiles: ".jpeg,.jpg,.png,.mp4",
-        autoDiscover :false,
-        autoProcessQueue:false,
-        createImageThumbnails: true,
-        uploadMultiple: false,
-        addRemoveLinks: true,
-            init: function() {
-            	var myDropzone = this;
-            	
-	           	$(".dz-error-message").remove();
-	           	
-	       	    this.on("addedfile", function(file) {
-	       	    	
-	       	    	var ext = file.name.substr(file.name.lastIndexOf('.') + 1);
-	       	    	console.log(ext);
-	       	    	var uploadAction = false;
-	       	    	if(ext=="png"||ext=="jpg"||ext=="jpeg"){
-	       	    		uploadAction = actionUploadKKBild;
-	       	    	}
-	       	    	else if(ext=="mp4"){
-	       	    		uploadAction = actionUploadKKVideo;
-	       	    	}
-	       	    	else{
-	       	    		showError("Bitte verwenden sie für Bilder .png oder .jpg und für Videos .mp4 als Format!");
-	       	         	myDropzone.removeAllFiles(true);
-	       	    		return false;
-	       	    	}
-	       	    	
-	       	    	var params = {};
-	       	    	$("#dz_info_message").hide();
-	       	    	$(".dz-preview").addClass("center");
-	       	    	$(".dz-error-message").remove();
-	       	    	$(".dz-error-mark").remove();
-	       	    	$(".dz-success-mark").remove();
-	       	    	$(".dz-preview").css("margin","40px");
-	       	    	clone = $(".dz-size");
-	       	    	$(".dz-size").remove();
-	       	    	$(".dz-details").append(clone);
-	       	    	
-	       		    function successFkt(data){
-	       		    	UPLOADTYPE = ext;
-//	       		    	$("#cke_kk_erstellen_TA").hide();
-	           	    	UPLOADIDSET = data.strResult;
-	           	    	console.log("Zurückgegebene UploadID:"+UPLOADIDSET);
-	       		    }
-	       	    	uploadFile(file, successFkt, uploadAction, params);
-	       	    });
-	       	    
-	       	    this.on("removedfile", function(file) {
-	       	    	$("#dz_info_message").show();
-//	       	    	$("#cke_kk_erstellen_TA").show();
-	       	    	UPLOADTYPE = "";
-	       	    	UPLOADIDSET = -1;
-	       	    });
-	       	  }
-        }).get(0).dropzone;
-		$( "#file-dropzone" ).droppable();
-    }
-    catch(e)
-    {
-    	myDropzone.removeAllFiles(true);
-    }
-    	
+   
 }
 
 /**

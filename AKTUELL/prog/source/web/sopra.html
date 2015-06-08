@@ -54,6 +54,8 @@
 <script src="zeroclipboard-2.2.0/dist/ZeroClipboard.js"></script>
 <!-- Dropzone.js Skript -->
 <script src="JS/libs/dropzone.js"></script>
+<!-- Dropzone config -->
+<script src="JS/dropzoneConfig.js"></script>
 <!-- HTML5-Videoplayer -->
 <script src="JS/videoPlayer.js"></script>
 <!-- Zentrale Variablen -->
@@ -250,10 +252,9 @@
 						<div class="fallback">
 							<input name="file" type="file" />
 						</div>
-				        <div class="dz-message" id="dz_info_message">
-							Klicken oder ziehen sie eine Datei in das Feld.<br>
-							Sie können keinen Text und eine Datei gleichzeitig verwenden.
-							
+						<div class="dz-message" data-dz-message>
+							<span>Klicken oder ziehen sie eine Datei in das Feld.
+							</span>
 						</div>
 				    </form>
 	 			</div>
@@ -344,10 +345,9 @@
 						<div class="fallback">
 							<input name="file" type="file" />
 						</div>
-				        <div class="dz-message" id="dz_info_message">
-							Klicken oder ziehen sie eine Datei in das Feld.<br>
-							Sie können keinen Text und eine Datei gleichzeitig verwenden.
-							
+						<div class="dz-message" data-dz-message>
+							<span>Klicken oder ziehen sie eine Datei in das Feld.
+							</span>
 						</div>
 				    </form>
 	 			</div>
@@ -725,23 +725,21 @@ Dann aber so leer.
 </div>
 <!-- Template Dropzone Uploaded Image -->
 
-<div id="kk_b_BildPreviewTemplate" class="dz-preview center dz-image-preview" style="margin: 40px; display:none;">
-	<div class="dz-image">
-		<img data-dz-thumbnail="">
-	</div> 
-	<div class="dz-details">
-		<div class="dz-filename">
-			<span data-dz-name=""></span>
+<div id="kk_PreviewTemplate" class="dz-preview center dz-image-preview" style="margin: 40px; display:none;">
+		<div class="dz-details">
+			<img data-dz-thumbnail style="width:120px;max-height:120px;"/>
+			<div class="dz-filename">
+				<span data-dz-name></span>
+			</div>
+			<div class="dz-size" data-dz-size></div>
 		</div>
-		<div class="dz-size">
-			<span data-dz-size="">
-			</span>
-		</div>
-	</div>
 		<div class="dz-progress">
-			<span class="dz-upload" data-dz-uploadprogress=""></span>
+			<span class="dz-upload" data-dz-uploadprogress></span>
 		</div>
-	<a id="KKbearbeitenRemoveLink" class="dz-remove" href="javascript:undefined;" data-dz-remove="">Remove file</a>
+		<div class="dz-error-message">
+			<span data-dz-errormessage></span>
+		</div>
+		<br><a data-dz-remove>Datei entfernen</a>
 </div>
 
 <!-- Template Karteikarte -->

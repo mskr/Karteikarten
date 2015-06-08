@@ -1,11 +1,12 @@
-var myDropzone;
-var UPLOADIDSET = -1;
-var UPLOADTYPE ="";
+
 $(document).ready(function(){
 	// Nicht hier sondern beim erstellen. Neue Karteikarten werden sonst nicht beachtet !
 //	$(".KKbearbeiten").click(function(){
 //		processKK_editClick($(this));
 //	});
+	
+
+	kkBearbeitenDropZone = $("#df_area_kk_b").dropzone(myDropzoneConfig).get(0).dropzone;
 });
 
 function processKK_editClick(triggerElem){
@@ -25,7 +26,6 @@ function kkBearbeiten(kkJSON)
 {
 	$("#df_area_kk_b").find("#kk_b_BildPreviewTemplate").remove();
 	$("#df_area_kk_b").find(".dz-message").show();
-	appendDropzone();
 	$("#kk_jetztNeuesKapitel ~ label").html("Diese Karteikarte als Überschrift verwenden.");
 	$("#kk_jetztNeuesKapitel").off();
 	$("#kk_jetztNeuesKapitel").change(function(e) {
@@ -78,32 +78,50 @@ function kkBearbeiten(kkJSON)
 			  type: "HEAD",
 			  url: "files/images/"+kkJSON[paramId]+".png",
 			  success: function(msg){
-				$("#df_area_kk_b").find(".dz-message").hide(0);
-			    size = String(xhr.getResponseHeader('Content-Length')/1000);
-			    size = myRound(size,2);
-			    domElem = $("#kk_b_BildPreviewTemplate").clone();
-			    domElem.find(".dz-size").remove();
-			    domElem.find(".dz-size").children().first().html("<strong>"+size+"</strong> KB");
-			    domElem.css("display","block");
-			    
-			    name = kkJSON[paramId]+".png";
-			    domElem.find(".dz-filename").children().first().html(name);
-			    domElem.find(".dz-image").show();
-			    domElem.find(".dz-image").children().first().attr("src","files/images/"+name).css({height:"120px",width:"120px"});
-			    
-			    
-			    if($("#df_area_kk_b").find("#kk_b_BildPreviewTemplate").length===0){
-			    	$("#df_area_kk_b").append(domElem);
-			    }
-			    else{
-			    	$("#kk_b_BildPreviewTemplate").replaceWith(domElem);
-			    }
-			    
-			    $("#KKbearbeitenRemoveLink").one("click",function(){
-			    	$("#kk_b_BildPreviewTemplate").remove();
-			    	$("#kk_bearbeiten_text_area").slideDown(300);
-			    	$("#df_area_kk_b").find(".dz-message").fadeIn(200);
-			    });
+				  var mockFile = { 
+						  name: kkJSON[paramId]+".png", 
+						  size: xhr.getResponseHeader('Content-Length'),
+						  accepted: true,
+						  fromServer: true					// Wird verwendet um zu prüfen, ob file neu ist oder nciht
+						  };
+				  mockFile.upload = {bytesSent: xhr.getResponseHeader('Content-Length')};
+				  mockFile.kind = "file";
+				  
+				  // Call the default addedfile event handler
+				  kkBearbeitenDropZone.emit("addedfile", mockFile);
+				  kkBearbeitenDropZone.files.push(mockFile);
+				  // And optionally show the thumbnail of the file:
+				  kkBearbeitenDropZone.emit("thumbnail", mockFile, "files/images/"+kkJSON[paramId]+".png");
+
+//				  var existingFileCount = 1; // The number of files already uploaded
+//				  kkBearbeitenDropZone.options.maxFiles = kkBearbeitenDropZone.options.maxFiles - existingFileCount;
+
+//				$("#df_area_kk_b").find(".dz-message").hide(0);
+//			    size = String(xhr.getResponseHeader('Content-Length')/1000);
+//			    size = myRound(size,2);
+//			    domElem = $("#kk_b_BildPreviewTemplate").clone();
+//			    domElem.find(".dz-size").remove();
+//			    domElem.find(".dz-size").children().first().html("<strong>"+size+"</strong> KB");
+//			    domElem.css("display","block");
+//			    
+//			    name = kkJSON[paramId]+".png";
+//			    domElem.find(".dz-filename").children().first().html(name);
+//			    domElem.find(".dz-image").show();
+//			    domElem.find(".dz-image").children().first().attr("src","files/images/"+name).css({height:"120px",width:"120px"});
+//			    
+//			    
+//			    if($("#df_area_kk_b").find("#kk_b_BildPreviewTemplate").length===0){
+//			    	$("#df_area_kk_b").append(domElem);
+//			    }
+//			    else{
+//			    	$("#kk_b_BildPreviewTemplate").replaceWith(domElem);
+//			    }
+//			    
+//			    $("#KKbearbeitenRemoveLink").one("click",function(){
+//			    	$("#kk_b_BildPreviewTemplate").remove();
+//			    	$("#kk_bearbeiten_text_area").slideDown(300);
+//			    	$("#df_area_kk_b").find(".dz-message").fadeIn(200);
+//			    });
 			  }
 			});
 	}
@@ -113,32 +131,20 @@ function kkBearbeiten(kkJSON)
 			  type: "HEAD",
 			  url: "files/videos/"+kkJSON[paramId]+".mp4",
 			  success: function(msg){
-				$("#df_area_kk_b").find(".dz-message").hide(0);
-			    size = String(xhr.getResponseHeader('Content-Length')/1000);
-			    size = myRound(size,2);
-			    domElem = $("#kk_b_BildPreviewTemplate").clone();
-			    domElem.find(".dz-size").remove();
-			    domElem.find(".dz-size").children().first().html("<strong>"+size+"</strong> KB");
-			    domElem.css("display","block");
-			    
-			    name = kkJSON[paramId]+".mp4";
-			    domElem.find(".dz-filename").children().first().html(name);
-			    
-			    domElem.find(".dz-image").hide();
-			    
-			    
-			    if($("#df_area_kk_b").find("#kk_b_BildPreviewTemplate").length===0){
-			    	$("#df_area_kk_b").append(domElem);
-			    }
-			    else{
-			    	$("#kk_b_BildPreviewTemplate").replaceWith(domElem);
-			    }
-			    
-			    $("#KKbearbeitenRemoveLink").one("click",function(){
-			    	$("#kk_b_BildPreviewTemplate").remove();
-			    	$("#kk_bearbeiten_text_area").slideDown(300);
-			    	$("#df_area_kk_b").find(".dz-message").fadeIn(200);
-			    });
+				  var mockFile = { 
+						  name: kkJSON[paramId]+".mp4", 
+						  size: xhr.getResponseHeader('Content-Length'),
+						  accepted: true,
+						  fromServer: true					// Wird verwendet um zu prüfen, ob file neu ist oder nciht
+						  };
+				  mockFile.upload = {bytesSent: xhr.getResponseHeader('Content-Length')};
+				  mockFile.kind = "file";
+				  
+				  // Call the default addedfile event handler
+				  kkBearbeitenDropZone.emit("addedfile", mockFile);
+				  kkBearbeitenDropZone.files.push(mockFile);
+				  // And optionally show the thumbnail of the file:
+				  kkBearbeitenDropZone.emit("thumbnail", mockFile, "files/videos/"+kkJSON[paramId]+".mp4");
 			  }
 			});
 	}
@@ -301,11 +307,16 @@ function kkBearbeiten(kkJSON)
     		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
     		return false;
     	}
-    	else if(text == "" && UPLOADIDSET == -1 && !$("#kk_jetztNeuesKapitel").prop("checked"))
+    	else if(text == "" &&  kkBearbeitenDropZone.files.length == 0 && !$("#kk_jetztNeuesKapitel").prop("checked"))
     	{
             showError("Bitte füllen sie ihre Karteikarte mit einem Inhalt.");
     		return false;
     	}
+    	else if(uploadInProgress)
+		{
+    		showError("Bitte warten. Datei wird hochgeladen.");
+    		return false;
+		}
     	else
     	{
     		processKKbearbeiten(id,text,titel,attributes,
@@ -322,7 +333,7 @@ function kkBearbeiten(kkJSON)
         $("#kk_bearbeiten_popup input[type='checkbox']").prop("checked",false);
     	$("#kk_bearbeiten_titel_input").val("");
     	$("#kk_bearbeiten_TA").val("");
-    	myDropzone.removeAllFiles(true);
+    	kkBearbeitenDropZone.removeAllFiles(true);
         // Zerstoere Verweis Baeume mit allen Handlern
         $("#kk_bearbeiten_popup").find(".kk_verweise_baum").empty();
     }
@@ -380,80 +391,9 @@ function kkBearbeiten(kkJSON)
     {
     	console.log(e);
     }
-    
-	
 }
 
-function appendDropzone(){
-	try
-	{
-		myDropzone = $("#df_area_kk_b").dropzone({
-        url: actionUploadKKBild,
-        maxFilesize: 1,
-        acceptedFiles: ".jpeg,.jpg,.png,.mp4",
-        autoDiscover :false,
-        autoProcessQueue:false,
-        createImageThumbnails: true,
-        uploadMultiple: false,
-        addRemoveLinks: true,
-            init: function() {
-            	myDropzone = this;
-           	 	$(".dz-error-message").remove();
-           	 	
-           	 	
-	       	    this.on("addedfile", function(file) {
-	       	    	
-	       	    	var ext = file.name.substr(file.name.lastIndexOf('.') + 1);
-	       	    	console.log(ext);
-	       	    	uploadAction = false;
-	       	    	if(ext=="png"||ext=="jpg"||ext=="jpeg"){
-	       	    		uploadAction = actionUploadKKBild;
-	       	    	}
-	       	    	else if(ext=="mp4"){
-	       	    		uploadAction = actionUploadKKVideo;
-	       	    	}
-	       	    	else{
-	       	    		showError("Bitte verwenden sie für Bilder .png oder .jpg und für Videos .mp4 als Format!");
-	       	         	myDropzone.removeAllFiles(true);
-	       	    		return false;
-	       	    	}
-	       	    	
-	       	    	var params = {};
-	       	    	$("#df_area_kk_b").find(".dz-message").hide();
-	       	    	$(".dz-preview").addClass("center");
-	       	    	$(".dz-error-message").remove();
-	       	    	$(".dz-error-mark").remove();
-	       	    	$(".dz-success-mark").remove();
-	       	    	$(".dz-preview").css("margin","40px");
-	       	    	clone = $(".dz-size").first();
-	       	    	$(".dz-size").remove();
-	       	    	$(".dz-details").append(clone);
-	       	    	
-	       		    function successFkt(data){
-	       		    	UPLOADTYPE = ext;
-	       		    	$("#cke_kk_erstellen_TA").hide();
-	           	    	UPLOADIDSET = data.strResult;
-	           	    	console.log("Zurückgegebene UploadID:"+UPLOADIDSET);
-	       		    }
-	       	    	uploadFile(file, successFkt, uploadAction, params) 
-	       	    });
-	       	    
-	       	    this.on("removedfile", function(file) {
-	       	    	$("#df_area_kk_b").find(".dz-message").show();
-	       	    	$("#cke_kk_erstellen_TA").show();
-	       	    	UPLOADTYPE = "";
-	       	    	UPLOADIDSET = -1;
-	       	    });
-	       	    
-       	  }
-        }).get(0).dropzone;
-		$( "#file-dropzone" ).droppable();
-    }
-    catch(e)
-    {
-    	myDropzone.removeAllFiles(true);
-    }
-}
+
 
 function processKKbearbeiten(id,text,titel,attributes,
         verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr)
@@ -463,13 +403,26 @@ function processKKbearbeiten(id,text,titel,attributes,
 	params[paramId] = id;
 	params[paramInhalt] = text;
 	params[paramAttribute] = attributes;
-	params[paramType] = UPLOADTYPE;
-	params[paramKkUploadID] = UPLOADIDSET;
 	params[paramVeranstaltung] = veranstaltungsObject[paramId];
     params[paramVerweisVoraussetzung] = verweisVoraussetzungArr;
     params[paramVerweisWeiterfuehrend] = verweisWeiterfuehrendArr;
     params[paramVerweisUebung] = verweisUebungArr;
     params[paramVerweisSonstiges] = verweisSonstigesArr;
+    
+    if(kkBearbeitenDropZone.files.length==0){
+		params[paramType] = "";
+		params[paramKkUploadID] = -1;
+    }
+    else if(kkBearbeitenDropZone.files[0].fromServer)
+    {
+		params[paramType] = "doNothing";
+		params[paramKkUploadID] = -1;
+	}
+    else
+	{
+		params[paramType] = UPLOADTYPE;
+		params[paramKkUploadID] = UPLOADIDSET;
+	}
 	submitEditKarteikarte(params)
 }
 

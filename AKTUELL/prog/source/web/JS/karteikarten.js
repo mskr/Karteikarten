@@ -263,25 +263,33 @@ function fillKarteiKarte(domElem, json){
         	}
         	break;
         case paramKkBild:
-        	var caption = domElem.find(".kk_inhalt").clone();
-        	caption.addClass("inhalt_text");
-        	caption.html(json[paramInhalt]);
-        	var kkInhalt = domElem.find(".kk_inhalt");
-        	
+        	var caption;
+        	var kkInhalt;
+        	if(json[paramInhalt] != ""){
+	        	caption = domElem.find(".kk_inhalt").clone();
+	        	caption.addClass("inhalt_text");
+	        	caption.html(json[paramInhalt]);
+	        	kkInhalt = domElem.find(".kk_inhalt");
+        	}
         	domElem.find(".kk_inhalt").addClass("inhalt_bild");
         	image = $(document.createElement("img"));
         	image.attr("src","files/images/"+json[paramId]+".png?"+CryptoJS.MD5(new Date().getTime()+""));
         	image.attr("onerror","this.src='files/general/default.png'");
         	image.css("max-width","100%");
         	domElem.find(".inhalt_bild").html(image);
-        	
-        	caption.insertAfter(kkInhalt);
+
+        	if(json[paramInhalt] != "")
+        		caption.insertAfter(kkInhalt);
         	break;
         case paramKkVideo:
-        	var caption = domElem.find(".kk_inhalt").clone();
-        	caption.addClass("inhalt_text");
-        	caption.html(json[paramInhalt]);
-        	var kkInhalt = domElem.find(".kk_inhalt");
+        	var caption;
+        	var kkInhalt;
+        	if(json[paramInhalt] != ""){
+        		caption = domElem.find(".kk_inhalt").clone();
+	        	caption.addClass("inhalt_text");
+	        	caption.html(json[paramInhalt]);
+	        	kkInhalt = domElem.find(".kk_inhalt");
+        	}
         	domElem.find(".kk_inhalt").addClass("inhalt_video");
         	video = $(document.createElement("video"));
         	video.attr("autobuffer","");
@@ -289,8 +297,9 @@ function fillKarteiKarte(domElem, json){
         	video.append("<source src='files/videos/"+json[paramId]+".mp4' type='video/mp4'></source>");
         	video.append("Your browser does not support the video tag.");
         	domElem.find(".inhalt_video").html(video);
-        	
-        	caption.insertAfter(kkInhalt);
+
+        	if(json[paramInhalt] != "")
+        		caption.insertAfter(kkInhalt);
 	}
 
     // Klone die Buttonbar mit Votes und Optionen neben den Titel fuer Smartphoneansicht
