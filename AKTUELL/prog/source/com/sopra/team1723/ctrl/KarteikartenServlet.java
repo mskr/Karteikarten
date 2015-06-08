@@ -328,7 +328,7 @@ public class KarteikartenServlet extends ServletController
             {
                 kkTyp = KarteikartenTyp.TEXT;
             }
-            else if (typ.equals("nothing"))
+            else if (typ.equals("doNothing"))
             {
                 kkTyp = oldKk.getTyp();
             }
@@ -415,7 +415,7 @@ public class KarteikartenServlet extends ServletController
                 FileUtils.deleteQuietly(newName);
             }
             // Nichts tun
-            else if (typ.equals("nothing") && uploadedID.equals("-1"))
+            else if (typ.equals("doNothing") && uploadedID.equals("-1"))
             {
 
             }

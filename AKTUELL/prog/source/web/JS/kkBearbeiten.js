@@ -415,7 +415,7 @@ function processKKbearbeiten(id,text,titel,attributes,
     }
     else if(kkBearbeitenDropZone.files[0].fromServer)
     {
-		params[paramType] = "doNothing";
+		params[paramType] = "nothing";
 		params[paramKkUploadID] = -1;
 	}
     else
