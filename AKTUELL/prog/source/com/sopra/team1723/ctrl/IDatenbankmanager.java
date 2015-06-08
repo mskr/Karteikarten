@@ -226,7 +226,8 @@ public interface IDatenbankmanager {
      * @param veranst-Objekt, das in der db geupdatet wird
      * @return
      */
-    public void bearbeiteVeranstaltung(Veranstaltung veranst,String[] studiengaenge, int[] moderatorenIds) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteVeranstaltung(Veranstaltung veranst,String[] studiengaenge, int[] moderatorenIds) 
+            throws SQLException, DbUniqueConstraintException, DbFalsePasswortException;
 
     /**
      * Entfernt die Veranstaltung aus der Datenbank. Tritt ein Fehler auf
