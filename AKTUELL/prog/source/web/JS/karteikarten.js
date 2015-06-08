@@ -21,26 +21,26 @@ function buildKarteikarte(karteikarteJson)
     
     // Rechte pruefen
     
-    // Wenn Benutzer kein Admin oder Ersteller oder es handelt es sich um die Root-Karteikarte: 
-    // Verberge Bearbeiten- und Loeschen-Buttons
-    if(!checkIfAllowedVn(veranstaltungsObject, true, true, false) ||
-            veranstaltungsObject[paramErsteKarteikarte] == kkId)
-    {
-        kkDom.find(".KKbearbeiten").hide();
-        kkDom.find(".KKloeschen").hide();
-    }
-    // Wenn Benutzer Moderator ohne Bearbeitungsrechte: Verberge Buttons
-    if(checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
-                !veranstaltungsObject[paramModeratorKkBearbeiten])
+    // Wenn Benutzer kein Admin oder Ersteller 
+    if( !checkIfAllowedVn(veranstaltungsObject, true, true, false) ||
+            (checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
+                !veranstaltungsObject[paramModeratorKkBearbeiten]) )
     {
         kkDom.find(".KKbearbeiten").hide();
         kkDom.find(".KKloeschen").hide();
     }
     // Wenn Benutzer Moderator mit Bearbeitungsrechten: Zeige Buttons wieder an.
-    else if(checkIfAllowedVn(veranstaltungsObject, false, false, true))
+    if(checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
+            veranstaltungsObject[paramModeratorKkBearbeiten])
     {
         kkDom.find(".KKbearbeiten").show();
         kkDom.find(".KKloeschen").show();
+    }
+    // Handelt es sich um die Root-Karteikarte: Verberge Bearbeiten- und Loeschen-Buttons
+    if(veranstaltungsObject[paramErsteKarteikarte] == kkId)
+    {
+        kkDom.find(".KKbearbeiten").hide();
+        kkDom.find(".KKloeschen").hide();
     }
     // Wenn Bewertungen fuer diese Veranstaltung nicht erlaubt: Verberge Bewertungsbuttons
     if(!veranstaltungsObject[paramBewertungenErlauben])
