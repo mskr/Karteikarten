@@ -13,6 +13,7 @@ function uploadFile(file, successFkt, uploadAction, params, beforeFkt, completeF
     $.ajax({
         type: "POST",
         url: fileUploadServlet,
+        timeout: 0, // == Kein Timeout (bedenke Video-Uploads!)
         enctype: "multipart/form-data",
         data: formData,
         processData: false,

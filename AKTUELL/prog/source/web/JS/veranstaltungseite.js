@@ -182,8 +182,21 @@ function fillVeranstaltungsSeite(Vid, kkId)
                     $("#vn_attr_kommentare_erlaubt").text(veranstaltungsObject[paramKommentareErlauben] ? "ja" : "nein");
                     $("#vn_attr_modbearb_erlaubt").text(veranstaltungsObject[paramModeratorKkBearbeiten] ? "ja" : "nein");
                     
-                    document.title = titel;
+                    if(checkIfAllowedVn(veranstaltungsObject, true, false, false))
+                        $("#vn_rechte_info").text("Als Ersteller haben Sie volle Berechtigungen für diese Veranstaltung.");
+                    else if(checkIfAllowedVn(veranstaltungsObject, false, true, false))
+                        $("#vn_rechte_info").text("Als Administrator haben Sie volle Berechtigungen für diese Veranstaltung.");
+                    else if(checkIfAllowedVn(veranstaltungsObject, false, false, true))
+                    {
+                        if(veranstaltungsObject[paramModeratorKkBearbeiten])
+                            $("#vn_rechte_info").text("Als Moderator haben Sie Berechtigungen betreffend Änderungen an Karteikarten.");
+                        else
+                            $("#vn_rechte_info").text("Als Moderator mit eingeschränkten Rechten haben Sie Berechtigungen betreffend Änderungen an Kommentaren.");
+                    }
+                    else
+                        $("#vn_rechte_info").text("Als Student haben Sie keine besonderen Berechtigungen in dieser Veranstaltung.");
                     
+                    document.title = titel;
                     
                     if(veranstaltungsObject[paramErsteller][paramId] == jsonBenutzer[paramId] || jsonBenutzer[paramNutzerstatus] == "ADMIN")
                     {
@@ -415,10 +428,12 @@ function ladeKindKarteikarten(vaterId, vaterElem, zeigeErstellButtons, extraClic
 
 function registerErstellKkHandler(domErstellenLink){
 	// Prüfen ob erlaubt
-    if(checkIfAllowedVn(veranstaltungsObject))
+    if(checkIfAllowedVn(veranstaltungsObject, true, true, false) ||
+            (checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
+            veranstaltungsObject[paramModeratorKkBearbeiten]))
 	{
-    	domErstellenLink.find(".inhaltsvz_kk_erstellen").click(function(){
-	    	newKarteikarte($(this));
+        domErstellenLink.find(".inhaltsvz_kk_erstellen").click(function(){
+            newKarteikarte($(this));
         });
 	}
     else
@@ -541,16 +556,11 @@ function loadAfterKk(id)
 				function nextItem()
 				{
 						o = data.shift();
-						if(o == undefined){
-							$.each(domms,function(i, obj){
-								domms[i].animate({opacity: 1}, 200);
-							})
+						if(o == undefined)
 							return;
-						}
-						
 						domkk = buildKarteikarte(o);
 						domkk.show();
-						domkk.css("opacity", "0");
+//						domkk.addClass("animated slideIn"); //TODO
 						$("#kk_all").append(domkk);
 						domms.push(domkk);
 						nextItem();

@@ -114,8 +114,8 @@
 			<span id="dialog_sicher_frage"></span>
 		</div>
 		<div class="sindSieSicher_foot">
-			<span id = "dialog_sicher_ja" class="dialog_sicher_ja mybutton red"><span class="octicon octicon-check"></span> Ja, weiter</span>
-			<span id = "dialog_sicher_nein" class="dialog_sicher_nein mybutton flat"><span class="octicon octicon-x"></span> Nein</span>
+			<button id="dialog_sicher_ja" class="dialog_sicher_ja mybutton red"><span class="octicon octicon-check"></span> Ja, weiter</button>
+			<button id="dialog_sicher_nein" class="dialog_sicher_nein mybutton flat"><span class="octicon octicon-x"></span> Nein</button>
 		</div>
 	</div>
 </div>
@@ -346,18 +346,52 @@
  			</div>
 		</div>
 		<div id="popup_fenster_body5" class="popup_fenster_body">
-			<p class="form_infotext">Ändern sie die Attribute ihrer Karteikarte.</p>
-			<div id="kkB_attributes">
-				<span><input id="kkB_attr_lemma" type="checkbox" name="attr"><label for="kkB_attr_lemma">Lemma</label></span><br>
-				<span><input id="kkB_attr_satz" type="checkbox" name="attr"><label for="kkB_attr_satz">Satz</label></span><br>
-				<span><input id="kkB_attr_beweis" type="checkbox" name="attr"><label for="kkB_attr_beweis">Beweis</label></span><br>
-				<span><input id="kkB_attr_def" type="checkbox" name="attr"><label for="kkB_attr_def">Definition</label></span><br>
-				<span><input id="kkB_attr_wichtig" type="checkbox" name="attr"><label for="kkB_attr_wichtig">Wichtig</label></span><br>
-				<span><input id="kkB_attr_grundl" type="checkbox" name="attr"><label for="kkB_attr_grundl">Grundlagen</label></span><br>
-				<span><input id="kkB_attr_zusatz" type="checkbox" name="attr"><label for="kkB_attr_zusatz">Zusatzinformation</label></span><br>
-				<span><input id="kkB_attr_exkurs" type="checkbox" name="attr"><label for="kkB_attr_exkurs">Exkurs</label></span><br>
-				<span><input id="kkB_attr_bsp" type="checkbox" name="attr"><label for="kkB_attr_bsp">Beispiel</label></span><br>
-				<span><input id="kkB_attr_uebung" type="checkbox" name="attr"><label for="kkB_attr_uebung">Übung</label></span><br>
+			<p class="form_infotext">Ändern sie die Attribute Ihrer Karteikarte.</p>
+			<div id="kkB_attributes" class="flex_container">
+				<div class="popup_fenster_spalte">
+					<span>
+						<input id="kkB_attr_satz" type="checkbox">
+						<label for="kkB_attr_satz">Satz</label>
+					</span>
+					<span>
+						<input id="kkB_attr_lemma" type="checkbox">
+						<label for="kkB_attr_lemma">Lemma</label>
+					</span>
+					<span>
+						<input id="kkB_attr_beweis" type="checkbox">
+						<label for="kkB_attr_beweis">Beweis</label>
+					</span>
+					<span>
+						<input id="kkB_attr_def" type="checkbox">
+						<label for="kkB_attr_def">Definition</label>
+					</span>
+					<span>
+						<input id="kkB_attr_wichtig" type="checkbox">
+						<label for="kkB_attr_wichtig">Wichtig</label>
+					</span>
+				</div>
+				<div class="popup_fenster_spalte">
+					<span>
+						<input id="kkB_attr_grundl" type="checkbox">
+						<label for="kkB_attr_grundl">Grundlagen</label>
+					</span>
+					<span>
+						<input id="kkB_attr_zusatz" type="checkbox">
+						<label for="kkB_attr_zusatz">Zusatzinformation</label>
+					</span>
+					<span>
+						<input id="kkB_attr_exkurs" type="checkbox">
+						<label for="kkB_attr_exkurs">Exkurs</label>
+					</span>
+					<span>
+						<input id="kkB_attr_bsp" type="checkbox">
+						<label for="kkB_attr_bsp">Beispiel</label>
+					</span>
+					<span>
+						<input id="kkB_attr_uebung" type="checkbox">
+						<label for="kkB_attr_uebung">Übung</label>
+					</span>
+				</div>
 			</div>
 		</div>
 		<div id="popup_fenster_body6" class="popup_fenster_body">
@@ -398,8 +432,9 @@
 			<span id="kk_bearbeiten_ok" class="mybutton green">Änderungen speichern</span>
 		</div>
 	</div>
-</div>	
-<!-- Karteikarten Attribute aendern Tooltip -->
+</div>
+
+<!-- Karteikarten Attribute aendern Tooltip 
 <div id="attr_popup" class="bigtooltip">
 	<div class="bigtooltip_pfeil"></div>
 	<div class="bigtooltip_head">
@@ -418,7 +453,7 @@
 		
 	</div>
 	<div class="bigtooltip_foot"></div>
-</div>
+</div> -->
 
 <!-- Elemente fuer kleine Bildschirme -->
 <div class="r-header"></div>
@@ -665,6 +700,7 @@ Dann aber so leer.
 		</div>
 		<button id="vn_bearbeiten" class="mybutton dark flat"><span class="octicon octicon-pencil"></span> Bearbeiten</button>
 		<button id="kk_export" class="mybutton dark flat"><span class="octicon octicon-cloud-download"></span> Exportieren</button>
+		<div id="vn_rechte_info"></div>
 	</div>
 
 	<div id="kk_inhaltsverzeichnis" class="kk_baum">
@@ -702,86 +738,94 @@ Dann aber so leer.
 
 <!-- Template Karteikarte -->
 <div id="templatekarteikarte" class="kk_wrapper" style="display:none">
-<span class="kk_header">
-	<span class="kk_titel">Karteikarten-Titel</span>
-	 <span class="displayOnHover" style="display:inline-flex">
-		<a class="option permalink tiptrigger tipabove"
-			data-tooltip="Link kopieren"><span 
-			class="octicon octicon-link"></span></a>
-		<a class=" option loeschen KKloeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
-			<span class="octicon octicon-trashcan"></span></a>
-		<a class="option bearbeiten tiptrigger tipabove"
-			data-tooltip="Karteikarte bearbeiten"><span
-			class="KKbearbeiten octicon octicon-pencil"></span></a>
-	</span>
-</span>
-<div style = "display:table-row">
-	<div style="display:table-cell;">
-		<div class="kk_votes" style="display:table-cell;">
-			<a class="kk_voteup"><span
-				class="mega-octicon octicon-triangle-up"></span></a>
-			<div class="kk_votestat">0</div>
-			<a class="kk_votedown"><span
-				class="mega-octicon octicon-triangle-down"></span></a>
+	<div style="display:table-row">
+		<div class="kk_buttonbar">
+			<div class="kk_votes">
+				<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
+				<div class="kk_votestat">0</div>
+				<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
+			</div>
+			<div class="kk_optionen">
+				<a class="kk_option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
+					<span class="octicon octicon-link"></span>
+				</a>
+				<a class="kk_option KKbearbeiten tiptrigger tipabove" data-tooltip="Karteikarte bearbeiten">
+					<span class="octicon octicon-pencil"></span>
+				</a>
+				<a class="kk_option KKloeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
+					<span class="octicon octicon-trashcan"></span>
+				</a>
+			</div>
 		</div>
-<!-- 		<div class="kk_optionen" style="display:table-cell;">
-			<a class="option permalink tiptrigger tipabove"
-				data-tooltip="Link kopieren"><span 
-				class="octicon octicon-link"></span></a>
-			<a class="option einfuegen tiptrigger tipabove"
-				data-tooltip="Karteikarte unter dieser Karteikarte einfügen"><span
-				class="octicon octicon-plus"></span></a>
-			<a class="option attribute attr_popup_open tiptrigger tipabove"
-				data-tooltip="Attribute ändern"><span
-				class="octicon octicon-checklist"></span></a>
-		</div> -->
-	</div>
-	<div style="display:table-cell;vertical-align:middle;width:100%">
-		<div class="kk kk_inhalt"></div>
-	</div>
-</div>
-<div style = "display:table-row">
-	<div style="display:table-cell;"></div>
-	<div class="kk_info" style="display:table-cell">
-		<a class="kk_info_head"><span class="octicon octicon-file-text"></span> Informationen</a>
-		<div class="kk_info_body_wrapper">
-			<b>Attribute:</b><br> <span class="kk_info_attr">Wichtig, Langweilig, ...</span><br><br>
-			<b>Vorraussetung:</b><br> <span class="kk_rel_vorraus"><a>Grundlagen</a>, <a>Analysis I</a>, </span><br>
-			<b>Weiterführendes:</b><br> <span class="kk_rel_zusatz"><a>Weiterführendes</a></span><br>
-			<b>Sonstige Verweise:</b><br> <span class="kk_rel_sonstiges"><a>Weiterführendes</a>, <a>Übung</a>, ...</span><br>
-			<b>Übungen:</b><br> <span class="kk_rel_uebung"><a>Beispiel 1</a>, <a>Übung 1</a>, ...</span>
-		</div>
-	</div>
-</div>
-<div style = "display:table-row">
-	<div style="display:table-cell;"></div>
-	<div class="kk_notizen" style="display:table-cell">
-		<a class="kk_notizen_head"><span class="octicon octicon-file-text"></span> Notizen</a>
-		<div class="kk_notizen_body_wrapper">
-			<textarea class="kk_notizen_body" contenteditable=""></textarea>
-			<div class="kk_notizen_foot" style="padding-top: 0.5em;display:none;">
-				<span class="mybutton green"> Änderungen speichern </span>
+		<div class="kk_inhalt_wrapper">
+			<div class="kk_titel">Karteikarten-Titel</div>
+			<div class="kk_inhalt">
+				<!-- Text, Bild oder Video hier -->
 			</div>
 		</div>
 	</div>
-</div>
-<div style = "display:table-row">
-	<div style="display:table-cell;"></div>
-	<div class="kk_kommbox" style="display:table-cell;">
-		<a class="kk_kommheader">
-			<span class="octicon octicon-comment-discussion"></span> Kommentare
-			(<span class="kk_kommzaehler">0</span>)
-		</a>
-		<div class = "kk_kommbody" style = "display:none">
-			<div class="kk_kommerstellen">
-				<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
-				<a class="komm_submit_bt" style="float: right">Thema erstellen</a>
-			</div><div class="clearfix"></div>
-			<div class="kk_kommList">
+	<div style="display:table-row">
+		<div class="tabelleLueckenfueller"></div>
+		<div class="kk_info">
+			<div class="kk_info_body_wrapper">
+				<span class="kk_info_attr">
+					<!-- Attribute Chips hier -->
+				</span>
+				<span class="kk_rel_vorraus">
+					<!-- Verweislinks hier -->
+				</span>
+				<br>
+				<span class="kk_rel_zusatz">
+					<!-- Verweislinks hier -->
+				</span><br>
+				<span class="kk_rel_uebung">
+					<!-- Verweislinks hier -->
+				</span><br>
+				<span class="kk_rel_sonstiges">
+					<!-- Verweislinks hier -->
+				</span>
 			</div>
 		</div>
 	</div>
-</div>
+	<div style = "display:table-row">
+		<div class="tabelleLueckenfueller"></div>
+		<div class="komm_notiz_box card">
+			<input type="radio" id="kk_komm_radio" class="kk_tabs_radio kk_komm_radio" name="kk_tabs">
+			<label class="kk_kommheader kk_tabs_label" for="kk_komm_radio">
+				<span class="octicon octicon-comment-discussion"></span> Kommentare
+				<span class="kk_kommzaehler">0</span>
+			</label>
+			<input type="radio" id="kk_notizen_radio" class="kk_tabs_radio kk_notizen_radio" name="kk_tabs">
+			<label class="kk_notizen_head kk_tabs_label" for="kk_notizen_radio">
+				<span class="octicon octicon-light-bulb"></span> Notizen
+				<span class='kk_notiz_gesetzt_wrapper tiptrigger tipabove' data-tooltip='Notiz vorhanden'></span>
+			</label>
+			<div class="kk_kommbox">
+				<div class="kk_kommbody">
+					<div class="kk_kommerstellen">
+						<a class="komm_submit_bt">
+							<span class="octicon octicon-comment"></span>
+							<br>
+							Erstellen
+						</a>
+						<textarea class="antw" contenteditable="" placeholder="Neues Thema beginnen..."></textarea>
+					</div>
+					<div class="clearfix"></div>
+					<div class="kk_kommList">
+						<!-- Themen-Kommentare hier -->
+					</div>
+				</div>
+			</div>
+			<div class="kk_notizen">
+				<div class="kk_notizen_body_wrapper">
+					<textarea class="kk_notizen_body"></textarea>
+					<div class="kk_notizen_foot">
+						<div class="kk_notizen_speichern">Änderungen speichern</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <!-- Template Kommentare -->
 <div class="kk_superkomm" id="templateSuperKomm" data-komm-id="" style="display:none">
@@ -790,38 +834,42 @@ Dann aber so leer.
 		<div class="komm_votestat">3</div>
 		<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
 	</div>
-	<img class="kk_komm_profilBild" style="width: 43px;
-	    height: 43px;" alt="profilBild" src=""/>
-
+	<img class="kk_komm_profilBild" style="width: 43px;height: 43px;" alt="profilBild" src=""/>
 	<div class="kk_komm_loeschen">
 		<a><span class="octicon octicon-trashcan"></span></a>
 	</div>
-	<span class="kk_inhalt"></span>
+	<span class="kommInhalt"></span>
 	<div class="kk_komminfo">
 		<a class="kommAuthor">Matthias Englert</a>
 		<span class="kommDatum">28. Jan '15 um 15:29</span>
 	</div>
 	<div class="clearfix"></div>
-	<div class="kk_kommantwort">
-		<textarea class="antw" placeholder="Antworten..." rows="1" ></textarea>
-		<a class="komm_submit_bt" style="float:right">Antwort absenden</a>
-		<div class="clearfix"></div>
+	<div class="antwAnzeigen">
+		<span class ="AntwPfeil octicon octicon-triangle-up hidden"></span>
+		Antworten: <span class="subKommCount">0</span>
 	</div>
-	
-	<a class="antwAnzeigen" style="color:yellow"><span class ="AntwPfeil octicon octicon-triangle-down"></span><span class="subKommCount">0</span> Antwort(en)</a>
-	<div class="subkommentare" style="display:none">
-	
+	<div>
+		<div class="kk_kommantwort">
+			<a class="komm_submit_bt">
+				<span class="octicon octicon-mail-reply"></span>
+				<br>
+				Antworten
+			</a>
+			<textarea class="antw" placeholder="Antworten..." rows="1" ></textarea>
+			<div class="clearfix"></div>
+		</div>
+		<div class="subkommentare" style="display:none">
+			<!-- Antwort-Kommentare hier -->
+		</div>
 	</div>
 </div>
 <!-- Template subkommentar -->
 <div class="kk_subkomm" id="templateSubKomm" data-komm-id="" style="display:none">
-		<img class="kk_komm_profilBild"
-			style="width: 34px; height: 34px;"
-			alt="profilBild" src="" />
-		<div class="kk_komm_loeschen">
+	<img class="kk_komm_profilBild" alt="profilBild" src="" />
+	<div class="kk_komm_loeschen">
 		<a><span class="octicon octicon-trashcan"></span></a>
 	</div>
-	<span class="kk_inhalt"></span>
+	<span class="kommInhalt"></span>
 	<div class="kk_komminfo"><a class="kommAuthor">Jan Willem Liebezeit</a><span class="kommDatum">28. Jan '15 um 16:29</span></div>
 	<div class="clearfix"></div>
 </div>

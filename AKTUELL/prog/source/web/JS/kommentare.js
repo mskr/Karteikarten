@@ -1,17 +1,17 @@
 function showHauptKommentare(karteikarteContainer, kommentarArray)
 {
-	var kommbox = karteikarteContainer.find(".kk_kommbox");
-	var kommCountElem = kommbox.find(".kk_kommzaehler");	
-	kommCountElem.html(kommentarArray.length);
-	kommbox.find(".kk_kommList").empty();
+	var kommlist = karteikarteContainer.find(".kk_kommList");
+	var kommCountElem = karteikarteContainer.find(".kk_kommzaehler");	
+	kommCountElem.html(kommentarArray.length > 0 ? kommentarArray.length : "");
+	kommlist.empty();
 	for(var i in kommentarArray)
 	{
 		hauptKomm = createAndFillKommentar(kommentarArray[i], false, karteikarteContainer);
-		kommbox.find(".kk_kommList").append(hauptKomm);
+		kommlist.append(hauptKomm);
 	}
 
 	// Sortieren
-	orderKommentareById(kommbox.find(".kk_kommList"));
+	orderKommentareById(kommlist);
 }
 
 function showAntwortKommentare(hauptkommentar, kommentarArray)
@@ -71,15 +71,15 @@ function fillHauptKommentar(domKomm, kommObj, domKK)
 			function() {
 				$.when(loescheKommentar(kommObj[paramId])).done(function()
 				{
-					domKomm.slideUp("slow");
+					domKomm.slideUp();
 					count = parseInt(domKK.find(".kk_kommzaehler").html());	
-					domKK.find(".kk_kommzaehler").html(count-1);
+					domKK.find(".kk_kommzaehler").html(count-1 > 0 ? count-1 : "");
 				});
 			});
 		});
 	}
 
-	domKomm.find(".antw").ckeditor(ckEditorKommentarAntwortConfig);
+//	domKomm.find(".antw").ckeditor(ckEditorKommentarAntwortConfig);
 	setupAntwAnz(domKomm, kommObj[paramAntwortCount]);
 
 	// Antworten anzeigen
@@ -88,11 +88,13 @@ function fillHauptKommentar(domKomm, kommObj, domKK)
 		isAufgeklappt = domKomm.find(".subkommentare").is(':visible') ;
 		if (isAufgeklappt) 
 		{
+		    domKomm.find(".kk_kommantwort").slideUp();
 			hideAntworten(domKomm);
 		}
 		// Zugeklappt ?
 		else if (!isAufgeklappt) 
 		{
+            domKomm.find(".kk_kommantwort").slideDown();
 			showAntworten(domKomm,kommObj[paramId]);
 		}
 	});
@@ -101,7 +103,7 @@ function fillHauptKommentar(domKomm, kommObj, domKK)
 	domKomm.find(".komm_submit_bt").click(function(){
 		if(domKomm.find(".antw").val().trim() == "")
 		{
-			showError("Ein Kommentar darf nicht leer sein!");
+			showError("Bitte geben Sie etwas in das Antwortfeld ein.");
 			return;
 		}
 
@@ -125,7 +127,7 @@ function fillAntKomm(domKomm, kommObj, domVaterKomm)
 				function() {
 					$.when(loescheKommentar(kommObj[paramId])).done(function()
 					{
-						domKomm.slideUp("slow");
+						domKomm.slideUp();
 						i = parseInt(domVaterKomm.find(".subKommCount").html());
 						if(!setupAntwAnz(domVaterKomm, i-1))
 						{
@@ -149,7 +151,7 @@ function createAndFillKommentar(kommObj, isAntwortKommentar, domVater)
 	domKomm.show();
 	
 	// Infos setzen
-	domKomm.find(".kk_inhalt").html(kommObj[paramInhalt]);
+	domKomm.find(".kommInhalt").html(kommObj[paramInhalt]);
 	domKomm.find(".kommAuthor").html(kommErsteller[paramVorname] + " " + kommErsteller[paramNachname]);
 	domKomm.find(".kommAuthor").click(function(){
 		gotoProfil(kommErsteller[paramId]);
@@ -207,7 +209,10 @@ function setupAntwAnz(domKomm, antwCnt)
 	}
 	else
 	{
-		domKomm.find(".antwAnzeigen").hide();
+//		domKomm.find(".antwAnzeigen").hide();
+        domKomm.find(".antwAnzeigen").show();
+        domKomm.find(".subKommCount").text("Keine.");
+        domKomm.find(".subKommCount").addClass("keineAntworten");
 		return false;
 	}
 }
@@ -226,9 +231,8 @@ function showAntworten(domKomm, id)
 				
 				showAntwortKommentare(domKomm,arr);
 
-				domKomm.find(".AntwPfeil").toggleClass("octicon-triangle-up");
-				domKomm.find(".AntwPfeil").toggleClass("octicon-triangle-down");
-				domKomm.find(".subkommentare").slideDown("slow");
+				domKomm.find(".AntwPfeil").toggleClass("hidden");
+				domKomm.find(".subkommentare").slideDown();
 			},
 			params
 	);
@@ -236,10 +240,9 @@ function showAntworten(domKomm, id)
 
 function hideAntworten(domKomm)
 {
-	domKomm.find(".subkommentare").slideUp("slow",function(){
+	domKomm.find(".subkommentare").slideUp(function(){
 		domKomm.find(".subkommentare").empty();
-		domKomm.find(".AntwPfeil").toggleClass("octicon-triangle-down");
-		domKomm.find(".AntwPfeil").toggleClass("octicon-triangle-up");
+		domKomm.find(".AntwPfeil").toggleClass("hidden");
 	});
 }
 

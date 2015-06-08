@@ -9,6 +9,7 @@
  */
 
 CKEDITOR.env.isCompatible = true;
+CKEDITOR.disableAutoInline = true;
 
 var ckEditorKommentarConfig = {
 		height: "100px",
@@ -27,14 +28,32 @@ var ckEditorKommentarAntwortConfig = {
 };
 
 var ckEditorNotizConfig = {
-		removePlugins: 'elementspath,autogrow',
-		height: "100px",
-		resize_enabled : false,
-		toolbarGroups: [
-		        		{ name: 'insert' }
-		        		],
-		removeButtons: 'Image,Flash,Table,HorizontalRule',
-}
+		removePlugins: 'elementspath',
+        resize_enabled : false,
+		autoGrow_minHeight: 50,
+        autoGrow_onStartup: true,
+        toolbarGroups: [
+            { name: 'forms' },
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+            { name: 'insert' },
+            { name: 'styles' },
+            { name: 'colors' },
+            { name: 'tools' },
+            { name: 'others' },
+        ],
+		removeButtons: 
+		    "Image," +
+			"Flash," +
+			"Table," +
+			"HorizontalRule," +
+			"Maximize," +
+			"Format," +
+			"Strike," +
+			"Subscript," +
+			"Superscript," +
+			"Blockquote"
+};
 
 
 var ckEditorVnErstellenConfig = {

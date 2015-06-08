@@ -1643,7 +1643,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 ps.setInt(2, bem.getBenutzer());
                 ps.setInt(3, bem.getVeranstaltung().getId());
 
-                // todo karteikarten und kommentar Benachrichtigungen müssen
+                // TODO karteikarten und kommentar Benachrichtigungen müssen
                 // noch angepasst werden
             }
             else if (benachrichtigung instanceof BenachrKarteikAenderung)

@@ -19,11 +19,32 @@ function buildKarteikarte(karteikarteJson)
 
     fillKarteiKarte(kkDom,karteikarteJson);
     
-    if(!checkIfAllowedVn(veranstaltungsObject)
-    		||veranstaltungsObject[paramErsteKarteikarte] == kkId)
+    // Rechte pruefen
+    
+    // Wenn Benutzer kein Admin oder Ersteller ...
+    if(!checkIfAllowedVn(veranstaltungsObject, true, true, false))
     {
-    	kkDom.find(".bearbeiten").hide();
-    	kkDom.find(".loeschen").hide();
+        //... und kein Moderator ...
+        //... oder Moderator ohne Bearbeitungsrechte ...
+        // oder handelt es sich um die Root-Karteikarte: Verberge Bearbeiten- und Loeschen-Buttons
+        if(!checkIfAllowedVn(veranstaltungsObject, false, false, true) ||
+                (checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
+                !veranstaltungsObject[paramModeratorKkBearbeiten]) ||
+                veranstaltungsObject[paramErsteKarteikarte] == kkId)
+        {
+            kkDom.find(".KKbearbeiten").hide();
+            kkDom.find(".KKloeschen").hide();
+        }
+    }
+    // Wenn Bewertungen fuer diese Veranstaltung nicht erlaubt: Verberge Bewertungsbuttons
+    if(!veranstaltungsObject[paramBewertungenErlauben])
+        kkDom.find(".kk_votes").hide();
+    // Wenn Kommentare fuer diese Veranstaltung nicht erlaubt: Verberge Kommentar-Box
+    if(!veranstaltungsObject[paramKommentareErlauben])
+    {
+        kkDom.find(".kk_kommheader").hide();
+        kkDom.find(".kk_kommbox").hide();
+        kkDom.find(".kk_notizen_head").outerWidth("100%");
     }
 
     kkDom.find(".KKbearbeiten").click(function(){
@@ -75,24 +96,21 @@ function buildKarteikarte(karteikarteJson)
     if(kkInhalt == "" && kkType == paramKkText)
     	return kkDom;
     
-    // Info
-    kkDom.find(".kk_info_body_wrapper").hide();
-    kkDom.find(".kk_info_head").click(function(){
-    	kkDom.find(".kk_info_body_wrapper").slideToggle();
+    // Setup Kommentare/Notizen CSS-Tabs
+    kkDom.find(".kk_tabs_radio").attr("name", "kk_tabs_"+karteikarteJson[paramId]);
+    kkDom.find(".kk_tabs_radio").each(function() {
+        var radioID = $(this).attr("id")+"_"+karteikarteJson[paramId];
+        $(this).attr("id", radioID);
+        $(this).next("label").attr("for", radioID);
     });
     
-    // Notiz
-    kkDom.find(".kk_notizen_body_wrapper").hide();
-    kkDom.find(".kk_notizen_head").click(function(){
-    	kkDom.find(".kk_notizen_body_wrapper").slideToggle();
-    });
-    
+    // Notiz Editor
     kkDom.find(".kk_notizen_body").ckeditor(function() {
     	// TODO Karteikarte setzen und DANACH change handler registireren
     	// Funktioniert irgendwie nicht. Handler wird gesetzt bevor Inhalt gesetzt wurde
     	var f = function(that){
     		that.on('change', function() {
-            	kkDom.find(".kk_notizen_foot").slideDown();
+            	kkDom.find(".kk_notizen_speichern").addClass("changed");
             });
     	};
     	var f2 = function(that) {
@@ -103,6 +121,25 @@ function buildKarteikarte(karteikarteJson)
     	f2(this);
     	
 	}, ckEditorNotizConfig);
+    
+    setNotiz(kkDom, kkId);
+    
+    // Notiz absenden Handler
+    kkDom.find(".kk_notizen_speichern").click(function(){
+        var params = {};
+        text = kkDom.find(".kk_notizen_body").val();
+        params[paramId] = kkId;
+        params[paramInhalt] = text;
+        ajaxCall(
+            notizServlet,
+            actionSpeichereNotiz,
+            function(response) {
+                showInfo("Gespeichert.");
+            },
+            params
+        );
+    });
+    
     // Voting
     if(karteikarteJson[paramHatGevoted] == true)
     {
@@ -126,33 +163,38 @@ function buildKarteikarte(karteikarteJson)
 				});
 		});
     }
-    kkDom.find(".kk_notizen_foot").find(".mybutton").click(function(){
-    	var params = {};
-    	text = kkDom.find(".kk_notizen_body").val();
-	    params[paramId] = kkId;
-	    params[paramInhalt] = text;
-		ajaxCall(
-		    notizServlet,
-		    actionSpeichereNotiz,
-		    function(response) {
-		    	showInfo("Notizen wurden gespeichert.");
-		    },
-		    params
-		);
+    
+    // Notizen aufklappen
+    kkDom.find(".kk_notizen_head").click(function(e){
+//        kkDom.find(".kk_notizen_body_wrapper").slideToggle();
+        var radioID = $(e.target).attr("for");
+        if($("#"+radioID).prop("checked"))
+        {
+            $("#"+radioID).prop("checked", false);
+            e.preventDefault();
+            e.stopPropagation();
+        }
     });
     
     // Kommentare aufklappen
-    kkDom.find(".kk_kommheader").click(function(){
-    	kkDom.find(".kk_kommbody").slideToggle("slow");
+    kkDom.find(".kk_kommheader").click(function(e){
+//        kkDom.find(".kk_kommbody").slideToggle("slow");
+        var radioID = $(e.target).attr("for");
+        if($("#"+radioID).prop("checked"))
+        {
+            $("#"+radioID).prop("checked", false);
+            e.preventDefault();
+            e.stopPropagation();
+        }
     });
     
     // Neues Thema Handler
-    kkDom.find(".antw").ckeditor(ckEditorKommentarConfig);
+//    kkDom.find(".antw").ckeditor(ckEditorKommentarConfig);
     
     kkDom.find(".komm_submit_bt").click(function(){
 		if(kkDom.find(".antw").val().trim() == "")
 		{
-			showError("Der Text darf nicht leer sein!");
+			showError("Bitte geben sie etwas in das Kommentarfeld ein.");
 			return;
 		}
 		$.when(erstelleNeuesThemaKk(karteikarteJson[paramId], kkDom.find(".antw").val())).done(function(){
@@ -197,72 +239,77 @@ function fillKarteiKarte(domElem, json){
 	domElem.find(".kk_titel").text(json[paramTitel]);
 	
 	// Attribute setzen
-	domElem.find(".kk_info_attr").text(createAttrStr(json[paramAttribute]));
+	domElem.find(".kk_info_attr").empty();
+	domElem.find(".kk_info_attr").append(createAttrStr(json[paramAttribute]));
 	
 //	[{"id":"5","titel":"blabla","type":"zusatz"},{"id":"8","titel":"Hallo123","type":"sonstiges"}]
 	fillVerweise(domElem,json[paramVerweise]);
 	
 	// detect type and add content
 	switch (json[paramType]) {
-    case paramKkText:
-    	domElem.find(".kk_inhalt").addClass("inhalt_text");
-    	if(json[paramInhalt].trim() == "")
-    	{
-    		domElem.find("div").hide();
-    	}
-    	else
-    	{
-    		domElem.find(".inhalt_text").html(json[paramInhalt]);
-    	}
-    	break;
-    case paramKkBild:
-    	domElem.find(".kk_inhalt").addClass("inhalt_bild");
-    	image = $(document.createElement("img"));
-    	image.attr("src","files/images/"+json[paramId]+".png?"+CryptoJS.MD5(new Date().getTime()+""));
-    	image.attr("onerror","this.src='files/general/default.png'");
-    	image.css("max-width","100%");
-    	domElem.find(".inhalt_bild").html(image);
-    	break;
-    case paramKkVideo:
-    	domElem.find(".kk_inhalt").addClass("inhalt_video");
-    	video = $(document.createElement("video"));
-    	video.css("width","100%");
-    	video.attr("autobuffer","");
-//    	video.attr("autoplay",""); 
-    	video.attr("controls","");
-    	video.append("<source src='files/videos/"+json[paramId]+".mp4' type='video/mp4'></source>");
-    	video.append("Your browser does not support the video tag.");
-    	domElem.find(".inhalt_video").html(video);
-    	break;
+        case paramKkText:
+        	domElem.find(".kk_inhalt").addClass("inhalt_text");
+        	if(json[paramInhalt].trim() == "")
+        	{
+        	    var kkOptionen = domElem.find(".kk_optionen").clone(true,true);
+        		domElem.html("<div class='kk_ueberschrift_titel'>"+json[paramTitel]+"</div>");
+        		domElem.find(".kk_ueberschrift_titel").append(kkOptionen);
+        	}
+        	else
+        	{
+        		domElem.find(".inhalt_text").html(json[paramInhalt]);
+        	}
+        	break;
+        case paramKkBild:
+        	domElem.find(".kk_inhalt").addClass("inhalt_bild");
+        	image = $(document.createElement("img"));
+        	image.attr("src","files/images/"+json[paramId]+".png?"+CryptoJS.MD5(new Date().getTime()+""));
+        	image.attr("onerror","this.src='files/general/default.png'");
+        	image.css("max-width","100%");
+        	domElem.find(".inhalt_bild").html(image);
+        	break;
+        case paramKkVideo:
+        	domElem.find(".kk_inhalt").addClass("inhalt_video");
+        	video = $(document.createElement("video"));
+        	video.attr("autobuffer","");
+        	video.attr("controls","");
+        	video.append("<source src='files/videos/"+json[paramId]+".mp4' type='video/mp4'></source>");
+        	video.append("Your browser does not support the video tag.");
+        	domElem.find(".inhalt_video").html(video);
 	}
+
+    // Klone die Buttonbar mit Votes und Optionen neben den Titel fuer Smartphoneansicht
+    var kkButtonbar = domElem.find(".kk_buttonbar").clone(true,true);
+    domElem.find(".kk_titel").append(kkButtonbar);
 }
+
 function createAttrStr(arrAttr){
 	strArr = [];
 	if(arrAttr[0] == true)
-		strArr.push("Satz");
+		strArr.push("<span class='kk_attr_chip'>Satz</span>");
 	if(arrAttr[1] == true)
-		strArr.push("Lemma");
+		strArr.push("<span class='kk_attr_chip'>Lemma</span>");
 	if(arrAttr[2] == true)
-		strArr.push("Beweis");
+		strArr.push("<span class='kk_attr_chip'>Beweis</span>");
 	if(arrAttr[3] == true)
-		strArr.push("Definition");
+		strArr.push("<span class='kk_attr_chip'>Definition</span>");
 	if(arrAttr[4] == true)
-		strArr.push("Wichtig");
+		strArr.push("<span class='kk_attr_chip'>Wichtig</span>");
 	if(arrAttr[5] == true)
-		strArr.push("Grundlage");
+		strArr.push("<span class='kk_attr_chip'>Grundlage</span>");
 	if(arrAttr[6] == true)
-		strArr.push("Zusatzinfo");
+		strArr.push("<span class='kk_attr_chip'>Zusatzinfo</span>");
 	if(arrAttr[7] == true)
-		strArr.push("Exkurs");
+		strArr.push("<span class='kk_attr_chip'>Exkurs</span>");
 	if(arrAttr[8] == true)
-		strArr.push("Beispiel");
+		strArr.push("<span class='kk_attr_chip'>Beispiel</span>");
 	if(arrAttr[9] == true)
-		strArr.push("Übung");
+		strArr.push("<span class='kk_attr_chip'>Übung</span>");
 	
 	if(strArr.length == 0)
-		strArr.push("Keine Attribute angegeben.");
+		strArr.push("<span class='kk_info_keine_attr'>Keine Attribute angegeben.</span>");
 	
-	return concatStrArr(strArr, ", ");
+	return concatStrArr(strArr, "");
 }
 /**
  * 
@@ -290,13 +337,13 @@ function fillVerweise(domKk, verweisArr)
 	}
 	
 	if(rel_vor.length == 0)
-		rel_vor.push("Keine Verweise angegeben.");
+		rel_vor.push("<span class='kk_info_keine_verw'>Keine Verweise angegeben.</span>");
 	if(rel_zusatz.length == 0)
-		rel_zusatz.push("Keine Verweise angegeben.");
+		rel_zusatz.push("<span class='kk_info_keine_verw'>Keine Verweise angegeben.</span>");
 	if(rel_sonstiges.length == 0)
-		rel_sonstiges.push("Keine Verweise angegeben.");
+		rel_sonstiges.push("<span class='kk_info_keine_verw'>Keine Verweise angegeben.</span>");
 	if(rel_uebung.length == 0)
-		rel_uebung.push("Keine Verweise angegeben.");
+		rel_uebung.push("<span class='kk_info_keine_verw'>Keine Verweise angegeben.</span>");
 	
 
 	domKk.find(".kk_rel_vorraus").html(concatStrArr(rel_vor, ", "));
@@ -329,14 +376,10 @@ function setNotiz(kkDom, kkId)
 	    function(response) {
 	    	kkDom.find(".kk_notizen_body").val(response[paramInhalt]);
 	    	if(response[paramInhalt].trim() != "")
-	    	{
-	    		// TODO Unschön
-//	    		kkDom.find(".kk_notizen_head").append(" (!)");
-	    	}
+	    		kkDom.find(".kk_notiz_gesetzt_wrapper").html(
+	    		        "<span class='kk_notiz_gesetzt'></span>");
 	    	else
-    		{
-//	    		kkDom.find(".kk_notizen_head").append("( gesetzt )");
-    		}
+	    	    kkDom.find(".kk_notiz_gesetzt_wrapper").hide();
 	    },
 	    params
 	);
