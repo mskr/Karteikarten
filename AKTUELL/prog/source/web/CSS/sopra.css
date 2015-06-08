@@ -1506,6 +1506,10 @@ textarea.input_std {
 	display: none;
 	position: relative;
 }
+.kk_kommheader_refresh{
+	float:left;
+	position: relative;
+}
 
 .kk_kommheader .kk_kommzaehler {
 	font-weight: bold;

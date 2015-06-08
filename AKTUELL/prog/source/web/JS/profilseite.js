@@ -328,7 +328,7 @@ function registerProfilSpeichernEvents() {
         	
             var params = {};
             params[paramPasswortNew] = escape(pwNeu);
-            if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
+            if(jsonBenutzer[paramNutzerstatus] != "ADMIN")
             	params[paramPasswort] = escape(pwAlt);
             params[paramId] = currentProfilID;
             ajaxCall(
@@ -336,6 +336,9 @@ function registerProfilSpeichernEvents() {
                 actionAenderePasswort,
                 function(response) {
                     showInfo("Änderungen gespeichert.");
+                    $("#profil_passwort_alt_input").removeAttr("style");
+                    $("#profil_passwort_wdh_input").removeAttr("style");
+                    $("#profil_passwort_input").removeAttr("style");
                     fillProfilseite();
                 },
                 params,

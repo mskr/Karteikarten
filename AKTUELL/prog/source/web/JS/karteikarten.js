@@ -211,19 +211,23 @@ function buildKarteikarte(karteikarteJson)
 		});
 	});
     
-    
-    // Kommentare laden und anzeigen
-    var params = {};
-    params[paramId] = kkId;
-	ajaxCall(
-	    kommentarServlet,
-	    actionLeseThemaKommentar,
-	    function(response) {
-	    	arr = response[keyJsonArrResult];
-	        showHauptKommentare(kkDom,arr);
-	    },
-	    params
-	);
+   
+	
+	kkDom.find(".kk_kommheader_refresh").click(function(){
+	    // Kommentare laden und anzeigen
+	    var params = {};
+	    params[paramId] = kkId;
+		ajaxCall(
+		    kommentarServlet,
+		    actionLeseThemaKommentar,
+		    function(response) {
+		    	arr = response[keyJsonArrResult];
+		        showHauptKommentare(kkDom,arr);
+		    },
+		    params
+		);
+	});
+	kkDom.find(".kk_kommheader_refresh").trigger("click");
 	
 
 	
