@@ -26,6 +26,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.locks.ReentrantLock;
 import java.sql.Timestamp;
 
+import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
+
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
 import com.sopra.team1723.exceptions.*;
@@ -37,9 +39,11 @@ import com.sopra.team1723.exceptions.*;
 public class Datenbankmanager implements IDatenbankmanager
 {
     final int                                         UNIQUE_CONSTRAINT_ERROR = 1062;
-    private static HashMap<Connection, ReentrantLock> connectionsNeo4j        = null;
-    private static HashMap<Connection, ReentrantLock> connections             = null;
-    private final static int                          AnzConnections          = 10;
+//    private static HashMap<Connection, ReentrantLock> connectionsNeo4j        = null;
+//    private static HashMap<Connection, ReentrantLock> connections             = null;
+//    private final static int                          AnzConnections          = 10;
+    private static BasicDataSource                      connectionPoolSQL = new BasicDataSource();
+    private static BasicDataSource                      connectionPoolNeo4j = new BasicDataSource();
 
     /**
      * Implementiert die Methoden des private ArrayList<Connection> connections
@@ -54,91 +58,120 @@ public class Datenbankmanager implements IDatenbankmanager
 
     static
     {
-        try
-        {
-            Class.forName("com.mysql.jdbc.Driver");
-            Class.forName("org.neo4j.jdbc.Driver");
-            connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
-            for (int i = 0; i < AnzConnections; ++i)
-                connectionsNeo4j.put(
-                        DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten", "neo4j", "hallo123"),
-                        new ReentrantLock());
-
-            connections = new HashMap<Connection, ReentrantLock>();
-            for (int i = 0; i < AnzConnections; ++i)
-                connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra", "root", ""),
-                        new ReentrantLock());
-        }
-        catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
+        connectionPoolSQL.setUrl("jdbc:mysql://localhost:3306/sopra");
+        connectionPoolSQL.setDriverClassName("com.mysql.jdbc.Driver");
+        connectionPoolSQL.setUsername("root");
+        connectionPoolSQL.setPassword("");
+        
+        connectionPoolNeo4j.setUrl("jdbc:neo4j://localhost:7474/karteikarten");
+        connectionPoolNeo4j.setDriverClassName("org.neo4j.jdbc.Driver");
+        connectionPoolNeo4j.setUsername("neo4j");
+        connectionPoolNeo4j.setPassword("hallo123");
+        
+//        try
+//        {
+//            Class.forName("com.mysql.jdbc.Driver");
+//            Class.forName("org.neo4j.jdbc.Driver");
+//            connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
+//            for (int i = 0; i < AnzConnections; ++i)
+//                connectionsNeo4j.put(
+//                        DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten", "neo4j", "hallo123"),
+//                        new ReentrantLock());
+//
+//            connections = new HashMap<Connection, ReentrantLock>();
+//            for (int i = 0; i < AnzConnections; ++i)
+//                connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra", "root", ""),
+//                        new ReentrantLock());
+//        }
+//        catch (ClassNotFoundException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        catch (SQLException e)
+//        {
+//            e.printStackTrace();
+//        }
     }
 
-    public static Entry<Connection, ReentrantLock> getConnectionNeo4j()
+//    public static Entry<Connection, ReentrantLock> getConnectionNeo4j()
+//    {
+//        Iterator<Entry<Connection, ReentrantLock>> it = connectionsNeo4j.entrySet().iterator();
+//        Entry<Connection, ReentrantLock> defaultConnection = null;
+//        while (it.hasNext())
+//        {
+//            Entry<Connection, ReentrantLock> connection = it.next();
+//            if (!connection.getValue().isLocked())
+//            {
+//                connection.getValue().lock();
+//                return connection;
+//            }
+//
+//            if (defaultConnection == null
+//                    || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
+//                defaultConnection = connection;
+//        }
+//        System.out.println("Keine Neo4j Connection frei! Warte in Queue");
+//        try
+//        {
+//            throw new Exception("No Connection free");
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//        defaultConnection.getValue().lock();
+//        return defaultConnection;
+//    }
+//
+    public static synchronized Connection getConnectionNeo4j()
     {
-        Iterator<Entry<Connection, ReentrantLock>> it = connectionsNeo4j.entrySet().iterator();
-        Entry<Connection, ReentrantLock> defaultConnection = null;
-        while (it.hasNext())
-        {
-            Entry<Connection, ReentrantLock> connection = it.next();
-            if (!connection.getValue().isLocked())
-            {
-                connection.getValue().lock();
-                return connection;
-            }
-
-            if (defaultConnection == null
-                    || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
-                defaultConnection = connection;
+        Connection connection = null;
+        try {
+            connection = connectionPoolNeo4j.getConnection();
+        } catch (SQLException ex) {
+            System.out.println("Error while getting a connection from the pool! \nNeo4j state:" + ex.getSQLState() + "\nMESSAGE" + ex.getMessage());
         }
-        System.out.println("Keine Neo4j Connection frei! Warte in Queue");
-        try
-        {
-            throw new Exception("No Connection free");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        defaultConnection.getValue().lock();
-        return defaultConnection;
+        return connection;
     }
-
-    public static Entry<Connection, ReentrantLock> getConnection()
+    
+    public static synchronized Connection getConnectionSQL()
     {
-        Iterator<Entry<Connection, ReentrantLock>> it = connections.entrySet().iterator();
-        Entry<Connection, ReentrantLock> defaultConnection = null;
-        while (it.hasNext())
-        {
-            Entry<Connection, ReentrantLock> connection = it.next();
-            if (!connection.getValue().isLocked())
-            {
-                connection.getValue().lock();
-                return connection;
-            }
-
-            if (defaultConnection == null
-                    || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
-                defaultConnection = connection;
+        Connection connection = null;
+        try {
+            connection = connectionPoolSQL.getConnection();
+        } catch (SQLException ex) {
+            System.out.println("Error while getting a connection from the pool! \nSQL state:" + ex.getSQLState() + "\nMESSAGE" + ex.getMessage());
         }
-        System.out.println("Keine SQL Connection frei! Warte in Queue.");
-        try
-        {
-            throw new Exception("No Connection free");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        defaultConnection.getValue().lock();
-        return defaultConnection;
+        return connection;
+        
+//        Iterator<Entry<Connection, ReentrantLock>> it = connections.entrySet().iterator();
+//        Entry<Connection, ReentrantLock> defaultConnection = null;
+//        while (it.hasNext())
+//        {
+//            Entry<Connection, ReentrantLock> connection = it.next();
+//            if (!connection.getValue().isLocked())
+//            {
+//                connection.getValue().lock();
+//                return connection;
+//            }
+//
+//            if (defaultConnection == null
+//                    || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
+//                defaultConnection = connection;
+//        }
+//        System.out.println("Keine SQL Connection frei! Warte in Queue.");
+//        try
+//        {
+//            throw new Exception("No Connection free");
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//        defaultConnection.getValue().lock();
+//        return defaultConnection;
     }
 
     public void closeQuietly(Connection connection)
@@ -191,8 +224,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Benutzer leseBenutzer(String eMail)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Benutzer benutzer = null;
@@ -224,7 +256,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return benutzer;
@@ -233,16 +264,8 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Benutzer leseBenutzer(int id)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
-        try
-        {
-            return leseBenutzerWrapper(id, conMysql);
-        }
-        finally
-        {
-            conLock.getValue().unlock();
-        }
+        Connection conMysql = getConnectionSQL();
+        return leseBenutzerWrapper(id, conMysql);
     }
     
     private Benutzer leseBenutzerWrapper(int id, Connection conMysql){
@@ -285,8 +308,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public void schreibeBenutzer(Benutzer benutzer) throws DbUniqueConstraintException, SQLException
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         if (ServletController.DEBUGMODE)
             System.out.println("------");
@@ -333,15 +355,13 @@ public class Datenbankmanager implements IDatenbankmanager
         finally
         {
             closeQuietly(ps);
-            conLock.getValue().unlock();
         }
     }
 
     @Override
     public void bearbeiteBenutzer(Benutzer benutzer) throws SQLException, DbUniqueConstraintException
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         try
@@ -371,7 +391,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
     }
 
@@ -379,8 +398,7 @@ public class Datenbankmanager implements IDatenbankmanager
     public void bearbeiteBenutzerAdmin(Benutzer benutzer, Benutzer aktuellerBenutzer) throws SQLException,
             DbUniqueConstraintException
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         try
@@ -424,15 +442,13 @@ public class Datenbankmanager implements IDatenbankmanager
             conMysql.setAutoCommit(true);
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
     }
 
     @Override
     public boolean loescheBenutzer(int benutzerId)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         boolean erfolgreich = true;
         try
@@ -450,7 +466,6 @@ public class Datenbankmanager implements IDatenbankmanager
         finally
         {
             closeQuietly(ps);
-            conLock.getValue().unlock();
         }
         return erfolgreich;
     }
@@ -458,8 +473,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public void pruefeLogin(String eMail, String passwort) throws SQLException, DbFalseLoginDataException
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         try
@@ -494,7 +508,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
     }
@@ -502,8 +515,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public List<String> leseStudiengaenge()
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         ArrayList<String> studiengaenge = new ArrayList<String>();
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -526,7 +538,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
         return studiengaenge;
     }
@@ -534,8 +545,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Map<Integer, String> leseSemester()
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Map<Integer, String> semester = null;
@@ -559,7 +569,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
         return semester;
     }
@@ -567,8 +576,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public boolean passwortAendern(String eMail, String neuesPasswort)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean erfolgreich = true;
@@ -589,7 +597,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
         return erfolgreich;
     }
@@ -597,8 +604,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public boolean aendereProfilBild(int benutzerId, String dateiName)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean erfolgreich = true;
@@ -620,7 +626,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
         return erfolgreich;
     }
@@ -628,16 +633,8 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Veranstaltung leseVeranstaltung(int id)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
-        try
-        {
-            return leseVeranstaltungWrapper(id, conMysql);
-        }
-        finally
-        {
-            conLock.getValue().unlock();
-        }
+        Connection conMysql = getConnectionSQL();
+        return leseVeranstaltungWrapper(id, conMysql);
 
     }
     
@@ -686,8 +683,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public List<Veranstaltung> leseVeranstaltungen(String semester, String studiengang)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<Veranstaltung> veranstaltungen = null;
@@ -725,7 +721,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
         return veranstaltungen;
 
@@ -734,8 +729,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public List<Veranstaltung> leseVeranstaltungen(int benutzer)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<Veranstaltung> veranstaltungen = null;
@@ -772,7 +766,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return veranstaltungen;
@@ -781,8 +774,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public List<Benutzer> leseModeratoren(int veranstaltung)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<Benutzer> moderatoren = null;
@@ -814,7 +806,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return moderatoren;
@@ -823,8 +814,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public List<String> leseStudiengaenge(int veranstaltung)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ArrayList<String> studiengaenge = null;
@@ -850,7 +840,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
 
         return studiengaenge;
@@ -888,8 +877,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Boolean istModerator(int benutzer, int veranstaltung)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
 
         try
         {
@@ -897,7 +885,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         finally
         {
-            conLock.getValue().unlock();
+//            conLock.getValue().unlock();
         }
     }
 
@@ -945,8 +933,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Map<IjsonObject, Integer> durchsucheDatenbankVeranstaltung(String suchmuster)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Map<IjsonObject, Integer> ergebnisse = null;
@@ -976,7 +963,6 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             closeQuietly(ps);
             closeQuietly(rs);
-            conLock.getValue().unlock();
         }
         return ergebnisse;
     }
@@ -984,8 +970,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Map<IjsonObject, Integer> durchsucheDatenbankBenutzer(String suchmuster)
     {
-        Entry<Connection, ReentrantLock> conLock = getConnection();
-        Connection conMysql = conLock.getKey();
+        Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Map<IjsonObject, Integer> ergebnisse = null;
@@ -2083,7 +2068,6 @@ public class Datenbankmanager implements IDatenbankmanager
                         rs.getBoolean("Zusatzinformation"), rs.getBoolean("Exkurs"), rs.getBoolean("Beispiel"),
                         rs.getBoolean("Uebung"), verweise);
             }
-
         }
         catch (SQLException e)
         {

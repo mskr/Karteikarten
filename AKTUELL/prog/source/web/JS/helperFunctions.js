@@ -220,7 +220,7 @@ function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, be
 {
     console.log("[AJAX] action="+action);
     if(timeOut == undefined)
-    	timeOut = 6000;
+    	timeOut = 10000;
     
 //    return $.ajax({
 //    	timeout: timeOut,
