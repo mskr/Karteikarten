@@ -1938,7 +1938,11 @@ textarea.input_std {
 .profil_loeschen {
 	float: right;
 }
-
+.profil_avatar_loeschen {
+	clear:both;
+	margin-top:10px;
+	float: right;
+}
 .profil_daten, .profil_passwort {
 	text-align: right;
     flex-basis: 15em;

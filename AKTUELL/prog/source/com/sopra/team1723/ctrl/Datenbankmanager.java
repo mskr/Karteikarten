@@ -469,7 +469,33 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         return erfolgreich;
     }
+    @Override
+    public boolean loescheProfilBild(int benutzerId)
+    {
+        Entry<Connection, ReentrantLock> conLock = getConnection();
+        Connection conMysql = conLock.getKey();
+        PreparedStatement ps = null;
+        boolean erfolgreich = true;
+        try
+        {
+            ps = conMysql.prepareStatement("UPDATE benutzer SET Profilbild=? WHERE ID=?");
+            ps.setString(1, "default.png");
+            ps.setInt(2, benutzerId);
+            ps.executeUpdate();
 
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            erfolgreich = false;
+        }
+        finally
+        {
+            closeQuietly(ps);
+            conLock.getValue().unlock();
+        }
+        return erfolgreich;
+    }
     @Override
     public void pruefeLogin(String eMail, String passwort) throws SQLException, DbFalseLoginDataException
     {
