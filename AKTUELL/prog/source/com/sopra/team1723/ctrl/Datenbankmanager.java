@@ -405,7 +405,7 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public void bearbeiteBenutzerAdmin(Benutzer benutzer, Benutzer aktuellerBenutzer) throws SQLException,
+    public void bearbeiteBenutzerAdmin(Benutzer benutzer, Benutzer admin) throws SQLException,
             DbUniqueConstraintException
     {
         Connection conMysql = getConnectionSQL();
@@ -432,9 +432,9 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
-            if (benutzer.getId() != aktuellerBenutzer.getId())
+            if (benutzer.getId() != admin.getId())
                 schreibeBenachrichtigungWrapper(new BenachrProfilGeaendert(new GregorianCalendar(), benutzer.getId(),
-                        aktuellerBenutzer), conMysql);
+                        admin), conMysql);
 
             conMysql.commit();
         }
@@ -2957,6 +2957,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
+            k = null;
             e.printStackTrace();
 
         }
@@ -3371,15 +3372,17 @@ public class Datenbankmanager implements IDatenbankmanager
 
             rs = ps.executeQuery();
 
-            while (rs.next())
+            if (rs.next())
             {
                 notiz = new Notiz(rs.getInt("ID"), rs.getString("Inhalt"), rs.getInt("Benutzer"),
                         rs.getInt("KarteikarteID"));
 
-            }
+            } else
+                return null;
         }
         catch (SQLException e)
         {
+            notiz = null;
             e.printStackTrace();
         }
         finally
