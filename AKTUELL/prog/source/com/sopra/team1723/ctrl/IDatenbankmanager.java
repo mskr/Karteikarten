@@ -69,12 +69,14 @@ public interface IDatenbankmanager {
      * @return true, falls kein Fehler auftritt, false bei einem Fehler
      */
     public boolean aendereProfilBild(int benutzerId, String dateiName);
+    
     /**
      * Löscht das Profilbild eines Benutzers in der Datenbank.
      * @param benutzerId referenziert eindeutig den Benutzer
      * @return true, falls kein Fehler auftritt, false bei einem Fehler
      */
     public boolean loescheProfilBild(int benutzerId);
+    
     /**
      * Daten des angegebenen Benutzers werden in der Datenbank geupdatet. Das Kennwort wird nicht gesetzt
      * {@link #passwortAendern(String, String)}. Diese Methode wird verwendet, wenn
@@ -83,10 +85,11 @@ public interface IDatenbankmanager {
      * verwendet. Tritt ein Fehler in der Datenbank auf, dann wird eine SQLException geworfen. Wird versucht einen Benutzer
      * mit einer bereits vorhandenen eMail Adresse anzulegen, so wird eine DbUniqueConstraintException
      * geworfen
-     * @param benutzer-Objket, das in der Datenbank geupdatet wird 
+     * @param benutzer-Objket, das in der Datenbank geupdatet wird
+     * @param admin, der das Profil des Benutzers bearbeitet
      * @throws DbUniqueConstraintException, SQLException
      */
-    public void bearbeiteBenutzerAdmin(Benutzer benutzer, Benutzer aktuellerBenutzer) throws SQLException, DbUniqueConstraintException;
+    public void bearbeiteBenutzerAdmin(Benutzer benutzer, Benutzer admin) throws SQLException, DbUniqueConstraintException;
 
     /**
      * Entfernt den Benutzer aus der Datenbank. 
@@ -438,54 +441,60 @@ public interface IDatenbankmanager {
     public boolean hatKarteikarteBewertet(int karteikID, int benutzer);
 
     /**
-     * Gibt alle Kommentare zu einer Karteikarte zuruck. Bei einem Fehler
-     * wird null zuruckgegeben
-     * @param karteikID 
-     * @param vaterKID 
-     * @return
+     * Holt alle Themenkommentare zu einer Karteikarte
+     * @param karteikID referenziert eindeutig eine Karteikarte
+     * @param aktBenutzerID referenziert eindeutig einen Benutzer. Mit dieser ID kann ermittelt
+     * werden welche Kommentare dieser Benutzer bewertet hat
+     * @return Liste von Themenkommentaren. Bei einem Fehler kommt null zurück. Gibt es keine
+     * Themenkommentare zu der Karteikarte, dann wird eine leere Liste zurückgegeben
      */
     public ArrayList<Kommentar> leseThemenKommentare(int karteikID, int aktBenutzerID);
+    
+    /**
+     * Holt alle Antworten zu einem Kommentar
+     * @param vaterKID referenziert eindeutig einen Themenkommentar
+     * @param aktBenutzerID referenziert eindeutig einen Benutzer. Mit dieser ID kann ermittelt
+     * werden welche Kommentare dieser Benutzer bewertet hat
+     * @return Liste von Antwortkommentaren. Bei einem Fehler kommt null zurück. Gibt es keine
+     * Antwortkommentare zu dem Themenkommentar, dann wird eine leere Liste zurückgegeben
+     */
     public ArrayList<Kommentar> leseAntwortKommentare(int vaterKID, int aktBenutzerID);
 
     /**
-     * Fugt neuen Kommentar in die Datenbank ein. Bei Erfolg wird
-     * true zuruckgegeben. Bei einem Fehler in der Datenbank wird false
-     * zuruckgeliefert.
-     * @param kommentar 
-     * @return
+     * Fügt einen neuen Kommentar in die Datenbank ein
+     * @param kommentar referenziert eindeutig einen Kommentar
+     * @return Bei Erfolg wird true zurückgegeben. Bei einem Fehler in der Datenbank kommt false zurück
      */
     public boolean schreibeKommentar(Kommentar kommentar);
 
     /**
-     * Entfernt den Kommentar aus der Datenbank. Tritt ein Fehler auf
-     * gibt die Methode false zuruck. Ansonsten true. (Auch wenn der
+     * Entfernt den Kommentar aus der Datenbank.
+     * @param kommentarID referenziert eindeutig einen Kommentar
+     * @return Tritt ein Fehler auf gibt die Methode false zurück. Ansonsten true. (Auch wenn der
      * Kommentar gar nicht in der Datenbank vorhanden war.)
-     * @param kommentarID 
-     * @return
      */
     public boolean loescheKommentar(int kommentarID);
 
     /**
      * Speichert die Bewertung, die der Benutzer diesem Kommentar gegeben
      * hat. Die Gesamtbewertung des Kommentars wird entsprechend
-     * angepasst. Bei einem Fehler wird false zuruckgeliefert ansonsten
+     * angepasst.
+     * @param kommentarID referenziert eindeutig einen Kommentar
+     * @param bewert, Bewertung des Kommentars
+     * @param benutzer referenziert eindeutig einen Benutzer
+     * @return Bei einem Fehler wird false zurückgeliefert ansonsten
      * true.
-     * @param kommentarID 
-     * @param bewert 
-     * @param benutzer 
-     * @return
      */
     public boolean bewerteKommentar(int kommentarID, int bewert, int benutzerId);
 
     /**
-     * Gibt true zuruck, falls der Benutzer diesen Kommentar bereits bewertet
-     * hat. Ansonsten wird false zuruckgegeben.
-     * @param kommentarID 
-     * @param benutzer 
-     * @return
+     * Prüft ob der Benutzer den Kommentar bereits bewertet hat
+     * @param kommentarID referenziert eindeutig einen Kommentar
+     * @param benutzerId referenziert eindeutig einen Benutzer
+     * @return Gibt true zurück, falls der Benutzer den Kommentar bereits bewertet hat.
+     * Falls nicht wird false zurückgegeben. Bei einem Fehler kommt null zurück.
      */
     public Boolean hatKommentarBewertet(int kommentarID, int benutzerId);
-
 
     /**
      * Schreibt Benutzer in die Veranstaltung ein. Ist der Benutzer bereits in die Veranstaltung eingetragen,
@@ -496,6 +505,8 @@ public interface IDatenbankmanager {
      * @param veranstaltung referenziert eindeutig eine Veranstaltung 
      * @param benutzer referenziert eindeutig einen Benutzer 
      * @param kennwort für den Zugang zur Veranstaltung
+     * @param isAdmin. Falls isAdmin true wird nicht geprüft ob das Kennwort richtig ist. Der Admin darf sich also
+     * in jede Veranstaltung eintragen. Ist isAdmin false, so wird die Prüfung durchgeführt
      * @throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
      */
     public void zuVeranstaltungEinschreiben(int veranstaltung, int benutzer, String kennwort, boolean isAdmin) throws SQLException, 
@@ -511,12 +522,11 @@ public interface IDatenbankmanager {
     public boolean vonVeranstaltungAbmelden(int veranstaltung, int benutzer);
 
     /**
-     * Liest alle Notizen eines Benutzers zu einer Karteikarte
+     * Liest die Notiz eines Benutzers zu einer Karteikarte
      * @param benutzer referenziert eindeutig einen Benutzer 
      * @param karteikID referenziert eindeutig eine Karteikarte
-     * @return Liste von Notiz-Objekten. Bei einem Fehler wird null zurückgegeben.
-     * Gibt es keine Notizen von dem Benutzer zu dieser Karteikarte wird
-     * eine leere Liste zurückgegeben
+     * @return Notiz-Objekt. Bei einem Fehler oder falls keine Notiz
+     * gefunden wird null zurückgegeben.
      */
     public Notiz leseNotiz(int benutzer, int karteikID);
 
@@ -529,7 +539,7 @@ public interface IDatenbankmanager {
 
     /**
      * Updatet die angegebene Notiz in der Datenbank
-     * @param notiz 
+     * @param notiz
      * @return Liefert true, falls kein Fehler aufgetreten ist, ansonsten false
      */
     public boolean bearbeiteNotiz(Notiz notiz);
@@ -542,11 +552,11 @@ public interface IDatenbankmanager {
     public boolean loescheNotiz(int notizID);
 
     /**
-     * @param eMail 
-     * @param status 
-     * @return
+     * Liest einen Kommentar aus der Datenbank
+     * @param kommId referenziert eindeutig einen Kommentar 
+     * @return Kommentar-Objekt. Bei einem Fehler oder falls kein Kommentar gefunden
+     * wird, kommt null zurück
      */
-
     public Kommentar leseKommentar(int kommId);
     
 
