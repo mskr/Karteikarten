@@ -4,14 +4,17 @@ $(document).ready(function(){
 });
 
 
-function newKarteikarte(triggerElem) {
+function newKarteikarte(vater, bruder) {
     
-	var vater = findVater(triggerElem);
+//	var vater = findVater(triggerElem);
 	// Spezialfall ganz oben im Baum
 	if(vater == undefined)
 		vater = veranstaltungsObject[paramErsteKarteikarte];
+	if(bruder == undefined) //no brother before it, then -1
+		bruder = -1;
 	
-	var bruder = findBruder(triggerElem);
+		
+//	var bruder = findBruder(triggerElem);
 	try{
 	    var kk_ck_editor = $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
 	}
@@ -44,13 +47,12 @@ function newKarteikarte(triggerElem) {
     // Sammle Ajax Objekte aller Verweis Baeume
     var verwBaeumeAjaxCalls = [];
     
-    $(".kk_erstellen_verweise_baum").each(function() {
-        // Verweis Baeume initialisieren
-        baumWurzelAjax = ladeKindKarteikarten(
-                veranstaltungsObject[paramErsteKarteikarte], 
-                $(this), 
-                false, 
-                function(arr, kkListItem, i, e, ajax, klappeAus) {
+    $(".kk_erstellen_verweise_baum").each(function(i,v) {
+    	var inh = new Inhaltsverzeichnis($(this),
+    			veranstaltungsObject,
+    			undefined,
+    			false,
+    			function(arr, kkListItem, i, e, ajax, klappeAus) {
                     if(klappeAus)
                     {
                         $.when(ajax).done(function() {
@@ -70,10 +72,10 @@ function newKarteikarte(triggerElem) {
                             });
                         });
                     }
-                }, 
-                true
-        );
-        verwBaeumeAjaxCalls.push(baumWurzelAjax);
+                },
+                true,false);
+
+        verwBaeumeAjaxCalls.push(inh.init());
     });
     
     // Warte darauf, dass die Wurzel-Ebene aller Verweise Baeume geladen wurde
@@ -183,6 +185,7 @@ function newKarteikarte(triggerElem) {
     	$("#kk_erstellen_text_area").show();
 		$("#df_area_kk").show();
     	$("#kk_erstellen_popup input[type='checkbox']").prop("checked",false);
+		$("#kk_erstellen_content").show();
     	$("#kk_erstellen_titel_input").val("");
     	$("#kk_erstellen_TA").val("");
     	kkErstellenDropZone.removeAllFiles(true);
@@ -249,7 +252,9 @@ function newKarteikarte(triggerElem) {
                 function(response) {
                     showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich erzeugt.");
                     displayKarteikarte(response[paramId]);
-                    initInhaltsverzeichnis();
+                    $.when(vnInhaltsverzeichnis.init()).done(function(){
+                        vnInhaltsverzeichnis.showEintrag(response[paramId]);
+                    });
                 },
                 params
             );
@@ -258,43 +263,43 @@ function newKarteikarte(triggerElem) {
    
 }
 
-/**
- * Hilfsmethode fuer das Erstellen von Karteikarten mittels Inhaltsverzeichnis.
- * @param elem jQuery Object. Ein Erstellen Button im Inhaltsverzeichnis.
- * @returns ID der Vaterkarteikarte
- */
-function findVater(elem)
-{
-	maybeNode = elem.parent().parent().parent().attr("id")
-	if(maybeNode === "kk_inhaltsverzeichnis"){
-		return veranstaltungsObject[paramErsteKarteikarte];
-	}
-	else
-	{
-		maybeNode = elem.parent().parent().prev().data("kkid");
-		return maybeNode;
-	}
-}
-
-/**
- * Hilfsmethode fuer das Erstellen von Karteikarten mittels Inhaltsverzeichnis.
- * @param elem jQuery Object. Ein Erstellen Button im Inhaltsverzeichnis.
- * @returns ID der vorhergehenden Bruderkarteikarte
- */
-function findBruder(elem)
-{
-	elemBefore = elem.parent().prev();
-	if(elemBefore.length < 1){ //no brother before it, then -1
-		return -1;
-	}
-	else
-	{
-		id = elemBefore.children().first().data("kkid");
-		return id
-	}
-	//2.:
-//	elem.parent().prev().children().first().data("kkid");
-}
+///**
+// * Hilfsmethode fuer das Erstellen von Karteikarten mittels Inhaltsverzeichnis.
+// * @param elem jQuery Object. Ein Erstellen Button im Inhaltsverzeichnis.
+// * @returns ID der Vaterkarteikarte
+// */
+//function findVater(elem)
+//{
+//	maybeNode = elem.parent().parent().parent().attr("id")
+//	if(maybeNode === "kk_inhaltsverzeichnis"){
+//		return veranstaltungsObject[paramErsteKarteikarte];
+//	}
+//	else
+//	{
+//		maybeNode = elem.parent().parent().parent().prev().data("kkid");
+//		return maybeNode;
+//	}
+//}
+//
+///**
+// * Hilfsmethode fuer das Erstellen von Karteikarten mittels Inhaltsverzeichnis.
+// * @param elem jQuery Object. Ein Erstellen Button im Inhaltsverzeichnis.
+// * @returns ID der vorhergehenden Bruderkarteikarte
+// */
+//function findBruder(elem)
+//{
+//	elemBefore = elem.parent().prev();
+//	if(elemBefore.length < 1){ //no brother before it, then -1
+//		return -1;
+//	}
+//	else
+//	{
+//		id = elemBefore.data("kkid");
+//		return id
+//	}
+//	//2.:
+////	elem.parent().prev().children().first().data("kkid");
+//}
 
 function isImage(filename) 
 {

@@ -1,7 +1,7 @@
 /**
  * @author mk
  */
-
+insertingKarteikarte = false;
 function buildKarteikarte(karteikarteJson)
 {
     var kkId = karteikarteJson[paramId],
@@ -61,10 +61,11 @@ function buildKarteikarte(karteikarteJson)
     	sindSieSicher(kkDom.find(".KKloeschen"), "Wollen Sie diese Karteikarte wirklich löschen?", function(){
     		var params = {};
     		params[paramId] = kkId;
-    		ajaxCall(karteikartenServlet, actionDeleteKk, function(){
-    			kkDom.find("*").off();
-    			kkDom.slideUp();
-    	    	initInhaltsverzeichnis();
+    		ajaxCall(karteikartenServlet, actionDeleteKk, function(){    			
+    			displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], undefined, true);
+                $.when(vnInhaltsverzeichnis.init()).done(function(){
+                    vnInhaltsverzeichnis.showEintrag(veranstaltungsObject[paramErsteKarteikarte]);
+                });
     			showInfo("Karteikarte gelöscht.");
     		}, params);
     	});
@@ -88,13 +89,17 @@ function buildKarteikarte(karteikarteJson)
     new Waypoint({
 	    element: kkDom,
 	    handler: function(direction) {
-	        inhaltsverzeichnisUnhighlightAll();
-	        var kkID = kkDom.attr("data-kkid");
-	        if(kkID != veranstaltungsObject[paramErsteKarteikarte])
-	            inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkID);
-	        else
-	            $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("fast", function() { $(this).remove() });
-	    }
+	    	//TODO
+	    	if(!insertingKarteikarte)
+	    		vnInhaltsverzeichnis.showEintrag(kkId);
+	    	
+//	    	vnInhaltsverzeichnis.unhighlightAll();
+//	        if(kkID != veranstaltungsObject[paramErsteKarteikarte])
+//	            inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkID);
+//	        else
+//	            $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("fast", function() { $(this).remove() });
+	    },
+	    offset: "20px"
 	});
     
 
@@ -485,64 +490,3 @@ function voteKkDown(kommId)
 //    // TODO Funktion darf nicht returnen bevor der Callback von $.when().done oben feuert! Wie geht das?
 //}
 
-
-function inhaltsverzeichnisAufklappenBis(startElem, kkID)
-{
-    // Hole Liste mit Kindern der naechsten Ebene
-    var kkArr = startElem.find("> ul > li .inhaltsvz_kk_knoten");
-    if(kkArr.length == 0) return;
-    // Merke mit diesem Flag, ob ID gefunden
-    var isFound = false;
-    // Suche in der aktuellen Ebene nach der ID
-    kkArr.each(function(i, elem) {
-        var currentKkID = $(elem).attr("data-kkid");
-        if(currentKkID == kkID)
-        {
-            // Wenn gefunden Knoten hervorheben
-            inhaltsverzeichnisHighlightKnoten($(elem));
-            // Geschwisterknoten einklappen
-            $(elem).parents("li").siblings().find("ul").slideUp("normal", function() { $(this).remove() });
-            isFound = true;
-            return false; // break loop
-        }
-    });
-    // Wenn ID noch nicht gefunden, gehe Ebene tiefer
-    if(!isFound)
-    {
-        kkArr.each(function(i, elem) {
-            var currentKkID = $(elem).attr("data-kkid");
-            // Ist naechste Ebene bereits ausgeklappt starte sofort rekursiven Aufruf
-            if($(elem).siblings("ul").size() > 0)
-            {
-                inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
-            }
-            // Andernfalls lade naechste Ebene und starte danach rekursiven Aufruf
-            else
-            {
-                $.when( ladeInhaltsverzeichnisKinder(currentKkID, $(elem).parent("li")) ).done(function() {
-                    inhaltsverzeichnisAufklappenBis($(elem).parent("li"), kkID);
-                });
-            }
-        });
-    }
-}
-var inhaltsverzeichnisHighlightedKnoten = [];
-function inhaltsverzeichnisHighlightKnoten(kkKnoten) {
-    kkKnoten.css("font-weight","bold");
-    kkKnoten.css("color","white");
-    kkKnoten.parents("li").css("border-left","2px solid white");
-    inhaltsverzeichnisHighlightedKnoten.push(kkKnoten);
-}
-function inhaltsverzeichnisUnhighlightKnoten(kkKnoten) {
-    kkKnoten.removeAttr("style");
-    kkKnoten.parents("li").removeAttr("style");
-}
-function inhaltsverzeichnisUnhighlightAll() {
-    for(var i in inhaltsverzeichnisHighlightedKnoten) {
-        inhaltsverzeichnisUnhighlightKnoten( inhaltsverzeichnisHighlightedKnoten[i] );
-    }
-}
-
-function inhaltsverzeichnisAlleEinklappen() {
-    $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("normal", function() { $(this).remove() });
-}

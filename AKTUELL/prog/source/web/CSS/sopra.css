@@ -1196,8 +1196,8 @@ textarea.input_std {
 	z-index: 3;
 	width: 30em;
 	height: auto;
-	max-height: 100%;
-	font-size: .8em;
+/* 	max-height: 100%; führt manchmal zu problemen
+ */	font-size: .8em;
 	overflow: auto;
 }
 
@@ -1221,7 +1221,8 @@ textarea.input_std {
 } #kk_inhaltsverzeichnis ul li {
 	white-space: nowrap;
 	border-left: 1px solid #aaa;
-} #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_knoten {
+}
+#kk_inhaltsverzeichnis ul li .inhaltsvz_kk_knoten {
 	
 } #kk_inhaltsverzeichnis ul li .inhaltsvz_kk_knoten:before {
 	content: "\2014";
@@ -1236,7 +1237,10 @@ textarea.input_std {
 	content: "\2192";
 	padding-right: .5em;
 }
-
+/* .gotoKk{
+	opacity: 0;
+}
+ */
 #kk_inhaltsverzeichnis.stuck {
     position: fixed !important;
     top: 0;

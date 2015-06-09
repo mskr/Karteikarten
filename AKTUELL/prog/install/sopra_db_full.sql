@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 08. Jun 2015 um 12:21
+-- Erstellungszeit: 09. Jun 2015 um 19:14
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 `ID` int(11) NOT NULL,
   `Inhalt` mediumtext NOT NULL,
   `Erstelldatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 --
 -- Daten für Tabelle `benachrichtigung`
@@ -88,7 +88,9 @@ INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
 (4, 'Es wurde eine neuer Kommentar zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-08 08:07:16'),
 (5, 'Es wurde eine neuer Kommentar zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-08 08:15:56'),
 (6, 'Es wurde eine neuer Kommentar zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-08 08:19:42'),
-(7, 'Es wurde eine neuer Kommentar in der Veranstaltung "Softwaretechnik II" zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-08 09:39:51');
+(7, 'Es wurde eine neuer Kommentar in der Veranstaltung "Softwaretechnik II" zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-08 09:39:51'),
+(8, 'Sie wurden zur Veranstaltung Bedienungsanleitung eLearning-System als Moderator hinzugefügt!', '2015-06-09 07:12:00'),
+(9, 'Die Veranstaltung Bedienungsanleitung eLearning-System wurde bearbeitet.', '2015-06-09 07:12:00');
 
 -- --------------------------------------------------------
 
@@ -103,14 +105,15 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
   `Veranstaltung` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
   `Angenommen` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `benachrichtigung_einladung_moderator`
 --
 
 INSERT INTO `benachrichtigung_einladung_moderator` (`ID`, `Benachrichtigung`, `Benutzer`, `Veranstaltung`, `Gelesen`, `Angenommen`) VALUES
-(1, 2, 1, 2, 0, NULL);
+(1, 2, 1, 2, 0, NULL),
+(2, 8, 2, 3, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -138,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_neuer_kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Kommentar` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -173,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_veranstaltungsaenderung` (
   `Veranstaltung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `benachrichtigung_veranstaltungsaenderung`
@@ -181,7 +184,9 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_veranstaltungsaenderung` (
 
 INSERT INTO `benachrichtigung_veranstaltungsaenderung` (`ID`, `Benachrichtigung`, `Veranstaltung`, `Benutzer`, `Gelesen`) VALUES
 (1, 3, 2, 1, 0),
-(2, 3, 2, 5, 1);
+(2, 3, 2, 5, 1),
+(3, 9, 3, 1, 0),
+(4, 9, 3, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -202,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
   `NotifyVeranstAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `CryptedPW` varchar(60) NOT NULL COMMENT 'hash = salt(29 Zeichen) + crypted (Rest)'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Daten für Tabelle `benutzer`
@@ -225,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -233,7 +238,9 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 
 INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
 (2, 1, 2),
+(6, 1, 3),
 (5, 2, 2),
+(8, 2, 3),
 (4, 4, 2),
 (3, 5, 2);
 
@@ -274,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KommentarID` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -307,15 +314,38 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
 --
 
 INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderungsdatum`, `Veranstaltung`, `Satz`, `Lemma`, `Beweis`, `Definition`, `Wichtig`, `Grundlagen`, `Zusatzinformation`, `Exkurs`, `Beispiel`, `Uebung`) VALUES
+(0, 'Anderes Profil anzeigen', '', 'TEXT', 0, '2015-06-09 07:22:23', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1, 'Suchfunktion benutzen', '', 'TEXT', 0, '2015-06-09 07:25:10', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 'Zu Veranstaltungen einschreiben / von Veranstaltungen ausschreiben', '', 'TEXT', 0, '2015-06-09 07:27:00', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 'Veranstaltungsübersicht', '', 'TEXT', 0, '2015-06-09 07:28:20', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(4, 'Meine Veranstaltungen', '', 'TEXT', 0, '2015-06-09 07:28:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(5, 'Karteikarten Typen', '', 'TEXT', 0, '2015-06-09 07:37:48', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(6, 'Text-Karteikarten', '', 'TEXT', 0, '2015-06-09 07:38:05', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(7, 'Bild-Karteikarten', '', 'TEXT', 0, '2015-06-09 07:38:20', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(8, 'Video-Karteikarten', '', 'TEXT', 0, '2015-06-09 07:38:34', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(9, 'Karteikarten erstellen', '', 'TEXT', 0, '2015-06-09 07:43:56', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(10, 'Karteikarten bearbeiten', '', 'TEXT', 0, '2015-06-09 07:46:51', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(11, 'Karteikarten löschen', '', 'TEXT', 0, '2015-06-09 07:47:02', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (20, 'SW-Prüfung', '', 'TEXT', 0, '2015-06-04 13:34:01', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(21, 'Hintergrund und Motivation', '<ul><li>Akzeptanz eines Produkts wird durch Qualit&auml;t bestimmt<ul><li>&Uuml;bereinstimmung mit den Anforderungen</li><li>Leistungsumfang, Benutzbarkeit und Komfort</li><li>Flexibilit&auml;t (bez&uuml;glich &Auml;nderungen)</li></ul></li><li>Verbesserung der Qualit&auml;t (von Artefakten der System und&nbsp;Softwareentwicklung) durch<ul><li>Disziplinierte Erstellung (&bdquo;Vorgehensmodelle&ldquo;) und</li><li>Systematische Pr&uuml;fung und Behebung von Defekten</li></ul></li></ul>', 'TEXT', 0, '2015-06-04 13:37:06', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(21, 'Hintergrund und Motivation', '<ul><li>Akzeptanz eines Produkts wird durch Qualit&auml;t bestimmt<ul><li>&Uuml;bereinstimmung mit den Anforderungen</li><li>Leistungsumfang, Benutzbarkeit und Komfort</li><li>Flexibilit&auml;t (bez&uuml;glich &Auml;nderungen)</li></ul></li><li>Verbesserung der Qualit&auml;t (von Artefakten der System und&nbsp;Softwareentwicklung) durch<ul><li>Disziplinierte Erstellung (&bdquo;Vorgehensmodelle&ldquo;) und</li><li>Systematische Pr&uuml;fung und Behebung von Defekten</li></ul></li></ul>', 'TEXT', -1, '2015-06-04 13:37:06', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (22, 'Qualitätssicherung - Review', '', 'TEXT', 0, '2015-06-04 13:38:20', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (23, 'Wichtigste Fragen', '<ul><li>Was ist (Software-)Qualit&auml;t?</li><li>Wie stellt sich Qualit&auml;t dar? (Qualit&auml;ts-Modelle und Merkmale)</li><li>Wie kann man Qualit&auml;t messen und vergleichen? (Metriken)</li><li>Welche Ma&szlig;nahmen dienen der Hebung der Qualit&auml;t? (Qualit&auml;tssicherung)</li></ul><p>&nbsp;</p>', 'TEXT', 0, '2015-06-04 13:41:10', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (24, 'Qualität', '<ul><li>Quality (IEEE-Standard)<ul><li>(1) The degree to which a system, component, or process meets specified&nbsp;requirements</li><li>(2) The degree to which a system, component, or process meets customer or&nbsp;user needs or expectations</li></ul></li><li>Qualit&auml;t ist die Gesamtheit von Merkmalen einer Einheit bez&uuml;glich ihrer Eignung,&nbsp;festgelegte und vorausgesetzte Erfordernisse zu erf&uuml;llen (DIN ISO 8402)</li></ul>', 'TEXT', 0, '2015-06-04 13:43:34', 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
 (25, 'Lernziele', '<ul><li>Grundlagen, wichtigste Aspekte und verschiedene Formen statischer Pr&uuml;fungen beschreiben k&ouml;nnen</li><li>Das Technische Review erkl&auml;ren und anwenden k&ouml;nnen</li><li>Praxisrelevante Aspekte von Reviews (z.B. Spielregeln f&uuml;r die Sitzung, Tipps f&uuml;r die Beteiligten) benennen k&ouml;nnen</li><li>St&auml;rken und Schw&auml;chen von Reviews auflisten k&ouml;nnen</li></ul>', 'TEXT', 0, '2015-06-04 13:46:40', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (26, 'Qualitätssicherung – Test', '<p><strong>Lernziele</strong></p><ul><li>Grundlagen und wichtigste Aspekte<br />hinsichtlich Tests beschreiben k&ouml;nnen</li><li>Die wichtigsten Testformen (Black-<br />Box- und Glass-Box-Tests) sowie<br />Verfahren zur Testfallauswahl<br />erkl&auml;ren und anwenden k&ouml;nnen</li><li>Andere Testverfahren beschreiben<br />k&ouml;nnen</li><li>St&auml;rken und Schw&auml;chen von Tests<br />wiedergeben k&ouml;nnen</li></ul>', 'TEXT', 0, '2015-06-04 13:47:16', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(36, 'Eigenes Profil anzeigen', '', 'TEXT', 0, '2015-06-09 07:21:10', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(57, 'Veranstaltungsseite', '', 'TEXT', 0, '2015-06-09 07:15:45', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(58, 'Profildaten bearbeiten', '', 'TEXT', 0, '2015-06-09 07:18:43', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(65, 'Profil bearbeiten', '', 'TEXT', 0, '2015-06-09 07:16:04', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (66, 'Fakten über Software-Qualität', '<p>Gr&ouml;&szlig;te Kostentreiber sind Fehlerfindung und -behebung sowie Dokumentenerstellung</p><ul><li>30% der Softwarekosten sind Kosten f&uuml;r Dokumenterstellung</li><li>Ca. 50 Dokumente (insgesamt: 6000 Seiten, 200 000 W&ouml;rter, 5000 Diagramme)</li><li>Dokumente haben 3 Defekte/Seite (18 000 insgesamt), die ohne Pr&uuml;fma&szlig;nahmen in die&nbsp;Software gehen oder beim Kunden landen</li><li>SW-Systeme haben insgesamt ca. 50 000 Defekte&nbsp;(von denen 80% durch Pr&uuml;fma&szlig;nahmen, insbesondere Tests, gefunden werden)</li><li>Tests erfordern insgesamt ca. 55 000 Testf&auml;lle</li><li>25% der Testf&auml;lle haben Defekte&nbsp;(Defektdichte bei Testf&auml;llen oft h&ouml;her als im System selbst)</li><li>7% der (40 000 s.o.) Bug-Fixes sind Bad-Fixes (2800, die zu den 10 000 v.o. dazukommen)</li><li>Von den insgesamt 12 800 ausgelieferten Defekten sind 20 % (d.h. ca. 2500) gravierend</li></ul>', 'TEXT', 0, '2015-06-04 13:48:17', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (68, 'Statische Prüfungen (1/7)', '<h3><span style="font-family:arial,helvetica,sans-serif"><strong>Statische Pr&uuml;fung</strong></span></h3><ul><li>Pr&uuml;fung eines Dokuments (allein oder mit Gespr&auml;chspartner) nach vorgegebenen Kriterien</li></ul><h3><span style="font-family:arial,helvetica,sans-serif"><strong>Gemeinsamkeiten aller statischen Pr&uuml;fmethoden</strong></span></h3><ul><li>Wesentliche T&auml;tigkeit: dokumentierte (Teil-)Produkte untersuchen und beurteilen</li><li>Hauptziel: Defekte aller Art (Fehler, Widerspr&uuml;che, Unvollst&auml;ndigkeiten, etc.) finden</li><li>Beteiligte: (kleines) Team mit klarer Rollenverteilung</li><li>Neben individueller Pr&uuml;ft&auml;tigkeit meist auch Gruppensitzung (mit allen Beteiligten) Sinnvolle Voraussetzungen (f&uuml;r den Erfolg statischer Pr&uuml;fungen)</li></ul><h3><span style="font-family:arial,helvetica,sans-serif"><strong>Der erforderliche Aufwand (Personal, Zeit) muss fest eingeplant sein</strong></span></h3><ul><li>Es muss bekannt sein, welchem Zweck die Pr&uuml;fung dient</li><li>Es muss ein zug&auml;ngliches Pr&uuml;fdokument (Text, Programm oder Zeichnung) vorliegen</li><li>Die Mitglieder des Pr&uuml;fteams sollten in der jeweiligen Pr&uuml;fmethode geschult sein</li><li>Die Pr&uuml;fmethode sollte dokumentiert sein und ihre Einhaltung &uuml;berpr&uuml;ft werden</li><li>Pr&uuml;fergebnisse d&uuml;rfen nicht zur Personalbeurteilung missbraucht werden</li></ul>', 'TEXT', 0, '2015-06-04 13:56:49', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(70, 'Profil anzeigen', '', 'TEXT', 0, '2015-06-09 07:16:24', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(71, 'Passwort ändern', '', 'TEXT', 0, '2015-06-09 16:47:49', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(74, 'Profilbild ändern', '', 'TEXT', 0, '2015-06-09 07:19:22', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(75, 'Bedienungsanleitung eLearning-System', '', 'TEXT', 0, '2015-06-08 11:52:50', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(76, 'Hauptseite', '', 'TEXT', 0, '2015-06-09 07:15:02', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(77, 'Profil', '', 'TEXT', 0, '2015-06-09 07:12:32', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(78, 'Profilbild löschen', '', 'TEXT', 0, '2015-06-09 07:19:42', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (79, 'Softwaretechnik II', '', 'TEXT', 0, '2015-06-04 13:21:47', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (80, 'Qualitätssicherung - Allgemeines', '', 'TEXT', 0, '2015-06-04 13:28:06', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (81, 'Qualität', '', 'TEXT', 0, '2015-06-04 13:28:21', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -342,7 +372,7 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Karteikarte` int(11) DEFAULT NULL,
   `Vaterkommentar` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -397,7 +427,7 @@ CREATE TABLE IF NOT EXISTS `moderator` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `moderator`
@@ -405,7 +435,8 @@ CREATE TABLE IF NOT EXISTS `moderator` (
 
 INSERT INTO `moderator` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
 (2, 1, 2),
-(3, 4, 2);
+(3, 4, 2),
+(4, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -459,9 +490,11 @@ INSERT INTO `studiengang` (`Name`) VALUES
 ('Biologie'),
 ('Chemie'),
 ('Informatik'),
+('Mathematik'),
 ('Medieninformatik'),
 ('Physik'),
-('Sonstiges');
+('Sonstiges'),
+('Wirtschaftswissenschaften');
 
 -- --------------------------------------------------------
 
@@ -480,14 +513,15 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `Ersteller` int(11) NOT NULL,
   `Titel` varchar(255) NOT NULL,
   `ErsteKarteikarte` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `veranstaltung`
 --
 
 INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `KommentareErlaubt`, `BewertungenErlaubt`, `ModeratorKarteikartenBearbeiten`, `Ersteller`, `Titel`, `ErsteKarteikarte`) VALUES
-(2, '<p>Die Vorlesung Softwaretechnik II ist die Fortsetzungsveranstaltung der&nbsp;Softwaretechnik I.</p><p>Themen der Vorlesung Softwaretechnik II (im Sommersemester) sind:</p><ul><li>Qualit&auml;tssicherung (Metriken, Systematisches Testen, Reviews)</li><li>Projektmanagement (Planung, Kostensch&auml;tzung, Controlling, Konfigurationsmanagement, Qualit&auml;tsmanagement, Prozessverbesserung)</li></ul>', 'SoSe2015', NULL, 1, 1, 1, 5, 'Softwaretechnik II', 79);
+(2, '<p>Die Vorlesung Softwaretechnik II ist die Fortsetzungsveranstaltung der&nbsp;Softwaretechnik I.</p><p>Themen der Vorlesung Softwaretechnik II (im Sommersemester) sind:</p><ul><li>Qualit&auml;tssicherung (Metriken, Systematisches Testen, Reviews)</li><li>Projektmanagement (Planung, Kostensch&auml;tzung, Controlling, Konfigurationsmanagement, Qualit&auml;tsmanagement, Prozessverbesserung)</li></ul>', 'SoSe2015', NULL, 1, 1, 1, 5, 'Softwaretechnik II', 79),
+(3, '<p>Dies ist die Bedienungsanleitung des Systems</p>', 'SoSe2015', NULL, 0, 0, 1, 1, 'Bedienungsanleitung eLearning-System', 75);
 
 -- --------------------------------------------------------
 
@@ -499,7 +533,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
@@ -507,7 +541,8 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 
 INSERT INTO `veranstaltung_studiengang_zuordnung` (`ID`, `Veranstaltung`, `Studiengang`) VALUES
 (4, 2, 'Informatik'),
-(5, 2, 'Medieninformatik');
+(5, 2, 'Medieninformatik'),
+(7, 3, 'Sonstiges');
 
 -- --------------------------------------------------------
 
@@ -656,12 +691,12 @@ ALTER TABLE `veranstaltung_studiengang_zuordnung`
 -- AUTO_INCREMENT for table `benachrichtigung`
 --
 ALTER TABLE `benachrichtigung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_einladung_moderator`
 --
 ALTER TABLE `benachrichtigung_einladung_moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_karteikartenaenderung`
 --
@@ -671,7 +706,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `benachrichtigung_neuer_kommentar`
 --
 ALTER TABLE `benachrichtigung_neuer_kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_profil_geaendert`
 --
@@ -681,17 +716,17 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `benachrichtigung_veranstaltungsaenderung`
 --
 ALTER TABLE `benachrichtigung_veranstaltungsaenderung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `benutzer`
 --
 ALTER TABLE `benutzer`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
@@ -701,17 +736,17 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `bewertung_kommentar`
 --
 ALTER TABLE `bewertung_kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `kommentar`
 --
 ALTER TABLE `kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `moderator`
 --
 ALTER TABLE `moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `notiz`
 --
@@ -726,12 +761,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 -- AUTO_INCREMENT for table `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- Constraints der exportierten Tabellen
 --

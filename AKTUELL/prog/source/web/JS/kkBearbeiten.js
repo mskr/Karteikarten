@@ -183,35 +183,34 @@ function kkBearbeiten(kkJSON)
     var verwBaeumeAjaxCalls = [];
     
     $(".kk_bearbeiten_verweise_baum").each(function() {
-        // Verweis Baeume initialisieren
-        baumWurzelAjax = ladeKindKarteikarten(
-                veranstaltungsObject[paramErsteKarteikarte], 
-                $(this), 
-                false, 
-                function(arr, kkListItem, i, e, ajax, klappeAus) {
-                    if(klappeAus)
-                    {
-                        $.when(ajax).done(function() {
-                            // Checkboxen mit den Arrays synchronisieren
-                            kkListItem.find("> ul input[type='checkbox']").each(function(index, elem) {
-                                var verwBaum = $(elem).parents(".kk_verweise_baum");
-                                var verwTyp = verwBaum.attr("id").split("_")[4];
-                                syncCheckboxWithArray(verwTyp, $(elem).data("kkid"), $(elem));
-                            });
-                            // Change Handler fuer die Checkboxes der bei Klick geladenen Kinder
-                            kkListItem.find("> ul input[type='checkbox']").change(function(e) {
-                                var verwBaum = $(e.target).parents(".kk_verweise_baum");
-                                var verwTyp = verwBaum.attr("id").split("_")[4];
-                                var isHinzu = $(e.target).prop("checked");
-                                var zielKkId = $(e.target).data("kkid");
-                                verweiseVonBenutzerGeaendert(verwTyp, isHinzu, zielKkId);
-                            });
-                        });
-                    }
-                }, 
-                true
-        );
-        verwBaeumeAjaxCalls.push(baumWurzelAjax);
+        var inh = new Inhaltsverzeichnis($(this),
+			veranstaltungsObject,
+			undefined,
+			false,
+			function(arr, kkListItem, i, e, ajax, klappeAus) {
+	            if(klappeAus)
+	            {
+	                $.when(ajax).done(function() {
+	                    // Checkboxen mit den Arrays synchronisieren
+	                    kkListItem.find("> ul input[type='checkbox']").each(function(index, elem) {
+	                        var verwBaum = $(elem).parents(".kk_verweise_baum");
+	                        var verwTyp = verwBaum.attr("id").split("_")[4];
+	                        syncCheckboxWithArray(verwTyp, $(elem).data("kkid"), $(elem));
+	                    });
+	                    // Change Handler fuer die Checkboxes der bei Klick geladenen Kinder
+	                    kkListItem.find("> ul input[type='checkbox']").change(function(e) {
+	                        var verwBaum = $(e.target).parents(".kk_verweise_baum");
+	                        var verwTyp = verwBaum.attr("id").split("_")[4];
+	                        var isHinzu = $(e.target).prop("checked");
+	                        var zielKkId = $(e.target).data("kkid");
+	                        verweiseVonBenutzerGeaendert(verwTyp, isHinzu, zielKkId);
+	                    });
+	                });
+	            }
+	        },
+	        true,false);
+
+        verwBaeumeAjaxCalls.push(inh.init());
     });
     
     // Warte darauf, dass die Wurzel-Ebene aller Verweise Baeume geladen wurde
@@ -434,8 +433,10 @@ function submitEditKarteikarte(params)
             actionBearbeiteKarteikarte,
             function(response) {
                 showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich bearbeitet.");
-                displayKarteikarte(params[paramId], null, true);
-                initInhaltsverzeichnis();
+                displayKarteikarte(params[paramId], undefined, true);
+                $.when(vnInhaltsverzeichnis.init()).done(function(){
+                    vnInhaltsverzeichnis.showEintrag(response[paramId]);
+                });
             },
             params
         );

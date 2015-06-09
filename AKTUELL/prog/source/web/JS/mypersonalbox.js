@@ -120,7 +120,7 @@ function addBenachrichtigung(ben)
 	var spanCntnt = $("<span></span>");
 	spanCntnt.addClass("bn_text");
 	spanCntnt.append(ben[paramInhalt]);
-	spanCntnt.append("<span class='bn_zeit' style='float: right;'>" + ben[paramBenErstelldaum] + "</span>");
+	spanCntnt.append("<span class='bn_zeit' style='float: right;'>" + ben[paramBenErstelldaum] + "</span><span class='clearfix'></span>");
 	
 	divBn.append(spanCntnt);
 
