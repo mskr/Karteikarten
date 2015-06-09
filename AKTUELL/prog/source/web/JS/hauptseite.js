@@ -70,7 +70,7 @@ function fillHauptseite()
 				return $(a).data('semesterid') > $(b).data('semesterid');
 			}).appendTo('#vn_erstellen_auswahl_semester');
 			
-//			$("[data-semesterid='"+aktSemesterId+"']").prop('selected', true);
+			$("[data-semesterid='"+aktSemesterId+"']").prop('selected', true);
 			$("#vn_erstellen_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
 	
 		}

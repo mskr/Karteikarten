@@ -256,7 +256,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
 					return $(a).data('semesterid') > $(b).data('semesterid');
 				}).appendTo('#vn_bearbeiten_auswahl_semester');
 		
-//				$("[data-semesterid='"+aktSemesterId+"']").prop('selected', true);
+				$("[data-semesterid='"+aktSemesterId+"']").prop('selected', true);
 				$("#vn_bearbeiten_auswahl_semester option[value='"+ response[paramAktSemester] +"']").prop('selected', true);
 			}
 	);
