@@ -1244,10 +1244,13 @@ textarea.input_std {
 	content: "\2192";
 	padding-right: .5em;
 }
-/* .gotoKk{
+.li_header:hover > .gotoKk{
+	opacity: 1;
+}
+.gotoKk{
 	opacity: 0;
 }
- */
+ 
 #kk_inhaltsverzeichnis.stuck {
     position: fixed !important;
     top: 0;

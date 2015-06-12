@@ -1236,10 +1236,12 @@ textarea.input_std {
 	content: "\2192";
 	padding-right: .5em;
 }
-/* .gotoKk{
+.li_header:hover > .gotoKk{
+	opacity: 1;
+}
+.gotoKk{
 	opacity: 0;
 }
- */
 #kk_inhaltsverzeichnis.stuck {
     position: fixed !important;
     top: 0;
@@ -1611,7 +1613,7 @@ textarea.input_std {
 	box-sizing: border-box;
 	padding: .5em 5em .5em 1em;
 	width: 100%;
-	min-height: 4rem;
+	min-height: 4em;
 	height: auto;
 	color: black;
 	font-size: .8em;

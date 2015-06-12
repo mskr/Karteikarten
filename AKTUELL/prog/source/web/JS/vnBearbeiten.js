@@ -41,6 +41,18 @@ $(document).ready(function() {
     		$("#vn_bearbeiten_passwort_set").prop("checked",false);
     });
     
+    var popup = new PopupFenster(
+    		$("#vn_bearbeiten_popup_overlay"), 
+    		[$('#vn_bearbeiten_popup_close'),$("#vn_bearbeiten_cancel")],
+    		undefined,
+    		$("#vn_bearbeiten_ok"),
+    		undefined,
+    		$("#vn_bearbeiten_titel_input"),
+    		$("#vn_bearbeiten_weiter"),
+    		$("#vn_bearbeiten_zurueck")
+    );
+
+    
 	$('#vn_bearbeiten').click(function() {
 		
 		// Daten füllen
@@ -81,91 +93,93 @@ $(document).ready(function() {
              );
 		}
 		
-		popupFenster(
-				$("#vn_bearbeiten_popup_overlay"), 
-				[$('#vn_bearbeiten_popup_close'),$("#vn_bearbeiten_cancel")],
-				function() {
-					var editor = $('#vn_bearbeiten_beschr_input').ckeditorGet();
-					editor.destroy();
 
-	            	var dialog = $("#vn_bearbeiten_popup");
-	            	dialog.find("#vn_bearbeiten_titel_input").val("");
+		
+		var closeFkt = function() {
+			var editor = $('#vn_bearbeiten_beschr_input').ckeditorGet();
+			editor.destroy();
+
+        	var dialog = $("#vn_bearbeiten_popup");
+        	dialog.find("#vn_bearbeiten_titel_input").val("");
 //	            	dialog.find("#vn_bearbeiten_auswahl_semester").val("");
-	            	selectedStudiengaenge = {};
-	            	$("#vn_bearbeiten_stg_list").empty();
-	            	
-	            	dialog.find("#vn_bearbeiten_beschr_input").val("");
-	            	dialog.find("#vn_bearbeiten_pass_input").val("");
-	            	dialog.find("#vn_bearbeiten_komm_erlaubt").prop("checked", true);
-	            	dialog.find("#vn_bearbeiten_bew_erlaubt").prop("checked", true);
+        	selectedStudiengaenge = {};
+        	$("#vn_bearbeiten_stg_list").empty();
+        	
+        	dialog.find("#vn_bearbeiten_beschr_input").val("");
+        	dialog.find("#vn_bearbeiten_pass_input").val("");
+        	dialog.find("#vn_bearbeiten_komm_erlaubt").prop("checked", true);
+        	dialog.find("#vn_bearbeiten_bew_erlaubt").prop("checked", true);
 
-	            	dialog.find("#vn_bearbeiten_keiner_bearb").prop("checked", true);
+        	dialog.find("#vn_bearbeiten_keiner_bearb").prop("checked", true);
 
-	            	selectedModList = {};
-	            	$("#vn_bearbeiten_mod_list").empty();
-				},
-				$("#vn_bearbeiten_ok"),
-				function() {
-					var dialog = $("#vn_bearbeiten_popup");
-					var titel = dialog.find("#vn_bearbeiten_titel_input").val(),
-					semester = dialog.find("#vn_bearbeiten_auswahl_semester").val(),
-					beschr = dialog.find("#vn_bearbeiten_beschr_input").val(),
-					moderatorenKkBearbeiten = dialog.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
-					passw = dialog.find("#vn_bearbeiten_pass_input").val(),
-					passChecked = dialog.find("#vn_bearbeiten_passwort_set").is(':checked'),
-					kommentareErlaubt = dialog.find("#vn_bearbeiten_komm_erlaubt").is(':checked'),
-					bewertungenErlaubt = dialog.find("#vn_bearbeiten_bew_erlaubt").is(':checked');
+        	selectedModList = {};
+        	$("#vn_bearbeiten_mod_list").empty();
+		};
+		
+		var submitFkt = function() {
+			var dialog = $("#vn_bearbeiten_popup");
+			var titel = dialog.find("#vn_bearbeiten_titel_input").val(),
+			semester = dialog.find("#vn_bearbeiten_auswahl_semester").val(),
+			beschr = dialog.find("#vn_bearbeiten_beschr_input").val(),
+			moderatorenKkBearbeiten = dialog.find("input[name=vn_bearbeitenMode_radiogb]:checked").val() != "Nur ich",
+			passw = dialog.find("#vn_bearbeiten_pass_input").val(),
+			passChecked = dialog.find("#vn_bearbeiten_passwort_set").is(':checked'),
+			kommentareErlaubt = dialog.find("#vn_bearbeiten_komm_erlaubt").is(':checked'),
+			bewertungenErlaubt = dialog.find("#vn_bearbeiten_bew_erlaubt").is(':checked');
 
-					var moderatorenIDs = [];
+			var moderatorenIDs = [];
 
-					for( var key in selectedModList)
-					{
-						moderatorenIDs.push(selectedModList[key][paramId]);
-					}
+			for( var key in selectedModList)
+			{
+				moderatorenIDs.push(selectedModList[key][paramId]);
+			}
 
-					// Fehlerprüfung
-	                if(titel == "" || beschr == "" || $.isEmptyObject(selectedStudiengaenge))
-	                {
-	                    showError("Bitte geben Sie mindestens einen Titel, eine Beschreibung und einen Studiengang an!");
-	                    return false;
-	                }
-										
-					var params = {};
-					params[paramId] = veranstaltungsObject[paramId]
-					params[paramTitel] = titel;
-					params[paramSemester] = semester;
-	                params[paramStudiengang] = [];
-	                
-	                for(var i in selectedStudiengaenge)
-	            	{
-	                	params[paramStudiengang].push(selectedStudiengaenge[i][paramStudiengang]);
-	            	}
-					params[paramBeschr] = beschr;
-					params[paramModeratorKkBearbeiten] = moderatorenKkBearbeiten;
-					params[paramKommentareErlauben] = kommentareErlaubt;
-					params[paramBewertungenErlauben] = bewertungenErlaubt;
-					if(passw != "" && passChecked)
-						params[paramPasswort] = passw;
-					else if(!passChecked)
-						params[paramPasswort] = "";
-					params[paramModeratoren] = moderatorenIDs;
+			// Fehlerprüfung
+            if(titel == "" || beschr == "" || $.isEmptyObject(selectedStudiengaenge))
+            {
+                showError("Bitte geben Sie mindestens einen Titel, eine Beschreibung und einen Studiengang an!");
+                return false;
+            }
+								
+			var params = {};
+			params[paramId] = veranstaltungsObject[paramId]
+			params[paramTitel] = titel;
+			params[paramSemester] = semester;
+            params[paramStudiengang] = [];
+            
+            for(var i in selectedStudiengaenge)
+        	{
+            	params[paramStudiengang].push(selectedStudiengaenge[i][paramStudiengang]);
+        	}
+			params[paramBeschr] = beschr;
+			params[paramModeratorKkBearbeiten] = moderatorenKkBearbeiten;
+			params[paramKommentareErlauben] = kommentareErlaubt;
+			params[paramBewertungenErlauben] = bewertungenErlaubt;
+			if(passw != "" && passChecked)
+				params[paramPasswort] = passw;
+			else if(!passChecked)
+				params[paramPasswort] = "";
+			params[paramModeratoren] = moderatorenIDs;
 
-					var ajax = ajaxCall(veranstaltungServlet,
-							actionBearbeiteVeranst,
-							function(response) {
-						showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich bearbeitet.");
-						gotoVeranstaltung(veranstaltungsObject[paramId]);  
-					},
-					params
-					);
-					return true;
-				},
-				$("#vn_bearbeiten_titel_input"),
-				$("#vn_bearbeiten_weiter"),
-				$("#vn_bearbeiten_zurueck")
-		);
-
-		$("#vn_bearbeiten_beschr_input").ckeditor(ckEditorVnErstellenConfig);
+			var ajax = ajaxCall(veranstaltungServlet,
+					actionBearbeiteVeranst,
+					function(response) {
+				showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich bearbeitet.");
+				gotoVeranstaltung(veranstaltungsObject[paramId]);  
+			},
+			params
+			);
+			return true;
+		};
+		
+		
+		popup.setCloseFkt(closeFkt);
+		popup.setSubmitFkt(submitFkt);
+		popup.show();
 
 	});
+	
+
+	$("#vn_bearbeiten_beschr_input").ckeditor(ckEditorVnErstellenConfig);
+
 });

@@ -84,7 +84,6 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
     $("#dialog_sicher_ja").focus();
 }
 
-var popupSeitenIterator = 0;
 /**
  * Blendet ein Popup auf der GUI ein. Hat das Popup mehrere Elemente mit der Klasse popup_fenster_body,
  * werden diese als Seiten dargestellt.
@@ -98,100 +97,143 @@ var popupSeitenIterator = 0;
  * @param weiterElem jQuery Objekt. Element, das das Umschalten zur naechsten Seite triggert.
  * @param zurueckElem jQuery Objekt. Element, das das Umschalten zur vorherigen Seite triggert.
  */
-function popupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, submitFunc, focusElem, weiterElem, zurueckElem)
+function PopupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, submitFunc, focusElem, weiterElem, zurueckElem)
 {
+	this.popupOverlayWrapper =popupOverlayWrapper;
+	this.closeElems =closeElems;
+	this.closeFunc =closeFunc;
+	this.submitElem =submitElem;
+	this.submitFunc =submitFunc;
+	this.focusElem =focusElem;
+	this.weiterElem =weiterElem;
+	this.zurueckElem =zurueckElem;
+	
+	this.isVisible = false;
+
+    if(this.submitFunc == undefined)
+    	this.submitFunc = function(){return true;};
+    if(this.closeFunc == undefined)
+    	this.closeFunc = function(){return true;};
+    
+    this.seitenArr = this.popupOverlayWrapper.find(".popup_fenster_body");
+    this.popupSeitenIterator = 0;
+}
+PopupFenster.prototype.setCloseFkt = function(closeFunc){
+	if(this.isVisible){
+		this.hide();
+		this.show();
+	}
+	this.closeFunc = closeFunc;
+}
+PopupFenster.prototype.setSubmitFkt = function(submitFunc){
+	if(this.isVisible){
+		this.hide();
+		this.show();		
+	}
+	this.submitFunc = submitFunc;
+}
+
+PopupFenster.prototype.show = function(){
+	
+	this.init();
     // Scrollbar ausserhalb Popup deaktivieren, sodass nur Popup Scrollbar sichtbar
     $("body").css("overflow-y","hidden");
-
-    if(submitFunc == undefined)
-    	submitFunc = function(){return true;};
-    if(closeFunc == undefined)
-    	closeFunc = function(){return true;};
     
-    var seitenArr = popupOverlayWrapper.find(".popup_fenster_body");
-    $(seitenArr[0]).show();
-    if(seitenArr.length > 1)
+    this.popupOverlayWrapper.fadeIn(300);
+    this.popupOverlayWrapper.find(".popup_fenster").removeClass("hidden");
+    
+    if(this.focusElem != undefined)
+    	this.focusElem.focus();
+    
+    this.isVisible = true;
+    
+}
+PopupFenster.prototype.hide = function(doSubmit){
+	this.isVisible = false;
+	$("body").removeAttr("style"); // Scrollbar ausserhalb Popup wieder aktivieren
+	this.popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
+	var that = this;
+	this.popupOverlayWrapper.fadeOut(300,function(){
+		that.closeFunc();
+		that.popupSeitenIterator = 0;
+	});
+}
+
+PopupFenster.prototype.init = function(){
+
+    $(this.seitenArr[0]).show();
+    var that = this;
+    
+    if(this.seitenArr.length > 1)
     {
-        for(var i=1; i<seitenArr.length; i++)
+    	// Alle anderen Seiten ausblenden
+        for(var i=1; i<this.seitenArr.length; i++)
         {
-            $(seitenArr[i]).hide();
+            $(this.seitenArr[i]).hide();
         }
-        submitElem.hide();
-        if(weiterElem != undefined){
-        	weiterElem.show();
-        	weiterElem.off();
-        	weiterElem.click(function() {
-        		$(seitenArr[popupSeitenIterator]).slideUp();
-        		popupSeitenIterator++;
-        		$(seitenArr[popupSeitenIterator]).slideDown();
-        		if(popupSeitenIterator > 0)
+        
+        this.submitElem.hide();
+        
+        // Handling von zurück und Vorwärts
+        
+        if(this.weiterElem != undefined){
+        	this.weiterElem.show();
+        	this.weiterElem.off();
+        	this.weiterElem.click(function() {
+        		$(that.seitenArr[that.popupSeitenIterator]).slideUp();
+        		that.popupSeitenIterator++;
+        		$(that.seitenArr[that.popupSeitenIterator]).slideDown();
+        		if(that.popupSeitenIterator > 0)
         		{
-        			zurueckElem.show();
+        			that.zurueckElem.show();
         		}
-        		if(popupSeitenIterator == seitenArr.length-1)
+        		if(that.popupSeitenIterator == that.seitenArr.length-1)
         		{
-        			weiterElem.hide();
-        			submitElem.show();
+        			that.weiterElem.hide();
+        			that.submitElem.show();
         		}
         	});
         }
-        if(zurueckElem!= undefined){
-        	zurueckElem.hide();
-        	zurueckElem.off();
-        	zurueckElem.click(function() {
-        		$(seitenArr[popupSeitenIterator]).slideUp();
-        		popupSeitenIterator--;
-        		$(seitenArr[popupSeitenIterator]).slideDown();
-        		if(popupSeitenIterator == 0)
+        
+        if(this.zurueckElem != undefined){
+        	this.zurueckElem.hide();
+        	this.zurueckElem.off();
+        	this.zurueckElem.click(function() {
+        		$(that.seitenArr[that.popupSeitenIterator]).slideUp();
+        		that.popupSeitenIterator--;
+        		$(that.seitenArr[that.popupSeitenIterator]).slideDown();
+        		if(that.popupSeitenIterator == 0)
         		{
-        			zurueckElem.hide();
+        			that.zurueckElem.hide();
         		}
-        		if(popupSeitenIterator < seitenArr.length-1)
+        		if(that.popupSeitenIterator < that.seitenArr.length-1)
         		{
-        			weiterElem.show();
-        			submitElem.hide();
+        			that.weiterElem.show();
+        			that.submitElem.hide();
         		}
         	});
         }
     }
     else
     {
-    	if(weiterElem!= undefined)
-    		weiterElem.hide();
-    	if(zurueckElem!= undefined)
-    		zurueckElem.hide();
+    	if(this.weiterElem!= undefined)
+    		this.weiterElem.hide();
+    	if(this.zurueckElem!= undefined)
+    		this.zurueckElem.hide();
     }
     
-    popupOverlayWrapper.fadeIn(300);
-    popupOverlayWrapper.find(".popup_fenster").removeClass("hidden");
-	console.log("Show popup.");
-    
-    if(focusElem != undefined)
-    	focusElem.focus();
-    
-    generalCloseFkt = function(){
-    	$("body").removeAttr("style"); // Scrollbar ausserhalb Popup wieder aktivieren
-        popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
-        popupOverlayWrapper.fadeOut(300,function(){
-            closeFunc();
-        });
-        popupSeitenIterator = 0;
-    }
-    
-    for(var i in closeElems)
+    for(var i in this.closeElems)
     {
-        closeElems[i].off();
-        closeElems[i].click(function() {
-        	console.log("Close popup.");
-        	generalCloseFkt();
+    	this.closeElems[i].off();
+    	this.closeElems[i].click(function() {
+    		that.hide();
         });
     }
-    submitElem.off();
-    submitElem.click(function() {
-        if(submitFunc())
+    this.submitElem.off();
+    this.submitElem.click(function() {
+        if(that.submitFunc())
         {
-        	console.log("Close popup after submit.");
-        	generalCloseFkt();
+        	that.hide();
         }
     });
 }

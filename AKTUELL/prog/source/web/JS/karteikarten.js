@@ -79,10 +79,11 @@ function buildKarteikarte(karteikarteJson)
    	 	
     	$("#link_copy_data").html(kkUrl);
     	
-    	popupFenster($("#link_copy_popup_overlay"), 
+    	var popup = new PopupFenster($("#link_copy_popup_overlay"), 
     			[$("#link_copy_ok"), $("#link_copy_popup_close")], function(){$("#link_copy_data").val("");}, 
     			$("#link_copy_ok"), undefined, 
     			undefined);
+    	popup.show();
     });
     
     
@@ -94,8 +95,8 @@ function buildKarteikarte(karteikarteJson)
 	    	var process = true;
 	    	
 	    	$.each(insertingKkAjaxCalls, function(i,v){
-	    		if(!v.state() == "resolved")
-	    			process = false
+	    		if(v.state() != "resolved")
+	    			process = false;
 	    	});
 	    	
 	    	if(process)

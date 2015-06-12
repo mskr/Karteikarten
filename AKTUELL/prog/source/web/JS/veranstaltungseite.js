@@ -43,7 +43,7 @@ $(document).ready(function() {
     
     
     $("#kk_export").click(function(){
-    	popupFenster($("#kk_export_popup_overlay"), 
+    	var popup = new PopupFenster($("#kk_export_popup_overlay"), 
     			[$("#kk_export_cancel"),$("#kk_export_popup_close"),$("#kk_export_ok")], 
     			function(){
 		    		$(".kk_export_pdf_link").attr("href","");
@@ -64,7 +64,8 @@ $(document).ready(function() {
     			}, 
     			undefined, 
     			$("#kk_export_weiter"), 
-    			$("#kk_export_zurueck"))
+    			$("#kk_export_zurueck"));
+    	popup.show();
     });
     
     $("#kk_start_export").one("click", function() {

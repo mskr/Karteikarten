@@ -1,25 +1,36 @@
 
 $(document).ready(function(){
 	kkErstellenDropZone = $("#df_area_kk").dropzone(myDropzoneConfig).get(0).dropzone;
-	kkErstellenDropZone.on("dragenter", function() {
-        $("#kk_erstellen_popup .drop_file_areas").addClass("dragenter");
-        $("#kk_erstellen_popup .drop_file_areas .dz-message").text("Datei fallen lassen zum Hochladen");
-    });
-    kkErstellenDropZone.on("dragleave", function() {
-        $("#kk_erstellen_popup .drop_file_areas").removeClass("dragenter");
-        $("#kk_erstellen_popup .drop_file_areas .dz-message").text(
-                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
-    });
-    kkErstellenDropZone.on("drop", function() {
-        $("#kk_erstellen_popup .drop_file_areas").removeClass("dragenter");
-        $("#kk_erstellen_popup .drop_file_areas").addClass("dropped");
-        $("#kk_erstellen_popup .drop_file_areas .dz-message").hide();
-        $("#kk_erstellen_popup .drop_file_areas .dz-message").text(
-                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
-    });
-    kkErstellenDropZone.on("removedfile", function() {
-        $("#kk_erstellen_popup .drop_file_areas .dz-message").show();
-    });
+//	kkErstellenDropZone.on("dragenter", function() {
+//        $("#kk_erstellen_popup .drop_file_areas").addClass("dragenter");
+//        $("#kk_erstellen_popup .drop_file_areas .dz-message").text("Datei fallen lassen zum Hochladen");
+//    });
+//    kkErstellenDropZone.on("dragleave", function() {
+//        $("#kk_erstellen_popup .drop_file_areas").removeClass("dragenter");
+//        $("#kk_erstellen_popup .drop_file_areas .dz-message").text(
+//                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
+//    });
+//    kkErstellenDropZone.on("drop", function() {
+//        $("#kk_erstellen_popup .drop_file_areas").removeClass("dragenter");
+//        $("#kk_erstellen_popup .drop_file_areas").addClass("dropped");
+//        $("#kk_erstellen_popup .drop_file_areas .dz-message").hide();
+//        $("#kk_erstellen_popup .drop_file_areas .dz-message").text(
+//                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
+//    });
+//    kkErstellenDropZone.on("removedfile", function() {
+//        $("#kk_erstellen_popup .drop_file_areas .dz-message").show();
+//    });
+    
+    kkErstellenPopup = new PopupFenster(
+            $("#kk_erstellen_popup_overlay"), 
+            [$('#kk_erstellen_popup_close'),$("#kk_erstellen_cancel")],
+            undefined,
+            $("#kk_erstellen_ok"),
+            undefined,
+            $("#kk_erstellen_titel_input"),
+            $("#kk_erstellen_weiter"),
+            $("#kk_erstellen_zurueck")
+        );
 });
 
 
@@ -212,17 +223,9 @@ function newKarteikarte(vater, bruder) {
     	// Zerstoere Verweis Baeume mit allen Handlern
     	$("#kk_erstellen_popup").find(".kk_verweise_baum").empty();
     }
-    
-    popupFenster(
-        $("#kk_erstellen_popup_overlay"), 
-        [$('#kk_erstellen_popup_close'),$("#kk_erstellen_cancel")],
-        clearFkt,
-        $("#kk_erstellen_ok"),
-        submitFkt,
-        $("#kk_erstellen_titel_input"),
-        $("#kk_erstellen_weiter"),
-        $("#kk_erstellen_zurueck")
-    );
+    kkErstellenPopup.setCloseFkt(clearFkt);
+    kkErstellenPopup.setSubmitFkt(submitFkt);
+    kkErstellenPopup.show();
     
 	function processKKerstellen(text,titel,attributes, bruder, vater, 
 	        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr)
