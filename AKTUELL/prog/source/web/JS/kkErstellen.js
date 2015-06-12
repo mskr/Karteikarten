@@ -1,6 +1,25 @@
 
 $(document).ready(function(){
 	kkErstellenDropZone = $("#df_area_kk").dropzone(myDropzoneConfig).get(0).dropzone;
+	kkErstellenDropZone.on("dragenter", function() {
+        $("#kk_erstellen_popup .drop_file_areas").addClass("dragenter");
+        $("#kk_erstellen_popup .drop_file_areas .dz-message").text("Datei fallen lassen zum Hochladen");
+    });
+    kkErstellenDropZone.on("dragleave", function() {
+        $("#kk_erstellen_popup .drop_file_areas").removeClass("dragenter");
+        $("#kk_erstellen_popup .drop_file_areas .dz-message").text(
+                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
+    });
+    kkErstellenDropZone.on("drop", function() {
+        $("#kk_erstellen_popup .drop_file_areas").removeClass("dragenter");
+        $("#kk_erstellen_popup .drop_file_areas").addClass("dropped");
+        $("#kk_erstellen_popup .drop_file_areas .dz-message").hide();
+        $("#kk_erstellen_popup .drop_file_areas .dz-message").text(
+                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
+    });
+    kkErstellenDropZone.on("removedfile", function() {
+        $("#kk_erstellen_popup .drop_file_areas .dz-message").show();
+    });
 });
 
 
@@ -189,6 +208,7 @@ function newKarteikarte(vater, bruder) {
     	$("#kk_erstellen_titel_input").val("");
     	$("#kk_erstellen_TA").val("");
     	kkErstellenDropZone.removeAllFiles(true);
+    	$("#kk_erstellen_popup .drop_file_areas").removeClass("dropped");
     	// Zerstoere Verweis Baeume mit allen Handlern
     	$("#kk_erstellen_popup").find(".kk_verweise_baum").empty();
     }
@@ -225,24 +245,24 @@ function newKarteikarte(vater, bruder) {
 	
     function isAnyAttrSelected()
     {
-    	var isTrue = false;
-    	$("#kkE_attributes").children().filter("span").children().filter("input").each(function(i){
-    		if($(this).prop("checked")==true){
-    			isTrue = true;
-    			return false;
-    		}
-    	});
-    	return isTrue;
+        var isTrue = false;
+        $("#kkE_attributes input[type='checkbox']").each(function(i, elem) {
+            if($(elem).prop("checked")){
+                isTrue = true;
+                return false; // break loop
+            }
+        });
+        return isTrue;
     }
     
     function getSelectedKkAttributes()
     {
-    	var str = ""
-    	$("#kkE_attributes").children().filter("span").children().filter("input").each(function(i){
-    		str = str + $(this).prop("checked")+",";
-    	});
-    	str =str.substring(0, str.length - 1);
-    	return str;
+        var str = ""
+            $("#kkE_attributes input[type='checkbox']").each(function(i, elem) {
+                str = str + $(elem).prop("checked") + ",";
+            });
+            str = str.substring(0, str.length - 1);
+            return str;
     }
     
     function submitNewKarteikarte(params)

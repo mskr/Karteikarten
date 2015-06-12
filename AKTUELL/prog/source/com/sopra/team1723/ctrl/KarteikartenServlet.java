@@ -343,6 +343,7 @@ public class KarteikartenServlet extends ServletController
 
             for (int i = 0; i < attribute.length; ++i)
             {
+                System.out.println(attribute[i]);
                 bAttribute[i] = Boolean.valueOf(attribute[i]);
             }
 

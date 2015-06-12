@@ -62,12 +62,14 @@ var ckEditorNotizConfig = {
 
 
 var ckEditorVnErstellenConfig = {
+        resize_enabled : false,
+        autoGrow_minHeight: 50,
+        autoGrow_onStartup: true,
 		toolbarGroups: [
 		{ name: 'forms' },
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
 		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
 		{ name: 'insert' },
-        '/',
 		{ name: 'styles' },
 		{ name: 'colors' },
 		{ name: 'tools' },

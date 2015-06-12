@@ -21,7 +21,12 @@ function message(isError, text) {
     }
     $(elemClass).html(text);
     if( !$(elemClass).is(":visible") ) {
-        $(elemClass).show().fadeOut(5000);
+//        $(elemClass).show().fadeOut(5000);
+        $(elemClass).slideDown("fast", function() {
+            setTimeout(function() {
+                $(elemClass).slideUp("slow");
+            }, 3000);
+        });
     } else {
         $(elemClass).stop();
         $(elemClass).css("opacity","1");

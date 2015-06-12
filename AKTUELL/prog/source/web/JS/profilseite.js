@@ -15,7 +15,7 @@ $(document).ready(function() {
 			    profilServlet,
 			    actionDeleteBenutzer,
 			    function() {
-			        showInfo("Profil wurde erfolgreich gelöscht!");
+			        showInfo("Profil wurde erfolgreich gelöscht.");
 			        // Hat sich der Benutzer selbst geloescht oder war das
 			        // ein Admin, der jmd anders geloescht hat.
 			        if(currentProfilID == jsonBenutzer[paramId])
@@ -67,9 +67,27 @@ $(document).ready(function() {
 			);
 		}, "bottom","left");
     });
+    
     getProfilStudiengaenge();
     registerProfilSpeichernEvents();
     registerAvatarAendernEvent();
+    
+    // Farbschema aendern Handler
+    $("#farbschema_toggle_checkbox").change(function() {
+        if($(this).prop("checked"))
+        {
+            changeCSS("CSS/sopra_light.css", 0);
+            changeCSS("CSS/mybuttonstyle_light.css", 1);
+            $("#farbschema_toggle_label").text("TAG");
+        }
+        else
+        {
+            changeCSS("CSS/sopra.css", 0);
+            changeCSS("CSS/mybuttonstyle.css", 1);
+            $("#farbschema_toggle_label").text("NACHT");
+        }
+    });
+    
 });
 /**
  * Zeigt die Daten des Benutzers im Profil an
@@ -140,6 +158,7 @@ function fillMyProfil(isAdmin)
 	$("#profil_pw_alt_div").show();
 	$("#profil_passwort_alt_input").prop("required",true);
 	$("#profil_daten_speichern").show();
+    $(".profil_farbschema_auswahl").show();
 	
 	$(".profil_benutzername").text(jsonBenutzer[paramVorname] +" "+jsonBenutzer[paramNachname]);
 	$(".profil_avatar_img").attr("src", jsonBenutzer[paramProfilBild]);
@@ -147,7 +166,8 @@ function fillMyProfil(isAdmin)
 	if(jsonBenutzer[paramProfilBild].indexOf("default")==-1){
 		$("#profil_avatar_loeschen_bt").show();
 	}
-	else{
+	else
+	{
 		$("#profil_avatar_loeschen_bt").hide();
 	}
     $(".profil_loeschen").show();
@@ -232,6 +252,7 @@ function fillOtherProfil(benutzer, isAdmin)
 		$("#profil_passwort_alt_input").prop("required",true);
 		$("#profil_passwort").hide();
 		$("#profil_daten_speichern").hide();
+        $(".profil_farbschema_auswahl").hide();
 
 	    $("#profil_email_input").val("");
 	    $("#profil_matnr_input").val("");
@@ -255,6 +276,7 @@ function fillOtherProfil(benutzer, isAdmin)
 		$("#profil_passwort_alt_input").prop("required",false);
 		$("#profil_pw_alt_div").hide();
 		$("#profil_daten_speichern").show();
+        $(".profil_farbschema_auswahl").show();
 
 	    $("#profil_email_input").val(benutzer[paramEmail]);
 	    $("#profil_matnr_input").val(benutzer[paramMatrikelNr]);

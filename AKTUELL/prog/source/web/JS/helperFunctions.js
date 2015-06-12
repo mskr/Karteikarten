@@ -418,6 +418,9 @@ var suchTimer = function(){
             {
             	suchergContainer.find("#sucherg_"+categoryClassMapping[i]).empty();
             }
+            // Bei leerem Suchfeld Abbruch
+            if(textInput.val() == "")
+                return;
             // Neue Suchergebnisse laden
             var params = {};
             params[paramSuchmuster] = textInput.val();
@@ -475,14 +478,14 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         if(klasse == keyJsonObjKlasseBenutzer)
         {
             suchErgHtmlString += "<span class='octicon octicon-person'></span>" + 
-                                 "<span class='sucherg_item_benutzer_vorname'>" + jsonSuchErgebnis[paramVorname] + "</span>" + 
+                                 "<span class='highlightable'>" + jsonSuchErgebnis[paramVorname] + 
                                  " " + 
-                                 "<span class='sucherg_item_benutzer_nachname'>" + jsonSuchErgebnis[paramNachname] + "</span>";
+                                 jsonSuchErgebnis[paramNachname] + "</span>";
         }
         else if(klasse == keyJsonObjKlasseVeranst)
         {
             suchErgHtmlString += "<span class='octicon octicon-podium'></span>" +
-                                 "<span class='sucherg_item_vn_titel'>" + jsonSuchErgebnis[paramTitel] + "</span>" + 
+                                 "<span class='highlightable'>" + jsonSuchErgebnis[paramTitel] + "</span>" + 
                                  "<br>" +
                                  "<span class='sucherg_item_detail'>" +
                                  jsonSuchErgebnis[paramErsteller][paramVorname] + " " + jsonSuchErgebnis[paramErsteller][paramNachname] +
@@ -492,7 +495,7 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         else if(klasse == keyJsonObjKlasseStudiengang)
         {
             suchErgHtmlString += "<span class='octicon octicon-mortar-board'></span>" +
-                                 jsonSuchErgebnis[paramStudiengang];
+                                 "<span class='sucherg_item_studgang highlightable'>" + jsonSuchErgebnis[paramStudiengang] + "</span>";
         }
         // TODO Falls noch andere Objekte als Suchergebnisse kommen koennen, muessen diese hier nachgetragen werden.
         else
@@ -501,22 +504,18 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
         }
         suchErgHtmlString +=    "</div>";
         var suchErgJQueryObj = $(suchErgHtmlString);
-        
+
         // Hebe exakte Treffer fett hervor
-        switch(textInput.val())
-        {
-            case jsonSuchErgebnis[paramVorname]:
-                suchErgJQueryObj.find(".sucherg_item_benutzer_vorname").css("font-weight","bold");
-                break;
-            case jsonSuchErgebnis[paramNachname]:
-                suchErgJQueryObj.find(".sucherg_item_benutzer_nachname").css("font-weight","bold");
-                break;
-            case jsonSuchErgebnis[paramVorname]+" "+jsonSuchErgebnis[paramNachname]:
-                suchErgJQueryObj.find(".sucherg_item_benutzer_nachname, .sucherg_item_benutzer_vorname").css("font-weight","bold");
-                break;
-            case jsonSuchErgebnis[paramTitel]:
-                suchErgJQueryObj.find(".sucherg_item_vn_titel").css("font-weight","bold");
-        }
+        suchErgJQueryObj.find(".highlightable").each(function() {
+            $(this).find("strong").replaceWith($(this).find("strong").text());
+            var start = $(this).html().toLowerCase().indexOf(textInput.val().toLowerCase());
+            var length = textInput.val().length;
+            if (start >= 0)
+                $(this).html(
+                    $(this).html().substr(0, start) 
+                    + "<strong>" + $(this).html().substr(start, length) + "</strong>"
+                    + $(this).html().substr(start+length) );
+        });
         
         suchergContainer.find("#sucherg_"+category).append(suchErgJQueryObj);
         isCategoryEmpty[category] = false;
@@ -683,4 +682,14 @@ function myRound(zahl,n){
 }
 function isEven(n) {
 	return n == parseFloat(n)? !(n%2) : void 0;
+}
+
+
+function changeCSS(cssFile, cssLinkIndex) {
+    var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+    var newlink = document.createElement("link");
+    newlink.setAttribute("rel", "stylesheet");
+    newlink.setAttribute("type", "text/css");
+    newlink.setAttribute("href", cssFile);
+    document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
 }

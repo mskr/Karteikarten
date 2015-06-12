@@ -7,6 +7,25 @@ $(document).ready(function(){
 	
 
 	kkBearbeitenDropZone = $("#df_area_kk_b").dropzone(myDropzoneConfig).get(0).dropzone;
+	kkBearbeitenDropZone.on("dragenter", function() {
+        $("#kk_bearbeiten_popup .drop_file_areas").addClass("dragenter");
+        $("#kk_bearbeiten_popup .drop_file_areas .dz-message").text("Datei fallen lassen zum Hochladen");
+    });
+	kkBearbeitenDropZone.on("dragleave", function() {
+        $("#kk_bearbeiten_popup .drop_file_areas").removeClass("dragenter");
+        $("#kk_bearbeiten_popup .drop_file_areas .dz-message").text(
+                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
+    });
+	kkBearbeitenDropZone.on("drop", function() {
+        $("#kk_bearbeiten_popup .drop_file_areas").removeClass("dragenter");
+        $("#kk_bearbeiten_popup .drop_file_areas").addClass("dropped");
+        $("#kk_bearbeiten_popup .drop_file_areas .dz-message").hide();
+        $("#kk_bearbeiten_popup .drop_file_areas .dz-message").text(
+                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
+    });
+	kkBearbeitenDropZone.on("removedfile", function() {
+        $("#kk_bearbeiten_popup .drop_file_areas .dz-message").show();
+    });
 });
 
 function processKK_editClick(triggerElem){
@@ -334,6 +353,7 @@ function kkBearbeiten(kkJSON)
     	$("#kk_bearbeiten_titel_input").val("");
     	$("#kk_bearbeiten_TA").val("");
     	kkBearbeitenDropZone.removeAllFiles(true);
+        $("#kk_bearbeiten_popup .drop_file_areas").removeClass("dropped");
         // Zerstoere Verweis Baeume mit allen Handlern
         $("#kk_bearbeiten_popup").find(".kk_verweise_baum").empty();
     }
@@ -350,16 +370,16 @@ function kkBearbeiten(kkJSON)
         );
 	
 	
-	$(".checkbox_labels").unbind("click");
-    $(".checkbox_labels").click(function(){
-    	if($(this).siblings().first().prop("checked")==true ){
-    		$(this).siblings().first().prop("checked",false)
-    	}
-    	else{
-    		$(this).siblings().first().prop("checked",true);
-    	}
-    	
-    });
+//	$(".checkbox_labels").unbind("click");
+//    $(".checkbox_labels").click(function(){
+//    	if($(this).siblings().first().prop("checked")==true ){
+//    		$(this).siblings().first().prop("checked",false)
+//    	}
+//    	else{
+//    		$(this).siblings().first().prop("checked",true);
+//    	}
+//    	
+//    });
     
     function isAnyAttrSelected()
     {
@@ -408,7 +428,6 @@ function processKKbearbeiten(id,text,titel,attributes,
     params[paramVerweisWeiterfuehrend] = verweisWeiterfuehrendArr;
     params[paramVerweisUebung] = verweisUebungArr;
     params[paramVerweisSonstiges] = verweisSonstigesArr;
-    
     if(kkBearbeitenDropZone.files.length==0 || $("#kk_jetztNeuesKapitel").prop("checked")){
 		params[paramType] = "";
 		params[paramKkUploadID] = -1;
