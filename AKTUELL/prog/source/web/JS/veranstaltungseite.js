@@ -126,6 +126,10 @@ function fillVeranstaltungsSeite(Vid, kkId)
     // Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
     d = jQuery.Deferred();
     
+    // Inhaltsverzeichniss zurücksetzen
+    $("body").scrollTop(0);
+    $(".stuck").removeClass("stuck");
+    
     var params = {};
     params[paramId] = Vid;
     var ajax1 = ajaxCall(veranstaltungServlet,

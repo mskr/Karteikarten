@@ -11,9 +11,9 @@ $(document).ready(function(){
 		autoDiscover : false,
 		autoProcessQueue : true,
 		createImageThumbnails : true,
-		previewTemplate : $("#kk_PreviewTemplate").html(),
+		previewTemplate : $("#kk_PreviewTemplate").clone().show().prop('outerHTML') ,
 		uploadMultiple : false,
-		addRemoveLinks : true,
+//		addRemoveLinks : true,
 		maxFiles : 1,
 
 		// Datei annehmen

@@ -246,7 +246,7 @@
 	 				<textarea id="kk_erstellen_TA">
 	 				</textarea>
 	 			</div>
-	 			<div class="drop_file_areas" id="df_area_kk">
+	 			<div class="drop_file_areas dropzone" id="df_area_kk">
 					<form action="/file-upload" class="dropzone" id="file-dropzone">
 						<div class="fallback">
 							<input name="file" type="file" />
@@ -257,6 +257,7 @@
 							</span>
 						</div>
 				    </form>
+						<div class="clearfix"></div>
 	 			</div>
  			</div>
 		</div>
@@ -374,7 +375,7 @@
 	 				<textarea id="kk_bearbeiten_TA">
 	 				</textarea>
 	 			</div>
-	 			<div class="drop_file_areas" id="df_area_kk_b">
+	 			<div class="drop_file_areas dropzone" id="df_area_kk_b">
 					<form action="/file-upload" class="dropzone" id="file-dropzone">
 						<div class="fallback">
 							<input name="file" type="file" />
@@ -385,6 +386,7 @@
 							</span>
 						</div>
 				    </form>
+					<div class="clearfix"></div>
 	 			</div>
  			</div>
 		</div>
@@ -765,7 +767,7 @@ Dann aber so leer.
 </div>
 
 <!-- Template Dropzone Uploaded Image -->
-<div id="kk_PreviewTemplate" class="dz-preview center dz-image-preview" style="margin: 40px; display:none;">
+<div id="kk_PreviewTemplate" class="dz-preview center dz-image-preview" style="display:none;">
 		<div class="dz-details">
 			<img data-dz-thumbnail style="width:120px;max-height:120px;"/>
 			<div class="dz-filename">
@@ -775,9 +777,6 @@ Dann aber so leer.
 		</div>
 		<div class="dz-progress">
 			<span class="dz-upload" data-dz-uploadprogress></span>
-		</div>
-		<div class="dz-error-message">
-			<span data-dz-errormessage></span>
 		</div>
 		<br><a data-dz-remove>Datei entfernen</a>
 </div>

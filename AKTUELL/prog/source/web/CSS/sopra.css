@@ -32,7 +32,12 @@ img[src*="gif.latex"] {
 } .cke_contents {
 	border-radius: .3em !important;
 }
-
+.dropzone.dz-started .dz-message {
+  opacity: 1; /* Don't let it disappear */
+}
+.dropzone.dz-max-files-reached .dz-message {
+  opacity: 0; /* Make it disappear */
+}
 
 body {
 	background: #4a4a4a;
@@ -2321,7 +2326,7 @@ select.profil_input {
 
 .drop_file_areas {
 	box-sizing: border-box;
-	margin: 1em 0;
+	/* margin: 1em 0; */
 	padding: 2em;
 	overflow: hidden;
 	border: 1px dashed DimGray;

@@ -33,6 +33,12 @@ img[src*="gif.latex"] {
 	border-radius: .3em !important;
 }
 
+.dropzone.dz-started .dz-message {
+  opacity: 1; /* Don't let it disappear */
+}
+.dropzone.dz-max-files-reached .dz-message {
+  opacity: 0; /* Make it disappear */
+}
 
 body {
 	background: #eee;
@@ -1349,6 +1355,7 @@ textarea.input_std {
 	position: relative;
 	z-index: 9;
 	display: block;
+	opacity: 0;
 } .kk_wrapper:hover .kk_optionen {
 	opacity: 1;
 } .KKloeschen:hover {
@@ -2310,23 +2317,30 @@ select.profil_input {
 .bn_zeit{
 	font-size: 0.7em;
 }
-.drop_file_areas{
-	text-align: center;
-	margin: 20px auto;
+.drop_file_areas {
+	box-sizing: border-box;
+	/* margin: 1em 0; */
+	padding: 2em;
 	overflow: hidden;
-	min-height: 12em;
 	border: 1px dashed DimGray;
-	border-radius: .3em;
-	width:100%;
-}
-.dz-message{
-	cursor:pointer;
-	display:block;
+	cursor: pointer;
+	transition: all .4s;
+} .drop_file_areas.dragenter {
+	box-shadow: inset 0 0 2em #333;
+	color: yellow;
+} .drop_file_areas.dropped {
+	cursor: default;
 	text-align: center;
-	margin: 0 auto;
-	margin-top:20px;
-}
-#dz_uploaded_file_message{
+} .dz-message{
+	
+} .dz-message:before {
+	font-family: Octicons;
+	content: "\f012";
+	font-size: 4em;
+	float: left;
+	margin-right: 2rem;
+	color: gray;
+} #dz_uploaded_file_message{
 	display:none;
 	margin: 0 auto;
 	overflow: hidden;
@@ -2338,6 +2352,8 @@ select.profil_input {
 	padding:1.5em;
 	border-radius: 1em;
 	width:30%;
+} .dz-remove:hover {
+	color: red;
 }
 .center{
 	text-align: center;
