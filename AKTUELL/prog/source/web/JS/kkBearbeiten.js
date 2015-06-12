@@ -56,24 +56,23 @@ function kkBearbeiten(kkJSON)
 {
 	$("#df_area_kk_b").find("#kk_b_BildPreviewTemplate").remove();
 	$("#df_area_kk_b").find(".dz-message").show();
-	$("#kk_jetztNeuesKapitel ~ label").html("Diese Karteikarte als Überschrift verwenden.");
-	$("#kk_jetztNeuesKapitel").off();
-	$("#kk_jetztNeuesKapitel").change(function(e) {
-    	if($("#kk_jetztNeuesKapitel").prop("checked")==true)
+	$("#kk_jetztNeuesKapitel_b ~ label").html("Diese Karteikarte als Überschrift verwenden.");
+	$("#kk_jetztNeuesKapitel_b").off();
+	$("#kk_jetztNeuesKapitel_b").change(function(e) {
+    	if($("#kk_jetztNeuesKapitel_b").prop("checked")==true)
     	{
     		$("#kk_bearbeiten_content").hide();
 			kkBearbeitenPopup.disablePage(1);
 			kkBearbeitenPopup.disablePage(2);
-    		$("#kk_jetztNeuesKapitel ~ label").append(
+    		$("#kk_jetztNeuesKapitel_b ~ label").append(
     		        "<span style='color:yellow'><br><span class='octicon octicon-alert'></span> Inhalt geht verloren</span>");
     	}
     	else
     	{
     		$("#kk_bearbeiten_content").show();
     		kkBearbeitenPopup.enableAllPages();
-		    $("#kk_jetztNeuesKapitel ~ label").html("Diese Karteikarte als Überschrift verwenden.");
+		    $("#kk_jetztNeuesKapitel_b ~ label").html("Diese Karteikarte als Überschrift verwenden.");
     	}
-		
     });
 	
 	// Attribute anhaken
@@ -89,15 +88,15 @@ function kkBearbeiten(kkJSON)
 	if(kkJSON[paramType]=="TEXT")
 	{
 		if(kkJSON[paramInhalt]==""){		//überschrift
-			$("#kk_jetztNeuesKapitel").prop("checked",true);
+			$("#kk_jetztNeuesKapitel_b").prop("checked",true);
+    		$("#kk_bearbeiten_content").hide();
 			kkBearbeitenPopup.disablePage(1);
 			kkBearbeitenPopup.disablePage(2);
-    		$("#kk_bearbeiten_content").hide();
 		}
-		else{							//textkarteikarte
-			$("#kk_jetztNeuesKapitel").prop("checked",false);
-    		kkBearbeitenPopup.enableAllPages();
+		else{								//textkarteikarte
+			$("#kk_jetztNeuesKapitel_b").prop("checked",false);
     		$("#kk_bearbeiten_content").show();
+    		kkBearbeitenPopup.enableAllPages();
 		}
 	}
 	else if(kkJSON[paramType]=="BILD")
@@ -324,7 +323,7 @@ function kkBearbeiten(kkJSON)
 	function submitFkt()
 	{
         // Wenn die KK zu einer Ueberschrift gemacht wurde, einfach Inhaltstext = Leerstring
-    	var text = $("#kk_jetztNeuesKapitel").prop("checked") ? "" : $("#kk_bearbeiten_TA").val().trim();
+    	var text = $("#kk_jetztNeuesKapitel_b").prop("checked") ? "" : $("#kk_bearbeiten_TA").val().trim();
     	var titel = $("#kk_bearbeiten_titel_input").val().trim();
     	var attributes = getSelectedKkBAttributes();
     	var id = kkJSON[paramId];
@@ -334,7 +333,7 @@ function kkBearbeiten(kkJSON)
     		showError("Bitte geben sie ihrer Karteikarte einen Titel.");
     		return false;
     	}
-    	else if(text == "" &&  kkBearbeitenDropZone.files.length == 0 && !$("#kk_jetztNeuesKapitel").prop("checked"))
+    	else if(text == "" &&  kkBearbeitenDropZone.files.length == 0 && !$("#kk_jetztNeuesKapitel_b").prop("checked"))
     	{
             showError("Bitte füllen sie ihre Karteikarte mit einem Inhalt.");
     		return false;
@@ -354,8 +353,8 @@ function kkBearbeiten(kkJSON)
     
     function clearFkt()
     {
-    	$("#kk_jetztNeuesKapitel").off();
-		$("#kk_jetztNeuesKapitel").prop("checked",false);
+    	$("#kk_jetztNeuesKapitel_b").off();
+		$("#kk_jetztNeuesKapitel_b").prop("checked",false);
     	$("#kk_bearbeiten_text_area").show();
 		$("#df_area_kk_b").show();
         $("#kk_bearbeiten_popup input[type='checkbox']").prop("checked",false);
@@ -432,7 +431,7 @@ function processKKbearbeiten(id,text,titel,attributes,
     params[paramVerweisWeiterfuehrend] = verweisWeiterfuehrendArr;
     params[paramVerweisUebung] = verweisUebungArr;
     params[paramVerweisSonstiges] = verweisSonstigesArr;
-    if(kkBearbeitenDropZone.files.length==0 || $("#kk_jetztNeuesKapitel").prop("checked")){
+    if(kkBearbeitenDropZone.files.length==0 || $("#kk_jetztNeuesKapitel_b").prop("checked")){
 		params[paramType] = "";
 		params[paramKkUploadID] = -1;
     }

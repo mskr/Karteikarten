@@ -123,12 +123,13 @@ function PopupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
 	{
     	this.seiteAktiv[i] = true;
 	}
+	this.init();
 }
 
 PopupFenster.prototype.disablePage = function(idx){
 	if(this.popupSeitenIterator == idx)
 	{
-		console.log("Die aktuell angezeigt seite kann nicht deaktiviert werden.");
+		console.log("Die aktuell angezeigte Seite kann nicht deaktiviert werden.");
 		return;
 	}
 	this.seiteAktiv[idx] = false;
@@ -247,6 +248,7 @@ PopupFenster.prototype.showNextPage = function(){
 	if(!this.seiteAktiv[this.popupSeitenIterator])
 	{
 		console.log("Ungültiger index");
+		return;
 	}
 	
 	$(this.seitenArr[currIdx]).slideUp();
@@ -275,6 +277,7 @@ PopupFenster.prototype.showPrevPage = function(){
 	if(!this.seiteAktiv[this.popupSeitenIterator])
 	{
 		console.log("Ungültiger index");
+		return;
 	}
 	
 	$(this.seitenArr[currIdx]).slideUp();
@@ -285,7 +288,6 @@ PopupFenster.prototype.showPrevPage = function(){
 
 PopupFenster.prototype.show = function(){
 	
-	this.init();
     // Scrollbar ausserhalb Popup deaktivieren, sodass nur Popup Scrollbar sichtbar
     $("body").css("overflow-y","hidden");
     
@@ -332,7 +334,6 @@ PopupFenster.prototype.init = function(){
         	this.weiterElem.off();
         	this.weiterElem.click(function() {
         		that.showNextPage();
-        		
         	});
         }
         
@@ -341,7 +342,6 @@ PopupFenster.prototype.init = function(){
         	this.zurueckElem.off();
         	this.zurueckElem.click(function() {
         		that.showPrevPage();
-        		
         	});
         }
     }
