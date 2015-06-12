@@ -62,16 +62,15 @@ function kkBearbeiten(kkJSON)
     	if($("#kk_jetztNeuesKapitel").prop("checked")==true)
     	{
     		$("#kk_bearbeiten_content").hide();
-//    		$("#kk_bearbeiten_text_area").hide();
-//    		$("#df_area_kk_b").hide();
+			kkBearbeitenPopup.disablePage(1);
+			kkBearbeitenPopup.disablePage(2);
     		$("#kk_jetztNeuesKapitel ~ label").append(
     		        "<span style='color:yellow'><br><span class='octicon octicon-alert'></span> Inhalt geht verloren</span>");
     	}
     	else
     	{
     		$("#kk_bearbeiten_content").show();
-//			$("#kk_bearbeiten_text_area").show();
-//			$("#df_area_kk_b").show();
+    		kkBearbeitenPopup.enableAllPages();
 		    $("#kk_jetztNeuesKapitel ~ label").html("Diese Karteikarte als Überschrift verwenden.");
     	}
 		
@@ -91,14 +90,13 @@ function kkBearbeiten(kkJSON)
 	{
 		if(kkJSON[paramInhalt]==""){		//überschrift
 			$("#kk_jetztNeuesKapitel").prop("checked",true);
-//			$("#kk_bearbeiten_text_area").hide(0);
-//			$("#df_area_kk_b").hide(0);
+			kkBearbeitenPopup.disablePage(1);
+			kkBearbeitenPopup.disablePage(2);
     		$("#kk_bearbeiten_content").hide();
 		}
 		else{							//textkarteikarte
 			$("#kk_jetztNeuesKapitel").prop("checked",false);
-//			$("#kk_bearbeiten_text_area").show(0);
-//			$("#df_area_kk_b").show(0);
+    		kkBearbeitenPopup.enableAllPages();
     		$("#kk_bearbeiten_content").show();
 		}
 	}
@@ -357,6 +355,7 @@ function kkBearbeiten(kkJSON)
     function clearFkt()
     {
     	$("#kk_jetztNeuesKapitel").off();
+		$("#kk_jetztNeuesKapitel").prop("checked",false);
     	$("#kk_bearbeiten_text_area").show();
 		$("#df_area_kk_b").show();
         $("#kk_bearbeiten_popup input[type='checkbox']").prop("checked",false);
@@ -367,6 +366,7 @@ function kkBearbeiten(kkJSON)
         $("#kk_bearbeiten_popup .drop_file_areas").removeClass("dropped");
         // Zerstoere Verweis Baeume mit allen Handlern
         $("#kk_bearbeiten_popup").find(".kk_verweise_baum").empty();
+        
     }
 
     kkBearbeitenPopup.setCloseFkt(clearFkt);

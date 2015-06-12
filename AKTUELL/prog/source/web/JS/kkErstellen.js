@@ -55,14 +55,13 @@ function newKarteikarte(vater, bruder) {
     $("#kk_neuesKapitel").change(function(e) {
     	if($("#kk_neuesKapitel").prop("checked"))
     	{
-//    		$("#kk_erstellen_text_area").hide();
-//    		$("#df_area_kk").hide();
+    		kkErstellenPopup.disablePage(1);
+    		kkErstellenPopup.disablePage(2);
     		$("#kk_erstellen_content").hide();
     	}
     	else
     	{
-//            $("#kk_erstellen_text_area").show();
-//            $("#df_area_kk").show();
+    		kkErstellenPopup.enableAllPages();
     		$("#kk_erstellen_content").show();
     	}
     });

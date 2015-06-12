@@ -117,7 +117,31 @@ function PopupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     
     this.seitenArr = this.popupOverlayWrapper.find(".popup_fenster_body");
     this.popupSeitenIterator = 0;
+    
+    this.seiteAktiv = [];
+    for(var i = 0; i < this.seitenArr.length; i++)
+	{
+    	this.seiteAktiv[i] = true;
+	}
 }
+
+PopupFenster.prototype.disablePage = function(idx){
+	if(this.popupSeitenIterator == idx)
+	{
+		console.log("Die aktuell angezeigt seite kann nicht deaktiviert werden.");
+		return;
+	}
+	this.seiteAktiv[idx] = false;
+	this.updateButtons();
+}
+PopupFenster.prototype.enableAllPages = function(){
+	for(var i = 0; i < this.seitenArr.length; i++)
+	{
+		this.seiteAktiv[i] = true;
+	}
+	this.updateButtons();
+}
+
 PopupFenster.prototype.setCloseFkt = function(closeFunc){
 	if(this.isVisible){
 		this.hide();
@@ -131,6 +155,132 @@ PopupFenster.prototype.setSubmitFkt = function(submitFunc){
 		this.show();		
 	}
 	this.submitFunc = submitFunc;
+}
+
+PopupFenster.prototype.updateButtons = function(){
+	if(this.popupSeitenIterator < 0)
+	{
+		console.log("Ungültiger Index");
+		return;
+	}
+	else if(this.popupSeitenIterator > this.seitenArr.length-1)
+	{
+		console.log("Ungültiger Index");
+		return;
+	}
+	// Suche den nächsten gültigen Index in beide richtungen
+	var isLast = false;
+	var isFirst = false;
+	
+	var currIdxUp = this.popupSeitenIterator;
+	if(currIdxUp == this.seitenArr.length-1)
+		isLast = true;
+	else
+	{
+		currIdxUp++;
+		while(currIdxUp <= this.seitenArr.length-1)
+		{
+			if(!this.seiteAktiv[currIdxUp])
+				currIdxUp++;
+			else
+				break;
+		}
+		isLast = currIdxUp>=this.seitenArr.length;
+	}
+	
+	var currIdxDown = this.popupSeitenIterator;
+	if(currIdxDown == 0)
+		isFirst = true;
+	else
+	{
+		currIdxDown--;
+		while(currIdxDown >= 0)
+		{
+			if(!this.seiteAktiv[currIdxDown])
+				currIdxDown--;
+			else
+				break;
+		}
+		isFirst = currIdxDown<0;
+	}
+
+	// Jetzt das Einblenden, was sinn ergibt
+	if(isFirst)
+	{
+		this.zurueckElem.hide();
+	}
+	else
+	{
+		this.zurueckElem.show();
+	}
+	
+	if(isLast)
+	{
+		this.weiterElem.hide();
+		this.submitElem.show();
+	}
+	else
+	{
+		this.weiterElem.show();
+		this.submitElem.hide();
+	}
+}
+PopupFenster.prototype.showNextPage = function(){
+	
+	if(this.popupSeitenIterator >= this.seitenArr.length-1)
+	{
+		console.log("Ungültiger Index");
+		return;
+	}
+	
+	// Nächste gültige Seite suchen
+	// Iterator zeigt jetzt auf das nächste element
+	var currIdx = this.popupSeitenIterator++;
+	while(this.popupSeitenIterator < this.seitenArr.length-1)
+	{
+		if(!this.seiteAktiv[this.popupSeitenIterator])
+			this.popupSeitenIterator ++;
+		else
+			break;
+	}
+	
+	if(!this.seiteAktiv[this.popupSeitenIterator])
+	{
+		console.log("Ungültiger index");
+	}
+	
+	$(this.seitenArr[currIdx]).slideUp();
+	$(this.seitenArr[this.popupSeitenIterator]).slideDown();
+	
+	this.updateButtons();
+}
+PopupFenster.prototype.showPrevPage = function(){
+	if(this.popupSeitenIterator <= 0)
+	{
+		console.log("Ungültiger Index");
+		return;
+	}
+	
+	// Vorherige gültige Seite suchen
+	// Iterator zeigt jetzt auf das vorherige element
+	var currIdx = this.popupSeitenIterator--;
+	while(this.popupSeitenIterator > 0)
+	{
+		if(!this.seiteAktiv[this.popupSeitenIterator])
+			this.popupSeitenIterator--;
+		else
+			break;
+	}
+	
+	if(!this.seiteAktiv[this.popupSeitenIterator])
+	{
+		console.log("Ungültiger index");
+	}
+	
+	$(this.seitenArr[currIdx]).slideUp();
+	$(this.seitenArr[this.popupSeitenIterator]).slideDown();
+	
+	this.updateButtons();
 }
 
 PopupFenster.prototype.show = function(){
@@ -150,6 +300,7 @@ PopupFenster.prototype.show = function(){
 }
 PopupFenster.prototype.hide = function(doSubmit){
 	this.isVisible = false;
+	this.enableAllPages();
 	$("body").removeAttr("style"); // Scrollbar ausserhalb Popup wieder aktivieren
 	this.popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
 	var that = this;
@@ -180,18 +331,8 @@ PopupFenster.prototype.init = function(){
         	this.weiterElem.show();
         	this.weiterElem.off();
         	this.weiterElem.click(function() {
-        		$(that.seitenArr[that.popupSeitenIterator]).slideUp();
-        		that.popupSeitenIterator++;
-        		$(that.seitenArr[that.popupSeitenIterator]).slideDown();
-        		if(that.popupSeitenIterator > 0)
-        		{
-        			that.zurueckElem.show();
-        		}
-        		if(that.popupSeitenIterator == that.seitenArr.length-1)
-        		{
-        			that.weiterElem.hide();
-        			that.submitElem.show();
-        		}
+        		that.showNextPage();
+        		
         	});
         }
         
@@ -199,18 +340,8 @@ PopupFenster.prototype.init = function(){
         	this.zurueckElem.hide();
         	this.zurueckElem.off();
         	this.zurueckElem.click(function() {
-        		$(that.seitenArr[that.popupSeitenIterator]).slideUp();
-        		that.popupSeitenIterator--;
-        		$(that.seitenArr[that.popupSeitenIterator]).slideDown();
-        		if(that.popupSeitenIterator == 0)
-        		{
-        			that.zurueckElem.hide();
-        		}
-        		if(that.popupSeitenIterator < that.seitenArr.length-1)
-        		{
-        			that.weiterElem.show();
-        			that.submitElem.hide();
-        		}
+        		that.showPrevPage();
+        		
         	});
         }
     }
