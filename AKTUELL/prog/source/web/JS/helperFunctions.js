@@ -235,7 +235,7 @@ PopupFenster.prototype.showNextPage = function(){
 	}
 	
 	// Nächste gültige Seite suchen
-	// Iterator zeigt jetzt auf das nächste element
+	// Iterator zeigt jetzt auf das nächste Element
 	var currIdx = this.popupSeitenIterator++;
 	while(this.popupSeitenIterator < this.seitenArr.length-1)
 	{
@@ -287,6 +287,15 @@ PopupFenster.prototype.showPrevPage = function(){
 }
 
 PopupFenster.prototype.show = function(){
+
+	// Alle anderen Seiten ausblenden
+    for(var i=1; i<this.seitenArr.length; i++)
+    {
+        $(this.seitenArr[i]).hide();
+    }
+    $(this.seitenArr[0]).show();
+	
+	this.updateButtons();
 	
     // Scrollbar ausserhalb Popup deaktivieren, sodass nur Popup Scrollbar sichtbar
     $("body").css("overflow-y","hidden");
@@ -300,15 +309,16 @@ PopupFenster.prototype.show = function(){
     this.isVisible = true;
     
 }
-PopupFenster.prototype.hide = function(doSubmit){
+PopupFenster.prototype.hide = function(){
 	this.isVisible = false;
-	this.enableAllPages();
-	$("body").removeAttr("style"); // Scrollbar ausserhalb Popup wieder aktivieren
-	this.popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
 	var that = this;
 	this.popupOverlayWrapper.fadeOut(300,function(){
+		that.enableAllPages();
+		$("body").removeAttr("style"); // Scrollbar ausserhalb Popup wieder aktivieren
+		that.popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
 		that.closeFunc();
 		that.popupSeitenIterator = 0;
+		
 	});
 }
 
