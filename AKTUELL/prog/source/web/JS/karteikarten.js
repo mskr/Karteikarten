@@ -2,6 +2,7 @@
  * @author mk
  */
 insertingKarteikarte = false;
+insertingKkAjaxCalls = [];
 function buildKarteikarte(karteikarteJson)
 {
     var kkId = karteikarteJson[paramId],
@@ -90,7 +91,14 @@ function buildKarteikarte(karteikarteJson)
 	    element: kkDom,
 	    handler: function(direction) {
 	    	//TODO
-	    	if(!insertingKarteikarte)
+	    	var process = true;
+	    	
+	    	$.each(insertingKkAjaxCalls, function(i,v){
+	    		if(!v.state() == "resolved")
+	    			process = false
+	    	});
+	    	
+	    	if(process)
 	    		vnInhaltsverzeichnis.showEintrag(kkId);
 	    	
 //	    	vnInhaltsverzeichnis.unhighlightAll();

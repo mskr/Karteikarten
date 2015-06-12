@@ -391,7 +391,7 @@ function displayKarteikarte(id, callback, reload){
             params2[paramKkId] = id;
             params2[paramVnId] = veranstaltungsObject[paramId];
         	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
-        		insertingKarteikarte = true;
+        		insertingKkAjaxCalls.push(ajax);
         		domkk = buildKarteikarte(response);
                 domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 				domkk.css("opacity", "0");
@@ -399,7 +399,12 @@ function displayKarteikarte(id, callback, reload){
 				domkk.animate({opacity: 1}, 200);
 
 	        	$.when(loadAfterKk(id)).done(function(){
-	        		insertingKarteikarte = false;
+	        		$.each(insertingKkAjaxCalls, function(i){
+	        		    if(insertingKkAjaxCalls[i] === ajax) {
+	        		    	insertingKkAjaxCalls = insertingKkAjaxCalls.splice(i,1);
+	        		        return false;
+	        		    }
+	        		});
 
 		        	if(callback != undefined) 
 		        		callback();
@@ -442,17 +447,22 @@ function loadAfterKk(id)
 						o = data.shift();
 						if(o == undefined)
 							return;
-						insertingKarteikarte = true;
+		        		insertingKkAjaxCalls.push(kkLoadRequest);
 						domkk = buildKarteikarte(o);
 						domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 //						domkk.addClass("animated slideIn"); //TODO
 						$("#kk_all").append(domkk);
 						domms.push(domkk);
 						nextItem();
-						insertingKarteikarte = false;
+
 				}
 				nextItem();
-                
+				$.each(insertingKkAjaxCalls, function(i){
+        		    if(insertingKkAjaxCalls[i] === kkLoadRequest) {
+        		    	insertingKkAjaxCalls = insertingKkAjaxCalls.splice(i,1);
+        		        return false;
+        		    }
+        		});
 				displayingAfterKK = false;
 				
 	        }, 
@@ -499,17 +509,21 @@ function loadPreKk(id)
 						})
 						return;
 					}
-					insertingKarteikarte = true;
+	        		insertingKkAjaxCalls.push(kkLoadRequest);
 					domkk = buildKarteikarte(o);
                     domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 					domkk.css("opacity", "0");
 					$("#kk_all").prepend(domkk);
 					domms.push(domkk);
 					nextItem();
-					insertingKarteikarte = false;
 				}
 				nextItem();
-				
+				$.each(insertingKkAjaxCalls, function(i){
+        		    if(insertingKkAjaxCalls[i] === kkLoadRequest) {
+        		    	insertingKkAjaxCalls = insertingKkAjaxCalls.splice(i,1);
+        		        return false;
+        		    }
+        		});
 				displayingPreKK = false;
 				
 			}, 
