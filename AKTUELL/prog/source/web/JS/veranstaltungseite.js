@@ -677,7 +677,7 @@ Inhaltsverzeichnis.prototype.ladeKinder = function(vaterId, vaterElem, initialVi
 
                                 istAusgeklappt = !istAusgeklappt;
                                 // Toggeln
-                                that.kkAufEinklappen(kkListItem,istAusgeklappt);
+                                ajax = that.kkAufEinklappen(kkListItem,istAusgeklappt);
                                 
                                 // Vom Aufrufer definierte Funktion ausfuehren
                                 that.extraClickFunction(arr, kkListItem, i, e, ajax, istAusgeklappt);
@@ -737,8 +737,10 @@ Inhaltsverzeichnis.prototype.kkAufEinklappen = function (liVater, aufklappen)
     var kinderGeladen = liVater.attr("data-kinder-geladen")=='true';
     var kkId = liVater.attr("data-kkid");
     var that = this;
+    var result = $.Deferred();
+    
     if(kkId == undefined)
-    	return;
+    	return result.resolve();
     
     // etwas zu tun?
     if(istAusgeklappt != aufklappen)
@@ -753,6 +755,7 @@ Inhaltsverzeichnis.prototype.kkAufEinklappen = function (liVater, aufklappen)
 	        });
 	    	istAusgeklappt = true;
 	    	kinderGeladen = true;
+	    	return ajax;
 	    }
     	// andernfalls auf oder zuklappen
     	else
@@ -771,6 +774,7 @@ Inhaltsverzeichnis.prototype.kkAufEinklappen = function (liVater, aufklappen)
     				that.kkAufEinklappen($(v), false);
     			});
     		}
+    		return result.resolve();
     	}
     }    
 }
