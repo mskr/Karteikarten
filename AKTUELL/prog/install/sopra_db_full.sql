@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 12. Jun 2015 um 19:37
+-- Erstellungszeit: 13. Jun 2015 um 15:45
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_veranstaltungsaenderung` (
   `Veranstaltung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Daten für Tabelle `benachrichtigung_veranstaltungsaenderung`
@@ -361,7 +361,7 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (68, 'Statische Prüfungen (1/7)', '<h3><span style="font-family:arial,helvetica,sans-serif"><strong>Statische Pr&uuml;fung</strong></span></h3><ul><li>Pr&uuml;fung eines Dokuments (allein oder mit Gespr&auml;chspartner) nach vorgegebenen Kriterien</li></ul><h3><span style="font-family:arial,helvetica,sans-serif"><strong>Gemeinsamkeiten aller statischen Pr&uuml;fmethoden</strong></span></h3><ul><li>Wesentliche T&auml;tigkeit: dokumentierte (Teil-)Produkte untersuchen und beurteilen</li><li>Hauptziel: Defekte aller Art (Fehler, Widerspr&uuml;che, Unvollst&auml;ndigkeiten, etc.) finden</li><li>Beteiligte: (kleines) Team mit klarer Rollenverteilung</li><li>Neben individueller Pr&uuml;ft&auml;tigkeit meist auch Gruppensitzung (mit allen Beteiligten) Sinnvolle Voraussetzungen (f&uuml;r den Erfolg statischer Pr&uuml;fungen)</li></ul><h3><span style="font-family:arial,helvetica,sans-serif"><strong>Der erforderliche Aufwand (Personal, Zeit) muss fest eingeplant sein</strong></span></h3><ul><li>Es muss bekannt sein, welchem Zweck die Pr&uuml;fung dient</li><li>Es muss ein zug&auml;ngliches Pr&uuml;fdokument (Text, Programm oder Zeichnung) vorliegen</li><li>Die Mitglieder des Pr&uuml;fteams sollten in der jeweiligen Pr&uuml;fmethode geschult sein</li><li>Die Pr&uuml;fmethode sollte dokumentiert sein und ihre Einhaltung &uuml;berpr&uuml;ft werden</li><li>Pr&uuml;fergebnisse d&uuml;rfen nicht zur Personalbeurteilung missbraucht werden</li></ul>', 'TEXT', 0, '2015-06-04 13:56:49', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (70, 'Profil anzeigen', '', 'TEXT', 0, '2015-06-09 07:16:24', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (71, 'Passwort ändern', '<p>Wechseln Sie zuerst auf Ihr Profil indem sie links oben auf Ihren Namen klicken.&nbsp;</p><p>Tragen Sie zuerst das alte Passwort ein. Tragen Sie dann das neue Passwort ein und wiederholen Sie es. Klicken Sie danach auf "Speichern".&nbsp;Wenn alle Angaben in Ordnung sind, wird Ihr Passwort gespeichert.</p>', 'BILD', 0, '2015-06-12 17:26:37', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(74, 'Profilbild ändern / löschen', '<p>Nachdem Sie auf Ihr Profil gewechselt haben (Klick auf Ihren Namen links oben), können Sie Ihr <u>Profilbild ändern</u></p><ul><li>Klicken Sie auf Ihr aktuelles Bild auf der Profilseite links oben. (Innerhalb der Seite, nicht in der Box links.) (Siehe Bild 1).</li><li>Es öffnet sich ein Datei-Dialog zum Auswählen eines Bildes. Es sind nur die Dateiendungen png, jpg und&nbsp;jpeg erlaubt.</li><li>Nach dem Auswählen der Datei wird sie entweder abgelehnt, andernfalls sehen Sie&nbsp;das mittlere Bild. Durch den Klick auf "Avatar hochladen" wird das Bild auf den Server geladen und gespeichert.&nbsp;</li><li>Wenn dies funktioniert hat, sehen Sie Bild 3.</li></ul><p><u>Profilbild löschen</u></p><p>Um Ihr Profilbild zu löschen, klicken Sie einfach auf "Profilbild löschen" (Siehe Bild 3).</p>', 'BILD', 0, '2015-06-12 17:25:48', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(74, 'Profilbild ändern / löschen', '<p>Nachdem Sie auf Ihr Profil gewechselt haben (Klick auf Ihren Namen links oben), können Sie Ihr</p><p><u>Profilbild ändern</u></p><ul><li>Klicken Sie auf Ihr aktuelles Bild auf der Profilseite links oben. (Innerhalb der Seite, nicht in der Box links.) (Siehe Bild 1).</li><li>Es öffnet sich ein Datei-Dialog zum Auswählen eines Bildes. Es sind nur die Dateiendungen png, jpg und&nbsp;jpeg erlaubt.</li><li>Nach dem Auswählen der Datei wird sie entweder abgelehnt, andernfalls sehen Sie&nbsp;das mittlere Bild. Durch den Klick auf "Avatar hochladen" wird das Bild auf den Server geladen und gespeichert.&nbsp;</li><li>Wenn dies funktioniert hat, sehen Sie Bild 3.</li></ul><p><u>Profilbild löschen</u></p><p>Um Ihr Profilbild zu löschen, klicken Sie einfach auf "Profilbild löschen" (Siehe Bild 3).</p>', 'BILD', 0, '2015-06-13 13:27:39', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (75, 'Bedienungsanleitung eLearning-System', '', 'TEXT', 0, '2015-06-08 11:52:50', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (76, 'Hauptseite', '', 'TEXT', 0, '2015-06-09 07:15:02', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (77, 'Profil', '', 'TEXT', 0, '2015-06-09 07:12:32', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -745,7 +745,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `benachrichtigung_veranstaltungsaenderung`
 --
 ALTER TABLE `benachrichtigung_veranstaltungsaenderung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `benutzer`
 --

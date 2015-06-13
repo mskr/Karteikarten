@@ -359,15 +359,36 @@ public class PDFExporter
         try
         {
             FileUtils.copyFile(new File(bildPfad), new File(workingDir + subFolder + "/" + kk.getId() + ".png"));
+            String latexStr;
+            if(kk.getInhalt().equals(""))
+            {
+                latexStr = "\\begin{figure}[H] " + newLineWithSeparation + 
+                        "  \\centering" + newLineWithSeparation
+                        + "  \\includegraphics[width=0.5\\linewidth]{" + kk.getId() + ".png}" + newLineWithSeparation
+                        + "  \\caption[" + replaceInvalidChars(kk.getTitel()) + "]"
+                        + "{" + replaceInvalidChars(kk.getTitel()) + createAttribute(kk) + "}" + newLineWithSeparation 
+                        + "  \\label{kk_" + kk.getId() + "}" + newLineWithSeparation 
+                        + "\\end{figure}" + newLineWithSeparation;
 
-            String latexStr = "\\begin{figure}[H] " + newLineWithSeparation + "  \\centering" + newLineWithSeparation
-                    + "  \\includegraphics[width=0.5\\linewidth]{" + kk.getId() + ".png}" + newLineWithSeparation
-                    + "  \\caption[" + replaceInvalidChars(kk.getTitel()) + "]{" + replaceInvalidChars(kk.getTitel())
-                    + createAttribute(kk) + "}" + newLineWithSeparation + "  \\label{kk_" + kk.getId() + "}"
-                    + newLineWithSeparation + "\\end{figure}" + newLineWithSeparation;
+                // TODO Bilder mit überschrift ?
+                return latexStr;// putStrIntoChapter(depth,kk.getTitel(), latexStr);
+            }
+            else
+            {
+                latexStr = "\\begin{figure}[H] " + newLineWithSeparation + 
+                        "  \\centering" + newLineWithSeparation
+                        + "  \\includegraphics[width=0.5\\linewidth]{" + kk.getId() + ".png}" + newLineWithSeparation
+                        + "  \\caption[" + replaceInvalidChars(kk.getTitel()) + "]"
+                        + "{" + replaceInvalidChars(kk.getTitel()) + createAttribute(kk) + "}" + newLineWithSeparation 
+                        + "  \\label{kk_" + kk.getId() + "}" + newLineWithSeparation 
+                        + "\\end{figure}" + newLineWithSeparation
+                        + transformHTMLToLaTeX(kk.getInhalt());
+                
 
-            // TODO Bilder mit überschrift ?
-            return latexStr;// putStrIntoChapter(depth,kk.getTitel(), latexStr);
+                // TODO Bilder mit überschrift ?
+                return putStrIntoChapter(depth,kk, latexStr);
+            }
+
         }
         catch (IOException e)
         {

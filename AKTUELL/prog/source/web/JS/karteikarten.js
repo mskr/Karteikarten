@@ -34,8 +34,9 @@ function buildKarteikarte(karteikarteJson)
     if(checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
             veranstaltungsObject[paramModeratorKkBearbeiten])
     {
-        kkDom.find(".KKbearbeiten").show();
-        kkDom.find(".KKloeschen").show();
+    	// remove statt show, weil show zu display:inline führt
+        kkDom.find(".KKbearbeiten").removeAttr("style");
+        kkDom.find(".KKloeschen").removeAttr("style");
     }
     // Handelt es sich um die Root-Karteikarte: Verberge Bearbeiten- und Loeschen-Buttons
     if(veranstaltungsObject[paramErsteKarteikarte] == kkId)
@@ -128,17 +129,12 @@ function buildKarteikarte(karteikarteJson)
     kkDom.find(".kk_notizen_body").ckeditor(function() {
     	// TODO Karteikarte setzen und DANACH change handler registireren
     	// Funktioniert irgendwie nicht. Handler wird gesetzt bevor Inhalt gesetzt wurde
-    	var f = function(that){
+    	var that = this;
+    	$.when(setNotiz(kkDom, kkId)).done(function(){
     		that.on('change', function() {
-            	kkDom.find(".kk_notizen_speichern").addClass("changed");
-            });
-    	};
-    	var f2 = function(that) {
-    		$.when(setNotiz(kkDom, kkId)).done(function(){
-        		f(that);
-        	});
-		};
-    	f2(this);
+    			kkDom.find(".kk_notizen_speichern").addClass("changed");
+    		});
+    	});
     	
 	}, ckEditorNotizConfig);
     
@@ -250,8 +246,6 @@ function buildKarteikarte(karteikarteJson)
 	});
 	kkDom.find(".kk_kommheader_refresh").trigger("click");
 	
-
-	
     return kkDom;
 }
 
@@ -265,7 +259,6 @@ function fillKarteiKarte(domElem, json){
 	domElem.find(".kk_info_attr").empty();
 	domElem.find(".kk_info_attr").append(createAttrStr(json[paramAttribute]));
 	
-//	[{"id":"5","titel":"blabla","type":"zusatz"},{"id":"8","titel":"Hallo123","type":"sonstiges"}]
 	fillVerweise(domElem,json[paramVerweise]);
 	
 	// detect type and add content
@@ -294,7 +287,7 @@ function fillKarteiKarte(domElem, json){
         	}
         	domElem.find(".kk_inhalt").addClass("inhalt_bild");
         	image = $(document.createElement("img"));
-        	image.attr("src","files/images/"+json[paramId]+".png?"+CryptoJS.MD5(new Date().getTime()+""));
+        	image.attr("src","files/images/"+json[paramId]+".png");
         	image.attr("onerror","this.src='files/general/default.png'");
         	image.css("max-width","100%");
         	domElem.find(".inhalt_bild").html(image);
