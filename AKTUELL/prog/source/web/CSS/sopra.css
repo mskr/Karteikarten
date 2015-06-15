@@ -2330,7 +2330,7 @@ select.profil_input {
 
 .drop_file_areas {
 	box-sizing: border-box;
-	/* margin: 1em 0; */
+	margin: 1em 0; 
 	padding: 2em;
 	overflow: hidden;
 	border: 1px dashed DimGray;
