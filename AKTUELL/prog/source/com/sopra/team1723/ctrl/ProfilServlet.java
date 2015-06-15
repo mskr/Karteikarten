@@ -494,6 +494,10 @@ public class ProfilServlet extends ServletController {
         {
             profilBearbeiten(req,resp);
         }
+        else if(aktuelleAction.equals(ParamDefines.ActionSetTheme))
+        {
+            setTheme(req,resp);
+        }
         else if(aktuelleAction.equals(ParamDefines.ActionAenderePasswort))
         {
             passwortAendern(req, resp);
@@ -513,6 +517,61 @@ public class ProfilServlet extends ServletController {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
         }
+
+    }
+    private void setTheme(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        HttpSession aktuelleSession = req.getSession();
+        PrintWriter outWriter = resp.getWriter();
+        Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
+        IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
+        JSONObject jo;
+
+        String idStr = req.getParameter(ParamDefines.Id);
+        String theme = req.getParameter(ParamDefines.Theme);
+        
+        if(isEmptyAndRemoveSpaces(theme))
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
+        int id;
+        try
+        {
+            id = Integer.parseInt(idStr);
+        }
+        catch (NumberFormatException e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            outWriter.print(jo);
+            return;
+        }
+
+        if (id != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        {
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
+            outWriter.print(jo);
+            return;
+        }
+        
+        Benutzer b = dbManager.leseBenutzer(id);
+        b.setTheme(theme);
+        try
+        {
+            dbManager.bearbeiteBenutzer(b);
+        }
+        catch (DbUniqueConstraintException | SQLException e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return;
+        }
+
+        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
+        outWriter.print(jo);
 
     }
 }

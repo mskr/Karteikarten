@@ -17,6 +17,18 @@ $(document).ready(function() {
 	
     $.when(getBenutzer()).done(function(a1) {
     	var firstRunFinished = false;
+    	
+        if(jsonBenutzer[paramTheme] == "DAY")
+        {
+            changeCSS("CSS/sopra_light.css", 0);
+            changeCSS("CSS/mybuttonstyle_light.css", 1);
+        }
+        else
+        {
+            changeCSS("CSS/sopra.css", 0);
+            changeCSS("CSS/mybuttonstyle.css", 1);
+        }
+        
     	// zu Beginn warten bis ALLE Ajax-Calls fertig sind
     	$( document ).ajaxStop(function() {
     		if(!firstRunFinished)

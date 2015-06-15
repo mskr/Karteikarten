@@ -77,6 +77,7 @@ public class ParamDefines
     public final static String ActionVoteKarteikarteUp = "voteUpKarteik";
     public final static String ActionVoteKarteikarteDown = "voteDownKarteik";
     
+    public final static String ActionSetTheme = "setTheme";
 
     public final static String Klasse = "klasse";
     public final static String KlasseBenutzer = "klasseBenutzer";
@@ -118,7 +119,7 @@ public class ParamDefines
     public final static String AnzTeilnehmer = "anzTeilnehmer";
     public final static String Angemeldet = "angemeldet";
     public final static String KennwortGesetzt = "kennwortGesetzt";
-    
+    public final static String Theme = "theme";
     
     // Parameter für Karteikarte  
     public final static String KkId = "kkId";      

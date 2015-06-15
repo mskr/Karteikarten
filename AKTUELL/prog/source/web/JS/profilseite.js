@@ -76,15 +76,31 @@ $(document).ready(function() {
     $("#farbschema_toggle_checkbox").change(function() {
         if($(this).prop("checked"))
         {
-            changeCSS("CSS/sopra_light.css", 0);
-            changeCSS("CSS/mybuttonstyle_light.css", 1);
-            $("#farbschema_toggle_label").text("TAG");
+			if (jsonBenutzer[paramId] == currentProfilID) {
+				changeCSS("CSS/sopra_light.css", 0);
+				changeCSS("CSS/mybuttonstyle_light.css", 1);
+				$("#farbschema_toggle_label").text("TAG");
+			}
+            
+            
+            var params = {};
+            params[paramId] = currentProfilID;
+            params[paramTheme] = "DAY";
+            ajaxCall(profilServlet, actionSetTheme, function(){showInfo("Farbschema geändert.")}, params);
+            
         }
         else
         {
-            changeCSS("CSS/sopra.css", 0);
-            changeCSS("CSS/mybuttonstyle.css", 1);
-            $("#farbschema_toggle_label").text("NACHT");
+        	if (jsonBenutzer[paramId] == currentProfilID) {
+        		changeCSS("CSS/sopra.css", 0);
+        		changeCSS("CSS/mybuttonstyle.css", 1);
+            	$("#farbschema_toggle_label").text("NACHT");
+        	}
+
+            var params = {};
+            params[paramId] = currentProfilID;
+            params[paramTheme] = "NIGHT";
+            ajaxCall(profilServlet, actionSetTheme, function(){showInfo("Farbschema geändert.")}, params);
         }
     });
     
@@ -192,6 +208,17 @@ function fillMyProfil(isAdmin)
 	    case paramNotifyKommentareValKeine:
 	    	$("#notifyKommentare_input_nie").prop("checked",true);
     }
+
+    if(jsonBenutzer[paramTheme] == "DAY")
+    {
+    	$("#farbschema_toggle_checkbox").prop("checked",true);
+        $("#farbschema_toggle_label").text("TAG");
+    }
+    else
+    {
+    	$("#farbschema_toggle_checkbox").prop("checked",false);
+        $("#farbschema_toggle_label").text("NACHT");
+    }
     
     $("#notifyVeranstAenderung_input").prop("checked",jsonBenutzer[paramNofityVeranstAenderung]);
     $("#notifyKarteikartenAenderung_input").prop("checked",jsonBenutzer[paramNotifyKarteikartenAenderung]);
@@ -287,6 +314,18 @@ function fillOtherProfil(benutzer, isAdmin)
 		$("#profil_matnr_input").prop("disabled", false);
 		$("#profil_studiengang_input").prop("disabled", false);
 		$("#profil_rolle_input").prop("disabled", false);
+
+
+	    if(benutzer[paramTheme] == "DAY")
+	    {
+	    	$("#farbschema_toggle_checkbox").prop("checked",true);
+	        $("#farbschema_toggle_label").text("TAG");
+	    }
+	    else
+	    {
+	    	$("#farbschema_toggle_checkbox").prop("checked",false);
+	        $("#farbschema_toggle_label").text("NACHT");
+	    }
 	}
 }
 

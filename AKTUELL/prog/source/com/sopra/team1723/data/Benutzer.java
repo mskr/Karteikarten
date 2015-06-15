@@ -11,6 +11,8 @@ import com.sopra.team1723.ctrl.ParamDefines;
  */
 public class Benutzer implements IjsonObject {
 
+    private String theme;
+
     /**
      * 
      */
@@ -25,7 +27,7 @@ public class Benutzer implements IjsonObject {
     // Konstruktor der alle Parameter setzt
     public Benutzer(int id, String eMail, String vorname, String nachname, int matrikelnummer, String studiengang,
             String kennwort, Nutzerstatus nutzerstatus, boolean notifyVeranstAenderung,
-            boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare, String profilBild)
+            boolean notifyKarteikartenAenderung, NotifyKommentare notifyKommentare, String profilBild, String theme)
     {
         this.id = id;
         this.eMail = eMail;
@@ -39,6 +41,7 @@ public class Benutzer implements IjsonObject {
         this.notifyKarteikartenAenderung = notifyKarteikartenAenderung;
         this.notifyKommentare = notifyKommentare;
         this.profilBild = profilBild;
+        this.theme = theme;
     }
     
     // Konstruktur ohne Kennwort, Matrikelnummer, Studiengang, Nutzerstatus (Die letzten 3 können vom Benutzer
@@ -294,6 +297,7 @@ public class Benutzer implements IjsonObject {
         jo.put(ParamDefines.Nutzerstatus, this.getNutzerstatus().name());
         jo.put(ParamDefines.Studiengang, this.getStudiengang());
         jo.put(ParamDefines.ProfilBildPfad, this.getProfilBildPfad());
+        
         if(full)
         {
             jo.put(ParamDefines.Email, this.geteMail());
@@ -301,8 +305,20 @@ public class Benutzer implements IjsonObject {
             jo.put(ParamDefines.NotifyVeranstAenderung, this.isNotifyVeranstAenderung());
             jo.put(ParamDefines.NotifyKarteikartenAenderung, this.isNotifyKarteikartenAenderung());
             jo.put(ParamDefines.NotifyKommentare, this.getNotifyKommentare().name());
+            jo.put(ParamDefines.Theme, this.theme);
         }
         return jo;
+    }
+
+    public void setTheme(String theme)
+    {
+        this.theme = theme;
+    }
+
+    public String getTheme()
+    {
+        // TODO Auto-generated method stub
+        return theme;
     }
 
 }

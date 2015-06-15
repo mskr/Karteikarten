@@ -232,7 +232,7 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             ps = conMysql
                     .prepareStatement("SELECT ID,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,CryptedPW,Nutzerstatus,"
-                            + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild FROM benutzer WHERE eMail = ?");
+                            + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild, Theme FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
             if (rs.next())
@@ -241,7 +241,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         rs.getInt("Matrikelnummer"), rs.getString("Studiengang"), rs.getString("CryptedPW"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), rs.getBoolean("NotifyVeranstAenderung"),
                         rs.getBoolean("NotifyKarteikartenAenderung"), NotifyKommentare.valueOf(rs
-                                .getString("NotifyKommentare")), rs.getString("Profilbild"));
+                                .getString("NotifyKommentare")), rs.getString("Profilbild"), rs.getString("Theme"));
 
                 benutzer.setProfilBildPfad(ServletController.dirProfilBilder + rs.getString("Profilbild"));
             }
@@ -284,7 +284,7 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             ps = conMysql
                     .prepareStatement("SELECT eMail,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,CryptedPW,Nutzerstatus,"
-                            + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild FROM benutzer WHERE ID = ?");
+                            + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild, Theme FROM benutzer WHERE ID = ?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if (rs.next())
@@ -293,7 +293,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         rs.getInt("Matrikelnummer"), rs.getString("Studiengang"), rs.getString("CryptedPW"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), rs.getBoolean("NotifyVeranstAenderung"),
                         rs.getBoolean("NotifyKarteikartenAenderung"), NotifyKommentare.valueOf(rs
-                                .getString("NotifyKommentare")), rs.getString("Profilbild"));
+                                .getString("NotifyKommentare")), rs.getString("Profilbild"), rs.getString("Theme"));
 
                 benutzer.setProfilBildPfad(ServletController.dirProfilBilder + rs.getString("Profilbild"));
             }
@@ -376,14 +376,16 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             ps = conMysql.prepareStatement("UPDATE benutzer SET eMail=?, Vorname=?,Nachname=?,"
-                    + "NotifyKommentare=?, NotifyVeranstAenderung=?," + "NotifyKarteikartenAenderung=?  WHERE ID = ?");
+                    + "NotifyKommentare=?, NotifyVeranstAenderung=?," 
+                    + "NotifyKarteikartenAenderung=?, Theme=? WHERE ID = ?");
             ps.setString(1, benutzer.geteMail());
             ps.setString(2, benutzer.getVorname());
             ps.setString(3, benutzer.getNachname());
             ps.setString(4, benutzer.getNotifyKommentare().name());
             ps.setBoolean(5, benutzer.isNotifyVeranstAenderung());
             ps.setBoolean(6, benutzer.isNotifyKarteikartenAenderung());
-            ps.setInt(7, benutzer.getId());
+            ps.setString(7, benutzer.getTheme());
+            ps.setInt(8, benutzer.getId());
             ps.executeUpdate();
 
         }
@@ -834,7 +836,7 @@ public class Datenbankmanager implements IDatenbankmanager
             ps = conMysql
                     .prepareStatement("SELECT b.ID, eMail, Vorname, Nachname, Profilbild, Matrikelnummer, Studiengang, "
                             + "CryptedPW, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, "
-                            + "Profilbild FROM benutzer AS b JOIN moderator AS m ON b.ID = m.Benutzer AND m.Veranstaltung =?");
+                            + "Profilbild, Theme FROM benutzer AS b JOIN moderator AS m ON b.ID = m.Benutzer AND m.Veranstaltung =?");
             ps.setInt(1, veranstaltung);
             rs = ps.executeQuery();
             while (rs.next())
@@ -843,7 +845,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         .getString("Nachname"), rs.getInt("Matrikelnummer"), rs.getString("Studiengang"), rs
                         .getString("CryptedPW"), Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), rs
                         .getBoolean("NotifyVeranstAenderung"), rs.getBoolean("NotifyKarteikartenAenderung"),
-                        NotifyKommentare.valueOf(rs.getString("NotifyKommentare")), rs.getString("Profilbild")));
+                        NotifyKommentare.valueOf(rs.getString("NotifyKommentare")), rs.getString("Profilbild"), rs.getString("Theme")));
             }
         }
         catch (SQLException e)

@@ -80,6 +80,10 @@ var actionLeseThemaKommentar = "leseThemaKomm";
 
 var actionSpeichereNotiz = "speichereNotiz";
 var actionLeseNotiz = "leseNotiz";
+
+
+var actionSetTheme = "setTheme";
+
 // GET/POST- und JSON-Schluessel-Parameter
 // Die folgenden Bereiche koennen sich ueberschneiden...
 // ===========================================================
@@ -106,6 +110,7 @@ var paramSuchmuster = "suchmuster";
 var paramInhalt = "inhalt";
 var paramGelesen = "gelesen";
 var paramType = "type";
+var paramTheme = "theme";
 
 //Karteikarte
 var paramURLKkID = "kkId";
