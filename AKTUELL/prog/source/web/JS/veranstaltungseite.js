@@ -378,7 +378,7 @@ function displayKarteikarte(id, callback, reload){
     if(kkDiv.length&&!reload)
     {
     	$('body').animate({
-            scrollTop: kkDiv.offset().top+20},
+            scrollTop: kkDiv.offset().top-40},
             'normal', callback);
     }
     else
@@ -557,6 +557,7 @@ function Inhaltsverzeichnis(kkDivMain, vnObjekt, htmlTitel, zeigeErstellButtons,
 	this.zeigeCheckboxes = zeigeCheckboxes;
 	this.extraGotoButton = extraGotoButton;
 	this.highlightedKnoten = undefined;
+	this.gotoIsClicked = false;
 }
 
 Inhaltsverzeichnis.prototype.init = function()
@@ -666,10 +667,15 @@ Inhaltsverzeichnis.prototype.ladeKinder = function(vaterId, vaterElem, initialVi
                         // Click Handler fuer Kk Knoten
                         var f = function(arr, kkListItem, i) {
                         	kkListItem.find(".gotoKk").click(function(e){
-                                displayKarteikarte(arr[i][paramId], function() {
-  	                              	that.highlightKnoten(kkListItem);
-  	                            });
-                              });
+                        		if(!that.gotoIsClicked)
+                        		{
+                        			that.gotoIsClicked = true;
+                        			displayKarteikarte(arr[i][paramId], function() {
+                        				that.highlightKnoten(kkListItem);
+                        				that.gotoIsClicked = false;
+                        			});
+                        		}
+                        	});
                         	
                             kkListItem.find(".inhaltsvz_kk_knoten").click(function(e) {
                                 var ajax;
@@ -810,7 +816,7 @@ Inhaltsverzeichnis.prototype.showEintragInternal = function (startElem, kkID)
 	        		that.kkAufEinklappen($(v),false);
 	        	});
 	        	$.each(elem.children("ul").children("li[data-kkid]"), function(i,v){
-	        		that.kkAufEinklappen($(v),false);
+	        		that.kkAufEinklappen(elem,false);
 	        	});
 	        	
 	            // Aktuellen Knoten und eltern aufklappen

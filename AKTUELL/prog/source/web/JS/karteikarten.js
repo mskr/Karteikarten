@@ -103,13 +103,8 @@ function buildKarteikarte(karteikarteJson)
 	    	if(process)
 	    		vnInhaltsverzeichnis.showEintrag(kkId);
 	    	
-//	    	vnInhaltsverzeichnis.unhighlightAll();
-//	        if(kkID != veranstaltungsObject[paramErsteKarteikarte])
-//	            inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkID);
-//	        else
-//	            $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("fast", function() { $(this).remove() });
 	    },
-	    offset: "20px"
+	    offset: "40px"
 	});
     
 
