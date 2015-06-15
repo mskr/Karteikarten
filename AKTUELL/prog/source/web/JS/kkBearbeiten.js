@@ -119,7 +119,7 @@ function kkBearbeiten(kkJSON)
 				  kkBearbeitenDropZone.files.push(mockFile);
 				  // And optionally show the thumbnail of the file:
 				  kkBearbeitenDropZone.emit("thumbnail", mockFile, "files/images/"+kkJSON[paramId]+".png");
-
+				  $("#df_area_kk_b").addClass("dz-max-files-reached");
 //				  var existingFileCount = 1; // The number of files already uploaded
 //				  kkBearbeitenDropZone.options.maxFiles = kkBearbeitenDropZone.options.maxFiles - existingFileCount;
 

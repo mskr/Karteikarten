@@ -79,14 +79,17 @@ $(document).ready(function() {
 			if (jsonBenutzer[paramId] == currentProfilID) {
 				changeCSS("CSS/sopra_light.css", 0);
 				changeCSS("CSS/mybuttonstyle_light.css", 1);
-				$("#farbschema_toggle_label").text("TAG");
 			}
-            
+
+			$("#farbschema_toggle_label").text("TAG");
             
             var params = {};
             params[paramId] = currentProfilID;
             params[paramTheme] = "DAY";
-            ajaxCall(profilServlet, actionSetTheme, function(){showInfo("Farbschema geändert.")}, params);
+            ajaxCall(profilServlet, actionSetTheme, function(){
+            	showInfo("Farbschema geändert.")
+            	jsonBenutzer[paramTheme] = "DAY";
+            }, params);
             
         }
         else
@@ -94,13 +97,16 @@ $(document).ready(function() {
         	if (jsonBenutzer[paramId] == currentProfilID) {
         		changeCSS("CSS/sopra.css", 0);
         		changeCSS("CSS/mybuttonstyle.css", 1);
-            	$("#farbschema_toggle_label").text("NACHT");
         	}
+        	$("#farbschema_toggle_label").text("NACHT");
 
             var params = {};
             params[paramId] = currentProfilID;
             params[paramTheme] = "NIGHT";
-            ajaxCall(profilServlet, actionSetTheme, function(){showInfo("Farbschema geändert.")}, params);
+            ajaxCall(profilServlet, actionSetTheme, function(){
+            	showInfo("Farbschema geändert.")
+            	jsonBenutzer[paramTheme] = "NIGHT";
+            }, params);
         }
     });
     

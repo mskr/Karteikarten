@@ -1,14 +1,15 @@
 /**
- * @author mk
+ * @author Marius Kircher, Andreas Rottach
  */
 
+// Hält das aktuelle Veranstaltungsobjekt der angezeigten Veranstaltung
 var veranstaltungsObject;
 
 $(document).ready(function() {
-	$("#vn_kk_ueberscht_box").hide();
+//	$("#vn_kk_ueberscht_box").hide();
 	
+	// Handler für das Löschen der Veranstaltung
 	$("#vn_loeschen").click(function() {
-		
 		sindSieSicher($("#vn_loeschen"), "Soll die Veranstaltung wirklich gelöscht werden?", function() {
 			var params = {};
 			params[paramId] = getUrlParameterByName(paramId);
@@ -25,54 +26,63 @@ $(document).ready(function() {
 	
 	// LadeHandler
     $(".kk_load_pre").click(function(){
+    	// Hole erste Kk id
     	id = $("#kk_all").children().first().attr("data-kkid");
+    	// Falls diese existiert, lade Vorgänger
     	if(id != undefined)
     		loadPreKk(id);
-    	else{
+    	// Andernfalls button ausblenden
+    	else
 			$(".kk_load_pre").addClass("animated zoomOut").fadeOut();
-    	}
     });    
+    
     $(".kk_load_after").click(function(){
+    	// Hole letzte Kk id
     	id = $("#kk_all").children().last().attr("data-kkid");
+    	// Falls diese existiert, lade Nachfolger
     	if(id != undefined)
 			loadAfterKk(id);
+    	// Andernfalls button ausblenden
     	else
 			$(".kk_load_after").addClass("animated zoomOut").fadeOut();
     });
     
-    
-    
+    // Popup erzeugen
+	var popup = new PopupFenster($("#kk_export_popup_overlay"), 
+			[$("#kk_export_cancel"),$("#kk_export_popup_close"),$("#kk_export_ok")], 
+			// Close funktion. Alles wieder zurücksetzen
+			function(){
+	    		$(".kk_export_pdf_link").attr("href","");
+	    		$(".kk_export_tex_link").attr("href","");
+	    		$("#kk_export_popup").find(".kk_export_files").hide();
+	    		$("#kk_export_popup").find("#kk_start_export").show();
+	    		$("#kk_export_popup").find("#kk_start_export").html("PDF erstellen");
+	    		$("#kk_export_popup").find(".load_kk_export").hide();
+	    		$("#kk_export_popup").find("#kk_export_zurueck").show();	
+	    		
+	    		$('#kk_export_opt_notizen').prop('checked', false);
+	    		$('#kk_export_opt_attrAnz').prop('checked', false);
+	    		$('#kk_export_opt_Querverweise').prop('checked', false);
+			}, 
+			$("#kk_export_ok"),
+			function(){
+				return true;
+			}, 
+			undefined, 
+			$("#kk_export_weiter"), 
+			$("#kk_export_zurueck"));
+	
+    // Export handler für Karteikarten
     $("#kk_export").click(function(){
-    	var popup = new PopupFenster($("#kk_export_popup_overlay"), 
-    			[$("#kk_export_cancel"),$("#kk_export_popup_close"),$("#kk_export_ok")], 
-    			function(){
-		    		$(".kk_export_pdf_link").attr("href","");
-		    		$(".kk_export_tex_link").attr("href","");
-		    		$("#kk_export_popup").find(".kk_export_files").hide();
-		    		$("#kk_export_popup").find("#kk_start_export").show();
-		    		$("#kk_export_popup").find("#kk_start_export").html("PDF erstellen");
-		    		$("#kk_export_popup").find(".load_kk_export").hide();
-		    		$("#kk_export_popup").find("#kk_export_zurueck").show();	
-		    		
-		    		$('#kk_export_opt_notizen').prop('checked', false);
-		    		$('#kk_export_opt_attrAnz').prop('checked', false);
-		    		$('#kk_export_opt_Querverweise').prop('checked', false);
-    			}, 
-    			$("#kk_export_ok"),
-    			function(){
-    				return true;
-    			}, 
-    			undefined, 
-    			$("#kk_export_weiter"), 
-    			$("#kk_export_zurueck"));
+    	// Popup anzeigen
     	popup.show();
     });
-    
+    // Export der PDF starten
     $("#kk_start_export").one("click", function() {
 		exportKkVonVn(veranstaltungsObject[paramId]);
 	})
 	
-	// CopyLink
+	// CopyLink Plugin zum Kopieren von Links in die Zwischenablage
     var clip = new ZeroClipboard($("#link_copy_to_cb"));
     clip.on("ready", function() {
       this.on("aftercopy", function(event) {
@@ -84,23 +94,32 @@ $(document).ready(function() {
     	  clipboard.setData( "text/plain", $("#link_copy_data").text());
     	});
     });
+    
 });
-
+/**
+ * Startet den ExportVorgang
+ * @param vnId Veranstaltung die exportiert werden soll
+ * @returns
+ */
 function exportKkVonVn(vnId)
 {
+	// Gui updaten
 	$("#kk_export_popup").find("#kk_start_export").html("Erstelle PDF....");
 	$("#kk_export_popup").find(".load_kk_export").slideDown();
 	$("#kk_export_popup").find("#kk_export_zurueck").hide();
 	
+	// Optionen für den Export in einem bool array speichern
 	options = [];
 	options.push($('#kk_export_opt_notizen').is(':checked'));
 	options.push($('#kk_export_opt_attrAnz').is(':checked'));
 	options.push($('#kk_export_opt_Querverweise').is(':checked'));
 	
+	// Parameter für ajax call zusammenbauen
 	params = {};
 	params[paramId] = vnId;
 	params[paramExportOptions] = options;
 	return ajaxCall(karteikartenServlet, actionExportSkript, function(response){
+		// Wenn erfolgreich, dann Links für den Benutzer sichtbar machen
 		$(".kk_export_pdf_link").attr("href",response[paramPDFFileName]);
 		$(".kk_export_tex_link").attr("href",response[paramTexFileName]);
 		$(".kk_export_pdf_link").show();
@@ -109,28 +128,38 @@ function exportKkVonVn(vnId)
 		$("#kk_export_error").hide();
 		
 	}, params, function(error, response) {
+		// Bei einem Fehler, nur das TexDokument bereitstellen. Das sollte immer generiert werden können
 		$("#kk_export_error").slideDown();
 		$(".kk_export_pdf_link").hide();
 		$(".kk_export_tex_link").attr("href",response[paramTexFileName]);
 		$("#kk_export_popup").find("#kk_start_export").slideUp();
 		$("#kk_export_popup").find(".kk_export_files").slideDown();
 		
-	}, undefined, function(){		    		
+	}, undefined, function(){
+		// Auf jedenfall immer den Click handler weider registrieren
 		$("#kk_start_export").one("click", function() {
 		    exportKkVonVn(veranstaltungsObject[paramId]);
 		    });
-		}, 20000);
+	// Bis zu 20 Sek auf ajaxcall warten, da der export länger dauern könnte
+	}, 20000);
 }
-
+/**
+ * Füllt die Veranstaltungsseite 
+ * @param Vid
+ * @param kkId
+ * @returns
+ */
 function fillVeranstaltungsSeite(Vid, kkId)
 {
     // Wir verwenden ein eigenes Deferred-Objekt um zurückzumelden, wenn alles geladen wurde.
     d = jQuery.Deferred();
     
     // Inhaltsverzeichniss zurücksetzen
+    // Seite nach oben scrollen und klasse stuck entfernen
     $("body").scrollTop(0);
     $(".stuck").removeClass("stuck");
     
+    // Veranstaltungsobjekt laden
     var params = {};
     params[paramId] = Vid;
     var ajax1 = ajaxCall(veranstaltungServlet,
@@ -144,17 +173,18 @@ function fillVeranstaltungsSeite(Vid, kkId)
                 showError("Sie haben nicht die notwendingen Berechtigungen um diese Seite zu sehen!");
                 gotoHauptseite();
 
-                // Deferred Objekt als abgeschlossen markieren.
+                // Deferred Objekt als abgeschlossen markieren, wenn der Benutzer keine Rechte hat
                 d.resolve();
                 return;
             }
-            
+            // Studiengänge und Moderatoren für Veranstaltung laden
             $.when(findStudiengaenge(Vid)).done(function() {
                 $.when(findModeratorenVn(Vid)).done(function() {
                     
-                    // Wenn alles geladen wurde
+                    // Wenn alles geladen wurde, Dokumenten-Titel setzen
                     titel = veranstaltungsObject[paramTitel];
                     document.title = titel;
+                    
                     // Details der VN in DOM einfuegen
                     $("#vn_title").text(titel);
                     $("#vn_attr_semester").text(veranstaltungsObject[paramSemester]);
@@ -201,7 +231,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
                     else
                         $("#vn_rechte_info").text("Als Student haben Sie keine besonderen Berechtigungen in dieser Veranstaltung.");
                     
-                    
+                    // Admin oder nicht ?
                     if(veranstaltungsObject[paramErsteller][paramId] == jsonBenutzer[paramId] || jsonBenutzer[paramNutzerstatus] == "ADMIN")
                     {
                         $("#vn_loeschen").show();
@@ -214,21 +244,31 @@ function fillVeranstaltungsSeite(Vid, kkId)
                         $("#vn_bearbeiten").hide();
                         $("#kk_erstellen").hide();
                     }
-                    
+                    // Ist eine Karteikarte übergeben die angezeigt werden soll?
+                    // Wenn nein, dann Wurzel anzeigen
                     if(kkId == undefined)
-                        displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], undefined, false);
-                    else
-                        displayKarteikarte(kkId, undefined, false);
+                        displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], function(){
+        					$(".kk_load_pre").addClass("animated zoomOut").fadeOut();
+        					
+                            // Deferred Objekt als abgeschlossen markieren.
+                            d.resolve();
+                        }, false);
                     
-                    // Deferred Objekt als abgeschlossen markieren.
-                    d.resolve();
+                    	
+                    // Wenn ja, dann diese Karteikarte anzeigen
+                    else
+                        displayKarteikarte(kkId, function(){
+                            // Deferred Objekt als abgeschlossen markieren.
+                            d.resolve();
+                        }, false);
                 });
             });
         },
         params
     );
+    // Alle CK-Editoren im Karteikarten container entfernen
     destroyCKeditors($("#kk_all"));
-    
+    // Karteikarten löschen
 	$("#kk_all").empty();
 	// Studiengänge in auswahlliste anzeigen
 	var ajax2 = ajaxCall(startseitenServlet,
@@ -273,14 +313,16 @@ function fillVeranstaltungsSeite(Vid, kkId)
 	    if(!veranstaltungsObject[paramAngemeldet])
 	        return;
 	    
+	    // Inhaltsverzeichnis erstellen
 	    vnInhaltsverzeichnis = null;
 	    vnInhaltsverzeichnis = new Inhaltsverzeichnis($("#kk_inhaltsverzeichnis"),
 	    		veranstaltungsObject,
 	    		"<span>Karteikarten in</span><strong> "+veranstaltungsObject[paramTitel]+"</strong>",
 	    		true,undefined,false,true);
-	    
+	    // Inhaltsverzeichnis initialiseren
 	    ajax4 = vnInhaltsverzeichnis.init();
-	    // warte bis mainbox visible
+	    
+	    // warte bis alles geladen
 	    $.when(ajax2,ajax3,d,ajax4).done(function() {
 	        // Inhaltsverzeichnis im Viewport halten
 	        var sticky = new Waypoint.Sticky({
@@ -303,27 +345,37 @@ function fillVeranstaltungsSeite(Vid, kkId)
         $(".r-kk-inhaltsvz-toggle").hide();
     }
     
-	return $.when(ajax1,ajax2,d);
+    $.when(ajax1,ajax2,ajax3,d).done(function(){
+//	    new Waypoint({
+//	    	element: $(".kk_load_pre"),
+//	    	handler: function(direction) {
+//	    		if(direction == "up")
+//	    			$(".kk_load_pre").trigger("click");
+//	    	},
+//	    	offset: '-10px'
+//	    });
+	    
+    	var triggeredInitial = false;
+	    new Waypoint({
+	    	element: $(".kk_load_after"),
+	    	handler: function(direction) {
+		    	if(!triggeredInitial)
+		    	{
+		    		triggeredInitial = true;
+		    		return;
+		    	}
+		    	
+	    		if(direction == "down")
+	    			$(".kk_load_after").trigger("click");
+	    	},
+	    	offset: 'bottom-in-view'
+	    });
+	    	    
+		
+    });
+    
+	return $.when(ajax1,ajax2,ajax3,d);
 }
-
-
-
-//function registerErstellKkHandler(domErstellenLink){
-//	// Prüfen ob erlaubt
-//    if(checkIfAllowedVn(veranstaltungsObject, true, true, false) ||
-//            (checkIfAllowedVn(veranstaltungsObject, false, false, true) &&
-//            veranstaltungsObject[paramModeratorKkBearbeiten]))
-//	{
-//        domErstellenLink.find(".inhaltsvz_kk_erstellen").click(function(){
-//            newKarteikarte($(this));
-//        });
-//	}
-//    else
-//    {
-//    	domErstellenLink.find(".inhaltsvz_kk_erstellen").attr("style","visibility: hidden");
-//    }
-//}
-
 
 //sucht Studiengänge, die zur Veranstaltung gehören
 function findStudiengaenge(id){
@@ -375,19 +427,25 @@ function displayKarteikarte(id, callback, reload){
 	}
     // Karteikarte schon in der Liste?
     kkDiv = $("#kk_all").find("[data-kkid=" + id + "]");
+    
+    // Karteikarte geladen und schon angezeigt, dann einfach nur dort hin scrollen
     if(kkDiv.length&&!reload)
     {
     	$('body').animate({
-            scrollTop: kkDiv.offset().top+20},
+            scrollTop: kkDiv.offset().top-40},
             'normal', callback);
     }
+    // Andernfalls neu laden
     else
     {
+    	// zuerst wieder alle editoren entfernen
     	destroyCKeditors($("#kk_all"));
+    	// Alle Karteikarten ausblenden
     	$("#kk_all").children().fadeOut(200).promise().done(function(){
+    		// Danach Karteikarten komplett entfernen und Lade-Buttons anzeigen
     		$("#kk_all").empty();
         	showPreAfterLoad();
-
+        	
         	var params2 ={};
             params2[paramKkId] = id;
             params2[paramVnId] = veranstaltungsObject[paramId];
@@ -557,6 +615,7 @@ function Inhaltsverzeichnis(kkDivMain, vnObjekt, htmlTitel, zeigeErstellButtons,
 	this.zeigeCheckboxes = zeigeCheckboxes;
 	this.extraGotoButton = extraGotoButton;
 	this.highlightedKnoten = undefined;
+	this.gotoIsClicked = false;
 }
 
 Inhaltsverzeichnis.prototype.init = function()
@@ -666,10 +725,15 @@ Inhaltsverzeichnis.prototype.ladeKinder = function(vaterId, vaterElem, initialVi
                         // Click Handler fuer Kk Knoten
                         var f = function(arr, kkListItem, i) {
                         	kkListItem.find(".gotoKk").click(function(e){
-                                displayKarteikarte(arr[i][paramId], function() {
-  	                              	that.highlightKnoten(kkListItem);
-  	                            });
-                              });
+                        		if(!that.gotoIsClicked)
+                        		{
+                        			that.gotoIsClicked = true;
+                        			displayKarteikarte(arr[i][paramId], function() {
+                        				that.highlightKnoten(kkListItem);
+                        				that.gotoIsClicked = false;
+                        			});
+                        		}
+                        	});
                         	
                             kkListItem.find(".inhaltsvz_kk_knoten").click(function(e) {
                                 var ajax;
@@ -810,7 +874,7 @@ Inhaltsverzeichnis.prototype.showEintragInternal = function (startElem, kkID)
 	        		that.kkAufEinklappen($(v),false);
 	        	});
 	        	$.each(elem.children("ul").children("li[data-kkid]"), function(i,v){
-	        		that.kkAufEinklappen($(v),false);
+	        		that.kkAufEinklappen(elem,false);
 	        	});
 	        	
 	            // Aktuellen Knoten und eltern aufklappen

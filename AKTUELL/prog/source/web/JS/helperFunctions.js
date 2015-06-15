@@ -206,7 +206,7 @@ PopupFenster.prototype.updateButtons = function(){
 	}
 
 	// Jetzt das Einblenden, was sinn ergibt
-	if(isFirst)
+	if(isFirst && this.zurueckElem != undefined)
 	{
 		this.zurueckElem.hide();
 	}
@@ -215,7 +215,7 @@ PopupFenster.prototype.updateButtons = function(){
 		this.zurueckElem.show();
 	}
 	
-	if(isLast)
+	if(isLast && this.weiterElem != undefined)
 	{
 		this.weiterElem.hide();
 		this.submitElem.show();

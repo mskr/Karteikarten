@@ -87,12 +87,17 @@ function buildKarteikarte(karteikarteJson)
     	popup.show();
     });
     
-    
+    var triggeredInitial = false;
 	// Reagiere auf das Scrollen zu dieser Karteikarte
     new Waypoint({
 	    element: kkDom,
 	    handler: function(direction) {
 	    	//TODO
+	    	if(!triggeredInitial)
+	    	{
+	    		triggeredInitial = true;
+	    		return;
+	    	}
 	    	var process = true;
 	    	
 	    	$.each(insertingKkAjaxCalls, function(i,v){
@@ -103,13 +108,8 @@ function buildKarteikarte(karteikarteJson)
 	    	if(process)
 	    		vnInhaltsverzeichnis.showEintrag(kkId);
 	    	
-//	    	vnInhaltsverzeichnis.unhighlightAll();
-//	        if(kkID != veranstaltungsObject[paramErsteKarteikarte])
-//	            inhaltsverzeichnisAufklappenBis($("#kk_inhaltsverzeichnis"), kkID);
-//	        else
-//	            $("#kk_inhaltsverzeichnis > ul > li > ul").slideUp("fast", function() { $(this).remove() });
 	    },
-	    offset: "20px"
+	    offset: "40px"
 	});
     
 
