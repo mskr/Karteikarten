@@ -247,13 +247,16 @@ function fillVeranstaltungsSeite(Vid, kkId)
                     // Ist eine Karteikarte übergeben die angezeigt werden soll?
                     // Wenn nein, dann Wurzel anzeigen
                     if(kkId == undefined)
-                        displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], undefined, false);
+                        displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], function(){
+                            // Deferred Objekt als abgeschlossen markieren.
+                            d.resolve();
+                        }, false);
                     // Wenn ja, dann diese Karteikarte anzeigen
                     else
-                        displayKarteikarte(kkId, undefined, false);
-                    
-                    // Deferred Objekt als abgeschlossen markieren.
-                    d.resolve();
+                        displayKarteikarte(kkId, function(){
+                            // Deferred Objekt als abgeschlossen markieren.
+                            d.resolve();
+                        }, false);
                 });
             });
         },
@@ -348,14 +351,23 @@ function fillVeranstaltungsSeite(Vid, kkId)
 //	    	offset: '-10px'
 //	    });
 	    
-//	    new Waypoint({
-//	    	element: $(".kk_load_after"),
-//	    	handler: function(direction) {
-//	    		if(direction == "down")
-//	    			$(".kk_load_after").trigger("click");
-//	    	},
-//	    	offset: 'bottom-in-view'
-//	    });
+    	var triggeredInitial = false;
+	    new Waypoint({
+	    	element: $(".kk_load_after"),
+	    	handler: function(direction) {
+		    	if(!triggeredInitial)
+		    	{
+		    		triggeredInitial = true;
+		    		return;
+		    	}
+		    	
+	    		if(direction == "down")
+	    			$(".kk_load_after").trigger("click");
+	    	},
+	    	offset: 'bottom-in-view'
+	    });
+	    	    
+		
     });
     
 	return $.when(ajax1,ajax2,ajax3,d);

@@ -87,12 +87,17 @@ function buildKarteikarte(karteikarteJson)
     	popup.show();
     });
     
-    
+    var triggeredInitial = false;
 	// Reagiere auf das Scrollen zu dieser Karteikarte
     new Waypoint({
 	    element: kkDom,
 	    handler: function(direction) {
 	    	//TODO
+	    	if(!triggeredInitial)
+	    	{
+	    		triggeredInitial = true;
+	    		return;
+	    	}
 	    	var process = true;
 	    	
 	    	$.each(insertingKkAjaxCalls, function(i,v){
