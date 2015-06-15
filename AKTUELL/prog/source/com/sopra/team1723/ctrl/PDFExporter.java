@@ -13,6 +13,7 @@ import java.util.TimerTask;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
+import org.jsoup.select.Elements;
 
 import com.sopra.team1723.data.Karteikarte;
 import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
@@ -81,6 +82,7 @@ public class PDFExporter
                                                        // Regeln
 
         // HTML Tag wird ersetzt durch Start und Ende Tag in Latex
+        tagReplaceList.put("pseudo", new Tupel<String, String>("", ""));
         tagReplaceList.put("p", new Tupel<String, String>("", newLineWithSeparation+newLineWithSeparation));
         tagReplaceList.put("br", new Tupel<String, String>("\\newline" + newLineWithSeparation, ""));
         tagReplaceList.put("span", new Tupel<String, String>("", ""));
@@ -379,8 +381,7 @@ public class PDFExporter
                         "  \\centering" + newLineWithSeparation
                         + "  \\includegraphics[width=0.5\\linewidth]{" + kk.getId() + ".png}" + newLineWithSeparation
                         + "  \\caption[" + replaceInvalidChars(kk.getTitel()) + "]"
-                        + "{" + replaceInvalidChars(kk.getTitel()) + createAttribute(kk) + "}" + newLineWithSeparation 
-                        + "  \\label{kk_" + kk.getId() + "}" + newLineWithSeparation 
+                        + "{" + replaceInvalidChars(kk.getTitel()) + createAttribute(kk) + "}" + newLineWithSeparation
                         + "\\end{figure}" + newLineWithSeparation
                         + transformHTMLToLaTeX(kk.getInhalt());
                 
@@ -496,7 +497,40 @@ public class PDFExporter
      */
     private String transformHTMLToLaTeX(String html)
     {
+        // Reguläre ausdrücke sind notwendig um den Text der in keinem seperaten html tag steht in ein pseudo tag zu packen.
+        // Die regulären ausdrücke haben folgende Bedeutung:
+        /**
+         * (>) = Ende eines html-tags
+         * ([^<]{1,}) = Aller text, der kein tag-anfang-symbol (<) enthält. Also der Text der gesucht wird.
+         * (<[^/]) = html tag der KEIN ende ist 
+         * 
+         * -> Reagiert auf folgende Struktur:
+         * <tag>gesuchterText<andererTag>
+         */
+        html = html.replaceAll("(>)([^<]{1,})(<[^/])", "$1<pseudo>$2</pseudo>$3");
+        /**
+         * (<[/][\\w]{0,1}>) = Html-Tag, der ein ende-tag ist
+         * ([^<]{1,}) = Aller text, der kein tag-anfang-symbol (<) enthält. Also der Text der gesucht wird.
+         * (<[/]) = html tag der ende ist.
+         * 
+         * -> Reagiert auf folgende Struktur:
+         * </tag>gesuchterText</andererTag>
+         */
+        html = html.replaceAll("(<[/][\\w\\s]{1,}>)([^<]{1,})(<[/])", "$1<pseudo>$2</pseudo>$3");
+        /**
+         * (\\/>) = Html-Tag, der ein self-closing-tag ist (br)
+         * ([^<]{1,}) = Aller text, der kein tag-anfang-symbol (<) enthält. Also der Text der gesucht wird.
+         * (<[/]) = html tag der ende ist.
+         * 
+         * -> Reagiert auf folgende Struktur:
+         * <tag />gesuchterText</andererTag>
+         */
+        html = html.replaceAll("(\\/>)([^<]{1,})(<\\/)", "$1<pseudo>$2</pseudo>$3");
+        
+        
         Document doc = Jsoup.parse("<html><body>" + html + "</body></html>");
+        
+        
         String latexStr = recursiveTransformHTLMtoLatex(doc.body(), 0);
         return latexStr;
     }
@@ -516,6 +550,9 @@ public class PDFExporter
 
         if (!n.nodeName().equals("body"))
         {
+            for(int i = 0; i < depth; i++)
+                System.out.print(" ");
+            System.out.println("<" + n.nodeName() + ">");
             String tag = mapHTMLTagToLaTeXTag(n, true);
             result += tag;
         }
@@ -523,6 +560,11 @@ public class PDFExporter
         String content = n.ownText();
         if (nodes.size() == 0)
         {
+
+            for(int i = 0; i < depth; i++)
+                System.out.print(" ");
+            System.out.println("Content: " + content);
+            
             if (n.attr("class").equals("mathjax_formel"))
             {
                 System.out.println("Skip replacing. Formel gefunden");
@@ -533,7 +575,23 @@ public class PDFExporter
         }
         else
         {
+//            Node firstChild = n.childNode(0);
+//            if(firstChild instanceof TextNode)
+//            {
+//                result += replaceInvalidChars(((TextNode) firstChild).getWholeText());
+//            }
+
+            for(int i = 0; i < depth; i++)
+                System.out.print(" ");
+            System.out.println("Content aber noch kinder: " + content);
+
+            for(int i = 0; i < depth; i++)
+                System.out.print(n.text());
+            
+            System.out.println(" Text: " + content);
+            
             result += replaceInvalidChars(content);
+            
             for (Element n2 : nodes)
             {
                 result += recursiveTransformHTLMtoLatex(n2, depth + 1);
@@ -542,6 +600,9 @@ public class PDFExporter
 
         if (!n.nodeName().equals("body"))
         {
+            for(int i = 0; i < depth; i++)
+                System.out.print(" ");
+            System.out.println("</" + n.nodeName() + ">");
             String tag = mapHTMLTagToLaTeXTag(n, false);
             result += tag;
         }
@@ -572,22 +633,24 @@ public class PDFExporter
      * Liefert den Latex code zurück, der den angegebenen HTML-Knoten
      * repräsentiert.
      * 
-     * @param node
+     * @param elem
      * @param begin
      * @return
      */
-    private String mapHTMLTagToLaTeXTag(Element node, boolean begin)
+    private String mapHTMLTagToLaTeXTag(Element elem, boolean begin)
     {
-        Tupel<String, String> replacer = tagReplaceList.get(node.nodeName().toLowerCase());
+        String nodeName = elem.nodeName();
+        Tupel<String, String> replacer = tagReplaceList.get(nodeName);
         if (replacer == null)
         {
             if (begin)
-                System.out.println("[PDF-EXPORTER]: Info -> HTML-Tag \"" + node.nodeName()
+                System.out.println("[PDF-EXPORTER]: Info -> HTML-Tag \"" + elem.nodeName()
                         + "\" nicht bekannt und daher übersprungen.");
             return "";
         }
 
-        if (node.nodeName().toLowerCase().equals("table"))
+
+        if (nodeName.equals("table"))
         {
             if (begin)
             {
@@ -595,11 +658,11 @@ public class PDFExporter
                 int colCnt = 0;
                 String caption = null;
 
-                colCnt = node.getElementsByTag("tbody").get(0).child(0).getElementsByTag("td").size();
+                colCnt = elem.getElementsByTag("tbody").get(0).child(0).getElementsByTag("td").size();
 
-                if (node.getElementsByTag("caption").size() != 0)
+                if (elem.getElementsByTag("caption").size() != 0)
                 {
-                    caption = node.getElementsByTag("caption").first().text();
+                    caption = elem.getElementsByTag("caption").first().text();
                 }
 
                 String tableConfig = "{|";
@@ -620,13 +683,11 @@ public class PDFExporter
             else
                 return replacer.y;
         }
-        else if (node.nodeName().toLowerCase().equals("caption"))
-            return "";
-        else if (node.nodeName().toLowerCase().equals("td"))
+        else if (nodeName.equals("td"))
         {
             if (begin)
             {
-                int idx = node.siblingIndex();
+                int idx = elem.siblingIndex();
                 if (idx == 0)
                     return replacer.x;
                 else
@@ -642,7 +703,6 @@ public class PDFExporter
             else
                 return replacer.y;
         }
-
     }
 
     /**

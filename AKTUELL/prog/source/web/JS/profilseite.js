@@ -79,9 +79,9 @@ $(document).ready(function() {
 			if (jsonBenutzer[paramId] == currentProfilID) {
 				changeCSS("CSS/sopra_light.css", 0);
 				changeCSS("CSS/mybuttonstyle_light.css", 1);
-				$("#farbschema_toggle_label").text("TAG");
 			}
-            
+
+			$("#farbschema_toggle_label").text("TAG");
             
             var params = {};
             params[paramId] = currentProfilID;
@@ -97,8 +97,8 @@ $(document).ready(function() {
         	if (jsonBenutzer[paramId] == currentProfilID) {
         		changeCSS("CSS/sopra.css", 0);
         		changeCSS("CSS/mybuttonstyle.css", 1);
-            	$("#farbschema_toggle_label").text("NACHT");
         	}
+        	$("#farbschema_toggle_label").text("NACHT");
 
             var params = {};
             params[paramId] = currentProfilID;

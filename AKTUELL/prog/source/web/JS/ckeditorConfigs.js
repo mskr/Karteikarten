@@ -11,6 +11,9 @@
 CKEDITOR.env.isCompatible = true;
 CKEDITOR.disableAutoInline = true;
 
+//enterMode: CKEDITOR_ENTER_P,
+//shiftEnterMode: CKEDITOR_ENTER_DIV,
+
 var ckEditorKommentarConfig = {
 		height: "100px",
 		toolbarGroups: [
