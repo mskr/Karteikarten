@@ -11,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
@@ -295,19 +296,20 @@ public class PDFExporter
             return false;
 
         System.out.println("Append KK: " + kk.getTitel());
+        String Strkk;
         switch (kk.getTyp())
         {
             case VIDEO:
-                System.out.println("Video KK - nicht unterstützt");
-                dataStr += "Video " + replaceInvalidChars(kk.getTitel() + " (Übersprungen)") + newLineWithSeparation;
+                Strkk = createVideoKKLatexStr(kk, depth);
+                dataStr += Strkk + newLineWithSeparation;
                 break;
             case BILD:
-                String Strkk = createBildKKLatexStr(kk, depth);
+                Strkk = createBildKKLatexStr(kk, depth);
                 dataStr += Strkk + newLineWithSeparation;
                 break;
             case TEXT:
-                String Strkk1 = createTextKKLatexStr(kk, depth);
-                dataStr += Strkk1 + newLineWithSeparation;
+                Strkk = createTextKKLatexStr(kk, depth);
+                dataStr += Strkk + newLineWithSeparation;
                 break;
 
             default:
@@ -396,6 +398,32 @@ public class PDFExporter
             e.printStackTrace();
         }
         return "";
+    }
+
+
+    /**
+     * Erzeugt den Latex code für eine Bild-karteikarte
+     * 
+     * @param kk
+     * @param depth
+     * @return
+     */
+    private String createVideoKKLatexStr(Karteikarte kk, int depth)
+    {
+        String bildPfad = servletContextPath + "/files/general/noMovie.png";
+
+        try{
+            FileUtils.copyFile(new File(bildPfad), new File(workingDir + subFolder + "/noMovie.png"));
+        }
+        catch(Exception e){}
+
+        String latexStr = "\\begin{figure}[H] " + newLineWithSeparation + 
+                "  \\centering" + newLineWithSeparation
+                + "  \\includegraphics[width=0.5\\linewidth]{noMovie.png}" + newLineWithSeparation
+                + "  \\label{kk_" + kk.getId() + "}" + newLineWithSeparation 
+                + "\\end{figure}" + newLineWithSeparation;
+
+        return putStrIntoChapter(depth,kk, latexStr);
     }
 
     /**
@@ -527,6 +555,10 @@ public class PDFExporter
          */
         html = html.replaceAll("(\\/>)([^<]{1,})(<\\/)", "$1<pseudo>$2</pseudo>$3");
         
+        /**
+         * Non-breakable-Spaces ersetzen
+         */
+        html = html.replaceAll("(&nbsp;)", " ");
         
         Document doc = Jsoup.parse("<html><body>" + html + "</body></html>");
         
@@ -558,6 +590,12 @@ public class PDFExporter
         }
 
         String content = n.ownText();
+        // Workaround um an text ohne trimming zu kommen
+        if(!content.equals(""))
+        {
+            content = n.textNodes().get(0).getWholeText();
+        }
+        
         if (nodes.size() == 0)
         {
 

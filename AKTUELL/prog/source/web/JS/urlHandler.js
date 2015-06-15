@@ -17,18 +17,6 @@ $(document).ready(function() {
 	
     $.when(getBenutzer()).done(function(a1) {
     	var firstRunFinished = false;
-    	
-        if(jsonBenutzer[paramTheme] == "DAY")
-        {
-            changeCSS("CSS/sopra_light.css", 0);
-            changeCSS("CSS/mybuttonstyle_light.css", 1);
-        }
-        else
-        {
-            changeCSS("CSS/sopra.css", 0);
-            changeCSS("CSS/mybuttonstyle.css", 1);
-        }
-        
     	// zu Beginn warten bis ALLE Ajax-Calls fertig sind
     	$( document ).ajaxStop(function() {
     		if(!firstRunFinished)
@@ -177,6 +165,17 @@ function interpreteUrlQuery(paramObj)
 	// Benutzer eingeloggt
     if(jsonBenutzer != undefined)
     { 
+        if(jsonBenutzer[paramTheme] == "DAY")
+        {
+            changeCSS("CSS/sopra_light.css", 0);
+            changeCSS("CSS/mybuttonstyle_light.css", 1);
+        }
+        else
+        {
+            changeCSS("CSS/sopra.css", 0);
+            changeCSS("CSS/mybuttonstyle.css", 1);
+        }
+        
         var ajax1 = fillMyPersonalBox();
         var ajax2;
         if(ziel == undefined ||                         // Kein location Parameter
