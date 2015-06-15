@@ -86,7 +86,10 @@ $(document).ready(function() {
             var params = {};
             params[paramId] = currentProfilID;
             params[paramTheme] = "DAY";
-            ajaxCall(profilServlet, actionSetTheme, function(){showInfo("Farbschema geändert.")}, params);
+            ajaxCall(profilServlet, actionSetTheme, function(){
+            	showInfo("Farbschema geändert.")
+            	jsonBenutzer[paramTheme] = "DAY";
+            }, params);
             
         }
         else
@@ -100,7 +103,10 @@ $(document).ready(function() {
             var params = {};
             params[paramId] = currentProfilID;
             params[paramTheme] = "NIGHT";
-            ajaxCall(profilServlet, actionSetTheme, function(){showInfo("Farbschema geändert.")}, params);
+            ajaxCall(profilServlet, actionSetTheme, function(){
+            	showInfo("Farbschema geändert.")
+            	jsonBenutzer[paramTheme] = "NIGHT";
+            }, params);
         }
     });
     
