@@ -1214,7 +1214,8 @@ textarea.input_std {
 }
 
 #kk_inhaltsverzeichnis {
-	position: absolute;
+	position: absolute;  
+	max-height: 100%;
 }
 
 #kk_inhaltsverzeichnis_titel {

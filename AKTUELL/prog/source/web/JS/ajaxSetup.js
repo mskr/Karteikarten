@@ -58,7 +58,7 @@ function checkConnection()
         url: startseitenServlet,
         data: "action="+actionPing,
         success: function(jsonResponse) {
-		    showInfo("Verbindungsaufbau erfolgreich. Bitte warten...");
+		    showInfo("Verbindungsaufbau erfolgreich. Bitte warten Seite wird neu geladen...");
 		    connectionCheckRunning = false;
 		    setTimeout(function(){
 		    	location.reload();

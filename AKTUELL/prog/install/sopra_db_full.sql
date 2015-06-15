@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 13. Jun 2015 um 15:45
+-- Erstellungszeit: 15. Jun 2015 um 11:51
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
   `Veranstaltung` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
   `Angenommen` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `benachrichtigung_einladung_moderator`
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_karteikartenaenderung` (
   `Benutzer` int(11) NOT NULL,
   `Karteikarte` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_neuer_kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Kommentar` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_profil_geaendert` (
   `Benutzer` int(11) NOT NULL,
   `Admin` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Daten für Tabelle `benachrichtigung_profil_geaendert`
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_veranstaltungsaenderung` (
   `Veranstaltung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- Daten für Tabelle `benachrichtigung_veranstaltungsaenderung`
@@ -218,19 +218,20 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
   `NotifyKommentare` enum('KEINE','VERANSTALTUNG_TEILGENOMMEN','DISKUSSION_TEILGENOMMEN','') NOT NULL DEFAULT 'KEINE',
   `NotifyVeranstAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0',
-  `CryptedPW` varchar(60) NOT NULL COMMENT 'hash = salt(29 Zeichen) + crypted (Rest)'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+  `CryptedPW` varchar(60) NOT NULL COMMENT 'hash = salt(29 Zeichen) + crypted (Rest)',
+  `Theme` enum('DAY','NIGHT') NOT NULL DEFAULT 'NIGHT'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Daten für Tabelle `benutzer`
 --
 
-INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Matrikelnummer`, `Studiengang`, `Nutzerstatus`, `NotifyKommentare`, `NotifyVeranstAenderung`, `NotifyKarteikartenAenderung`, `CryptedPW`) VALUES
-(1, 'admin@sopra.de', 'Der', 'Admin', 'default.png', 0, 'Sonstiges', 'ADMIN', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$AoMut6JI4GkLJZxbnqGMkeMC/ozfbynBdKZr90N5Wjs2CJ7aR59oi'),
-(2, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', '1434129132115.png', 1234567, 'Informatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$a7C2vqqPpl0GiF1D5gTKXO/3EdVTIWGgGN9v7Az7x24W6vECiTLaC'),
-(3, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 815, 'Informatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3/LOgBMsK8Lu2fYo3j0WLOIjrCC/w/MTjBit.aezhz9ED.apKE5hS'),
-(4, 'mk@ulm.de', 'Marius', 'Kircher', 'default.png', 123456, 'Medieninformatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$7LlnqoZqrmtgSH4tHVdMjOFT50RwLillAq0p3Z.nz87tjTgHzxn9O'),
-(5, 'helmut.partsch@uni-ulm.de', 'Helmut', 'Partsch', 'default.png', 2345678, 'Sonstiges', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3s5UOGTQ6PtnW144JmofdOJKzk7WBYDPSEsbb3vrNl281tAJDrPbq');
+INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Matrikelnummer`, `Studiengang`, `Nutzerstatus`, `NotifyKommentare`, `NotifyVeranstAenderung`, `NotifyKarteikartenAenderung`, `CryptedPW`, `Theme`) VALUES
+(1, 'admin@sopra.de', 'Der', 'Admin', 'default.png', 0, 'Sonstiges', 'ADMIN', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$AoMut6JI4GkLJZxbnqGMkeMC/ozfbynBdKZr90N5Wjs2CJ7aR59oi', 'NIGHT'),
+(2, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', '1434129132115.png', 1234567, 'Informatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$a7C2vqqPpl0GiF1D5gTKXO/3EdVTIWGgGN9v7Az7x24W6vECiTLaC', 'NIGHT'),
+(3, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 815, 'Informatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3/LOgBMsK8Lu2fYo3j0WLOIjrCC/w/MTjBit.aezhz9ED.apKE5hS', 'NIGHT'),
+(4, 'mk@ulm.de', 'Marius', 'Kircher', 'default.png', 123456, 'Medieninformatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$7LlnqoZqrmtgSH4tHVdMjOFT50RwLillAq0p3Z.nz87tjTgHzxn9O', 'NIGHT'),
+(5, 'helmut.partsch@uni-ulm.de', 'Helmut', 'Partsch', 'default.png', 2345678, 'Sonstiges', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3s5UOGTQ6PtnW144JmofdOJKzk7WBYDPSEsbb3vrNl281tAJDrPbq', 'NIGHT');
 
 -- --------------------------------------------------------
 
@@ -242,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -254,6 +255,7 @@ INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung
 (5, 2, 2),
 (11, 2, 3),
 (4, 4, 2),
+(12, 4, 3),
 (3, 5, 2);
 
 -- --------------------------------------------------------
@@ -339,11 +341,11 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (2, 'Zu Veranstaltungen einschreiben / von Veranstaltungen ausschreiben', '', 'TEXT', 0, '2015-06-09 07:27:00', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (3, 'Veranstaltungsübersicht', '', 'TEXT', 0, '2015-06-09 07:28:20', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (4, 'Meine Veranstaltungen', '', 'TEXT', 0, '2015-06-09 07:28:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(5, 'Karteikarten Typen', '', 'TEXT', 0, '2015-06-09 07:37:48', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(6, 'Text-Karteikarten', '', 'TEXT', 0, '2015-06-09 07:38:05', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(5, 'Karteikarten Typen', '', 'TEXT', 0, '2015-06-15 08:28:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(6, 'Text-Karteikarten', '<p>Beispiel für eine Textkarteikarte</p>', 'BILD', 0, '2015-06-15 08:15:05', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (7, 'Bild-Karteikarten', '', 'TEXT', 0, '2015-06-09 07:38:20', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (8, 'Video-Karteikarten', '', 'TEXT', 0, '2015-06-09 07:38:34', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(9, 'Karteikarten erstellen', '', 'TEXT', 0, '2015-06-09 07:43:56', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(9, 'Karteikarten erstellen', '<p>Karteikarten haben eine feste Position in der Baumstruktur. Daher legen Sie neue Karteikarten durch Klicken an die entsprechende Position im Inhaltsverzeichnis an.</p><p><em><strong>Hinweis:&nbsp;</strong></em>Die grünen Buttons, die auf dem Screenshot zu sehen sind, tauchen erst auf wenn Sie die&nbsp;Maus über das Inhaltsverzeichnis bewegen.</p>', 'BILD', 0, '2015-06-15 09:36:21', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (10, 'Karteikarten bearbeiten', '', 'TEXT', 0, '2015-06-09 07:46:51', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (11, 'Karteikarten löschen', '', 'TEXT', 0, '2015-06-09 07:47:02', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (20, 'SW-Prüfung', '', 'TEXT', 0, '2015-06-04 13:34:01', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -365,6 +367,7 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (75, 'Bedienungsanleitung eLearning-System', '', 'TEXT', 0, '2015-06-08 11:52:50', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (76, 'Hauptseite', '', 'TEXT', 0, '2015-06-09 07:15:02', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (77, 'Profil', '', 'TEXT', 0, '2015-06-09 07:12:32', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(78, 'Karteikarten', '', 'TEXT', 0, '2015-06-15 08:34:42', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (79, 'Softwaretechnik II', '', 'TEXT', 0, '2015-06-04 13:21:47', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (80, 'Qualitätssicherung - Allgemeines', '', 'TEXT', 0, '2015-06-04 13:28:06', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (81, 'Qualität', '', 'TEXT', 0, '2015-06-04 13:28:21', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -376,7 +379,9 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (87, 'Zyklomatische  Komplexität', '', 'TEXT', 0, '2015-06-04 13:33:05', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (88, 'Kohäsions-Metrik', '', 'TEXT', 0, '2015-06-04 13:33:21', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (89, 'Halstead-Metrik', '', 'TEXT', 0, '2015-06-04 13:33:36', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(90, 'Fehler', '', 'TEXT', 0, '2015-06-04 13:33:46', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+(90, 'Fehler', '', 'TEXT', 0, '2015-06-04 13:33:46', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(91, 'Idee', '<p>Das E-Learning System nutzt als Konzept sogenannte Karteikarten. Der Sinn dahinter liegt darin ein Vorlesungsskript nicht komplett linear aufzubauen, sondern modularer. Durch das Inhaltsverzeichnis soll dennoch eine hierarchische Struktur wie sie bei einem linearen Skript üblich ist beibehalten werden. Zusätzlich können Karteikarten verschiedene Attribute und Verweise auf andere Karteikarten haben. Diese Konzepte werden im Folgenden genauer erläutert</p>', 'TEXT', 0, '2015-06-15 08:39:12', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(92, 'Attribute und Verweise', '<p>Die Karteikarte behandelt ein Beispiel aus der Stochastik und zeigt wie man Attribute und Verweise verwenden kann.</p><p><u>Attribute </u>spezifizieren den Inhalt der Karteikarte. Eine Karteikarte kann mehrere Attribute haben. In dem Beispiel handelt es sich um eine Definition. Im Bereich der Stochastik kann die Karteikarte aber auch als wichtig und als Grundlagenwissen angesehen werden.</p><p><u>Verweise</u></p>', 'TEXT', 0, '2015-06-15 09:48:12', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -477,7 +482,7 @@ CREATE TABLE IF NOT EXISTS `notiz` (
   `Inhalt` text NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -750,12 +755,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 -- AUTO_INCREMENT for table `benutzer`
 --
 ALTER TABLE `benutzer`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
@@ -780,7 +785,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 -- AUTO_INCREMENT for table `notiz`
 --
 ALTER TABLE `notiz`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `semester`
 --
