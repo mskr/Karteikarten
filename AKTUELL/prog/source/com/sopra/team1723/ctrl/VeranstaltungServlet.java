@@ -414,7 +414,7 @@ public class VeranstaltungServlet extends ServletController {
 
         try
         {
-            dbManager.bearbeiteVeranstaltung(v,studiengaenge,mIds);
+            dbManager.bearbeiteVeranstaltung(v,studiengaenge,mIds, aktuellerBenutzer.getId());
         }
         catch (SQLException e)
         {

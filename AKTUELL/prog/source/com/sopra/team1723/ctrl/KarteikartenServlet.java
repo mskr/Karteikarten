@@ -441,7 +441,7 @@ public class KarteikartenServlet extends ServletController
             
             
 
-            boolean result = dbManager.bearbeiteKarteikarte(karteikarte);
+            boolean result = dbManager.bearbeiteKarteikarte(karteikarte, aktuellerBenutzer.getId());
             if (!result)
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);

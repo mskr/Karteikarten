@@ -1279,7 +1279,7 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public void bearbeiteVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds)
+    public void bearbeiteVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds, int bearbeiter)
             throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
     {
         Connection conMysql = getConnectionSQL();
@@ -1370,7 +1370,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             }
 
-            BenachrVeranstAenderung bva = new BenachrVeranstAenderung(veranst);
+            BenachrVeranstAenderung bva = new BenachrVeranstAenderung(veranst, bearbeiter);
             schreibeBenachrichtigungWrapper(bva, conMysql);
 
             conMysql.commit();
@@ -1546,7 +1546,7 @@ public class Datenbankmanager implements IDatenbankmanager
             if (rs.next())
             {
                 Calendar cal = new GregorianCalendar();
-                rs.getTimestamp("Erstelldatum", cal);
+                cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
                 
                 Veranstaltung veranst = leseVeranstaltungWrapper(rs.getInt("Veranstaltung"),conMysql);
                 if(veranst == null)
@@ -1587,7 +1587,7 @@ public class Datenbankmanager implements IDatenbankmanager
             if (rs.next())
             {
                 Calendar cal = new GregorianCalendar();
-                rs.getTimestamp("Erstelldatum", cal);
+                cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
                 Karteikarte kk = leseKarteikarteWrapper(rs.getInt("Karteikarte"),conMysql,conNeo4j);
                 if (kk == null)
                     return null;
@@ -1638,7 +1638,7 @@ public class Datenbankmanager implements IDatenbankmanager
                     return null;
 
                 Calendar cal = new GregorianCalendar();
-                rs.getTimestamp("Erstelldatum", cal);
+                cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
                 benachrichtigung = new BenachrNeuerKommentar(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
                         cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), rs.getInt("Kommentar"), karteik);
             }
@@ -1674,7 +1674,7 @@ public class Datenbankmanager implements IDatenbankmanager
             if (rs.next())
             {
                 Calendar cal = new GregorianCalendar();
-                rs.getTimestamp("Erstelldatum", cal);
+                cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
                 
                 Benutzer admin = leseBenutzerWrapper(rs.getInt("Admin"),conMysql);
                 if(admin == null)
@@ -1715,7 +1715,7 @@ public class Datenbankmanager implements IDatenbankmanager
             if (rs.next())
             {
                 Calendar cal = new GregorianCalendar();
-                rs.getTimestamp("Erstelldatum", cal);
+                cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
                 
                 Veranstaltung veranst = leseVeranstaltungWrapper(rs.getInt("Veranstaltung"),conMysql);
                 if(veranst == null)
@@ -1801,11 +1801,15 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 BenachrKarteikAenderung bk = (BenachrKarteikAenderung) benachrichtigung;
                 ps = conMysql
-                        .prepareStatement("INSERT INTO benachrichtigung_karteikartenaenderung (Benachrichtigung, Benutzer,"
-                                + "Karteikarte) VALUES (?,?,?);");
+                        .prepareStatement("INSERT INTO benachrichtigung_karteikartenaenderung (Benachrichtigung, Karteikarte,"
+                                + "Benutzer) "
+                                + "SELECT ?,?,Benutzer FROM benutzer AS b JOIN benutzer_veranstaltung_zuordnung AS bvz"
+                                + " ON b.ID = bvz.Benutzer JOIN Karteikarte AS k ON bvz.Veranstaltung = k.Veranstaltung "
+                                + "WHERE k.ID = ? AND b.NotifyKarteikartenAenderung = true AND b.ID != ?");
                 ps.setInt(1, id);
-                ps.setInt(2, bk.getId());
+                ps.setInt(2, bk.getKarteikarte().getId());
                 ps.setInt(3, bk.getKarteikarte().getId());
+                ps.setInt(4,bk.getBenutzer());
 
             }
             else if (benachrichtigung instanceof BenachrNeuerKommentar)
@@ -1855,10 +1859,11 @@ public class Datenbankmanager implements IDatenbankmanager
                         + " (Benachrichtigung, Veranstaltung, Benutzer)"
                         + " SELECT ?,?,Benutzer FROM benutzer_veranstaltung_zuordnung AS bvz "
                         + "JOIN Benutzer AS b ON bvz.Benutzer = b.ID WHERE bvz.Veranstaltung = ? "
-                        + "AND b.NotifyVeranstAenderung = true");
+                        + "AND b.NotifyVeranstAenderung = true AND b.ID != ?");
                 ps.setInt(1, id);
                 ps.setInt(2, bv.getVeranstaltung().getId());
                 ps.setInt(3, bv.getVeranstaltung().getId());
+                ps.setInt(4, bv.getBenutzer());
             }
             // ACHTUNG es kann auch sein, dass keiner Eingeschrieben ist und
             // niemand die benachrichtung erhält!
@@ -2607,7 +2612,7 @@ public class Datenbankmanager implements IDatenbankmanager
     }
 
     @Override
-    public boolean bearbeiteKarteikarte(Karteikarte karteik)
+    public boolean bearbeiteKarteikarte(Karteikarte karteik, int bearbeiter)
     {
         Connection conMysql = getConnectionSQL();
         Connection conNeo4j = getConnectionNeo4j();
@@ -2656,6 +2661,8 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 connectKk(karteik.getId(), verweis.y, verweis.x, conNeo4j);
             }
+            
+            schreibeBenachrichtigungWrapper(new BenachrKarteikAenderung(karteik, bearbeiter), conMysql);
 
             conNeo4j.commit();
             conMysql.commit();

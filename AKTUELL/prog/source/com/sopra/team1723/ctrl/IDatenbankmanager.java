@@ -235,7 +235,7 @@ public interface IDatenbankmanager {
      * @param veranst-Objekt, das in der db geupdatet wird
      * @return
      */
-    public void bearbeiteVeranstaltung(Veranstaltung veranst,String[] studiengaenge, int[] moderatorenIds) 
+    public void bearbeiteVeranstaltung(Veranstaltung veranst,String[] studiengaenge, int[] moderatorenIds, int bearbeiter) 
             throws SQLException, DbUniqueConstraintException, DbFalsePasswortException;
 
     /**
@@ -408,7 +408,7 @@ public interface IDatenbankmanager {
      * @param karteik 
      * @return
      */
-    public boolean bearbeiteKarteikarte(Karteikarte karteik);
+    public boolean bearbeiteKarteikarte(Karteikarte karteik, int bearbeiter);
 
     /**
      * Entfernt die Karteikarte aus der Datenbank. Tritt ein Fehler auf

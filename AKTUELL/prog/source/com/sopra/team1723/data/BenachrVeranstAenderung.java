@@ -23,13 +23,14 @@ public class BenachrVeranstAenderung extends Benachrichtigung{
         this.gelesen = false;
     }
     
-    public BenachrVeranstAenderung(Veranstaltung veranstaltung){
+    public BenachrVeranstAenderung(Veranstaltung veranstaltung, int bearbeiter){
         this.inhalt = "Die Veranstaltung " + veranstaltung.getTitel() + " wurde bearbeitet.";
         this.erstelldaum = new GregorianCalendar();
         erstelldaum.setTimeInMillis(System.currentTimeMillis());
         this.veranstaltung = veranstaltung;
         this.id = -1;
-        this.benutzer = -1;
+        // hier nicht ein Benutzer, der die Benachrichtigung bekommt, sondern der, der sie verusacht hat
+        this.benutzer = bearbeiter;
         this.gelesen = false;
     }
     
