@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 15. Jun 2015 um 12:51
+-- Erstellungszeit: 15. Jun 2015 um 17:27
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 `ID` int(11) NOT NULL,
   `Inhalt` mediumtext NOT NULL,
   `Erstelldatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
 
 --
 -- Daten für Tabelle `benachrichtigung`
@@ -96,7 +96,9 @@ INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
 (12, 'Die Veranstaltung Bedienungsanleitung eLearning-System wurde bearbeitet.', '2015-06-12 07:56:06'),
 (13, 'Die Veranstaltung Bedienungsanleitung eLearning-System wurde bearbeitet.', '2015-06-12 07:56:39'),
 (14, 'Es wurde eine neuer Kommentar in der Veranstaltung "Softwaretechnik II" zur Karteikarte "Qualität" verfasst.', '2015-06-12 11:46:28'),
-(15, 'Die Veranstaltung Bedienungsanleitung eLearning-System wurde bearbeitet.', '2015-06-12 15:02:51');
+(15, 'Die Veranstaltung Bedienungsanleitung eLearning-System wurde bearbeitet.', '2015-06-12 15:02:51'),
+(16, 'Sie wurden zur Veranstaltung fsef als Moderator hinzugefügt!', '2015-06-15 12:05:34'),
+(17, 'Sie wurden zur Veranstaltung esrdhtfjzgfhtdegrse als Moderator hinzugefügt!', '2015-06-15 12:13:43');
 
 -- --------------------------------------------------------
 
@@ -111,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
   `Veranstaltung` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
   `Angenommen` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `benachrichtigung_einladung_moderator`
@@ -227,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
 --
 
 INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Matrikelnummer`, `Studiengang`, `Nutzerstatus`, `NotifyKommentare`, `NotifyVeranstAenderung`, `NotifyKarteikartenAenderung`, `CryptedPW`, `Theme`) VALUES
-(1, 'admin@sopra.de', 'Der', 'Admin', 'default.png', 0, 'Sonstiges', 'ADMIN', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$AoMut6JI4GkLJZxbnqGMkeMC/ozfbynBdKZr90N5Wjs2CJ7aR59oi', 'NIGHT'),
+(1, 'admin@sopra.de', 'Der', 'Admin', 'default.png', 0, 'Sonstiges', 'ADMIN', 'KEINE', 0, 0, '$2a$10$AoMut6JI4GkLJZxbnqGMkeMC/ozfbynBdKZr90N5Wjs2CJ7aR59oi', 'NIGHT'),
 (2, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', '1434129132115.png', 1234567, 'Informatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$a7C2vqqPpl0GiF1D5gTKXO/3EdVTIWGgGN9v7Az7x24W6vECiTLaC', 'NIGHT'),
 (3, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 815, 'Informatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3/LOgBMsK8Lu2fYo3j0WLOIjrCC/w/MTjBit.aezhz9ED.apKE5hS', 'NIGHT'),
 (4, 'mk@ulm.de', 'Marius', 'Kircher', 'default.png', 123456, 'Medieninformatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$7LlnqoZqrmtgSH4tHVdMjOFT50RwLillAq0p3Z.nz87tjTgHzxn9O', 'NIGHT'),
@@ -243,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
@@ -336,18 +338,18 @@ CREATE TABLE IF NOT EXISTS `karteikarte` (
 --
 
 INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderungsdatum`, `Veranstaltung`, `Satz`, `Lemma`, `Beweis`, `Definition`, `Wichtig`, `Grundlagen`, `Zusatzinformation`, `Exkurs`, `Beispiel`, `Uebung`) VALUES
-(0, 'Anderes Profil anzeigen', '', 'TEXT', 0, '2015-06-09 07:22:23', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(1, 'Suchfunktion benutzen', '', 'TEXT', 0, '2015-06-09 07:25:10', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(2, 'Zu Veranstaltungen einschreiben / von Veranstaltungen ausschreiben', '', 'TEXT', 0, '2015-06-09 07:27:00', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(3, 'Veranstaltungsübersicht', '', 'TEXT', 0, '2015-06-09 07:28:20', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(4, 'Meine Veranstaltungen', '', 'TEXT', 0, '2015-06-09 07:28:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(0, 'Anderes Profil anzeigen', '<p>Sie können sich andere&nbsp;Profile anzeigen lassen, indem sie mit der Suchfunktion nach einem Benutzer suchen. Klicken sie auf einen Benutzer, so werden sie zu seinem Profil weitergeleitet.</p><p>Desweiteren sind meist alle Benutzernamen, die auf der Website vorkommen mit einem Link versehrt, der sie ebenfalls zu dem zugehörigen Profil weiterleitet.</p>', 'TEXT', 0, '2015-06-15 12:45:43', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1, 'Suchfunktion benutzen', '<p>Die Suchfunktion ist hilfreich, wenn sie den Namen der Veranstaltung, für die sie sich einschreiben wollen, schon wissen. Suchen sie einfach nach dieser Veranstaltung und wählen sie das passende Ergebnis aus.</p><p>Sollte sie eine Veranstaltung nicht finden, suchen sie im Reiter "Alle" explizit nach dieser Veranstaltung (wenn sie dort nicht zu finden ist, existiert sie auch nicht). Siehe dazu Karteikarte&nbsp;"Alle Veranstaltungen".</p><p>Weiterhin kann man mit der Suchfunktion nach Benutzern suchen. Mit einem Klick auf ein Ergebnis gelangen sie zu dem Profil des Benutzers.</p><p>Die Suche brechen sie ab, indem sie auf das hellgraue "x" oben rechts bei den Ergebnissen klicken.</p>', 'TEXT', 0, '2015-06-15 12:18:08', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 'Zu Veranstaltungen einschreiben / von Veranstaltungen ausschreiben', '<p>Um sich in eine Veranstaltung ein- oder auszuschreiben, klicken sie auf den grauen Pfeil rechts, der bei jeder aktuell aufgelisteten Veranstaltung erscheint. Nun wird die Beschreibung der Veranstaltung gezeigt, sowie rechts unten entweder ein Raketen-Symbol mit dem Schriftzug "Einschreiben" oder ein "x" mit dem Schriftzug "Ausschreiben".</p><p>Im ersten Fall können sie hier klicken um sich für diese Veranstaltung einzuschreiben. Bedenken sie, dass es für manche Veranstaltungen Kennworte gibt, um die Veranstaltung zu schützen. Dieses Kennwort erfahren sie im Regelfall von ihrem Dozenten. Geben sie dieses Hier ein und drücken sie anschließend auf "Einschreiben".</p><p>Im zweiten Fall können sind sie bereits für diese Veranstaltung ausgeschrieben. Wenn sie hier klicken, werden sie folglich ausgeschrieben. Bedenken sie, dass sie sich um die Veranstaltung einsehen zu können, wieder einschreiben müssen.</p><p> </p>', 'TEXT', 0, '2015-06-15 12:33:49', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 'Meine Veranstaltungen', '<p>Im Reiter "Meine" finden sie alle Veranstaltungen, in die sie momentan eingeschrieben sind.</p><p>In dieser Veranstaltung (Bedienungsanleitung eLearning-System) sind sie automatisch eingeschrieben worden.&nbsp;</p>', 'TEXT', 0, '2015-06-15 12:00:00', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(4, 'Veranstaltungsübersicht', '<p>Auf dieser Seite haben sie oben ein Suchfeld, in der sie nach Veranstaltungen und Personen suchen können.</p><p>Weiterhin existieren zwei Reiter "Meine" und "Alle", in dem sie Veranstaltungen finden können (siehe "Meine Veranstaltungen" und "Alle Veranstaltungen".</p><p>Sie finden zu jeder aufgelisteten Veranstaltung mittig den zugehörigen Dozent, die aktuelle Teilnehmeranzahl, sowie das Semester in dem diese gehalten wird.</p><p>Sie können mit dem grauen Pfeil nach unten (rechts bei jeder aufgelisteten Veranstaltung) mehr Informationen über die Veranstaltung in Erfahrung bringen. Hier erscheint dann zur jeweiligen Veranstaltung eine Beschreibung. Rechts unten ist entweder ein Raketen-Symbol zum Einschreiben in den Kurs oder ein "x" zum Ausschreiben (siehe "zu Veranstaltung einschreiben/ von Veranstaltung ausschreiben).</p>', 'TEXT', 0, '2015-06-15 12:11:21', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (5, 'Karteikarten Typen', '', 'TEXT', 0, '2015-06-15 08:28:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(6, 'Text-Karteikarten', '<p>Beispiel für eine Textkarteikarte</p>', 'BILD', 0, '2015-06-15 08:15:05', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(7, 'Bild-Karteikarten', '<p>Dies ist eine Beispiel Bild-Karteikarte. Bilder können zusätlich eine Bildunterschrift beinhalten.</p>', 'BILD', 0, '2015-06-15 10:30:38', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(8, 'Video-Karteikarten', '<p>Dies ist ein Beispiel für eine Video-Karteikarte. Diese können wie Bild-Karteikarten eine Beschreibung haben</p>', 'VIDEO', 0, '2015-06-15 10:35:20', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(6, 'Text-Karteikarten', '<p>Beispiel für eine Textkarteikarte</p>', 'BILD', 0, '2015-06-15 13:37:54', 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
+(7, 'Bild-Karteikarten', '<p>Dies ist eine Beispiel Bild-Karteikarte. Bilder können zusätlich eine Bildunterschrift beinhalten.</p>', 'BILD', 0, '2015-06-15 13:45:00', 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
+(8, 'Video-Karteikarten', '<p>Dies ist ein Beispiel für eine Video-Karteikarte. Diese können wie Bild-Karteikarten eine Beschreibung haben</p>', 'VIDEO', 0, '2015-06-15 13:46:51', 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
 (9, 'Karteikarten erstellen', '', 'TEXT', 0, '2015-06-15 10:39:09', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(10, 'Karteikarten bearbeiten', '', 'TEXT', 0, '2015-06-09 07:46:51', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(11, 'Karteikarten löschen', '', 'TEXT', 0, '2015-06-09 07:47:02', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(10, 'Karteikarten bearbeiten', '<p>Der Button für das Bearbeiten von Karteikarten befindet sich rechts neben Karteikarten. Es öffnet sich der gleiche Dialog, wie er beim Erstellen schon beschrieben wurde.</p>', 'BILD', 0, '2015-06-15 14:28:46', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(11, 'Karteikarten löschen', '<p>Um eine Karteikarte zu löschen, brauchen sie zunächst die nötigen Rechte. Berechtigt sind sie, wenn sie der Dozent der Veranstaltung sind oder Moderator sind. Moderatoren können jedoch nur Karteikarten löschen, wenn sie vom Dozenten berechtigt wurden.</p><p>Im Fall der Berechtigung, erscheinen beim Hovern (Schweben der Maus) über der Karteikarte Symbole.&nbsp;Diese erscheinen entweder rechts (bei einer Überschriftskarteikarte) oder links bei allen anderen. Eines dieser Symbole ist ein Mülleimer. Klicken sie auf diesen und Bestätigen sie, dass sie sich sicher sind. Danach sind die Karteikarte und alle ihre untergeordneten Karteikarten ("Kinder") gelöscht. Prüfen sie vorher ausführlich, ob sie dies wirklich wollen, da dieser Vorgang irreversibel ist.</p>', 'BILD', 0, '2015-06-15 14:33:07', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (20, 'SW-Prüfung', '', 'TEXT', 0, '2015-06-04 13:34:01', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (21, 'Hintergrund und Motivation', '<ul><li>Akzeptanz eines Produkts wird durch Qualit&auml;t bestimmt<ul><li>&Uuml;bereinstimmung mit den Anforderungen</li><li>Leistungsumfang, Benutzbarkeit und Komfort</li><li>Flexibilit&auml;t (bez&uuml;glich &Auml;nderungen)</li></ul></li><li>Verbesserung der Qualit&auml;t (von Artefakten der System und&nbsp;Softwareentwicklung) durch<ul><li>Disziplinierte Erstellung (&bdquo;Vorgehensmodelle&ldquo;) und</li><li>Systematische Pr&uuml;fung und Behebung von Defekten</li></ul></li></ul>', 'TEXT', 0, '2015-06-04 13:37:06', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (22, 'Qualitätssicherung - Review', '', 'TEXT', 0, '2015-06-04 13:38:20', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -355,7 +357,7 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (24, 'Qualität', '<ul><li>Quality (IEEE-Standard)<ul><li>(1) The degree to which a system, component, or process meets specified&nbsp;requirements</li><li>(2) The degree to which a system, component, or process meets customer or&nbsp;user needs or expectations</li></ul></li><li>Qualit&auml;t ist die Gesamtheit von Merkmalen einer Einheit bez&uuml;glich ihrer Eignung,&nbsp;festgelegte und vorausgesetzte Erfordernisse zu erf&uuml;llen (DIN ISO 8402)</li></ul>', 'TEXT', -1, '2015-06-04 13:43:34', 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
 (25, 'Lernziele', '<ul><li>Grundlagen, wichtigste Aspekte und verschiedene Formen statischer Pr&uuml;fungen beschreiben k&ouml;nnen</li><li>Das Technische Review erkl&auml;ren und anwenden k&ouml;nnen</li><li>Praxisrelevante Aspekte von Reviews (z.B. Spielregeln f&uuml;r die Sitzung, Tipps f&uuml;r die Beteiligten) benennen k&ouml;nnen</li><li>St&auml;rken und Schw&auml;chen von Reviews auflisten k&ouml;nnen</li></ul>', 'TEXT', 0, '2015-06-04 13:46:40', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (26, 'Qualitätssicherung – Test', '<p><strong>Lernziele</strong></p><ul><li>Grundlagen und wichtigste Aspekte<br />hinsichtlich Tests beschreiben k&ouml;nnen</li><li>Die wichtigsten Testformen (Black-<br />Box- und Glass-Box-Tests) sowie<br />Verfahren zur Testfallauswahl<br />erkl&auml;ren und anwenden k&ouml;nnen</li><li>Andere Testverfahren beschreiben<br />k&ouml;nnen</li><li>St&auml;rken und Schw&auml;chen von Tests<br />wiedergeben k&ouml;nnen</li></ul>', 'TEXT', 0, '2015-06-04 13:47:16', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(36, 'Eigenes Profil anzeigen', '', 'TEXT', 0, '2015-06-09 07:21:10', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(36, 'Eigenes Profil anzeigen', '<p>Sie können sich ihr eigenes Profil anzeigen lassen, indem sie auf ihren eigenen Namen klicken. Dieser ist befindet sich im linken Block, direkt unter ihrem Profilbild. Sie werden mit dem Klick auf ihr eigenes Profil weitergeleitet.</p>', 'TEXT', 0, '2015-06-15 12:42:25', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (57, 'Veranstaltungsseite', '', 'TEXT', 0, '2015-06-09 07:15:45', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (58, 'Profildaten bearbeiten', '<p>Hier können Sie Ihre im System gespeicherten Daten sehen. Die Daten lassen sich direkt in den entsprechenden Feldern ändern.&nbsp;</p><p>Außerdem können Sie einstellen, wann Sie benachrichtigt werden wollen.</p><p><u>Kommentare</u></p><ul><li>Sie können sich über alle Kommentare zu Veranstaltungen, zu denen Sie eingeschrieben sind informieren lassen.</li><li>Sie können sich nur über Kommentare benachrichtigen lassen, bei denen Sie selbst einen Kommentar verfasst haben.</li><li>Sie können diese Benachrichtigung deaktivieren.</li></ul><p><u>Änderungen</u></p><ul><li>Sie können sich über Änderungen an Veranstaltungen informieren lassen.</li><li>Sie können sich über Änderungen an Karteikarten informieren lassen.</li></ul>', 'BILD', 0, '2015-06-12 17:00:52', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (65, 'Profil bearbeiten', '', 'TEXT', 0, '2015-06-09 07:16:04', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -383,8 +385,30 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (91, 'Idee', '<p>Das E-Learning System nutzt als Konzept sogenannte Karteikarten. Der Sinn dahinter liegt darin ein Vorlesungsskript nicht komplett linear aufzubauen, sondern modularer. Durch das Inhaltsverzeichnis soll dennoch eine hierarchische Struktur wie sie bei einem linearen Skript üblich ist beibehalten werden. Zusätzlich können Karteikarten verschiedene Attribute und Verweise auf andere Karteikarten haben. Diese Konzepte werden im Folgenden genauer erläutert</p>', 'TEXT', 0, '2015-06-15 08:39:12', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (92, 'Attribute und Verweise', '<p>Die Karteikarte behandelt ein Beispiel aus der Stochastik und zeigt wie man Attribute und Verweise verwenden kann.</p><p><u>Attribute </u>spezifizieren den Inhalt der Karteikarte. Eine Karteikarte kann mehrere Attribute haben. In dem Beispiel handelt es sich um eine Definition. Im Bereich der Stochastik kann die Karteikarte aber auch als wichtig und als Grundlagenwissen angesehen werden.</p><p>Es gibt 4 Arten von <u>Verweisen</u>. Die Verweise müssen auf eine Karteikarte in der gleichen Veranstaltung verweisen. In dem Beispiel ist es als Voraussetzung wichtig zu wissen was Riemann Integrale sind um die Definition der Verteilung von absolutstetigen Zufallsvariablen zu verstehen. Klickt man auf einen Verweis dann springt man zur entsprechenden Karteikarte.</p><p>Für Übungsaufgaben kann beispielsweise am Ende des Vorlesungsskripts ein Kapitel mit Übungsaufgaben erstellt werden.</p>', 'BILD', 0, '2015-06-15 10:13:27', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (93, 'Inhaltsverzeichnis', '', 'TEXT', 0, '2015-06-15 10:08:39', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(94, 'wertwert', '', 'BILD', 0, '2015-06-15 10:27:19', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(95, 'Wo erstelle ich Karteikarten?', '<p>Karteikarten haben eine feste Position in der Baumstruktur. Daher legen Sie neue Karteikarten durch Klicken an die entsprechende Position im Inhaltsverzeichnis an.</p><p><em><strong>Hinweis:&nbsp;</strong></em>Die grünen Buttons, die auf dem Screenshot zu sehen sind, tauchen erst auf wenn Sie die&nbsp;Maus über das Inhaltsverzeichnis bewegen.</p>', 'BILD', 0, '2015-06-15 10:40:08', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+(95, 'Wo erstelle ich Karteikarten?', '<p>Karteikarten haben eine feste Position in der Baumstruktur. Daher legen Sie neue Karteikarten durch Klicken an die entsprechende Position im Inhaltsverzeichnis an.</p><p><em><strong>Hinweis:&nbsp;</strong></em>Die grünen Buttons, die auf dem Screenshot zu sehen sind, tauchen erst auf wenn Sie die&nbsp;Maus über das Inhaltsverzeichnis bewegen (und natürlich auch nur, wenn sie entsprechende <strong>Rechte </strong>besitzen).</p>', 'BILD', 0, '2015-06-15 14:37:56', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(97, 'Welche Informationen kann eine Karteikarte enthalten? (1/3)', '<p>Jede Karteikarte&nbsp;<strong>muss&nbsp;</strong>einen Titel haben.</p><p>Wenn Sie eine Überschrift erstellen wollen, markieren die entsprechende Checkbox. Bitte nehmen Sie zur Kenntnis, dass Sie dann&nbsp;<strong>keinen Inhalt</strong>&nbsp;(in Form von Text, Bild oder Video) mehr zu dieser Karteikarte hinzufügen können.</p><p>Eine Karteikarte, die keine Überschrift ist,&nbsp;<strong>muss</strong>&nbsp;einen Inhalt enthalten.&nbsp;</p><p>Sie können zum einen&nbsp;reine&nbsp;<strong>Textkarteikarten&nbsp;</strong>erstellen. Verfassen Sie dafür mithilfe des Editors einen Inhalt. Weiterführendes über die Möglichkeiten des Editors finden Sie auf der Karteikarte zum Editor.</p><p>Zum anderen können Sie&nbsp;<strong>Bild- bzw. Videokarteikarten</strong>&nbsp;erstellen. Wählen Sie dazu im Upload-Feld eine Datei aus. Diese wird im Hintergrund hochgeladen und Sie erhalten eine Meldung, sobald dies erfolgreich war. Sie können nun einen&nbsp;<strong>zusätzlichen&nbsp;Text</strong>&nbsp;verfassen, der das Bild oder Video ergänzt.</p><p>Über den Button&nbsp;<span style="font-family:computer modern serif"><em>Weiter</em>&nbsp;</span>gelangen Sie zur nächsten Seite des Erstellen-Dialogs.</p>', 'BILD', 0, '2015-06-15 14:15:15', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(100, 'Alle Veranstaltungen', '<p>Auf der Hauptseite finden sie den Reiter "Alle Veranstaltungen". Hier finden sie alle Veranstaltungen im System. Wenn sie nach einer Veranstaltungen suchen stehen ihnen zu Spezifikation ihrer Suche zwei Comboboxen zur Verfügung.</p><p>Die linke Combobox ermöglicht ihnen die Auswahl des Semesters, in der die Veranstaltung gehalten wird/wurde. Mit der rechten Combobox können sie einen Studiengang auswählen (meist ihren eigenen), für den die Veranstaltung gehalten wird. Finden sie ihre Veranstaltung hier nicht, existiert sie möglicherweise nicht. Wenden sie sich an den Dozenten.</p>', 'TEXT', 0, '2015-06-15 12:26:28', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(101, 'Beschreibung', '<div>Das Inhaltsverzeichnis ordnet die Karteikarten in einer hierarchischen Struktur an. Jede Karteikarte der Veranstaltung muss sich in dieser Hierarchie wiederfinden. Das heißt es darf keine losen Verweise geben. Will man von Karteikarten auf Übungsaufgaben verweisen, dann müssen die Übungsaufgaben z.B. am Ende vom Skript in die Hierarchie eingefügt werden.</div>', 'TEXT', 0, '2015-06-15 12:41:14', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(102, 'Wie navigiere ich im Inhaltsverzeichnis?', '<div>Zu Beginn sind nur die Karteikarten auf der obersten Hierarchie-Stufe zu sehen. Die Karteikarten im Inhaltsverzeichnis sind klickbar. Beim Klicken wird der Baum aufgeklappt und es werden die Unterkapitel der Karteikarte angezeigt. Fährt man mit der Maus über eine Karteikarte, erscheint neben dem Namen ein Pfeil. Wird dieser angeklickt springt der Content und das Inhaltsverzeichnis an die entprechende Stelle.</div>', 'TEXT', 0, '2015-06-15 12:53:05', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(103, 'Notizen', '<p><u>Beispiel Notiz:</u></p><ul><li>Es gibt nur eine Notiz pro Karteikarte.</li><li>Mit Klick auf das Feld Notizen kann dieses aus-und eingeklappt werden</li><li>Der weiße Punkt neben dem Wort Notizen heißt, dass für diese Karteikarte Notizen gemacht wurden</li></ul>', 'BILD', 0, '2015-06-15 13:36:33', 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
+(104, 'Kommentare', '<p><u>Beispiel Kommentar:</u></p><p>Kommentare sind nur möglich, wenn der Dozent der Veranstaltung dies zulässt</p><p>Kommentare werden nach ihrem Erstelldatum absteigend sortiert</p><p>Zu einer Karteikarten kann es verschiedene Themenkommentare geben. Themenkommentare können von jedem Teilnehmer der Veranstaltung bewertet werden. Dabei sind die Bewertungen 1 und -1 möglich (entsprechend Pfeil nach oben oder unten neben dem Kommentar wählen).</p><p>Für einen Themenkommentar kann es beliebig viele Antwortkommentare geben. Antwortkommentare können nicht bewertet werden</p>', 'BILD', 0, '2015-06-15 13:35:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
+(106, 'Welche Informationen kann eine Karteikarte enthalten? (2/3)', '<p>Optional kann eine Karteikarte mit <strong>Attributen </strong>ausgestattet werden. Diese können Sie auf der zweiten Seite des Erstellen-Dialogs auswählen.</p>', 'BILD', 0, '2015-06-15 13:42:45', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(107, 'Welche Informationen kann eine Karteikarte enthalten? (3/3)', '<p>Eine Karteikarte kann optional mit <strong>Verweisen </strong>auf andere Karteikarten ausgestattet werden. Nutzen Sie dies, um Ihren Inhalt durch sinnvolle Querbezüge zu vernetzen.</p>', 'BILD', 0, '2015-06-15 13:45:46', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(108, 'Benachrichtigungen', '', 'TEXT', 0, '2015-06-15 13:47:54', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(109, 'Rechte', '', 'TEXT', 0, '2015-06-15 13:50:15', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(111, 'Rolle: Studenten', '', 'TEXT', 0, '2015-06-15 14:28:05', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(112, 'Rolle: Dozent', '', 'TEXT', 0, '2015-06-15 14:28:17', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(113, 'Rechte in Profilen', '<p>In der Profilansicht gibt es zwei Arten von Rechten.</p><p>Der Besitzer des Profils kann alle seine Stammdaten einsehen und verändern.&nbsp;Weiterhin darf er sein Passwort verädern und kann&nbsp;sein Farbschema anpassen. Außer dem Besitzer selbst kann niemand diese sensitiven Daten einsehen (ausgenommen Administrator).</p><p>Alle anderen können nur folgende Informationen über das Profil einsehen: Vorname, Nachname, Studiengang und seine Rolle im System (Student, Dozent, Administrator). Für Nicht-Besitzer gibt es weiterhin auch kein Bearbeitungsrecht.</p>', 'TEXT', 0, '2015-06-15 14:21:22', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(114, 'Editor', '<p>In diesem System wird ein Editor verwendet, der es erlaubt formatierten Text ohne Kenntnisse einer Markup-Sprache zu verfassen. Wie bekannte Textverarbeitungsprogramme verfolgt er dabei das&nbsp;<em>What-You-See-Is-What-You-Get&nbsp;</em>Prinzip. Daher ist es für durchschnittlich erfahrene&nbsp;Computernutzer leicht möglich reichhaltigen Inhalt zu erstellen.</p><p>Auf dem Screenshot sind einige der Möglichkeiten dargestellt.</p><p>Besondere Erwähnung soll hier noch der integrierte TeX-Formel-Editor finden. Nutzer, die TeX Syntax beherrschen, können damit komplexere Formeln einfügen. Klicken Sie dazu auf das Sigma in der Editor-Toolbar.</p>', 'BILD', 0, '2015-06-15 14:14:22', 3, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0),
+(115, 'Bewertungen', '<p>Wenn in einer Veranstaltungen Bewertungen zugelassen sind, können deren Karteikarten von allen eingeschriebenen Nutzern bewertet werden. Jeder Nutzer kann höchstens eine positive <em>(Upvote)&nbsp;</em>oder negative Bewertung&nbsp;<em>(Downvote)&nbsp;</em>abgeben. Die Summe aller Bewertungen wird als Gesamtbewertung angezeigt.</p>', 'BILD', 0, '2015-06-15 14:22:51', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(116, 'Einstufung der Rechte', '<p>Die Benutzer des Systems sind in 3 Rechtegruppen unterteilt:</p><p>1. Studenten</p><p>2. Dozenten</p><p>3. Administrator</p><p>(4. Moderatoren von Veranstaltungen, siehe "Rechte innheralb von Veranstaltungen")</p>', 'TEXT', 0, '2015-06-15 14:26:47', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(117, 'Rechte in Veranstaltungen', '<p>In Veranstaltungen darf sich ein Student (ggf. mit Kennwort) einschreiben.</p><p>Innerhalb der Veranstaltung hat er folgende Rechte:</p><ul><li>das Skript/die Karteikarten&nbsp;ansehen</li><li>das Skript exportieren</li><li>Karteikarten bewerten</li><li>Notizen verfassen/bearbeiten (wenn in Veranstaltung erlaubt)</li><li>Kommentare verfassen/bearbeiten&nbsp;(wenn in Veranstaltung erlaubt)</li><li>eigene Kommentare löschen</li><li>den externen Link zu einer Karteikarte kopieren</li><li>Informationen über die Veranstaltung einsehen (Beschreibung, Semester, Dozent, usw.)</li></ul><p> </p><p>Wurder er zum Moderator von dem Dozenten der Veranstaltung ernannt, kommen folgende Rechte dazu:</p><ul><li>Kommentare löschen</li><li>wenn Dozent Bearbeitungsrechte vergeben hat:<ul><li>Karteikarten hinzufügen</li><li>Karteikarten bearbeiten</li><li>Karteikarten löschen</li></ul></li></ul><p>&nbsp;</p>', 'TEXT', 0, '2015-06-15 14:53:15', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(118, 'Rechte in Veranstaltungen', '<p>In Veranstaltungen darf sich ein Dozent (ggf. mit Kennwort) einschreiben.</p><p>Weiterhin darf er auch selbst Veranstaltungen erstellen.</p><p>Innerhalb einer&nbsp;Veranstaltung, die er nicht besitzt,&nbsp;hat er folgende Rechte:</p><ul><li>das Skript/die Karteikarten&nbsp;ansehen</li><li>das Skript exportieren</li><li>Karteikarten bewerten</li><li>Notizen verfassen/bearbeiten (wenn in Veranstaltung erlaubt)</li><li>Kommentare verfassen/bearbeiten&nbsp;(wenn in Veranstaltung erlaubt)</li><li>eigene Kommentare löschen</li><li>den externen Link zu einer Karteikarte kopieren</li><li>Informationen über die Veranstaltung einsehen (Beschreibung, Semester, Dozent, usw.)</li></ul><p> </p><p>Wurder er zum Moderator von einer Veranstaltung ernannt, die er nicht besitzt,&nbsp;kommen folgende Rechte dazu:</p><ul><li>Kommentare löschen</li><li>wenn Dozent Bearbeitungsrechte vergeben hat:<ul><li>Karteikarten hinzufügen</li><li>Karteikarten bearbeiten</li><li>Karteikarten löschen</li></ul></li></ul><p> </p><p>Handelt es sich um seine eigene Veranstaltung, hat er zusätzlich folgende Berechtigungen:</p><ul><li>Veranstaltung bearbeiten<ul><li>Titel, Beschreibung, Semester, Studiengänge ändern</li><li>Kennwort setzen/ändern</li><li>Moderatoren hinzufügen</li><li>Rechte der Moderatoren ändern</li><li>Kommentare und Bewertungen erlauben oder verbieten</li></ul></li><li>Karteikarten hinzufügen</li><li>Karteikarten bearbeiten</li><li>Karteikarten löschen</li></ul>', 'TEXT', 0, '2015-06-15 14:59:21', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(119, 'Smartphoneansicht', '<p>Sie können das System komfortabel auf Smartphones nutzen, da sich die GUI automatisch an die Breite Ihres Bildschirms anpasst.</p>', 'BILD', 0, '2015-06-15 14:51:10', 3, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0),
+(120, 'Veranstaltungen erstellen', '<p>Ein Dozent hat das Recht, eine Veranstaltung zu erstellen.</p>', 'TEXT', 0, '2015-06-15 15:00:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(121, 'Wann werden neue Benachrichtigungen erzeugt?', '<p>Neue Benachrichtigungen tauchen in der Box mit Ihrem Nutzernamen auf, wenn</p><ul><li>eine Veranstaltung, in die Sie eingeschrieben sind, bearbeitet wurde.</li><li>sie als Moderator zu einer Veranstaltung hinzugefügt wurden.</li><li>eine Karteikarte in einer Veranstaltung, in die Sie eingeschrieben sind, bearbeitet wurde.</li><li>eine Karteikarte in einer Veranstaltung, in die Sie eingeschrieben sind, kommentiert wurde (Sie können in Ihrem Profil einstellen, ob Sie über alle Kommentare benachrichtigt werden möchten, oder nur über Kommentare in Diskussionen, an denen Sie teilgenommen haben)</li><li>ihre Profil von Ihnen oder einem Administrator bearbeitet wurde.</li></ul>', 'TEXT', 0, '2015-06-15 15:16:18', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(122, 'Status von Benachrichtigungen', '<p><strong>Ungelesene Benachrichtigungen</strong> werden farbig hervorgehoben.</p><p>Bei Klick auf eine Benachrichtigung wird diese als gelesen markiert und sie springen zur betreffenden&nbsp;Veranstaltung oder zum&nbsp;Profil.</p>', 'TEXT', 0, '2015-06-15 15:22:54', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(123, 'Export', '<p>Eine Veranstaltung kann als PDF-Datei exportiert und heruntergeladen werden.</p><p>Dafür wird LaTeX Code erzeugt, den Sie als TEX-Datei herunterladen können.</p>', 'TEXT', 0, '2015-06-15 15:27:03', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -463,7 +487,7 @@ CREATE TABLE IF NOT EXISTS `moderator` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 --
 -- Daten für Tabelle `moderator`
@@ -549,7 +573,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `Ersteller` int(11) NOT NULL,
   `Titel` varchar(255) NOT NULL,
   `ErsteKarteikarte` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Daten für Tabelle `veranstaltung`
@@ -569,7 +593,7 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
 --
 -- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
@@ -728,12 +752,12 @@ ALTER TABLE `veranstaltung_studiengang_zuordnung`
 -- AUTO_INCREMENT for table `benachrichtigung`
 --
 ALTER TABLE `benachrichtigung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_einladung_moderator`
 --
 ALTER TABLE `benachrichtigung_einladung_moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_karteikartenaenderung`
 --
@@ -763,7 +787,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
@@ -783,7 +807,7 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 -- AUTO_INCREMENT for table `moderator`
 --
 ALTER TABLE `moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `notiz`
 --
@@ -798,12 +822,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 -- AUTO_INCREMENT for table `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- Constraints der exportierten Tabellen
 --
