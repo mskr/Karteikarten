@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 15. Jun 2015 um 11:51
+-- Erstellungszeit: 15. Jun 2015 um 12:51
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -343,9 +343,9 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (4, 'Meine Veranstaltungen', '', 'TEXT', 0, '2015-06-09 07:28:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (5, 'Karteikarten Typen', '', 'TEXT', 0, '2015-06-15 08:28:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (6, 'Text-Karteikarten', '<p>Beispiel für eine Textkarteikarte</p>', 'BILD', 0, '2015-06-15 08:15:05', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(7, 'Bild-Karteikarten', '', 'TEXT', 0, '2015-06-09 07:38:20', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(8, 'Video-Karteikarten', '', 'TEXT', 0, '2015-06-09 07:38:34', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(9, 'Karteikarten erstellen', '<p>Karteikarten haben eine feste Position in der Baumstruktur. Daher legen Sie neue Karteikarten durch Klicken an die entsprechende Position im Inhaltsverzeichnis an.</p><p><em><strong>Hinweis:&nbsp;</strong></em>Die grünen Buttons, die auf dem Screenshot zu sehen sind, tauchen erst auf wenn Sie die&nbsp;Maus über das Inhaltsverzeichnis bewegen.</p>', 'BILD', 0, '2015-06-15 09:36:21', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(7, 'Bild-Karteikarten', '<p>Dies ist eine Beispiel Bild-Karteikarte. Bilder können zusätlich eine Bildunterschrift beinhalten.</p>', 'BILD', 0, '2015-06-15 10:30:38', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(8, 'Video-Karteikarten', '<p>Dies ist ein Beispiel für eine Video-Karteikarte. Diese können wie Bild-Karteikarten eine Beschreibung haben</p>', 'VIDEO', 0, '2015-06-15 10:35:20', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(9, 'Karteikarten erstellen', '', 'TEXT', 0, '2015-06-15 10:39:09', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (10, 'Karteikarten bearbeiten', '', 'TEXT', 0, '2015-06-09 07:46:51', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (11, 'Karteikarten löschen', '', 'TEXT', 0, '2015-06-09 07:47:02', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (20, 'SW-Prüfung', '', 'TEXT', 0, '2015-06-04 13:34:01', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -381,7 +381,10 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (89, 'Halstead-Metrik', '', 'TEXT', 0, '2015-06-04 13:33:36', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (90, 'Fehler', '', 'TEXT', 0, '2015-06-04 13:33:46', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (91, 'Idee', '<p>Das E-Learning System nutzt als Konzept sogenannte Karteikarten. Der Sinn dahinter liegt darin ein Vorlesungsskript nicht komplett linear aufzubauen, sondern modularer. Durch das Inhaltsverzeichnis soll dennoch eine hierarchische Struktur wie sie bei einem linearen Skript üblich ist beibehalten werden. Zusätzlich können Karteikarten verschiedene Attribute und Verweise auf andere Karteikarten haben. Diese Konzepte werden im Folgenden genauer erläutert</p>', 'TEXT', 0, '2015-06-15 08:39:12', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(92, 'Attribute und Verweise', '<p>Die Karteikarte behandelt ein Beispiel aus der Stochastik und zeigt wie man Attribute und Verweise verwenden kann.</p><p><u>Attribute </u>spezifizieren den Inhalt der Karteikarte. Eine Karteikarte kann mehrere Attribute haben. In dem Beispiel handelt es sich um eine Definition. Im Bereich der Stochastik kann die Karteikarte aber auch als wichtig und als Grundlagenwissen angesehen werden.</p><p><u>Verweise</u></p>', 'TEXT', 0, '2015-06-15 09:48:12', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+(92, 'Attribute und Verweise', '<p>Die Karteikarte behandelt ein Beispiel aus der Stochastik und zeigt wie man Attribute und Verweise verwenden kann.</p><p><u>Attribute </u>spezifizieren den Inhalt der Karteikarte. Eine Karteikarte kann mehrere Attribute haben. In dem Beispiel handelt es sich um eine Definition. Im Bereich der Stochastik kann die Karteikarte aber auch als wichtig und als Grundlagenwissen angesehen werden.</p><p>Es gibt 4 Arten von <u>Verweisen</u>. Die Verweise müssen auf eine Karteikarte in der gleichen Veranstaltung verweisen. In dem Beispiel ist es als Voraussetzung wichtig zu wissen was Riemann Integrale sind um die Definition der Verteilung von absolutstetigen Zufallsvariablen zu verstehen. Klickt man auf einen Verweis dann springt man zur entsprechenden Karteikarte.</p><p>Für Übungsaufgaben kann beispielsweise am Ende des Vorlesungsskripts ein Kapitel mit Übungsaufgaben erstellt werden.</p>', 'BILD', 0, '2015-06-15 10:13:27', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(93, 'Inhaltsverzeichnis', '', 'TEXT', 0, '2015-06-15 10:08:39', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(94, 'wertwert', '', 'BILD', 0, '2015-06-15 10:27:19', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(95, 'Wo erstelle ich Karteikarten?', '<p>Karteikarten haben eine feste Position in der Baumstruktur. Daher legen Sie neue Karteikarten durch Klicken an die entsprechende Position im Inhaltsverzeichnis an.</p><p><em><strong>Hinweis:&nbsp;</strong></em>Die grünen Buttons, die auf dem Screenshot zu sehen sind, tauchen erst auf wenn Sie die&nbsp;Maus über das Inhaltsverzeichnis bewegen.</p>', 'BILD', 0, '2015-06-15 10:40:08', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 

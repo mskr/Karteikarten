@@ -248,9 +248,13 @@ function fillVeranstaltungsSeite(Vid, kkId)
                     // Wenn nein, dann Wurzel anzeigen
                     if(kkId == undefined)
                         displayKarteikarte(veranstaltungsObject[paramErsteKarteikarte], function(){
+        					$(".kk_load_pre").addClass("animated zoomOut").fadeOut();
+        					
                             // Deferred Objekt als abgeschlossen markieren.
                             d.resolve();
                         }, false);
+                    
+                    	
                     // Wenn ja, dann diese Karteikarte anzeigen
                     else
                         displayKarteikarte(kkId, function(){
