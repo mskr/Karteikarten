@@ -87,32 +87,16 @@ function buildKarteikarte(karteikarteJson)
     	popup.show();
     });
     
-    var triggeredInitial = false;
 	// Reagiere auf das Scrollen zu dieser Karteikarte
     new Waypoint({
 	    element: kkDom,
+	    enabled: false,					// Erstmal deaktivieren
 	    handler: function(direction) {
-	    	//TODO
-	    	if(!triggeredInitial)
-	    	{
-	    		triggeredInitial = true;
-	    		return;
-	    	}
-	    	var process = true;
-	    	
-	    	$.each(insertingKkAjaxCalls, function(i,v){
-	    		if(v.state() != "resolved")
-	    			process = false;
-	    	});
-	    	
-	    	if(process)
-	    		vnInhaltsverzeichnis.showEintrag(kkId);
-	    	
+	    	vnInhaltsverzeichnis.showEintrag(kkId);
 	    },
 	    offset: "40px"
 	});
     
-
     // Überschrift kk
     if(kkInhalt == "" && kkType == paramKkText)
     	return kkDom;

@@ -156,7 +156,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
     
     // Inhaltsverzeichniss zurücksetzen
     // Seite nach oben scrollen und klasse stuck entfernen
-    $("body").scrollTop(0);
+    $("body,html").scrollTop(0);
     $(".stuck").removeClass("stuck");
     
     // Veranstaltungsobjekt laden
@@ -431,7 +431,7 @@ function displayKarteikarte(id, callback, reload){
     // Karteikarte geladen und schon angezeigt, dann einfach nur dort hin scrollen
     if(kkDiv.length&&!reload)
     {
-    	$('body').animate({
+    	$('body,html').animate({
             scrollTop: kkDiv.offset().top-40},
             'normal', callback);
     }
@@ -450,7 +450,6 @@ function displayKarteikarte(id, callback, reload){
             params2[paramKkId] = id;
             params2[paramVnId] = veranstaltungsObject[paramId];
         	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
-        		insertingKkAjaxCalls.push(ajax);
         		domkk = buildKarteikarte(response);
                 domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 				domkk.css("opacity", "0");
@@ -458,13 +457,7 @@ function displayKarteikarte(id, callback, reload){
 				domkk.animate({opacity: 1}, 200);
 
 	        	$.when(loadAfterKk(id)).done(function(){
-	        		$.each(insertingKkAjaxCalls, function(i){
-	        		    if(insertingKkAjaxCalls[i] === ajax) {
-	        		    	insertingKkAjaxCalls = insertingKkAjaxCalls.splice(i,1);
-	        		        return false;
-	        		    }
-	        		});
-
+	        		
 		        	if(callback != undefined) 
 		        		callback();
 	        	});
@@ -493,6 +486,7 @@ function loadAfterKk(id)
 				if(displayingAfterKK)
 					return;
 				displayingAfterKK = true;
+				Waypoint.disableAll()
 				
 				data = response[keyJsonArrResult];
 				if(data.length < 5)
@@ -506,7 +500,6 @@ function loadAfterKk(id)
 						o = data.shift();
 						if(o == undefined)
 							return;
-		        		insertingKkAjaxCalls.push(kkLoadRequest);
 						domkk = buildKarteikarte(o);
 						domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 //						domkk.addClass("animated slideIn"); //TODO
@@ -516,12 +509,8 @@ function loadAfterKk(id)
 
 				}
 				nextItem();
-				$.each(insertingKkAjaxCalls, function(i){
-        		    if(insertingKkAjaxCalls[i] === kkLoadRequest) {
-        		    	insertingKkAjaxCalls = insertingKkAjaxCalls.splice(i,1);
-        		        return false;
-        		    }
-        		});
+				Waypoint.enableAll();
+				Waypoint.refreshAll();
 				displayingAfterKK = false;
 				
 	        }, 
@@ -549,6 +538,7 @@ function loadPreKk(id)
 				if(displayingPreKK)
 					return;
 				displayingPreKK = true;
+				Waypoint.disableAll();
 				
 				data = response[keyJsonArrResult];
 				if(data.length < 5)
@@ -568,7 +558,6 @@ function loadPreKk(id)
 						})
 						return;
 					}
-	        		insertingKkAjaxCalls.push(kkLoadRequest);
 					domkk = buildKarteikarte(o);
                     domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 					domkk.css("opacity", "0");
@@ -577,12 +566,8 @@ function loadPreKk(id)
 					nextItem();
 				}
 				nextItem();
-				$.each(insertingKkAjaxCalls, function(i){
-        		    if(insertingKkAjaxCalls[i] === kkLoadRequest) {
-        		    	insertingKkAjaxCalls = insertingKkAjaxCalls.splice(i,1);
-        		        return false;
-        		    }
-        		});
+				Waypoint.enableAll();
+				Waypoint.refreshAll();
 				displayingPreKK = false;
 				
 			}, 
