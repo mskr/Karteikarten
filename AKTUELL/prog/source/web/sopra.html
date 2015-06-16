@@ -22,8 +22,6 @@
 <link rel='stylesheet' href='fonts/ComputerModern/Serif/cmun-serif.css' type='text/css'>
 <!-- GitHub Octicons -->
 <link rel="stylesheet" href="octicons/octicons.css">
-<!-- MySopraIcons -->
-<link rel="stylesheet" href="mysopraicons/style.css" type="text/css">
 <!-- Verhindert favIcon Error -->
 <link rel="shortcut icon" href="files/general/icon.png">
 <!-- JQuery --> 
@@ -479,27 +477,6 @@
 	</div>
 </div>
 
-<!-- Karteikarten Attribute aendern Tooltip 
-<div id="attr_popup" class="bigtooltip">
-	<div class="bigtooltip_pfeil"></div>
-	<div class="bigtooltip_head">
-		<span class="octicon octicon-checklist"></span><span> Attribute ändern</span>
-	</div>
-	<div class="bigtooltip_body">
-		<span><input id="attr_satz" type="checkbox" name="attr"><label for="attr_satz">Satz</label></span>
-		<span><input id="attr_beweis" type="checkbox" name="attr"><label for="attr_beweis">Beweis</label></span>
-		<span><input id="attr_def" type="checkbox" name="attr"><label for="attr_def">Definition</label></span>
-		<span><input id="attr_wichtig" type="checkbox" name="attr"><label for="attr_wichtig">Wichtig</label></span>
-		<span><input id="attr_grundl" type="checkbox" name="attr"><label for="attr_grundl">Grundlagen</label></span>
-		<span><input id="attr_zusatz" type="checkbox" name="attr"><label for="attr_ueberschr">Zusatzinformation</label></span>
-		<span><input id="attr_exkurs" type="checkbox" name="attr"><label for="attr_ueberschr">Exkurs</label></span>
-		<span><input id="attr_bsp" type="checkbox" name="attr"><label for="attr_ueberschr">Beispiel</label></span>
-		<span><input id="attr_uebung" type="checkbox" name="attr"><label for="attr_ueberschr">Übung</label></span>
-		
-	</div>
-	<div class="bigtooltip_foot"></div>
-</div> -->
-
 <!-- Elemente fuer kleine Bildschirme -->
 <div class="r-header"></div>
 <input id="r-checkbox" class="r-checkbox" type="checkbox">
@@ -566,24 +543,11 @@
 			
 	<div class="user_container">
 		<img class="user_MyProfilBild" alt="profilBild" src="files/profilBilder/default.png"><br>
-		<!-- <span class="mysopraicon sopra-usericon usericon"><br></span> -->
 		<a class="username tiptrigger tipabove" data-tooltip="Eigenes Profil ansehen und bearbeiten"></a>
 		<br>
 		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
 		<a id="logout"><span class="octicon octicon-sign-out"></span><span class="logout">Logout</span></a>
 	</div>
-
-		<!-- TODO Wie soll man das hier machen? Vllt weglassen weil == Meine Veranstaltungen. 
-Dann aber so leer.
- - Ich würde sagen, man kann nochmal aus Meine Veranstaltungen welche auswaehlen, die man anpinnen moechte 
-(wenn man in sehr viele eingeschrieben ist) - Marius -->
-<!--	<span class="meinevn_header"><span class="octicon octicon-pin"></span> Angepinnte Veranstaltungen</span>
-	<br>
-	<ul class="meinevn">
- 		<li><a class="vn_angepinnt">Analysis I</a></li>
-		<li><a class="vn_angepinnt">Algorithmen</a></li>
-		<li><a class="vn_angepinnt">Lineare Algebra</a></li> 
-	</ul>-->
 	
 	<div class="bn_full">
 		<span class="bn_header" id="bn-header" style="cursor: pointer;">
@@ -599,18 +563,7 @@ Dann aber so leer.
 </div>
 
 <div id="mainbox_startseite" class="mainbox">
-	<span class="mysopraicon sopra-sleepicon sleepicon"></span>
-	<!-- 
-	<svg id="sleepicon" viewBox="0 0 200 200">
-		<g id="z" class="sleepiconText"><text x="50%" y="25%">Z</text></g>
-		<g id="zz" class="sleepiconText"><text x="50%" y="25%">Z</text></g>
-		<g id="zzz" class="sleepiconText"><text x="50%" y="25%">Z</text></g>
-		<path d="M100,9c50.178,0,91,40.822,91,91c0,50.178-40.822,91-91,91S9,150.178,9,100C9,49.822,49.822,9,100,9 M100,0   C44.771,0,0,44.772,0,100c0,55.229,44.771,100,100,100s100-44.771,100-100C200,44.772,155.229,0,100,0L100,0z"/>
-		<path d="M116.5,149.706c0,9.108-7.4,16.5-16.5,16.5c-9.114,0-16.5-7.392-16.5-16.5s7.386-16.5,16.5-16.5  C109.1,133.206,116.5,140.598,116.5,149.706z"/>
-		<path d="M62,99.636c-11.06,0-21.069-4.486-28.309-11.738C35.311,102.1,47.365,113.136,62,113.136  c14.637,0,26.689-11.036,28.309-25.238C83.068,95.149,73.06,99.636,62,99.636z"/>
-		<path d="M138,99.636c-11.06,0-21.068-4.486-28.309-11.738c1.619,14.202,13.674,25.238,28.309,25.238  c14.637,0,26.689-11.036,28.309-25.238C159.068,95.149,149.06,99.636,138,99.636z"/>
-	</svg>
-	-->
+	
 </div>
 
 <div id="mainbox_hauptseite" class="mainbox">

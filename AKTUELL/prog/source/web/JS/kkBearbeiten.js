@@ -406,9 +406,11 @@ function kkBearbeiten(kkJSON)
     	return str;
     }
     
+    var kk_ck_editor;
+    
 	try
 	{
-		var kk_ck_editor = $("#kk_bearbeiten_TA").ckeditor(ckEditorVnErstellenConfig);
+		kk_ck_editor = $("#kk_bearbeiten_TA").ckeditor(ckEditorVnErstellenConfig);
 	}
     catch(e)
     {

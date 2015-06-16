@@ -210,7 +210,7 @@ PopupFenster.prototype.updateButtons = function(){
 	{
 		this.zurueckElem.hide();
 	}
-	else
+	else if(this.zurueckElem != undefined)
 	{
 		this.zurueckElem.show();
 	}
@@ -220,7 +220,7 @@ PopupFenster.prototype.updateButtons = function(){
 		this.weiterElem.hide();
 		this.submitElem.show();
 	}
-	else
+	else if(this.weiterElem != undefined)
 	{
 		this.weiterElem.show();
 		this.submitElem.hide();
@@ -315,11 +315,11 @@ PopupFenster.prototype.hide = function(){
 	this.popupOverlayWrapper.fadeOut(300,function(){
 		that.enableAllPages();
 		$("body").removeAttr("style"); // Scrollbar ausserhalb Popup wieder aktivieren
-		that.popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
 		that.closeFunc();
 		that.popupSeitenIterator = 0;
 		
 	});
+    that.popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
 }
 
 PopupFenster.prototype.init = function(){

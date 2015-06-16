@@ -335,6 +335,9 @@ textarea.input_std {
 	opacity: 1;
 	transform: scale(1);
 	transition: all .3s;
+} .popup_fenster.hidden {
+	transform: scale(.5);
+	opacity: 0;
 } .popup_fenster_titel {
 	padding: 1em;
 	height: 1.3em;
@@ -394,9 +397,6 @@ textarea.input_std {
 	border-top: 1px solid DimGray;
 	border-radius: 0 0 2px 2px;
 	box-shadow: 0 1px 1px black;
-} .popup_fenster.hidden {
-	transform: scale(.5);
-	opacity: 0;
 }
 
 .popup_fenster_overlay {
@@ -407,7 +407,7 @@ textarea.input_std {
 	height: calc(100% - .8em);
 	padding-top: 1%;
 	background: rgba(0,0,0,.5);
-	overflow: auto;
+	overflow-y: scroll;
 }
 
 .autoCompleteWrapper {

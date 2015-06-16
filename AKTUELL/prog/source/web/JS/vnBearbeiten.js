@@ -54,6 +54,8 @@ $(document).ready(function() {
 
     
 	$('#vn_bearbeiten').click(function() {
+
+	    var ckeditor = $("#vn_bearbeiten_beschr_input").ckeditor(ckEditorVnErstellenConfig);
 		
 		// Daten füllen
 		var dialog = $("#vn_bearbeiten_popup");
@@ -92,12 +94,13 @@ $(document).ready(function() {
 			 veranstaltungsObject[paramModeratoren][m], undefined,undefined
              );
 		}
-		
-
-		
+				
 		var closeFkt = function() {
-			var editor = $('#vn_bearbeiten_beschr_input').ckeditorGet();
-			editor.destroy();
+		    
+		    $.when(ckeditor.promise).done(function() {
+	            var editor = $('#vn_bearbeiten_beschr_input').ckeditorGet();
+	            editor.destroy();
+		    });
 
         	var dialog = $("#vn_bearbeiten_popup");
         	dialog.find("#vn_bearbeiten_titel_input").val("");
@@ -178,8 +181,5 @@ $(document).ready(function() {
 		popup.show();
 
 	});
-	
-
-	$("#vn_bearbeiten_beschr_input").ckeditor(ckEditorVnErstellenConfig);
 
 });
