@@ -48,8 +48,6 @@ $(document).ready(function() {
  */
 function fillStartseite() 
 {
-    Waypoint.destroyAll();
-    
 	document.title = "Sopra Login";
 
     // Elemente fuer kleine Bildschirme

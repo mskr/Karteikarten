@@ -26,7 +26,6 @@ $(document).ready(function() {
 function fillHauptseite() 
 {
 	document.title = "Veranstaltungen";
-    Waypoint.destroyAll();
     
 	// Studiengänge in auswahlliste anzeigen
 	var ajax1 = ajaxCall(startseitenServlet,
