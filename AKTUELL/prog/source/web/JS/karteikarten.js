@@ -80,11 +80,16 @@ function buildKarteikarte(karteikarteJson)
    	 	
     	$("#link_copy_data").html(kkUrl);
     	
-    	var popup = new PopupFenster($("#link_copy_popup_overlay"), 
-    			[$("#link_copy_ok"), $("#link_copy_popup_close")], function(){$("#link_copy_data").val("");}, 
-    			$("#link_copy_ok"), undefined, 
-    			undefined);
-    	popup.show();
+    	new PopupFenster(
+    	        $("#link_copy_popup_overlay"), 
+    			[$("#link_copy_ok"), $("#link_copy_popup_close")], 
+    			function(){ $("#link_copy_data").val("") }, 
+    			$("#link_copy_ok"), 
+    			undefined, // keine submit function
+    			undefined, // kein element das fokus erhalten soll
+    			undefined, // kein weiter button
+    			undefined // kein zurueck button
+    	).show();
     });
     
     var triggeredInitial = false;
