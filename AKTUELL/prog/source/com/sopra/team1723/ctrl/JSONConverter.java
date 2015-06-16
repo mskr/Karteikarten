@@ -238,7 +238,8 @@ public class JSONConverter
             {
                 BenachrKarteikAenderung b = (BenachrKarteikAenderung) ben;
                 j.put(ParamDefines.Type, ParamDefines.benTypeKarteikarte);
-//                j.put(ParamDefines.benKarteikarte,toJson( b.getKarteikarte()));
+                j.put(ParamDefines.KkId, b.getKarteikarte().getId());               
+                j.put(ParamDefines.VnId, b.getKarteikarte().getVeranstaltung());
             }
             else  if (ben instanceof BenachrNeuerKommentar)
             {
@@ -246,7 +247,6 @@ public class JSONConverter
                 j.put(ParamDefines.Type, ParamDefines.benTypeKommentar);
                 j.put(ParamDefines.KkId, b.getKarteikarte().getId());               
                 j.put(ParamDefines.VnId, b.getKarteikarte().getVeranstaltung());
-//                j.put(ParamDefines.benKommentar, toJson(b.getKommentar()));
             }
             else  if (ben instanceof BenachrVeranstAenderung)
             {

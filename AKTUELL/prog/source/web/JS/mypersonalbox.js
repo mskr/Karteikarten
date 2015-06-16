@@ -78,7 +78,9 @@ function addBenachrichtigung(ben)
 	var onClickfkt = function() {};
 	if(type == paramBenTypeKarteikarte)
 	{
-		// TODO
+		onClickfkt = function() {
+			gotoVeranstaltung(ben[paramVnId], ben[paramKkId]);
+		};
 	}
 	else if(type == paramBenTypeKommentar)
 	{
