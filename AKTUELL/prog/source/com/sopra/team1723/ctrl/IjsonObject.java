@@ -5,7 +5,6 @@ import org.json.simple.JSONObject;
 /**
  * Wird von Benutzern, Veranstaltungen etc. implementiert
  * und enthaelt eine JSON-Converter-Methode.
- * @author mk
  *
  */
 public interface IjsonObject

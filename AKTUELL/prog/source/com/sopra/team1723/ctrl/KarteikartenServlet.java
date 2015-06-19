@@ -70,18 +70,18 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-        
+
         Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
-        
-        if(!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response) 
-                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN )
+
+        if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response)
+                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
-        
-        if(Kk == null || Kk.getVeranstaltung() != vnId)
+
+        if (Kk == null || Kk.getVeranstaltung() != vnId)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
@@ -93,6 +93,13 @@ public class KarteikartenServlet extends ServletController
         outWriter.print(jo);
     }
 
+    /**
+     * Liefert die Vorgänger zu der übergebenen Karteikarten ID
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     private void getKarteikarteVorgaenger(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         HttpSession aktuelleSession = request.getSession();
@@ -116,7 +123,6 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-        
 
         if (aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN
                 && !pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, request, response))
@@ -125,14 +131,13 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-        Karteikarte Kk  = dbManager.leseKarteikarte(karteikartenID);
-        if(Kk == null || Kk.getVeranstaltung() != vnId)
+        Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
+        if (Kk == null || Kk.getVeranstaltung() != vnId)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
-        // TODO
         Map<Integer, Karteikarte> Kks = dbManager.leseVorgaenger(karteikartenID, 5);
         if (Kks == null)
         {
@@ -148,6 +153,13 @@ public class KarteikartenServlet extends ServletController
         outWriter.print(jo);
     }
 
+    /**
+     * Liefert die Nachfolger zu der übergebenen Karteikarten ID
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     private void getKarteikarteNachfolger(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         HttpSession aktuelleSession = request.getSession();
@@ -179,15 +191,15 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-        
-        Karteikarte Kk  = dbManager.leseKarteikarte(karteikartenID);
-        if(Kk == null || Kk.getVeranstaltung() != vnId)
+
+        Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
+        if (Kk == null || Kk.getVeranstaltung() != vnId)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
-        
+
         Map<Integer, Karteikarte> Kks = dbManager.leseNachfolger(karteikartenID, 5);
         if (Kks == null)
         {
@@ -244,7 +256,7 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-        
+
         // Rechte pruefen
         if (aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN
                 && !pruefeFuerVeranstDerKarteikEingeschrieben(karteikId, request, response))
@@ -255,13 +267,13 @@ public class KarteikartenServlet extends ServletController
         }
         Karteikarte karteikarte = dbManager.leseKarteikarte(karteikId);
         Veranstaltung veranstaltung = dbManager.leseVeranstaltung(karteikarte.getVeranstaltung());
-        if(!veranstaltung.isBewertungenErlaubt())
+        if (!veranstaltung.isBewertungenErlaubt())
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
-        
+
         if (dbManager.bewerteKarteikarte(karteikId, bewertung, aktuellerBenutzer.getId()))
         {
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
@@ -303,17 +315,18 @@ public class KarteikartenServlet extends ServletController
             String inhalt = req.getParameter(ParamDefines.Inhalt);
             String uploadedID = req.getParameter(ParamDefines.UploadID);
             int kkID = Integer.parseInt(req.getParameter(ParamDefines.Id));
-            
+
             Karteikarte oldKk = dbManager.leseKarteikarte(kkID);
             Veranstaltung v = dbManager.leseVeranstaltung(oldKk.getVeranstaltung());
-            
-            if(v.getErsteKarteikarte() == kkID)
+
+            if (v.getErsteKarteikarte() == kkID)
             {
-                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed, "Sie können die oberste Karteikarte nicht bearbeiten.");
+                jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed,
+                        "Sie können die oberste Karteikarte nicht bearbeiten.");
                 outWriter.print(jo);
                 return false;
             }
-            
+
             KarteikartenTyp kkTyp;
             String typ = req.getParameter(ParamDefines.Type);
             if (typ.equals("mp4"))
@@ -348,21 +361,21 @@ public class KarteikartenServlet extends ServletController
             }
 
             // Rechte pruefen
-            if (!pruefeFuerVeranstDerKarteikEingeschrieben(kkID, req, resp) 
+            if (!pruefeFuerVeranstDerKarteikEingeschrieben(kkID, req, resp)
                     && !istModeratorDozentOderAdmin(aktuellerBenutzer, veranstaltung, dbManager))
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
                 outWriter.print(jo);
                 return false;
             }
-            if(dbManager.istModerator(aktuellerBenutzer.getId(), veranstaltung)
+            if (dbManager.istModerator(aktuellerBenutzer.getId(), veranstaltung)
                     && !dbManager.leseVeranstaltung(veranstaltung).isModeratorKarteikartenBearbeiten())
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
                 outWriter.print(jo);
                 return false;
             }
-            
+
             String[] v_uebung = req.getParameterValues(ParamDefines.V_Uebung + "[]");
             String[] v_voraussetzung = req.getParameterValues(ParamDefines.V_Voraussetzung + "[]");
             String[] v_zusatzinfo = req.getParameterValues(ParamDefines.V_Zusatzinfo + "[]");
@@ -382,7 +395,6 @@ public class KarteikartenServlet extends ServletController
                     bAttribute[1], bAttribute[2], bAttribute[3], bAttribute[4], bAttribute[5], bAttribute[6],
                     bAttribute[7], bAttribute[8], bAttribute[9], verweise);
 
-           
             // Kein text mehr und dateien müssen geändert werden?
 
             String relativerPfad = "";
@@ -438,8 +450,6 @@ public class KarteikartenServlet extends ServletController
                     outWriter.print(jo);
                 }
             }
-            
-            
 
             boolean result = dbManager.bearbeiteKarteikarte(karteikarte, aktuellerBenutzer.getId());
             if (!result)
@@ -448,7 +458,7 @@ public class KarteikartenServlet extends ServletController
                 outWriter.print(jo);
                 return true;
             }
-            
+
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
 
         }
@@ -490,7 +500,7 @@ public class KarteikartenServlet extends ServletController
         try
         {
             String titel = req.getParameter(ParamDefines.Titel);
-            String inhalt =  req.getParameter(ParamDefines.Inhalt);
+            String inhalt = req.getParameter(ParamDefines.Inhalt);
             String uploadedID = "";
 
             KarteikartenTyp kkTyp;
@@ -529,14 +539,14 @@ public class KarteikartenServlet extends ServletController
             }
 
             // Rechte pruefen
-            if (!pruefeFuerVeranstDerKarteikEingeschrieben(vaterKK, req, resp) 
+            if (!pruefeFuerVeranstDerKarteikEingeschrieben(vaterKK, req, resp)
                     && !istModeratorDozentOderAdmin(aktuellerBenutzer, veranstaltung, dbManager))
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
                 outWriter.print(jo);
                 return;
             }
-            if(dbManager.istModerator(aktuellerBenutzer.getId(), veranstaltung)
+            if (dbManager.istModerator(aktuellerBenutzer.getId(), veranstaltung)
                     && !dbManager.leseVeranstaltung(veranstaltung).isModeratorKarteikartenBearbeiten())
             {
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
@@ -626,6 +636,14 @@ public class KarteikartenServlet extends ServletController
         outWriter.print(jo);
     }
 
+    /**
+     * Konvertiert die Verweise eines Typs in ein tripel aus typ, id und name.
+     * 
+     * @param typ
+     * @param zielIds
+     * @return
+     * @throws IllegalArgumentException
+     */
     private ArrayList<Tripel<BeziehungsTyp, Integer, String>> konvertVerweise(BeziehungsTyp typ, String[] zielIds)
             throws IllegalArgumentException
     {
@@ -637,6 +655,15 @@ public class KarteikartenServlet extends ServletController
         return verweise;
     }
 
+    /**
+     * Prüft ob der aktuelle Benutzer admin dozent oder Moderator in einer
+     * veranstaltung ist.
+     * 
+     * @param aktuellerBenutzer
+     * @param veranstaltung
+     * @param dbManager
+     * @return
+     */
     private boolean istModeratorDozentOderAdmin(Benutzer aktuellerBenutzer, int veranstaltung,
             IDatenbankmanager dbManager)
     {
@@ -649,6 +676,14 @@ public class KarteikartenServlet extends ServletController
         return true;
     }
 
+    /**
+     * Liest die Karteikarte zur übergebenen ID aus der Datenbank und liefert
+     * sie zurück
+     * 
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     private void leseKarteikarte(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
         HttpSession aktuelleSession = req.getSession();
@@ -671,7 +706,7 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-        
+
         if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, req, resp)
                 && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
@@ -680,8 +715,8 @@ public class KarteikartenServlet extends ServletController
             return;
         }
         Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
-        
-        if(Kk == null || Kk.getVeranstaltung() != vnId)
+
+        if (Kk == null || Kk.getVeranstaltung() != vnId)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
@@ -692,6 +727,13 @@ public class KarteikartenServlet extends ServletController
 
     }
 
+    /**
+     * Liest die Kinder einer Karteikarte und gibt davon id und titel zurück.
+     * 
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     private void leseKarteikartenKinder(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
         HttpSession aktuelleSession = req.getSession();
@@ -714,7 +756,7 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-        
+
         if (!pruefeFuerVeranstDerKarteikEingeschrieben(karteikartenID, req, resp)
                 && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
@@ -723,8 +765,8 @@ public class KarteikartenServlet extends ServletController
             return;
         }
         Karteikarte Kk = dbManager.leseKarteikarte(karteikartenID);
-        
-        if(Kk == null || Kk.getVeranstaltung() != vnId)
+
+        if (Kk == null || Kk.getVeranstaltung() != vnId)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
@@ -744,9 +786,14 @@ public class KarteikartenServlet extends ServletController
         outWriter.print(jo);
 
     }
-    
 
-
+    /**
+     * Köscht die Karteikarte mit der angegebenen ID
+     * 
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     private void loescheKk(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
         HttpSession aktuelleSession = req.getSession();
@@ -767,28 +814,30 @@ public class KarteikartenServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-        
+
         Karteikarte k = dbManager.leseKarteikarte(karteikartenID);
         Veranstaltung v = dbManager.leseVeranstaltung(k.getVeranstaltung());
-        
-        if(v.getErsteKarteikarte() == karteikartenID)
+
+        if (v.getErsteKarteikarte() == karteikartenID)
         {
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed, "Sie können die oberste Karteikarte nicht löschen.");
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed,
+                    "Sie können die oberste Karteikarte nicht löschen.");
             outWriter.print(jo);
             return;
         }
-        
+
         // Rechte pruefen
-        if (!(dbManager.istModerator(aktuellerBenutzer.getId(), v.getId()) && v.isModeratorKarteikartenBearbeiten()) && 
-                v.getErsteller().getId() != aktuellerBenutzer.getId() &&
-                aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+        if (!(dbManager.istModerator(aktuellerBenutzer.getId(), v.getId()) && v.isModeratorKarteikartenBearbeiten())
+                && v.getErsteller().getId() != aktuellerBenutzer.getId()
+                && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
         {
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
             outWriter.print(jo);
             return;
         }
-        
-        if(dbManager.loescheKarteikarte(karteikartenID))
+        // Wenn das löschen erfolgreich war, dann wird die Datei (bild/video)
+        // ebenfalls entfernt
+        if (dbManager.loescheKarteikarte(karteikartenID))
         {
             String relativerPfad = "";
             if (k.getTyp() == KarteikartenTyp.VIDEO)
@@ -811,7 +860,7 @@ public class KarteikartenServlet extends ServletController
 
             // Datei mit id namen löschen
             FileUtils.deleteQuietly(newName);
-                    
+
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         }
         else
@@ -822,6 +871,16 @@ public class KarteikartenServlet extends ServletController
 
     }
 
+    /**
+     * Prüft ob der Benutzer der eine Kartekarte laden will, zu der zugehörigen
+     * Veranstaltung eingeschrieben ist.
+     * 
+     * @param karteikarte
+     * @param req
+     * @param resp
+     * @return
+     * @throws IOException
+     */
     private boolean pruefeFuerVeranstDerKarteikEingeschrieben(int karteikarte, HttpServletRequest req,
             HttpServletResponse resp) throws IOException
     {
@@ -842,15 +901,19 @@ public class KarteikartenServlet extends ServletController
         catch (SQLException e)
         {
             e.printStackTrace();
-            // Nichts zurückgeben!
-            // JSONObject jo =
-            // JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            // outWriter.print(jo);
-
+            return false;
         }
-        return false;
     }
 
+    /**
+     * Exportiert das Skript der angegebenen Veranstaltung. Diese Anfrage kann
+     * unter umständen länger dauern, da das latex dokument erst erzeugt und
+     * dann kompiliert werden muss.
+     * 
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     private void exportSkript(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
         HttpSession aktuelleSession = req.getSession();
@@ -863,9 +926,9 @@ public class KarteikartenServlet extends ServletController
         ServletContext servletContext = getServletContext();
         String contextPath = servletContext.getRealPath(File.separator);
 
-        String[] options = req.getParameterValues(ParamDefines.ExportOptions+ "[]");
+        String[] options = req.getParameterValues(ParamDefines.ExportOptions + "[]");
         if (options == null)
-        {
+        {   
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
@@ -893,7 +956,7 @@ public class KarteikartenServlet extends ServletController
             pexp.deleteFiles();
 
         pexp = new PDFExporter(contextPath + "/" + PDFPfad, contextPath, v, Boolean.valueOf(options[0]),
-                 Boolean.valueOf(options[1]),Boolean.valueOf(options[2]));
+                Boolean.valueOf(options[1]), Boolean.valueOf(options[2]));
 
         // Tiefe = -1 sorgt dafür, dass die oberste KK übersprungen wird.
         appendKKExportRecursive(dbManager, pexp, -1, v.getErsteKarteikarte(), aktuellerBenutzer.getId());
@@ -930,22 +993,30 @@ public class KarteikartenServlet extends ServletController
 
         outWriter.print(jo);
     }
-
-    private void appendKKExportRecursive(IDatenbankmanager dbManager, PDFExporter pexp, int depth, int vaterKkId, int benutzerId)
+    /**
+     * Fügt eine Karteikarte zum Exporter hinzu. Diese funktion läuft rekursiv durch den Karteikarten baum durch.
+     * @param dbManager
+     * @param pexp
+     * @param depth
+     * @param vaterKkId
+     * @param benutzerId
+     */
+    private void appendKKExportRecursive(IDatenbankmanager dbManager, PDFExporter pexp, int depth, int vaterKkId,
+            int benutzerId)
     {
         // Vater hinzufügen
         Karteikarte k = dbManager.leseKarteikarte(vaterKkId);
-        
+
         if (k == null)
             return;
-        
+
         Notiz n = dbManager.leseNotiz(benutzerId, k.getId());
         pexp.appendKarteikarte(k, depth, n);
 
         Map<Integer, Tupel<Integer, String>> kkList = dbManager.leseKindKarteikarten(vaterKkId);
         if (kkList == null)
             return;
-        
+
         int i = 0;
         for (; i < kkList.size(); i++)
         {
@@ -976,20 +1047,10 @@ public class KarteikartenServlet extends ServletController
         {
             erstelleKarteikarte(req, resp);
         }
-        //TODO
-//        else if (aktuelleAction.equals(ParamDefines.ActionErstelleUeberschrift))
-//        {
-//            erstelleUeberschrift(req, resp);
-//        }
         else if (aktuelleAction.equals(ParamDefines.ActionBearbeiteKarteikarte))
         {
             karteikarteBearbeiten(req, resp);
         }
-        //TODO
-//        else if (aktuelleAction.equals(ParamDefines.ActionBearbeiteUeberschrift))
-//        {
-//            ueberschriftBearbeiten(req, resp);
-//        }
         else if (aktuelleAction.equals(ParamDefines.ActionGetKarteikartenNachfolger))
         {
             getKarteikarteNachfolger(req, resp);

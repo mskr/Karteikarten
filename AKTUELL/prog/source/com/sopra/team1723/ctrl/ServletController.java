@@ -3,7 +3,6 @@
  * 
  */
 
-
 package com.sopra.team1723.ctrl;
 
 import java.io.File;
@@ -25,83 +24,91 @@ import org.json.simple.JSONObject;
 import com.sopra.team1723.data.*;
 
 /**
- * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
- * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
+ * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls
+ * an das Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer
+ * zurückgibt.
  */
-public abstract class ServletController extends HttpServlet 
+public abstract class ServletController extends HttpServlet
 {
     /**
-     *  Session Attribute, die verwendet werden
+     * Session Attribute, die verwendet werden
      */
-    //    protected final String sessionAttributeEMail = "eMail";
-    protected final static String sessionAttributeUserID = "UserID";
+    protected final static String sessionAttributeUserID            = "UserID";
     protected final static String sessionAttributeGewähltesSemester = "gewähltesSemester";
-    protected final static String sessionAttributeDbManager = "dbManager";
+    protected final static String sessionAttributeDbManager         = "dbManager";
     protected final static String sessionAttributeaktuellerBenutzer = "aktuellerBenutzer";
-    public final static String sessionAttributePDFExporter = "pdfExporter";
+    public final static String    sessionAttributePDFExporter       = "pdfExporter";
 
-    protected final int sessionTimeoutSek = 60*20;          // 20 Minuten
-    
-    public static final boolean DEBUGMODE = true;
+    // Timeout für die Session.
+    protected final int           sessionTimeoutSek                 = 60 * 20;                   // 20
+                                                                                                  // Minuten
 
-    /**
-     *  DateiPfade
-     */
-    public final static String dirFiles = "files/";             
-    public final static String dirProfilBilder = dirFiles + "profilBilder/";
-    public final static String dirKKBild = dirFiles + "images/";
-    public final static String dirKKVideo = dirFiles + "videos/";
-
-
+    // DebugMode = true -> Server printed log nachrichrichten in der Konsole
+    public static final boolean   DEBUGMODE                         = false;
 
     /**
-     * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und gegebenenfalls an das 
-     * Benutzer-Servlet weiterleitet oder einen Fehler an den Aufrufer zurückgibt.
+     * DateiPfade
      */
-    public ServletController() 
+    public final static String    dirFiles                          = "files/";
+    public final static String    dirProfilBilder                   = dirFiles + "profilBilder/";
+    public final static String    dirKKBild                         = dirFiles + "images/";
+    public final static String    dirKKVideo                        = dirFiles + "videos/";
+
+    /**
+     * Abstrakte Oberklasse, die die Login-Überprüfung übernimmt und
+     * gegebenenfalls an das Benutzer-Servlet weiterleitet oder einen Fehler an
+     * den Aufrufer zurückgibt.
+     */
+    public ServletController()
     {
-        
+
     }
+
     /**
-     * Prüft, ob die eMail-Adresse des Benutzers in der aktuellen Session vorhanden ist und ob der Benutzer somit eingeloggt ist.
+     * Prüft, ob die id des Benutzers in der aktuellen Session vorhanden ist und
+     * ob der Benutzer somit eingeloggt ist.
+     * 
      * @return
      */
-    protected boolean pruefeLogin(HttpSession session) 
+    protected boolean pruefeLogin(HttpSession session)
     {
         IDatenbankmanager dbManager = (IDatenbankmanager) session.getAttribute(sessionAttributeDbManager);
 
-        if(dbManager == null)
+        if (dbManager == null)
             return false;
 
         // Benutzer nicht eingeloggt?
-        if(session.getAttribute(sessionAttributeUserID) == null)
+        if (session.getAttribute(sessionAttributeUserID) == null)
             return false;
 
         // Attribut ist gesetzt, Benutzer muss eingeloggt sein
-        return true; 
+        return true;
     }
 
     /**
      * liest das Benutzerobjekt aus der Datenbank aus.
-     * @param session 
+     * 
+     * @param session
      * @return
      */
-    private Benutzer leseBenutzer(HttpSession session) 
-    {        
+    private Benutzer leseBenutzer(HttpSession session)
+    {
         Integer userID = (Integer) session.getAttribute(sessionAttributeUserID);
 
-        if(userID == null)
+        if (userID == null)
             return null;
 
         IDatenbankmanager dbManager = (IDatenbankmanager) session.getAttribute(sessionAttributeDbManager);
 
-        if(dbManager == null)
+        if (dbManager == null)
             return null;
 
         return dbManager.leseBenutzer(userID);
     }
+
     /**
-     * Gibt alle Parameter aus, die am Request hängen
+     * Gibt alle Parameter aus, die am Request hängen. Für Debugzwecke.
+     * 
      * @param req
      */
     protected void printAllParameters(HttpServletRequest req)
@@ -109,13 +116,14 @@ public abstract class ServletController extends HttpServlet
         Enumeration<String> parameterNames = req.getParameterNames();
         System.out.println("URL: " + req.getRequestURI());
         System.out.println("Empfangene Parameter: ");
-        while (parameterNames.hasMoreElements()) 
+        while (parameterNames.hasMoreElements())
         {
             String paramName = parameterNames.nextElement();
             System.out.print(paramName + " :");
 
             String[] paramValues = req.getParameterValues(paramName);
-            for (int i = 0; i < paramValues.length; i++) {
+            for (int i = 0; i < paramValues.length; i++)
+            {
                 String paramValue = paramValues[i];
                 System.out.print(" " + paramValue + ", ");
             }
@@ -124,41 +132,59 @@ public abstract class ServletController extends HttpServlet
         }
     }
 
-    protected String leseAktuellesSemester(){
+    /**
+     * Liefert das Aktuelle Semester als Text zurück
+     * 
+     * @return
+     */
+    protected String leseAktuellesSemester()
+    {
         Calendar aktDatum = Calendar.getInstance();
 
         int aktYear = aktDatum.get(Calendar.YEAR);
         ParamDefines.WiSeBeginn.set(Calendar.YEAR, aktYear);
         ParamDefines.WiSeEnde.set(Calendar.YEAR, aktYear);
-        if(aktDatum.after(ParamDefines.WiSeBeginn))
-            return "WiSe"+aktYear+"/"+String.valueOf(aktYear+1).substring(2);
+        if (aktDatum.after(ParamDefines.WiSeBeginn))
+            return "WiSe" + aktYear + "/" + String.valueOf(aktYear + 1).substring(2);
         else if (aktDatum.before(ParamDefines.WiSeEnde))
-            return "WiSe"+String.valueOf(aktYear-1)+"/"+String.valueOf(aktYear).substring(2);
+            return "WiSe" + String.valueOf(aktYear - 1) + "/" + String.valueOf(aktYear).substring(2);
         else
-            return "SoSe"+String.valueOf(aktYear);
+            return "SoSe" + String.valueOf(aktYear);
     }
-    
+
+    /**
+     * Get requests an post weiterleiten
+     */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
         doPost(req, resp);
     }
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    /**
+     * Behandelt alle requests, die im system ankommen. (Außer login)
+     */
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
+        // Encoding UTF-8
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
+        // Output: json-Objekte
         resp.setContentType("application/json");
 
-        if(DEBUGMODE)
+        if (DEBUGMODE)
             printAllParameters(req);
-        
-        try{
-            if(preProcessRequest(req, resp)){
+
+        try
+        {
+            // Zuerst vorverarbeitung der Parameter und zugangsprüfung
+            if (preProcessRequest(req, resp))
+            {
+                // Wenn erfolgreich
                 // Hole die vom client angefragte Aktion
                 String action = req.getParameter(ParamDefines.Action);
 
-                if(isEmptyAndRemoveSpaces(action))
+                if (isEmptyAndRemoveSpaces(action))
                 {
                     // Sende Error zurück
                     PrintWriter outWriter = resp.getWriter();
@@ -166,10 +192,11 @@ public abstract class ServletController extends HttpServlet
                     outWriter.print(jo);
                     return;
                 }
+                // Anfrage an die Sub-Klasse weiterleiten.
                 processRequest(action, req, resp);
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             e.printStackTrace();
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
@@ -178,12 +205,33 @@ public abstract class ServletController extends HttpServlet
         }
     }
 
-    protected abstract void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
+    /**
+     * Abstrakte methode, die von allen Servlets (Außer login) implementiert
+     * werden muss.
+     * 
+     * @param aktuelleAction
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected abstract void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException;
 
-    protected boolean preProcessRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+    /**
+     * Vorverarbeitung der Anfragen
+     * 
+     * @param req
+     * @param resp
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected boolean preProcessRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+            IOException
     {
         // Bisschen platz zwischen den Requests
-        if(DEBUGMODE)
+        if (DEBUGMODE)
         {
             System.out.println();
             System.out.println();
@@ -192,10 +240,8 @@ public abstract class ServletController extends HttpServlet
         PrintWriter outWriter = resp.getWriter();
 
         // Prüfen ob session abgelaufen ist
-        if (req.getRequestedSessionId() != null && 
-                !req.isRequestedSessionIdValid() && 
-                req.getSession(false) != null && 
-                !req.getSession(false).isNew()) 
+        if (req.getRequestedSessionId() != null && !req.isRequestedSessionIdValid() && req.getSession(false) != null
+                && !req.getSession(false).isNew())
         {
             System.out.println("Session " + req.getRequestedSessionId() + " ist abgelaufen!");
             // Session is expired
@@ -209,16 +255,18 @@ public abstract class ServletController extends HttpServlet
         }
 
         HttpSession s = req.getSession();
-        if(s.isNew())
+        if (s.isNew())
             s.setMaxInactiveInterval(sessionTimeoutSek);
 
         IDatenbankmanager dbManager = (IDatenbankmanager) s.getAttribute(sessionAttributeDbManager);
-        if(dbManager == null)
+        // Neuen Datenbankmanager erzeugen, falls für diese session noch keiner
+        // erzeugt wurde
+        if (dbManager == null)
         {
             try
             {
                 dbManager = new Datenbankmanager();
-                if(DEBUGMODE)
+                if (DEBUGMODE)
                     System.out.println("Erzeuge neuen Db-Manager.");
                 s.setAttribute(sessionAttributeDbManager, dbManager);
             }
@@ -226,7 +274,8 @@ public abstract class ServletController extends HttpServlet
             {
                 e.printStackTrace();
                 dbManager = null;
-                System.err.println("Es Konnte keine Verbindung zur Datenbank hergestellt werden oder ein unerwarteter Fehler ist aufgetreten!");
+                System.err
+                        .println("Es Konnte keine Verbindung zur Datenbank hergestellt werden oder ein unerwarteter Fehler ist aufgetreten!");
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
                 return false;
@@ -234,11 +283,11 @@ public abstract class ServletController extends HttpServlet
         }
 
         // Ist der Benutzer eingeloggt ?
-        if(pruefeLogin(s))
+        if (pruefeLogin(s))
         {
             // Wenn ja, dann stelle allen Servlets den Benutzer zur Verfügung
             Benutzer b = leseBenutzer(s);
-            if(b == null)
+            if (b == null)
             {
                 // Sende Nack mit ErrorText zurück
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
@@ -255,27 +304,26 @@ public abstract class ServletController extends HttpServlet
             outWriter.print(jo);
             return false;
         }
-       
-//        req.setAttribute(sessionAttributeaktuelleAction, action);
 
-        if(s.getAttribute(sessionAttributeGewähltesSemester)== null)
+        if (s.getAttribute(sessionAttributeGewähltesSemester) == null)
             s.setAttribute(sessionAttributeGewähltesSemester, leseAktuellesSemester());
 
         return true;
     }
 
     /**
-     * Diese Funktion prüft, ob der übergebene String leer ist und 
-     * ob entfernt automatisch alle Leerzeichen am Anfang und am Ende.
+     * Diese Funktion prüft, ob der übergebene String leer ist und ob entfernt
+     * automatisch alle Leerzeichen am Anfang und am Ende.
+     * 
      * @param txt
      * @return
      */
     boolean isEmptyAndRemoveSpaces(String txt)
     {
-        if(txt == null)
+        if (txt == null)
             return true;
 
-        if(txt.equals(""))
+        if (txt.equals(""))
             return true;
 
         // Falls doch inhalt drin ist, trim alle leerzeichen/zeilen weg
@@ -283,17 +331,19 @@ public abstract class ServletController extends HttpServlet
 
         return false;
     }
+
     /**
      * Diese Funktion prüft, ob der übergebene String leer ist.
+     * 
      * @param txt
      * @return
      */
     boolean isEmpty(String txt)
     {
-        if(txt == null)
+        if (txt == null)
             return true;
 
-        if(txt.equals(""))
+        if (txt.equals(""))
             return true;
 
         return false;

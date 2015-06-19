@@ -13,7 +13,10 @@ import org.json.simple.JSONObject;
 
 import com.sopra.team1723.data.Benachrichtigung;
 import com.sopra.team1723.data.Benutzer;
-
+/**
+ * Beantwortet alle Anfragen des Clients, die sich um Benachrichtungen kümmern.
+ *
+ */
 public class BenachrichtigungsServlet extends ServletController
 {
 
@@ -28,14 +31,15 @@ public class BenachrichtigungsServlet extends ServletController
         Benutzer aktuellerBenutzer = (Benutzer) aktuelleSession.getAttribute(sessionAttributeaktuellerBenutzer);
         IDatenbankmanager dbManager = (IDatenbankmanager) aktuelleSession.getAttribute(sessionAttributeDbManager);
         
+        // Benachrichtigungen lesen
         if(aktuelleAction.equals(ParamDefines.ActionLeseBenachrichtungen))
         {
             List<Benachrichtigung> benachrichtigungen = dbManager.leseBenachrichtigungen(aktuellerBenutzer.getId(),20);  
             jo = JSONConverter.toJsonBenachrichtigungen(benachrichtigungen);
             outWriter.print(jo);
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionMarkiereBenGelesen) || aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen)
-                || aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen))
+        // Benachrichtungen als gelesen markieren
+        else if(aktuelleAction.equals(ParamDefines.ActionMarkiereBenGelesen))
         {
             String benIDStr = req.getParameter(ParamDefines.Id);
             if(isEmpty(benIDStr))
@@ -63,21 +67,21 @@ public class BenachrichtigungsServlet extends ServletController
                     return;
                 }
                     
-                
-                if(aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen)){
-                    if(!dbManager.einladungModeratorAnnehmen(benID, aktuellerBenutzer.getId())){
-                        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-                        outWriter.print(jo);
-                        return;
-                    }
-                } 
-                else if(aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen)){
-                    if(!dbManager.einladungModeratorAblehnen(benID, aktuellerBenutzer.getId())){
-                        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-                        outWriter.print(jo);
-                        return;
-                    }
-                }
+                // TODO kann das weg?
+//                if(aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen)){
+//                    if(!dbManager.einladungModeratorAnnehmen(benID, aktuellerBenutzer.getId())){
+//                        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+//                        outWriter.print(jo);
+//                        return;
+//                    }
+//                } 
+//                else if(aktuelleAction.equals(ParamDefines.ActionEinlModeratorAnnehmen)){
+//                    if(!dbManager.einladungModeratorAblehnen(benID, aktuellerBenutzer.getId())){
+//                        jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+//                        outWriter.print(jo);
+//                        return;
+//                    }
+//                }
                 
                 jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
                 outWriter.print(jo);

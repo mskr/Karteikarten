@@ -34,15 +34,21 @@ import org.json.simple.JSONObject;
 import com.sopra.team1723.data.Benutzer;
 import com.sopra.team1723.data.Nutzerstatus;
 
+/**
+ * Dieses Servlet kümmert sich um den Upload von Files. Dazu gehören
+ * Profilbilder und Karteikarteninhalte.
+ *
+ */
 @MultipartConfig
 public class FileUploadServlet extends ServletController
 {
-    
+
     protected final int profilBildHeigth = 150;             // Pixel
-    protected final int profilBildWidth = profilBildHeigth;
-    
+    protected final int profilBildWidth  = profilBildHeigth;
+
     @Override
-    protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    protected void processRequest(String aktuelleAction, HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException
     {
         HttpSession s = req.getSession();
         PrintWriter outWriter = resp.getWriter();
@@ -56,8 +62,9 @@ public class FileUploadServlet extends ServletController
         String contextPath;
         String fileExt;
 
-        if(aktuelleAction.equals(ParamDefines.ActionUploadKKBild)){
-        	
+        // Upload eines Bildes für eine Karteikarte
+        if (aktuelleAction.equals(ParamDefines.ActionUploadKKBild))
+        {
             uploadedFile = req.getPart(ParamDefines.UploadFile);
             fileName = getFileName(uploadedFile);
             contentStream = uploadedFile.getInputStream();
@@ -65,154 +72,171 @@ public class FileUploadServlet extends ServletController
             servletContext = getServletContext();
             contextPath = servletContext.getRealPath(File.separator);
             fileExt = FilenameUtils.getExtension(fileName);
-            
-            if(fileExt == null || 
-                    (!fileExt.equalsIgnoreCase("jpg") && 
-                    !fileExt.equalsIgnoreCase("jpeg") &&
-                    !fileExt.equalsIgnoreCase("png")))
+
+            if (fileExt == null
+                    || (!fileExt.equalsIgnoreCase("jpg") && !fileExt.equalsIgnoreCase("jpeg") && !fileExt
+                            .equalsIgnoreCase("png")))
             {
-        	JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            outWriter.print(jo);
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                outWriter.print(jo);
             }
-            String unixTimestamp = Instant.now().getEpochSecond()+"";
+            String unixTimestamp = Instant.now().getEpochSecond() + "";
 
             String UploadID = null;
             byte[] bytesOfMessage = unixTimestamp.getBytes("UTF-8");
 
             MessageDigest md;
-			try {
-				md = MessageDigest.getInstance("MD5");
-				md.update(bytesOfMessage);
-				byte[] digest = md.digest();
-				StringBuffer sb = new StringBuffer();
-				for (byte b : digest) {
-					sb.append(String.format("%02x", b & 0xff));
-				}
-				UploadID = sb.toString();
-				System.out.println("uploadid:"+UploadID);
+            try
+            {
+                md = MessageDigest.getInstance("MD5");
+                md.update(bytesOfMessage);
+                byte[] digest = md.digest();
+                StringBuffer sb = new StringBuffer();
+                for (byte b : digest)
+                {
+                    sb.append(String.format("%02x", b & 0xff));
+                }
+                UploadID = sb.toString();
+                System.out.println("uploadid:" + UploadID);
 
-			} catch (NoSuchAlgorithmException e) {
-	            e.printStackTrace();
-				JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-                outWriter.print(jo);
-			}
-            if(UploadID!=null){
-            	 BufferedImage originalImage = ImageIO.read(contentStream);
-                 String dateiName = UploadID + ".png";
-                 String relativerPfad = dirKKBild + dateiName;
-                 String absolutePath = contextPath + relativerPfad;
-                 ImageIO.write(originalImage, "png", new File(absolutePath));
-                 
-                 Timer timer = new Timer();
-                 timer.schedule(new TimerTask() {
-                     @Override
-                     public void run() {
-                         FileUtils.deleteQuietly(new File(absolutePath));
-                     }
-                   }, 60*60*1000);
-                 
-                 System.out.println(UploadID);
-                 JSONObject jo = JSONConverter.toJson(UploadID);
-                 outWriter.print(jo);
             }
-            else{
-            	JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            catch (NoSuchAlgorithmException e)
+            {
+                e.printStackTrace();
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+                outWriter.print(jo);
+            }
+            if (UploadID != null)
+            {
+                BufferedImage originalImage = ImageIO.read(contentStream);
+                String dateiName = UploadID + ".png";
+                String relativerPfad = dirKKBild + dateiName;
+                String absolutePath = contextPath + relativerPfad;
+                ImageIO.write(originalImage, "png", new File(absolutePath));
+
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run()
+                    {
+                        FileUtils.deleteQuietly(new File(absolutePath));
+                    }
+                }, 60 * 60 * 1000);
+
+                System.out.println(UploadID);
+                JSONObject jo = JSONConverter.toJson(UploadID);
+                outWriter.print(jo);
+            }
+            else
+            {
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
             }
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionUploadKKVideo)){
-        	uploadedFile = req.getPart(ParamDefines.UploadFile);
+        // Upload einer videodatei für eine Karteikarte
+        else if (aktuelleAction.equals(ParamDefines.ActionUploadKKVideo))
+        {
+            uploadedFile = req.getPart(ParamDefines.UploadFile);
             fileName = getFileName(uploadedFile);
             contentStream = uploadedFile.getInputStream();
 
             servletContext = getServletContext();
             contextPath = servletContext.getRealPath(File.separator);
             fileExt = FilenameUtils.getExtension(fileName);
-            
-            if(fileExt == null || 
-                    (!fileExt.equalsIgnoreCase("mp4")))
+
+            if (fileExt == null || (!fileExt.equalsIgnoreCase("mp4")))
             {
-        	JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
-            outWriter.print(jo);
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+                outWriter.print(jo);
             }
-            String unixTimestamp = Instant.now().getEpochSecond()+"";
+            String unixTimestamp = Instant.now().getEpochSecond() + "";
 
             String UploadID = null;
             byte[] bytesOfMessage = unixTimestamp.getBytes("UTF-8");
 
             MessageDigest md;
-			try {
-				md = MessageDigest.getInstance("MD5");
-				md.update(bytesOfMessage);
-				byte[] digest = md.digest();
-				StringBuffer sb = new StringBuffer();
-				for (byte b : digest) {
-					sb.append(String.format("%02x", b & 0xff));
-				}
-				UploadID = sb.toString();
-				System.out.println("uploadid:"+UploadID);
+            try
+            {
+                md = MessageDigest.getInstance("MD5");
+                md.update(bytesOfMessage);
+                byte[] digest = md.digest();
+                StringBuffer sb = new StringBuffer();
+                for (byte b : digest)
+                {
+                    sb.append(String.format("%02x", b & 0xff));
+                }
+                UploadID = sb.toString();
+                System.out.println("uploadid:" + UploadID);
 
-			} catch (NoSuchAlgorithmException e) {
-	            e.printStackTrace();
-				JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            }
+            catch (NoSuchAlgorithmException e)
+            {
+                e.printStackTrace();
+                JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
-			}
-            if(UploadID!=null){
-                 String dateiName = UploadID + ".mp4";
-                 String relativerPfad = dirKKVideo + dateiName;
-                 String absolutePath = contextPath + relativerPfad;
-                 
-                 FileOutputStream fos = new FileOutputStream(absolutePath);
-                 int b = 0;
-                 while(b != -1){
+            }
+            if (UploadID != null)
+            {
+                String dateiName = UploadID + ".mp4";
+                String relativerPfad = dirKKVideo + dateiName;
+                String absolutePath = contextPath + relativerPfad;
 
-                     b = contentStream.read();
-                     fos.write(b);
-                 }
-                 int read = 0;
-                 final byte[] bytes = new byte[1024];
-                 while ((read = contentStream.read(bytes)) != -1) {
-                	 fos.write(bytes, 0, read);
-                 }
-                 if (fos != null) {
-                	 fos.close();
-                 }
-                 JSONObject jo = JSONConverter.toJson(UploadID);
-                 outWriter.print(jo);
+                FileOutputStream fos = new FileOutputStream(absolutePath);
+                int b = 0;
+                while (b != -1)
+                {
 
-                 Timer timer = new Timer();
-                 timer.schedule(new TimerTask() {
-                     @Override
-                     public void run() {
-                         FileUtils.deleteQuietly(new File(absolutePath));
-                     }
-                   }, 60*60*1000);
+                    b = contentStream.read();
+                    fos.write(b);
+                }
+                int read = 0;
+                final byte[] bytes = new byte[1024];
+                while ((read = contentStream.read(bytes)) != -1)
+                {
+                    fos.write(bytes, 0, read);
+                }
+                if (fos != null)
+                {
+                    fos.close();
+                }
+                JSONObject jo = JSONConverter.toJson(UploadID);
+                outWriter.print(jo);
+
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run()
+                    {
+                        FileUtils.deleteQuietly(new File(absolutePath));
+                    }
+                }, 60 * 60 * 1000);
             }
         }
-        else if(aktuelleAction.equals(ParamDefines.ActionUploadProfilBild))
+        // Upload des Profilbilds für einen Benutzer
+        else if (aktuelleAction.equals(ParamDefines.ActionUploadProfilBild))
         {
-        	String idStr = req.getParameter(ParamDefines.Id);
-            
+            String idStr = req.getParameter(ParamDefines.Id);
+
             int id = 0;
-        	try{
+            try
+            {
                 id = Integer.parseInt(idStr);
             }
-            catch(NumberFormatException e)
+            catch (NumberFormatException e)
             {
                 e.printStackTrace();
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return;
             }
-            
-            if(id != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
+
+            if (id != aktuellerBenutzer.getId() && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN)
             {
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNotAllowed);
                 outWriter.print(jo);
                 return;
             }
 
-            
             uploadedFile = req.getPart(ParamDefines.UploadFile);
             fileName = getFileName(uploadedFile);
             contentStream = uploadedFile.getInputStream();
@@ -220,38 +244,39 @@ public class FileUploadServlet extends ServletController
             servletContext = getServletContext();
             contextPath = servletContext.getRealPath(File.separator);
             fileExt = FilenameUtils.getExtension(fileName);
-            
-            if(fileExt == null || 
-                    (!fileExt.equalsIgnoreCase("jpg") && 
-                    !fileExt.equalsIgnoreCase("jpeg") &&
-                    !fileExt.equalsIgnoreCase("png")  &&
-                    !fileExt.equalsIgnoreCase("bmp")))
+
+            if (fileExt == null
+                    || (!fileExt.equalsIgnoreCase("jpg") && !fileExt.equalsIgnoreCase("jpeg")
+                            && !fileExt.equalsIgnoreCase("png") && !fileExt.equalsIgnoreCase("bmp")))
             {
                 // Sende Error zurück
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
                 return;
             }
-            
+
             // Bild neu Skalieren und speichern
             BufferedImage originalImage = ImageIO.read(contentStream);
-            
+
             // Bild zuschneiden
-            if(originalImage.getWidth() > originalImage.getHeight())
+            if (originalImage.getWidth() > originalImage.getHeight())
             {
-                int diff = originalImage.getWidth()-originalImage.getHeight();
+                int diff = originalImage.getWidth() - originalImage.getHeight();
                 // Links und rechts abschneiden
-                originalImage = originalImage.getSubimage(diff/2, 0, originalImage.getWidth()-diff, originalImage.getHeight());
+                originalImage = originalImage.getSubimage(diff / 2, 0, originalImage.getWidth() - diff,
+                        originalImage.getHeight());
             }
-            else  if(originalImage.getWidth() < originalImage.getHeight())
+            else if (originalImage.getWidth() < originalImage.getHeight())
             {
-                int diff = originalImage.getHeight()-originalImage.getWidth();
+                int diff = originalImage.getHeight() - originalImage.getWidth();
                 // oben und unten abschneiden
-                originalImage = originalImage.getSubimage(0, diff/2, originalImage.getWidth(), originalImage.getHeight()-diff);
+                originalImage = originalImage.getSubimage(0, diff / 2, originalImage.getWidth(),
+                        originalImage.getHeight() - diff);
             }
-            
+
             // Bild skalieren
-            BufferedImage scaledImage = new BufferedImage(profilBildWidth, profilBildHeigth, BufferedImage.TYPE_INT_ARGB);
+            BufferedImage scaledImage = new BufferedImage(profilBildWidth, profilBildHeigth,
+                    BufferedImage.TYPE_INT_ARGB);
             Graphics g = scaledImage.createGraphics();
             g.drawImage(originalImage, 0, 0, profilBildWidth, profilBildHeigth, null);
             g.dispose();
@@ -260,20 +285,20 @@ public class FileUploadServlet extends ServletController
             String relativerPfad = dirProfilBilder + dateiName;
             String absolutePath = contextPath + relativerPfad;
             ImageIO.write(scaledImage, "png", new File(absolutePath));
-            
+
             // Benutzer holen um zu prüfen, wie sein Altes profilbild heißt
             Benutzer bcurr = dbManager.leseBenutzer(id);
-            
-            if(!dbManager.aendereProfilBild(id, dateiName))
+
+            if (!dbManager.aendereProfilBild(id, dateiName))
             {
                 // Sende Error zurück
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
                 outWriter.print(jo);
                 return;
             }
-            
+
             // Altes Bild löschen
-            if(!bcurr.getProfilBildPfad().contains("default.png"))
+            if (!bcurr.getProfilBildPfad().contains("default.png"))
             {
                 File f = new File(contextPath + bcurr.getProfilBildPfad());
                 f.delete();
@@ -285,17 +310,22 @@ public class FileUploadServlet extends ServletController
             outWriter.print(jo);
             return;
         }
-        else{
-        	 // Sende Error zurück
+        else
+        {
+            // Sende Error zurück
             JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
             outWriter.print(jo);
             return;
         }
     }
-    
-    private String getFileName(Part part) 
+    /**
+     * Liest den Dateinamen aus einer Multipart message
+     * @param part
+     * @return
+     */
+    private String getFileName(Part part)
     {
-        for (String cd : part.getHeader("content-disposition").split(";")) 
+        for (String cd : part.getHeader("content-disposition").split(";"))
         {
             if (cd.trim().startsWith("filename"))
             {
@@ -305,4 +335,3 @@ public class FileUploadServlet extends ServletController
         return null;
     }
 }
-

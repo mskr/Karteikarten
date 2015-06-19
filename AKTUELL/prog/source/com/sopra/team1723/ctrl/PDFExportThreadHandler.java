@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * Startet den Kompilierungsvorgang der PDF und speichert das Ergebnis.
+ * Startet den Kompilierungsvorgang der PDF in einem eigenen Thread und speichert das Ergebnis.
  * 
  * @author Andreas R.
  *
@@ -19,6 +19,7 @@ public class PDFExportThreadHandler implements Runnable
     private ProcessBuilder pb;
     private PDFExporter    pe;
 
+    // Bekommt den Exporter übergeben sowie den ProcessBuilder, der den latex-kompiler startet
     public PDFExportThreadHandler(PDFExporter pe, ProcessBuilder pb)
     {
         this.pb = pb;
@@ -33,6 +34,8 @@ public class PDFExportThreadHandler implements Runnable
     {
         try
         {
+            // Latex dokumente müssen 2 mal kompiliert werden, da sonst das Inhaltsverzeichniss
+            // nicht angezeigt wird. Das wird erst beim 2. Latex lauf erzeugt.
             int copileRunNr = 0;
             int res = 0;
             for (; copileRunNr < 2; copileRunNr++)
@@ -42,17 +45,21 @@ public class PDFExportThreadHandler implements Runnable
                         + ".Lauf von pdflatex warte auf Fertigstellung...");
                 Process p = pb.start();
 
+                // Es muss ein extra Thread erzeugt werden, indem alles gelesen wird, 
+                // was der Latex-kompiler ausgibt. Andernfalls würde der Thread blockieren.
                 new Thread(new Runnable() {
                     @Override
                     public void run()
                     {
+                        // Reader des inputstreams erzegen
                         InputStream is = p.getInputStream();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
+                        // Daten lesen, solange der Prozess aktiv ist.
                         while (p.isAlive())
                         {
                             try
                             {
+                                // Daten einfach lesen und dann verwerfen. wir benötigen sie nicht.
                                 reader.readLine();
                             }
                             catch (IOException e)
@@ -62,10 +69,11 @@ public class PDFExportThreadHandler implements Runnable
                         }
                     }
                 }).start();
-
+                // Warten, bis der latex process fertig ist. Dies legt den aktuellen Prozess schlafen.
                 res = p.waitFor();
-                System.out
-                        .println("[PDFEXPORT-THREAD-HANDLER]: " + String.valueOf(copileRunNr + 1) + ".Lauf fertig...");
+                
+                System.out.println("[PDFEXPORT-THREAD-HANDLER]: " + String.valueOf(copileRunNr + 1) + ".Lauf fertig...");
+                // Falls res != 0 ist ein Fehler beim kompilierungsvorgang aufgetreten. Dann abbrechen
                 if (res != 0)
                     break;
             }
