@@ -7,6 +7,14 @@ import java.util.Map;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+/**
+ * Erkennt wenn eine Session abgelaufen bzw. zerstört wurde. Und prüft
+ * daraufhin, ob noch files vom Export auf dem Server liegen. Wenn ja, dann
+ * werden diese gelöscht.
+ * 
+ * @author Andreas
+ *
+ */
 public class SopraSessionListener implements HttpSessionListener
 {
 
@@ -22,10 +30,11 @@ public class SopraSessionListener implements HttpSessionListener
         System.out.println("[SessionListener] Destroyed Session");
         // Prüfen, ob noch alte dateien erzeugt wurden
         PDFExporter pexp = (PDFExporter) arg0.getSession().getAttribute(ServletController.sessionAttributePDFExporter);
-        if(pexp != null){
+        if (pexp != null)
+        {
             pexp.deleteFiles();
         }
-        arg0.getSession().setAttribute(ServletController.sessionAttributePDFExporter,null);
+        arg0.getSession().setAttribute(ServletController.sessionAttributePDFExporter, null);
     }
 
 }

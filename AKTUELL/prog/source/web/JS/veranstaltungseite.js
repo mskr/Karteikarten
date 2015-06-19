@@ -94,7 +94,6 @@ $(document).ready(function() {
     	  clipboard.setData( "text/plain", $("#link_copy_data").text());
     	});
     });
-    
 });
 /**
  * Startet den ExportVorgang
@@ -156,7 +155,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
     
     // Inhaltsverzeichniss zurücksetzen
     // Seite nach oben scrollen und klasse stuck entfernen
-    $("body").scrollTop(0);
+    $("body,html").scrollTop(0);
     $(".stuck").removeClass("stuck");
     
     // Veranstaltungsobjekt laden
@@ -323,12 +322,23 @@ function fillVeranstaltungsSeite(Vid, kkId)
 	    ajax4 = vnInhaltsverzeichnis.init();
 	    
 	    // warte bis alles geladen
-	    $.when(ajax2,ajax3,d,ajax4).done(function() {
+	    $.when(ajax1,ajax2,ajax3,d,ajax4).done(function() {
 	        // Inhaltsverzeichnis im Viewport halten
 	        var sticky = new Waypoint.Sticky({
 	            element: $("#kk_inhaltsverzeichnis"),
 	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
-	        });	       
+	        });
+ 
+	        var afterLoadWaypoint = new Waypoint({
+	    		element: $(".kk_load_after"),
+	    		enabled: false,
+	        	handler: function(direction) {
+	        		if(direction == "down")
+	        			$(".kk_load_after").trigger("click");
+	        	},
+	        	offset: 'bottom-in-view'
+	        });
+	        afterLoadWaypoint.enable();
 	    });
         
 	});
@@ -346,32 +356,8 @@ function fillVeranstaltungsSeite(Vid, kkId)
     }
     
     $.when(ajax1,ajax2,ajax3,d).done(function(){
-//	    new Waypoint({
-//	    	element: $(".kk_load_pre"),
-//	    	handler: function(direction) {
-//	    		if(direction == "up")
-//	    			$(".kk_load_pre").trigger("click");
-//	    	},
-//	    	offset: '-10px'
-//	    });
-	    
-    	var triggeredInitial = false;
-	    new Waypoint({
-	    	element: $(".kk_load_after"),
-	    	handler: function(direction) {
-		    	if(!triggeredInitial)
-		    	{
-		    		triggeredInitial = true;
-		    		return;
-		    	}
-		    	
-	    		if(direction == "down")
-	    			$(".kk_load_after").trigger("click");
-	    	},
-	    	offset: 'bottom-in-view'
-	    });
-	    	    
-		
+//    	var triggeredInitial = false;
+    	
     });
     
 	return $.when(ajax1,ajax2,ajax3,d);
@@ -431,7 +417,7 @@ function displayKarteikarte(id, callback, reload){
     // Karteikarte geladen und schon angezeigt, dann einfach nur dort hin scrollen
     if(kkDiv.length&&!reload)
     {
-    	$('body').animate({
+    	$('body,html').animate({
             scrollTop: kkDiv.offset().top-40},
             'normal', callback);
     }
@@ -443,6 +429,7 @@ function displayKarteikarte(id, callback, reload){
     	// Alle Karteikarten ausblenden
     	$("#kk_all").children().fadeOut(200).promise().done(function(){
     		// Danach Karteikarten komplett entfernen und Lade-Buttons anzeigen
+    		Waypoint.destroyAll();
     		$("#kk_all").empty();
         	showPreAfterLoad();
         	
@@ -450,7 +437,6 @@ function displayKarteikarte(id, callback, reload){
             params2[paramKkId] = id;
             params2[paramVnId] = veranstaltungsObject[paramId];
         	ajax = ajaxCall(karteikartenServlet, actionGetKarteikarteByID, function(response){
-        		insertingKkAjaxCalls.push(ajax);
         		domkk = buildKarteikarte(response);
                 domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 				domkk.css("opacity", "0");
@@ -458,13 +444,7 @@ function displayKarteikarte(id, callback, reload){
 				domkk.animate({opacity: 1}, 200);
 
 	        	$.when(loadAfterKk(id)).done(function(){
-	        		$.each(insertingKkAjaxCalls, function(i){
-	        		    if(insertingKkAjaxCalls[i] === ajax) {
-	        		    	insertingKkAjaxCalls = insertingKkAjaxCalls.splice(i,1);
-	        		        return false;
-	        		    }
-	        		});
-
+	        		
 		        	if(callback != undefined) 
 		        		callback();
 	        	});
@@ -486,6 +466,7 @@ function loadAfterKk(id)
     params2[paramKkId] = id;
     params2[paramVnId] = veranstaltungsObject[paramId];
 	
+    var promise = $.Deferred();
 	kkLoadRequest = ajaxCall(karteikartenServlet,
 			actionGetKarteikartenNachfolger, 
 			function(response){
@@ -493,6 +474,7 @@ function loadAfterKk(id)
 				if(displayingAfterKK)
 					return;
 				displayingAfterKK = true;
+				Waypoint.disableAll();
 				
 				data = response[keyJsonArrResult];
 				if(data.length < 5)
@@ -506,7 +488,6 @@ function loadAfterKk(id)
 						o = data.shift();
 						if(o == undefined)
 							return;
-		        		insertingKkAjaxCalls.push(kkLoadRequest);
 						domkk = buildKarteikarte(o);
 						domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 //						domkk.addClass("animated slideIn"); //TODO
@@ -516,21 +497,16 @@ function loadAfterKk(id)
 
 				}
 				nextItem();
-				$.each(insertingKkAjaxCalls, function(i){
-        		    if(insertingKkAjaxCalls[i] === kkLoadRequest) {
-        		    	insertingKkAjaxCalls = insertingKkAjaxCalls.splice(i,1);
-        		        return false;
-        		    }
-        		});
+				Waypoint.enableAll();
 				displayingAfterKK = false;
-				
+				promise.resolve();
 	        }, 
 	        params2,
             undefined,
             function() { $(".kk_load_after").addClass("loading").children().hide(); },
             function() { $(".kk_load_after").removeClass("loading").children().show(); }
 	);
-	return kkLoadRequest;
+	return promise;
 }
 displayingPreKK = false;
 function loadPreKk(id)
@@ -542,6 +518,8 @@ function loadPreKk(id)
 	var params ={};
     params[paramKkId] = id;
     params[paramVnId] = veranstaltungsObject[paramId];
+
+    var promise = $.Deferred();
 	kkLoadRequest = ajaxCall(karteikartenServlet, 
 			actionGetKarteikartenVorgaenger, 
 			function(response)
@@ -549,6 +527,7 @@ function loadPreKk(id)
 				if(displayingPreKK)
 					return;
 				displayingPreKK = true;
+				Waypoint.disableAll();
 				
 				data = response[keyJsonArrResult];
 				if(data.length < 5)
@@ -568,7 +547,6 @@ function loadPreKk(id)
 						})
 						return;
 					}
-	        		insertingKkAjaxCalls.push(kkLoadRequest);
 					domkk = buildKarteikarte(o);
                     domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
 					domkk.css("opacity", "0");
@@ -577,13 +555,9 @@ function loadPreKk(id)
 					nextItem();
 				}
 				nextItem();
-				$.each(insertingKkAjaxCalls, function(i){
-        		    if(insertingKkAjaxCalls[i] === kkLoadRequest) {
-        		    	insertingKkAjaxCalls = insertingKkAjaxCalls.splice(i,1);
-        		        return false;
-        		    }
-        		});
+				Waypoint.enableAll();
 				displayingPreKK = false;
+				promise.resolve();
 				
 			}, 
 			params,
@@ -591,7 +565,7 @@ function loadPreKk(id)
 			function() { $(".kk_load_pre").addClass("loading").children().hide(); },
 			function() { $(".kk_load_pre").removeClass("loading").children().show(); }
 	);
-	return kkLoadRequest;
+	return promise;
 }
 
 function showPreAfterLoad()

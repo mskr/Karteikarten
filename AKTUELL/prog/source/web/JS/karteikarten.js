@@ -3,6 +3,7 @@
  */
 insertingKarteikarte = false;
 insertingKkAjaxCalls = [];
+kkWaypoints = [];
 function buildKarteikarte(karteikarteJson)
 {
     var kkId = karteikarteJson[paramId],
@@ -88,32 +89,18 @@ function buildKarteikarte(karteikarteJson)
     	).show();
     });
     
-    var triggeredInitial = false;
 	// Reagiere auf das Scrollen zu dieser Karteikarte
-    new Waypoint({
+    kkWaypoints.push(kkDom.waypoint({
 	    element: kkDom,
+	    enabled: false,					// Erstmal deaktivieren
 	    handler: function(direction) {
-	    	//TODO
-	    	if(!triggeredInitial)
-	    	{
-	    		triggeredInitial = true;
-	    		return;
-	    	}
-	    	var process = true;
-	    	
-	    	$.each(insertingKkAjaxCalls, function(i,v){
-	    		if(v.state() != "resolved")
-	    			process = false;
-	    	});
-	    	
-	    	if(process)
-	    		vnInhaltsverzeichnis.showEintrag(kkId);
-	    	
+	    	vnInhaltsverzeichnis.showEintrag(kkId);
 	    },
-	    offset: "40px"
-	});
+	    offset: "40px",
+	    group: 'kk_waypoint_group',
+	    continuous: false
+	}));
     
-
     // Überschrift kk
     if(kkInhalt == "" && kkType == paramKkText)
     	return kkDom;

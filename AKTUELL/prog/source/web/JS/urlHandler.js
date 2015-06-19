@@ -194,6 +194,9 @@ function interpreteUrlQuery(paramObj)
         	vid = paramObj[paramId];
         	kkId = paramObj[paramURLKkID];
         	ajax2 = fillVeranstaltungsSeite(vid, kkId);
+        	ajax2.done(function(){
+        		Waypoint.enableAll();
+        	});
         }
         
         $.when(ajax1, ajax2).done(function() {
@@ -256,18 +259,14 @@ function display(ansicht)
     	// Alles auÃŸer das neue Ausblenden
         $(".mainbox").not("#mainbox_"+alleAnsichten[ansichtIdx]).hide();
         
-        $("#mainbox_"+alleAnsichten[ansichtIdx]).show();
-        
-        if(ansicht == ansichtVeranstaltungsseite)
-        {
-        	$("#vn_kk_ueberscht_box").show();
-        }
+        return $("#mainbox_"+alleAnsichten[ansichtIdx]).show();
     }
     else 
     {
         console.log("[urlHandler] Ungueltige Ansicht: "+ansicht);
     }
-    $(document).scrollTop(0);
+    
+    return $.Deferred().resolve();
 }
 /**
  * Diese Funktion setzt die URL und wechselt zum angegebenen Profil

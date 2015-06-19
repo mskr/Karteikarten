@@ -107,7 +107,9 @@ public class PDFExporter
         tagReplaceList.put("blockquote", new Tupel<String, String>(newLineWithSeparation + "\\begin{quote}"
                 + newLineWithSeparation, newLineWithSeparation + "\\end{quote}" + newLineWithSeparation));
 
-        // Tabellen Mapping muss abgefangen werden
+        // Tabellen Mapping muss unten abgefangen werden und 
+        // der Latex code muss von hand erzeugt werden. Es muss allerdings eine regel exisiteren, sonst wird
+        // Der tag beim konvertierungsvorgang übersprungen.
         tagReplaceList.put("table", new Tupel<String, String>("\\begin{table}[H]" + newLineWithSeparation,
                 "\\end{tabular}" + newLineWithSeparation + "\\end{table}"
                         + newLineWithSeparation));

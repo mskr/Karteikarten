@@ -22,7 +22,13 @@ public class NotizServlet extends ServletController {
     public NotizServlet() {
     }
 
-
+/**
+ * Liest die Notizen zur angegebenen Karteikarte aus der Datenbank
+ * @param request
+ * @param response
+ * @return
+ * @throws IOException
+ */
     private boolean notizLesen(HttpServletRequest request, HttpServletResponse response ) throws IOException {
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();
@@ -65,7 +71,13 @@ public class NotizServlet extends ServletController {
         
         return true;
     }
-
+/**
+ * Speichert eine neue bzw. ändert eine bestehende Notiz zu einer Karteikarte
+ * @param request
+ * @param response
+ * @return
+ * @throws IOException
+ */
     private boolean notizSpeichern(HttpServletRequest request, HttpServletResponse response ) throws IOException {
         HttpSession aktuelleSession = request.getSession();
         PrintWriter outWriter = response.getWriter();

@@ -19,25 +19,33 @@ import com.sopra.team1723.data.Benutzer;
 import com.sopra.team1723.data.Tupel;
 import com.sopra.team1723.data.Veranstaltung;
 
+/**
+ * Diese Klasse konvertiert verschiedene Objekte, Listen oder Fehlermeldungen in
+ * JSON-Objekte, die dann per Internet an den Client zurückgesendet werden.
+ *
+ */
 @SuppressWarnings("unchecked")
 public class JSONConverter
 {
-    
+
     /**
      * Einfache Bestätigung von Aktionen oder Error
-     * @param errorCode 
+     * 
+     * @param errorCode
      * @return
      */
     static JSONObject toJsonError(String errorCode)
     {
         JSONObject jo = new JSONObject();
-        
+
         jo.put(ParamDefines.jsonErrorCode, errorCode);
-       
+
         return jo;
     }
+
     /**
      * Gibt einen Fehler inklusive individuellem ErrorText zurück
+     * 
      * @param errorCode
      * @param errorText
      * @return
@@ -45,143 +53,154 @@ public class JSONConverter
     static JSONObject toJsonError(String errorCode, String errorText)
     {
         JSONObject jo = toJsonError(errorCode);
-        jo.put(ParamDefines.jsonErrorMsg,errorText);
+        jo.put(ParamDefines.jsonErrorMsg, errorText);
         return jo;
     }
-    
-    
-    
+
     /**
-     * Verpackt die Daten eines Benutzer Objekts in
-     * ein JSON Objekt und gibt dieses zurueck.
-     * Das Passwort wird aus Sicherheitsgruenden 
-     * nicht in das JSON Objekt gepackt.
+     * Verpackt die Daten eines Benutzer Objekts in ein JSON Objekt und gibt
+     * dieses zurueck. Das Passwort wird aus Sicherheitsgruenden nicht in das
+     * JSON Objekt gepackt.
+     * 
      * @param benutzer
-     * @param full gibt an ob auch die pers. Einstellungen eingepackt werden sollen
+     * @param full
+     *            gibt an ob auch die pers. Einstellungen eingepackt werden
+     *            sollen
      * @return JSONObject mit den Benutzerdaten
      */
-    static JSONObject toJson(Benutzer benutzer, boolean full) 
+    static JSONObject toJson(Benutzer benutzer, boolean full)
     {
         return benutzer.toJSON(full);
     }
+
     /**
      * 
      * @param strings
      * @return JSONObject mit einer Liste von Strings
      */
-    static JSONObject toJson(List<String> strings) 
+    static JSONObject toJson(List<String> strings)
     {
         JSONObject jo = new JSONObject();
-        
+
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         JSONArray array = new JSONArray();
-        
-        for(String s: strings)
+
+        for (String s : strings)
             array.add(s);
-        
+
         jo.put(ParamDefines.jsonArrResult, array);
-        
+
         return jo;
     }
+
     /**
+     * Konvertiert beliebige Listen, die das interface {@link IjsonObject}
+     * implementieren in ein Json objekt
      * 
      * @param strings
      * @return JSONObject mit einer Liste von JsonObjekten
      */
-    static JSONObject toJson(List<? extends IjsonObject> obj, boolean full) 
+    static JSONObject toJson(List<? extends IjsonObject> obj, boolean full)
     {
         JSONObject jo = new JSONObject();
-        
+
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         JSONArray array = new JSONArray();
-        
-        for(IjsonObject s: obj)
+
+        for (IjsonObject s : obj)
             array.add(s.toJSON(full));
-        
+
         jo.put(ParamDefines.jsonArrResult, array);
-        
+
         return jo;
     }
-    
+
     /**
-     * Von den Ergebnissen der Suche, welche in der Klasse
-     * ErgebnisseSuchfeld gekapselt sind, werden an die GUI
-     * nur die ähnlichen Texte gegeben
+     * Von den Ergebnissen der Suche, welche in der Klasse ErgebnisseSuchfeld
+     * gekapselt sind, werden an die GUI nur die ähnlichen Texte gegeben
+     * 
      * @return JSONObject mit einer Liste von Strings
      */
-    static JSONObject toJsonSuchfeld(Map<IjsonObject,Integer> suchtreffer) 
+    static JSONObject toJsonSuchfeld(Map<IjsonObject, Integer> suchtreffer)
     {
         JSONObject jo = new JSONObject();
-        
+
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         JSONArray array = new JSONArray();
-        
+
         JSONObject tupel;
-        for(Entry<IjsonObject,Integer> ergs: suchtreffer.entrySet()){
+        for (Entry<IjsonObject, Integer> ergs : suchtreffer.entrySet())
+        {
             tupel = new JSONObject();
-            tupel.put("key",ergs.getKey().toJSON(true));
+            tupel.put("key", ergs.getKey().toJSON(true));
             tupel.put("value", ergs.getValue());
-            
+
             array.add(tupel);
         }
-        
+
         jo.put(ParamDefines.jsonArrResult, array);
-        
+
         return jo;
     }
-    
+
     /**
+     * Konvertiert einen Text in ein JSON Objekt
      * 
      * @param strings
      * @return JSONObject mit NoError und einem String
      */
-    static JSONObject toJson(String txt) 
+    static JSONObject toJson(String txt)
     {
-        JSONObject jo = new JSONObject();  
-        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);      
+        JSONObject jo = new JSONObject();
+        jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         jo.put(ParamDefines.jsonStrResult, txt);
-        
+
         return jo;
     }
-    
+
     /**
+     * Konvertiert eine Liste von veranstaltungen in ein json Objekt.
      * 
-     * @param strings
-     * @return JSONObject mit NoError und einem String
+     * @param veranstList
+     * @param angemeldet
+     *            Boolean liste, die für jede veranstaltung true bzw false
+     *            enthält. Je nachdem, ob der Benutzer in dieser Veranstaltung
+     *            eingeschrieben ist.
+     * @return
      */
-    static JSONObject toJsonVeranstList(List<Veranstaltung> veranstList, List<Boolean> angemeldet) 
+    static JSONObject toJsonVeranstList(List<Veranstaltung> veranstList, List<Boolean> angemeldet)
     {
         // TODO Interface benutzen!!
         JSONObject jo = new JSONObject();
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
-        
+
         JSONArray array = new JSONArray();
 
         Iterator<Boolean> it = angemeldet.iterator();
-        for(Veranstaltung v: veranstList)
+        for (Veranstaltung v : veranstList)
         {
             JSONObject o = new JSONObject();
 
-            o.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);      
-            o.put(ParamDefines.Titel, v.getTitel());   
-            o.put(ParamDefines.Id, v.getId()); 
-            o.put(ParamDefines.Beschr, v.getBeschreibung()); 
-            o.put(ParamDefines.Semester, v.getSemester()); 
-            o.put(ParamDefines.BewertungenErlauben, v.isBewertungenErlaubt()); 
-            o.put(ParamDefines.ModeratorKkBearbeiten, v.isModeratorKarteikartenBearbeiten()); 
-            o.put(ParamDefines.KommentareErlauben,v.isKommentareErlaubt());
-            o.put(ParamDefines.Ersteller,JSONConverter.toJson(v.getErsteller(),true));
+            o.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
+            o.put(ParamDefines.Titel, v.getTitel());
+            o.put(ParamDefines.Id, v.getId());
+            o.put(ParamDefines.Beschr, v.getBeschreibung());
+            o.put(ParamDefines.Semester, v.getSemester());
+            o.put(ParamDefines.BewertungenErlauben, v.isBewertungenErlaubt());
+            o.put(ParamDefines.ModeratorKkBearbeiten, v.isModeratorKarteikartenBearbeiten());
+            o.put(ParamDefines.KommentareErlauben, v.isKommentareErlaubt());
+            o.put(ParamDefines.Ersteller, JSONConverter.toJson(v.getErsteller(), true));
             o.put(ParamDefines.AnzTeilnehmer, v.getAnzTeilnehmer());
             o.put(ParamDefines.Angemeldet, it.next());
-            
+
             boolean zugangsPasswortGesetzt;
             if (v.getZugangspasswort() == null)
                 zugangsPasswortGesetzt = false;
             else
                 zugangsPasswortGesetzt = true;
-                
+
             o.put(ParamDefines.KennwortGesetzt, zugangsPasswortGesetzt);
-            
+
             array.add(o);
         }
 
@@ -189,29 +208,20 @@ public class JSONConverter
 
         return jo;
     }
-    
+
     /**
+     * Erzeugt ein JSON objekt aus einer Liste aus Benachrichtigungen
      * 
-     * @param strings
-     * @return JSONObject mit NoError und einem String
+     * @param benachrichtigungen
+     * @return
      */
-//    static JSONObject toJson(Veranstaltung veranst) 
-//    {
-//        return veranst.toJSON(true); // Boolean in diesem Fall egal
-//    }
-    
-    /**
-     * 
-     * @param strings
-     * @return JSONObject mit NoError und einem String
-     */
-    static JSONObject toJsonBenachrichtigungen(List<Benachrichtigung> benachrichtigungen) 
+    static JSONObject toJsonBenachrichtigungen(List<Benachrichtigung> benachrichtigungen)
     {
         JSONObject jo = new JSONObject();
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
-        
+
         JSONArray array = new JSONArray();
-        for(Benachrichtigung ben: benachrichtigungen)
+        for (Benachrichtigung ben : benachrichtigungen)
         {
             JSONObject j = new JSONObject();
 
@@ -220,35 +230,35 @@ public class JSONConverter
             j.put(ParamDefines.Gelesen, ben.isGelesen());
             SimpleDateFormat d = new SimpleDateFormat("HH:mm dd.MM.yyyy");
             String s = d.format(ben.getErstelldaum().getTime());
-            
-            j.put(ParamDefines.benErstelldaum, s);            
-            
+
+            j.put(ParamDefines.benErstelldaum, s);
+
             if (ben instanceof BenachrProfilGeaendert)
             {
                 BenachrProfilGeaendert b = (BenachrProfilGeaendert) ben;
                 j.put(ParamDefines.Type, ParamDefines.benTypeProfil);
             }
-            else  if (ben instanceof BenachrEinlModerator)
+            else if (ben instanceof BenachrEinlModerator)
             {
                 BenachrEinlModerator b = (BenachrEinlModerator) ben;
                 j.put(ParamDefines.Type, ParamDefines.benTypeModerator);
                 j.put(ParamDefines.benVeranst, b.getVeranstaltung().toJSON(false));
             }
-            else  if (ben instanceof BenachrKarteikAenderung)
+            else if (ben instanceof BenachrKarteikAenderung)
             {
                 BenachrKarteikAenderung b = (BenachrKarteikAenderung) ben;
                 j.put(ParamDefines.Type, ParamDefines.benTypeKarteikarte);
-                j.put(ParamDefines.KkId, b.getKarteikarte().getId());               
+                j.put(ParamDefines.KkId, b.getKarteikarte().getId());
                 j.put(ParamDefines.VnId, b.getKarteikarte().getVeranstaltung());
             }
-            else  if (ben instanceof BenachrNeuerKommentar)
+            else if (ben instanceof BenachrNeuerKommentar)
             {
                 BenachrNeuerKommentar b = (BenachrNeuerKommentar) ben;
                 j.put(ParamDefines.Type, ParamDefines.benTypeKommentar);
-                j.put(ParamDefines.KkId, b.getKarteikarte().getId());               
+                j.put(ParamDefines.KkId, b.getKarteikarte().getId());
                 j.put(ParamDefines.VnId, b.getKarteikarte().getVeranstaltung());
             }
-            else  if (ben instanceof BenachrVeranstAenderung)
+            else if (ben instanceof BenachrVeranstAenderung)
             {
                 BenachrVeranstAenderung b = (BenachrVeranstAenderung) ben;
                 j.put(ParamDefines.Type, ParamDefines.benTypeVeranstaltung);
@@ -257,28 +267,33 @@ public class JSONConverter
             array.add(j);
         }
         jo.put(ParamDefines.jsonArrResult, array);
-        
+
         return jo;
     }
-    
-    // Um die Semester sortieren zu können, wird die ID noch mitgeliefert. Es werden IDs und Name des Semesters
-    // in einer Map gespeichert. Die Methode übergibt an JavaScript keine Map sondern ein Array, bei dem
-    // in jedem Eintrag sich das Paar aus ID und Name des Semesters befinden.
-    static JSONObject toJsonSemesterMap(Map<Integer, String> semester) 
+
+    /**
+     * Um die Semester sortieren zu können, wird die ID noch mitgeliefert. Es
+     * werden IDs und Name des Semesters in einer Map gespeichert. Die Methode
+     * übergibt an JavaScript keine Map sondern ein Array, bei dem in jedem
+     * Eintrag sich das Paar aus ID und Name des Semesters befinden.
+     * 
+     * @param semester
+     * @return
+     */
+    static JSONObject toJsonSemesterMap(Map<Integer, String> semester)
     {
-        JSONObject jo = new JSONObject();  
+        JSONObject jo = new JSONObject();
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
-        
+
         JSONArray array = new JSONArray();
 
-        for(Integer key : semester.keySet())
+        for (Integer key : semester.keySet())
         {
             JSONObject o = new JSONObject();
 
             o.put(ParamDefines.Id, key);
             o.put(ParamDefines.Semester, semester.get(key));
-            
-            
+
             array.add(o);
         }
 
@@ -286,21 +301,27 @@ public class JSONConverter
 
         return jo;
     }
-    
-    static JSONObject toJsonKarteikarten(Map<Integer, Tupel<Integer,String>> karteikarten) 
+
+    /**
+     * Wandelt karteikarten in JSON Objekte um
+     * 
+     * @param karteikarten
+     * @return
+     */
+    static JSONObject toJsonKarteikarten(Map<Integer, Tupel<Integer, String>> karteikarten)
     {
-        JSONObject jo = new JSONObject();  
+        JSONObject jo = new JSONObject();
         jo.put(ParamDefines.jsonErrorCode, ParamDefines.jsonErrorNoError);
         JSONArray array = new JSONArray();
 
-        for(Integer key : karteikarten.keySet())
+        for (Integer key : karteikarten.keySet())
         {
             JSONObject o = new JSONObject();
 
             o.put(ParamDefines.Reihenfolge, key);
             o.put(ParamDefines.Id, karteikarten.get(key).x);
-            o.put(ParamDefines.Titel, karteikarten.get(key).y);            
-            
+            o.put(ParamDefines.Titel, karteikarten.get(key).y);
+
             array.add(o);
         }
 

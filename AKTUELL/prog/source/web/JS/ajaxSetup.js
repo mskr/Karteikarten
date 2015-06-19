@@ -81,4 +81,5 @@ $( document ).ajaxStart(function() {
 
 $( document ).ajaxStop(function() {
 	  $("#loadingDiv").hide();
+      Waypoint.refreshAll();  // TODO so lassen?
 });
