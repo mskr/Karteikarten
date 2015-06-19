@@ -1,7 +1,18 @@
 /**
- * 
+ * @author Andreas, Marius
  */
 
+/**
+ * Sendet eine Datei per asynchronem HTTP POST Request an das FileUploadServlet.
+ * @param file JS File Objekt
+ * @param successFkt wird nach erfolgreichen Upload ausgefuehrt
+ * @param uploadAction der obligatorische 'action' Parameter fuer den Server
+ * @param params weitere Parameter fuer den Server
+ * @param beforeFkt wird unmittelbar vor dem Absenden ausgefuehrt
+ * @param completeFkt wird ausgefuehrt wenn der Server geantwortet hat
+ * @see https://developer.mozilla.org/de/docs/Web/API/FormData
+ * @see https://developer.mozilla.org/de/docs/Web/API/File
+ */
 function uploadFile(file, successFkt, uploadAction, params, beforeFkt, completeFkt) 
 {
     var formData = new FormData();

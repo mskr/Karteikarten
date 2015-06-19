@@ -1,3 +1,7 @@
+/**
+ * @author Andreas
+ */
+
 $(document).ready(function(){
 	UPLOADIDSET = -1;
 //	UPLOAD_ID = -1;

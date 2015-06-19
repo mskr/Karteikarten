@@ -1,5 +1,9 @@
-
 /**
+ * @author Andreas, Marius
+ * 
+ * Enthaelt Config-Objekte fuer das CKEditor Framework.
+ * Config-Objekte koennen wie folgt benutzt werden: $(textarea).ckeditor(configObject).
+ * 
  * Dokumentation der Attribute
  *  removePlugins -> Entfernt plugins. Bei 'toolbar' wird die ganze Toolbar entfernt
  *  resize_enabled -> Fenster ist durch den Nutzer vergrößerbar. Bei False verschwindet auch der untere Graue Rand.
@@ -8,12 +12,13 @@
  *  toolbarGroups -> Gibt an welche toolbars sichtbar sind und wie sie grupiert sind.
  */
 
+// Verhindert das automatische Deaktivieren des CKEditor bspw. auf Smartphones
 CKEDITOR.env.isCompatible = true;
+
+// Verhindert das automatische Initialisieren einer CKEditor Instanz auf Textarea-Elementen
 CKEDITOR.disableAutoInline = true;
 
-//enterMode: CKEDITOR_ENTER_P,
-//shiftEnterMode: CKEDITOR_ENTER_DIV,
-
+// Config-Objekt fuer Kommentarfelder
 var ckEditorKommentarConfig = {
 		height: "100px",
 		toolbarGroups: [
@@ -35,6 +40,7 @@ var ckEditorKommentarConfig = {
         removePlugins: 'elementspath, autogrow, maximize, toolbarswitch'
 };
 
+// Config-Objekt fuer den Notiz-Editor
 var ckEditorNotizConfig = {
         resize_enabled : false,
 		autoGrow_minHeight: 50,
@@ -63,7 +69,9 @@ var ckEditorNotizConfig = {
 		removePlugins: 'elementspath, maximize, toolbarswitch'
 };
 
-
+// Config-Objekt fuer folgende Dialoge:
+// - Veranstaltung erstellen und bearbeiten
+// - Karteikarten erstellen und bearbeiten
 var ckEditorVnErstellenConfig = {
         resize_enabled : false,
         autoGrow_minHeight: 50,

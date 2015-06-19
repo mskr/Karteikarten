@@ -1,21 +1,17 @@
 /**
- * @author mk
+ * @author Andreas, Marius
+ * 
  */
 
 /**
- * Konfiguriert alle Ajax Calls.
- * Kommt vom Server keine Antwort,
- * wird ein Fehler ausgegeben.
+ * Konfiguriert global alle Ajax Calls (asynchrone HTTP Requests).
+ * Kommt vom Server keine Antwort, wird ein Fehler ausgegeben.
  * Setzt einen Timeout.
  */
-
 $.ajaxSetup({
     type: "POST",
 	timeout: 10000,
-	error: function(jqXHR, textStatus, errorThrown) { 
-
-//		console.log("AJAX-ERROR: " + textStatus + " " + errorThrown);
-		
+	error: function(jqXHR, textStatus, errorThrown) {
 		if(textStatus == "timeout")
 		{
 		    showError("Verbindung zum Server wurde unterbrochen. Wiederholen Sie den Vorngang, wenn möglich.");
@@ -34,7 +30,7 @@ $.ajaxSetup({
 			// ignorieren
 		}
 		else
-			showError("Unbekannter Fehler. AjaxStatus: "+jqXHR.status+", AjaxTextStatus: "+textStatus+", AjaxErrorCode: "+errorThrown + ", resonseText: " + jqXHR.responseText);
+			showError("Unbekannter Fehler. AjaxStatus: "+jqXHR.status+", AjaxTextStatus: "+textStatus+", AjaxErrorCode: "+errorThrown + ", responseText: " + jqXHR.responseText);
 	},
 	complete: function() {
 		if (typeof MathJax != 'undefined') {
@@ -44,13 +40,14 @@ $.ajaxSetup({
 	}
 });
 
-$(document).ready(function(){
-	// Meldung zeigen, wenn Mathjax nicht geladen werden konnte
-	if (typeof MathJax == 'undefined')
-		showError("MathJax nicht geladen. Formeln können nicht konvertiert werden.");
-});
-
+// Speichert, ob aktuell auf Beantwortung eines Ping-Requests gewartet wird
 var connectionCheckRunning = false;
+
+/**
+ * Fuehrt bei Timeouts einen Verbindungstest durch,
+ * indem wiederholt 'Ping' an den Server gesendet wird.
+ * Sobald eine Antwort zurueck kommt wird automatisch die Seite neu geladen.
+ */
 function checkConnection() 
 {
     connectionCheckRunning = true;
@@ -74,6 +71,9 @@ function checkConnection()
         }
     });
 }
+
+
+// Zeige waehrend Ajax Calls eine Ladeanimation auf der GUI an
 
 $( document ).ajaxStart(function() {
 	  $("#loadingDiv").show();

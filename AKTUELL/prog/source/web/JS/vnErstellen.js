@@ -93,16 +93,19 @@ $(document).ready(function() {
 	 
 });
 
-
-
-
-var selectedModList = {};
+//Speichere die aktuell im Veranstaltung-erstellen-Dialog gewaehlten Studiengaenge
 var selectedStudiengaenge = {};
-var modSuchTimer;
+
+// Speichere die aktuell im Veranstaltung-erstellen-Dialog gewaehlten Moderatoren
+var selectedModList = {};
+
+/**
+ * Registrieren der Handler fuer Dialog zum Erstellen von Veranstaltungen
+ */
 function registerVeranstErzeugeHandler() {
 
     var categoryClassMapping = {};
-    categoryClassMapping[keyJsonObjKlasseStudiengang] = "STUDIENGAENGE";
+    categoryClassMapping[keyJsonObjKlasseStudiengang] = "";
     autoComplete(
             $("#vn_erstellen_stg_input"),
             {
@@ -118,7 +121,7 @@ function registerVeranstErzeugeHandler() {
     );
 
     categoryClassMapping = {};
-    categoryClassMapping[keyJsonObjKlasseBenutzer] = "MODERATORWAHL";
+    categoryClassMapping[keyJsonObjKlasseBenutzer] = "";
     autoComplete(
             $("#vn_erstellen_mod_input"),
             {
