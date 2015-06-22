@@ -4,7 +4,7 @@
  * 2. Sendet action getBenutzer an Server
  * 3. Interpretiert die URL Parameter
  * 4. Zeigt entsprechende Ansicht an
- * @author mk
+ * @author Marius Kircher, Andreas Rottach
  */
 var initialURL="";
 $(document).ready(function() {

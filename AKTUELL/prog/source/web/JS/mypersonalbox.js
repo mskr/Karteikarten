@@ -1,5 +1,6 @@
 /**
- * @author mk
+ * @author Andreas, Marius
+ * 
  */
 
 // Statische Handler einmal registrieren

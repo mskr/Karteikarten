@@ -1,7 +1,7 @@
 /**
- * @author mk
+ * @author Andreas, Marius
+ * 
  */
-
 $(document).ready(function() {
     $("#registrieren_form").submit(function(event) {
         // Verhindert das normale Absenden des Formulars

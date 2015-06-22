@@ -1,5 +1,6 @@
 /**
- * @author mk
+ * @author Andreas, Marius
+ * 
  */
 
 var currentProfilID;

@@ -1,5 +1,5 @@
 /**
- * @author mk
+ * @author Marius Kircher, Andreas Rottach
  */
 
 // Statische Handler einmal registrieren
