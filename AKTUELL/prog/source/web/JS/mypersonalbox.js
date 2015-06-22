@@ -44,8 +44,10 @@ function fillMyPersonalBox()
     {
         return;
     }
+    
     fillUserContainer();
     handleReturnLink();
+    
     ajaxCall(
         benachrichtungsServlet,
         actionLeseBenachrichtungen,
@@ -68,6 +70,7 @@ function fillUserContainer()
     $(".username").html(vorname+" "+nachname);
     $(".rolle").html(" "+nutzerstatus);
     $(".user_MyProfilBild").attr("src", jsonBenutzer[paramProfilBild]);
+    $(".user_MyProfilBild").attr("onerror","this.src='files/general/default.png'");
 }
 
 /**
@@ -144,6 +147,12 @@ function addBenachrichtigung(ben)
 	
 	divBn.slideDown("slow");
 }
+/**
+ * Sortiert html-Benachrichtigungscontainer anhand ihrer Klasse new bzw ihrer ID
+ * @param a
+ * @param b
+ * @returns {Number}
+ */
 function sortDivByClassName(a,b)
 {
 	if($(a).hasClass("neu") && $(b).hasClass("neu"))
@@ -157,8 +166,12 @@ function sortDivByClassName(a,b)
 	else 
 		return 0;
 }
-
+// Aktuell angezeigte Benachrichtungen
 var aktuelleBenArr = [];
+/**
+ * Updated die aktuell angezeigten Benachrichtungen
+ * @param newBens
+ */
 function updateBenachrichtigungen(newBens)
 {
 	var contentDiv = $("#bn_container");
@@ -257,7 +270,7 @@ function updateBenachrichtigungen(newBens)
 
 
 /**
- * Entfernt alle benachrichtigungen
+ * Entfernt alle Benachrichtigungen
  */
 function clearBenachrichtigungen()
 {
