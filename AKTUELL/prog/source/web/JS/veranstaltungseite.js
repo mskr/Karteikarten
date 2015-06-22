@@ -82,6 +82,13 @@ $(document).ready(function() {
 		exportKkVonVn(veranstaltungsObject[paramId]);
 	})
 	
+	
+    // Inhaltsverzeichnis im Viewport halten
+    stickyWrapperInhaltsverzeichniss = new Waypoint.Sticky({
+        element: $("#kk_inhaltsverzeichnis"),
+        wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
+    });
+	
 	// CopyLink Plugin zum Kopieren von Links in die Zwischenablage
     var clip = new ZeroClipboard($("#link_copy_to_cb"));
     clip.on("ready", function() {
@@ -323,12 +330,15 @@ function fillVeranstaltungsSeite(Vid, kkId)
 	    
 	    // warte bis alles geladen
 	    $.when(ajax1,ajax2,ajax3,d,ajax4).done(function() {
-	        // Inhaltsverzeichnis im Viewport halten
-	        var sticky = new Waypoint.Sticky({
+ 
+	    	if(stickyWrapperInhaltsverzeichniss != undefined)
+	    		stickyWrapperInhaltsverzeichniss.destroy();
+	    	
+	    	stickyWrapperInhaltsverzeichniss = new Waypoint.Sticky({
 	            element: $("#kk_inhaltsverzeichnis"),
 	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
 	        });
- 
+	    	
 	        var afterLoadWaypoint = new Waypoint({
 	    		element: $(".kk_load_after"),
 	    		enabled: false,
@@ -431,6 +441,18 @@ function displayKarteikarte(id, callback, reload){
     		// Danach Karteikarten komplett entfernen und Lade-Buttons anzeigen
     		Waypoint.destroyAll();
     		$("#kk_all").empty();
+
+    	    $("body,html").scrollTop(0);
+    	    $(".stuck").removeClass("stuck");
+    	    
+    	    if(stickyWrapperInhaltsverzeichniss != undefined)
+	    		stickyWrapperInhaltsverzeichniss.destroy();
+	    	
+	    	stickyWrapperInhaltsverzeichniss = new Waypoint.Sticky({
+	            element: $("#kk_inhaltsverzeichnis"),
+	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
+	        });
+    	    
         	showPreAfterLoad();
         	
         	var params2 ={};
