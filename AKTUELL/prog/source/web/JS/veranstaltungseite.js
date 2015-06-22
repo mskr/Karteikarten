@@ -6,8 +6,6 @@
 var veranstaltungsObject;
 
 $(document).ready(function() {
-//	$("#vn_kk_ueberscht_box").hide();
-	
 	// Handler für das Löschen der Veranstaltung
 	$("#vn_loeschen").click(function() {
 		sindSieSicher($("#vn_loeschen"), "Soll die Veranstaltung wirklich gelöscht werden?", function() {
@@ -363,13 +361,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
     {
         $(".r-suche_etwas_label").hide();
         $(".r-kk-inhaltsvz-toggle").hide();
-    }
-    
-    $.when(ajax1,ajax2,ajax3,d).done(function(){
-//    	var triggeredInitial = false;
-    	
-    });
-    
+    }    
 	return $.when(ajax1,ajax2,ajax3,d);
 }
 
@@ -441,10 +433,12 @@ function displayKarteikarte(id, callback, reload){
     		// Danach Karteikarten komplett entfernen und Lade-Buttons anzeigen
     		Waypoint.destroyAll();
     		$("#kk_all").empty();
-
+    		
+    		// Nach oben scrollen
     	    $("body,html").scrollTop(0);
     	    $(".stuck").removeClass("stuck");
     	    
+    	    // Inhaltsverzeichniss neu initialisieren
     	    if(stickyWrapperInhaltsverzeichniss != undefined)
 	    		stickyWrapperInhaltsverzeichniss.destroy();
 	    	
@@ -452,9 +446,11 @@ function displayKarteikarte(id, callback, reload){
 	            element: $("#kk_inhaltsverzeichnis"),
 	            wrapper: '<div class="inhaltsverzeichnis-sticky-wrapper" />'
 	        });
-    	    
+	    	
+    	    // Lade buttons anzeigen
         	showPreAfterLoad();
         	
+        	// karteikarten laden
         	var params2 ={};
             params2[paramKkId] = id;
             params2[paramVnId] = veranstaltungsObject[paramId];
@@ -475,8 +471,15 @@ function displayKarteikarte(id, callback, reload){
     	});
     }
 }
+// Speichert den Ajaxcall der Karteikarten die aktuell geladen werden
+kkLoadRequest;
+// True, wenn aktuell Nachfolger geladen werden
 displayingAfterKK = false;
-var kkLoadRequest;
+/**
+ * Lädt die Nachfolger einer Karteikarte und zeigt sie am Ende des kk_all Wrappers an.
+ * @param id
+ * @returns
+ */
 function loadAfterKk(id)
 {
 	if (kkLoadRequest != null){ 
@@ -512,7 +515,6 @@ function loadAfterKk(id)
 							return;
 						domkk = buildKarteikarte(o);
 						domkk.removeAttr("style"); // Zeige KK durch entfernen von display:none
-//						domkk.addClass("animated slideIn"); //TODO
 						$("#kk_all").append(domkk);
 						domms.push(domkk);
 						nextItem();
@@ -530,7 +532,14 @@ function loadAfterKk(id)
 	);
 	return promise;
 }
-displayingPreKK = false;
+// True, wenn Vorgänger Karteikarten geladen werden.
+displayingPreKK = false;ä
+
+/**
+ * Lädt die Vorgänger einer Karteikarte und zeigt sie am Anfang des kk_all Wrappers an.
+ * @param id
+ * @returns
+ */
 function loadPreKk(id)
 {
 	if (kkLoadRequest != null){ 
@@ -589,7 +598,9 @@ function loadPreKk(id)
 	);
 	return promise;
 }
-
+/**
+ * Zeigt den Vorgänger/Nachfolger-LadeButton an.
+ */
 function showPreAfterLoad()
 {
 	$(".kk_load_after").removeClass("animated").removeClass("zoomOut").show();
@@ -597,7 +608,24 @@ function showPreAfterLoad()
 }
 
 /**
- * Klassendefinition für Inhaltsverzeichniss
+ * Klassendefinition für Inhaltsverzeichnis
+ * @param kkDivMain Main Container des Inhaltsverzeichnisses
+ * @param htmlTitel Titel des Inhaltsverzeichnises
+ * @param vnObjekt Veranstaltungsobjekt, das zum Inhaltsverzeichnis gehört.
+ * @param zeigeErstellButtons Boolean. Gibt an ob die Buttons zum Erstellen neuer KKs angezeigt werden.
+ * @param extraClickFunction Funktion, die <i>zusaetzlich</i> zum Ein-/Ausklappen ausgefuehrt werden soll.
+ * Diese Funktion erhaelt folgende Parameter:
+ * <ul>
+ * <li>arr = Array der vom Server empfangenen Kindkarteikarten (als JSON) auf Ebene des angeklickten Elements.</li>
+ * <li>kkListItem = JQuery Object. Listitem, das die angeklickte Karteikarte wrappt.</li>
+ * <li>i = Index der angeklickten Karteikarte im Array arr. Folglich liefert arr[i] die angeklickte Karteikarte als JSON.</li>
+ * <li>e = Click-Event</li>
+ * <li>ajax = JQuery Deferred Object. Resolved, wenn Kinder der angeklickten Karteikarte geladen.</li>
+ * <li>klappeAus = Boolean. True, wenn Kinder durch den Klick ausgeklappt werden. False, wenn sie eingeklappt werden.</li>
+ * </ul>
+ * @param zeigeCheckboxes Boolean. Gibt an ob vor jedem Karteikarten-Knoten eine Checkbox platziert werden soll.
+ * Diese Checkbox wird ein Attribut "data-kkid" mit der Karteikarten-ID haben.
+ * @param extraGotoButton Boolean. Wenn true, dann werden kleine Buttons hinter jedem Eintrag angezeigt, mit dessen Hilfe kann man die aktuelle Karteikarte anzeigen.
  */
 function Inhaltsverzeichnis(kkDivMain, vnObjekt, htmlTitel, zeigeErstellButtons, extraClickFunction, zeigeCheckboxes,extraGotoButton)
 {
@@ -613,7 +641,9 @@ function Inhaltsverzeichnis(kkDivMain, vnObjekt, htmlTitel, zeigeErstellButtons,
 	this.highlightedKnoten = undefined;
 	this.gotoIsClicked = false;
 }
-
+/**
+ * Initialisiert das Inhaltsverzeichnis
+ */
 Inhaltsverzeichnis.prototype.init = function()
 {
 	if(this.htmlTitel != undefined)
@@ -621,7 +651,12 @@ Inhaltsverzeichnis.prototype.init = function()
     
 	return this.ladeKinder(this.vnObjekt[paramErsteKarteikarte], this.kkDivMain, true);
 }
-
+/**
+ * Registriert den Erstellen-Handler zum gegebenen dom element.
+ * @param domErstellenLink
+ * @param vater
+ * @param bruder
+ */
 Inhaltsverzeichnis.prototype.registerErstellKkHandler = function(domErstellenLink, vater,bruder){
 	// Prüfen ob erlaubt
 	if(checkIfAllowedVn(veranstaltungsObject, true, true, false) ||
@@ -644,20 +679,7 @@ Inhaltsverzeichnis.prototype.registerErstellKkHandler = function(domErstellenLin
  * der beim Klick auf ein ListItem rekursiv dessen direkte Kinder laedt usw.
  * @param vaterId ID der Vaterkarteikarte
  * @param vaterElem jQuery Objekt. Container, in den die Unordered List eingefuegt wird.
- * @param zeigeErstellButtons Boolean. Gibt an ob die Buttons zum Erstellen neuer KKs angezeigt werden.
- * @param extraClickFunction Funktion, die <i>zusaetzlich</i> zum Ein-/Ausklappen ausgefuehrt werden soll.
- * Diese Funktion erhaelt folgende Parameter:
- * <ul>
- * <li>arr = Array der vom Server empfangenen Kindkarteikarten (als JSON) auf Ebene des angeklickten Elements.</li>
- * <li>kkListItem = JQuery Object. Listitem, das die angeklickte Karteikarte wrappt.</li>
- * <li>i = Index der angeklickten Karteikarte im Array arr. Folglich liefert arr[i] die angeklickte Karteikarte als JSON.</li>
- * <li>e = Click-Event</li>
- * <li>ajax = JQuery Deferred Object. Resolved, wenn Kinder der angeklickten Karteikarte geladen.</li>
- * <li>klappeAus = Boolean. True, wenn Kinder durch den Klick ausgeklappt werden. False, wenn sie eingeklappt werden.</li>
- * </ul>
- * @param zeigeCheckboxes Boolean. Gibt an ob vor jedem Karteikarten-Knoten eine Checkbox platziert werden soll.
- * Diese Checkbox wird ein Attribut "data-kkid" mit der Karteikarten-ID haben.
- * @param extraGotoButton Boolean. Wenn true, dann werden kleine Buttons hinter jedem Eintrag angezeigt, mit dessen Hilfe kann man die aktuelle Karteikarte anzeigen.
+ * @param initialVisible True, wenn die Kinder direkt angezeigt werden sollen.
  * @returns Ajax Objekt
  */
 Inhaltsverzeichnis.prototype.ladeKinder = function(vaterId, vaterElem, initialVisible) {
@@ -772,6 +794,10 @@ Inhaltsverzeichnis.prototype.ladeKinder = function(vaterId, vaterElem, initialVi
             params
     );
 }
+/**
+ * Highlighted den gegebenen Knoten und alle seiner Eltern
+ * @param kkKnoten Knoten, der gehighlited werden soll.
+ */
 Inhaltsverzeichnis.prototype.highlightKnoten = function (kkKnoten) {
 	if(this.highlightedKnoten != undefined)
 		this.unhighlightKnoten();
@@ -782,16 +808,26 @@ Inhaltsverzeichnis.prototype.highlightKnoten = function (kkKnoten) {
     kkKnoten.parents("li").css("border-left","2px solid white");
     this.highlightedKnoten = kkKnoten;
 }
+/**
+ * Unhighlighted alle Knoten des Inhaltsverzeichnisses
+ */
 Inhaltsverzeichnis.prototype.unhighlightKnoten = function () {
 	this.kkDivMain.find("li").removeAttr("style");
 	this.kkDivMain.find(".li_header").removeAttr("style");
 	this.highlightedKnoten = undefined;
 }
-
+/**
+ * Klappt alle Knoten des Inhaltsverzeichnisses ein
+ */
 Inhaltsverzeichnis.prototype.alleEinklappen = function () {
 	this.kkAufEinklappen(this.kkDivMain,false);
 }
-
+/**
+ * Klappt die Kinder des Übergebenen Knotens ein bzw. auf.
+ * @param liVater
+ * @param aufklappen
+ * @returns
+ */
 Inhaltsverzeichnis.prototype.kkAufEinklappen = function (liVater, aufklappen)
 {
     var istAusgeklappt = liVater.attr("data-ausgeklappt")=='true';
@@ -839,10 +875,19 @@ Inhaltsverzeichnis.prototype.kkAufEinklappen = function (liVater, aufklappen)
     	}
     }    
 }
+/**
+ * Klappt einen gegebenen Eintrag inklusive alle seiner Eltern auf
+ * @param kkID KkID des Eintrags
+ */
 Inhaltsverzeichnis.prototype.showEintrag = function (kkID)
 {
 	this.showEintragInternal(this.kkDivMain,kkID);
 }
+/**
+ * Durchsucht rekursiv den Baum und klappt jeden Vater der gesuchten Karteikarte auf. Diese funktion lädt die Kinder vom Server, falls notwendig.
+ * @params startElem Start Div ab dem die Suche beginnt.
+ * @params kkID gesuchte Karteikarten ID
+ */
 Inhaltsverzeichnis.prototype.showEintragInternal = function (startElem, kkID)
 {
     var that = this;
