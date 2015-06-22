@@ -199,32 +199,45 @@ function interpreteUrlQuery(paramObj)
             changeCSS("CSS/mybuttonstyle.css", 1);
         }
         
-        var ajax1 = fillMyPersonalBox();
+        var ajax1 = fillMyPersonalBox()
         var ajax2;
-        if(ziel == undefined ||                         // Kein location Parameter
-           $.inArray(ziel, alleAnsichten) == -1 ||      // Kein bekannter location Parameter
-           ziel == ansichtStartseite ||                 // location ist Startseite
-           ziel == ansichtHauptseite)                   // location ist Hauptseite
-        {
-            ziel = ansichtHauptseite;                   // Dann gehe zu Hauptseite
-            ajax2 = fillHauptseite();
-        }
-        else if(ziel == ansichtProfilseite) 
-        {
-        	ajax2 = fillProfilseite();
-        }
-        else if(ziel == ansichtVeranstaltungsseite){
-        	vid = paramObj[paramId];
-        	kkId = paramObj[paramURLKkID];
-        	ajax2 = fillVeranstaltungsSeite(vid, kkId);
-        	ajax2.done(function(){
-        		Waypoint.enableAll();
-        	});
-        }
-        
-        $.when(ajax1, ajax2).done(function() {
-        	display(ziel);
-		});
+        // Warten auf das füllen der Personal Box
+        $.when(ajax1).done(function(){
+        	
+        	// Benutzer immernoch gültig?
+        	if(jsonBenutzer == undefined)
+    		{
+                $.when(fillStartseite()).done(function() {
+                	display(ansichtStartseite);
+        		});
+                return;
+    		}
+        	
+        	else if(ziel == undefined ||                         // Kein location Parameter
+	           $.inArray(ziel, alleAnsichten) == -1 ||      // Kein bekannter location Parameter
+	           ziel == ansichtStartseite ||                 // location ist Startseite
+	           ziel == ansichtHauptseite)                   // location ist Hauptseite
+	        {
+	            ziel = ansichtHauptseite;                   // Dann gehe zu Hauptseite
+	            ajax2 = fillHauptseite();
+	        }
+	        else if(ziel == ansichtProfilseite) 
+	        {
+	        	ajax2 = fillProfilseite();
+	        }
+	        else if(ziel == ansichtVeranstaltungsseite){
+	        	vid = paramObj[paramId];
+	        	kkId = paramObj[paramURLKkID];
+	        	ajax2 = fillVeranstaltungsSeite(vid, kkId);
+	        	ajax2.done(function(){
+	        		Waypoint.enableAll();
+	        	});
+	        }
+	        
+	        $.when(ajax2).done(function() {
+	        	display(ziel);
+			});
+        });
     } 
     // Benutzer nicht eingeloggt
     else 
