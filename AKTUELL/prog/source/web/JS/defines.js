@@ -1,5 +1,5 @@
 /**
- * @author mk
+ * @author Andreas, Marius
  */
 
 var adminServlet = "AdminServlet";
@@ -12,9 +12,6 @@ var veranstaltungServlet = "VeranstaltungServlet";
 var fileUploadServlet = "FileUploadServlet";
 var suchfeldServlet = "SuchfeldServlet";
 var benachrichtungsServlet = "BenachrichtigungsServlet";
-
-
-// TODO Alle ErrorCodes stehen noch hard gecoded im text !!
 
 var errorMsg = "errorMessage";
 
@@ -45,16 +42,19 @@ var actionDeleteVn = "vnLoeschen";
 var actionPing = "ping";
 var actionDeleteKk = "kkLoeschen";
 
-var actionLeseVeranst = "leseVeranstaltungen";       // Liefert eine Liste von Veranstaltugen
-var leseVeranstMode = "mode";                        // Liefert Veranstaltungen
-var leseVeranstModeStudiengangSemester = "studiengangSemester";            // Liefert alle Veranstaltungen im aktuellen Semester und studiengang
-var leseVeranstModeMeine = "meine";                  // Liefert meine Veranstaltungen 
+//Liefert eine Liste von Veranstaltugen
+var actionLeseVeranst = "leseVeranstaltungen";
+//Liefert Veranstaltungen
+var leseVeranstMode = "mode";
+//Liefert alle Veranstaltungen im aktuellen Semester und studiengang
+var leseVeranstModeStudiengangSemester = "studiengangSemester";
+//Liefert meine Veranstaltungen
+var leseVeranstModeMeine = "meine";
 
 var actionAusschreiben = "ausschreiben";
 var actionEinschreiben = "einschreiben";
 var actionLeseBenachrichtungen = "leseBen";
 var actionMarkiereBenGelesen = "benGelesen";
-
 
 var actionGetKarteikartenVorgaenger = "getKkVor";
 var actionGetKarteikartenNachfolger = "getKkNach";
@@ -64,7 +64,6 @@ var actionGetKarteikartenVater = "getKKVater";
 var actionVoteKarteikarteUp = "voteUpKarteik";
 var actionVoteKarteikarteDown = "voteDownKarteik";
 var actionErstelleKarteikarte = "erstelleKarteikarte";
-//var actionErstelleUeberschrift = "erstelleUeberschrift"; // unnoetig -> Ueberschriften sind KK ohne Inhalt
 var actionBearbeiteKarteikarte = "bearbeiteKarteikarte";
 var actionBearbeiteUeberschrift = "bearbeiteUeberschrift";
 var actionExportSkript = "exportSkript";
@@ -81,12 +80,7 @@ var actionLeseThemaKommentar = "leseThemaKomm";
 var actionSpeichereNotiz = "speichereNotiz";
 var actionLeseNotiz = "leseNotiz";
 
-
 var actionSetTheme = "setTheme";
-
-// GET/POST- und JSON-Schluessel-Parameter
-// Die folgenden Bereiche koennen sich ueberschneiden...
-// ===========================================================
 
 // Allgemeines + Benutzer
 var paramId = "id";
@@ -114,7 +108,8 @@ var paramTheme = "theme";
 
 //Karteikarte
 var paramURLKkID = "kkId";
-var paramKkId = paramURLKkID;		// Wenn mehrere IDs bertragen werden
+//Wenn mehrere IDs bertragen werden
+var paramKkId = paramURLKkID;
 var paramVerweise = "verweise";
 var paramVerweisVoraussetzung = "V_Voraussetzung";
 var paramVerweisWeiterfuehrend = "V_Zusatzinfo";
@@ -127,13 +122,15 @@ var paramKkUploadID = "uploadID";
 var paramVeranstaltung = "veranstaltung";
 var paramAenderungsdatum = "aenderungsdatum";
 var paramBewertung = "bewertung";
-var paramIndex = "index"; //bei liste der karteikarten ids: index für reihenfolge
+// Bei Liste von Karteikarten IDs: Index für Reihenfolge
+var paramIndex = "index";
 var paramAttribute = "attribute"
 var paramVaterKK = "vaterKK";
 var paramBruderKK = "bruderKK";
 
 // Veranstaltungen
-var paramVnId = "vnId";		// Wenn mehrere IDs bertragen werden
+//Wenn mehrere IDs bertragen werden
+var paramVnId = "vnId";
 var paramTitel = "titel";
 var paramBeschr = "beschr";
 var paramSemester = "semester";
@@ -183,8 +180,8 @@ var keyJsonObjKlasseVeranst = "klasseVeranst";
 var keyJsonObjKlasseStudiengang = "klasseStudiengang";
 var keyJsonObjKlasseKarteikarte = "klasseKarteikarte";
 
+// urlHandler
 
-// GET-Parameter fuer den urlHandler.js
 var urlParamLocation = "location";
 var urlParamId = "id";
 
@@ -193,6 +190,3 @@ var ansichtHauptseite = "hauptseite";
 var ansichtProfilseite = "profilseite";
 var ansichtVeranstaltungsseite = "veranstaltungsseite";
 var alleAnsichten = [ansichtStartseite,ansichtHauptseite,ansichtProfilseite,ansichtVeranstaltungsseite];
-
-//Aktuelle Objecte
-

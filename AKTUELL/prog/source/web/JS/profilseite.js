@@ -30,7 +30,7 @@ $(document).ready(function() {
 			    },
 			    params
 			);
-		}, "bottom","left");
+		});
 	});
 
     // Reagiere auf die Auswahl einer Datei
@@ -65,7 +65,7 @@ $(document).ready(function() {
 			    },
 			    params
 			);
-		}, "bottom","left");
+		});
     });
     
     getProfilStudiengaenge();
@@ -468,8 +468,8 @@ function registerProfilSpeichernEvents() {
 function registerAvatarAendernEvent() {
     $("#profil_avatar_aendern_form").submit(function(event) {
         event.preventDefault();
-    	var file = $('#profil_avatar_aendern_file')[0].files[0];
-    	var filenameFull = $('#profil_avatar_aendern_file').val();
+    	var file = $("#profil_avatar_aendern_file")[0].files[0];
+    	var filenameFull = $("#profil_avatar_aendern_file").val();
     	var fileName = filenameFull.split(/(\\|\/)/g).pop();
     	if(fileName.toLowerCase().indexOf(".jpg") < 0 && 
     			fileName.toLowerCase().indexOf(".jpeg") < 0 &&
@@ -484,42 +484,43 @@ function registerAvatarAendernEvent() {
     	{
     		var params = {};
     		params[paramId] = currentProfilID;
-    		uploadFile(file, function(response) {
-    			
-
-            	var errFkt = function(errCode) 
-            	{
-            		if(errCode == "invalidparam") 
-                    {
-                        showError("Bitte geben Sie eine gültige Datei an.");
-                        return true;
-                    }
-            		return false;
-				};
-				
-    			if(verifyResponse(response,errFkt))
-    			{
-            		showInfo("Änerungen gespeichert.");
-            		$.when(getBenutzer()).done(function() {
-                 		fillProfilseite();
-                 		fillMyPersonalBox();
-					});
-    			}
-    		},
-    		actionUploadProfilBild,
-    		params,
-    		function() {
-    		    // beforeSend
-    		    $("#profil_avatar_submit").val("Lädt...");
-    		    $("#profil_avatar_submit").prop("disabled", true);
-    		},
-    		function() {
-    		    // complete
-    		    $("#profil_avatar_submit").val("Avatar ändern");
-                $("#profil_avatar_submit").prop("disabled", false);
-                $("#profil_avatar_submit").hide("scale");
-                $("#profil_avatar_aendern_file_name").hide("scale");
-    		});
+    		uploadFile(
+    		        file, 
+    		        function(response) {
+                    	var errFkt = function(errCode) 
+                    	{
+                    		if(errCode == "invalidparam") 
+                            {
+                                showError("Bitte geben Sie eine gültige Datei an.");
+                                return true;
+                            }
+                    		return false;
+        				};
+        				
+            			if(verifyResponse(response,errFkt))
+            			{
+                    		showInfo("Änerungen gespeichert.");
+                    		$.when(getBenutzer()).done(function() {
+                         		fillProfilseite();
+                         		fillMyPersonalBox();
+        					});
+            			}
+    		        },
+    		        actionUploadProfilBild,
+    		        params,
+    		        function() {
+            		    // beforeSend
+            		    $("#profil_avatar_submit").val("Lädt...");
+            		    $("#profil_avatar_submit").prop("disabled", true);
+    		        },
+    		        function() {
+            		    // complete
+            		    $("#profil_avatar_submit").val("Avatar ändern");
+                        $("#profil_avatar_submit").prop("disabled", false);
+                        $("#profil_avatar_submit").hide("scale");
+                        $("#profil_avatar_aendern_file_name").hide("scale");
+    		        }
+    		);
     	}
         event.preventDefault();
     });

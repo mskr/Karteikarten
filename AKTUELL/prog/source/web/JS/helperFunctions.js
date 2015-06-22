@@ -1,12 +1,31 @@
 /**
- * Enthält nützliche Hilfsfunktionen, die uns die Arbeit erleichtern.
+ * Enthaelt nützliche Hilfsfunktionen, die uns die Arbeit erleichtern.
  */
 
+$(document).ready(function() {
+    
+    // Handler der den Sind-Sie-Sicher-Dialog schliesst.
+    // Der Dialog wird immer nur durch diesen Code verborgen,
+    // egal welcher Button geklickt wird.
+    $("#dialog_sicher_popup_overlay").click(function() {
+        $("#dialog_sicher").addClass("hidden");
+        $("#dialog_sicher").fadeOut(300);
+        $("#dialog_sicher_popup_overlay").fadeOut(300);
+        $("#dialog_sicher_ja").off("click");
+    });
+    
+    // Meldung zeigen, wenn MathJax nicht geladen werden konnte
+    // (weil z.B. das CDN nicht erreichbar ist)
+    if (typeof MathJax == 'undefined')
+        showError("MathJax nicht geladen. Formeln können nicht gerendert werden.");
+    
+});
+
 /**
- * Füllt eine gegebenee selection mit optionen
+ * Füllt ein gegebenes select-Element mit option-Elementen
  * @param select
  * @param optArray Array mit den Einträgen als String
- * @param slectedOptName Option die gewählt sein soll
+ * @param selectedOptName Option die gewaehlt sein soll
  * @param clearFirst Wenn true, dann werden alle alten Optionen erst entfernt
  * @param placeholder String kann uebergeben werden, falls eine Default Option gesetzt werden soll
  */
@@ -26,46 +45,41 @@ function fillSelectWithOptions(select, optArray, selectedOptName, clearFirst, pl
     $(select).find("option[value='"+ selectedOptName +"']").prop('selected', true);
 }
 
+
 /**
  * Triggert einen Sind-Sicher-Dialog auf der GUI.
- * @param anchorElem ist das Triggerelement (jQuery- oder DOM-Element).
+ * @param anchorElem ist das Triggerelement (jQuery- oder DOM-Element), an dessen Position der Dialog erscheint.
  * @param message ist die Nachricht, die der Benutzer bestaetigen soll.
- * @param doCriticalThing ist eine Funktion, die nach Bestaetigung mit Ok ausgefuehrt wird.
+ * @param doCriticalThing ist eine Funktion, die nach Bestaetigung durch Klick auf 'Ja, weiter' ausgefuehrt wird.
  */
-$(document).ready(function() {
-	$("#dialog_sicher_popup_overlay").click(function() {
-		$("#dialog_sicher").addClass("hidden");
-		$("#dialog_sicher").fadeOut(300);
-		$("#dialog_sicher_popup_overlay").fadeOut(300);
-	    $("#dialog_sicher_ja").off("click");
-	});
-});
-function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
+function sindSieSicher(anchorElem, message, doCriticalThing)
 {
-	$("#dialog_sicher_popup_overlay").css("z-index","4000");
+    // Die Klasse hidden loest eine CSS Transition des Attributs 'scale' aus
     $("#dialog_sicher").removeClass("hidden");
+    
+    // Berechne und setze die Position des Dialogs.
+    // Falls dieser aus dem sichtbaren Bereich verschwindet, berechne Position neu.
     $("#dialog_sicher").css({
         top: 0,
         left: 0
     });
-    
     var pos = anchorElem.offset();
     $("#dialog_sicher").offset({
         top: pos.top,
         left: pos.left
     });
-    
     // Workaround
     var clone = $("#dialog_sicher").clone();
     clone.css("visibility","hidden");
     $('body').append(clone);
-    // Breite + Padding !
+    // Hole Breite inklusive Padding
     var width = clone.find(".sindSieSicher_head").outerWidth() + 1*clone.find(".sindSieSicher_head").css("padding-left").replace(/[^-\d\.]/g, '');
     clone.remove();
-    
+    // Verlaesst der Dialog den sichtbaren Bereich?
     var overflow = pos.left + width - $(window).width();
     if(overflow > 0)
     {
+        // Wenn ja, setze Position neu
         $("#dialog_sicher").offset({
             top: $("#dialog_sicher").offset().top,
             left: $("#dialog_sicher").offset().left - overflow
@@ -77,6 +91,7 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
 
     $("#dialog_sicher_frage").text(message);
     
+    // Handler fuer den 'Ja, weiter' Button
     $("#dialog_sicher_ja").click(function(e) {
         doCriticalThing();
     });
@@ -85,8 +100,12 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
 }
 
 /**
- * Blendet ein Popup auf der GUI ein. Hat das Popup mehrere Elemente mit der Klasse popup_fenster_body,
- * werden diese als Seiten dargestellt.
+ * Konstruktor der Klassendefinition fuer PopupFenster.
+ * Blendet ein PopupFenster als modalen Dialog auf der GUI ein.
+ * Die innere HTML Struktur des PopupFensters wird in einem div-Element mit der Klasse 'popup_fenster_overlay' festgelegt.
+ * Hat das Popup mehrere Elemente mit der Klasse 'popup_fenster_body' werden diese als Seiten dargestellt.
+ * Durch das Deaktivieren der Seiten wird ermoeglicht,
+ * dass der Dialog Seiten ueberspringt ohne dass der Benutzer dies bemerkt.
  * @param popupOverlayWrapper jQuery Objekt. Element, das den dunklen Hintergrund darstellt.
  * @param closeElems Array aus jQuery Objekten. Elemente, die bei Klick das Popup schliessen.
  * @param closeFunc Funktion, die bei Schliessen (egal auf welchem Weg!) ausgefuehrt wird.
@@ -99,14 +118,14 @@ function sindSieSicher(anchorElem, message, doCriticalThing, locV, locH)
  */
 function PopupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, submitFunc, focusElem, weiterElem, zurueckElem)
 {
-	this.popupOverlayWrapper =popupOverlayWrapper;
-	this.closeElems =closeElems;
-	this.closeFunc =closeFunc;
-	this.submitElem =submitElem;
-	this.submitFunc =submitFunc;
-	this.focusElem =focusElem;
-	this.weiterElem =weiterElem;
-	this.zurueckElem =zurueckElem;
+	this.popupOverlayWrapper = popupOverlayWrapper;
+	this.closeElems = closeElems;
+	this.closeFunc = closeFunc;
+	this.submitElem = submitElem;
+	this.submitFunc = submitFunc;
+	this.focusElem = focusElem;
+	this.weiterElem = weiterElem;
+	this.zurueckElem = zurueckElem;
 	
 	this.isVisible = false;
 
@@ -115,7 +134,10 @@ function PopupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
     if(this.closeFunc == undefined)
     	this.closeFunc = function(){return true;};
     
+    // Hole alle div-Elemente, die Seiten des Popups darstellen und speichere sie in einem Array
     this.seitenArr = this.popupOverlayWrapper.find(".popup_fenster_body");
+    
+    // Speichert immer den Index der aktuellen Seite
     this.popupSeitenIterator = 0;
     
     this.seiteAktiv = [];
@@ -123,18 +145,90 @@ function PopupFenster(popupOverlayWrapper, closeElems, closeFunc, submitElem, su
 	{
     	this.seiteAktiv[i] = true;
 	}
+    
 	this.init();
 }
 
+/**
+ * Wird vom Konstruktor aufgerufen
+ */
+PopupFenster.prototype.init = function(){
+    
+    $(this.seitenArr[0]).show();
+    var that = this;
+
+    // Handling der Seiten
+    if (this.seitenArr.length > 1) 
+    {
+        // Alle anderen Seiten ausblenden
+        for (var i = 1; i < this.seitenArr.length; i++) 
+        {
+            $(this.seitenArr[i]).hide();
+        }
+
+        this.submitElem.hide();
+
+        // Handling von zurück und Vorwärts
+        if (this.weiterElem != undefined) 
+        {
+            this.weiterElem.show();
+            this.weiterElem.off();
+            this.weiterElem.click(function() {
+                that.showNextPage();
+            });
+        }
+
+        if (this.zurueckElem != undefined) 
+        {
+            this.zurueckElem.hide();
+            this.zurueckElem.off();
+            this.zurueckElem.click(function() {
+                that.showPrevPage();
+            });
+        }
+    } 
+    // Wenn nur 1 Seite vorhanden, kein Seiten Handling noetig
+    else 
+    {
+        if (this.weiterElem != undefined)
+            this.weiterElem.hide();
+        if (this.zurueckElem != undefined)
+            this.zurueckElem.hide();
+    }
+
+    for ( var i in this.closeElems) 
+    {
+        this.closeElems[i].off();
+        this.closeElems[i].click(function() {
+            that.hide();
+        });
+    }
+    this.submitElem.off();
+    this.submitElem.click(function() {
+        if (that.submitFunc()) 
+        {
+            that.hide();
+        }
+    });
+}
+
+/**
+ * Seite mit gegebener ID deaktivieren.
+ * @param idx Index der Seite, die deaktiviert werden soll
+ */
 PopupFenster.prototype.disablePage = function(idx){
 	if(this.popupSeitenIterator == idx)
 	{
-		console.log("Die aktuell angezeigte Seite kann nicht deaktiviert werden.");
+		console.log("PopupFenster: Die aktuell angezeigte Seite kann nicht deaktiviert werden.");
 		return;
 	}
 	this.seiteAktiv[idx] = false;
 	this.updateButtons();
 }
+
+/**
+ * Alle Seiten aktivieren.
+ */
 PopupFenster.prototype.enableAllPages = function(){
 	for(var i = 0; i < this.seitenArr.length; i++)
 	{
@@ -143,6 +237,11 @@ PopupFenster.prototype.enableAllPages = function(){
 	this.updateButtons();
 }
 
+/**
+ * Ermoeglicht das Aendern der Funkion, die beim Schliessen des Popups ausgefuehrt wird,
+ * nachdem der Dialog initialisiert wurde.
+ * @param closeFunc
+ */
 PopupFenster.prototype.setCloseFkt = function(closeFunc){
 	if(this.isVisible){
 		this.hide();
@@ -150,6 +249,12 @@ PopupFenster.prototype.setCloseFkt = function(closeFunc){
 	}
 	this.closeFunc = closeFunc;
 }
+
+/**
+ * Ermoeglicht das Aendern der Funkion, die beim Absenden des Popups ausgefuehrt wird,
+ * nachdem der Dialog initialisiert wurde.
+ * @param submitFunc
+ */
 PopupFenster.prototype.setSubmitFkt = function(submitFunc){
 	if(this.isVisible){
 		this.hide();
@@ -158,21 +263,26 @@ PopupFenster.prototype.setSubmitFkt = function(submitFunc){
 	this.submitFunc = submitFunc;
 }
 
+/**
+ * Aktualisiert die Sichtbarkeit der Weiter-, Zurueck- und Submit-Buttons der aktuellen Seite.
+ */
 PopupFenster.prototype.updateButtons = function(){
 	if(this.popupSeitenIterator < 0)
 	{
-		console.log("Ungültiger Index");
+		console.log("PopupFenster: Ungültiger Index");
 		return;
 	}
 	else if(this.popupSeitenIterator > this.seitenArr.length-1)
 	{
-		console.log("Ungültiger Index");
+		console.log("PopupFenster: Ungültiger Index");
 		return;
 	}
-	// Suche den nächsten gültigen Index in beide richtungen
+	
+	// Suche den Index der naechsten aktiven (sichtbaren) Seite in beide Richtungen
+	// und merke mit zwei Booleans, ob die aktuelle Seite die erste oder letzte  sichtbare ist.
 	var isLast = false;
 	var isFirst = false;
-	
+	// Suche nach rechts (aufsteigender Index)
 	var currIdxUp = this.popupSeitenIterator;
 	if(currIdxUp == this.seitenArr.length-1)
 		isLast = true;
@@ -188,7 +298,7 @@ PopupFenster.prototype.updateButtons = function(){
 		}
 		isLast = currIdxUp>=this.seitenArr.length;
 	}
-	
+	// Suche nach links (absteigender Index)
 	var currIdxDown = this.popupSeitenIterator;
 	if(currIdxDown == 0)
 		isFirst = true;
@@ -205,7 +315,7 @@ PopupFenster.prototype.updateButtons = function(){
 		isFirst = currIdxDown<0;
 	}
 
-	// Jetzt das Einblenden, was sinn ergibt
+	// Jetzt die jeweils richtigen Buttons einblenden
 	if(isFirst && this.zurueckElem != undefined)
 	{
 		this.zurueckElem.hide();
@@ -226,11 +336,14 @@ PopupFenster.prototype.updateButtons = function(){
 		this.submitElem.hide();
 	}
 }
+/**
+ * Zeigt die naechste aktive (d.h. fuer Benutzer sichtbare) Seite an (Weiter-Funktion).
+ */
 PopupFenster.prototype.showNextPage = function(){
 	
 	if(this.popupSeitenIterator >= this.seitenArr.length-1)
 	{
-		console.log("Ungültiger Index");
+		console.log("PopupFenster: Ungültiger Index");
 		return;
 	}
 	
@@ -247,7 +360,7 @@ PopupFenster.prototype.showNextPage = function(){
 	
 	if(!this.seiteAktiv[this.popupSeitenIterator])
 	{
-		console.log("Ungültiger index");
+		console.log("PopupFenster: Ungültiger index");
 		return;
 	}
 	
@@ -256,10 +369,14 @@ PopupFenster.prototype.showNextPage = function(){
 	
 	this.updateButtons();
 }
+
+/**
+ * Zeigt die vorherige aktive (d.h. fuer Benutzer sichtbare) Seite an (Zurueck-Funktion).
+ */
 PopupFenster.prototype.showPrevPage = function(){
 	if(this.popupSeitenIterator <= 0)
 	{
-		console.log("Ungültiger Index");
+		console.log("PopupFenster: Ungültiger Index");
 		return;
 	}
 	
@@ -286,6 +403,9 @@ PopupFenster.prototype.showPrevPage = function(){
 	this.updateButtons();
 }
 
+/**
+ * Zeigt das PopupFenster als modalen Dialog auf der GUI an.
+ */
 PopupFenster.prototype.show = function(){
 
 	// Alle anderen Seiten ausblenden
@@ -309,6 +429,10 @@ PopupFenster.prototype.show = function(){
     this.isVisible = true;
     
 }
+
+/**
+ * Blendet das PopupFenster aus.
+ */
 PopupFenster.prototype.hide = function(){
 	this.isVisible = false;
 	var that = this;
@@ -320,63 +444,6 @@ PopupFenster.prototype.hide = function(){
 		
 	});
     that.popupOverlayWrapper.find(".popup_fenster").addClass("hidden");
-}
-
-PopupFenster.prototype.init = function(){
-
-    $(this.seitenArr[0]).show();
-    var that = this;
-    
-    if(this.seitenArr.length > 1)
-    {
-    	// Alle anderen Seiten ausblenden
-        for(var i=1; i<this.seitenArr.length; i++)
-        {
-            $(this.seitenArr[i]).hide();
-        }
-        
-        this.submitElem.hide();
-        
-        // Handling von zurück und Vorwärts
-        
-        if(this.weiterElem != undefined){
-        	this.weiterElem.show();
-        	this.weiterElem.off();
-        	this.weiterElem.click(function() {
-        		that.showNextPage();
-        	});
-        }
-        
-        if(this.zurueckElem != undefined){
-        	this.zurueckElem.hide();
-        	this.zurueckElem.off();
-        	this.zurueckElem.click(function() {
-        		that.showPrevPage();
-        	});
-        }
-    }
-    else
-    {
-    	if(this.weiterElem!= undefined)
-    		this.weiterElem.hide();
-    	if(this.zurueckElem!= undefined)
-    		this.zurueckElem.hide();
-    }
-    
-    for(var i in this.closeElems)
-    {
-    	this.closeElems[i].off();
-    	this.closeElems[i].click(function() {
-    		that.hide();
-        });
-    }
-    this.submitElem.off();
-    this.submitElem.click(function() {
-        if(that.submitFunc())
-        {
-        	that.hide();
-        }
-    });
 }
 
 /**
@@ -401,23 +468,9 @@ PopupFenster.prototype.init = function(){
  */
 function ajaxCall(servletUrl, action, noerrorFunc, params, errorHandlingFunc, beforeFunc, completeFunc, timeOut)
 {
-    console.log("[AJAX] action="+action);
+//    console.log("[AJAX] action="+action); // DEBUG
     if(timeOut == undefined)
     	timeOut = 10000;
-    
-//    return $.ajax({
-//    	timeout: timeOut,
-//        url: servletUrl,
-//        data: "action="+action + "&"+ toUrlParamString(params),
-//        beforeSend: beforeFunc,
-//        success: function(jsonResponse) {
-//            if(verifyResponse(jsonResponse,errorHandlingFunc)) {
-//            	if(noerrorFunc!= undefined)
-//            		noerrorFunc(jsonResponse);
-//            }
-//        },
-//        complete: completeFunc
-//    });
     
     if(params == undefined)
 		params = {};
@@ -473,7 +526,19 @@ function toUrlParamString(paramObj)
     return locationSearchTmp;
 }
 
-
+/**
+ * HTML Elemente mit der Klasse 'itemlist' koennen als GUI fuer Listen fungieren.
+ * Diese Funktion fuegt ein Element ein, dessen Name neben einem Button zum Entfernen
+ * des Eintrags angezeigt wird.
+ * @param itemMap assoziatives Objekt, das Anzeigenamen auf interne Daten mappt
+ * @param container jQuery Object. HTML Element mit der Klasse 'itemlist'
+ * @param displayName String der als Name angezeigt werden soll
+ * @param data interne Daten, die auf den Anzeigenamen gemappt werden
+ * @param removeFkt Funktion die beim Klick auf Entfernen ausgefuehrt wird
+ * @param clickFkt Funktion die beim Klick auf den Listeneintrag ausgefuehrt wird
+ * @returns {Boolean} true wenn das Einfuegen erfolgreich war,
+ * false wenn ein Eintrag mit diesem Namen schon in der Liste vorhanden ist.
+ */
 function addItemToList(itemMap, container, displayName, data, removeFkt, clickFkt) 
 {
 	if(itemMap[displayName])
@@ -489,7 +554,7 @@ function addItemToList(itemMap, container, displayName, data, removeFkt, clickFk
 	html += "<a class='octicon octicon-x itemListItemClose'></a>" +
 				"</span>"
 	
-	// Zu jquery konvertieren
+	// In jQuery Objekt konvertieren
 	html = $(html);
 	container.append(html);
 	
@@ -512,8 +577,6 @@ function addItemToList(itemMap, container, displayName, data, removeFkt, clickFk
 		// Aus map löschen
 		delete itemMap[displayName];
 	});
-	
-	
 	
 	return true;
 }
@@ -747,7 +810,9 @@ function fillSuchergebnisse(arrSuchErgebnisse, suchergContainer, categories, cat
     }
 }
 
+// Speichert den Index des aktuell selektierten Suchergebnisses
 var suchErgIterator = 0;
+
 /**
  * Diese Funktion wird von autoComplete genutzt.
  * Sie ermoeglicht es mit der Tastatur in den Suchergebnissen zu navigieren.
@@ -785,6 +850,10 @@ function handlePfeiltastenEvents(pressedKey, suchergJQueryObj, textInput) {
     $(arr[suchErgIterator]).addClass("selected");
 }
 
+/**
+ * Zerstoert alle CKEditor Instanzen in einem gegebenen DOM Element
+ * @param container
+ */
 function destroyCKeditors(container)
 {
 	for (var i in CKEDITOR.instances) {
@@ -801,6 +870,12 @@ function destroyCKeditors(container)
 	}
 }
 
+/**
+ * Kovertiert ein String-Array in einen einzigen String
+ * @param strArr
+ * @param seperator Zeichen, dass die Array-Eintraege im Ausgabestring trennt
+ * @returns {String}
+ */
 function concatStrArr(strArr, seperator)
 {
 	str = "";
@@ -858,16 +933,32 @@ function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator
 	return false;
 }
 
+/**
+ * Rundet eine gegebene Zahl
+ * @param zahl
+ * @param n
+ * @returns {Number}
+ */
 function myRound(zahl,n){
     var faktor;
     faktor = Math.pow(10,n);
     return(Math.round(zahl * faktor) / faktor);
 }
+
+/**
+ * Prueft ob gegebene Zahl gerade ist
+ * @param n
+ * @returns
+ */
 function isEven(n) {
 	return n == parseFloat(n)? !(n%2) : void 0;
 }
 
-
+/**
+ * Setzt ein neues CSS im Dokument
+ * @param cssFile Dateipfad
+ * @param cssLinkIndex Position an der das CSS im Dokument eingebunden wird
+ */
 function changeCSS(cssFile, cssLinkIndex) {
     var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
     var newlink = document.createElement("link");

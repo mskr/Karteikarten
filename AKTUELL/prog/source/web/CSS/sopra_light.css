@@ -282,7 +282,17 @@ textarea.input_std {
 	transform: scale(.3);
 }
 
-.sindSieSicherContainer {
+
+.popup_fenster_overlay {
+	display: none;
+	position: fixed;
+	z-index: 4000;
+	width: 100%;
+	height: calc(100% - .8em);
+	padding-top: 1%;
+	background: rgba(0,0,0,.5);
+	overflow-y: scroll;
+} .sindSieSicherContainer {
 	display: none;
 	position: absolute;
 	width: 13em;
@@ -297,16 +307,12 @@ textarea.input_std {
 	font-weight: bold;
 	background: white;
 	border-radius: 4px 4px 0 0;
-} /* .bigtooltip_head span {
-	display: inline;
-} */ .sindSieSicher_body {
+} .sindSieSicher_body {
 	padding: 0 1em;
 	width: inherit;
 	background: white;
 	box-shadow: 0px 0px 5px #888;
-} /* .sindSieSicher_body span {
-	display: block;
-}  */.sindSieSicher_foot {
+} .sindSieSicher_foot {
 	display: inline-block;
 	padding: 1em;
 	width: inherit;
@@ -386,17 +392,6 @@ textarea.input_std {
 } .popup_fenster.hidden {
 	transform: scale(.5);
 	opacity: 0;
-}
-
-.popup_fenster_overlay {
-	display: none;
-	position: fixed;
-	z-index: 199;
-	width: 100%;
-	height: calc(100% - .8em);
-	padding-top: 1%;
-	background: rgba(0,0,0,.5);
-	overflow-y: scroll;
 }
 
 .autoCompleteWrapper {

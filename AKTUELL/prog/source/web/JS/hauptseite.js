@@ -1,8 +1,7 @@
 /**
- * @author mk
+ * @author Andreas, Marius
  */
 
-// Statische Handler einmal registrieren
 $(document).ready(function() {
 	
     // Setup der Suchfunktion
@@ -20,14 +19,20 @@ $(document).ready(function() {
 				   $("#vn_alle_auswahl_studiengang").val());
 	});
 	
+	// Registriere die Handler fuer den Veranstaltung Erstellen Dialog
 	registerVeranstErzeugeHandler();
 });
 
+/**
+ * Zentrale Funktion zum Anzeigen der Hauptseite.
+ * Wird von urlHandler aufgerufen, wenn location == hauptseite.
+ * @returns jQuery Deffered, das resolved, wenn alle Ajax Calls fuer das Laden der Hauptseite abgeschlossen
+ */
 function fillHauptseite() 
 {
 	document.title = "Veranstaltungen";
     
-	// Studiengänge in auswahlliste anzeigen
+	// Studiengänge in Auswahlliste anzeigen
 	var ajax1 = ajaxCall(startseitenServlet,
 		actionGetStudiengaenge,
 		function(response) 
@@ -40,7 +45,7 @@ function fillHauptseite()
 	); 
 
 
-	// Semester in auswahlliste anzeigen
+	// Semester in Auswahlliste anzeigen
 	var ajax2 =  ajaxCall(startseitenServlet,
 		actionGetSemester,
 		function(response) 
@@ -99,12 +104,20 @@ function fillHauptseite()
     return $.when(ajax1,ajax2).done(fillVeranstaltungsliste);
 }
 
+/**
+ * Staret das Anzeigen der Veranstaltungen in den Tabs
+ * @returns jQuery Deferred, das resolved, wenn die Veranstaltungen geladen wurden
+ */
 function fillVeranstaltungsliste() 
 {
     return $.when(leseVeranstaltungenMeine(),leseVeranstaltungenSemesterStudiengang($("#vn_alle_auswahl_semester").val(),
     												   $("#vn_alle_auswahl_studiengang").val()));
 }
 
+/**
+ * Zeigt die Veranstaltung in die der aktuell eingeloggte Benutzer eingeschrieben ist im Tab 'Meine' an.
+ * @returns jQuery Deferred, das resolved, wenn die Veranstaltungen geladen wurden
+ */
 function leseVeranstaltungenMeine()
 {
 	// Meine Veranstaltungen
@@ -121,6 +134,12 @@ function leseVeranstaltungenMeine()
 	);
 }
 
+/**
+ * Zeigt die passenden Veranstaltungen zu einem gegebenen Semester sowie  Studiengang im Tab 'Alle' an.
+ * @param semesterName String, z.B. 'SoSe2015'
+ * @param studiengangName String, z.B. 'Informatik'
+ * @returns jQuery Deferred, das resolved, wenn die Veranstaltungen geladen wurden
+ */
 function leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName)
 {
 	// Semester Veranstaltungen
@@ -140,8 +159,11 @@ function leseVeranstaltungenSemesterStudiengang(semesterName, studiengangName)
 	);
 }
 
-
-
+/**
+ * Zeigt eine Liste von Veranstaltungen in einem gegebenen Container Element an.
+ * @param container DOM Objekt, das die Veranstaltungen enhalten soll
+ * @param ajaxResult JSON Objekt mit allen Daten ueber die Veranstaltungen
+ */
 function displayVeranstaltungen(container, ajaxResult)
 {
 	if(verifyResponse(ajaxResult))
@@ -174,10 +196,12 @@ function displayVeranstaltungen(container, ajaxResult)
 	}
 }
 
-var checkedRadio; // Der Radio Button zur derzeit ausgeklappten Veranstaltung
+//Der Radio Button zur derzeit ausgeklappten Veranstaltung
+var checkedRadio;
 
 /**
- * Zeigt eine Veranstaltung im angegeben Container an.
+ * Baut das DOM Element fuer eine einzelne Veranstaltung zusammen und
+ * fuegt es in den gegeben Container ein.
  * @param container Übergeordneter Container
  * @param jsonVeranstObj Objekt, dass die Veranstaltung enthält
  */
@@ -235,7 +259,7 @@ function displayVeranstaltung(container, jsonVeranstObj)
 		container.append(str);
 
 		// Ein-/Ausklappen
-		// (jetzt in CSS mit versteckten Radiobuttons realisiert, sodass nur 1 Veranstaltung gleichzeitig aufgeklappt sein kann)
+		// in CSS mit versteckten Radiobuttons realisiert, sodass nur 1 Veranstaltung gleichzeitig aufgeklappt sein kann
 		$("#"+id+"_radio").click(function() {
 			var vnIDaktuell = "vn_"+this.id.split("_")[1]+"_"+this.id.split("_")[2];
 			var vnIDdavor = "";
@@ -267,7 +291,9 @@ function displayVeranstaltung(container, jsonVeranstObj)
 			});
 		}
 
+		// Klick auf Erstellername fuehrt zu dessen Profil
 		registerErstellerClickFunction(str,jsonVeranstObj);
+		
 		registerEinAusschreibenClickEvent(str, jsonVeranstObj);
 	}
 }
@@ -386,6 +412,9 @@ function registerEinAusschreibenClickEvent(vnHtmlString, jsonVeranstObj) {
     }
 }
 
+/**
+ * Registriert den Handler fuer die Suche nach Personen und Veranstaltungen.
+ */
 function registerSuchEvent()
 {
     var categoryClassMapping = {};

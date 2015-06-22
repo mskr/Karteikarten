@@ -1,14 +1,13 @@
 /**
- * @author mk
+ * @author Andreas, Marius
  */
 
 /**
  * Diese Funktion zeigt einen roten oder gruenen Balken
  * am oberen Bildschirmrand an, der eine Fehler-
  * oder auch eine Erfolgsmeldung enthaelt.
- * @param isError ist 0, falls es sich um eine Fehler-
- * meldung handelt. 1 andernfalls.
- * @param text ist die anzuzeigende Meldung.
+ * @param isError true falls es sich um eine Fehlermeldung handelt, false andernfalls
+ * @param text anzuzeigende Meldung
  */
 function message(isError, text) {
 	var elemClass;
@@ -34,23 +33,31 @@ function message(isError, text) {
     }
 }
 
+// Speichert mehrere Meldungen in einer Warteschlange
 var messageQueue = [];
+// Dauer in Millisekunden, die eine Meldung angezeigt werden soll
 var messageTimer;
+// Speichert, ob aktuell eine Meldung angezeigt wird
 var laeuftGerade = false;
 
+/**
+ * Ruft sich in regelmaessigen Zeitabstaenden selbst auf, um die naechste Meldung anzuzeigen.
+ */
 function bearbeiteMessageQueue()
 {
-	if(showNextMessage()){
+	if(showNextMessage())
+	{
 		messageTimer = setTimeout(bearbeiteMessageQueue, 3000);
 		laeuftGerade = true;
 	}
-	else{
+	else
+	{
 		clearTimeout(messageTimer);
 		laeuftGerade = false;
 	}
 }
 /**
- * Beginnt die verarbeitung der Nachrichten. Tut nichts, wenn die verarbeitung schon läuft
+ * Beginnt die Verarbeitung der Meldungen. Tut nichts, wenn die Verarbeitung schon laeuft.
  */
 function startMessageQueue()
 {
@@ -59,7 +66,7 @@ function startMessageQueue()
 	bearbeiteMessageQueue();
 }
 /**
- * Leert die Queue und verarbeitet keine weiteren Nachrichten
+ * Leert die Queue und verarbeitet keine weiteren Meldungen.
  */
 function clearMessageQueue()
 {
@@ -91,12 +98,12 @@ function addMessageToQueue(errorTxt, isError)
 	messageQueue.push(obj);
 }
 /**
- * Holt die nächste Nachricht aus der Queue und zeigt sie an
- * @returns {Boolean}
+ * Holt die nächste Nachricht aus der Queue und zeigt sie an.
+ * @returns {Boolean} true falls weitere Meldungen warten
  */
 function showNextMessage()
 {
-	if(messageQueue.lenght == 0)
+	if(messageQueue.length == 0)
 		return false;
 	
 	obj = messageQueue.shift();
@@ -104,7 +111,7 @@ function showNextMessage()
 	if(obj == undefined)
 		return false;
 	
-	// show message
+	// Meldung anzeigen
 	message(obj["type"],obj["txt"]);
 
 	if(messageQueue.lenght == 0)
@@ -121,8 +128,8 @@ function showError(errorTxt) {
 	console.log("[ERROR] " + errorTxt);
 	addMessageToQueue(errorTxt,true);
 	startMessageQueue();
-	
 }
+
 /**
  * Wrapper für message(1,...)
  * @param intoTxt
@@ -132,64 +139,76 @@ function showInfo(intoTxt) {
 	startMessageQueue();
 }
 
+/**
+ * Uebersetzt Error Codes in fuer Benutzer angemessene Fehlermeldungen und zeigt diese an.
+ * In einigen Faellen sendet der Server eine solche Fehlermeldung zusaetzlich zum Error Code mit.
+ * In diesen Faellen wird diese Fehlermeldung angezeigt. 
+ * Andernfalls wird eine hier als String gespeicherte Fehlermeldung angezeigt. 
+ * Bei 'notloggedin' leitet diese Funktion den Benutzer zur Startseite weiter.
+ * Bei 'notallowed' leitet diese Funktion den Benutzer zur Hauptseite weiter.
+ * @param errorCode Error Code
+ * @param msg Fehlermeldung
+ */
 function handleError(errorCode,msg) {
 	switch (errorCode)
 	{
 		case "systemerror": 
 			if(msg == undefined)
-				showError("Ein interner Fehler ist aufgetreten. Versuchen Sie es erneut. Wenn der Fehler weiterhin besteht, wenden Sie sich an den Administrator.");
+				showError("Ein interner Serverfehler ist aufgetreten. " +
+						"Versuchen Sie es erneut. " +
+						"Wenn der Fehler weiterhin besteht, wenden Sie sich an den Administrator.");
 			else
 				showError(msg);
 			break;
 		case "invalidparam": 
 			if(msg == undefined)
-				showError("Der Server hat ungueltige oder fehlende Parameter erhalten. Bitte geben Sie korrekte Daten ein!");
+				showError("Der Server hat unerwartete Eingaben erhalten, die er nicht verarbeiten kann. " +
+						"Bitte machen Sie andere Eingaben.");
 			else
 				showError(msg);
 			break;
 		case "notloggedin": 
-	
-			if(getUrlParameterByName(urlParamLocation) != ansichtStartseite)
-				showError("Bitte loggen Sie sich ein!");
-			else if(msg != undefined)
-					showError(msg);
-	
-			jsonBenutzer = undefined;			// Benutzer objekt ungültig
+            if(msg == undefined)
+                showError("Sie sind nicht eingeloggt.");
+            else
+                showError(msg);
+            // Benutzer Objekt loeschen
+			jsonBenutzer = undefined;
 			gotoStartseite();
 			break;
 		case "loginfailed": 
 			if(msg == undefined)
-				showError("Dieser Eintrag wurde in der Datenbank nicht gefunden.");
+				showError("Dieser Benutzer wurde in der Datenbank nicht gefunden.");
 			else
 				showError(msg);
 			break;
 		case "registerfailed": 
 			if(msg == undefined)
-				showError("Ihre Daten konnten nicht registriert werden. Bitte versuchen Sie es erneut.");
+				showError("Die angegebenen Daten konnten nicht registriert werden. Bitte geben Sie andere Daten ein.");
 			else
 				showError(msg);
 			break;
 		case "emailalreadyinuse": 
 			if(msg == undefined)
-				showError("Entschuldigung, diese E-Mail Adresse ist bereits vergeben.");
+				showError("Diese E-Mail Adresse ist bereits vergeben.");
 			else
 				showError(msg);
 			break;
 		case "pwresetfailed": 
 			if(msg == undefined)
-				showError("Ihr Passwort konnte nicht zurueckgesetzt werden. Bitte versuchen Sie es erneut.");
+				showError("Ihr Passwort konnte nicht zurueckgesetzt werden.");
 			else
 				showError(msg);
 			break;
 		case "sessionexpired": 
 			if(msg == undefined)
-				showError("Ihre Login Session ist abgelaufen. Bitte loggen Sie sich erneut ein.");
+				showError("Sie wurden automatisch ausgeloggt, da sie zu lange inaktiv waren.");
 			else
 				showError(msg);
 			break;
 		case "notallowed":
 			if(msg == undefined)
-				showError("Diese Aktion ist nicht erlaubt. Sie haben womöglich nicht die nötigen Berechtigungen.");
+				showError("Zugriff verweigert. Sie haben nicht die erforderlichen Rechte.");
 			else
 				showError(msg);
 			
@@ -197,18 +216,20 @@ function handleError(errorCode,msg) {
 			break;
 		default: 
 			if(msg == undefined)
-				showError("Ein unbekannter Fehler ist aufgetreten (Error Code nicht bekannt).");
+				showError("Unbekannter Fehler. Error Code = "+errorCode);
 			else
 				showError(msg);
 		break;
-		}
+	}
 }
 
 /**
- * 
- * @param jsonResponse
- * @param specialErrorHandlingFkt
- * @returns true, falls kein Error, false andernfalls
+ * Prueft ob eine gegebene Serverantwort fehlerfrei ist.
+ * @param jsonResponse Antwortobjekt (JSON)
+ * @param specialErrorHandlingFkt Spezialbehandlung fuer einen gegebenen Errorcode.
+ * Dieser Callback muss true zurueckgeben, falls der Fehler nicht mehr anderweitig 
+ * bearbeitet werden soll (insb. durch eine Fehlermeldung).
+ * @returns true, falls fehlerfrei
  */
 function verifyResponse(jsonResponse, specialErrorHandlingFkt) 
 {
@@ -227,5 +248,3 @@ function verifyResponse(jsonResponse, specialErrorHandlingFkt)
 	
 	return true;
 }
-
-
