@@ -461,7 +461,7 @@ function displayKarteikarte(id, callback, reload){
     }
 }
 // Speichert den Ajaxcall der Karteikarten die aktuell geladen werden
-kkLoadRequest;
+kkLoadRequest = null;
 // True, wenn aktuell Nachfolger geladen werden
 displayingAfterKK = false;
 /**
@@ -522,7 +522,7 @@ function loadAfterKk(id)
 	return promise;
 }
 // True, wenn Vorgänger Karteikarten geladen werden.
-displayingPreKK = false;ä
+displayingPreKK = false;
 
 /**
  * Lädt die Vorgänger einer Karteikarte und zeigt sie am Anfang des kk_all Wrappers an.
@@ -723,7 +723,7 @@ Inhaltsverzeichnis.prototype.ladeKinder = function(vaterId, vaterElem, initialVi
                         kkListItem += "<a data-kkid='"+arr[i][paramId]+"' class='inhaltsvz_kk_knoten'>"+arr[i][paramTitel] + "</a>";
                         
                         if(that.extraGotoButton)
-                        	kkListItem +=" <a class='gotoKk octicon octicon-mail-reply' data-tooltip='Zu Karteikarte springen'></a>";
+                        	kkListItem +=" <a class='gotoKk tiptrigger tipabove' data-tooltip='Zu Karteikarte springen'><span class='octicon octicon-move-right'></span></a>";
                         
                         kkListItem += "</span></li>";
                         

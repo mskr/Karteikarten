@@ -1,5 +1,5 @@
 /**
- * @author mk
+ * @author Andreas, Marius
  */
 
 // Statische Handler einmal registrieren
@@ -7,7 +7,7 @@ $(document).ready(function() {
     $("#pwreset").click(function() {
 		if($("#login_email").val() == "")
 		{
-    		showError("Bitte geben Sie Ihre eMail-Adresse an!");
+    		showError("Bitte geben Sie Ihre E-Mail-Adresse an.");
 		}
 		else
 		{
@@ -18,13 +18,13 @@ $(document).ready(function() {
 			     actionResetPasswort,
 			     function(response) {
 			         showInfo("Ihr Passwort wurde erfolgreich zurückgesetzt. " +
-                              "Sie haben eine eMail mit ihrem neuen Passwort erhalten.");
+                              "Sie haben eine E-Mail mit Ihrem neuen Passwort erhalten.");
 			     },
 			     params,
 			     function(errCode) {
 			         if(errCode == "loginfailed") 
                      {
-                         showError("Diese eMail-Adresse existiert nicht im System.");
+                         showError("Diese E-Mail-Adresse existiert nicht.");
                          return true;
                      }
 			         else

@@ -1,5 +1,5 @@
 /**
- * @author mk
+ * @author Andreas, Marius
  */
 
 // Statische Handler einmal registrieren
@@ -71,6 +71,7 @@ function fillUserContainer()
 
 /**
  * Fügt eine neue Benachrichtung hinzu.
+ * @param ben 
  */
 function addBenachrichtigung(ben)
 {
@@ -143,6 +144,15 @@ function addBenachrichtigung(ben)
 	
 	divBn.slideDown("slow");
 }
+
+/**
+ * Wird von Benachrichtigungen genutzt.
+ * Sortiert DOM Elemente nach dem data-id Attribut,
+ * wenn diese die Klasse 'neu' haben.
+ * @param a
+ * @param b
+ * @returns {Number}
+ */
 function sortDivByClassName(a,b)
 {
 	if($(a).hasClass("neu") && $(b).hasClass("neu"))
@@ -157,12 +167,19 @@ function sortDivByClassName(a,b)
 		return 0;
 }
 
+// Speichert die aktuell als neu markierten Benachrichtigungen
 var aktuelleBenArr = [];
+
+/**
+ * Fuegt neue Benachrichtigungen aus einem gegebenen Array zur Queue der
+ * bestehenden Benachrichtigungen hinzu, aktualisiert den Counter, 
+ * und sortiert die Liste neu.
+ * @param newBens
+ */
 function updateBenachrichtigungen(newBens)
 {
 	var contentDiv = $("#bn_container");
 	var ungelesenCount = 0;
-	
 	
 	var initalArrSize = aktuelleBenArr.length;
 	
@@ -198,7 +215,7 @@ function updateBenachrichtigungen(newBens)
 				$("#keine_bn").slideUp("slow");
 			}			
 		}
-		// Sollte nicht auftreten. WEnn eine benachrichtigung von gelesen zu neu wird z.b.
+		// Sollte nicht auftreten. Wenn eine benachrichtigung von gelesen zu neu wird z.b.
 		else
 		{
 			var benDiv = contentDiv.find("[data-id="+newBens[i][paramId]+"]");
@@ -294,7 +311,7 @@ function handleReturnLink() {
 }
 
 /**
- * Ermoeglicht das Ausklappen der mypersonalbox im Smartphonemodus
+ * Animiert das Menu Icon im Smarphonemodus
  */
 function naviconTransformicon() {
     $(".lines-button").toggleClass("close");

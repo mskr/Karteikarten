@@ -159,7 +159,7 @@ textarea.input_std {
 	width: calc(100% - 20px);
 	position: fixed;
 	top: 0;
-	z-index: 900;
+	z-index: 5000;
 	color: white;
 	font-weight: bold;
 	display: none;
@@ -1239,11 +1239,13 @@ textarea.input_std {
 	content: "\2192";
 	padding-right: .5em;
 }
-.li_header:hover > .gotoKk{
-	opacity: 1;
-}
-.gotoKk{
+
+.gotoKk {
+	margin-left: .5em;
+	position: relative;
 	opacity: 0;
+} .li_header:hover > .gotoKk {
+	opacity: 1;
 }
  
 #kk_inhaltsverzeichnis.stuck {

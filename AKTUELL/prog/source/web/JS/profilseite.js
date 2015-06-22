@@ -1,7 +1,8 @@
 /**
- * @author mk
+ * @author Andreas, Marius
  */
 
+// ID des Benutzer, dessen Profil gerade angezeigt wird
 var currentProfilID;
 
 // Statische Handler einmal registrieren
@@ -111,6 +112,7 @@ $(document).ready(function() {
     });
     
 });
+
 /**
  * Zeigt die Daten des Benutzers im Profil an
  * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
@@ -161,11 +163,15 @@ function getProfilStudiengaenge() {
 				    	for(var i in studgArr) {
 				    		$("#profil_studiengang_input").append("<option>"+studgArr[i]+"</option>");
 				    	}
-				    	console.log("Studiengaenge geladen");
 			    	}
 		    	);
 }
 
+/**
+ * Fuellt das eigene Profil mit den Daten aus dem jsonBenutzer Objekt.
+ * Als Admin hat der Benutzer mehr Bearbeitungsmoeglichkeiten.
+ * @param isAdmin gibt an, ob ein Admin sein Profil ansieht
+ */
 function fillMyProfil(isAdmin)
 {
     $("#profil_email_input").attr("disabled",false);
@@ -184,7 +190,6 @@ function fillMyProfil(isAdmin)
 	
 	$(".profil_benutzername").text(jsonBenutzer[paramVorname] +" "+jsonBenutzer[paramNachname]);
 	$(".profil_avatar_img").attr("src", jsonBenutzer[paramProfilBild]);
-	console.log(jsonBenutzer[paramProfilBild]);
 	if(jsonBenutzer[paramProfilBild].indexOf("default")==-1){
 		$("#profil_avatar_loeschen_bt").show();
 	}
@@ -201,7 +206,6 @@ function fillMyProfil(isAdmin)
     $("#profil_matnr_input").val(jsonBenutzer[paramMatrikelNr]);
     $("#profil_rolle_input").val(jsonBenutzer[paramNutzerstatus]);
 	$("#profil_studiengang_input").val(jsonBenutzer[paramStudiengang]);
-	console.log("Setzte studiengang auf " + jsonBenutzer[paramStudiengang]);
     
     switch(jsonBenutzer[paramNotifyKommentare])
     {
@@ -243,6 +247,13 @@ function fillMyProfil(isAdmin)
 	}
 }
 
+/**
+ * Fuellt das Profil eines gegebenen Benutzers.
+ * Als Admin hat der Benutzer mehr Bearbeitungsmoeglichkeiten
+ * und kann das Profil loeschen.
+ * @param benutzer
+ * @param isAdmin
+ */
 function fillOtherProfil(benutzer, isAdmin)
 {
 	//aktualisiere Titel

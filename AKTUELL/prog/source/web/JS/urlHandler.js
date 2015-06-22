@@ -4,8 +4,10 @@
  * 2. Sendet action getBenutzer an Server
  * 3. Interpretiert die URL Parameter
  * 4. Zeigt entsprechende Ansicht an
- * @author mk
+ * @author Marius, Andreas
  */
+
+// URL mit der die Seite geladen wurde
 var initialURL="";
 $(document).ready(function() {
 	
@@ -28,13 +30,17 @@ $(document).ready(function() {
     	});
     });
     
-    // Auf zurÃ¼ck und vorwÃ¤rts im browser reagieren
+    // Auf zurueck und vorwaerts im Browser reagieren
     History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
         var urlQuery = parseUrlQuery();
         interpreteUrlQuery(urlQuery);
     });
 });
 
+/**
+ * Wird bei Groesssenaenderung des Fensters sowie bei Seitenwechseln aufgerufen.
+ * Blendet kontextsensitive Buttons in der Ansicht fuer kleine Bildschirme ein bzw. aus.
+ */
 var onResizeHandler = function(){
 	// Elemente fuer kleine Bildschirme
     if (window.matchMedia("(max-width: 56em)").matches)
@@ -86,6 +92,7 @@ var onResizeHandler = function(){
 $( window ).resize(function() {    
 	onResizeHandler();
 });
+
 //Der aktuell eingeloggte Benutzer als JSON Objekt.
 var jsonBenutzer;
 
