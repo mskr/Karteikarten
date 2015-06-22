@@ -1,16 +1,12 @@
+
+
 package com.sopra.team1723.ctrl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.*;
-
-import org.json.simple.JSONObject;
-
-import java.sql.Connection;
 
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.DbFalseLoginDataException;
@@ -18,6 +14,7 @@ import com.sopra.team1723.exceptions.DbFalsePasswortException;
 import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
+ * @author Matthias Englert
  * Interface zur Datenbank
  */
 public interface IDatenbankmanager {
@@ -140,30 +137,6 @@ public interface IDatenbankmanager {
      * vorhanden oder tritt ein Fehler auf, wird null zurückgegeben.
      */
     public Veranstaltung leseVeranstaltung(int id);
-
-    //    /**
-    //     * Holt alle Veranstaltungen aus der Datenbank und packt sie in eine Array List.
-    //     * @return Liste aller Veranstaltungen. Gibt es keine Veranstaltungen wird eine 
-    //     * leere Liste zurückgegeben. Bei einem Fehler kommt null zurück.
-    //     */
-    //    public List<Veranstaltung> leseAlleVeranstaltungen();
-    //    
-    //    /**
-    //     * Holt Veranstaltungen, die von dem angegebenen Studiengang gehört werden können
-    //     * aus der Datenbank.
-    //     * @param studiengang
-    //     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die 
-    //     * Methode eine leere Liste zurück. Bei einem Fehler kommt null zurück.
-    //     */
-    //    public List<Veranstaltung> leseVeranstaltungenStudiengang(String studiengang);
-    //
-    //    /**
-    //     * Holt alle Veranstaltungen aus dem angegebenen Semester aus der Datenbank.
-    //     * @param semester 
-    //     * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die Methode eine leere Liste zurück.
-    //     * Bei einem Fehler kommt null zurück.
-    //     */
-    //    public List<Veranstaltung> leseVeranstaltungenSemester(String semester);
 
     /**
      * Holt alle Veranstaltungen zu dem angegebenen Semester und Studiengang aus der Datenbank.
@@ -383,39 +356,59 @@ public interface IDatenbankmanager {
      */
     public Map<Integer,Tupel<Integer,String>> leseKindKarteikarten(int vaterKarteikID);
     
-    
+    /**
+     * Liest die Nachfolger Karteikarte einer Karteikarte.  
+     * @param karteik referenziert eindeutig eine Karteikarte
+     * @param anzNachfolger gibt an wie viele Nachfolger ausgelesen werden
+     * @return Gibt eine Map aus Position der Karteikarte (also um den wievielten Nachfolger
+     * es sich handelt) und der Karteikarte zurück. Bei einem Fehler wird null zurückgegeben.
+     */
     public Map<Integer,Karteikarte> leseNachfolger(int karteikarte, int anzNachfolger);
     
+    /**
+     * Liest die Vorgänger Karteikarte einer Karteikarte.  
+     * @param karteik referenziert eindeutig eine Karteikarte
+     * @param anzVorgänger gibt an wie viele Vorgänger ausgelesen werden
+     * @return Gibt eine Map aus Position der Karteikarte (also um den wievielten Vorgänger
+     * es sich handelt) und der Karteikarte zurück. Bei einem Fehler wird null zurückgegeben.
+     */
     public Map<Integer,Karteikarte> leseVorgaenger(int karteikarte, int anzVorgänger);
 
     /**
      * Fügt neue Karteikarte in die Datenbank ein. Bei einem Fehler wird eine
      * SQLException geworfen.  
-     * @param karteik
+     * @param karteik-Objekt, das in der Datenbank gespeichert wird
+     * @param vaterKK referenziert eindeutig eine Karteikarte. Die zu speichernde Karteikarte
+     * muss immer einen Vater haben, da über der ersten Karteikarte keine Karteikarte eingefügt
+     * werden kann
+     * @param ueberliegendeBruderKK referenziert eindeutig eine Karteikarte. Ist die Karteikarte
+     * das oberste Kind einer Karteikarte, gibt es keine ueberliegendeBruderKK. In diesem Fall muss
+     * der Parameter den Wert -1 haben.
      * @return ID der gerade eingefügten Karteikarte
+     * @throws SQLException
      */
     public int schreibeKarteikarte(Karteikarte karteik, int vaterKK, int ueberliegendeBruderKK) throws SQLException;
-    
-//    private void connectKk(int vonKK, int zuKK, Karteikarte.BeziehungsTyp typ, Connection conNeo4j) throws SQLException;
-//    
-//    private void disconnectKk(int vonKK, int zuKK, Connection conNeo4j) throws SQLException;
 
     /**
      * Daten der angegebenen Karteikarte werden in der Datenbank geupdatet.
      * Bei Erfolg liefert die Methode true zuruck (auch wenn die
      * Karteikarte gar nicht in der Datenbank vorhanden war). Bei einem
      * Fehler false.
-     * @param karteik 
-     * @return
+     * @param karteik-Objekt, das in der Datenbank geupdatet wird
+     * @param bearbeiter referenziert eindeutig einen Benutzer. Dieser Parameter wird benötigt
+     * damit die Methode weiß, dass der Bearbeiter keine Benachrichtigung bekommen soll
+     * @return Bei einem Fehler wird false zurückgeliefert ansonsten
+     * true.
      */
     public boolean bearbeiteKarteikarte(Karteikarte karteik, int bearbeiter);
 
     /**
-     * Entfernt die Karteikarte aus der Datenbank. Tritt ein Fehler auf
-     * gibt die Methode false zuruck. Ansonsten true. (Auch wenn die
+     * Entfernt die Karteikarte aus der Datenbank. Die Löschung erfolgt rekursiv.
+     * Das heißt, dass der komplette Unterbaum, der an dieser Karteikarte hängt
+     * ebenfalls gelöscht wird.
+     * @param karteikID referenziert eindeutig eine Karteikarte
+     * @return Tritt ein Fehler auf gibt die Methode false zurück. Ansonsten true. (Auch wenn die
      * Karteikarte gar nicht in der Datenbank vorhanden war.)
-     * @param karteikID 
-     * @return
      */
     public boolean loescheKarteikarte(int karteikID);
 
@@ -424,7 +417,7 @@ public interface IDatenbankmanager {
      * hat. Die Gesamtbewertung der Karteikarte wird entsprechend
      * angepasst. 
      * @param karteikID referenziert eindeutig eine Karteikarte
-     * @param bewert Bewertung des Benutzers, die entweder 1 oder -1 ist
+     * @param bewert, Bewertung des Benutzers, die entweder 1 oder -1 ist
      * @param benutzer referenziert eindeutig einen Benutzer
      * @return Bei einem Fehler wird false zurückgeliefert ansonsten
      * true.
@@ -432,11 +425,11 @@ public interface IDatenbankmanager {
     public boolean bewerteKarteikarte(int karteikID, int bewert, int benutzer);
 
     /**
-     * Gibt true zuruck, falls der Benutzer diese Karteikarte bereits bewertet
-     * hat. Ansonsten wird false zuruckgegeben.
-     * @param karteikID 
-     * @param benutzer 
-     * @return
+     * Prüft ob ein Benutzer eine Karteikarte bereits bewertet hat 
+     * @param karteikID referenziert eindeutig eine Karteikarte
+     * @param benutzer referenziert eindeutig einen Benutzer
+     * @return true, falls der Benutzer diese Karteikarte bereits bewertet
+     * hat. Ansonsten wird false zurückgegeben.
      */
     public boolean hatKarteikarteBewertet(int karteikID, int benutzer);
 

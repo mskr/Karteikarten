@@ -1,7 +1,3 @@
-/**
- * @author Matthias
- * 
- */
 package com.sopra.team1723.ctrl;
 
 import java.sql.Connection;
@@ -33,6 +29,7 @@ import com.sopra.team1723.data.Karteikarte.BeziehungsTyp;
 import com.sopra.team1723.exceptions.*;
 
 /**
+ * @author Matthias Englert
  * Implementiert die Methoden des @ref IDatenbankmanager. Bietet eine
  * Schnittstelle zur Datenbank.
  */
