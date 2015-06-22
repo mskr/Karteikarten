@@ -42,21 +42,44 @@ var onResizeHandler = function(){
     	if(window.location.href.indexOf("hauptseite")>=0){
     		$(".r-suche_etwas_label").show();
     		$(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
     	}
     	else if(window.location.href.indexOf("veranstaltungsseite")>=0){
-    		$(".r-kk-inhaltsvz-toggle").show();
+    	    $(".r-kk-inhaltsvz-toggle-screensize-m").removeAttr("style");
+    		$(".r-kk-inhaltsvz-toggle").removeAttr("style");
     		$(".r-suche_etwas_label").hide();
     	}
     	else
         {
             $(".r-suche_etwas_label").hide();
             $(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
+        }
+    }
+    else if (window.matchMedia("(max-width: 80em)").matches)
+    {
+        if(window.location.href.indexOf("hauptseite")>=0){
+            $(".r-suche_etwas_label").hide();
+            $(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
+        }
+        else if(window.location.href.indexOf("veranstaltungsseite")>=0){
+            $(".r-kk-inhaltsvz-toggle-screensize-m").removeAttr("style");
+            $(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-suche_etwas_label").hide();
+        }
+        else
+        {
+            $(".r-suche_etwas_label").hide();
+            $(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
         }
     }
     else
     {
         $(".r-suche_etwas_label").hide();
         $(".r-kk-inhaltsvz-toggle").hide();
+        $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
     }
 }
 

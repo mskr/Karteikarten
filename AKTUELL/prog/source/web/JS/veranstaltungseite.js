@@ -350,18 +350,7 @@ function fillVeranstaltungsSeite(Vid, kkId)
 	    });
         
 	});
-      
-    // Elemente fuer kleine Bildschirme
-    if (window.matchMedia("(max-width: 56em)").matches)
-    {
-        $(".r-suche_etwas_label").hide();
-        $(".r-kk-inhaltsvz-toggle").show();
-    }
-    else
-    {
-        $(".r-suche_etwas_label").hide();
-        $(".r-kk-inhaltsvz-toggle").hide();
-    }    
+	
 	return $.when(ajax1,ajax2,ajax3,d);
 }
 

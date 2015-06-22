@@ -88,18 +88,6 @@ function fillHauptseite()
 	{
 		$("#vn_erstellen_bt").hide();
 	}
-	  
-    // Elemente fuer kleine Bildschirme
-    if (window.matchMedia("(max-width: 56em)").matches)
-    {
-        $(".r-suche_etwas_label").show();
-        $(".r-kk-inhaltsvz-toggle").hide();
-    }
-    else
-    {
-        $(".r-suche_etwas_label").hide();
-        $(".r-kk-inhaltsvz-toggle").hide();
-    }
 
     return $.when(ajax1,ajax2).done(fillVeranstaltungsliste);
 }
