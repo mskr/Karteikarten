@@ -49,17 +49,6 @@ $(document).ready(function() {
 function fillStartseite() 
 {
 	document.title = "Sopra Login";
-
-    // Elemente fuer kleine Bildschirme
-    if (window.matchMedia("(max-width: 56em)").matches) {
-        $(".r-suche_etwas_label").hide();
-        $(".r-kk-inhaltsvz-toggle").hide();
-    }
-    else
-    {
-        $(".r-suche_etwas_label").hide();
-        $(".r-kk-inhaltsvz-toggle").hide();
-    }
     
     return ajaxCall(
         startseitenServlet,
