@@ -1,3 +1,7 @@
+/**
+ * @author Andreas, Marius
+ * 
+ */
 $(document).ready(function() {
 
 	var categoryClassMapping = {};

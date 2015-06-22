@@ -43,8 +43,10 @@ function fillMyPersonalBox()
     {
         return;
     }
+    
     fillUserContainer();
     handleReturnLink();
+    
     ajaxCall(
         benachrichtungsServlet,
         actionLeseBenachrichtungen,
@@ -67,6 +69,7 @@ function fillUserContainer()
     $(".username").html(vorname+" "+nachname);
     $(".rolle").html(" "+nutzerstatus);
     $(".user_MyProfilBild").attr("src", jsonBenutzer[paramProfilBild]);
+    $(".user_MyProfilBild").attr("onerror","this.src='files/general/default.png'");
 }
 
 /**
@@ -146,9 +149,7 @@ function addBenachrichtigung(ben)
 }
 
 /**
- * Wird von Benachrichtigungen genutzt.
- * Sortiert DOM Elemente nach dem data-id Attribut,
- * wenn diese die Klasse 'neu' haben.
+ * Sortiert html-Benachrichtigungscontainer anhand ihrer Klasse new bzw ihrer ID
  * @param a
  * @param b
  * @returns {Number}
@@ -167,13 +168,11 @@ function sortDivByClassName(a,b)
 		return 0;
 }
 
-// Speichert die aktuell als neu markierten Benachrichtigungen
+// Aktuell angezeigte Benachrichtungen
 var aktuelleBenArr = [];
 
 /**
- * Fuegt neue Benachrichtigungen aus einem gegebenen Array zur Queue der
- * bestehenden Benachrichtigungen hinzu, aktualisiert den Counter, 
- * und sortiert die Liste neu.
+ * Updated die aktuell angezeigten Benachrichtungen
  * @param newBens
  */
 function updateBenachrichtigungen(newBens)
@@ -273,7 +272,7 @@ function updateBenachrichtigungen(newBens)
 
 
 /**
- * Entfernt alle benachrichtigungen
+ * Entfernt alle Benachrichtigungen
  */
 function clearBenachrichtigungen()
 {
