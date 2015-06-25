@@ -22,6 +22,7 @@ import org.jsoup.Jsoup;
 import com.sopra.team1723.ctrl.*;
 import com.sopra.team1723.data.*;
 import com.sopra.team1723.exceptions.DbFalseLoginDataException;
+import com.sopra.team1723.exceptions.DbFalsePasswortException;
 import com.sopra.team1723.exceptions.DbUniqueConstraintException;
 
 /**
@@ -207,6 +208,9 @@ public class StartseitenServlet extends ServletController
         try
         {
             dbManager.schreibeBenutzer(nutzer);
+            nutzer = dbManager.leseBenutzer(email);
+            // Zu bedienungsanleitung einschreiben
+            dbManager.zuVeranstaltungEinschreiben(3, nutzer.getId(), null, true);   // Auf jedenfall einschreiben (deshalb admin=true)
         }
         catch (DbUniqueConstraintException e)
         {
@@ -225,6 +229,13 @@ public class StartseitenServlet extends ServletController
             return false;
         }
         catch (SQLException e)
+        {
+            e.printStackTrace();
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
+            outWriter.print(jo);
+            return false;
+        }
+        catch (DbFalsePasswortException e)
         {
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);

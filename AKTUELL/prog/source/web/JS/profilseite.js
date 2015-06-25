@@ -21,6 +21,7 @@ $(document).ready(function() {
 			        // ein Admin, der jmd anders geloescht hat.
 			        if(currentProfilID == jsonBenutzer[paramId])
 			        {
+		                initialURL = "";
 			            jsonBenutzer = undefined;
 	                    gotoStartseite();
 			        }
