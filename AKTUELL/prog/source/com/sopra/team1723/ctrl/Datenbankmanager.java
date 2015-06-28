@@ -33,12 +33,22 @@ import com.sopra.team1723.exceptions.*;
  * Implementiert die Methoden des @ref IDatenbankmanager. Bietet eine
  * Schnittstelle zur Datenbank.
  */
+
+
+
+// Die Methoden, die das Wort "Wrapper" beinhalten bauen selbst keine Connection zur Datenbank auf
+// sondern fordern die Connection als Parameter. Damit ist es für eine Datenbankmanager-Methode möglich
+// eine andere Datenbankmanager-Methode aufzurufen und bei beiden Methoden dieselbe Connection zu
+// verwenden. Dies kann notwendig sein um das Konzept einer Transaktion zu gewährleisten.
+// Dies ist wichtig falls ein Fehler auftritt und Änderungen in der Datenbank nur teilweise erledigt wurden.
+// Wenn die gleiche für alle Änderungen die gleiche Connection verwendet wurde, dann macht ein
+// "rollback" auf dieser Connection alle Änderungen rückgängig und die Datenbank bleibt in einem konsistenten
+// Zustand.
+
+
 public class Datenbankmanager implements IDatenbankmanager
 {
-    final int                                         UNIQUE_CONSTRAINT_ERROR = 1062;
-//    private static HashMap<Connection, ReentrantLock> connectionsNeo4j        = null;
-//    private static HashMap<Connection, ReentrantLock> connections             = null;
-//    private final static int                          AnzConnections          = 10;
+    final int                                           UNIQUE_CONSTRAINT_ERROR = 1062;
     private static BasicDataSource                      connectionPoolSQL = new BasicDataSource();
     private static BasicDataSource                      connectionPoolNeo4j = new BasicDataSource();
 
@@ -65,62 +75,8 @@ public class Datenbankmanager implements IDatenbankmanager
         connectionPoolNeo4j.setUsername("neo4j");
         connectionPoolNeo4j.setPassword("hallo123");
         
-//        try
-//        {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            Class.forName("org.neo4j.jdbc.Driver");
-//            connectionsNeo4j = new HashMap<Connection, ReentrantLock>();
-//            for (int i = 0; i < AnzConnections; ++i)
-//                connectionsNeo4j.put(
-//                        DriverManager.getConnection("jdbc:neo4j://localhost:7474/karteikarten", "neo4j", "hallo123"),
-//                        new ReentrantLock());
-//
-//            connections = new HashMap<Connection, ReentrantLock>();
-//            for (int i = 0; i < AnzConnections; ++i)
-//                connections.put(DriverManager.getConnection("jdbc:mysql://localhost:3306/sopra", "root", ""),
-//                        new ReentrantLock());
-//        }
-//        catch (ClassNotFoundException e)
-//        {
-//            e.printStackTrace();
-//        }
-//        catch (SQLException e)
-//        {
-//            e.printStackTrace();
-//        }
     }
 
-//    public static Entry<Connection, ReentrantLock> getConnectionNeo4j()
-//    {
-//        Iterator<Entry<Connection, ReentrantLock>> it = connectionsNeo4j.entrySet().iterator();
-//        Entry<Connection, ReentrantLock> defaultConnection = null;
-//        while (it.hasNext())
-//        {
-//            Entry<Connection, ReentrantLock> connection = it.next();
-//            if (!connection.getValue().isLocked())
-//            {
-//                connection.getValue().lock();
-//                return connection;
-//            }
-//
-//            if (defaultConnection == null
-//                    || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
-//                defaultConnection = connection;
-//        }
-//        System.out.println("Keine Neo4j Connection frei! Warte in Queue");
-//        try
-//        {
-//            throw new Exception("No Connection free");
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//
-//        defaultConnection.getValue().lock();
-//        return defaultConnection;
-//    }
-//
     public static synchronized Connection getConnectionNeo4j()
     {
         Connection connection = null;
@@ -141,36 +97,10 @@ public class Datenbankmanager implements IDatenbankmanager
             System.out.println("Error while getting a connection from the pool! \nSQL state:" + ex.getSQLState() + "\nMESSAGE" + ex.getMessage());
         }
         return connection;
-        
-//        Iterator<Entry<Connection, ReentrantLock>> it = connections.entrySet().iterator();
-//        Entry<Connection, ReentrantLock> defaultConnection = null;
-//        while (it.hasNext())
-//        {
-//            Entry<Connection, ReentrantLock> connection = it.next();
-//            if (!connection.getValue().isLocked())
-//            {
-//                connection.getValue().lock();
-//                return connection;
-//            }
-//
-//            if (defaultConnection == null
-//                    || connection.getValue().getQueueLength() < defaultConnection.getValue().getQueueLength())
-//                defaultConnection = connection;
-//        }
-//        System.out.println("Keine SQL Connection frei! Warte in Queue.");
-//        try
-//        {
-//            throw new Exception("No Connection free");
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//
-//        defaultConnection.getValue().lock();
-//        return defaultConnection;
     }
 
+    
+    // schließt eine Datenbankverbindung falls die Connection nicht null ist
     public void closeQuietly(Connection connection)
     {
         if (null == connection)
@@ -185,7 +115,8 @@ public class Datenbankmanager implements IDatenbankmanager
         }
 
     }
-
+    
+    // schließt ein PreparedStatement falls dieses nicht null ist
     protected void closeQuietly(PreparedStatement statement)
     {
         if (null == statement)
@@ -200,6 +131,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
     }
 
+    // schließt ein ResultSet falls dieses nicht null ist
     protected void closeQuietly(ResultSet resultSet)
     {
         if (null == resultSet)
@@ -221,12 +153,14 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Benutzer leseBenutzer(String eMail)
     {
+        // Verbindungsaufbau zur Datenbank
         Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Benutzer benutzer = null;
         try
         {
+            // lese Benutzer aus der Datenbank
             ps = conMysql
                     .prepareStatement("SELECT ID,Vorname,Nachname,Profilbild,Matrikelnummer,Studiengang,CryptedPW,Nutzerstatus,"
                             + "NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, Profilbild, Theme FROM benutzer WHERE eMail = ?");
@@ -234,6 +168,7 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             if (rs.next())
             {
+                // erzeuge neues Benutzerobjekt mit den Daten aus der Datenbank
                 benutzer = new Benutzer(rs.getInt("ID"), eMail, rs.getString("Vorname"), rs.getString("Nachname"),
                         rs.getInt("Matrikelnummer"), rs.getString("Studiengang"), rs.getString("CryptedPW"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), rs.getBoolean("NotifyVeranstAenderung"),
@@ -262,6 +197,8 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Benutzer leseBenutzer(int id)
     {
+        // Diese Methode liest einen Benuter au der Datenbank und baut dabei
+        // im Gegensatz zu der Methode leseBenutzerWrapper eine eigene Connection auf
         Connection conMysql = getConnectionSQL();
         try
         {
@@ -273,6 +210,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
     }
     
+    // liest Benutzer aus der Datenbank. Braucht zusätzlich eine Connection als Parameter
     private Benutzer leseBenutzerWrapper(int id, Connection conMysql){
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -286,6 +224,7 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             if (rs.next())
             {
+                // erzeuge neues Benutzerobjekt mit den Daten aus der Datenbank
                 benutzer = new Benutzer(id, rs.getString("eMail"), rs.getString("Vorname"), rs.getString("Nachname"),
                         rs.getInt("Matrikelnummer"), rs.getString("Studiengang"), rs.getString("CryptedPW"),
                         Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), rs.getBoolean("NotifyVeranstAenderung"),
@@ -317,6 +256,7 @@ public class Datenbankmanager implements IDatenbankmanager
         PreparedStatement ps = null;
         if (ServletController.DEBUGMODE)
             System.out.println("------");
+        // Passwort verschlüsseln
         String md5pwd = benutzer.getKennwort();
         String CryptedPW = BCrypt.hashpw(md5pwd, BCrypt.gensalt());
 
@@ -328,6 +268,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         try
         {
+            // Benutzer in die Datenbank einfügen
             ps = conMysql.prepareStatement("INSERT INTO benutzer (Vorname,Nachname,Matrikelnummer,eMail,Studiengang,"
                     + "CryptedPW, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, "
                     + "NotifyKarteikartenAenderung) VALUES(?,?,?,?,?,?,?,?,?,?)");
@@ -348,6 +289,7 @@ public class Datenbankmanager implements IDatenbankmanager
         catch (SQLException e)
         {
             e.printStackTrace();
+            // Matrikelnummer und Email müssen eindeutig sein
             if (UNIQUE_CONSTRAINT_ERROR == e.getErrorCode()){
                 if(e.getMessage().toLowerCase().contains("matrikelnummer"))
                     throw new DbUniqueConstraintException("matrikelnummer");
@@ -372,6 +314,7 @@ public class Datenbankmanager implements IDatenbankmanager
         ResultSet rs = null;
         try
         {
+            // ändere Benutzerdaten in der Datenbank
             ps = conMysql.prepareStatement("UPDATE benutzer SET eMail=?, Vorname=?,Nachname=?,"
                     + "NotifyKommentare=?, NotifyVeranstAenderung=?," 
                     + "NotifyKarteikartenAenderung=?, Theme=? WHERE ID = ?");
@@ -412,7 +355,10 @@ public class Datenbankmanager implements IDatenbankmanager
         ResultSet rs = null;
         try
         {
+            // Das Bearbeiten des Benutzers und das Schreiben einer Benachrichtiung
+            // soll eine Transaktion sein
             conMysql.setAutoCommit(false);
+            // ändere Benutzerdaten in der Datenbank
             ps = conMysql
                     .prepareStatement("UPDATE benutzer SET eMail=?, Vorname=?,Nachname=?,Matrikelnummer=?,Studiengang=?,"
                             + "Nutzerstatus=?, NotifyKommentare=?, NotifyVeranstAenderung=?,"
@@ -435,6 +381,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 schreibeBenachrichtigungWrapper(new BenachrProfilGeaendert(new GregorianCalendar(), benutzer.getId(),
                         admin), conMysql);
 
+            // Führe alle Änderungen aus
             conMysql.commit();
         }
         catch (SQLException e)
@@ -463,6 +410,7 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean erfolgreich = true;
         try
         {
+            // lösche Benutzer
             ps = conMysql.prepareStatement("DELETE FROM benutzer WHERE ID=?");
             ps.setInt(1, benutzerId);
             ps.executeUpdate();
@@ -488,6 +436,7 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean erfolgreich = true;
         try
         {
+            // Füge Pfad des Profilbilds in die Datenbank ein
             ps = conMysql.prepareStatement("UPDATE benutzer SET Profilbild=? WHERE ID=?");
             ps.setString(1, "default.png");
             ps.setInt(2, benutzerId);
@@ -516,6 +465,7 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             if (ServletController.DEBUGMODE)
                 System.out.println("DB prueft: email=" + eMail + ", passwort=" + passwort);
+            // Suche Benutzer mit der angegebenen E-Mail
             ps = conMysql.prepareStatement("SELECT * FROM benutzer WHERE eMail = ?");
             ps.setString(1, eMail);
             rs = ps.executeQuery();
@@ -527,6 +477,7 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 String Crypted = rs.getString("CryptedPW");
                 System.out.println("PASSWORT=" + passwort + "\nCRYPTED=" + Crypted);
+                // Prüfe ob Passwörter übereinstimmen
                 if (BCrypt.checkpw(passwort, Crypted) == false)
                 {
                     throw new DbFalseLoginDataException();
@@ -558,6 +509,7 @@ public class Datenbankmanager implements IDatenbankmanager
         ResultSet rs = null;
         try
         {
+            // Lese alle Studiengänge
             ps = conMysql.prepareStatement("SELECT Name FROM Studiengang");
             rs = ps.executeQuery();
             while (rs.next())
@@ -590,6 +542,7 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             semester = new HashMap<Integer, String>();
+            // Lese alle Semester
             ps = conMysql.prepareStatement("SELECT ID, Name FROM Semester");
             rs = ps.executeQuery();
             while (rs.next())
@@ -621,6 +574,7 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean erfolgreich = true;
         try
         {
+            // ändere Passwort
             ps = conMysql.prepareStatement("UPDATE benutzer SET CryptedPW=? WHERE eMail=?");
             ps.setString(1, neuesPasswort);
             ps.setString(2, eMail);
@@ -650,6 +604,7 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean erfolgreich = true;
         try
         {
+            // ändere Profilbild
             ps = conMysql.prepareStatement("UPDATE benutzer SET Profilbild=? WHERE ID=?");
             ps.setString(1, dateiName);
             ps.setInt(2, benutzerId);
@@ -691,6 +646,9 @@ public class Datenbankmanager implements IDatenbankmanager
         Veranstaltung veranstaltung = null;
         try
         {
+            // Lese Veranstaltung zu einer bestimmten ID. Es wird außerdem noch die Anzahl der Teilnehmer an der Veranstaltung ausgelesen.
+            // Die Anzahl ist kein Attribut der Veranstaltung-Tabelle. Die Anzahl Teilnehmer muss über die Zuordnungstabelle
+            // zwischen Benutzer und Veranstaltung ermittelt werden.
             ps = conMysql.prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt,"
                     + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer,"
                     + " ErsteKarteikarte "
@@ -703,9 +661,13 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             if (rs.next())
             {
+                // In der Tabelle Veranstaltung steht nur die Benutzer-ID des Erstellers der Veranstaltung zu Verfügung.
+                // Deshalb wird hier das komplette Benutzer-Objekt geholt
                 Benutzer ersteller = leseBenutzerWrapper(rs.getInt("Ersteller"),conMysql);
+                // Prüfe ob die Mehtode leseBenutzerWrapper erfolgreich war
                 if(ersteller == null)
                     return null;
+                // Erzeuge neues Veranstaltung-Objekt
                 veranstaltung = new Veranstaltung(id, rs.getString("Titel"), rs.getString("Beschreibung"),
                         rs.getString("Semester"), rs.getString("Kennwort"), rs.getBoolean("BewertungenErlaubt"),
                         rs.getBoolean("ModeratorKarteikartenBearbeiten"), ersteller,
@@ -737,6 +699,9 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             veranstaltungen = new ArrayList<Veranstaltung>();
+            // Lese Veranstaltungen in einem Semester und zu einem Studiengang. Es wird außerdem noch die Anzahl der Teilnehmer an der Veranstaltung ausgelesen.
+            // Die Anzahl ist kein Attribut der Veranstaltung-Tabelle. Die Anzahl Teilnehmer muss über die Zuordnungstabelle
+            // zwischen Benutzer und Veranstaltung ermittelt werden. 
             ps = conMysql
                     .prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
                             + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer, "
@@ -748,9 +713,13 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             while (rs.next())
             {
+                // In der Tabelle Veranstaltung steht nur die Benutzer-ID des Erstellers der Veranstaltung zu Verfügung.
+                // Deshalb wird hier das komplette Benutzer-Objekt geholt
                 Benutzer ersteller = leseBenutzerWrapper(rs.getInt("Ersteller"), conMysql);
+                // Prüfe ob die Mehtode leseBenutzerWrapper erfolgreich war
                 if(ersteller == null)
                     return null;
+                // Erzeuge neues Veranstaltung-Objekt und füge es der Liste hinzu.
                 veranstaltungen.add(new Veranstaltung(rs.getInt("v.ID"), rs.getString("Titel"), rs
                         .getString("Beschreibung"), rs.getString("Semester"), rs.getString("Kennwort"), rs
                         .getBoolean("BewertungenErlaubt"), rs.getBoolean("ModeratorKarteikartenBearbeiten"),
@@ -784,6 +753,9 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             veranstaltungen = new ArrayList<Veranstaltung>();
+            // Lese Veranstaltungen zu einem Benutzer. Es wird außerdem noch die Anzahl der Teilnehmer an der Veranstaltung ausgelesen.
+            // Die Anzahl ist kein Attribut der Veranstaltung-Tabelle. Die Anzahl Teilnehmer muss über die Zuordnungstabelle
+            // zwischen Benutzer und Veranstaltung ermittelt werden. 
             ps = conMysql
                     .prepareStatement("SELECT v.ID, Titel, Beschreibung, Semester, Kennwort, BewertungenErlaubt, "
                             + "ModeratorKarteikartenBearbeiten, Ersteller, KommentareErlaubt, count(bvz.ID) AS AnzTeilnehmer, "
@@ -794,9 +766,13 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             while (rs.next())
             {
+                // In der Tabelle Veranstaltung steht nur die Benutzer-ID des Erstellers der Veranstaltung zu Verfügung.
+                // Deshalb wird hier das komplette Benutzer-Objekt geholt
                 Benutzer ersteller = leseBenutzerWrapper(rs.getInt("Ersteller"), conMysql);
+                // Prüfe ob die Mehtode leseBenutzerWrapper erfolgreich war
                 if(ersteller == null)
                     return null;
+                // Erzeuge neues Veranstaltung-Objekt und füge es der Liste hinzu.
                 veranstaltungen.add(new Veranstaltung(rs.getInt("ID"), rs.getString("Titel"), rs
                         .getString("Beschreibung"), rs.getString("Semester"), rs.getString("Kennwort"), rs
                         .getBoolean("BewertungenErlaubt"), rs.getBoolean("ModeratorKarteikartenBearbeiten"),
