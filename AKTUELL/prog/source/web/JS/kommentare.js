@@ -1,3 +1,12 @@
+/**
+ * @author Andreas, Marius
+ */
+
+/**
+ * Zeigt gegebene Hauptkommentare zu einer Karteikarte an.
+ * @param karteikarteContainer
+ * @param kommentarArray
+ */
 function showHauptKommentare(karteikarteContainer, kommentarArray)
 {
 	var kommlist = karteikarteContainer.find(".kk_kommList");
@@ -9,11 +18,15 @@ function showHauptKommentare(karteikarteContainer, kommentarArray)
 		hauptKomm = createAndFillKommentar(kommentarArray[i], false, karteikarteContainer);
 		kommlist.append(hauptKomm);
 	}
-
 	// Sortieren
 	orderKommentareById(kommlist);
 }
 
+/**
+ * Zeigt gegebene Antwortkommentare zu einem Hauptkommentar an.
+ * @param hauptkommentar
+ * @param kommentarArray
+ */
 function showAntwortKommentare(hauptkommentar, kommentarArray)
 {
 	var kommbox = hauptkommentar.find(".subkommentare");
@@ -27,27 +40,34 @@ function showAntwortKommentare(hauptkommentar, kommentarArray)
 	orderKommentareById(kommbox);
 }
 
+/**
+ * Fuellt ein gegebenes Hauptkommentar-DOM-Element mit Informationen 
+ * aus einem gegebenen Hauptkommentar-JSON-Objekt.
+ * @param domKomm
+ * @param kommObj
+ * @param domKK
+ */
 function fillHauptKommentar(domKomm, kommObj, domKK)
 {
-	// Voting	
+	// Hervorheben positiver/negativer Bewertungen
 	domKomm.find(".komm_votestat").html(kommObj[paramBewertung]);
 	if(kommObj[paramBewertung] < 0)
 	{
-		domKomm.css("border-color","rgb(251,51,11)");
+		domKomm.css("border-left",".2em solid IndianRed");
 	}
 	else if(kommObj[paramBewertung] > 0)
 	{
-		domKomm.css("border-color","rgb(14,248,101)");
+		domKomm.css("border-left",".2em solid DarkSeaGreen");
 	}
-	
+	// Ausblenden der Buttons, falls Benutzer bereits bewertet hat
 	if(kommObj[paramHatGevoted] == true)
 	{
 		domKomm.find(".komm_voteup").css("opacity"," 0");
 		domKomm.find(".komm_votedown").css("opacity"," 0");
 	}
+    // Falls nicht: Bewertungen Handler registrieren
 	else
 	{
-		// Vote-Handler registrieren
 		domKomm.find(".komm_voteup").click(function() {
 			$.when(voteKommentarUp(kommObj[paramId])).done(function()
 				{
@@ -62,10 +82,11 @@ function fillHauptKommentar(domKomm, kommObj, domKK)
 		});
 	}
 
+	// Darf der Benutzer den Kommentar loeschen?
 	var kommErsteller = kommObj[paramErsteller];
-	if(kommErsteller[paramId] == jsonBenutzer[paramId] || checkIfAllowedVn(veranstaltungsObject,false))
+	if(kommErsteller[paramId] == jsonBenutzer[paramId] || checkIfAllowedVn(veranstaltungsObject,true,true,true))
 	{
-		// Löschen handler
+		// Falls ja Hauptkommentar loeschen Handler registrieren
 		domKomm.find(".kk_komm_loeschen").click(function() {
 			sindSieSicher(domKomm.find(".kk_komm_loeschen"), "Wollen Sie das gesamte Thema wirklich löschen?", 
 			function() {
@@ -120,11 +141,18 @@ function fillHauptKommentar(domKomm, kommObj, domKK)
 	});
 }
 
+/**
+ * Fuellt ein gegebenes Antwortkommentar-DOM-Element mit Informationen
+ * aus einem gegebenen Antwortkommentar-JSON-Object.
+ * @param domKomm
+ * @param kommObj
+ * @param domVaterKomm
+ */
 function fillAntKomm(domKomm, kommObj, domVaterKomm)
 {
+    // Darf der Benutzer den Kommentar loeschen?
 	var kommErsteller = kommObj[paramErsteller];
-	
-	if(kommErsteller[paramId] == jsonBenutzer[paramId] || checkIfAllowedVn(veranstaltungsObject,false) )
+	if(kommErsteller[paramId] == jsonBenutzer[paramId] || checkIfAllowedVn(veranstaltungsObject,true,true,true))
 	{
 		domKomm.find(".kk_komm_loeschen").off("click");
 		domKomm.find(".kk_komm_loeschen").click(function() {
@@ -144,6 +172,14 @@ function fillAntKomm(domKomm, kommObj, domVaterKomm)
 	}
 }
 
+/**
+ * Uebergeordnete Funktion, die gegebene Daten in ein Kommentar-DOM-Element einfuegt,
+ * das in HTML definiert ist. Diese Funktion ist fuer Hauptkommentare und Antwortkommentare verwendbar.
+ * @param kommObj
+ * @param isAntwortKommentar
+ * @param domVater
+ * @returns Kommentar DOM Element
+ */
 function createAndFillKommentar(kommObj, isAntwortKommentar, domVater)
 {
 	komID = isAntwortKommentar? "#templateSubKomm": "#templateSuperKomm";
@@ -164,9 +200,9 @@ function createAndFillKommentar(kommObj, isAntwortKommentar, domVater)
 	domKomm.find(".kommDatum").html(kommObj[paramErstellDatum]);
 	domKomm.find(".kk_komm_profilBild").attr("src",kommErsteller[paramProfilBild]);
 	
-	// TODO Was ist mit Moderatoren?
-	if(kommErsteller[paramId] == jsonBenutzer[paramId] || checkIfAllowedVn(veranstaltungsObject,false))
+	if(kommErsteller[paramId] == jsonBenutzer[paramId] || checkIfAllowedVn(veranstaltungsObject,true,true,true))
 	{
+	    
 	}
 	else
 	{
@@ -183,7 +219,13 @@ function createAndFillKommentar(kommObj, isAntwortKommentar, domVater)
 	return domKomm;
 }
 
-//Funktion für GUI der Votes
+/**
+ * Aktualisiert die GUI der Hauptkommentar-Bewertungen 
+ * zu einem gegebenen Hauptkommentar nach einem Bewertungsvorgang.
+ * Blendet Bewertungsbuttons aus und entfernt Klick Handler.
+ * @param domKomm
+ * @param vote Bewertung
+ */
 function doVoteGUI(domKomm, vote){
 	domKomm.find(".komm_voteup").fadeTo("fast",0);
 	domKomm.find(".komm_votedown").fadeTo("fast",0);
@@ -192,11 +234,11 @@ function doVoteGUI(domKomm, vote){
 	domKomm.find(".komm_votestat").html(vote);
 	if(vote < 0)
 	{
-		domKomm.css("border-color","rgb(251,51,11)");
+		domKomm.css("border-left",".2em solid IndianRed");
 	}
 	else if(vote > 0)
 	{
-		domKomm.css("border-color","rgb(14,248,101)");
+		domKomm.css("border-left",".2em solid DarkSeaGreen");
 	}
 	else
 	{
@@ -204,6 +246,12 @@ function doVoteGUI(domKomm, vote){
 	}
 }
 
+/**
+ * Zeigt eine gegeene Anzahl Antwortkommentare auf der GUI an.
+ * @param domKomm
+ * @param antwCnt
+ * @returns true, falls Antwortkommentare vorhanden, false andernfalls
+ */
 function setupAntwAnz(domKomm, antwCnt)
 {
 	if(antwCnt>0)
@@ -222,6 +270,12 @@ function setupAntwAnz(domKomm, antwCnt)
 	}
 }
 
+/**
+ * Laedt Antwortkommentare zu einem gegebenen Hauptkommentar vom Server
+ * und startet das Anzeigen auf der GUI.
+ * @param domKomm DOM Element des Hauptkommentars
+ * @param id des Hauptkommentars
+ */
 function showAntworten(domKomm, id)
 {
 	var params = {};
@@ -230,7 +284,7 @@ function showAntworten(domKomm, id)
 			kommentarServlet,
 			actionLeseAntwortKommentar,
 			function(response) {
-				arr = response[keyJsonArrResult];
+				var arr = response[keyJsonArrResult];
 				setupAntwAnz(domKomm,arr.length);
 				domKomm.find(".subkommentare").empty();
 				
@@ -243,6 +297,10 @@ function showAntworten(domKomm, id)
 	);
 }
 
+/**
+ * Klappt Antwortkommentare ein.
+ * @param domKomm
+ */
 function hideAntworten(domKomm)
 {
 	domKomm.find(".subkommentare").slideUp(function(){
@@ -251,7 +309,11 @@ function hideAntworten(domKomm)
 	});
 }
 
-
+/**
+ * Sortiert Kommentare in einem gegebenen Container nach ID
+ * (Entspricht Sortierung nach Erstelldatum).
+ * @param kommentareContainer
+ */
 function orderKommentareById(kommentareContainer)
 {
 	// Neu Sortieren
@@ -261,6 +323,11 @@ function orderKommentareById(kommentareContainer)
 	kommentareContainer.append(elem);
 }
 
+/**
+ * Bewertet ein Kommentar mit gegebener ID positiv.
+ * @param kommId
+ * @returns Ajax Objekt
+ */
 function voteKommentarUp(kommId)
 {
 	var params = {};
@@ -270,6 +337,12 @@ function voteKommentarUp(kommId)
 	        params
 	    );
 }
+
+/**
+ * Bewertet ein Kommentar mit gegebener ID negativ.
+ * @param kommId
+ * @returns Ajax Objekt
+ */
 function voteKommentarDown(kommId)
 {
 	var params = {};
@@ -279,6 +352,12 @@ function voteKommentarDown(kommId)
 	        params
 	    );
 }
+
+/**
+ * Loescht ein Kommentar mit gegebener ID.
+ * @param kommId
+ * @returns Ajax Objekt
+ */
 function loescheKommentar(kommId)
 {
 	var params = {};
@@ -288,6 +367,14 @@ function loescheKommentar(kommId)
 	        params
 	    );
 }
+
+/**
+ * Erstellt ein neues Antwort Kommentar mit gegebenem Text
+ * unter einem Hauptkommentar mit gegebener ID.
+ * @param hautpKommId
+ * @param text
+ * @returns Ajax Objekt
+ */
 function sendeAntwortKomm(hautpKommId, text)
 {
 	var params = {};
@@ -299,6 +386,14 @@ function sendeAntwortKomm(hautpKommId, text)
 	        params
 	);
 }
+
+/**
+ * Erstellt eine neues Hauptkommentar mit gegebenem Text
+ * zu einer Karteikarte mit gegebener ID.
+ * @param kkId
+ * @param text
+ * @returns Ajax Objekt
+ */
 function erstelleNeuesThemaKk(kkId, text)
 {
 	var params = {};

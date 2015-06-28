@@ -1,9 +1,14 @@
 /**
- * @author mk
+ * @author Andreas, Marius
+ * 
  */
 
+/**
+ * Erzeugt den Erstellen Dialog für das Erstellen der Veranstaltung
+ */
 $(document).ready(function() {
-    
+
+	// Popup dialog erstellen für Veranstaltung erstellen dialog.
 	 var popup = new PopupFenster(
         $("#vn_erstellen_popup_overlay"), 
         [$('#vn_erstellen_popup_close'),$("#vn_erstellen_cancel")],
@@ -14,13 +19,10 @@ $(document).ready(function() {
         $("#vn_erstellen_weiter"),
         $("#vn_erstellen_zurueck")
     );
-
+	 // Schließen funktion
 	 var closeFkt = function() {
-//		 var editor = $('#vn_erstellen_beschr_input').ckeditorGet();
-//		 editor.destroy();
 		 var dialog = $("#vn_erstellen_popup");
 		 dialog.find("#vn_erstellen_titel_input").val("");
-//		 dialog.find("#vn_erstellen_auswahl_semester").val(jsonBenutzer[paramSemester]);
 		 selectedStudiengaenge = {};
 		 $("#vn_erstellen_stg_list").empty();
 		 $("#vn_erstellen_stg_input").val("");
@@ -33,7 +35,7 @@ $(document).ready(function() {
 		 selectedModList = {};
 		 $("#vn_erstellen_mod_list").empty();
 	 }
-
+	 // Submit-Funktion
 	 var submitFkt = function() {
 		 var dialog = $("#vn_erstellen_popup");
 		 var titel = dialog.find("#vn_erstellen_titel_input").val(),
@@ -72,7 +74,9 @@ $(document).ready(function() {
 		 {
 			 params[paramModeratoren].push(selectedModList[key][paramId]);
 		 }
-		 var ajax = ajaxCall(veranstaltungServlet,
+		 
+		 // Senden des Ajax-Calls zum Erstellen der Veranstaltung
+		 ajaxCall(veranstaltungServlet,
 				 actionErstelleVeranst,
 				 function(response) {
 			 showInfo("Veranstaltung \""+ titel +"\"wurde erfolgreich erzeugt.");
@@ -82,11 +86,13 @@ $(document).ready(function() {
 		 );
 		 return true;
 	 }
+	 // Funktionen setzen
 	 popup.setCloseFkt(closeFkt);
 	 popup.setSubmitFkt(submitFkt);
 	 
+	 // CK editor für die Veranstaltungsbeschreibung erstellen.
 	 $("#vn_erstellen_beschr_input").ckeditor(ckEditorVnErstellenConfig);
-
+	 // Popup anzeigen wenn benutzer auf erstellen klickt
 	 $('#vn_erstellen_bt').click(function() {
 		 popup.show();
 	 });

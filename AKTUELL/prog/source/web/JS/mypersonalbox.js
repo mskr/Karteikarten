@@ -1,5 +1,5 @@
 /**
- * @author mk
+ * @author Andreas, Marius
  */
 
 // Statische Handler einmal registrieren
@@ -43,8 +43,10 @@ function fillMyPersonalBox()
     {
         return;
     }
+    
     fillUserContainer();
     handleReturnLink();
+    
     ajaxCall(
         benachrichtungsServlet,
         actionLeseBenachrichtungen,
@@ -67,10 +69,12 @@ function fillUserContainer()
     $(".username").html(vorname+" "+nachname);
     $(".rolle").html(" "+nutzerstatus);
     $(".user_MyProfilBild").attr("src", jsonBenutzer[paramProfilBild]);
+    $(".user_MyProfilBild").attr("onerror","this.src='files/general/default.png'");
 }
 
 /**
  * Fügt eine neue Benachrichtung hinzu.
+ * @param ben 
  */
 function addBenachrichtigung(ben)
 {
@@ -143,6 +147,13 @@ function addBenachrichtigung(ben)
 	
 	divBn.slideDown("slow");
 }
+
+/**
+ * Sortiert html-Benachrichtigungscontainer anhand ihrer Klasse new bzw ihrer ID
+ * @param a
+ * @param b
+ * @returns {Number}
+ */
 function sortDivByClassName(a,b)
 {
 	if($(a).hasClass("neu") && $(b).hasClass("neu"))
@@ -157,12 +168,17 @@ function sortDivByClassName(a,b)
 		return 0;
 }
 
+// Aktuell angezeigte Benachrichtungen
 var aktuelleBenArr = [];
+
+/**
+ * Updated die aktuell angezeigten Benachrichtungen
+ * @param newBens
+ */
 function updateBenachrichtigungen(newBens)
 {
 	var contentDiv = $("#bn_container");
 	var ungelesenCount = 0;
-	
 	
 	var initalArrSize = aktuelleBenArr.length;
 	
@@ -198,7 +214,7 @@ function updateBenachrichtigungen(newBens)
 				$("#keine_bn").slideUp("slow");
 			}			
 		}
-		// Sollte nicht auftreten. WEnn eine benachrichtigung von gelesen zu neu wird z.b.
+		// Sollte nicht auftreten. Wenn eine benachrichtigung von gelesen zu neu wird z.b.
 		else
 		{
 			var benDiv = contentDiv.find("[data-id="+newBens[i][paramId]+"]");
@@ -256,7 +272,7 @@ function updateBenachrichtigungen(newBens)
 
 
 /**
- * Entfernt alle benachrichtigungen
+ * Entfernt alle Benachrichtigungen
  */
 function clearBenachrichtigungen()
 {
@@ -294,7 +310,7 @@ function handleReturnLink() {
 }
 
 /**
- * Ermoeglicht das Ausklappen der mypersonalbox im Smartphonemodus
+ * Animiert das Menu Icon im Smarphonemodus
  */
 function naviconTransformicon() {
     $(".lines-button").toggleClass("close");

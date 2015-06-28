@@ -2,11 +2,9 @@ package com.sopra.team1723.ctrl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
@@ -393,8 +391,10 @@ public class KommentarServlet extends ServletController
             vaterKomm = dbManager.leseKommentar(komm.getVaterID());
 
         Karteikarte kk = dbManager.leseKarteikarte(vaterKomm.getKarteikartenID());
+        Veranstaltung vn = dbManager.leseVeranstaltung(kk.getVeranstaltung());
 
-        if (komm.getErsteller().getId() != aktuellerBenutzer.getId()
+        if (vn.getErsteller().getId() != aktuellerBenutzer.getId()
+                && komm.getErsteller().getId() != aktuellerBenutzer.getId()
                 && aktuellerBenutzer.getNutzerstatus() != Nutzerstatus.ADMIN
                 && !dbManager.istModerator(aktuellerBenutzer.getId(), kk.getVeranstaltung()))
         {

@@ -1,3 +1,7 @@
+/**
+ * @author Andreas, Marius
+ * 
+ */
 $(document).ready(function() {
 
 	var categoryClassMapping = {};
@@ -33,7 +37,7 @@ $(document).ready(function() {
 			categoryClassMapping,
 			actionSucheBenutzer
 	);
-	
+	// Wenn das Passwort geändert wird, prüfen ob man den haken setzen muss oder nicht ( leeres PW-> haken weg)
     $("#vn_bearbeiten_pass_input").change(function(){
     	if($("#vn_bearbeiten_pass_input").val() != "")
     		$("#vn_bearbeiten_passwort_set").prop("checked",true);
@@ -104,7 +108,6 @@ $(document).ready(function() {
 
         	var dialog = $("#vn_bearbeiten_popup");
         	dialog.find("#vn_bearbeiten_titel_input").val("");
-//	            	dialog.find("#vn_bearbeiten_auswahl_semester").val("");
         	selectedStudiengaenge = {};
         	$("#vn_bearbeiten_stg_list").empty();
         	
@@ -158,6 +161,7 @@ $(document).ready(function() {
 			params[paramModeratorKkBearbeiten] = moderatorenKkBearbeiten;
 			params[paramKommentareErlauben] = kommentareErlaubt;
 			params[paramBewertungenErlauben] = bewertungenErlaubt;
+			
 			if(passw != "" && passChecked)
 				params[paramPasswort] = passw;
 			else if(!passChecked)

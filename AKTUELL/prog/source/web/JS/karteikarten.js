@@ -1,11 +1,17 @@
 /**
- * @author mk
+ * @author Andreas, Marius
  */
-insertingKarteikarte = false;
-insertingKkAjaxCalls = [];
-kkWaypoints = [];
+
+/**
+ * Baut zu einem gegebenen Karteikarten Objekt das DOM Element zusammen.
+ * Dafuer wird ein im HTML File definiertes 'Grundgeruest' fuer Karteikarten verwendet.
+ * Dieses wird mit Informationen aus dem gegebenen Objekt gefuellt.
+ * @param karteikarteJson eine Karteikarte als JSON Objekt wie es der Server versendet
+ * @returns kkDom DOM Element, das eine Karteikarte darstellt
+ */
 function buildKarteikarte(karteikarteJson)
 {
+    // Hole Daten der Karteikarte
     var kkId = karteikarteJson[paramId],
         kkTitel = karteikarteJson[paramTitel],
         kkType = karteikarteJson[paramType],
@@ -14,14 +20,16 @@ function buildKarteikarte(karteikarteJson)
         kkBewertung = karteikarteJson[paramBewertung],
         kkAenderungsdatum = karteikarteJson[paramAenderungsdatum];
     
+    // Hole das in HTML definierte Karteikarten Element
     var kkDom = $("#templatekarteikarte").clone(true,true);
     kkDom.removeAttr("id");
     kkDom.attr("data-kkid", kkId);
     kkDom.show();
 
+    // Fuelle die Karteikarte mit den Daten
     fillKarteiKarte(kkDom,karteikarteJson);
     
-    // Rechte pruefen
+    // Rechte pruefen und entsprechende Buttons anzeigen bzw. ausblenden
     
     // Wenn Benutzer kein Admin oder Ersteller 
     if( !checkIfAllowedVn(veranstaltungsObject, true, true, false) ||
@@ -56,6 +64,8 @@ function buildKarteikarte(karteikarteJson)
         kkDom.find(".kk_notizen_head").outerWidth("100%");
     }
 
+    // Registriere Klick Handler auf Buttons
+    
     kkDom.find(".KKbearbeiten").click(function(){
     	processKK_editClick($(this));
 	});
@@ -74,8 +84,8 @@ function buildKarteikarte(karteikarteJson)
     	});
     });
     
-    // Workaround:
     kkDom.find(".permalink").click(function(){
+        // Baue die eindeutige URL fuer eine Karteikarte zusammen
    	 	kkUrl = location.host + location.pathname + "?location=veranstaltungsseite&id="+ veranstaltungsObject[paramId] +
 			"&"+paramURLKkID+"=" + 	kkId;
    	 	
@@ -90,18 +100,18 @@ function buildKarteikarte(karteikarteJson)
     });
     
 	// Reagiere auf das Scrollen zu dieser Karteikarte
-    kkWaypoints.push(kkDom.waypoint({
-	    element: kkDom,
-	    enabled: false,					// Erstmal deaktivieren
+    kkDom.waypoint({
+        // Waypoints werden aktiviert, wenn alle KKs geladen wurden
+	    enabled: false,
 	    handler: function(direction) {
 	    	vnInhaltsverzeichnis.showEintrag(kkId);
 	    },
 	    offset: "40px",
 	    group: 'kk_waypoint_group',
 	    continuous: false
-	}));
+	});
     
-    // Überschrift kk
+    // Ueberschrift Karteikarten sind hier schon fertig, Funktion wird verlassen
     if(kkInhalt == "" && kkType == paramKkText)
     	return kkDom;
     
@@ -115,8 +125,7 @@ function buildKarteikarte(karteikarteJson)
     
     // Notiz Editor
     kkDom.find(".kk_notizen_body").ckeditor(function() {
-    	// TODO Karteikarte setzen und DANACH change handler registireren
-    	// Funktioniert irgendwie nicht. Handler wird gesetzt bevor Inhalt gesetzt wurde
+        // Notiz speichern Button
     	var that = this;
     	$.when(setNotiz(kkDom, kkId)).done(function(){
     		that.on('change', function() {
@@ -190,7 +199,7 @@ function buildKarteikarte(karteikarteJson)
         }
     });
 
-    // Erzeuge ckEditor
+    // Kommentare ckEditor
     kkDom.find(".kk_kommerstellen .antw").ckeditor(ckEditorKommentarConfig);
 
     // Neues Thema absenden Handler
@@ -216,8 +225,6 @@ function buildKarteikarte(karteikarteJson)
 		});
 	});
     
-   
-	
 	kkDom.find(".kk_kommheader_refresh").click(function(){
 	    // Kommentare laden und anzeigen
 	    var params = {};
@@ -237,6 +244,12 @@ function buildKarteikarte(karteikarteJson)
     return kkDom;
 }
 
+/**
+ * Traegt die Daten aus einem gegebenen Karteikarten JSON-Objekt
+ * in ein gegebenes Karteikarten DOM-Element ein.
+ * @param domElem
+ * @param json
+ */
 function fillKarteiKarte(domElem, json){
 	        
 	// set Rating
@@ -309,6 +322,14 @@ function fillKarteiKarte(domElem, json){
     domElem.find(".kk_titel").append(kkButtonbar);
 }
 
+/**
+ * Wandelt das vom Server empfangene Boolean Array, 
+ * das die Verweise zu einer Karteikarte repraesentiert
+ * in einen fuer die GUI nutzbaren HTML String um.
+ * Verweise werden als span's mit der Klasse 'kk_attr_chip' dargestellt.
+ * @param arrAttr
+ * @returns HTML String
+ */
 function createAttrStr(arrAttr){
 	strArr = [];
 	if(arrAttr[0] == true)
@@ -337,8 +358,10 @@ function createAttrStr(arrAttr){
 	
 	return concatStrArr(strArr, "");
 }
+
 /**
- * 
+ * Baut die Verweise einer Karteikarte in das DOM Element ein.
+ * @param domKk Karteikarte DOM Element
  * @param verweisArr Array aus {paramType, paramId, paramTitel}
  */
 function fillVerweise(domKk, verweisArr)
@@ -378,6 +401,12 @@ function fillVerweise(domKk, verweisArr)
 	domKk.find(".kk_rel_uebung").html(concatStrArr(rel_uebung, ", "));
 	
 }
+
+/**
+ * Laedt ein Karteikarten JSON Objekt mit gegebener ID vom Server.
+ * @param id
+ * @returns Ajax Objekt
+ */
 function getKarteikarteByID(id){
 	var params = {};
     params[paramKkId] = id;
@@ -391,6 +420,13 @@ function getKarteikarteByID(id){
     );
 }
 
+/**
+ * Laed eine eventuell vorhandene Notiz des aktuell eingeloggten Benutzers 
+ * zu einer Karteikarte vom Server und traegt diese in das DOM Element ein.
+ * @param kkDom
+ * @param kkId
+ * @returns Ajax Objekt
+ */
 function setNotiz(kkDom, kkId)
 {
 	var params = {};
@@ -410,7 +446,13 @@ function setNotiz(kkDom, kkId)
 	    params
 	);
 }
-//Funktion für GUI der Votes
+
+/**
+ * Aktualisiert die Bewertungsbuttons nach einer Bewertung.
+ * Neue Bewertung wird gesetzt, Pfeile werden ausgegraut und Klick Handler entfernt.
+ * @param domKomm
+ * @param vote (Number) Bewertung
+ */
 function doVoteKkGUI(domKomm, vote){
 	domKomm.find(".kk_voteup").css("opacity","0.1");
 	domKomm.find(".kk_votedown").css("opacity","0.1");
@@ -420,6 +462,12 @@ function doVoteKkGUI(domKomm, vote){
 	domKomm.find(".kk_votedown").off("click");
 	domKomm.find(".kk_votestat").html(vote);
 }
+
+/**
+ * Sendet eine positive Bewertung zu einer gegebenenen Karteikarten ID an den Server.
+ * @param kommId 
+ * @returns Ajax Objekt
+ */
 function voteKkUp(kommId)
 {
 	var params = {};
@@ -429,6 +477,12 @@ function voteKkUp(kommId)
 	        params
 	    );
 }
+
+/**
+ * Sendet eine negative Bewertung zu einer gegebenenen Karteikarten ID an den Server.
+ * @param kommId
+ * @returns Ajax Objekt
+ */
 function voteKkDown(kommId)
 {
 	var params = {};
@@ -438,45 +492,3 @@ function voteKkDown(kommId)
 	        params
 	    );
 }
-
-
-//function inhaltsvzAufklappenBis(startElem, kkID, i)
-//{
-//    var kkArr = startElem.find("> ul > li > .inhaltsvz_kk_knoten");
-//    if(kkArr.size() == 0)
-//    {
-//        return false;
-//    }
-//    elem = kkArr[i];
-//    if($(elem).data("kkid") == kkID)
-//    {
-//        inhaltsverzeichnisHighlightKnoten($(elem));
-//        $(elem).parents("li").siblings().find("ul").slideUp("normal", function() { $(this).remove() });
-//        return true;
-//    }
-//    else
-//    {
-//        if( inhaltsvzAufklappenBis($(elem).parent("li"), kkID, i) )
-//        {
-//            return true;
-//        }
-//        else
-//        {
-//            $.when( ladeKindKarteikarten($(elem).data("kkid"), $(elem).parent("li")) ).done(function() {
-//                if( inhaltsvzAufklappenBis($(elem).parent("li"), kkID, i) )
-//                {
-//                    return true;
-//                }
-//                else
-//                {
-//                    if(i < kkArr.length-1)
-//                        return inhaltsvzAufklappenBis(startElem, kkID, i+1);
-//                    else
-//                        return false;
-//                }
-//            });
-//        }
-//    }
-//    // TODO Funktion darf nicht returnen bevor der Callback von $.when().done oben feuert! Wie geht das?
-//}
-

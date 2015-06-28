@@ -1,5 +1,5 @@
 /**
- * @author mk
+ * @author Andreas, Marius
  */
 
 $(document).ready(function() {
@@ -15,7 +15,10 @@ $(document).ready(function() {
              startseitenServlet,
              actionLogin,
              function() {
-                 $.when(getBenutzer()).done(function(){
+                 // Warte bis aktueller Benutzer als JSON geladen
+                 $.when(getBenutzer()).done(function() {
+                     // Falls URL nicht auf Startseite gesetzt, weiterleiten zu der location mit der
+                     // die Seite aufgerufen wurde
                 	 if(initialURL.indexOf("sopra.html")>=0 && initialURL.indexOf("startseite")<0)
                 		 History.back();
                 	 else
@@ -45,6 +48,7 @@ $(document).ready(function() {
                 jsonBenutzer = undefined;
                 showInfo("Sie haben sich erfolgreich abgemeldet");
                 clearBenachrichtigungen();
+                initialURL = "";
                 gotoStartseite();
             }
         )

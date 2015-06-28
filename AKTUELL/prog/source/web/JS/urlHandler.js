@@ -4,8 +4,10 @@
  * 2. Sendet action getBenutzer an Server
  * 3. Interpretiert die URL Parameter
  * 4. Zeigt entsprechende Ansicht an
- * @author mk
+ * @author Marius, Andreas
  */
+
+// URL mit der die Seite geladen wurde
 var initialURL="";
 $(document).ready(function() {
 	
@@ -28,13 +30,17 @@ $(document).ready(function() {
     	});
     });
     
-    // Auf zurÃ¼ck und vorwÃ¤rts im browser reagieren
+    // Auf zurueck und vorwaerts im Browser reagieren
     History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
         var urlQuery = parseUrlQuery();
         interpreteUrlQuery(urlQuery);
     });
 });
 
+/**
+ * Wird bei Groesssenaenderung des Fensters sowie bei Seitenwechseln aufgerufen.
+ * Blendet kontextsensitive Buttons in der Ansicht fuer kleine Bildschirme ein bzw. aus.
+ */
 var onResizeHandler = function(){
 	// Elemente fuer kleine Bildschirme
     if (window.matchMedia("(max-width: 56em)").matches)
@@ -42,27 +48,51 @@ var onResizeHandler = function(){
     	if(window.location.href.indexOf("hauptseite")>=0){
     		$(".r-suche_etwas_label").show();
     		$(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
     	}
     	else if(window.location.href.indexOf("veranstaltungsseite")>=0){
-    		$(".r-kk-inhaltsvz-toggle").show();
+    	    $(".r-kk-inhaltsvz-toggle-screensize-m").removeAttr("style");
+    		$(".r-kk-inhaltsvz-toggle").removeAttr("style");
     		$(".r-suche_etwas_label").hide();
     	}
     	else
         {
             $(".r-suche_etwas_label").hide();
             $(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
+        }
+    }
+    else if (window.matchMedia("(max-width: 80em)").matches)
+    {
+        if(window.location.href.indexOf("hauptseite")>=0){
+            $(".r-suche_etwas_label").hide();
+            $(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
+        }
+        else if(window.location.href.indexOf("veranstaltungsseite")>=0){
+            $(".r-kk-inhaltsvz-toggle-screensize-m").removeAttr("style");
+            $(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-suche_etwas_label").hide();
+        }
+        else
+        {
+            $(".r-suche_etwas_label").hide();
+            $(".r-kk-inhaltsvz-toggle").hide();
+            $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
         }
     }
     else
     {
         $(".r-suche_etwas_label").hide();
         $(".r-kk-inhaltsvz-toggle").hide();
+        $(".r-kk-inhaltsvz-toggle-screensize-m").hide();
     }
 }
 
 $( window ).resize(function() {    
 	onResizeHandler();
 });
+
 //Der aktuell eingeloggte Benutzer als JSON Objekt.
 var jsonBenutzer;
 
@@ -176,32 +206,45 @@ function interpreteUrlQuery(paramObj)
             changeCSS("CSS/mybuttonstyle.css", 1);
         }
         
-        var ajax1 = fillMyPersonalBox();
+        var ajax1 = fillMyPersonalBox()
         var ajax2;
-        if(ziel == undefined ||                         // Kein location Parameter
-           $.inArray(ziel, alleAnsichten) == -1 ||      // Kein bekannter location Parameter
-           ziel == ansichtStartseite ||                 // location ist Startseite
-           ziel == ansichtHauptseite)                   // location ist Hauptseite
-        {
-            ziel = ansichtHauptseite;                   // Dann gehe zu Hauptseite
-            ajax2 = fillHauptseite();
-        }
-        else if(ziel == ansichtProfilseite) 
-        {
-        	ajax2 = fillProfilseite();
-        }
-        else if(ziel == ansichtVeranstaltungsseite){
-        	vid = paramObj[paramId];
-        	kkId = paramObj[paramURLKkID];
-        	ajax2 = fillVeranstaltungsSeite(vid, kkId);
-        	ajax2.done(function(){
-        		Waypoint.enableAll();
-        	});
-        }
-        
-        $.when(ajax1, ajax2).done(function() {
-        	display(ziel);
-		});
+        // Warten auf das füllen der Personal Box
+        $.when(ajax1).done(function(){
+        	
+        	// Benutzer immernoch gültig?
+        	if(jsonBenutzer == undefined)
+    		{
+                $.when(fillStartseite()).done(function() {
+                	display(ansichtStartseite);
+        		});
+                return;
+    		}
+        	
+        	else if(ziel == undefined ||                         // Kein location Parameter
+	           $.inArray(ziel, alleAnsichten) == -1 ||      // Kein bekannter location Parameter
+	           ziel == ansichtStartseite ||                 // location ist Startseite
+	           ziel == ansichtHauptseite)                   // location ist Hauptseite
+	        {
+	            ziel = ansichtHauptseite;                   // Dann gehe zu Hauptseite
+	            ajax2 = fillHauptseite();
+	        }
+	        else if(ziel == ansichtProfilseite) 
+	        {
+	        	ajax2 = fillProfilseite();
+	        }
+	        else if(ziel == ansichtVeranstaltungsseite){
+	        	vid = paramObj[paramId];
+	        	kkId = paramObj[paramURLKkID];
+	        	ajax2 = fillVeranstaltungsSeite(vid, kkId);
+	        	ajax2.done(function(){
+	        		Waypoint.enableAll();
+	        	});
+	        }
+	        
+	        $.when(ajax2).done(function() {
+	        	display(ziel);
+			});
+        });
     } 
     // Benutzer nicht eingeloggt
     else 

@@ -1,26 +1,13 @@
+/**
+ * @author Julius, Andreas, Marius
+ */
 
-$(document).ready(function(){
-	kkErstellenDropZone = $("#df_area_kk").dropzone(myDropzoneConfig).get(0).dropzone;
-//	kkErstellenDropZone.on("dragenter", function() {
-//        $("#kk_erstellen_popup .drop_file_areas").addClass("dragenter");
-//        $("#kk_erstellen_popup .drop_file_areas .dz-message").text("Datei fallen lassen zum Hochladen");
-//    });
-//    kkErstellenDropZone.on("dragleave", function() {
-//        $("#kk_erstellen_popup .drop_file_areas").removeClass("dragenter");
-//        $("#kk_erstellen_popup .drop_file_areas .dz-message").text(
-//                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
-//    });
-//    kkErstellenDropZone.on("drop", function() {
-//        $("#kk_erstellen_popup .drop_file_areas").removeClass("dragenter");
-//        $("#kk_erstellen_popup .drop_file_areas").addClass("dropped");
-//        $("#kk_erstellen_popup .drop_file_areas .dz-message").hide();
-//        $("#kk_erstellen_popup .drop_file_areas .dz-message").text(
-//                "Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.");
-//    });
-//    kkErstellenDropZone.on("removedfile", function() {
-//        $("#kk_erstellen_popup .drop_file_areas .dz-message").show();
-//    });
+$(document).ready(function() {
     
+    // Initialisiere Feld fuer File Uploads
+	kkErstellenDropZone = $("#df_area_kk").dropzone(myDropzoneConfig).get(0).dropzone;
+	
+	// Initialisiere Karteikarte bearbeiten Popup
     kkErstellenPopup = new PopupFenster(
             $("#kk_erstellen_popup_overlay"), 
             [$('#kk_erstellen_popup_close'),$("#kk_erstellen_cancel")],
@@ -33,25 +20,29 @@ $(document).ready(function(){
         );
 });
 
-
+/**
+ * Startet den Vorgang zum erstellen einer neuen Karteikarte mit gegebener Vater- und Bruderkarteikarte.
+ * @param vater
+ * @param bruder
+ */
 function newKarteikarte(vater, bruder) {
     
-//	var vater = findVater(triggerElem);
 	// Spezialfall ganz oben im Baum
 	if(vater == undefined)
 		vater = veranstaltungsObject[paramErsteKarteikarte];
 	if(bruder == undefined) //no brother before it, then -1
 		bruder = -1;
-	
 		
-//	var bruder = findBruder(triggerElem);
-	try{
-	    var kk_ck_editor = $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
+	// Initialisiere ckEditor
+	try {
+	    $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
 	}
     catch(e){
     	console.log(e);
     }
     
+    // Soll eine neues Kapitel angelegt werden sind die Popup-Seiten 
+    // fuer Attribut und Verweise nicht noetig
     $("#kk_neuesKapitel").change(function(e) {
     	if($("#kk_neuesKapitel").prop("checked"))
     	{
@@ -119,6 +110,12 @@ function newKarteikarte(vater, bruder) {
         });
     });
     
+    /**
+     * Setzt die gegebene Checkbox falls der gegebene Verweis im Array vorhanden ist.
+     * @param verweisTyp String
+     * @param zielKkId Number
+     * @param checkbox DOM Object
+     */
     function syncCheckboxWithArray(verweisTyp, zielKkId, checkbox)
     {
         switch(verweisTyp)
@@ -141,6 +138,12 @@ function newKarteikarte(vater, bruder) {
         }
     }
     
+    /**
+     * Durch Setzen oder Loeschen von Checkboxen geaenderte Verweise auch in den Array hinzufuegen oder loeschen.
+     * @param verweisTyp String
+     * @param isHinzu Boolean
+     * @param zielKkId Number
+     */
     function verweiseVonBenutzerGeaendert(verweisTyp, isHinzu, zielKkId)
     {
         switch(verweisTyp)
@@ -182,6 +185,10 @@ function newKarteikarte(vater, bruder) {
 
     //== Code fuer die Verweise ENDE ==
     
+    /**
+     * Startet eine Pruefung der Eingaben und ggf. das Absenden der Daten.
+     * @returns true, falls Eingaben fehlerfrei und Popup bereit zum Schliessen.
+     */
     submitFkt = function() {
     	var text = $("#kk_neuesKapitel").prop("checked") ? "" : $("#kk_erstellen_TA").val().trim();
     	var titel = $("#kk_erstellen_titel_input").val().trim();
@@ -209,6 +216,9 @@ function newKarteikarte(vater, bruder) {
     	}
     }
     
+    /**
+     * Raeumt das Popup beim Schliessen auf.
+     */
     clearFkt = function(){
     	$("#kk_neuesKapitel").off();
     	$("#kk_erstellen_text_area").show();
@@ -222,10 +232,24 @@ function newKarteikarte(vater, bruder) {
     	// Zerstoere Verweis Baeume mit allen Handlern
     	$("#kk_erstellen_popup").find(".kk_verweise_baum").empty();
     }
+    
+    // Popup konfigurieren und anzeigen
     kkErstellenPopup.setCloseFkt(clearFkt);
     kkErstellenPopup.setSubmitFkt(submitFkt);
     kkErstellenPopup.show();
     
+    /**
+     * Erstellt ein requestfertiges Objekt aller noetigen Parameter zum Erstellen einer neuen Karteikarte
+     * @param text
+     * @param titel
+     * @param attributes
+     * @param bruder
+     * @param vater
+     * @param verweisVoraussetzungArr
+     * @param verweisWeiterfuehrendArr
+     * @param verweisUebungArr
+     * @param verweisSonstigesArr
+     */
 	function processKKerstellen(text,titel,attributes, bruder, vater, 
 	        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr)
 	{
@@ -245,6 +269,9 @@ function newKarteikarte(vater, bruder) {
 		submitNewKarteikarte(params)
 	}
 	
+	/**
+     * @returns true falls Attribute gewaehlt wurden
+     */
     function isAnyAttrSelected()
     {
         var isTrue = false;
@@ -257,6 +284,12 @@ function newKarteikarte(vater, bruder) {
         return isTrue;
     }
     
+    /**
+     * Wandelt gewaehlte Attribute in einen String um.
+     * Der String ist eine kommaseparierte Liste aus 'true' und 'false'.
+     * Ein solcher String wird vom Server erwartet.
+     * @returns String
+     */
     function getSelectedKkAttributes()
     {
         var str = ""
@@ -267,6 +300,10 @@ function newKarteikarte(vater, bruder) {
             return str;
     }
     
+    /**
+     * Sendet den Ajax Call zum Erstellen einer Karteikarte ab.
+     * @params
+     */
     function submitNewKarteikarte(params)
     {
     	var ajax = ajaxCall(karteikartenServlet,
@@ -285,44 +322,11 @@ function newKarteikarte(vater, bruder) {
    
 }
 
-///**
-// * Hilfsmethode fuer das Erstellen von Karteikarten mittels Inhaltsverzeichnis.
-// * @param elem jQuery Object. Ein Erstellen Button im Inhaltsverzeichnis.
-// * @returns ID der Vaterkarteikarte
-// */
-//function findVater(elem)
-//{
-//	maybeNode = elem.parent().parent().parent().attr("id")
-//	if(maybeNode === "kk_inhaltsverzeichnis"){
-//		return veranstaltungsObject[paramErsteKarteikarte];
-//	}
-//	else
-//	{
-//		maybeNode = elem.parent().parent().parent().prev().data("kkid");
-//		return maybeNode;
-//	}
-//}
-//
-///**
-// * Hilfsmethode fuer das Erstellen von Karteikarten mittels Inhaltsverzeichnis.
-// * @param elem jQuery Object. Ein Erstellen Button im Inhaltsverzeichnis.
-// * @returns ID der vorhergehenden Bruderkarteikarte
-// */
-//function findBruder(elem)
-//{
-//	elemBefore = elem.parent().prev();
-//	if(elemBefore.length < 1){ //no brother before it, then -1
-//		return -1;
-//	}
-//	else
-//	{
-//		id = elemBefore.data("kkid");
-//		return id
-//	}
-//	//2.:
-////	elem.parent().prev().children().first().data("kkid");
-//}
-
+/**
+ * Testet, ob eine Datei ein akzeptiertes Bild ist.
+ * @param filename
+ * @returns true, wenn akzeptiertes Format
+ */
 function isImage(filename) 
 {
     var ext = getExtension(filename);
@@ -335,11 +339,17 @@ function isImage(filename)
     return false;
 }
 
+/**
+ * Testet, ob eine Datei ein akzeptiertes Video ist.
+ * @param filename
+ * @returns true, wenn akzeptiertes Format
+ */
 function isVideo(filename) 
 {
     var ext = getExtension(filename);
     switch (ext.toLowerCase()) {
         case 'mp4':
+        case 'ogg':
             // etc
             return true;
     }

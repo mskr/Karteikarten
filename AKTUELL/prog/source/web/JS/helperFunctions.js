@@ -1,4 +1,5 @@
 /**
+ * @author Andreas, Marius
  * Enthaelt nützliche Hilfsfunktionen, die uns die Arbeit erleichtern.
  */
 
