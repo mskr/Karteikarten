@@ -1131,7 +1131,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
     @Override
     public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds)
-            throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
+            throws SQLException, DbUniqueConstraintException
     {
         Connection conMysql = getConnectionSQL();
         Connection conNeo4j = getConnectionNeo4j();
@@ -1258,9 +1258,7 @@ public class Datenbankmanager implements IDatenbankmanager
         catch (DbFalsePasswortException e)
         {
             e.printStackTrace();
-            conMysql.rollback();
-            conNeo4j.rollback();
-            throw e;
+            throw new SQLException();
         }
         finally
         {
@@ -1277,7 +1275,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
     @Override
     public void bearbeiteVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds, int bearbeiter)
-            throws SQLException, DbUniqueConstraintException, DbFalsePasswortException
+            throws SQLException, DbUniqueConstraintException
     {
         Connection conMysql = getConnectionSQL();
         PreparedStatement ps = null;
@@ -1386,8 +1384,7 @@ public class Datenbankmanager implements IDatenbankmanager
         catch (DbFalsePasswortException e)
         {
             e.printStackTrace();
-            conMysql.rollback();
-            throw e;
+            throw new SQLException();
         }
         catch (DbUniqueConstraintException e)
         {
@@ -1947,99 +1944,6 @@ public class Datenbankmanager implements IDatenbankmanager
         }
 
         return true;
-    }
-
-    @Override
-    public boolean einladungModeratorAnnehmen(int benachrichtigung, int benutzer)
-    {
-        Connection conMysql = getConnectionSQL();
-        PreparedStatement ps = null;
-        boolean erfolgreich = true;
-        try
-        {
-            String sql = "UPDATE benachrichtigung_einladung_moderator " + "SET Angenommen = 1 "
-                    + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
-            ps = conMysql.prepareStatement(sql);
-            ps.setInt(1, benachrichtigung);
-            ps.setInt(2, benutzer);
-            ps.executeUpdate();
-
-            closeQuietly(ps);
-
-        }
-        catch (SQLException e)
-        {
-            erfolgreich = false;
-            e.printStackTrace();
-
-        }
-        finally
-        {
-            closeQuietly(ps);
-            closeQuietly(conMysql);
-        }
-
-        return erfolgreich;
-    }
-
-    @Override
-    public boolean einladungModeratorAblehnen(int benachrichtigung, int benutzer)
-    {
-        Connection conMysql = getConnectionSQL();
-        PreparedStatement ps = null;
-        boolean erfolgreich = true;
-        try
-        {
-            conMysql.setAutoCommit(false);
-            String sql = "UPDATE benachrichtigung_einladung_moderator " + "SET Angenommen = 0 "
-                    + "WHERE Benachrichtigung = ? AND Benutzer = ? ";
-            ps = conMysql.prepareStatement(sql);
-            ps.setInt(1, benachrichtigung);
-            ps.setInt(2, benutzer);
-            ps.executeUpdate();
-
-            closeQuietly(ps);
-
-            ps = conMysql
-                    .prepareStatement("DELETE FROM moderator WHERE Veranstaltung = ANY (SELECT Veranstaltung FROM"
-                            + " benachrichtigung_einladung_moderator WHERE Benachrichtigung = ? AND Benutzer = ?) AND Benutzer = ?");
-            ps.setInt(1, benachrichtigung);
-            ps.setInt(2, benutzer);
-            ps.setInt(3, benutzer);
-            ps.executeUpdate();
-
-            conMysql.commit();
-
-        }
-        catch (SQLException e)
-        {
-            erfolgreich = false;
-            e.printStackTrace();
-            try
-            {
-                conMysql.rollback();
-            }
-            catch (SQLException e1)
-            {
-                e1.printStackTrace();
-            }
-        }
-        finally
-        {
-            try
-            {
-                conMysql.setAutoCommit(true);
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
-            closeQuietly(ps);
-            closeQuietly(conMysql);
-        }
-
-        return erfolgreich;
-
     }
 
     @Override

@@ -91,7 +91,7 @@ public interface IDatenbankmanager {
     /**
      * Entfernt den Benutzer aus der Datenbank. 
      * @param benutzerId referenziert eindeutig den zu löschenden Benutzer
-     * @return  Tritt ein Fehler auf gibt die Methode false zurück. Ansonsten true.
+     * @return  Tritt ein Fehler auf, gibt die Methode false zurück. Ansonsten true.
      * (Auch wenn der Benutzer gar nicht in der Datenbank vorhanden war.)
      */
     public boolean loescheBenutzer(int benutzerId);
@@ -115,9 +115,10 @@ public interface IDatenbankmanager {
     public List<String> leseStudiengaenge();
 
     /**
-     * Gibt eine Liste aller Semester zurück. 
-     * @return Liste der Semester. Tritt ein Fehler auf wird null zurückgegeben. Werden keine Semester in der 
-     * Datenbank gefunden, dann wird eine leere Liste zurückgegeben
+     * Holt alle Semester aus der Datenbank. 
+     * @return Map aus einem Integer, der die Reihenfolge angibt, und dem Semester.
+     * Tritt ein Fehler auf wird null zurückgegeben. Werden keine Semester in der 
+     * Datenbank gefunden, dann wird eine leere Map zurückgegeben
      */
     public Map<Integer,String> leseSemester();
 
@@ -140,7 +141,8 @@ public interface IDatenbankmanager {
 
     /**
      * Holt alle Veranstaltungen zu dem angegebenen Semester und Studiengang aus der Datenbank.
-     * @param semester, studiengang 
+     * @param semester referenziert eindeutig ein Semester
+     * @param studiengang referenziert eindeutig einen Studiengang
      * @return Liste von Veranstaltungen. Wird keine Veranstaltung gefunden gibt die Methode eine leere Liste zurück.
      * Bei einem Fehler kommt null zurück.    
     */
@@ -157,8 +159,8 @@ public interface IDatenbankmanager {
     /**
      * Holt alle Moderatoren zu der angegebenen Veranstaltung aus der Datenbank.
      * @param veranstaltung referenziert eindeutig eine Veranstaltung
-     * @return Liste von Moderatoren der Veranstaltung.Hat die Veranstaltung  ine Moderatoren
-     * wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
+     * @return Liste von Moderatoren der Veranstaltung. Hat die Veranstaltung  keine Moderatoren
+     * wird eine leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<Benutzer> leseModeratoren(int veranstaltung);
 
@@ -166,7 +168,7 @@ public interface IDatenbankmanager {
      * Holt alle Studiengaenge zu der angegebenen Veranstaltung aus der Datenbank.
      * @param veranstaltung referenziert eindeutig eine Veranstaltung
      * @return Liste der Studiengänge zu dieser Veranstaltung. Wird die Veranstaltung von keinem Studiengang
-     * gehört wird die leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
+     * gehört wird eine leere Liste zurückgegeben. Bei einem Fehler wird null zurückgegeben.
      */
     public List<String> leseStudiengaenge(int veranstaltung);
     
@@ -181,9 +183,11 @@ public interface IDatenbankmanager {
 
     /**
      * Prüft, ob ein Benutzer in eine Veranstaltung eingeschrieben ist.
-     * @param benutzer
-     * @param veranstaltung
+     * Bei einem Fehler wird eine SQLException geworfen
+     * @param benutzer referenziert eindeutig einen Benutzer
+     * @param veranstaltung referenziert eindeutig eine Veranstaltung
      * @return true, falls eingeschrieben, false andernfalls.
+     * @throws SQLException
      */
     public boolean angemeldet(int benutzer, int veranstaltung) throws SQLException;
 
@@ -193,12 +197,14 @@ public interface IDatenbankmanager {
      * wird eine DbUniqueConstraintException geworfen. Bei einem anderen Fehler wird
      * eine SQLException geworfen.
      * @param veranst-Objekt, das in die db eingefügt wird
-     * @param studiengaenge, die zu der Veranstaltung gehören
+     * @param studiengaenge die zu der Veranstaltung gehören
      * Veranstaltung werden.
+     * @param moderatorenIds bestimmen die Moderatoren der Veranstaltung
      * @return gibt die ID der soeben eingefügten Veranstaltung zurück.
+     * @throws SQLException, DbUniqueConstraintException
      */
     public int schreibeVeranstaltung(Veranstaltung veranst, String[] studiengaenge, int[] moderatorenIds) 
-            throws SQLException, DbUniqueConstraintException, DbFalsePasswortException;
+            throws SQLException, DbUniqueConstraintException;
 
     /**
      * Daten der angegebenen Veranstaltung werden in der Datenbank
@@ -206,89 +212,52 @@ public interface IDatenbankmanager {
      * wird eine DbUniqueConstraintException geworfen. Bei einem anderen Fehler wird
      * eine SQLException geworfen.
      * @param veranst-Objekt, das in der db geupdatet wird
-     * @return
+     * @param studiengaenge zu denen die Veranstaltung gehört
+     * @param moderatorenIds bestimmen die Moderatoren der Veranstaltung
+     * @param bearbeiter referenziert eindeutig einen Benutzer. Der Parameter stellt sicher
+     * dass der Bearbeiter nicht auch über die Veranstaltungsänderung benachrichtigt wird
+     * @throws SQLException, DbUniqueConstraintException
      */
     public void bearbeiteVeranstaltung(Veranstaltung veranst,String[] studiengaenge, int[] moderatorenIds, int bearbeiter) 
-            throws SQLException, DbUniqueConstraintException, DbFalsePasswortException;
+            throws SQLException, DbUniqueConstraintException;
 
     /**
-     * Entfernt die Veranstaltung aus der Datenbank. Tritt ein Fehler auf
-     * gibt die Methode false zuruck. Ansonsten true. (Auch wenn die
-     * Veranstaltung gar nicht in der Datenbank vorhanden war.)
-     * @param veranstTitel 
-     * @return
+     * Entfernt die Veranstaltung aus der Datenbank.
+     * @param veranstId referenziert eindeutig eine Veranstaltung 
+     * @return Liefert bei Erfolg true zurück und bei einem Fehler false.
      */
     public boolean loescheVeranstaltung(int veranstId);
 
     /**
-     * 
-     * Diese Methode durchsucht die Datenbank nach dem suchmuster. Die Methode ist flexibel gebaut.
-     * Das heißt, dass man in einer Liste angeben kann nach welchen Feldern in der Datenbank gesucht
-     * werden soll. Die Namen der Felder sind eindeutig durch den Klassennamen und den Attributnamen bestimmt.
-     * Die beiden Werte sind in der Klasse Klassenfeld gekapselt. Die Methode liefert die zum suchmuster
-     * ähnlichen Ergebnisse in einer Liste zurück. In der Klasse ErgebnisseSuchfeld sind dabei 
-     * der ähnliche Text, der Klassenname und die ID des Objekts zu dem der ähnliche Text gehört
-     * gekapselt. In der Liste werden maximal 5 Einträge gespeichert. Ist der Rückgabewert null, so
-     * ist ein Fehler aufgetreten. Gibt es kein ähnliches Feld zu dem Suchmuster, dann liefert die
-     * Methode eine leere Liste zurück.
-     * @param suchmuster nach dem Felder in der Datenbank verglichen werden
-     * @param suchfeld gibt an welche Felder in der Datenbank mit dem Suchmuster verglichen werden.
-     * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
-     * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
+     * Vergleicht die Titel von Veranstaltungen und die Namen von Benutzern mit dem Suchmuster
+     * und gibt die 5 besten Ergebnisse zurück
+     * @param suchmuster nach dem in der Datenbank verglichen werden
+     * @return Gibt eine Map aus einem IjsonObject und einem Wert, der angibt wie gut das Suchergebnis
+     * mit dem Suchmuster übereinstimmt.
      */
     public Map<IjsonObject,Integer> durchsucheDatenbank(String suchmuster);
     
     /**
-     * 
-     * Diese Methode durchsucht die Datenbank nach dem suchmuster. Die Methode ist flexibel gebaut.
-     * Das heißt, dass man in einer Liste angeben kann nach welchen Feldern in der Datenbank gesucht
-     * werden soll. Die Namen der Felder sind eindeutig durch den Klassennamen und den Attributnamen bestimmt.
-     * Die beiden Werte sind in der Klasse Klassenfeld gekapselt. Die Methode liefert die zum suchmuster
-     * ähnlichen Ergebnisse in einer Liste zurück. In der Klasse ErgebnisseSuchfeld sind dabei 
-     * der ähnliche Text, der Klassenname und die ID des Objekts zu dem der ähnliche Text gehört
-     * gekapselt. In der Liste werden maximal 5 Einträge gespeichert. Ist der Rückgabewert null, so
-     * ist ein Fehler aufgetreten. Gibt es kein ähnliches Feld zu dem Suchmuster, dann liefert die
-     * Methode eine leere Liste zurück.
-     * @param suchmuster nach dem Felder in der Datenbank verglichen werden
-     * @param suchfeld gibt an welche Felder in der Datenbank mit dem Suchmuster verglichen werden.
-     * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
-     * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
+     * Vergleicht die Titel von Veranstaltungen mit dem Suchmuster und gibt die 5 besten Ergebnisse zurück
+     * @param suchmuster nach dem Veranstaltungstitel in der Datenbank verglichen werden
+     * @return Gibt eine Map aus einem IjsonObject und einem Wert, der angibt wie gut das Suchergebnis
+     * mit dem Suchmuster übereinstimmt.
      */
     public Map<IjsonObject, Integer>  durchsucheDatenbankVeranstaltung(String suchmuster);
     
     /**
-     * 
-     * Diese Methode durchsucht die Datenbank nach dem suchmuster. Die Methode ist flexibel gebaut.
-     * Das heißt, dass man in einer Liste angeben kann nach welchen Feldern in der Datenbank gesucht
-     * werden soll. Die Namen der Felder sind eindeutig durch den Klassennamen und den Attributnamen bestimmt.
-     * Die beiden Werte sind in der Klasse Klassenfeld gekapselt. Die Methode liefert die zum suchmuster
-     * ähnlichen Ergebnisse in einer Liste zurück. In der Klasse ErgebnisseSuchfeld sind dabei 
-     * der ähnliche Text, der Klassenname und die ID des Objekts zu dem der ähnliche Text gehört
-     * gekapselt. In der Liste werden maximal 5 Einträge gespeichert. Ist der Rückgabewert null, so
-     * ist ein Fehler aufgetreten. Gibt es kein ähnliches Feld zu dem Suchmuster, dann liefert die
-     * Methode eine leere Liste zurück.
-     * @param suchmuster nach dem Felder in der Datenbank verglichen werden
-     * @param suchfeld gibt an welche Felder in der Datenbank mit dem Suchmuster verglichen werden.
-     * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
-     * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
+     * Vergleicht die Namen von Benutzern mit dem Suchmuster und gibt die 5 besten Ergebnisse zurück
+     * @param suchmuster nach dem Namen von Benutzern in der Datenbank verglichen werden
+     * @return Gibt eine Map aus einem IjsonObject und einem Wert, der angibt wie gut das Suchergebnis
+     * mit dem Suchmuster übereinstimmt.
      */
     public Map<IjsonObject, Integer>  durchsucheDatenbankBenutzer(String suchmuster);
     
     /**
-     * 
-     * Diese Methode durchsucht die Datenbank nach dem suchmuster. Die Methode ist flexibel gebaut.
-     * Das heißt, dass man in einer Liste angeben kann nach welchen Feldern in der Datenbank gesucht
-     * werden soll. Die Namen der Felder sind eindeutig durch den Klassennamen und den Attributnamen bestimmt.
-     * Die beiden Werte sind in der Klasse Klassenfeld gekapselt. Die Methode liefert die zum suchmuster
-     * ähnlichen Ergebnisse in einer Liste zurück. In der Klasse ErgebnisseSuchfeld sind dabei 
-     * der ähnliche Text, der Klassenname und die ID des Objekts zu dem der ähnliche Text gehört
-     * gekapselt. In der Liste werden maximal 5 Einträge gespeichert. Ist der Rückgabewert null, so
-     * ist ein Fehler aufgetreten. Gibt es kein ähnliches Feld zu dem Suchmuster, dann liefert die
-     * Methode eine leere Liste zurück.
-     * @param suchmuster nach dem Felder in der Datenbank verglichen werden
-     * @param suchfeld gibt an welche Felder in der Datenbank mit dem Suchmuster verglichen werden.
-     * @return Liste mit Objekten der Klasse ErgebnisseSuchfeld. Wird kein ähnliches Feld gefunden
-     * gibt die Methode die leere Liste zurück. Bei einem Fehler wird null zurückgegeben.
+     * Durchsucht die Tabelle Studiengang nach dem Suchmuster und gibt die 5 besten Ergebnisse zurück
+     * @param suchmuster nach dem Studiengänge in der Datenbank verglichen werden
+     * @return Gibt eine Map aus einem IjsonObject und einem Wert, der angibt wie gut das Suchergebnis
+     * mit dem Suchmuster übereinstimmt.
      */
     public Map<IjsonObject,Integer> durchsucheDatenbankStudiengang(String suchmuster);
 
@@ -302,10 +271,11 @@ public interface IDatenbankmanager {
     public List<Benachrichtigung> leseBenachrichtigungen(int benutzer, int limit);
     
     /**
-     * Schreibt die Benachrichtigung in die Datenbank
+     * Schreibt die Benachrichtigung in die Datenbank. Bei einem Fehler wird eine
+     * SQLException geworfen
      * @param benachrichtigung Objekt. Die Methode setzt das Attribut gelesen
      * standardmäßig auf false.
-     * @return Liefert bei Erfolg true zurück und bei einem Fehler false.
+     * @throws SQLException
      */
     public void schreibeBenachrichtigung(Benachrichtigung benachrichtigung) throws SQLException;
 
@@ -315,27 +285,6 @@ public interface IDatenbankmanager {
      * @return Liefert bei Erfolg true zurück und bei einem Fehler false.
      */
     public boolean markiereBenAlsGelesen(int benID, int benutzerID);
-    
-    /**
-     * Markiert die Einladung als akzeptiert und trägt den Benutzer als Moderator
-     * für die Veranstaltung ein.
-     * @param benachrichtigung referenziert eindeutig eine Benachrichtigung
-     * @param benutzer, zu einer Benachrichtigung können mehrere Benutzer gehören,
-     * weshalb noch der Benutzer übergeben werden muss
-     * @return Liefert bei Erfolg true zurück (auch wenn die benachrichtigung nicht existiert)
-     * und bei einem Fehler false.
-     */
-    public boolean einladungModeratorAnnehmen(int benachrichtigung, int benutzer);
-    
-    /**
-     * Markiert die Einladung als abgelehnt
-     * @param benachrichtigung referenziert eindeutig eine Benachrichtigung
-     * @param benutzer, zu einer Benachrichtigung können mehrere Benutzer gehören,
-     * weshalb noch der Benutzer übergeben werden muss
-     * @return Liefert bei Erfolg true zurück (auch wenn die benachrichtigung nicht existiert)
-     * und bei einem Fehler false.
-     */
-    public boolean einladungModeratorAblehnen(int benachrichtigung, int benutzer);
     
     /**
      * Holt Daten der Karteikarte anhand der ID aus der Datenbank
