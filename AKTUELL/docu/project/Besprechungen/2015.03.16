@@ -1,8 +1,0 @@
-Datenbanken
-- Für Karteikarten Graphendatenbank
-- Für alles andere MySQL
-
-
-Grober Ablaufplan
-- Implementierung Schnittweise d.h. Jede Funktionalität muss komplett funktionieren (mit GUI, Servlet, DB).
-- Jetzt: Login/Logout/Registierung
