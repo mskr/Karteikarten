@@ -198,7 +198,7 @@ public class StartseitenServlet extends ServletController
         catch (NumberFormatException e)
         {
             e.printStackTrace();
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
+            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Ihre Matrikelnummer ist zu lang.");
             outWriter.print(jo);
             return false;
         }
