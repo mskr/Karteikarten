@@ -2193,7 +2193,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        HashMap<Integer, Karteikarte> kindKarteikarten = new HashMap<Integer, Karteikarte>();
+        HashMap<Integer, Karteikarte> nachfolger = new HashMap<Integer, Karteikarte>();
         try
         {
             Integer aktuelleKarteikarte = karteikarte;
@@ -2217,7 +2217,7 @@ public class Datenbankmanager implements IDatenbankmanager
                     if (aktKarteik == null)
                         return null;
                     // Füge die Kind-Karteikarte in die Liste der Nachfolger ein
-                    kindKarteikarten.put(i, aktKarteik);
+                    nachfolger.put(i, aktKarteik);
                     --anzNachfolger;
                     ++i;
                 }
@@ -2258,7 +2258,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         if (vaterKarteikarte == null)
                             return null;
                         else if (vaterKarteikarte == -1)
-                            return kindKarteikarten;
+                            return nachfolger;
                         else
                             aktuelleKarteikarte = vaterKarteikarte;
                     }
@@ -2268,7 +2268,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 Karteikarte bruderKk = leseKarteikarteWrapper(bruderKarteik,conMysql,conNeo4j);
                 if (bruderKk == null)
                     return null;
-                kindKarteikarten.put(i, bruderKk);
+                nachfolger.put(i, bruderKk);
                 aktuelleKarteikarte = bruderKarteik;
                 ++i;
                 --anzNachfolger;
@@ -2277,7 +2277,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
-            kindKarteikarten = null;
+            nachfolger = null;
             e.printStackTrace();
         }
         finally
@@ -2288,7 +2288,7 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(conNeo4j);
         }
 
-        return kindKarteikarten;
+        return nachfolger;
     }
 
     @Override
@@ -2299,13 +2299,14 @@ public class Datenbankmanager implements IDatenbankmanager
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        HashMap<Integer, Karteikarte> kindKarteikarten = new HashMap<Integer, Karteikarte>();
+        HashMap<Integer, Karteikarte> vorgaenger = new HashMap<Integer, Karteikarte>();
         try
         {
             Integer aktuelleKarteikarte = karteikarte;
             int i = 0;
             while (anzVorgänger > 0)
             {
+                // Lese die erste übergeordnete Bruder Karteikarte
                 ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_brother]-(m)" + " WHERE id(n) = {1}"
                         + " return id(m) AS ID");
                 ps.setInt(1, aktuelleKarteikarte);
@@ -2315,20 +2316,25 @@ public class Datenbankmanager implements IDatenbankmanager
                 closeQuietly(ps);
                 closeQuietly(rs);
 
+                // Gibt es keine übergeordnete Bruder Karteikarte, dann wird der Vater ausgelesen
                 if (!rs.next())
                 {
                     aktuelleKarteikarte = gibVater(aktuelleKarteikarte, conNeo4j);
                     if (aktuelleKarteikarte == null)
                         return null;
+                    // Gibt es keinen Vater mehr, dann können keine weiteren Vorgänger gefunden werden und
+                    // es wird an dieser Stelle abgebrochen
                     else if (aktuelleKarteikarte == -1)
-                        return kindKarteikarten;
+                        return vorgaenger;
 
                     Karteikarte aktKarteik = leseKarteikarteWrapper(aktuelleKarteikarte, conMysql, conNeo4j);
                     if (aktKarteik == null)
                         return null;
-                    kindKarteikarten.put(i, aktKarteik);
+                    vorgaenger.put(i, aktKarteik);
                     --anzVorgänger;
                     ++i;
+                    // Gehe zum nächsten Schleifendurchlauf, da für die Vaterkarteikarte erst wieder
+                    // der übergeordnete Bruder und keine Kinder gelesen werden sollen
                     continue;
                 }
                 else
@@ -2339,7 +2345,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 boolean abbruch = false;
                 do
                 {
-
+                    // Hole Kind der übergeordneten Bruder Karteikarte
                     ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->(m)" + " WHERE id(n) = {1}"
                             + " return id(m) AS ID");
 
@@ -2353,7 +2359,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         Karteikarte aktKarteik = leseKarteikarteWrapper(aktuelleKarteikarte, conMysql, conNeo4j);
                         if (aktKarteik == null)
                             return null;
-                        kindKarteikarten.put(i, aktKarteik);
+                        vorgaenger.put(i, aktKarteik);
                         --anzVorgänger;
                         ++i;
                         closeQuietly(ps);
@@ -2364,6 +2370,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         aktuelleKarteikarte = rs.getInt("ID");
                         closeQuietly(ps);
                         closeQuietly(rs);
+                        // Hole letzten Bruder in der verketteten Liste
                         ps = conNeo4j.prepareStatement("MATCH p=((n)-[:h_brother*0..]->(m))" + " WHERE id(n) = {1}"
                                 + " return id(m) AS ID ORDER BY length(p) DESC LIMIT 1");
 
@@ -2385,7 +2392,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
-            kindKarteikarten = null;
+            vorgaenger = null;
             e.printStackTrace();
         }
         finally
@@ -2396,7 +2403,7 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(conNeo4j);
         }
 
-        return kindKarteikarten;
+        return vorgaenger;
     }
 
     private Integer gibBruder(int karteikarte, Connection conNeo4j)
@@ -2406,6 +2413,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Integer karteik;
         try
         {
+            // Lese ID der Bruderkarteikarte
             ps = conNeo4j.prepareStatement("MATCH (n)-[:h_brother]->(m)" + " WHERE id(n) = {1} return id(m) AS ID");
             ps.setInt(1, karteikarte);
             rs = ps.executeQuery();
@@ -2435,6 +2443,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Integer karteik;
         try
         {
+            // Lese ID der übergeordneten Bruderkarteikarte
             ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_brother]-(m)" + " WHERE id(n) = {1} return id(m) AS ID");
             ps.setInt(1, karteikarte);
             rs = ps.executeQuery();
@@ -2464,6 +2473,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Integer karteik;
         try
         {
+            // Lese ID der Vaterkarteikarte
             ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_child]-(m)" + " WHERE id(n) = {1} return id(m) AS ID");
             ps.setInt(1, karteikarte);
             rs = ps.executeQuery();
@@ -2493,6 +2503,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Integer karteik;
         try
         {
+            // Lese ID der Kindkarteiarte
             ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->(m)" + " WHERE id(n) = {1} return id(m) AS ID");
             ps.setInt(1, karteikarte);
             rs = ps.executeQuery();
@@ -2530,6 +2541,8 @@ public class Datenbankmanager implements IDatenbankmanager
             conNeo4j.setAutoCommit(false);
             conMysql.setAutoCommit(false);
 
+            // Erstelle neuen Knoten in der Neo4j Datenbank und lese die von Neo4j automatisch
+            // erstellte ID damit sie für die MySql Datenbank zur Verfügung steht
             ps = conNeo4j.prepareStatement("CREATE(n) RETURN id(n) AS Id");
 
             rs = ps.executeQuery();
@@ -2540,9 +2553,14 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
+            // Gibt es eine überliegende Bruder Karteikarte, dann muss die neue Karteikarte mit dieser
+            // über die h_brother Relation verknüpft werden
             if (ueberliegendeBruderKK != -1)
             {
                 Integer unterliegendeBruderKK = gibBruder(ueberliegendeBruderKK, conNeo4j);
+                // Hat die überliegende Bruder Karteikarte eine unterliegende Bruder Karteikarte, dann
+                // muss diese Verbindung aufgetrennt werden und die neue Karteiakarte dazwischen
+                // eingehängt werden
                 if (unterliegendeBruderKK == null)
                     throw new SQLException();
                 else if (unterliegendeBruderKK != -1)
@@ -2554,9 +2572,17 @@ public class Datenbankmanager implements IDatenbankmanager
                 connectKk(ueberliegendeBruderKK, insertedId, BeziehungsTyp.H_BROTHER, conNeo4j);
 
             }
+            // Gibt es keine überliegende Bruder Karteikarte, dann muss die neue Karteikarte mit der
+            // Vater Karteikarte über die h_child Relation verknüpft werden. Eine Vaterkarteikarte
+            // sollte es immer geben, da über der "ersten Karteikarte" der Veranstaltung keine Karteikarte
+            // eingefügt werden kann
             else if (vaterKK != -1)
             {
                 Integer kindKarteikarte = gibKind(vaterKK, conNeo4j);
+                
+                // Hat die Vater Karteikarte eine Kind Karteikarte Karteikarte, dann
+                // muss diese Verbindung aufgetrennt werden und die neue Karteiakarte dazwischen
+                // eingehängt werden
                 if (kindKarteikarte == null)
                     throw new SQLException();
                 else if (kindKarteikarte != -1)
@@ -2572,6 +2598,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 throw new SQLException();
             }
 
+            // erstelle die Verweise der Karteikarte zu anderen Karteikarten in der Neo4j Datenbank
             for (int i = 0; i < karteik.getVerweise().size(); ++i)
             {
                 connectKk(karteik.getId(), karteik.getVerweise().get(i).y, karteik.getVerweise().get(i).x, conNeo4j);
@@ -2579,6 +2606,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
+            // Schreibe restliche Daten der Karteikarte in die Datenbank
             ps = conMysql.prepareStatement("INSERT INTO karteikarte(ID,Titel,Inhalt,Typ,"
                     + "Veranstaltung, Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, "
                     + " Zusatzinformation, Exkurs, Beispiel, Uebung) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -2637,6 +2665,7 @@ public class Datenbankmanager implements IDatenbankmanager
             conMysql.setAutoCommit(false);
             conNeo4j.setAutoCommit(false);
 
+            // bearbeite Karteikarte
             ps = conMysql.prepareStatement("UPDATE karteikarte SET "
                     + "Titel = ?, Inhalt = ?, Typ = ?, Aenderungsdatum = ?, Satz = ?, Lemma = ?, Beweis = ?,"
                     + " Definition = ?, Wichtig = ?, Grundlagen = ?, Zusatzinformation = ?, Exkurs = ?,"
@@ -2660,6 +2689,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
+            // lösche exitierende Verweise
             ps = conNeo4j
                     .prepareStatement("match n-[r:" + BeziehungsTyp.V_VORAUSSETZUNG.toString().toLowerCase() + "|"
                             + BeziehungsTyp.V_UEBUNG.toString().toLowerCase() + "|" + ""
@@ -2669,6 +2699,7 @@ public class Datenbankmanager implements IDatenbankmanager
             ps.setInt(1, karteik.getId());
             ps.executeUpdate();
 
+            // Füge neue Verweise ein
             for (Tripel<BeziehungsTyp, Integer, String> verweis : karteik.getVerweise())
             {
                 connectKk(karteik.getId(), verweis.y, verweis.x, conNeo4j);
@@ -2720,12 +2751,15 @@ public class Datenbankmanager implements IDatenbankmanager
             conNeo4j.setAutoCommit(false);
             conMysql.setAutoCommit(false);
 
+            // Lösche rekursiv aus der Neo4j Datenbank die Karteikarten und alle Verweise.
+            // Dabei wird die Karteikarte selbst noch nicht gelöscht. Dies geschieht weiter unten
             ps = conNeo4j.prepareStatement("match p=((n)-[:h_child]->(m)-[:h_child|h_brother*0..]->(o))"
                     + " where id(n) = {1}" + " with o" + " match (o)-[r]-()" + " delete o,r "
                     + "return distinct(id(o)) AS ID_o");
             ps.setInt(1, karteikID);
             rs = ps.executeQuery();
 
+            // Lösche Karteikarten aus der MySql Datenbank
             psMysql = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
             boolean loescheInMysql = rs.next();
             if (loescheInMysql)
@@ -2743,20 +2777,28 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
+            // Wenn eine Karteikarte aus der Datenbank gelöscht wird, entsteht eine Lücke im Strukturbaum
+            // Diese muss geschlossen werden
             Integer bruder = gibBruder(karteikID, conNeo4j);
             if (bruder == null)
                 throw new SQLException();
 
+            // Hat die Karteikarte keinen Bruder, dann entsteht keine Lücke
             if (bruder != -1)
             {
                 Integer aeltererBruder = gibAelterenBruder(karteikID, conNeo4j);
 
                 if (aeltererBruder == null)
                     throw new SQLException();
+                // Hat die Karteikarte einen übergeordneten Bruder, dann muss
+                // der übergeordnete Bruder und der unterliegende Bruder mit h_brother
+                // verknüpft werden
                 else if (aeltererBruder != -1)
                     connectKk(aeltererBruder, bruder, BeziehungsTyp.H_BROTHER, conNeo4j);
                 else
                 {
+                    // Ansonsten muss die Vaterkarteikarte und die unterliegende
+                    // Bruder Karteikarte mit h_child verknüpft werden
                     Integer vater = gibVater(karteikID, conNeo4j);
                     if (vater == null || vater == -1)
                         throw new SQLException();
@@ -2765,19 +2807,18 @@ public class Datenbankmanager implements IDatenbankmanager
                 }
             }
 
+            // Lösche die Karteikarte aus der MySql Datenbank
             psMysql = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
             psMysql.setInt(1, karteikID);
             psMysql.executeUpdate();
 
+            // Lösche die Karteikarte und alle ihre Verweise aus der Neo4j Datenbank
             ps = conNeo4j.prepareStatement("match(n) " + "where id(n) = {1} " + "OPTIONAL match n-[r]-() "
                     + "delete n,r");
             ps.setInt(1, karteikID);
             ps.executeUpdate();
             closeQuietly(ps);
 
-            psMysql = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
-            psMysql.setInt(1, karteikID);
-            psMysql.executeUpdate();
 
             conNeo4j.commit();
             conMysql.commit();
@@ -2828,6 +2869,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
+            // benutzer bewertet Karteikarte
             ps = conMysql
                     .prepareStatement("INSERT INTO bewertung_karteikarte (Bewertung,Benutzer,KarteikarteID) VALUES (?,?,?)");
             ps.setInt(1, bewert);
@@ -2867,6 +2909,8 @@ public class Datenbankmanager implements IDatenbankmanager
             ps.setInt(2, karteikID);
 
             rs = ps.executeQuery();
+            // Wenn es ein Ergebnistupel gibt, dann hat der Benutzer die Karteikarte bereits bewertet
+            // ansonsten nicht
             if (rs.next())
                 return true;
             else
@@ -2898,6 +2942,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
+            // Lese Themenkommentare zu einer Karteikarte aus der View "kommentaruebersicht"
             String sql = "SELECT * FROM kommentaruebersicht WHERE Karteikarte = ?";
             ps = conMysql.prepareStatement(sql);
             ps.setInt(1, karteikID);
@@ -2908,16 +2953,21 @@ public class Datenbankmanager implements IDatenbankmanager
                 GregorianCalendar g = new GregorianCalendar();
                 g.setTime(rs.getTimestamp("erstelldatum"));
                 
+                // lese Benutzer aus der ID
                 Benutzer benutzer = leseBenutzerWrapper(rs.getInt("Benutzer"), conMysql);
+                // Prüfe ob leseBenutzerWrapper einen Fehler liefert
                 if(benutzer == null)
                     return null;
+                // Prüfe ob der aktuelle Benutzer die Karteikarte bewertet hat
                 Boolean hatKommentarBewertet = hatKommentarBewertetWrapper(rs.getInt("ID"), aktBenutzerID, conMysql);
                 if(hatKommentarBewertet == null)
                     return null;
                 
+                // Erstelle neuen Kommentar
                 Kommentar k = new Kommentar(rs.getInt("ID"), rs.getString("Inhalt"), g,
                         benutzer, rs.getInt("Bewertung"), hatKommentarBewertet, -1, rs.getInt("Karteikarte"), rs.getInt("AnzKinder"));
 
+                // Füge Kommentar der Liste von Themen-Kommentaren hinzu
                 komms.add(k);
             }
 
