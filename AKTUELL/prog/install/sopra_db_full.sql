@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 15. Jun 2015 um 17:27
+-- Erstellungszeit: 29. Jun 2015 um 13:11
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung` (
 `ID` int(11) NOT NULL,
   `Inhalt` mediumtext NOT NULL,
   `Erstelldatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
 --
 -- Daten für Tabelle `benachrichtigung`
@@ -98,7 +98,17 @@ INSERT INTO `benachrichtigung` (`ID`, `Inhalt`, `Erstelldatum`) VALUES
 (14, 'Es wurde eine neuer Kommentar in der Veranstaltung "Softwaretechnik II" zur Karteikarte "Qualität" verfasst.', '2015-06-12 11:46:28'),
 (15, 'Die Veranstaltung Bedienungsanleitung eLearning-System wurde bearbeitet.', '2015-06-12 15:02:51'),
 (16, 'Sie wurden zur Veranstaltung fsef als Moderator hinzugefügt!', '2015-06-15 12:05:34'),
-(17, 'Sie wurden zur Veranstaltung esrdhtfjzgfhtdegrse als Moderator hinzugefügt!', '2015-06-15 12:13:43');
+(17, 'Sie wurden zur Veranstaltung esrdhtfjzgfhtdegrse als Moderator hinzugefügt!', '2015-06-15 12:13:43'),
+(18, 'Die Karteikarte Export wurde bearbeitet.', '2015-06-22 06:50:48'),
+(19, 'Die Karteikarte Export wurde bearbeitet.', '2015-06-22 07:04:19'),
+(20, 'Es wurde eine neuer Kommentar in der Veranstaltung "Softwaretechnik II" zur Karteikarte "Qualitätssicherung – Test" verfasst.', '2015-06-22 07:05:29'),
+(21, 'Es wurde eine neuer Kommentar in der Veranstaltung "Softwaretechnik II" zur Karteikarte "Qualitätssicherung – Test" verfasst.', '2015-06-22 07:05:39'),
+(22, 'Die Karteikarte Profildaten bearbeiten wurde bearbeitet.', '2015-06-22 07:28:13'),
+(23, 'Es wurde eine neuer Kommentar in der Veranstaltung "Softwaretechnik II" zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-25 10:23:45'),
+(24, 'Sie wurden zur Veranstaltung Softwaretechnik II als Moderator hinzugefügt!', '2015-06-25 10:28:10'),
+(25, 'Die Veranstaltung Softwaretechnik II wurde bearbeitet.', '2015-06-25 10:28:10'),
+(26, 'Die Veranstaltung Softwaretechnik II wurde bearbeitet.', '2015-06-25 10:31:34'),
+(27, 'Es wurde eine neuer Kommentar in der Veranstaltung "Softwaretechnik II" zur Karteikarte "Hintergrund und Motivation" verfasst.', '2015-06-29 08:54:50');
 
 -- --------------------------------------------------------
 
@@ -113,15 +123,16 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_einladung_moderator` (
   `Veranstaltung` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0',
   `Angenommen` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `benachrichtigung_einladung_moderator`
 --
 
 INSERT INTO `benachrichtigung_einladung_moderator` (`ID`, `Benachrichtigung`, `Benutzer`, `Veranstaltung`, `Gelesen`, `Angenommen`) VALUES
-(1, 2, 1, 2, 0, NULL),
-(2, 8, 2, 3, 1, NULL);
+(1, 2, 1, 2, 1, NULL),
+(2, 8, 2, 3, 1, NULL),
+(3, 24, 2, 2, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -135,7 +146,17 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_karteikartenaenderung` (
   `Benutzer` int(11) NOT NULL,
   `Karteikarte` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Daten für Tabelle `benachrichtigung_karteikartenaenderung`
+--
+
+INSERT INTO `benachrichtigung_karteikartenaenderung` (`ID`, `Benachrichtigung`, `Benutzer`, `Karteikarte`, `Gelesen`) VALUES
+(1, 18, 4, 123, 0),
+(2, 19, 4, 123, 0),
+(3, 22, 1, 58, 1),
+(4, 22, 4, 58, 0);
 
 -- --------------------------------------------------------
 
@@ -149,7 +170,14 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_neuer_kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Kommentar` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `benachrichtigung_neuer_kommentar`
+--
+
+INSERT INTO `benachrichtigung_neuer_kommentar` (`ID`, `Benachrichtigung`, `Benutzer`, `Kommentar`, `Gelesen`) VALUES
+(1, 27, 1, 4, 0);
 
 -- --------------------------------------------------------
 
@@ -184,23 +212,31 @@ CREATE TABLE IF NOT EXISTS `benachrichtigung_veranstaltungsaenderung` (
   `Veranstaltung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Gelesen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
 
 --
 -- Daten für Tabelle `benachrichtigung_veranstaltungsaenderung`
 --
 
 INSERT INTO `benachrichtigung_veranstaltungsaenderung` (`ID`, `Benachrichtigung`, `Veranstaltung`, `Benutzer`, `Gelesen`) VALUES
-(1, 3, 2, 1, 0),
+(1, 3, 2, 1, 1),
 (2, 3, 2, 5, 1),
-(3, 9, 3, 1, 0),
+(3, 9, 3, 1, 1),
 (4, 9, 3, 2, 1),
-(5, 12, 3, 1, 0),
+(5, 12, 3, 1, 1),
 (6, 12, 3, 2, 1),
-(8, 13, 3, 1, 0),
+(8, 13, 3, 1, 1),
 (9, 13, 3, 2, 1),
-(10, 15, 3, 1, 0),
-(11, 15, 3, 2, 1);
+(10, 15, 3, 1, 1),
+(11, 15, 3, 2, 1),
+(12, 25, 2, 1, 0),
+(13, 25, 2, 2, 1),
+(14, 25, 2, 4, 0),
+(15, 25, 2, 11, 0),
+(19, 26, 2, 1, 0),
+(20, 26, 2, 2, 0),
+(21, 26, 2, 4, 0),
+(22, 26, 2, 11, 0);
 
 -- --------------------------------------------------------
 
@@ -222,18 +258,19 @@ CREATE TABLE IF NOT EXISTS `benutzer` (
   `NotifyKarteikartenAenderung` tinyint(1) NOT NULL DEFAULT '0',
   `CryptedPW` varchar(60) NOT NULL COMMENT 'hash = salt(29 Zeichen) + crypted (Rest)',
   `Theme` enum('DAY','NIGHT') NOT NULL DEFAULT 'NIGHT'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- Daten für Tabelle `benutzer`
 --
 
 INSERT INTO `benutzer` (`ID`, `eMail`, `Vorname`, `Nachname`, `Profilbild`, `Matrikelnummer`, `Studiengang`, `Nutzerstatus`, `NotifyKommentare`, `NotifyVeranstAenderung`, `NotifyKarteikartenAenderung`, `CryptedPW`, `Theme`) VALUES
-(1, 'admin@sopra.de', 'Der', 'Admin', 'default.png', 0, 'Sonstiges', 'ADMIN', 'KEINE', 0, 0, '$2a$10$AoMut6JI4GkLJZxbnqGMkeMC/ozfbynBdKZr90N5Wjs2CJ7aR59oi', 'NIGHT'),
-(2, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', '1434129132115.png', 1234567, 'Informatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$a7C2vqqPpl0GiF1D5gTKXO/3EdVTIWGgGN9v7Az7x24W6vECiTLaC', 'NIGHT'),
+(1, 'admin@sopra.de', 'Der', 'Admin', 'default.png', 0, 'Sonstiges', 'ADMIN', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$AoMut6JI4GkLJZxbnqGMkeMC/ozfbynBdKZr90N5Wjs2CJ7aR59oi', 'NIGHT'),
+(2, 'andreas.rottach@uni-ulm.de', 'Andreas', 'Rottach', 'default.png', 1234567, 'Informatik', 'STUDENT', 'VERANSTALTUNG_TEILGENOMMEN', 1, 1, '$2a$10$a7C2vqqPpl0GiF1D5gTKXO/3EdVTIWGgGN9v7Az7x24W6vECiTLaC', 'NIGHT'),
 (3, 'matthias.englert@uni-ulm.de', 'Matthias', 'Englert', 'default.png', 815, 'Informatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3/LOgBMsK8Lu2fYo3j0WLOIjrCC/w/MTjBit.aezhz9ED.apKE5hS', 'NIGHT'),
 (4, 'mk@ulm.de', 'Marius', 'Kircher', 'default.png', 123456, 'Medieninformatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$7LlnqoZqrmtgSH4tHVdMjOFT50RwLillAq0p3Z.nz87tjTgHzxn9O', 'NIGHT'),
-(5, 'helmut.partsch@uni-ulm.de', 'Helmut', 'Partsch', 'default.png', 2345678, 'Sonstiges', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3s5UOGTQ6PtnW144JmofdOJKzk7WBYDPSEsbb3vrNl281tAJDrPbq', 'NIGHT');
+(5, 'helmut.partsch@uni-ulm.de', 'Helmut', 'Partsch', 'default.png', 2345678, 'Sonstiges', 'DOZENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$3s5UOGTQ6PtnW144JmofdOJKzk7WBYDPSEsbb3vrNl281tAJDrPbq', 'NIGHT'),
+(11, 'max.mustermann@uni-ulm.de', 'Max', 'Mustermann', 'default.png', 12345678, 'Informatik', 'STUDENT', 'DISKUSSION_TEILGENOMMEN', 1, 1, '$2a$10$9hViHA/KrCdrGx31DifAF.nJJn0H40eycrnk2JEiz8oYK7ftD9Db.', 'NIGHT');
 
 -- --------------------------------------------------------
 
@@ -245,20 +282,22 @@ CREATE TABLE IF NOT EXISTS `benutzer_veranstaltung_zuordnung` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
 
 --
 -- Daten für Tabelle `benutzer_veranstaltung_zuordnung`
 --
 
 INSERT INTO `benutzer_veranstaltung_zuordnung` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
-(2, 1, 2),
+(23, 1, 2),
 (6, 1, 3),
-(5, 2, 2),
+(25, 2, 2),
 (11, 2, 3),
-(4, 4, 2),
+(24, 4, 2),
 (12, 4, 3),
-(3, 5, 2);
+(3, 5, 2),
+(19, 11, 2),
+(17, 11, 3);
 
 -- --------------------------------------------------------
 
@@ -271,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `bewertung_karteikarte` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `bewertung_karteikarte`
@@ -279,7 +318,8 @@ CREATE TABLE IF NOT EXISTS `bewertung_karteikarte` (
 
 INSERT INTO `bewertung_karteikarte` (`ID`, `Bewertung`, `Benutzer`, `KarteikarteID`) VALUES
 (1, -1, 2, 24),
-(2, 1, 2, 21);
+(2, 1, 2, 21),
+(3, -1, 11, 21);
 
 --
 -- Trigger `bewertung_karteikarte`
@@ -305,7 +345,14 @@ CREATE TABLE IF NOT EXISTS `bewertung_kommentar` (
   `Bewertung` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KommentarID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `bewertung_kommentar`
+--
+
+INSERT INTO `bewertung_kommentar` (`ID`, `Bewertung`, `Benutzer`, `KommentarID`) VALUES
+(1, 1, 11, 1);
 
 -- --------------------------------------------------------
 
@@ -351,7 +398,7 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (10, 'Karteikarten bearbeiten', '<p>Der Button für das Bearbeiten von Karteikarten befindet sich rechts neben Karteikarten. Es öffnet sich der gleiche Dialog, wie er beim Erstellen schon beschrieben wurde.</p>', 'BILD', 0, '2015-06-15 14:28:46', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (11, 'Karteikarten löschen', '<p>Um eine Karteikarte zu löschen, brauchen sie zunächst die nötigen Rechte. Berechtigt sind sie, wenn sie der Dozent der Veranstaltung sind oder Moderator sind. Moderatoren können jedoch nur Karteikarten löschen, wenn sie vom Dozenten berechtigt wurden.</p><p>Im Fall der Berechtigung, erscheinen beim Hovern (Schweben der Maus) über der Karteikarte Symbole.&nbsp;Diese erscheinen entweder rechts (bei einer Überschriftskarteikarte) oder links bei allen anderen. Eines dieser Symbole ist ein Mülleimer. Klicken sie auf diesen und Bestätigen sie, dass sie sich sicher sind. Danach sind die Karteikarte und alle ihre untergeordneten Karteikarten ("Kinder") gelöscht. Prüfen sie vorher ausführlich, ob sie dies wirklich wollen, da dieser Vorgang irreversibel ist.</p>', 'BILD', 0, '2015-06-15 14:33:07', 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (20, 'SW-Prüfung', '', 'TEXT', 0, '2015-06-04 13:34:01', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(21, 'Hintergrund und Motivation', '<ul><li>Akzeptanz eines Produkts wird durch Qualit&auml;t bestimmt<ul><li>&Uuml;bereinstimmung mit den Anforderungen</li><li>Leistungsumfang, Benutzbarkeit und Komfort</li><li>Flexibilit&auml;t (bez&uuml;glich &Auml;nderungen)</li></ul></li><li>Verbesserung der Qualit&auml;t (von Artefakten der System und&nbsp;Softwareentwicklung) durch<ul><li>Disziplinierte Erstellung (&bdquo;Vorgehensmodelle&ldquo;) und</li><li>Systematische Pr&uuml;fung und Behebung von Defekten</li></ul></li></ul>', 'TEXT', 0, '2015-06-04 13:37:06', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(21, 'Hintergrund und Motivation', '<ul><li>Akzeptanz eines Produkts wird durch Qualit&auml;t bestimmt<ul><li>&Uuml;bereinstimmung mit den Anforderungen</li><li>Leistungsumfang, Benutzbarkeit und Komfort</li><li>Flexibilit&auml;t (bez&uuml;glich &Auml;nderungen)</li></ul></li><li>Verbesserung der Qualit&auml;t (von Artefakten der System und&nbsp;Softwareentwicklung) durch<ul><li>Disziplinierte Erstellung (&bdquo;Vorgehensmodelle&ldquo;) und</li><li>Systematische Pr&uuml;fung und Behebung von Defekten</li></ul></li></ul>', 'TEXT', -1, '2015-06-04 13:37:06', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (22, 'Qualitätssicherung - Review', '', 'TEXT', 0, '2015-06-04 13:38:20', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (23, 'Wichtigste Fragen', '<ul><li>Was ist (Software-)Qualit&auml;t?</li><li>Wie stellt sich Qualit&auml;t dar? (Qualit&auml;ts-Modelle und Merkmale)</li><li>Wie kann man Qualit&auml;t messen und vergleichen? (Metriken)</li><li>Welche Ma&szlig;nahmen dienen der Hebung der Qualit&auml;t? (Qualit&auml;tssicherung)</li></ul><p>&nbsp;</p>', 'TEXT', 0, '2015-06-04 13:41:10', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (24, 'Qualität', '<ul><li>Quality (IEEE-Standard)<ul><li>(1) The degree to which a system, component, or process meets specified&nbsp;requirements</li><li>(2) The degree to which a system, component, or process meets customer or&nbsp;user needs or expectations</li></ul></li><li>Qualit&auml;t ist die Gesamtheit von Merkmalen einer Einheit bez&uuml;glich ihrer Eignung,&nbsp;festgelegte und vorausgesetzte Erfordernisse zu erf&uuml;llen (DIN ISO 8402)</li></ul>', 'TEXT', -1, '2015-06-04 13:43:34', 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
@@ -359,7 +406,7 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (26, 'Qualitätssicherung – Test', '<p><strong>Lernziele</strong></p><ul><li>Grundlagen und wichtigste Aspekte<br />hinsichtlich Tests beschreiben k&ouml;nnen</li><li>Die wichtigsten Testformen (Black-<br />Box- und Glass-Box-Tests) sowie<br />Verfahren zur Testfallauswahl<br />erkl&auml;ren und anwenden k&ouml;nnen</li><li>Andere Testverfahren beschreiben<br />k&ouml;nnen</li><li>St&auml;rken und Schw&auml;chen von Tests<br />wiedergeben k&ouml;nnen</li></ul>', 'TEXT', 0, '2015-06-04 13:47:16', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (36, 'Eigenes Profil anzeigen', '<p>Sie können sich ihr eigenes Profil anzeigen lassen, indem sie auf ihren eigenen Namen klicken. Dieser ist befindet sich im linken Block, direkt unter ihrem Profilbild. Sie werden mit dem Klick auf ihr eigenes Profil weitergeleitet.</p>', 'TEXT', 0, '2015-06-15 12:42:25', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (57, 'Veranstaltungsseite', '', 'TEXT', 0, '2015-06-09 07:15:45', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(58, 'Profildaten bearbeiten', '<p>Hier können Sie Ihre im System gespeicherten Daten sehen. Die Daten lassen sich direkt in den entsprechenden Feldern ändern.&nbsp;</p><p>Außerdem können Sie einstellen, wann Sie benachrichtigt werden wollen.</p><p><u>Kommentare</u></p><ul><li>Sie können sich über alle Kommentare zu Veranstaltungen, zu denen Sie eingeschrieben sind informieren lassen.</li><li>Sie können sich nur über Kommentare benachrichtigen lassen, bei denen Sie selbst einen Kommentar verfasst haben.</li><li>Sie können diese Benachrichtigung deaktivieren.</li></ul><p><u>Änderungen</u></p><ul><li>Sie können sich über Änderungen an Veranstaltungen informieren lassen.</li><li>Sie können sich über Änderungen an Karteikarten informieren lassen.</li></ul>', 'BILD', 0, '2015-06-12 17:00:52', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(58, 'Profildaten bearbeiten', '<p>Hier können Sie Ihre im System gespeicherten Daten sehen. Die Daten lassen sich direkt in den entsprechenden Feldern ändern.&nbsp;</p><p>Außerdem können Sie einstellen, wann Sie benachrichtigt werden wollen.</p><p><u>Kommentare</u></p><ul><li>Sie können sich über alle Kommentare zu Veranstaltungen, zu denen Sie eingeschrieben sind informieren lassen.</li><li>Sie können sich nur über Kommentare benachrichtigen lassen, bei denen Sie selbst einen Kommentar verfasst haben.</li><li>Sie können diese Benachrichtigung deaktivieren.</li></ul><p><u>Änderungen</u></p><ul><li>Sie können sich über Änderungen an Veranstaltungen informieren lassen.</li><li>Sie können sich über Änderungen an Karteikarten informieren lassen.</li></ul>', 'BILD', 0, '2015-06-22 07:28:13', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (65, 'Profil bearbeiten', '', 'TEXT', 0, '2015-06-09 07:16:04', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (66, 'Fakten über Software-Qualität', '<p>Gr&ouml;&szlig;te Kostentreiber sind Fehlerfindung und -behebung sowie Dokumentenerstellung</p><ul><li>30% der Softwarekosten sind Kosten f&uuml;r Dokumenterstellung</li><li>Ca. 50 Dokumente (insgesamt: 6000 Seiten, 200 000 W&ouml;rter, 5000 Diagramme)</li><li>Dokumente haben 3 Defekte/Seite (18 000 insgesamt), die ohne Pr&uuml;fma&szlig;nahmen in die&nbsp;Software gehen oder beim Kunden landen</li><li>SW-Systeme haben insgesamt ca. 50 000 Defekte&nbsp;(von denen 80% durch Pr&uuml;fma&szlig;nahmen, insbesondere Tests, gefunden werden)</li><li>Tests erfordern insgesamt ca. 55 000 Testf&auml;lle</li><li>25% der Testf&auml;lle haben Defekte&nbsp;(Defektdichte bei Testf&auml;llen oft h&ouml;her als im System selbst)</li><li>7% der (40 000 s.o.) Bug-Fixes sind Bad-Fixes (2800, die zu den 10 000 v.o. dazukommen)</li><li>Von den insgesamt 12 800 ausgelieferten Defekten sind 20 % (d.h. ca. 2500) gravierend</li></ul>', 'TEXT', 0, '2015-06-04 13:48:17', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (68, 'Statische Prüfungen (1/7)', '<h3><span style="font-family:arial,helvetica,sans-serif"><strong>Statische Pr&uuml;fung</strong></span></h3><ul><li>Pr&uuml;fung eines Dokuments (allein oder mit Gespr&auml;chspartner) nach vorgegebenen Kriterien</li></ul><h3><span style="font-family:arial,helvetica,sans-serif"><strong>Gemeinsamkeiten aller statischen Pr&uuml;fmethoden</strong></span></h3><ul><li>Wesentliche T&auml;tigkeit: dokumentierte (Teil-)Produkte untersuchen und beurteilen</li><li>Hauptziel: Defekte aller Art (Fehler, Widerspr&uuml;che, Unvollst&auml;ndigkeiten, etc.) finden</li><li>Beteiligte: (kleines) Team mit klarer Rollenverteilung</li><li>Neben individueller Pr&uuml;ft&auml;tigkeit meist auch Gruppensitzung (mit allen Beteiligten) Sinnvolle Voraussetzungen (f&uuml;r den Erfolg statischer Pr&uuml;fungen)</li></ul><h3><span style="font-family:arial,helvetica,sans-serif"><strong>Der erforderliche Aufwand (Personal, Zeit) muss fest eingeplant sein</strong></span></h3><ul><li>Es muss bekannt sein, welchem Zweck die Pr&uuml;fung dient</li><li>Es muss ein zug&auml;ngliches Pr&uuml;fdokument (Text, Programm oder Zeichnung) vorliegen</li><li>Die Mitglieder des Pr&uuml;fteams sollten in der jeweiligen Pr&uuml;fmethode geschult sein</li><li>Die Pr&uuml;fmethode sollte dokumentiert sein und ihre Einhaltung &uuml;berpr&uuml;ft werden</li><li>Pr&uuml;fergebnisse d&uuml;rfen nicht zur Personalbeurteilung missbraucht werden</li></ul>', 'TEXT', 0, '2015-06-04 13:56:49', 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -408,7 +455,7 @@ INSERT INTO `karteikarte` (`ID`, `Titel`, `Inhalt`, `Typ`, `Bewertung`, `Aenderu
 (120, 'Veranstaltungen erstellen', '<p>Ein Dozent hat das Recht, eine Veranstaltung zu erstellen.</p>', 'TEXT', 0, '2015-06-15 15:00:35', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (121, 'Wann werden neue Benachrichtigungen erzeugt?', '<p>Neue Benachrichtigungen tauchen in der Box mit Ihrem Nutzernamen auf, wenn</p><ul><li>eine Veranstaltung, in die Sie eingeschrieben sind, bearbeitet wurde.</li><li>sie als Moderator zu einer Veranstaltung hinzugefügt wurden.</li><li>eine Karteikarte in einer Veranstaltung, in die Sie eingeschrieben sind, bearbeitet wurde.</li><li>eine Karteikarte in einer Veranstaltung, in die Sie eingeschrieben sind, kommentiert wurde (Sie können in Ihrem Profil einstellen, ob Sie über alle Kommentare benachrichtigt werden möchten, oder nur über Kommentare in Diskussionen, an denen Sie teilgenommen haben)</li><li>ihre Profil von Ihnen oder einem Administrator bearbeitet wurde.</li></ul>', 'TEXT', 0, '2015-06-15 15:16:18', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (122, 'Status von Benachrichtigungen', '<p><strong>Ungelesene Benachrichtigungen</strong> werden farbig hervorgehoben.</p><p>Bei Klick auf eine Benachrichtigung wird diese als gelesen markiert und sie springen zur betreffenden&nbsp;Veranstaltung oder zum&nbsp;Profil.</p>', 'TEXT', 0, '2015-06-15 15:22:54', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(123, 'Export', '<p>Eine Veranstaltung kann als PDF-Datei exportiert und heruntergeladen werden.</p><p>Dafür wird LaTeX Code erzeugt, den Sie als TEX-Datei herunterladen können.</p>', 'TEXT', 0, '2015-06-15 15:27:03', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+(123, 'Export', '<p>Eine Veranstaltung kann als PDF-Datei exportiert und heruntergeladen werden.</p><p>Dafür wird LaTeX Code erzeugt, den Sie als TEX-Datei oder als kompiliertes PDF&nbsp;herunterladen können.</p><p>Sie haben die Möglichkeit verschiedene Export Optionen zu wählen:</p><ul><li>Export von Notizen als Paragraph-Block unter der eigentlichen Karteikarte</li><li>Export von Attributen als Fußnoten</li><li>Export von Querverweisen als Paragraph-Block unter der eigentlichen Karteikarte. Diese Verweise sind klickbar.</li></ul><p>Nachdem Sie im Dialog auf PDF erstellen geklickt haben, wird das Latex-Dokument kompiliert. Dies kann einen Augenblick dauern. Nach beenden des Kompilierungsvorgangs erhalten Sie das PDF und das Tex-Dokument zum download.</p>', 'TEXT', 0, '2015-06-22 07:04:19', 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -423,16 +470,17 @@ CREATE TABLE IF NOT EXISTS `kommentar` (
   `Benutzer` int(11) NOT NULL,
   `Karteikarte` int(11) DEFAULT NULL,
   `Vaterkommentar` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `kommentar`
 --
 
 INSERT INTO `kommentar` (`ID`, `Inhalt`, `Erstelldatum`, `Benutzer`, `Karteikarte`, `Vaterkommentar`) VALUES
-(1, '<p>sdfsdfsdf</p>', '2015-06-12 09:51:48', 2, 21, NULL),
-(2, '<p>sdfsadfasd</p><p> </p>', '2015-06-12 09:52:06', 2, NULL, 1),
-(3, '<p><span class="mathjax_formel">\\(x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}\\)</span></p>', '2015-06-12 13:46:28', 2, 24, NULL);
+(1, '<p>Sehr interessant!</p>', '2015-06-12 09:51:48', 2, 21, NULL),
+(2, '<p>Naja vielleicht doch nicht so sehr...</p><p> </p>', '2015-06-12 09:52:06', 2, NULL, 1),
+(3, '<p><span class="mathjax_formel">\\(x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}\\)</span></p>', '2015-06-12 13:46:28', 2, 24, NULL),
+(4, '<p><span class="mathjax_formel">\\(x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}\\)</span></p>', '2015-06-29 10:54:50', 2, 21, NULL);
 
 -- --------------------------------------------------------
 
@@ -487,16 +535,17 @@ CREATE TABLE IF NOT EXISTS `moderator` (
 `ID` int(11) NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
 -- Daten für Tabelle `moderator`
 --
 
 INSERT INTO `moderator` (`ID`, `Benutzer`, `Veranstaltung`) VALUES
-(2, 1, 2),
-(3, 4, 2),
-(7, 2, 3);
+(7, 2, 3),
+(11, 1, 2),
+(12, 4, 2),
+(13, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -509,7 +558,7 @@ CREATE TABLE IF NOT EXISTS `notiz` (
   `Inhalt` text NOT NULL,
   `Benutzer` int(11) NOT NULL,
   `KarteikarteID` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -573,14 +622,14 @@ CREATE TABLE IF NOT EXISTS `veranstaltung` (
   `Ersteller` int(11) NOT NULL,
   `Titel` varchar(255) NOT NULL,
   `ErsteKarteikarte` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `veranstaltung`
 --
 
 INSERT INTO `veranstaltung` (`ID`, `Beschreibung`, `Semester`, `Kennwort`, `KommentareErlaubt`, `BewertungenErlaubt`, `ModeratorKarteikartenBearbeiten`, `Ersteller`, `Titel`, `ErsteKarteikarte`) VALUES
-(2, '<p>Die Vorlesung Softwaretechnik II ist die Fortsetzungsveranstaltung der&nbsp;Softwaretechnik I.</p><p>Themen der Vorlesung Softwaretechnik II (im Sommersemester) sind:</p><ul><li>Qualit&auml;tssicherung (Metriken, Systematisches Testen, Reviews)</li><li>Projektmanagement (Planung, Kostensch&auml;tzung, Controlling, Konfigurationsmanagement, Qualit&auml;tsmanagement, Prozessverbesserung)</li></ul>', 'SoSe2015', NULL, 1, 1, 1, 5, 'Softwaretechnik II', 79),
+(2, '<p>Die Vorlesung Softwaretechnik II ist die Fortsetzungsveranstaltung der&nbsp;Softwaretechnik I.</p><p>Themen der Vorlesung Softwaretechnik II (im Sommersemester) sind:</p><ul><li>Qualitätssicherung (Metriken, Systematisches Testen, Reviews)</li><li>Projektmanagement (Planung, Kostenschätzung, Controlling, Konfigurationsmanagement, Qualitätsmanagement, Prozessverbesserung)</li></ul>', 'SoSe2015', NULL, 1, 1, 1, 5, 'Softwaretechnik II', 79),
 (3, '<p>Dies ist die Bedienungsanleitung des Systems</p>', 'SoSe2015', NULL, 0, 0, 1, 1, 'Bedienungsanleitung eLearning-System', 75);
 
 -- --------------------------------------------------------
@@ -593,17 +642,17 @@ CREATE TABLE IF NOT EXISTS `veranstaltung_studiengang_zuordnung` (
 `ID` int(11) NOT NULL,
   `Veranstaltung` int(11) NOT NULL,
   `Studiengang` varchar(30) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
 
 --
 -- Daten für Tabelle `veranstaltung_studiengang_zuordnung`
 --
 
 INSERT INTO `veranstaltung_studiengang_zuordnung` (`ID`, `Veranstaltung`, `Studiengang`) VALUES
-(4, 2, 'Informatik'),
-(5, 2, 'Medieninformatik'),
 (12, 3, 'Sonstiges'),
-(13, 3, 'Biologie');
+(13, 3, 'Biologie'),
+(16, 2, 'Informatik'),
+(17, 2, 'Medieninformatik');
 
 -- --------------------------------------------------------
 
@@ -752,22 +801,22 @@ ALTER TABLE `veranstaltung_studiengang_zuordnung`
 -- AUTO_INCREMENT for table `benachrichtigung`
 --
 ALTER TABLE `benachrichtigung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_einladung_moderator`
 --
 ALTER TABLE `benachrichtigung_einladung_moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_karteikartenaenderung`
 --
 ALTER TABLE `benachrichtigung_karteikartenaenderung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_neuer_kommentar`
 --
 ALTER TABLE `benachrichtigung_neuer_kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `benachrichtigung_profil_geaendert`
 --
@@ -777,42 +826,42 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `benachrichtigung_veranstaltungsaenderung`
 --
 ALTER TABLE `benachrichtigung_veranstaltungsaenderung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `benutzer`
 --
 ALTER TABLE `benutzer`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `benutzer_veranstaltung_zuordnung`
 --
 ALTER TABLE `benutzer_veranstaltung_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `bewertung_karteikarte`
 --
 ALTER TABLE `bewertung_karteikarte`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `bewertung_kommentar`
 --
 ALTER TABLE `bewertung_kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `kommentar`
 --
 ALTER TABLE `kommentar`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `moderator`
 --
 ALTER TABLE `moderator`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `notiz`
 --
 ALTER TABLE `notiz`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `semester`
 --
@@ -822,12 +871,12 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 -- AUTO_INCREMENT for table `veranstaltung`
 --
 ALTER TABLE `veranstaltung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `veranstaltung_studiengang_zuordnung`
 --
 ALTER TABLE `veranstaltung_studiengang_zuordnung`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- Constraints der exportierten Tabellen
 --

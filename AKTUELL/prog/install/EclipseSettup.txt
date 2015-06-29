@@ -1,9 +1,0 @@
-1. Eclipse MARS herrunterladen
-2. EGit - Plugin installieren
-3. Repository clonen und einrichten
-	- Klicken auf "Import", dann "projects from git", weiter
-	- "Clone URI" wählen, weiter
-	- URI, Passwort und Username eintragen, weiter
-	- "Import as General Project" anwählen, weiter
-4. Dynamic Web Project anlegen und nach folgender Anletung vorgehen: 
-   http://stackoverflow.com/questions/18492293/eclipse-and-external-src-and-web-content-folder-linking-or-mapping
