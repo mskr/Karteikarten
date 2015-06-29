@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: registrieren.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: registrieren.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author Andreas, Marius
+ */
+
+$(document).ready(function() {
+    $("#registrieren_form").submit(function(event) {
+        // Verhindert das normale Absenden des Formulars
+        event.preventDefault();
+        // Textfelder auslesen
+        var email = $("#login_email").val();
+        if(validateEmail(email))
+        {
+            var pass = $("#login_pass").val();
+            var passwdh = $("#reg_pass").val();
+            
+            // Passwortwiederholung ueberpruefen
+            if(pass == passwdh)
+            {
+            	// pass wird vor verschicken mit md5 gehasht
+                pass = escape(CryptoJS.MD5(pass));
+                var vorname = $("#reg_vorname").val();
+                var nachname = $("#reg_nachname").val();
+                var matnr = $("#reg_matnr").val();
+                var studiengang = $("#reg_studiengang").val();
+                var params = {};
+                params[paramEmail] = email;
+                params[paramPasswort] = pass;
+                params[paramVorname] = vorname;
+                params[paramNachname] = nachname;
+                params[paramStudiengang] = studiengang;
+                params[paramMatrikelNr] = matnr;
+                ajaxCall(
+                    startseitenServlet,
+                    actionRegister,
+                    function() {
+                    	$(".login_input").removeAttr("style");
+                        showInfo("Ihre Daten wurde erfolgreich eingetragen. Sie können sich nun einloggen.");
+                    },
+                    params
+                );
+            }
+            else
+            {
+                // Falsche Passwortwiederholung
+                $("#reg_pass").focus();
+                $("#reg_pass").val("");
+                $("#reg_pass").css("border","4px solid IndianRed");
+                showError("Bitte wiederholen Sie Ihr Passwort erneut.");
+            }
+        }
+        else
+        {
+            $("#login_email").focus();
+            $("#login_email").css("border","4px solid IndianRed");
+            showError("Bitte prüfen Sie Ihre Email-Adresse.");
+        }
+    });
+});
+
+/**
+ * Akzeptiert Email Adressen, die "mindestens" die Form a@b.de haben.
+ * @see http://stackoverflow.com/questions/46155
+ * @param email die validiert werden soll.
+ * @returns true wenn Email valide, false andernfalls.
+ */
+function validateEmail(email) {
+    var re = /^(([^&lt;>()[\]\\.,;:\s@"]+(\.[^&lt;>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addBenachrichtigung">addBenachrichtigung</a></li><li><a href="global.html#addItemToList">addItemToList</a></li><li><a href="global.html#addMessageToQueue">addMessageToQueue</a></li><li><a href="global.html#adminServlet">adminServlet</a></li><li><a href="global.html#ajaxCall">ajaxCall</a></li><li><a href="global.html#autoComplete">autoComplete</a></li><li><a href="global.html#bearbeiteMessageQueue">bearbeiteMessageQueue</a></li><li><a href="global.html#buildKarteikarte">buildKarteikarte</a></li><li><a href="global.html#buildUrlQuery">buildUrlQuery</a></li><li><a href="global.html#changeCSS">changeCSS</a></li><li><a href="global.html#checkConnection">checkConnection</a></li><li><a href="global.html#checkIfAllowedVn">checkIfAllowedVn</a></li><li><a href="global.html#clearBenachrichtigungen">clearBenachrichtigungen</a></li><li><a href="global.html#clearMessageQueue">clearMessageQueue</a></li><li><a href="global.html#concatStrArr">concatStrArr</a></li><li><a href="global.html#createAndFillKommentar">createAndFillKommentar</a></li><li><a href="global.html#createAttrStr">createAttrStr</a></li><li><a href="global.html#currentProfilID">currentProfilID</a></li><li><a href="global.html#destroyCKeditors">destroyCKeditors</a></li><li><a href="global.html#display">display</a></li><li><a href="global.html#displayVeranstaltung">displayVeranstaltung</a></li><li><a href="global.html#displayVeranstaltungen">displayVeranstaltungen</a></li><li><a href="global.html#doVoteGUI">doVoteGUI</a></li><li><a href="global.html#doVoteKkGUI">doVoteKkGUI</a></li><li><a href="global.html#erstelleNeuesThemaKk">erstelleNeuesThemaKk</a></li><li><a href="global.html#exportKkVonVn">exportKkVonVn</a></li><li><a href="global.html#fillAntKomm">fillAntKomm</a></li><li><a href="global.html#fillHauptKommentar">fillHauptKommentar</a></li><li><a href="global.html#fillHauptseite">fillHauptseite</a></li><li><a href="global.html#fillKarteiKarte">fillKarteiKarte</a></li><li><a href="global.html#fillMyPersonalBox">fillMyPersonalBox</a></li><li><a href="global.html#fillMyProfil">fillMyProfil</a></li><li><a href="global.html#fillOtherProfil">fillOtherProfil</a></li><li><a href="global.html#fillProfilseite">fillProfilseite</a></li><li><a href="global.html#fillSelectWithOptions">fillSelectWithOptions</a></li><li><a href="global.html#fillStartseite">fillStartseite</a></li><li><a href="global.html#fillSuchergebnisse">fillSuchergebnisse</a></li><li><a href="global.html#fillUserContainer">fillUserContainer</a></li><li><a href="global.html#fillVeranstaltungsliste">fillVeranstaltungsliste</a></li><li><a href="global.html#fillVeranstaltungsSeite">fillVeranstaltungsSeite</a></li><li><a href="global.html#fillVerweise">fillVerweise</a></li><li><a href="global.html#getBenutzer">getBenutzer</a></li><li><a href="global.html#getKarteikarteByID">getKarteikarteByID</a></li><li><a href="global.html#getProfilStudiengaenge">getProfilStudiengaenge</a></li><li><a href="global.html#getUrlParameterByName">getUrlParameterByName</a></li><li><a href="global.html#gotoHauptseite">gotoHauptseite</a></li><li><a href="global.html#gotoProfil">gotoProfil</a></li><li><a href="global.html#gotoStartseite">gotoStartseite</a></li><li><a href="global.html#gotoVeranstaltung">gotoVeranstaltung</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handlePfeiltastenEvents">handlePfeiltastenEvents</a></li><li><a href="global.html#handleReturnLink">handleReturnLink</a></li><li><a href="global.html#hideAntworten">hideAntworten</a></li><li><a href="global.html#Inhaltsverzeichnis">Inhaltsverzeichnis</a></li><li><a href="global.html#initialURL">initialURL</a></li><li><a href="global.html#interpreteUrlQuery">interpreteUrlQuery</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isImage">isImage</a></li><li><a href="global.html#isVideo">isVideo</a></li><li><a href="global.html#kkBearbeiten">kkBearbeiten</a></li><li><a href="global.html#leseVeranstaltungenMeine">leseVeranstaltungenMeine</a></li><li><a href="global.html#leseVeranstaltungenSemesterStudiengang">leseVeranstaltungenSemesterStudiengang</a></li><li><a href="global.html#loadAfterKk">loadAfterKk</a></li><li><a href="global.html#loadPreKk">loadPreKk</a></li><li><a href="global.html#loescheKommentar">loescheKommentar</a></li><li><a href="global.html#message">message</a></li><li><a href="global.html#myRound">myRound</a></li><li><a href="global.html#naviconTransformicon">naviconTransformicon</a></li><li><a href="global.html#newKarteikarte">newKarteikarte</a></li><li><a href="global.html#onResizeHandler">onResizeHandler</a></li><li><a href="global.html#orderKommentareById">orderKommentareById</a></li><li><a href="global.html#parseUrlQuery">parseUrlQuery</a></li><li><a href="global.html#PopupFenster">PopupFenster</a></li><li><a href="global.html#processKK_editClick">processKK_editClick</a></li><li><a href="global.html#processKKbearbeiten">processKKbearbeiten</a></li><li><a href="global.html#registerAvatarAendernEvent">registerAvatarAendernEvent</a></li><li><a href="global.html#registerEinAusschreibenClickEvent">registerEinAusschreibenClickEvent</a></li><li><a href="global.html#registerErstellerClickFunction">registerErstellerClickFunction</a></li><li><a href="global.html#registerProfilSpeichernEvents">registerProfilSpeichernEvents</a></li><li><a href="global.html#registerSuchEvent">registerSuchEvent</a></li><li><a href="global.html#registerVeranstErzeugeHandler">registerVeranstErzeugeHandler</a></li><li><a href="global.html#sendeAntwortKomm">sendeAntwortKomm</a></li><li><a href="global.html#setNotiz">setNotiz</a></li><li><a href="global.html#setupAntwAnz">setupAntwAnz</a></li><li><a href="global.html#showAntworten">showAntworten</a></li><li><a href="global.html#showAntwortKommentare">showAntwortKommentare</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#showHauptKommentare">showHauptKommentare</a></li><li><a href="global.html#showInfo">showInfo</a></li><li><a href="global.html#showNextMessage">showNextMessage</a></li><li><a href="global.html#showPreAfterLoad">showPreAfterLoad</a></li><li><a href="global.html#sindSieSicher">sindSieSicher</a></li><li><a href="global.html#sortDivByClassName">sortDivByClassName</a></li><li><a href="global.html#startMessageQueue">startMessageQueue</a></li><li><a href="global.html#submitEditKarteikarte">submitEditKarteikarte</a></li><li><a href="global.html#suchTimer">suchTimer</a></li><li><a href="global.html#toUrlParamString">toUrlParamString</a></li><li><a href="global.html#updateBenachrichtigungen">updateBenachrichtigungen</a></li><li><a href="global.html#uploadFile">uploadFile</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#veranstaltungsObject">veranstaltungsObject</a></li><li><a href="global.html#verifyResponse">verifyResponse</a></li><li><a href="global.html#voteKkDown">voteKkDown</a></li><li><a href="global.html#voteKkUp">voteKkUp</a></li><li><a href="global.html#voteKommentarDown">voteKommentarDown</a></li><li><a href="global.html#voteKommentarUp">voteKommentarUp</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Jun 22 2015 20:23:51 GMT+0200 (MESZ)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

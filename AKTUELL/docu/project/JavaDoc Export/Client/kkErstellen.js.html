@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: kkErstellen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: kkErstellen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author Julius, Andreas, Marius
+ */
+
+$(document).ready(function() {
+    
+    // Initialisiere Feld fuer File Uploads
+	kkErstellenDropZone = $("#df_area_kk").dropzone(myDropzoneConfig).get(0).dropzone;
+	
+	// Initialisiere Karteikarte bearbeiten Popup
+    kkErstellenPopup = new PopupFenster(
+            $("#kk_erstellen_popup_overlay"), 
+            [$('#kk_erstellen_popup_close'),$("#kk_erstellen_cancel")],
+            undefined,
+            $("#kk_erstellen_ok"),
+            undefined,
+            $("#kk_erstellen_titel_input"),
+            $("#kk_erstellen_weiter"),
+            $("#kk_erstellen_zurueck")
+        );
+});
+
+/**
+ * Startet den Vorgang zum erstellen einer neuen Karteikarte mit gegebener Vater- und Bruderkarteikarte.
+ * @param vater
+ * @param bruder
+ */
+function newKarteikarte(vater, bruder) {
+    
+	// Spezialfall ganz oben im Baum
+	if(vater == undefined)
+		vater = veranstaltungsObject[paramErsteKarteikarte];
+	if(bruder == undefined) //no brother before it, then -1
+		bruder = -1;
+		
+	// Initialisiere ckEditor
+	try {
+	    $("#kk_erstellen_TA").ckeditor(ckEditorVnErstellenConfig);
+	}
+    catch(e){
+    	console.log(e);
+    }
+    
+    // Soll eine neues Kapitel angelegt werden sind die Popup-Seiten 
+    // fuer Attribut und Verweise nicht noetig
+    $("#kk_neuesKapitel").change(function(e) {
+    	if($("#kk_neuesKapitel").prop("checked"))
+    	{
+    		kkErstellenPopup.disablePage(1);
+    		kkErstellenPopup.disablePage(2);
+    		$("#kk_erstellen_content").hide();
+    	}
+    	else
+    	{
+    		kkErstellenPopup.enableAllPages();
+    		$("#kk_erstellen_content").show();
+    	}
+    });
+    
+    //== Code fuer die Verweise START ==
+    
+    var verweisVoraussetzungArr = [];
+    var verweisWeiterfuehrendArr = [];
+    var verweisUebungArr = [];
+    var verweisSonstigesArr = [];
+    
+    // Sammle Ajax Objekte aller Verweis Baeume
+    var verwBaeumeAjaxCalls = [];
+    
+    $(".kk_erstellen_verweise_baum").each(function(i,v) {
+    	var inh = new Inhaltsverzeichnis($(this),
+    			veranstaltungsObject,
+    			undefined,
+    			false,
+    			function(arr, kkListItem, i, e, ajax, klappeAus) {
+                    if(klappeAus)
+                    {
+                        $.when(ajax).done(function() {
+                            // Checkboxen mit den Arrays synchronisieren
+                            kkListItem.find("> ul input[type='checkbox']").each(function(index, elem) {
+                                var verwBaum = $(elem).parents(".kk_verweise_baum");
+                                var verwTyp = verwBaum.attr("id").split("_")[4];
+                                syncCheckboxWithArray(verwTyp, $(elem).data("kkid"), $(elem));
+                            });
+                            // Change Handler fuer die Checkboxes der bei Klick geladenen Kinder
+                            kkListItem.find("> ul input[type='checkbox']").change(function(e) {
+                                var verwBaum = $(e.target).parents(".kk_verweise_baum");
+                                var verwTyp = verwBaum.attr("id").split("_")[4];
+                                var isHinzu = $(e.target).prop("checked");
+                                var zielKkId = $(e.target).data("kkid");
+                                verweiseVonBenutzerGeaendert(verwTyp, isHinzu, zielKkId);
+                            });
+                        });
+                    }
+                },
+                true,false);
+
+        verwBaeumeAjaxCalls.push(inh.init());
+    });
+    
+    // Warte darauf, dass die Wurzel-Ebene aller Verweise Baeume geladen wurde
+    $.when.apply(null, verwBaeumeAjaxCalls).done(function() {
+        // Change Handler fuer die Checkboxes der Wurzel-Ebene
+        $(".kk_erstellen_verweise_baum input[type='checkbox']").change(function(e) {
+            var verwBaum = $(e.target).parents(".kk_verweise_baum");
+            var verwTyp = verwBaum.attr("id").split("_")[4];
+            var isHinzu = $(e.target).prop("checked");
+            var zielKkId = $(e.target).data("kkid");
+            verweiseVonBenutzerGeaendert(verwTyp, isHinzu, zielKkId);
+        });
+    });
+    
+    /**
+     * Setzt die gegebene Checkbox falls der gegebene Verweis im Array vorhanden ist.
+     * @param verweisTyp String
+     * @param zielKkId Number
+     * @param checkbox DOM Object
+     */
+    function syncCheckboxWithArray(verweisTyp, zielKkId, checkbox)
+    {
+        switch(verweisTyp)
+        {
+            case "voraussetzung":
+                if(jQuery.inArray(zielKkId, verweisVoraussetzungArr) != -1)
+                    checkbox.prop("checked", true);
+                break;
+            case "weiterfuehrend":
+                if(jQuery.inArray(zielKkId, verweisWeiterfuehrendArr) != -1)
+                    checkbox.prop("checked", true);
+                break;
+            case "uebung":
+                if(jQuery.inArray(zielKkId, verweisUebungArr) != -1)
+                    checkbox.prop("checked", true);
+                break;
+            case "sonstige":
+                if(jQuery.inArray(zielKkId, verweisSonstigesArr) != -1)
+                    checkbox.prop("checked", true);
+        }
+    }
+    
+    /**
+     * Durch Setzen oder Loeschen von Checkboxen geaenderte Verweise auch in den Array hinzufuegen oder loeschen.
+     * @param verweisTyp String
+     * @param isHinzu Boolean
+     * @param zielKkId Number
+     */
+    function verweiseVonBenutzerGeaendert(verweisTyp, isHinzu, zielKkId)
+    {
+        switch(verweisTyp)
+        {
+            case "voraussetzung":
+                if(isHinzu)
+                    verweisVoraussetzungArr.push(zielKkId);
+                else
+                    verweisVoraussetzungArr = jQuery.grep(verweisVoraussetzungArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+                break;
+            case "weiterfuehrend":
+                if(isHinzu)
+                    verweisWeiterfuehrendArr.push(zielKkId);
+                else
+                    verweisWeiterfuehrendArr = jQuery.grep(verweisWeiterfuehrendArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+                break;
+            case "uebung":
+                if(isHinzu)
+                    verweisUebungArr.push(zielKkId);
+                else
+                    verweisUebungArr = jQuery.grep(verweisUebungArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+                break;
+            case "sonstige":
+                if(isHinzu)
+                    verweisSonstigesArr.push(zielKkId);
+                else
+                    verweisSonstigesArr = jQuery.grep(verweisSonstigesArr, function(elem) {
+                        return elem != zielKkId;
+                    });
+        }
+        
+    }
+
+    //== Code fuer die Verweise ENDE ==
+    
+    /**
+     * Startet eine Pruefung der Eingaben und ggf. das Absenden der Daten.
+     * @returns true, falls Eingaben fehlerfrei und Popup bereit zum Schliessen.
+     */
+    submitFkt = function() {
+    	var text = $("#kk_neuesKapitel").prop("checked") ? "" : $("#kk_erstellen_TA").val().trim();
+    	var titel = $("#kk_erstellen_titel_input").val().trim();
+    	var attributes = getSelectedKkAttributes();
+    	if(titel=="")
+    	{
+    		showError("Bitte geben Sie ihrer Karteikarte einen Titel.");
+    		return false;
+    	}
+    	else if(text == "" &amp;&amp; kkErstellenDropZone.files.length == 0 &amp;&amp; !$("#kk_neuesKapitel").prop("checked"))
+    	{
+    		showError("Bitte füllen sie ihre Karteikarte mit einem Inhalt.");
+    		return false;
+    	}
+    	else if(uploadInProgress)
+		{
+    		showError("Bitte warten. Datei wird hochgeladen.");
+    		return false;
+		}
+    	else
+    	{
+    		processKKerstellen(text,titel,attributes, bruder, vater, 
+    				verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr);
+    		return true;
+    	}
+    }
+    
+    /**
+     * Raeumt das Popup beim Schliessen auf.
+     */
+    clearFkt = function(){
+    	$("#kk_neuesKapitel").off();
+    	$("#kk_erstellen_text_area").show();
+		$("#df_area_kk").show();
+    	$("#kk_erstellen_popup input[type='checkbox']").prop("checked",false);
+		$("#kk_erstellen_content").show();
+    	$("#kk_erstellen_titel_input").val("");
+    	$("#kk_erstellen_TA").val("");
+    	kkErstellenDropZone.removeAllFiles(true);
+    	$("#kk_erstellen_popup .drop_file_areas").removeClass("dropped");
+    	// Zerstoere Verweis Baeume mit allen Handlern
+    	$("#kk_erstellen_popup").find(".kk_verweise_baum").empty();
+    }
+    
+    // Popup konfigurieren und anzeigen
+    kkErstellenPopup.setCloseFkt(clearFkt);
+    kkErstellenPopup.setSubmitFkt(submitFkt);
+    kkErstellenPopup.show();
+    
+    /**
+     * Erstellt ein requestfertiges Objekt aller noetigen Parameter zum Erstellen einer neuen Karteikarte
+     * @param text
+     * @param titel
+     * @param attributes
+     * @param bruder
+     * @param vater
+     * @param verweisVoraussetzungArr
+     * @param verweisWeiterfuehrendArr
+     * @param verweisUebungArr
+     * @param verweisSonstigesArr
+     */
+	function processKKerstellen(text,titel,attributes, bruder, vater, 
+	        verweisVoraussetzungArr, verweisWeiterfuehrendArr, verweisUebungArr, verweisSonstigesArr)
+	{
+		var params = {};
+		params[paramTitel] = titel;
+		params[paramVeranstaltung] = veranstaltungsObject[paramId];
+		params[paramInhalt] = text;
+		params[paramAttribute] = attributes;
+		params[paramType] = UPLOADTYPE;
+		params[paramVaterKK] = vater;
+		params[paramBruderKK] = bruder;
+		params[paramKkUploadID] = UPLOADIDSET;
+		params[paramVerweisVoraussetzung] = verweisVoraussetzungArr;
+        params[paramVerweisWeiterfuehrend] = verweisWeiterfuehrendArr;
+        params[paramVerweisUebung] = verweisUebungArr;
+        params[paramVerweisSonstiges] = verweisSonstigesArr;
+		submitNewKarteikarte(params)
+	}
+	
+	/**
+     * @returns true falls Attribute gewaehlt wurden
+     */
+    function isAnyAttrSelected()
+    {
+        var isTrue = false;
+        $("#kkE_attributes input[type='checkbox']").each(function(i, elem) {
+            if($(elem).prop("checked")){
+                isTrue = true;
+                return false; // break loop
+            }
+        });
+        return isTrue;
+    }
+    
+    /**
+     * Wandelt gewaehlte Attribute in einen String um.
+     * Der String ist eine kommaseparierte Liste aus 'true' und 'false'.
+     * Ein solcher String wird vom Server erwartet.
+     * @returns String
+     */
+    function getSelectedKkAttributes()
+    {
+        var str = ""
+            $("#kkE_attributes input[type='checkbox']").each(function(i, elem) {
+                str = str + $(elem).prop("checked") + ",";
+            });
+            str = str.substring(0, str.length - 1);
+            return str;
+    }
+    
+    /**
+     * Sendet den Ajax Call zum Erstellen einer Karteikarte ab.
+     * @params
+     */
+    function submitNewKarteikarte(params)
+    {
+    	var ajax = ajaxCall(karteikartenServlet,
+    			actionErstelleKarteikarte,
+                function(response) {
+                    showInfo("Karteikarte \""+ params[paramTitel] +"\" wurde erfolgreich erzeugt.");
+                    displayKarteikarte(response[paramId]);
+                    $.when(vnInhaltsverzeichnis.init()).done(function(){
+                        vnInhaltsverzeichnis.showEintrag(response[paramId]);
+                    });
+                },
+                params
+            );
+    }
+    
+   
+}
+
+/**
+ * Testet, ob eine Datei ein akzeptiertes Bild ist.
+ * @param filename
+ * @returns true, wenn akzeptiertes Format
+ */
+function isImage(filename) 
+{
+    var ext = getExtension(filename);
+    switch (ext.toLowerCase()) {
+        case 'jpg':
+        case 'png':
+            //etc
+            return true;
+    }
+    return false;
+}
+
+/**
+ * Testet, ob eine Datei ein akzeptiertes Video ist.
+ * @param filename
+ * @returns true, wenn akzeptiertes Format
+ */
+function isVideo(filename) 
+{
+    var ext = getExtension(filename);
+    switch (ext.toLowerCase()) {
+        case 'mp4':
+        case 'ogg':
+            // etc
+            return true;
+    }
+    return false;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addBenachrichtigung">addBenachrichtigung</a></li><li><a href="global.html#addItemToList">addItemToList</a></li><li><a href="global.html#addMessageToQueue">addMessageToQueue</a></li><li><a href="global.html#adminServlet">adminServlet</a></li><li><a href="global.html#ajaxCall">ajaxCall</a></li><li><a href="global.html#autoComplete">autoComplete</a></li><li><a href="global.html#bearbeiteMessageQueue">bearbeiteMessageQueue</a></li><li><a href="global.html#buildKarteikarte">buildKarteikarte</a></li><li><a href="global.html#buildUrlQuery">buildUrlQuery</a></li><li><a href="global.html#changeCSS">changeCSS</a></li><li><a href="global.html#checkConnection">checkConnection</a></li><li><a href="global.html#checkIfAllowedVn">checkIfAllowedVn</a></li><li><a href="global.html#clearBenachrichtigungen">clearBenachrichtigungen</a></li><li><a href="global.html#clearMessageQueue">clearMessageQueue</a></li><li><a href="global.html#concatStrArr">concatStrArr</a></li><li><a href="global.html#createAndFillKommentar">createAndFillKommentar</a></li><li><a href="global.html#createAttrStr">createAttrStr</a></li><li><a href="global.html#currentProfilID">currentProfilID</a></li><li><a href="global.html#destroyCKeditors">destroyCKeditors</a></li><li><a href="global.html#display">display</a></li><li><a href="global.html#displayVeranstaltung">displayVeranstaltung</a></li><li><a href="global.html#displayVeranstaltungen">displayVeranstaltungen</a></li><li><a href="global.html#doVoteGUI">doVoteGUI</a></li><li><a href="global.html#doVoteKkGUI">doVoteKkGUI</a></li><li><a href="global.html#erstelleNeuesThemaKk">erstelleNeuesThemaKk</a></li><li><a href="global.html#exportKkVonVn">exportKkVonVn</a></li><li><a href="global.html#fillAntKomm">fillAntKomm</a></li><li><a href="global.html#fillHauptKommentar">fillHauptKommentar</a></li><li><a href="global.html#fillHauptseite">fillHauptseite</a></li><li><a href="global.html#fillKarteiKarte">fillKarteiKarte</a></li><li><a href="global.html#fillMyPersonalBox">fillMyPersonalBox</a></li><li><a href="global.html#fillMyProfil">fillMyProfil</a></li><li><a href="global.html#fillOtherProfil">fillOtherProfil</a></li><li><a href="global.html#fillProfilseite">fillProfilseite</a></li><li><a href="global.html#fillSelectWithOptions">fillSelectWithOptions</a></li><li><a href="global.html#fillStartseite">fillStartseite</a></li><li><a href="global.html#fillSuchergebnisse">fillSuchergebnisse</a></li><li><a href="global.html#fillUserContainer">fillUserContainer</a></li><li><a href="global.html#fillVeranstaltungsliste">fillVeranstaltungsliste</a></li><li><a href="global.html#fillVeranstaltungsSeite">fillVeranstaltungsSeite</a></li><li><a href="global.html#fillVerweise">fillVerweise</a></li><li><a href="global.html#getBenutzer">getBenutzer</a></li><li><a href="global.html#getKarteikarteByID">getKarteikarteByID</a></li><li><a href="global.html#getProfilStudiengaenge">getProfilStudiengaenge</a></li><li><a href="global.html#getUrlParameterByName">getUrlParameterByName</a></li><li><a href="global.html#gotoHauptseite">gotoHauptseite</a></li><li><a href="global.html#gotoProfil">gotoProfil</a></li><li><a href="global.html#gotoStartseite">gotoStartseite</a></li><li><a href="global.html#gotoVeranstaltung">gotoVeranstaltung</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handlePfeiltastenEvents">handlePfeiltastenEvents</a></li><li><a href="global.html#handleReturnLink">handleReturnLink</a></li><li><a href="global.html#hideAntworten">hideAntworten</a></li><li><a href="global.html#Inhaltsverzeichnis">Inhaltsverzeichnis</a></li><li><a href="global.html#initialURL">initialURL</a></li><li><a href="global.html#interpreteUrlQuery">interpreteUrlQuery</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isImage">isImage</a></li><li><a href="global.html#isVideo">isVideo</a></li><li><a href="global.html#kkBearbeiten">kkBearbeiten</a></li><li><a href="global.html#leseVeranstaltungenMeine">leseVeranstaltungenMeine</a></li><li><a href="global.html#leseVeranstaltungenSemesterStudiengang">leseVeranstaltungenSemesterStudiengang</a></li><li><a href="global.html#loadAfterKk">loadAfterKk</a></li><li><a href="global.html#loadPreKk">loadPreKk</a></li><li><a href="global.html#loescheKommentar">loescheKommentar</a></li><li><a href="global.html#message">message</a></li><li><a href="global.html#myRound">myRound</a></li><li><a href="global.html#naviconTransformicon">naviconTransformicon</a></li><li><a href="global.html#newKarteikarte">newKarteikarte</a></li><li><a href="global.html#onResizeHandler">onResizeHandler</a></li><li><a href="global.html#orderKommentareById">orderKommentareById</a></li><li><a href="global.html#parseUrlQuery">parseUrlQuery</a></li><li><a href="global.html#PopupFenster">PopupFenster</a></li><li><a href="global.html#processKK_editClick">processKK_editClick</a></li><li><a href="global.html#processKKbearbeiten">processKKbearbeiten</a></li><li><a href="global.html#registerAvatarAendernEvent">registerAvatarAendernEvent</a></li><li><a href="global.html#registerEinAusschreibenClickEvent">registerEinAusschreibenClickEvent</a></li><li><a href="global.html#registerErstellerClickFunction">registerErstellerClickFunction</a></li><li><a href="global.html#registerProfilSpeichernEvents">registerProfilSpeichernEvents</a></li><li><a href="global.html#registerSuchEvent">registerSuchEvent</a></li><li><a href="global.html#registerVeranstErzeugeHandler">registerVeranstErzeugeHandler</a></li><li><a href="global.html#sendeAntwortKomm">sendeAntwortKomm</a></li><li><a href="global.html#setNotiz">setNotiz</a></li><li><a href="global.html#setupAntwAnz">setupAntwAnz</a></li><li><a href="global.html#showAntworten">showAntworten</a></li><li><a href="global.html#showAntwortKommentare">showAntwortKommentare</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#showHauptKommentare">showHauptKommentare</a></li><li><a href="global.html#showInfo">showInfo</a></li><li><a href="global.html#showNextMessage">showNextMessage</a></li><li><a href="global.html#showPreAfterLoad">showPreAfterLoad</a></li><li><a href="global.html#sindSieSicher">sindSieSicher</a></li><li><a href="global.html#sortDivByClassName">sortDivByClassName</a></li><li><a href="global.html#startMessageQueue">startMessageQueue</a></li><li><a href="global.html#submitEditKarteikarte">submitEditKarteikarte</a></li><li><a href="global.html#suchTimer">suchTimer</a></li><li><a href="global.html#toUrlParamString">toUrlParamString</a></li><li><a href="global.html#updateBenachrichtigungen">updateBenachrichtigungen</a></li><li><a href="global.html#uploadFile">uploadFile</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#veranstaltungsObject">veranstaltungsObject</a></li><li><a href="global.html#verifyResponse">verifyResponse</a></li><li><a href="global.html#voteKkDown">voteKkDown</a></li><li><a href="global.html#voteKkUp">voteKkUp</a></li><li><a href="global.html#voteKommentarDown">voteKommentarDown</a></li><li><a href="global.html#voteKommentarUp">voteKommentarUp</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Jun 22 2015 20:23:51 GMT+0200 (MESZ)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

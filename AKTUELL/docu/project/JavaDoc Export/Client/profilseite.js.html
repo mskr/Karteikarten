@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: profilseite.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: profilseite.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author Andreas, Marius
+ */
+
+// ID des Benutzer, dessen Profil gerade angezeigt wird
+var currentProfilID;
+
+// Statische Handler einmal registrieren
+$(document).ready(function() {
+    
+	$("#profil_loeschen_bt").click(function() {
+		sindSieSicher($("#profil_loeschen_bt"), "Wollen sie das Profil wirklich löschen?",function(){
+		    var params = {};
+		    params[paramId] = currentProfilID;
+			ajaxCall(
+			    profilServlet,
+			    actionDeleteBenutzer,
+			    function() {
+			        showInfo("Profil wurde erfolgreich gelöscht.");
+			        // Hat sich der Benutzer selbst geloescht oder war das
+			        // ein Admin, der jmd anders geloescht hat.
+			        if(currentProfilID == jsonBenutzer[paramId])
+			        {
+			            jsonBenutzer = undefined;
+	                    gotoStartseite();
+			        }
+			        else
+			        {
+			            gotoHauptseite();
+			        }
+			    },
+			    params
+			);
+		});
+	});
+
+    // Reagiere auf die Auswahl einer Datei
+    $('#profil_avatar_aendern_file').change(function() {
+        var filenameFull = $('#profil_avatar_aendern_file').val();
+        var fileName = filenameFull.split(/(\\|\/)/g).pop();
+        $("#profil_avatar_aendern_file_name").html(fileName);
+        $("#profil_avatar_aendern_file_name").css("color","yellow");
+        if(fileName != "")
+        {
+            $("#profil_avatar_submit").show("scale");
+            $("#profil_avatar_aendern_file_name").show("scale");
+        }
+        else
+        {
+            $("#profil_avatar_submit").hide("scale");
+            $("#profil_avatar_aendern_file_name").hide("scale");
+        }
+    });
+    
+    // Reagiere auf das löschen des Profilbildes
+    $("#profil_avatar_loeschen_bt").click(function(){
+    	sindSieSicher($("#profil_avatar_loeschen_bt"), "Wollen sie das Bild wirklich löschen?",function(){
+		    var params = {};
+		    params[paramId] = currentProfilID;
+			ajaxCall(
+			    profilServlet,
+			    actionDeleteBenutzerBild,
+			    function() {
+			        showInfo("Ihr Profilbild wurde erfolgreich gelöscht!");
+			        $(".profil_avatar_img").attr("src","files/profilBilder/default.png");
+			        $(".user_MyProfilBild").attr("src","files/profilBilder/default.png");
+			        $("#profil_avatar_loeschen_bt").hide();
+			    },
+			    params
+			);
+		});
+    });
+    
+    // Studiengänge anzeigen
+    getProfilStudiengaenge();
+    // Reagiere auf Profil Speichern
+    registerProfilSpeichernEvents();
+    // Reagiere auf Avatar Ändern
+    registerAvatarAendernEvent();
+    
+    // Farbschema aendern Handler
+    $("#farbschema_toggle_checkbox").change(function() {
+        if($(this).prop("checked"))
+        {
+        	// Eigenes Profil?
+			if (jsonBenutzer[paramId] == currentProfilID) {
+				changeCSS("CSS/sopra_light.css", 0);
+				changeCSS("CSS/mybuttonstyle_light.css", 1);
+			}
+
+			$("#farbschema_toggle_label").text("TAG");
+            
+            var params = {};
+            params[paramId] = currentProfilID;
+            params[paramTheme] = "DAY";
+            ajaxCall(profilServlet, actionSetTheme, function(){
+            	showInfo("Farbschema geändert.")
+            	jsonBenutzer[paramTheme] = "DAY";
+            }, params);
+            
+        }
+        else
+        {
+        	// Eigenes Profil?
+        	if (jsonBenutzer[paramId] == currentProfilID) {
+        		changeCSS("CSS/sopra.css", 0);
+        		changeCSS("CSS/mybuttonstyle.css", 1);
+        	}
+        	$("#farbschema_toggle_label").text("NACHT");
+
+            var params = {};
+            params[paramId] = currentProfilID;
+            params[paramTheme] = "NIGHT";
+            ajaxCall(profilServlet, actionSetTheme, function(){
+            	showInfo("Farbschema geändert.")
+            	jsonBenutzer[paramTheme] = "NIGHT";
+            }, params);
+        }
+    });
+    
+});
+
+/**
+ * Zeigt die Daten des Benutzers im Profil an
+ * jsonBenutzer enthält immer das aktuelle BenutzerObjekt.
+ */
+function fillProfilseite() 
+{
+    currentProfilID = getUrlParameterByName(urlParamId);
+    
+    if(currentProfilID == jsonBenutzer[paramId])
+    {
+    	UserName = jsonBenutzer[paramVorname]+" "+jsonBenutzer[paramNachname];
+    	document.title = UserName;
+    	fillMyProfil(jsonBenutzer[paramNutzerstatus] == "ADMIN");
+    }
+    else
+    {
+        // Benutzer zeigt anderes Profil an
+    	var params = {};
+    	params[paramId] = currentProfilID;
+        return ajaxCall(profilServlet,
+            			actionGetOtherBenutzer,
+            function(response)
+            {
+        		fillOtherProfil(response,jsonBenutzer[paramNutzerstatus] == "ADMIN");
+            },
+            params,
+            function(erroTxt)
+            {
+                // Angefragter Benutzer existiert evntl nicht
+                gotoHauptseite();
+                
+                return false;
+            }
+        );
+    }
+}
+
+/**
+ * Holt die Studiengaenge und traegt sie in das select Element ein.
+ */
+function getProfilStudiengaenge() {
+    return ajaxCall(startseitenServlet,
+    				actionGetStudiengaenge,
+    				function(response) 
+    				{
+				    	$("#profil_studiengang_input").empty();
+				    	var studgArr = response[keyJsonArrResult];
+				    	for(var i in studgArr) {
+				    		$("#profil_studiengang_input").append("&lt;option>"+studgArr[i]+"&lt;/option>");
+				    	}
+			    	}
+		    	);
+}
+
+/**
+ * Fuellt das eigene Profil mit den Daten aus dem jsonBenutzer Objekt.
+ * Als Admin hat der Benutzer mehr Bearbeitungsmoeglichkeiten.
+ * @param isAdmin gibt an, ob ein Admin sein Profil ansieht
+ */
+function fillMyProfil(isAdmin)
+{
+    $("#profil_email_input").attr("disabled",false);
+    $("#profil_vorname_input").attr("disabled",false);
+    $("#profil_nachname_input").attr("disabled",false);
+    
+	$("#profil_avatar_aendern_file_name").show();
+	$(".profil_avatar_overlay").show();
+	$(".profil_loeschen").show();
+	$("#profil_einstellungen").show();
+	$("#profil_passwort ").show();
+	$("#profil_pw_alt_div").show();
+	$("#profil_passwort_alt_input").prop("required",true);
+	$("#profil_daten_speichern").show();
+    $(".profil_farbschema_auswahl").show();
+	
+	$(".profil_benutzername").text(jsonBenutzer[paramVorname] +" "+jsonBenutzer[paramNachname]);
+	$(".profil_avatar_img").attr("src", jsonBenutzer[paramProfilBild]);
+	if(jsonBenutzer[paramProfilBild].indexOf("default")==-1){
+		$("#profil_avatar_loeschen_bt").show();
+	}
+	else
+	{
+		$("#profil_avatar_loeschen_bt").hide();
+	}
+    $(".profil_loeschen").show();
+    $("#profil_email").show();
+    $("#profil_matrikelnummer").show();
+    $("#profil_email_input").val(jsonBenutzer[paramEmail]);
+    $("#profil_vorname_input").val(jsonBenutzer[paramVorname]);
+    $("#profil_nachname_input").val(jsonBenutzer[paramNachname]);
+    $("#profil_matnr_input").val(jsonBenutzer[paramMatrikelNr]);
+    $("#profil_rolle_input").val(jsonBenutzer[paramNutzerstatus]);
+	$("#profil_studiengang_input").val(jsonBenutzer[paramStudiengang]);
+	
+    switch(jsonBenutzer[paramNotifyKommentare])
+    {
+	    case paramNotifyKommentareValVeranst:
+	    	$("#notifyKommentare_input_teilgenommen").prop("checked",true);
+	    	break;
+	    case paramNotifyKommentareValDiskussion:
+	    	$("#notifyKommentare_input_diskussionen").prop("checked",true);
+	    	break;
+	    case paramNotifyKommentareValKeine:
+	    	$("#notifyKommentare_input_nie").prop("checked",true);
+    }
+
+    if(jsonBenutzer[paramTheme] == "DAY")
+    {
+    	$("#farbschema_toggle_checkbox").prop("checked",true);
+        $("#farbschema_toggle_label").text("TAG");
+    }
+    else
+    {
+    	$("#farbschema_toggle_checkbox").prop("checked",false);
+        $("#farbschema_toggle_label").text("NACHT");
+    }
+    
+    $("#notifyVeranstAenderung_input").prop("checked",jsonBenutzer[paramNofityVeranstAenderung]);
+    $("#notifyKarteikartenAenderung_input").prop("checked",jsonBenutzer[paramNotifyKarteikartenAenderung]);
+	
+	if(!isAdmin)
+	{
+		$("#profil_matnr_input").prop("disabled", true);
+		$("#profil_studiengang_input").prop("disabled", true);
+		$("#profil_rolle_input").prop("disabled", true);
+	}
+	else
+	{
+		$("#profil_matnr_input").prop("disabled", false);
+		$("#profil_studiengang_input").prop("disabled", false);
+		$("#profil_rolle_input").prop("disabled", false);
+	}
+}
+
+/**
+ * Fuellt das Profil eines gegebenen Benutzers.
+ * Als Admin hat der Benutzer mehr Bearbeitungsmoeglichkeiten
+ * und kann das Profil loeschen.
+ * @param benutzer
+ */
+function fillOtherProfil(benutzer, isAdmin)
+{
+	//aktualisiere Titel
+	UserName = benutzer[paramVorname]+" "+benutzer[paramNachname];
+	document.title = UserName;
+
+	$("#profil_avatar_loeschen_bt").hide();
+	$(".profil_benutzername").text(benutzer[paramVorname] +" "+benutzer[paramNachname]);
+	$(".profil_avatar_img").attr("src", benutzer[paramProfilBild]);
+
+    $("#profil_vorname_input").val(benutzer[paramVorname]);
+    $("#profil_nachname_input").val(benutzer[paramNachname]);
+    $("#profil_rolle_input").val(benutzer[paramNutzerstatus]);
+	$("#profil_studiengang_input").val(benutzer[paramStudiengang]);
+    
+    switch(benutzer[paramNotifyKommentare])
+    {
+	    case paramNotifyKommentareValVeranst:
+	    	$("#notifyKommentare_input_teilgenommen").prop("checked",true);
+	    	break;
+	    case paramNotifyKommentareValDiskussion:
+	    	$("#notifyKommentare_input_diskussionen").prop("checked",true);
+	    	break;
+	    case paramNotifyKommentareValKeine:
+	    	$("#notifyKommentare_input_nie").prop("checked",true);
+    }
+    
+    $("#notifyVeranstAenderung_input").prop("checked",benutzer[paramNofityVeranstAenderung]);
+    $("#notifyKarteikartenAenderung_input").prop("checked",benutzer[paramNotifyKarteikartenAenderung]);
+	
+	if(!isAdmin)
+	{
+	    $("#profil_email").hide();
+	    $("#profil_matrikelnummer").hide();
+		$("#profil_avatar_aendern_file_name").hide();
+		$(".profil_avatar_overlay").hide();
+		$(".profil_loeschen").hide();
+		$("#profil_einstellungen").hide();
+		$("#profil_pw_alt_div").show();
+		$("#profil_passwort_alt_input").prop("required",true);
+		$("#profil_passwort").hide();
+		$("#profil_daten_speichern").hide();
+        $(".profil_farbschema_auswahl").hide();
+
+	    $("#profil_email_input").val("");
+	    $("#profil_matnr_input").val("");
+	    
+		$("#profil_email_input").prop("disabled", true);
+		$("#profil_vorname_input").prop("disabled", true);
+		$("#profil_nachname_input").prop("disabled", true);
+		$("#profil_matnr_input").prop("disabled", true);
+		$("#profil_studiengang_input").prop("disabled", true);
+		$("#profil_rolle_input").prop("disabled", true);
+	}
+	else
+	{
+	    $("#profil_email").show();
+	    $("#profil_matrikelnummer").show();
+		$("#profil_avatar_aendern_file_name").show();
+		$(".profil_avatar_overlay").show();
+		$(".profil_loeschen").show();
+		$("#profil_einstellungen").show();
+		$("#profil_passwort").show();
+		$("#profil_passwort_alt_input").prop("required",false);
+		$("#profil_pw_alt_div").hide();
+		$("#profil_daten_speichern").show();
+        $(".profil_farbschema_auswahl").show();
+
+	    $("#profil_email_input").val(benutzer[paramEmail]);
+	    $("#profil_matnr_input").val(benutzer[paramMatrikelNr]);
+	    
+		$("#profil_email_input").prop("disabled", false);
+		$("#profil_vorname_input").prop("disabled", false);
+		$("#profil_nachname_input").prop("disabled", false);
+		$("#profil_matnr_input").prop("disabled", false);
+		$("#profil_studiengang_input").prop("disabled", false);
+		$("#profil_rolle_input").prop("disabled", false);
+
+
+	    if(benutzer[paramTheme] == "DAY")
+	    {
+	    	$("#farbschema_toggle_checkbox").prop("checked",true);
+	        $("#farbschema_toggle_label").text("TAG");
+	    }
+	    else
+	    {
+	    	$("#farbschema_toggle_checkbox").prop("checked",false);
+	        $("#farbschema_toggle_label").text("NACHT");
+	    }
+	}
+}
+
+/**
+ * Liest die Daten aus den Feldern aus und uebertraegt Sie zum Server.
+ */
+function registerProfilSpeichernEvents() {
+    
+    $("#profil_daten_form").submit(function(event) 
+    {
+        // Felder auslesen
+        var email = $("#profil_email_input").val();
+        var vorname = $("#profil_vorname_input").val();
+        var nachname = $("#profil_nachname_input").val();
+        var notifyVeranst = $("#notifyVeranstAenderung_input").prop("checked");
+        var notifyKarteikarten = $("#notifyKarteikartenAenderung_input").prop("checked");
+        var notifyKommentare =  $("input[name=profil_notifyKommentareRb]:checked").val();
+        if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
+        {
+            var matnr = $("#profil_matnr_input").val();
+            var studiengang = $("#profil_studiengang_input").val();
+            var rolle = $("#profil_rolle_input").val();
+        }
+        var params = {};
+        params[paramId] = getUrlParameterByName(urlParamId);
+        params[paramVorname] = vorname;
+        params[paramNachname] = nachname;
+        params[paramNofityVeranstAenderung] = notifyVeranst;
+        params[paramNotifyKarteikartenAenderung] = notifyKarteikarten;
+        params[paramNotifyKommentare] = notifyKommentare;
+        params[paramEmailNew] = email;
+        if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
+        {
+            params[paramNutzerstatus] = rolle;
+            params[paramStudiengang] = studiengang;
+            params[paramMatrikelNr] = matnr;
+        }
+        ajaxCall(
+            profilServlet,
+            actionAendereProfil,
+            function(response) {
+                showInfo("Änderungen gespeichert.");
+                $.when(getBenutzer()).done(function() {
+                    fillProfilseite();
+                    fillMyPersonalBox();
+                });
+            },
+            params,
+            undefined,
+            function() {
+                $("#profil_daten_speichern").val("Lädt...");
+                $("#profil_daten_speichern").prop("disabled", true);
+            },
+            function() {
+                $("#profil_daten_speichern").val("Speichern");
+                $("#profil_daten_speichern").prop('disabled', false);
+            }
+        );
+        // Verhindert das normale Absenden des Formulars
+        event.preventDefault();         
+    });
+            
+    $("#profil_passwort_form").submit(function(event) 
+    {
+        // Felder auslesen
+        var pwNeu = $("#profil_passwort_input").val();
+        var pwNeuWdh = $("#profil_passwort_wdh_input").val();
+        var pwAlt = $("#profil_passwort_alt_input").val();
+        // Fehleingaben abfangen
+        if(pwNeu != pwNeuWdh)
+        {
+            // Wdh-Feld leeren
+            $("#profil_passwort_wdh_input").val("");
+            $("#profil_passwort_wdh_input").focus();
+            $("#profil_passwort_wdh_input").css("border","4px solid IndianRed");
+            showError("Bitte prüfen Sie Ihre Eingaben.");
+        }
+        else
+        {
+        	pwNeu = CryptoJS.MD5(pwNeu);
+        	pwAlt = CryptoJS.MD5(pwAlt);
+        	
+            var params = {};
+            params[paramPasswortNew] = escape(pwNeu);
+            if(jsonBenutzer[paramNutzerstatus] != "ADMIN")
+            	params[paramPasswort] = escape(pwAlt);
+            params[paramId] = currentProfilID;
+            ajaxCall(
+                profilServlet,
+                actionAenderePasswort,
+                function(response) {
+                    showInfo("Änderungen gespeichert.");
+                    $("#profil_passwort_alt_input").removeAttr("style");
+                    $("#profil_passwort_wdh_input").removeAttr("style");
+                    $("#profil_passwort_input").removeAttr("style");
+                    fillProfilseite();
+                },
+                params,
+                function(errCode) {
+                    if(errCode == "loginfailed") 
+                    {
+                        $("#profil_passwort_alt_input").css("border","4px solid IndianRed");
+                        $("#profil_passwort_alt_input").val("");
+                        $("#profil_passwort_alt_input").focus();
+                        showError("Bitte prüfen Sie Ihre Eingaben.");
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                },
+                function() {
+                    $("#profil_passwort_speichern").val("Lädt...");
+                    $("#profil_passwort_speichern").prop('disabled', true);
+                },
+                function() {
+                    $("#profil_passwort_speichern").val("Speichern");
+                    $("#profil_passwort_speichern").prop('disabled', false);
+                }
+            );
+            $("#profil_passwort_input").val("");
+            $("#profil_passwort_wdh_input").val("");
+            $("#profil_passwort_alt_input").val("");
+        }
+        // Verhindert das normale Absenden des Formulars
+        event.preventDefault();
+    });
+}
+
+/**
+ * Laedt ein neues Profilbild hoch.
+ */
+function registerAvatarAendernEvent() {
+    $("#profil_avatar_aendern_form").submit(function(event) {
+        event.preventDefault();
+    	var file = $("#profil_avatar_aendern_file")[0].files[0];
+    	var filenameFull = $("#profil_avatar_aendern_file").val();
+    	var fileName = filenameFull.split(/(\\|\/)/g).pop();
+    	if(fileName.toLowerCase().indexOf(".jpg") &lt; 0 &amp;&amp; 
+    			fileName.toLowerCase().indexOf(".jpeg") &lt; 0 &amp;&amp;
+    			fileName.toLowerCase().indexOf(".bmp") &lt; 0 &amp;&amp;
+    			fileName.toLowerCase().indexOf(".png") &lt; 0)
+    	{
+    		showError("Leider werden nur die Formate jpg/jpeg, bmp oder png unterstützt.");
+            $("#profil_avatar_submit").hide("scale");
+            $("#profil_avatar_aendern_file_name").hide("scale");
+    	}
+    	else
+    	{
+    		var params = {};
+    		params[paramId] = currentProfilID;
+    		uploadFile(
+    		        file, 
+    		        function(response) {
+                    	var errFkt = function(errCode) 
+                    	{
+                    		if(errCode == "invalidparam") 
+                            {
+                                showError("Bitte geben Sie eine gültige Datei an.");
+                                return true;
+                            }
+                    		return false;
+        				};
+        				
+            			if(verifyResponse(response,errFkt))
+            			{
+                    		showInfo("Änerungen gespeichert.");
+                    		$.when(getBenutzer()).done(function() {
+                         		fillProfilseite();
+                         		fillMyPersonalBox();
+        					});
+            			}
+    		        },
+    		        actionUploadProfilBild,
+    		        params,
+    		        function() {
+            		    // beforeSend
+            		    $("#profil_avatar_submit").val("Lädt...");
+            		    $("#profil_avatar_submit").prop("disabled", true);
+    		        },
+    		        function() {
+            		    // complete
+            		    $("#profil_avatar_submit").val("Avatar ändern");
+                        $("#profil_avatar_submit").prop("disabled", false);
+                        $("#profil_avatar_submit").hide("scale");
+                        $("#profil_avatar_aendern_file_name").hide("scale");
+    		        }
+    		);
+    	}
+        event.preventDefault();
+    });
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addBenachrichtigung">addBenachrichtigung</a></li><li><a href="global.html#addItemToList">addItemToList</a></li><li><a href="global.html#addMessageToQueue">addMessageToQueue</a></li><li><a href="global.html#adminServlet">adminServlet</a></li><li><a href="global.html#ajaxCall">ajaxCall</a></li><li><a href="global.html#autoComplete">autoComplete</a></li><li><a href="global.html#bearbeiteMessageQueue">bearbeiteMessageQueue</a></li><li><a href="global.html#buildKarteikarte">buildKarteikarte</a></li><li><a href="global.html#buildUrlQuery">buildUrlQuery</a></li><li><a href="global.html#changeCSS">changeCSS</a></li><li><a href="global.html#checkConnection">checkConnection</a></li><li><a href="global.html#checkIfAllowedVn">checkIfAllowedVn</a></li><li><a href="global.html#clearBenachrichtigungen">clearBenachrichtigungen</a></li><li><a href="global.html#clearMessageQueue">clearMessageQueue</a></li><li><a href="global.html#concatStrArr">concatStrArr</a></li><li><a href="global.html#createAndFillKommentar">createAndFillKommentar</a></li><li><a href="global.html#createAttrStr">createAttrStr</a></li><li><a href="global.html#currentProfilID">currentProfilID</a></li><li><a href="global.html#destroyCKeditors">destroyCKeditors</a></li><li><a href="global.html#display">display</a></li><li><a href="global.html#displayVeranstaltung">displayVeranstaltung</a></li><li><a href="global.html#displayVeranstaltungen">displayVeranstaltungen</a></li><li><a href="global.html#doVoteGUI">doVoteGUI</a></li><li><a href="global.html#doVoteKkGUI">doVoteKkGUI</a></li><li><a href="global.html#erstelleNeuesThemaKk">erstelleNeuesThemaKk</a></li><li><a href="global.html#exportKkVonVn">exportKkVonVn</a></li><li><a href="global.html#fillAntKomm">fillAntKomm</a></li><li><a href="global.html#fillHauptKommentar">fillHauptKommentar</a></li><li><a href="global.html#fillHauptseite">fillHauptseite</a></li><li><a href="global.html#fillKarteiKarte">fillKarteiKarte</a></li><li><a href="global.html#fillMyPersonalBox">fillMyPersonalBox</a></li><li><a href="global.html#fillMyProfil">fillMyProfil</a></li><li><a href="global.html#fillOtherProfil">fillOtherProfil</a></li><li><a href="global.html#fillProfilseite">fillProfilseite</a></li><li><a href="global.html#fillSelectWithOptions">fillSelectWithOptions</a></li><li><a href="global.html#fillStartseite">fillStartseite</a></li><li><a href="global.html#fillSuchergebnisse">fillSuchergebnisse</a></li><li><a href="global.html#fillUserContainer">fillUserContainer</a></li><li><a href="global.html#fillVeranstaltungsliste">fillVeranstaltungsliste</a></li><li><a href="global.html#fillVeranstaltungsSeite">fillVeranstaltungsSeite</a></li><li><a href="global.html#fillVerweise">fillVerweise</a></li><li><a href="global.html#getBenutzer">getBenutzer</a></li><li><a href="global.html#getKarteikarteByID">getKarteikarteByID</a></li><li><a href="global.html#getProfilStudiengaenge">getProfilStudiengaenge</a></li><li><a href="global.html#getUrlParameterByName">getUrlParameterByName</a></li><li><a href="global.html#gotoHauptseite">gotoHauptseite</a></li><li><a href="global.html#gotoProfil">gotoProfil</a></li><li><a href="global.html#gotoStartseite">gotoStartseite</a></li><li><a href="global.html#gotoVeranstaltung">gotoVeranstaltung</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handlePfeiltastenEvents">handlePfeiltastenEvents</a></li><li><a href="global.html#handleReturnLink">handleReturnLink</a></li><li><a href="global.html#hideAntworten">hideAntworten</a></li><li><a href="global.html#Inhaltsverzeichnis">Inhaltsverzeichnis</a></li><li><a href="global.html#initialURL">initialURL</a></li><li><a href="global.html#interpreteUrlQuery">interpreteUrlQuery</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isImage">isImage</a></li><li><a href="global.html#isVideo">isVideo</a></li><li><a href="global.html#kkBearbeiten">kkBearbeiten</a></li><li><a href="global.html#leseVeranstaltungenMeine">leseVeranstaltungenMeine</a></li><li><a href="global.html#leseVeranstaltungenSemesterStudiengang">leseVeranstaltungenSemesterStudiengang</a></li><li><a href="global.html#loadAfterKk">loadAfterKk</a></li><li><a href="global.html#loadPreKk">loadPreKk</a></li><li><a href="global.html#loescheKommentar">loescheKommentar</a></li><li><a href="global.html#message">message</a></li><li><a href="global.html#myRound">myRound</a></li><li><a href="global.html#naviconTransformicon">naviconTransformicon</a></li><li><a href="global.html#newKarteikarte">newKarteikarte</a></li><li><a href="global.html#onResizeHandler">onResizeHandler</a></li><li><a href="global.html#orderKommentareById">orderKommentareById</a></li><li><a href="global.html#parseUrlQuery">parseUrlQuery</a></li><li><a href="global.html#PopupFenster">PopupFenster</a></li><li><a href="global.html#processKK_editClick">processKK_editClick</a></li><li><a href="global.html#processKKbearbeiten">processKKbearbeiten</a></li><li><a href="global.html#registerAvatarAendernEvent">registerAvatarAendernEvent</a></li><li><a href="global.html#registerEinAusschreibenClickEvent">registerEinAusschreibenClickEvent</a></li><li><a href="global.html#registerErstellerClickFunction">registerErstellerClickFunction</a></li><li><a href="global.html#registerProfilSpeichernEvents">registerProfilSpeichernEvents</a></li><li><a href="global.html#registerSuchEvent">registerSuchEvent</a></li><li><a href="global.html#registerVeranstErzeugeHandler">registerVeranstErzeugeHandler</a></li><li><a href="global.html#sendeAntwortKomm">sendeAntwortKomm</a></li><li><a href="global.html#setNotiz">setNotiz</a></li><li><a href="global.html#setupAntwAnz">setupAntwAnz</a></li><li><a href="global.html#showAntworten">showAntworten</a></li><li><a href="global.html#showAntwortKommentare">showAntwortKommentare</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#showHauptKommentare">showHauptKommentare</a></li><li><a href="global.html#showInfo">showInfo</a></li><li><a href="global.html#showNextMessage">showNextMessage</a></li><li><a href="global.html#showPreAfterLoad">showPreAfterLoad</a></li><li><a href="global.html#sindSieSicher">sindSieSicher</a></li><li><a href="global.html#sortDivByClassName">sortDivByClassName</a></li><li><a href="global.html#startMessageQueue">startMessageQueue</a></li><li><a href="global.html#submitEditKarteikarte">submitEditKarteikarte</a></li><li><a href="global.html#suchTimer">suchTimer</a></li><li><a href="global.html#toUrlParamString">toUrlParamString</a></li><li><a href="global.html#updateBenachrichtigungen">updateBenachrichtigungen</a></li><li><a href="global.html#uploadFile">uploadFile</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#veranstaltungsObject">veranstaltungsObject</a></li><li><a href="global.html#verifyResponse">verifyResponse</a></li><li><a href="global.html#voteKkDown">voteKkDown</a></li><li><a href="global.html#voteKkUp">voteKkUp</a></li><li><a href="global.html#voteKommentarDown">voteKommentarDown</a></li><li><a href="global.html#voteKommentarUp">voteKommentarUp</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Jun 22 2015 20:23:51 GMT+0200 (MESZ)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
