@@ -140,15 +140,6 @@ public class VeranstaltungServlet extends ServletController
             outWriter.print(jo);
             return false;
         }
-        // Einschreiben für den Ersteller fehlgeschlagen. Sollte eigentlich
-        // nicht passieren
-        catch (DbFalsePasswortException e)
-        {
-            e.printStackTrace();
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
-            outWriter.print(jo);
-            return false;
-        }
 
         jo = JSONConverter.toJsonError(ParamDefines.jsonErrorNoError);
         outWriter.print(jo);
@@ -453,13 +444,6 @@ public class VeranstaltungServlet extends ServletController
             e.printStackTrace();
             jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam, "Der Titel dieser Veranstaltung "
                     + "existiert in diesem Semester bereits. Bitte wählen Sie einen anderen!");
-            outWriter.print(jo);
-            return false;
-        }
-        catch (DbFalsePasswortException e)
-        {
-            e.printStackTrace();
-            jo = JSONConverter.toJsonError(ParamDefines.jsonErrorSystemError);
             outWriter.print(jo);
             return false;
         }

@@ -48,6 +48,7 @@ $(document).ready(function() {
                 jsonBenutzer = undefined;
                 showInfo("Sie haben sich erfolgreich abgemeldet");
                 clearBenachrichtigungen();
+                initialURL = "";
                 gotoStartseite();
             }
         )
