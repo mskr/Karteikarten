@@ -98,7 +98,8 @@ var jsonBenutzer;
 
 /**
  * Packt alle Parameter aus der URL in ein Objekt.
- * @returns 
+ * @param qry URL Query String
+ * @returns Assoziatives Objekt mit den URL Parametern
  */
 function parseUrlQuery(qry) {
     var match,

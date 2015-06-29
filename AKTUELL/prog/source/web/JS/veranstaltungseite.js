@@ -103,7 +103,7 @@ $(document).ready(function() {
 /**
  * Startet den ExportVorgang
  * @param vnId Veranstaltung die exportiert werden soll
- * @returns
+ * @returns Ajax Objekt
  */
 function exportKkVonVn(vnId)
 {
@@ -148,10 +148,11 @@ function exportKkVonVn(vnId)
 	}, 20000);
 }
 /**
- * Füllt die Veranstaltungsseite 
- * @param Vid
- * @param kkId
- * @returns
+ * Füllt die Veranstaltungsseite.
+ * @param Vid ID der Veranstaltung
+ * @param kkId ID der Karteikarte die angezeigt werden soll.
+ * Falls undefined wird Root Karteikarte angezeigt
+ * @returns jQuery Deferred Ojekt, das resolved, wenn alles geladen
  */
 function fillVeranstaltungsSeite(Vid, kkId)
 {
@@ -467,7 +468,7 @@ displayingAfterKK = false;
 /**
  * Lädt die Nachfolger einer Karteikarte und zeigt sie am Ende des kk_all Wrappers an.
  * @param id
- * @returns
+ * @returns jQuery Deferred Objekt, das resolved, wenn Nachfolger geladen
  */
 function loadAfterKk(id)
 {
@@ -527,7 +528,7 @@ displayingPreKK = false;
 /**
  * Lädt die Vorgänger einer Karteikarte und zeigt sie am Anfang des kk_all Wrappers an.
  * @param id
- * @returns
+ * @returns jQuery Deferred Objekt, das resolved, wenn Vorgaenger geladen
  */
 function loadPreKk(id)
 {
@@ -587,6 +588,7 @@ function loadPreKk(id)
 	);
 	return promise;
 }
+
 /**
  * Zeigt den Vorgänger/Nachfolger-LadeButton an.
  */
@@ -815,7 +817,7 @@ Inhaltsverzeichnis.prototype.alleEinklappen = function () {
  * Klappt die Kinder des Übergebenen Knotens ein bzw. auf.
  * @param liVater
  * @param aufklappen
- * @returns
+ * @returns deferred
  */
 Inhaltsverzeichnis.prototype.kkAufEinklappen = function (liVater, aufklappen)
 {

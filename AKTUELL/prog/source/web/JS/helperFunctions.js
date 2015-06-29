@@ -938,7 +938,7 @@ function checkIfAllowedVn(veranstObj, checkErsteller, checkAdmin, checkModerator
  * Rundet eine gegebene Zahl
  * @param zahl
  * @param n
- * @returns {Number}
+ * @returns gerundete Zahl
  */
 function myRound(zahl,n){
     var faktor;
@@ -949,7 +949,7 @@ function myRound(zahl,n){
 /**
  * Prueft ob gegebene Zahl gerade ist
  * @param n
- * @returns
+ * @returns true, falls gerade, false andernfalls
  */
 function isEven(n) {
 	return n == parseFloat(n)? !(n%2) : void 0;
