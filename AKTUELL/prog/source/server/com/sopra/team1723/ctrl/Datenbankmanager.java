@@ -806,6 +806,8 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             moderatoren = new ArrayList<Benutzer>();
+            // lese Moderatoren aus der Datenbank. Welche das für die gegebene Veranstaltung sind steht in der Moderator-Tabelle.
+            // Für die kompletten Daten eines Moderators wird zusätzlich noch die Benutzer-Tabelle benötigt
             ps = conMysql
                     .prepareStatement("SELECT b.ID, eMail, Vorname, Nachname, Profilbild, Matrikelnummer, Studiengang, "
                             + "CryptedPW, Nutzerstatus, NotifyKommentare, NotifyVeranstAenderung, NotifyKarteikartenAenderung, "
@@ -814,6 +816,7 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             while (rs.next())
             {
+                // erzeuge neues Benutzer-Objekt und füge es der Liste von Moderatoren hinzu
                 moderatoren.add(new Benutzer(rs.getInt("b.ID"), rs.getString("eMail"), rs.getString("Vorname"), rs
                         .getString("Nachname"), rs.getInt("Matrikelnummer"), rs.getString("Studiengang"), rs
                         .getString("CryptedPW"), Nutzerstatus.valueOf(rs.getString("Nutzerstatus")), rs
@@ -847,12 +850,15 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             studiengaenge = new ArrayList<String>();
+            // Lese Studiengänge zu einer Veranstaltung. Dafür wird die Zuordnungstabelle zwischen
+            // Veranstaltung und Studiengang verwendet
             ps = conMysql.prepareStatement("SELECT Studiengang FROM veranstaltung_studiengang_zuordnung "
                     + " WHERE Veranstaltung =?");
             ps.setInt(1, veranstaltung);
             rs = ps.executeQuery();
             while (rs.next())
             {
+                // Füge Studiengang der Liste hinzu
                 studiengaenge.add(rs.getString("Studiengang"));
             }
         }
@@ -878,10 +884,14 @@ public class Datenbankmanager implements IDatenbankmanager
         Boolean istModerator = false;
         try
         {
+            // Lese alle Moderatoren aus, die eine bestimmte Benutzer-ID haben und in einer bestimmten Veranstaltung
+            // Moderator sind.
             ps = conMysql.prepareStatement("SELECT ID FROM moderator WHERE Benutzer =? AND Veranstaltung =?");
             ps.setInt(1, benutzer);
             ps.setInt(2, veranstaltung);
             rs = ps.executeQuery();
+            // Wird kein Moderator mit den geforderten Parametern gefunden, dann ist der Benutzer kein Moderator
+            // für die Veranstaltung
             if (rs.next())
                 istModerator = true;
 
@@ -908,7 +918,8 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
-          return istModeratorWrapper(benutzer, veranstaltung, conMysql);
+            // Verwende istModeratorWrapper mit eigener Connection
+            return istModeratorWrapper(benutzer, veranstaltung, conMysql);
         }
         finally
         {
@@ -916,17 +927,23 @@ public class Datenbankmanager implements IDatenbankmanager
         }
     }
 
+    // Diese Methode bekommt als Parameter eine Map. Eine Map besteht aus key-value Paaren und hat keine Sortierung. Mit dieser Methode
+    // kann die Map nach den values sortiert werden. Das Ergebnis wird in eine LinkedHashMap gepackt. Diese hat eine Sortierung
     public static <K, V extends Comparable<? super V>> LinkedHashMap<K, V> sortByValue(Map<K, V> map)
     {
+        // Mache aus der Map eine Liste von key-value Paaren
         List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
+        // Sortiere diese Liste
         Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
             @Override
+            // Kriterium nach was sortiert werden soll. In desem Fall nach den values
             public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2)
             {
                 return (o1.getValue()).compareTo(o2.getValue());
             }
         });
 
+        // Schreibe die Einträge der Liste "list" in eine LinkedHashMap
         LinkedHashMap<K, V> result = new LinkedHashMap<>();
         for (Map.Entry<K, V> entry : list)
         {
@@ -939,14 +956,20 @@ public class Datenbankmanager implements IDatenbankmanager
     public Map<IjsonObject, Integer> durchsucheDatenbank(String suchmuster)
     {
         Map<IjsonObject, Integer> alleErgebnisse = new HashMap<IjsonObject, Integer>();
+        // suche nach Veranstaltungen und schreibe die Ergebnisse in die Map
         alleErgebnisse.putAll(durchsucheDatenbankVeranstaltung(suchmuster));
+        // suche nach Benutzern und schreibe die Ergebnisse in die Map
         alleErgebnisse.putAll(durchsucheDatenbankBenutzer(suchmuster));
 
+        // Sortiere die Map nach den values. Die values sind in diesem Fall Integer, die beschreiben
+        // wie gut das Suchergebnis zum Suchmuster passt
         LinkedHashMap<IjsonObject, Integer> sortierteErgebnisse = sortByValue(alleErgebnisse);
+        // Die LinkedHashMap sortierteErgebnisse kann bis zu 10 Ergebnisse enthalten. Wir wollen aber nur 5
         LinkedHashMap<IjsonObject, Integer> teilErgebnisse = new LinkedHashMap<IjsonObject, Integer>();
         Iterator<Entry<IjsonObject, Integer>> it = sortierteErgebnisse.entrySet().iterator();
         int i = 0;
         Entry<IjsonObject, Integer> entry;
+        // Deshalb wählen wir hier die 5 ersten Einträge aus
         while (i < 5 && it.hasNext())
         {
             entry = it.next();
@@ -967,15 +990,21 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             ergebnisse = new HashMap<IjsonObject, Integer>();
+            // Vergleiche die Titel einer Veranstaltung mittels der levenshtein-Funktion mit dem Suchmuster
+            // und gebe die 5 besten Treffer zurück
             ps = conMysql
                     .prepareStatement("SELECT ID, levenshtein(?,Titel) AS lev FROM Veranstaltung ORDER BY lev LIMIT 5");
             ps.setString(1, suchmuster);
             rs = ps.executeQuery();
             while (rs.next())
             {
+                // Lese die Veranstaltung zu der gegebenen ID
                 Veranstaltung veranst = leseVeranstaltungWrapper(rs.getInt("ID"),conMysql);
+                // Prüfe ob ein Fehler bei leseVeranstaltungWrapper aufgetreten ist
                 if(veranst == null)
                     return null;
+                // Veranstaltung implementiert das Interface IjsonObject.
+                // Füge veranst und die Bewertung der Ergebnisliste hinzu
                 ergebnisse.put(veranst, rs.getInt("lev"));
             }
 
@@ -1005,15 +1034,21 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             ergebnisse = new HashMap<IjsonObject, Integer>();
+            // Vergleiche die Vorname und Nachname eines Benutzers mittels der levenshtein-Funktion mit dem Suchmuster
+            // und gebe die 5 besten Treffer zurück
             ps = conMysql.prepareStatement("SELECT * , levenshtein(?,CONCAT(Vorname,' ',Nachname)) AS lev"
                     + " FROM Benutzer ORDER BY lev LIMIT 5 ");
             ps.setString(1, suchmuster);
             rs = ps.executeQuery();
             while (rs.next())
             {
+                // Lese den Benutzer zu der gegebenen ID
                 Benutzer benutzer = leseBenutzerWrapper(rs.getInt("ID"),conMysql);
+                // Prüfe ob ein Fehler bei leseBenutzerWrapper aufgetreten ist
                 if(benutzer == null)
                     return null;
+                // Benutzer implementiert das Interface IjsonObject.
+                // Füge benutzer und die Bewertung der Ergebnisliste hinzu
                 ergebnisse.put(benutzer, rs.getInt("lev"));
             }
 
@@ -1043,6 +1078,8 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             ergebnisse = new HashMap<IjsonObject, Integer>();
+            // Vergleiche die Studiengänge mittels der levenshtein-Funktion mit dem Suchmuster
+            // und gebe die 5 besten Treffer zurück
             ps = conMysql
                     .prepareStatement("SELECT Name, levenshtein(?,Name) AS lev FROM Studiengang ORDER BY lev LIMIT 5");
             ps.setString(1, suchmuster);
@@ -1052,6 +1089,8 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 if (ServletController.DEBUGMODE)
                     System.out.println(rs.getString("Name") + " " + suchmuster + " " + rs.getInt("lev"));
+                // Studiengang implementiert das Interface IjsonObject.
+                // Füge Studiengang und die Bewertung der Ergebnisliste hinzu
                 ergebnisse.put(new Studiengang(rs.getString("Name")), rs.getInt("lev"));
             }
 
@@ -1080,11 +1119,15 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean angemeldet = false;
         try
         {
+            // Suche in der Zuordnungstabelle zwischen Benutzer und Veranstaltung nach Einträgen mit
+            // der benutzer-ID und der veranstaltungs-ID aus den Parametern
             ps = conMysql
                     .prepareStatement("SELECT ID FROM benutzer_veranstaltung_zuordnung WHERE Benutzer =? AND Veranstaltung =?");
             ps.setInt(1, benutzer);
             ps.setInt(2, veranstaltung);
             rs = ps.executeQuery();
+            // Wird ein Ergebnis gefunden, ist der Benutzer zu der Veranstaltung angemeldet.
+            // Ansonsten nicht
             if (rs.next())
                 angemeldet = true;
             else
@@ -1121,9 +1164,14 @@ public class Datenbankmanager implements IDatenbankmanager
             conMysql.setAutoCommit(false);
             conNeo4j.setAutoCommit(false);
 
+            // Beim Anlegen einer Veranstaltung wird immer gleich die erste Karteikarte miterzeugt
+            // Dazu wird in der Neo4j Datenbank zuerst ein leerer Knoten erzeugt. Die ID dieses Knotens
+            // wird gespeichert und später in der MySql Datenbank verwendet
             ps = conNeo4j.prepareStatement("CREATE (n) RETURN id(n) AS ID");
             rs = ps.executeQuery();
             int insertedKkId;
+            // Wenn ein Knoten in der Neo4j Datenbank erzeugt wird, dann muss dieser auch eine ID haben.
+            // Ansonsten ist ein Fehler aufgetreten und es wird eine Exception geworfen
             if (rs.next())
                 insertedKkId = rs.getInt("ID");
             else
@@ -1132,12 +1180,14 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(ps);
             closeQuietly(rs);
 
+            // Schreibe Veranstaltung in die Datenbank
             ps = conMysql
                     .prepareStatement("INSERT INTO veranstaltung (Titel, Beschreibung, Semester, Kennwort, KommentareErlaubt,"
                             + "BewertungenErlaubt, ModeratorKarteikartenBearbeiten, Ersteller, ErsteKarteikarte) VALUES(?,?,?,?,?,?,?,?,?)");
             ps.setString(1, veranst.getTitel());
             ps.setString(2, veranst.getBeschreibung());
             ps.setString(3, veranst.getSemester());
+            // Eine Veranstaltung kann auch kein Passwort haben. Dann wird das Attribut Kennwort in der Datenbank auf null gesetzt
             if (veranst.getZugangspasswort().equals(""))
                 ps.setNull(4, Types.INTEGER);
             else
@@ -1151,6 +1201,7 @@ public class Datenbankmanager implements IDatenbankmanager
             ps.executeUpdate();
 
             ps.close();
+            // Lese die von MySql automatisch erzeugte ID der soeben eingefügten Veranstaltung aus
             ps = conMysql.prepareStatement("SELECT LAST_INSERT_ID();");
             rs = ps.executeQuery();
             if (!rs.next())
@@ -1160,6 +1211,8 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(ps);
             closeQuietly(rs);
 
+            // Füge eine nicht vom Benutzer erzeugte Karteikarte in die Datenbank ein. Diese ist die
+            // erste Karteikarte der Veranstaltung
             ps = conMysql.prepareStatement("INSERT INTO karteikarte (ID,Titel,Inhalt,Typ,Veranstaltung, "
                     + "Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, "
                     + " Zusatzinformation, Exkurs, Beispiel, Uebung) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -1184,20 +1237,24 @@ public class Datenbankmanager implements IDatenbankmanager
 
             if (studiengaenge != null)
             {
+                // Füge in die Zuordnungstabelle zwischen Veranstaltung und Studiengang die Liste "studiengaenge" ein
                 ps = conMysql
                         .prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");
                 for (String stg : studiengaenge)
                 {
                     ps.setInt(1, veranstId);
                     ps.setString(2, stg);
+                    // Mithilfe von addBatch() muss nicht für jedes einzufügende Tupel ein eigenes SQL-Statement ausgeführt werden
                     ps.addBatch();
                 }
+                // Sondern nur ein Statement für alle Tupel
                 ps.executeBatch();
                 closeQuietly(ps);
             }
 
             if (moderatorenIds != null)
             {
+                // Füge in die Tabelle Moderator die Liste "moderatorenIds" ein
                 ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
                 for (int i = 0; i < moderatorenIds.length; ++i)
                 {
@@ -1205,14 +1262,17 @@ public class Datenbankmanager implements IDatenbankmanager
                     ps.setInt(2, veranstId);
                     ps.addBatch();
 
+                    // Ein Moderator einer Veranstaltung muss auch zu dieser eingeschrieben sein
                     zuVeranstaltungEinschreibenWrapper(veranstId, moderatorenIds[i], veranst.getZugangspasswort(), conMysql,
                             false);
+                    // Ein Benutzer wird benachrichtigt, dass er von einem Dozenten zu einem Moderator einer Veranstaltung gemacht wurde
                     schreibeBenachrichtigungWrapper(new BenachrEinlModerator(moderatorenIds[i], veranst), conMysql);
                 }
                 ps.executeBatch();
 
             }
 
+            // Der Dozent einer Veranstaltung muss auch immer für die Veranstaltung eingeschrieben sein
             zuVeranstaltungEinschreibenWrapper(veranstId, veranst.getErsteller().getId(), veranst.getZugangspasswort(),
                     conMysql, false); // ignoriere isAdmin, da Passwort ohnehin
                                       // korrekt
@@ -1226,6 +1286,7 @@ public class Datenbankmanager implements IDatenbankmanager
             e.printStackTrace();
             conMysql.rollback();
             conNeo4j.rollback();
+            // Veranstaltungstitel und Semester sind unique
             if (UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
             else
@@ -1259,12 +1320,15 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             conMysql.setAutoCommit(false);
+            // Bearbeite Veranstaltung
             ps = conMysql.prepareStatement("UPDATE veranstaltung SET Titel=?, Beschreibung=?, Semester=?,"
                     + "Kennwort=?, KommentareErlaubt=?, BewertungenErlaubt=?, ModeratorKarteikartenBearbeiten=?,"
                     + " Ersteller=?, ErsteKarteikarte=? WHERE ID = ?");
             ps.setString(1, veranst.getTitel());
             ps.setString(2, veranst.getBeschreibung());
             ps.setString(3, veranst.getSemester());
+            // Eine Veranstaltung kann auch kein Passwort haben. Dann wird das Attribut Kennwort der Tabelle Veranstaltung auf
+            // null gesetzt
             if (veranst.getZugangspasswort().equals(""))
                 ps.setNull(4, Types.INTEGER);
             else
@@ -1279,6 +1343,9 @@ public class Datenbankmanager implements IDatenbankmanager
             ps.executeUpdate();
             closeQuietly(ps);
 
+            // Anstatt zu schauen wie sich die Liste der Studiengänge der Veranstaltung geändert hat,
+            // werden zuerst alle Studiengänge in der Zuordnungstabelle zwischen Veranstaltung und Studiengang
+            // gelöscht und danach die neue Liste, die als Parameter bereit steht, eingefügt
             ps = conMysql.prepareStatement("DELETE FROM veranstaltung_studiengang_zuordnung WHERE Veranstaltung = ?");
             ps.setInt(1, veranst.getId());
             ps.executeUpdate();
@@ -1286,6 +1353,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             if (studiengaenge != null)
             {
+               // Füge Liste der Studiengänge in die Datenbank ein
                 ps = conMysql
                         .prepareStatement("INSERT INTO veranstaltung_studiengang_zuordnung (Veranstaltung, Studiengang) VALUES(?,?)");
                 for (String stg : studiengaenge)
@@ -1303,18 +1371,24 @@ public class Datenbankmanager implements IDatenbankmanager
 
                 for (int i = 0; i < moderatorenIds.length; ++i)
                 {
+                    // Prüfe ob der Benutzer bereits Moderator der Veranstaltung ist
                     Boolean istModerator = istModeratorWrapper(moderatorenIds[i], veranst.getId(), conMysql);
+                    // Prüfe ob ein Fehler aufgetreten ist
                     if(istModerator == null)
                         throw new SQLException();
+                    // Falls nicht bekommt er eine Benachrichtigung
                     if (!istModerator)
                         schreibeBenachrichtigungWrapper(new BenachrEinlModerator(moderatorenIds[i], veranst), conMysql);
                 }
 
+                // Anstatt zu schauen wie sich die Liste der Moderatoren der Veranstaltung geändert hat,
+                // werden zuerst alle Moderatoren der Veranstaltung gelöscht und danach die neue Liste, die als Parameter bereit steht, eingefügt
                 ps = conMysql.prepareStatement("DELETE FROM moderator WHERE Veranstaltung = ?");
                 ps.setInt(1, veranst.getId());
                 ps.executeUpdate();
                 closeQuietly(ps);
 
+                // Schreibe die alten Moderatoren aus
                 ps = conMysql
                         .prepareStatement("DELETE FROM benutzer_veranstaltung_zuordnung WHERE Veranstaltung = ? AND Benutzer = ?");
                 for (int i = 0; i < moderatorenIds.length; ++i)
@@ -1326,6 +1400,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 ps.executeBatch();
                 closeQuietly(ps);
 
+                // Füge die neuen Moderatoren in die Datenbank ein
                 ps = conMysql.prepareStatement("INSERT INTO moderator (Benutzer, Veranstaltung) VALUES(?,?)");
                 for (int i = 0; i < moderatorenIds.length; ++i)
                 {
@@ -1333,6 +1408,7 @@ public class Datenbankmanager implements IDatenbankmanager
                     ps.setInt(2, veranst.getId());
                     ps.addBatch();
 
+                    // neue Moderatoren einschreiben
                     zuVeranstaltungEinschreibenWrapper(veranst.getId(), moderatorenIds[i], veranst.getZugangspasswort(),
                             conMysql, false);
 
@@ -1341,6 +1417,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             }
 
+            // Benachrichtigung dass sich etwas an der Veranstaltung geändert hat
             BenachrVeranstAenderung bva = new BenachrVeranstAenderung(veranst, bearbeiter);
             schreibeBenachrichtigungWrapper(bva, conMysql);
 
@@ -1351,6 +1428,7 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             conMysql.rollback();
             e.printStackTrace();
+            // Titel und Semester einer Veranstaltung sind unique
             if (UNIQUE_CONSTRAINT_ERROR == e.getErrorCode())
                 throw new DbUniqueConstraintException();
             else
@@ -1383,6 +1461,7 @@ public class Datenbankmanager implements IDatenbankmanager
         PreparedStatement ps = null;
         try
         {
+            // Lösche Veranstaltung mit der gegebenen veranstId aus der Datenbank
             ps = conMysql.prepareStatement("DELETE FROM VERANSTALTUNG WHERE ID = ?");
             ps.setInt(1, veranstId);
             int res = ps.executeUpdate();
@@ -1415,6 +1494,9 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             aktBenachrichtigungen = new ArrayList<Benachrichtigung>();
 
+            // Lese Die IDs der speziellen Benachrichtigungen aus der Datenbank. Geordnet wird nach 2 Attributen.
+            // Zuerst wird nach gelesen/nicht-gelesen sortiert. Dabei werden noch nicht gelesene Benachrichtigungen
+            // bevorzugt. Als zweites wird nach dem Erstelldatum der Benachrichtigung sortiert
             ps = conMysql
                     .prepareStatement("SELECT bem.ID AS ID, 'benachrichtigung_einladung_moderator' AS Tabelle, gelesen AS gel,"
                             + " b.Erstelldatum AS Erstelldatum FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtigung AS b ON"
@@ -1448,6 +1530,7 @@ public class Datenbankmanager implements IDatenbankmanager
             int id;
             
             Benachrichtigung benachrichtigung;
+            // Lese nun die Attribute für die speziellen Benachrichtigungen aus
             while (rs.next())
             {
                 tabelle = rs.getString("Tabelle");
@@ -1507,6 +1590,7 @@ public class Datenbankmanager implements IDatenbankmanager
         BenachrEinlModerator benachrichtigung = null;
         try
         {
+            // Lese Benachrichtigung für die Einladung als Moderator
             ps = conMysql
                     .prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen, Angenommen"
                             + " FROM benachrichtigung_einladung_moderator AS bem JOIN benachrichtigung AS b ON bem.Benachrichtigung"
@@ -1518,9 +1602,11 @@ public class Datenbankmanager implements IDatenbankmanager
                 Calendar cal = new GregorianCalendar();
                 cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
                 
+                // Lese Veranstaltung zu gegebener ID
                 Veranstaltung veranst = leseVeranstaltungWrapper(rs.getInt("Veranstaltung"),conMysql);
                 if(veranst == null)
                     return null;
+                // Ereuge Benachrichtigungs-Objekt
                 benachrichtigung = new BenachrEinlModerator(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"), cal,
                         rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), veranst,
                         rs.getBoolean("Angenommen"));
@@ -1548,6 +1634,7 @@ public class Datenbankmanager implements IDatenbankmanager
         BenachrKarteikAenderung benachrichtigung = null;
         try
         {
+            // Benachrichtigung für Karteikarten Änderung auslesen
             ps = conMysql
                     .prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Karteikarte, Gelesen"
                             + " FROM benachrichtigung_karteikartenaenderung AS bk JOIN benachrichtigung AS b ON bk.Benachrichtigung"
@@ -1558,10 +1645,12 @@ public class Datenbankmanager implements IDatenbankmanager
             {
                 Calendar cal = new GregorianCalendar();
                 cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
+                // Lese Karteikarte aus der ID
                 Karteikarte kk = leseKarteikarteWrapper(rs.getInt("Karteikarte"),conMysql,conNeo4j);
                 if (kk == null)
                     return null;
 
+                // Erzeuge neue Benachrichtigung
                 benachrichtigung = new BenachrKarteikAenderung(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
                         cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), kk);
             }
@@ -1589,6 +1678,7 @@ public class Datenbankmanager implements IDatenbankmanager
         BenachrNeuerKommentar benachrichtigung = null;
         try
         {
+            // Lese Benachrichtigung für neuen Kommentar
             ps = conMysql
                     .prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Kommentar, Gelesen"
                             + " FROM benachrichtigung_neuer_kommentar AS bnk JOIN benachrichtigung AS b ON bnk.Benachrichtigung"
@@ -1597,18 +1687,23 @@ public class Datenbankmanager implements IDatenbankmanager
             rs = ps.executeQuery();
             if (rs.next())
             {
+                // Nur Themenkommentare haben die zugeordnete Karteikarte gespeichert
                 Kommentar kommentar = leseKommentar(rs.getInt("Kommentar"));
                 Kommentar vaterKommentar = kommentar;
+                // Hole Vaterkommentar zu dem Kommentar
                 if (kommentar.getVaterID() != -1)
                     vaterKommentar = leseKommentar(kommentar.getVaterID());
                 if (vaterKommentar == null)
                     return null;
+                // Lese Karteikarte aus der ID des Vater-Kommentars
                 Karteikarte karteik = leseKarteikarteWrapper(vaterKommentar.getKarteikartenID(), conMysql, conNeo4j);
+                // Prüfe ob bei leseKarteikarteWrapper ein Fehler aufgetreten ist
                 if(karteik == null)
                     return null;
 
                 Calendar cal = new GregorianCalendar();
                 cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
+                // ereuge neue Benachrichtigung
                 benachrichtigung = new BenachrNeuerKommentar(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
                         cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), rs.getInt("Kommentar"), karteik);
             }
@@ -1635,6 +1730,7 @@ public class Datenbankmanager implements IDatenbankmanager
         BenachrProfilGeaendert benachrichtigung = null;
         try
         {
+            // Lese Benachrichtigung zu einer Profil-Änderung
             ps = conMysql
                     .prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Admin, Gelesen"
                             + " FROM benachrichtigung_profil_geaendert AS bpg JOIN benachrichtigung AS b ON bpg.Benachrichtigung"
@@ -1646,10 +1742,13 @@ public class Datenbankmanager implements IDatenbankmanager
                 Calendar cal = new GregorianCalendar();
                 cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
                 
+                // Lese Benutzerdaten des Admins, der das Profil des Benutzers geändert hat
                 Benutzer admin = leseBenutzerWrapper(rs.getInt("Admin"),conMysql);
+                // Prüfe ob bei leseBenutzerWrapper ein Fehler aufgetreten ist
                 if(admin == null)
                     return null;
                 
+                // erzeuge neue Benachrichtigung
                 benachrichtigung = new BenachrProfilGeaendert(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
                         cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"), admin);
             }
@@ -1676,6 +1775,7 @@ public class Datenbankmanager implements IDatenbankmanager
         BenachrVeranstAenderung benachrichtigung = null;
         try
         {
+            // Lese Benachrichtigung zu einer Veranstaltungsänderung
             ps = conMysql
                     .prepareStatement("SELECT Benachrichtigung, Inhalt, Erstelldatum, Benutzer, Veranstaltung, Gelesen"
                             + " FROM benachrichtigung_veranstaltungsaenderung AS bv JOIN benachrichtigung AS b ON bv.Benachrichtigung"
@@ -1687,9 +1787,12 @@ public class Datenbankmanager implements IDatenbankmanager
                 Calendar cal = new GregorianCalendar();
                 cal.setTimeInMillis(rs.getTimestamp("Erstelldatum").getTime());
                 
+                // Lese Veranstaltung die geändert wurde
                 Veranstaltung veranst = leseVeranstaltungWrapper(rs.getInt("Veranstaltung"),conMysql);
+                // Prüfe ob bei leseVeranstaltungWrapper ein Fehler aufgetreten ist
                 if(veranst == null)
                     return null;
+                // Erzeuge neue Benachrichtigung
                 benachrichtigung = new BenachrVeranstAenderung(rs.getInt("Benachrichtigung"), rs.getString("Inhalt"),
                         cal, rs.getInt("Benutzer"), rs.getBoolean("Gelesen"),veranst);
             }
@@ -1712,6 +1815,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public void schreibeBenachrichtigung(Benachrichtigung benachrichtigung) throws SQLException
     {
+        // schreibe Benachrichtigung mit neuer Connection
         Connection conMysql = getConnectionSQL();
 
         try
@@ -1742,11 +1846,14 @@ public class Datenbankmanager implements IDatenbankmanager
         ResultSet rs = null;
         try
         {
+            // Erzeuge zuerst eine Benachrichtiung in der allgemeinen Benachrichtigung-Tabelle
             ps = conMysql.prepareStatement("INSERT INTO benachrichtigung (Inhalt) VALUES (?); ");
             ps.setString(1, benachrichtigung.getInhalt());
             ps.executeUpdate();
             closeQuietly(ps);
 
+            // Hole die von MySql automatisch eingefügte ID, da sie für die spezielle Benachrichtigung
+            // benötigt wird
             ps = conMysql.prepareStatement("SELECT LAST_INSERT_ID();");
             rs = ps.executeQuery();
             if (!rs.next())
@@ -1754,6 +1861,8 @@ public class Datenbankmanager implements IDatenbankmanager
             int id = rs.getInt(1);
             closeQuietly(ps);
 
+            // Prüfe welche spezielle Benachrichtigung vorliegt und füge diese in die Datenbank ein.
+            // Dabei wird auf die allgemeine Benachrichtigung-Tabelle referenziert
             if (benachrichtigung instanceof BenachrEinlModerator)
             {
                 BenachrEinlModerator bem = (BenachrEinlModerator) benachrichtigung;
@@ -1764,12 +1873,13 @@ public class Datenbankmanager implements IDatenbankmanager
                 ps.setInt(2, bem.getBenutzer());
                 ps.setInt(3, bem.getVeranstaltung().getId());
 
-                // todo karteikarten und kommentar Benachrichtigungen müssen
-                // noch angepasst werden
             }
             else if (benachrichtigung instanceof BenachrKarteikAenderung)
             {
                 BenachrKarteikAenderung bk = (BenachrKarteikAenderung) benachrichtigung;
+                // Nur Benutzer, die zu der Veranstaltung eingeschrieben sind, zu der die Karteikarte gehört können
+                // benachrichtigt werden. Zusätzlich müssen die Benutzer in den Profileinstellungen festgelegt haben,
+                // dass sie darüber benachrichtigt werden wollen
                 ps = conMysql
                         .prepareStatement("INSERT INTO benachrichtigung_karteikartenaenderung (Benachrichtigung, Karteikarte,"
                                 + "Benutzer) "
@@ -1788,6 +1898,10 @@ public class Datenbankmanager implements IDatenbankmanager
                 Kommentar kommentar = leseKommentarWrapper(bnk.getKommentarId(), conMysql);
                 if (kommentar == null)
                     throw new SQLException();
+                // Es gibt 2 Möglichkeiten in den Benutzereinstellungen, damit man zu neuen Kommentaren benachrichtigt wird.
+                // "Diskussion Teilgenommen" und "Veranstaltung Teilgenommen". 
+                // Bei "Diskussion Teilgenommen" gibt es 2 Möglichkeiten. Entweder hat der Kommentar eines Benutzers den gleichen Vaterkommentar
+                // wie der Kommentar, der gerade eingefüt wird oder der Kommentar des Benutzers ist selbst der Vaterkommentar
                 ps = conMysql
                         .prepareStatement("INSERT INTO benachrichtigung_neuer_kommentar (Benachrichtigung, Benutzer,"
                                 + "Kommentar) SELECT DISTINCT ?,k.Benutzer,? FROM Kommentar AS k JOIN Benutzer AS b ON "
@@ -1801,6 +1915,8 @@ public class Datenbankmanager implements IDatenbankmanager
 
                 ps.executeUpdate();
 
+                // Bei "Veranstaltung Teilgenommen" wird ein Benutzer benachrichtigt, falls er für die Veranstaltung
+                // eingeschrieben ist zu der der Kommentar gehört
                 ps = conMysql
                         .prepareStatement("INSERT INTO benachrichtigung_neuer_kommentar (Benachrichtigung, Benutzer,"
                                 + "Kommentar) SELECT DISTINCT ?,bvz.Benutzer, ? FROM benutzer_veranstaltung_zuordnung AS bvz "
@@ -1824,6 +1940,9 @@ public class Datenbankmanager implements IDatenbankmanager
             }
             else if (benachrichtigung instanceof BenachrVeranstAenderung)
             {
+                // Nur Benutzer, die zu der Veranstaltung eingeschrieben sind können
+                // benachrichtigt werden. Zusätzlich müssen die Benutzer in den Profileinstellungen festgelegt haben,
+                // dass sie darüber benachrichtigt werden wollen
                 BenachrVeranstAenderung bv = (BenachrVeranstAenderung) benachrichtigung;
                 ps = conMysql.prepareStatement("INSERT INTO benachrichtigung_veranstaltungsaenderung"
                         + " (Benachrichtigung, Veranstaltung, Benutzer)"
@@ -1835,10 +1954,6 @@ public class Datenbankmanager implements IDatenbankmanager
                 ps.setInt(3, bv.getVeranstaltung().getId());
                 ps.setInt(4, bv.getBenutzer());
             }
-            // ACHTUNG es kann auch sein, dass keiner Eingeschrieben ist und
-            // niemand die benachrichtung erhält!
-            // if(ps.executeUpdate() == 0)
-            // erfolgreich = false;
             ps.executeUpdate();
 
         }
@@ -1925,6 +2040,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Karteikarte leseKarteikarte(int karteikID)
     {
+        // Lese Karteikarte mit eigener Conneciton
         Connection conMysql = getConnectionSQL();
         Connection conNeo4j = getConnectionNeo4j();
         try
@@ -1948,7 +2064,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Karteikarte karteikarte = null;
         try
         {
-
+            // Lese Verweise der Karteikarte aus der Neo4j Datenbank
             ps = conNeo4j.prepareStatement("MATCH(n)-[r:" + BeziehungsTyp.V_VORAUSSETZUNG.toString().toLowerCase()
                     + "|" + BeziehungsTyp.V_UEBUNG.toString().toLowerCase() + "|" + ""
                     + BeziehungsTyp.V_ZUSATZINFO.toString().toLowerCase() + "|"
@@ -1959,11 +2075,13 @@ public class Datenbankmanager implements IDatenbankmanager
             ArrayList<Tripel<BeziehungsTyp, Integer, String>> verweise = new ArrayList<Tripel<BeziehungsTyp, Integer, String>>();
             while (rs.next())
             {
+                // Lese Name der Karteikarte aus der MySql Datenbank
                 ps2 = conMysql.prepareStatement("SELECT Titel FROM Karteikarte WHERE ID = ?");
                 ps2.setInt(1, rs.getInt("zielID"));
                 rs2 = ps2.executeQuery();
                 if (!rs2.next())
                     return null;
+                // erstelle neuen Verweis
                 verweise.add(new Tripel<Karteikarte.BeziehungsTyp, Integer, String>(BeziehungsTyp.valueOf(rs.getString(
                         "Typ").toUpperCase()), rs.getInt("zielID"), rs2.getString("Titel")));
             }
@@ -1971,6 +2089,7 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(ps);
             closeQuietly(rs);
 
+            // Lese restliche Daten der Karteikarte aus der MySql Datenbank
             ps = conMysql.prepareStatement("SELECT Titel, Inhalt, Typ, Bewertung, Aenderungsdatum, Veranstaltung,"
                     + " Bewertung, Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, Zusatzinformation, Exkurs,"
                     + " Beispiel, Uebung FROM karteikarte WHERE ID = ?");
@@ -2023,6 +2142,9 @@ public class Datenbankmanager implements IDatenbankmanager
         try
         {
             kindKarteikarten = new HashMap<Integer, Tupel<Integer, String>>();
+            // Lese alle Kindkarteikarten einer Karteikarte. Das erste Kind ist mit einer h_child Beziehung
+            // zu der Karteikarte verknüpft. Die anderen hängen als verkettete Liste in einer h_brother Relation
+            // an dem ersten Kind.
             ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->()-[:h_brother*0..]-(m)" + " WHERE id(n) = {1}"
                     + " return id(m) AS ID");
             ps.setInt(1, vaterKarteikID);
@@ -2032,6 +2154,7 @@ public class Datenbankmanager implements IDatenbankmanager
             int i = 0;
             while (rs.next())
             {
+                // Lese die Titel der Kindkarteikarten aus der MySql-Datenbank
                 psMysql = conMysql.prepareStatement("SELECT Titel FROM Karteikarte WHERE ID = ?");
                 psMysql.setInt(1, rs.getInt("ID"));
                 rsMysql = psMysql.executeQuery();
@@ -2070,13 +2193,14 @@ public class Datenbankmanager implements IDatenbankmanager
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        HashMap<Integer, Karteikarte> kindKarteikarten = new HashMap<Integer, Karteikarte>();
+        HashMap<Integer, Karteikarte> nachfolger = new HashMap<Integer, Karteikarte>();
         try
         {
             Integer aktuelleKarteikarte = karteikarte;
             int i = 0;
             while (anzNachfolger > 0)
             {
+                // Folge dem h_child Pfad. Dabei dürfen maximal "anzNachfolger" viele ausgelesen werden
                 ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child*1.." + anzNachfolger + "]->(m)"
                         + " WHERE id(n) = {1}" + " return id(m) AS ID");
                 ps.setInt(1, aktuelleKarteikarte);
@@ -2085,11 +2209,15 @@ public class Datenbankmanager implements IDatenbankmanager
 
                 while (rs.next())
                 {
+                    // Die Kind-Karteikarte wird zur neuen aktuellen Karteikarte
                     aktuelleKarteikarte = rs.getInt("ID");
+                    // lese aus der ID alle Daten der Karteikarte
                     Karteikarte aktKarteik = leseKarteikarteWrapper(aktuelleKarteikarte,conMysql,conNeo4j);
+                    // Prüfe ob bei der Methode leseKArteikarteWrapper ein Fehler aufgetreten ist
                     if (aktKarteik == null)
                         return null;
-                    kindKarteikarten.put(i, aktKarteik);
+                    // Füge die Kind-Karteikarte in die Liste der Nachfolger ein
+                    nachfolger.put(i, aktKarteik);
                     --anzNachfolger;
                     ++i;
                 }
@@ -2097,15 +2225,20 @@ public class Datenbankmanager implements IDatenbankmanager
                 closeQuietly(ps);
                 closeQuietly(rs);
 
+                // Gibt es keine Kind-Karteikarte mehr und es müssen aber noch mehr Karteikarten ausgelesen
+                // werdnen, dann wird einmal dem h_brother Pfad gefolgt
                 Integer bruderKarteik;
                 do
                 {
                     bruderKarteik = gibBruder(aktuelleKarteikarte, conNeo4j);
 
+                    // Prüfe ob gibBruder ein Fehler liefert
                     if (bruderKarteik == null)
                         return null;
                     else if (bruderKarteik == -1)
                     {
+                        // Falls die aktuelleKarteikarte keinen Bruder mehr hat, wird die verkettete Liste aus
+                        // h_brother Relationenen zurückgelaufen und dann eine Ebene höher gegangen
                         ps = conNeo4j.prepareStatement("MATCH p=((n)<-[:h_brother*0..]-(m))" + " WHERE id(n) = {1}"
                                 + " return id(m) AS ID ORDER BY length(p) DESC LIMIT 1");
                         ps.setInt(1, aktuelleKarteikarte);
@@ -2114,6 +2247,8 @@ public class Datenbankmanager implements IDatenbankmanager
 
                         while (rs.next())
                         {
+                            // Diese Karteikarten wurden schon besucht. Deshalb werden sie nicht nochmal
+                            // in die Liste "kindKarteiarten" hinzugefüt
                             aktuelleKarteikarte = rs.getInt("ID");
                         }
                         closeQuietly(ps);
@@ -2123,7 +2258,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         if (vaterKarteikarte == null)
                             return null;
                         else if (vaterKarteikarte == -1)
-                            return kindKarteikarten;
+                            return nachfolger;
                         else
                             aktuelleKarteikarte = vaterKarteikarte;
                     }
@@ -2133,7 +2268,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 Karteikarte bruderKk = leseKarteikarteWrapper(bruderKarteik,conMysql,conNeo4j);
                 if (bruderKk == null)
                     return null;
-                kindKarteikarten.put(i, bruderKk);
+                nachfolger.put(i, bruderKk);
                 aktuelleKarteikarte = bruderKarteik;
                 ++i;
                 --anzNachfolger;
@@ -2142,7 +2277,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
-            kindKarteikarten = null;
+            nachfolger = null;
             e.printStackTrace();
         }
         finally
@@ -2153,7 +2288,7 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(conNeo4j);
         }
 
-        return kindKarteikarten;
+        return nachfolger;
     }
 
     @Override
@@ -2164,13 +2299,14 @@ public class Datenbankmanager implements IDatenbankmanager
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        HashMap<Integer, Karteikarte> kindKarteikarten = new HashMap<Integer, Karteikarte>();
+        HashMap<Integer, Karteikarte> vorgaenger = new HashMap<Integer, Karteikarte>();
         try
         {
             Integer aktuelleKarteikarte = karteikarte;
             int i = 0;
             while (anzVorgänger > 0)
             {
+                // Lese die erste übergeordnete Bruder Karteikarte
                 ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_brother]-(m)" + " WHERE id(n) = {1}"
                         + " return id(m) AS ID");
                 ps.setInt(1, aktuelleKarteikarte);
@@ -2180,20 +2316,25 @@ public class Datenbankmanager implements IDatenbankmanager
                 closeQuietly(ps);
                 closeQuietly(rs);
 
+                // Gibt es keine übergeordnete Bruder Karteikarte, dann wird der Vater ausgelesen
                 if (!rs.next())
                 {
                     aktuelleKarteikarte = gibVater(aktuelleKarteikarte, conNeo4j);
                     if (aktuelleKarteikarte == null)
                         return null;
+                    // Gibt es keinen Vater mehr, dann können keine weiteren Vorgänger gefunden werden und
+                    // es wird an dieser Stelle abgebrochen
                     else if (aktuelleKarteikarte == -1)
-                        return kindKarteikarten;
+                        return vorgaenger;
 
                     Karteikarte aktKarteik = leseKarteikarteWrapper(aktuelleKarteikarte, conMysql, conNeo4j);
                     if (aktKarteik == null)
                         return null;
-                    kindKarteikarten.put(i, aktKarteik);
+                    vorgaenger.put(i, aktKarteik);
                     --anzVorgänger;
                     ++i;
+                    // Gehe zum nächsten Schleifendurchlauf, da für die Vaterkarteikarte erst wieder
+                    // der übergeordnete Bruder und keine Kinder gelesen werden sollen
                     continue;
                 }
                 else
@@ -2204,7 +2345,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 boolean abbruch = false;
                 do
                 {
-
+                    // Hole Kind der übergeordneten Bruder Karteikarte
                     ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->(m)" + " WHERE id(n) = {1}"
                             + " return id(m) AS ID");
 
@@ -2218,7 +2359,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         Karteikarte aktKarteik = leseKarteikarteWrapper(aktuelleKarteikarte, conMysql, conNeo4j);
                         if (aktKarteik == null)
                             return null;
-                        kindKarteikarten.put(i, aktKarteik);
+                        vorgaenger.put(i, aktKarteik);
                         --anzVorgänger;
                         ++i;
                         closeQuietly(ps);
@@ -2229,6 +2370,7 @@ public class Datenbankmanager implements IDatenbankmanager
                         aktuelleKarteikarte = rs.getInt("ID");
                         closeQuietly(ps);
                         closeQuietly(rs);
+                        // Hole letzten Bruder in der verketteten Liste
                         ps = conNeo4j.prepareStatement("MATCH p=((n)-[:h_brother*0..]->(m))" + " WHERE id(n) = {1}"
                                 + " return id(m) AS ID ORDER BY length(p) DESC LIMIT 1");
 
@@ -2250,7 +2392,7 @@ public class Datenbankmanager implements IDatenbankmanager
         }
         catch (SQLException e)
         {
-            kindKarteikarten = null;
+            vorgaenger = null;
             e.printStackTrace();
         }
         finally
@@ -2261,7 +2403,7 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(conNeo4j);
         }
 
-        return kindKarteikarten;
+        return vorgaenger;
     }
 
     private Integer gibBruder(int karteikarte, Connection conNeo4j)
@@ -2271,6 +2413,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Integer karteik;
         try
         {
+            // Lese ID der Bruderkarteikarte
             ps = conNeo4j.prepareStatement("MATCH (n)-[:h_brother]->(m)" + " WHERE id(n) = {1} return id(m) AS ID");
             ps.setInt(1, karteikarte);
             rs = ps.executeQuery();
@@ -2300,6 +2443,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Integer karteik;
         try
         {
+            // Lese ID der übergeordneten Bruderkarteikarte
             ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_brother]-(m)" + " WHERE id(n) = {1} return id(m) AS ID");
             ps.setInt(1, karteikarte);
             rs = ps.executeQuery();
@@ -2329,6 +2473,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Integer karteik;
         try
         {
+            // Lese ID der Vaterkarteikarte
             ps = conNeo4j.prepareStatement("MATCH (n)<-[:h_child]-(m)" + " WHERE id(n) = {1} return id(m) AS ID");
             ps.setInt(1, karteikarte);
             rs = ps.executeQuery();
@@ -2358,6 +2503,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Integer karteik;
         try
         {
+            // Lese ID der Kindkarteiarte
             ps = conNeo4j.prepareStatement("MATCH (n)-[:h_child]->(m)" + " WHERE id(n) = {1} return id(m) AS ID");
             ps.setInt(1, karteikarte);
             rs = ps.executeQuery();
@@ -2395,6 +2541,8 @@ public class Datenbankmanager implements IDatenbankmanager
             conNeo4j.setAutoCommit(false);
             conMysql.setAutoCommit(false);
 
+            // Erstelle neuen Knoten in der Neo4j Datenbank und lese die von Neo4j automatisch
+            // erstellte ID damit sie für die MySql Datenbank zur Verfügung steht
             ps = conNeo4j.prepareStatement("CREATE(n) RETURN id(n) AS Id");
 
             rs = ps.executeQuery();
@@ -2405,9 +2553,14 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
+            // Gibt es eine überliegende Bruder Karteikarte, dann muss die neue Karteikarte mit dieser
+            // über die h_brother Relation verknüpft werden
             if (ueberliegendeBruderKK != -1)
             {
                 Integer unterliegendeBruderKK = gibBruder(ueberliegendeBruderKK, conNeo4j);
+                // Hat die überliegende Bruder Karteikarte eine unterliegende Bruder Karteikarte, dann
+                // muss diese Verbindung aufgetrennt werden und die neue Karteiakarte dazwischen
+                // eingehängt werden
                 if (unterliegendeBruderKK == null)
                     throw new SQLException();
                 else if (unterliegendeBruderKK != -1)
@@ -2419,9 +2572,17 @@ public class Datenbankmanager implements IDatenbankmanager
                 connectKk(ueberliegendeBruderKK, insertedId, BeziehungsTyp.H_BROTHER, conNeo4j);
 
             }
+            // Gibt es keine überliegende Bruder Karteikarte, dann muss die neue Karteikarte mit der
+            // Vater Karteikarte über die h_child Relation verknüpft werden. Eine Vaterkarteikarte
+            // sollte es immer geben, da über der "ersten Karteikarte" der Veranstaltung keine Karteikarte
+            // eingefügt werden kann
             else if (vaterKK != -1)
             {
                 Integer kindKarteikarte = gibKind(vaterKK, conNeo4j);
+                
+                // Hat die Vater Karteikarte eine Kind Karteikarte Karteikarte, dann
+                // muss diese Verbindung aufgetrennt werden und die neue Karteiakarte dazwischen
+                // eingehängt werden
                 if (kindKarteikarte == null)
                     throw new SQLException();
                 else if (kindKarteikarte != -1)
@@ -2437,6 +2598,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 throw new SQLException();
             }
 
+            // erstelle die Verweise der Karteikarte zu anderen Karteikarten in der Neo4j Datenbank
             for (int i = 0; i < karteik.getVerweise().size(); ++i)
             {
                 connectKk(karteik.getId(), karteik.getVerweise().get(i).y, karteik.getVerweise().get(i).x, conNeo4j);
@@ -2444,6 +2606,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
+            // Schreibe restliche Daten der Karteikarte in die Datenbank
             ps = conMysql.prepareStatement("INSERT INTO karteikarte(ID,Titel,Inhalt,Typ,"
                     + "Veranstaltung, Satz, Lemma, Beweis, Definition, Wichtig, Grundlagen, "
                     + " Zusatzinformation, Exkurs, Beispiel, Uebung) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -2502,6 +2665,7 @@ public class Datenbankmanager implements IDatenbankmanager
             conMysql.setAutoCommit(false);
             conNeo4j.setAutoCommit(false);
 
+            // bearbeite Karteikarte
             ps = conMysql.prepareStatement("UPDATE karteikarte SET "
                     + "Titel = ?, Inhalt = ?, Typ = ?, Aenderungsdatum = ?, Satz = ?, Lemma = ?, Beweis = ?,"
                     + " Definition = ?, Wichtig = ?, Grundlagen = ?, Zusatzinformation = ?, Exkurs = ?,"
@@ -2525,6 +2689,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
+            // lösche exitierende Verweise
             ps = conNeo4j
                     .prepareStatement("match n-[r:" + BeziehungsTyp.V_VORAUSSETZUNG.toString().toLowerCase() + "|"
                             + BeziehungsTyp.V_UEBUNG.toString().toLowerCase() + "|" + ""
@@ -2534,6 +2699,7 @@ public class Datenbankmanager implements IDatenbankmanager
             ps.setInt(1, karteik.getId());
             ps.executeUpdate();
 
+            // Füge neue Verweise ein
             for (Tripel<BeziehungsTyp, Integer, String> verweis : karteik.getVerweise())
             {
                 connectKk(karteik.getId(), verweis.y, verweis.x, conNeo4j);
@@ -2585,12 +2751,15 @@ public class Datenbankmanager implements IDatenbankmanager
             conNeo4j.setAutoCommit(false);
             conMysql.setAutoCommit(false);
 
+            // Lösche rekursiv aus der Neo4j Datenbank die Karteikarten und alle Verweise.
+            // Dabei wird die Karteikarte selbst noch nicht gelöscht. Dies geschieht weiter unten
             ps = conNeo4j.prepareStatement("match p=((n)-[:h_child]->(m)-[:h_child|h_brother*0..]->(o))"
                     + " where id(n) = {1}" + " with o" + " match (o)-[r]-()" + " delete o,r "
                     + "return distinct(id(o)) AS ID_o");
             ps.setInt(1, karteikID);
             rs = ps.executeQuery();
 
+            // Lösche Karteikarten aus der MySql Datenbank
             psMysql = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
             boolean loescheInMysql = rs.next();
             if (loescheInMysql)
@@ -2608,20 +2777,28 @@ public class Datenbankmanager implements IDatenbankmanager
 
             closeQuietly(ps);
 
+            // Wenn eine Karteikarte aus der Datenbank gelöscht wird, entsteht eine Lücke im Strukturbaum
+            // Diese muss geschlossen werden
             Integer bruder = gibBruder(karteikID, conNeo4j);
             if (bruder == null)
                 throw new SQLException();
 
+            // Hat die Karteikarte keinen Bruder, dann entsteht keine Lücke
             if (bruder != -1)
             {
                 Integer aeltererBruder = gibAelterenBruder(karteikID, conNeo4j);
 
                 if (aeltererBruder == null)
                     throw new SQLException();
+                // Hat die Karteikarte einen übergeordneten Bruder, dann muss
+                // der übergeordnete Bruder und der unterliegende Bruder mit h_brother
+                // verknüpft werden
                 else if (aeltererBruder != -1)
                     connectKk(aeltererBruder, bruder, BeziehungsTyp.H_BROTHER, conNeo4j);
                 else
                 {
+                    // Ansonsten muss die Vaterkarteikarte und die unterliegende
+                    // Bruder Karteikarte mit h_child verknüpft werden
                     Integer vater = gibVater(karteikID, conNeo4j);
                     if (vater == null || vater == -1)
                         throw new SQLException();
@@ -2630,19 +2807,18 @@ public class Datenbankmanager implements IDatenbankmanager
                 }
             }
 
+            // Lösche die Karteikarte aus der MySql Datenbank
             psMysql = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
             psMysql.setInt(1, karteikID);
             psMysql.executeUpdate();
 
+            // Lösche die Karteikarte und alle ihre Verweise aus der Neo4j Datenbank
             ps = conNeo4j.prepareStatement("match(n) " + "where id(n) = {1} " + "OPTIONAL match n-[r]-() "
                     + "delete n,r");
             ps.setInt(1, karteikID);
             ps.executeUpdate();
             closeQuietly(ps);
 
-            psMysql = conMysql.prepareStatement("DELETE FROM Karteikarte WHERE ID = ?");
-            psMysql.setInt(1, karteikID);
-            psMysql.executeUpdate();
 
             conNeo4j.commit();
             conMysql.commit();
@@ -2693,6 +2869,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
+            // benutzer bewertet Karteikarte
             ps = conMysql
                     .prepareStatement("INSERT INTO bewertung_karteikarte (Bewertung,Benutzer,KarteikarteID) VALUES (?,?,?)");
             ps.setInt(1, bewert);
@@ -2732,6 +2909,8 @@ public class Datenbankmanager implements IDatenbankmanager
             ps.setInt(2, karteikID);
 
             rs = ps.executeQuery();
+            // Wenn es ein Ergebnistupel gibt, dann hat der Benutzer die Karteikarte bereits bewertet
+            // ansonsten nicht
             if (rs.next())
                 return true;
             else
@@ -2763,6 +2942,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
+            // Lese Themenkommentare zu einer Karteikarte aus der View "kommentaruebersicht"
             String sql = "SELECT * FROM kommentaruebersicht WHERE Karteikarte = ?";
             ps = conMysql.prepareStatement(sql);
             ps.setInt(1, karteikID);
@@ -2773,16 +2953,21 @@ public class Datenbankmanager implements IDatenbankmanager
                 GregorianCalendar g = new GregorianCalendar();
                 g.setTime(rs.getTimestamp("erstelldatum"));
                 
+                // lese Benutzer aus der ID
                 Benutzer benutzer = leseBenutzerWrapper(rs.getInt("Benutzer"), conMysql);
+                // Prüfe ob leseBenutzerWrapper einen Fehler liefert
                 if(benutzer == null)
                     return null;
+                // Prüfe ob der aktuelle Benutzer die Karteikarte bewertet hat
                 Boolean hatKommentarBewertet = hatKommentarBewertetWrapper(rs.getInt("ID"), aktBenutzerID, conMysql);
                 if(hatKommentarBewertet == null)
                     return null;
                 
+                // Erstelle neuen Kommentar
                 Kommentar k = new Kommentar(rs.getInt("ID"), rs.getString("Inhalt"), g,
                         benutzer, rs.getInt("Bewertung"), hatKommentarBewertet, -1, rs.getInt("Karteikarte"), rs.getInt("AnzKinder"));
 
+                // Füge Kommentar der Liste von Themen-Kommentaren hinzu
                 komms.add(k);
             }
 
@@ -2809,6 +2994,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
+            // Lese Kommentar mit der ID des Parameters "kommID"
             String sql = "SELECT * FROM kommentaruebersicht WHERE ID = ?";
             ps = conMysql.prepareStatement(sql);
             ps.setInt(1, kommId);
@@ -2820,6 +3006,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 GregorianCalendar g = new GregorianCalendar();
                 g.setTime(rs.getTimestamp("erstelldatum"));
 
+                // Falls Themenkommentar, dann gibt es keinen Vater Kommentar
                 int vaterID = rs.getInt("VaterKommentar");
                 if (rs.wasNull())
                     vaterID = -1;
@@ -2827,6 +3014,7 @@ public class Datenbankmanager implements IDatenbankmanager
                 if (rs.wasNull())
                     kkId = -1;
 
+                // Lese Benutzer, der den Kommentar erstellt hat
                 Benutzer benutzer = leseBenutzerWrapper(rs.getInt("Benutzer"),conMysql);
                 if(benutzer == null)
                     return null;
