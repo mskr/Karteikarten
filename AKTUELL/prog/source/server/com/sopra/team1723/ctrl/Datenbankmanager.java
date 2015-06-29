@@ -1,7 +1,6 @@
 package com.sopra.team1723.ctrl;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.locks.ReentrantLock;
 import java.sql.Timestamp;
 
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
@@ -3046,6 +3043,7 @@ public class Datenbankmanager implements IDatenbankmanager
     @Override
     public Kommentar leseKommentar(int kommId)
     {
+        // Lese Kommentar mit eigener Connection
         Connection conMysql = getConnectionSQL();
 
         Kommentar k = leseKommentarWrapper(kommId, conMysql);
@@ -3063,6 +3061,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
+            // Lese Antwortkommentare zu einem Vaterkommentar
             String sql = "SELECT * FROM kommentaruebersicht WHERE Vaterkommentar = ?";
             ps = conMysql.prepareStatement(sql);
             ps.setInt(1, vaterKID);
@@ -3073,14 +3072,17 @@ public class Datenbankmanager implements IDatenbankmanager
                 GregorianCalendar g = new GregorianCalendar();
                 g.setTime(rs.getTimestamp("erstelldatum"));
                 
+                // Lese Daten des Benutzers, der den Kommentar erstellt hat
                 Benutzer benutzer = leseBenutzerWrapper(rs.getInt("Benutzer"), conMysql);
                 if(benutzer == null)
                     return null;
                 
+                // Prüfe ob der aktuelle Benutzer den Kommentar bewertet hat
                 Boolean hatKommentarBewertet = hatKommentarBewertetWrapper(rs.getInt("ID"), aktBenutzerID, conMysql);
                 if(hatKommentarBewertet == null)
                     return null;
                 
+                // Erstelle neuen Kommentar
                 Kommentar k = new Kommentar(rs.getInt("ID"), rs.getString("Inhalt"), g,
                         benutzer, rs.getInt("bewertung"),hatKommentarBewertet , rs.getInt("VaterKommentar"), -1, 0);
 
@@ -3121,6 +3123,7 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             conMysql.setAutoCommit(false);
 
+            // Erstelle neuen Kommentar
             String sql = "INSERT INTO kommentar(Inhalt, Benutzer, Karteikarte, Vaterkommentar) VALUES(?,?,?,?)";
             ps = conMysql.prepareStatement(sql);
             ps.setString(1, kommentar.getInhalt());
@@ -3208,6 +3211,7 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
+            // Lösche Kommentarm mit der angegebenen ID
             String sql = "DELETE FROM kommentar WHERE ID = ?";
             ps = conMysql.prepareStatement(sql);
 
@@ -3244,6 +3248,8 @@ public class Datenbankmanager implements IDatenbankmanager
         {
             conMysql.setAutoCommit(false);
 
+            // bewertung_kommentar ist eine Zuordnungstabelle zwischen Kommentar und Benutzer
+            // Füge neue Bewertung ein
             String sql = "INSERT INTO bewertung_kommentar(Bewertung, Benutzer, KommentarID) VALUES(?,?,?)";
             ps = conMysql.prepareStatement(sql);
 
@@ -3306,6 +3312,8 @@ public class Datenbankmanager implements IDatenbankmanager
 
         try
         {
+            // Prüfe wie oft der angegebene Benutzer und der angegebene Kommentar in der Zuordnungstabelle vorkommen
+            // Als Ergebnis kann nur 1 oder 0 zurückkommen
             String sql = "SELECT COUNT(*) AS anz FROM bewertung_kommentar WHERE Benutzer = ? AND KommentarID = ?";
             ps = conMysql.prepareStatement(sql);
 
@@ -3364,16 +3372,19 @@ public class Datenbankmanager implements IDatenbankmanager
         ResultSet rs = null;
         try
         {
+            // Hole Kennwort der Veranstaltung und vergleiche es mit dem Parameter "kennwort"
             ps = conMysql.prepareStatement("SELECT Kennwort FROM veranstaltung WHERE ID =?");
             ps.setInt(1, veranstaltung);
             rs = ps.executeQuery();
             if (rs.next())
             {
+                // Falls Der Benutzer Admin ist, interessiert das Passwort nicht
                 if (rs.getString("Kennwort") != null && rs.getString("Kennwort").equals(kennwort) == false && !isAdmin)
                     throw new DbFalsePasswortException();
             }
             closeQuietly(ps);
 
+            // In die Zuordnungstabelle zwischen Benutzer und Veranstaltung den entsprechenden Eintrag erstellen
             ps = conMysql.prepareStatement("INSERT INTO benutzer_veranstaltung_zuordnung (Benutzer, Veranstaltung)"
                     + "VALUES(?,?)");
             ps.setInt(1, benutzer);
@@ -3409,6 +3420,8 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean erfolgreich = true;
         try
         {
+            // Die Zuordnung zwischen dem Benutzer und der Veranstaltung in der Tabelle "benutzer_veranstaltung_zuordnung"
+            // löschen
             ps = conMysql
                     .prepareStatement("DELETE FROM benutzer_veranstaltung_zuordnung WHERE Benutzer=? AND Veranstaltung=?");
             ps.setInt(1, benutzer);
@@ -3439,6 +3452,7 @@ public class Datenbankmanager implements IDatenbankmanager
         Notiz notiz = null;
         try
         {
+            // Lese die Notiz eines Benutzers zu einer Karteikarte
             ps = conMysql.prepareStatement("SELECT ID, Inhalt, Benutzer, KarteikarteID FROM Notiz WHERE"
                     + " Benutzer = ? AND KarteikarteID = ?");
             ps.setInt(1, benutzer);
@@ -3477,6 +3491,7 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean erfolgreich = true;
         try
         {
+            // Erstelle neue Notiz
             ps = conMysql.prepareStatement("INSERT INTO Notiz (Inhalt,Benutzer,KarteikarteID) VALUES(?,?,?)");
             ps.setString(1, notiz.getInhalt());
             ps.setInt(2, notiz.getErsteller());
@@ -3508,6 +3523,7 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean erfolgreich = true;;
         try
         {
+            // Bearbeite Notiz
             ps = conMysql.prepareStatement("UPDATE Notiz SET Inhalt = ? WHERE Benutzer = ? AND KarteikarteID = ?");
             ps.setString(1, notiz.getInhalt());
             ps.setInt(2, notiz.getErsteller());
@@ -3539,6 +3555,7 @@ public class Datenbankmanager implements IDatenbankmanager
         boolean erfolgreich = true;
         try
         {
+            // Lösche Notiz
             ps = conMysql.prepareStatement("DELETE FROM Notiz WHERE ID=?");
             ps.setInt(1, notizID);
             ps.executeUpdate();
@@ -3569,6 +3586,7 @@ public class Datenbankmanager implements IDatenbankmanager
         PreparedStatement ps = null;
         try
         {
+            // Verbinde zwei Karteikarten in der Neo4j Datenbank mittels dem angegebenen Beziehungstyp
             ps = conNeo4j.prepareStatement("MATCH (n),(m) " + "WHERE id(n) = {1} AND id(m) = {2} " + "CREATE (n)-[:"
                     + typ.toString().toLowerCase() + "]->(m)");
             ps.setInt(1, vonKK);
@@ -3585,7 +3603,6 @@ public class Datenbankmanager implements IDatenbankmanager
             closeQuietly(ps);
             if (verbindungAbbauen)
                 closeQuietly(conNeo4j);
-//                conLockNeo4j.getValue().unlock();
         }
 
     }
@@ -3595,6 +3612,7 @@ public class Datenbankmanager implements IDatenbankmanager
         PreparedStatement ps = null;
         try
         {
+            // Trenne die Verbindung zwischen zwei Karteikarten in der Neo4j Datenbank
             ps = conNeo4j.prepareStatement("MATCH (n)-[r]->(m) " + "WHERE id(n) = {1} AND id(m) = {2} " + "DELETE r");
             ps.setInt(1, vonKK);
             ps.setInt(2, zuKK);
