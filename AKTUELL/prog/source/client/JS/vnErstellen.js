@@ -111,7 +111,8 @@ var selectedModList = {};
 function registerVeranstErzeugeHandler() {
 
     var categoryClassMapping = {};
-    categoryClassMapping[keyJsonObjKlasseStudiengang] = "";
+    // Achtung: Kategoriename 'STUDIENGAENGE' muss dem Key in Categories entprechen!
+    categoryClassMapping[keyJsonObjKlasseStudiengang] = "STUDIENGAENGE";
     autoComplete(
             $("#vn_erstellen_stg_input"),
             {
@@ -127,7 +128,8 @@ function registerVeranstErzeugeHandler() {
     );
 
     categoryClassMapping = {};
-    categoryClassMapping[keyJsonObjKlasseBenutzer] = "";
+    // Achtung: Kategoriename 'Moderatorenwahl' muss dem Key in Categories entprechen!
+    categoryClassMapping[keyJsonObjKlasseBenutzer] = "MODERATORWAHL";
     autoComplete(
             $("#vn_erstellen_mod_input"),
             {
