@@ -2231,6 +2231,9 @@ public class Datenbankmanager implements IDatenbankmanager
                     --anzNachfolger;
                     ++i;
                 }
+                
+                if(anzNachfolger <= 0)
+                    break;
 
                 closeQuietly(ps);
                 closeQuietly(rs);
