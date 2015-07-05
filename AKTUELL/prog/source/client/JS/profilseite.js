@@ -131,7 +131,7 @@ function fillProfilseite()
     
     if(currentProfilID == jsonBenutzer[paramId])
     {
-    	UserName = jsonBenutzer[paramVorname]+" "+jsonBenutzer[paramNachname];
+    	var UserName = jsonBenutzer[paramVorname]+" "+jsonBenutzer[paramNachname];
     	document.title = UserName;
     	fillMyProfil(jsonBenutzer[paramNutzerstatus] == "ADMIN");
     }
@@ -264,7 +264,7 @@ function fillMyProfil(isAdmin)
 function fillOtherProfil(benutzer, isAdmin)
 {
 	//aktualisiere Titel
-	UserName = benutzer[paramVorname]+" "+benutzer[paramNachname];
+	var UserName = benutzer[paramVorname]+" "+benutzer[paramNachname];
 	document.title = UserName;
 
 	$("#profil_avatar_loeschen_bt").hide();
@@ -381,6 +381,7 @@ function registerProfilSpeichernEvents() {
         params[paramNotifyKarteikartenAenderung] = notifyKarteikarten;
         params[paramNotifyKommentare] = notifyKommentare;
         params[paramEmailNew] = email;
+        params[paramTheme] = jsonBenutzer[paramTheme];
         if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
         {
             params[paramNutzerstatus] = rolle;
