@@ -581,69 +581,53 @@ public class PDFExporter
     {
         List<Element> nodes = n.children();
         String result = "";
-
+        // Starttag konvertieren
         if (!n.nodeName().equals("body"))
         {
-            for(int i = 0; i < depth; i++)
-                System.out.print(" ");
-            System.out.println("<" + n.nodeName() + ">");
+            // htmltag konvertieren 
             String tag = mapHTMLTagToLaTeXTag(n, true);
+            // und anhängen
             result += tag;
         }
-
+        // Content der Node holen
         String content = n.ownText();
-        // Workaround um an text ohne trimming zu kommen
+        // Falls Content existiert
         if(!content.equals(""))
         {
+            // Workaround um an text ohne trimming zu kommen
+            // Es muss min. ein TextNode als Kind geben. getWholeText liefert en Text ohne trimming
             content = n.textNodes().get(0).getWholeText();
         }
-        
+        // existieren keine Kinder?
         if (nodes.size() == 0)
         {
-
-            for(int i = 0; i < depth; i++)
-                System.out.print(" ");
-            System.out.println("Content: " + content);
-            
+            // Mathjax formel ? Wenn ja, dann muss nichts konvertiert werden. 
+            // Formel ist gültiger Latex Code
             if (n.attr("class").equals("mathjax_formel"))
-            {
-                System.out.println("Skip replacing. Formel gefunden");
                 result += content;
-            }
             else
+                // Ungültige Zeichen konvertieren und text anhängen
                 result += replaceInvalidChars(content);
         }
+        // kinder existieren!
         else
         {
-//            Node firstChild = n.childNode(0);
-//            if(firstChild instanceof TextNode)
-//            {
-//                result += replaceInvalidChars(((TextNode) firstChild).getWholeText());
-//            }
-
-            for(int i = 0; i < depth; i++)
-                System.out.print(" ");
-            System.out.println("Content aber noch kinder: " + content);
-
-            for(int i = 0; i < depth; i++)
-                System.out.print(n.text());
-            
-            System.out.println(" Text: " + content);
-            
+            // Ungültige Zeichen konvertieren und content anhängen
             result += replaceInvalidChars(content);
             
+            // kinder danach anhängen
             for (Element n2 : nodes)
             {
+                // funktion rekursiv aufrufen mit tiefe + 1
                 result += recursiveTransformHTLMtoLatex(n2, depth + 1);
             }
         }
-
+        // Endetag konvertieren
         if (!n.nodeName().equals("body"))
         {
-            for(int i = 0; i < depth; i++)
-                System.out.print(" ");
-            System.out.println("</" + n.nodeName() + ">");
+            // html tag konvertieren
             String tag = mapHTMLTagToLaTeXTag(n, false);
+            // und anhängen
             result += tag;
         }
         return result;
@@ -661,8 +645,10 @@ public class PDFExporter
         for (int i = 0; i < html.length(); i++)
         {
             String replacer = charReplaceList.get(html.charAt(i));
+            // Keine ersetzungsregel? dann einfach kopieren
             if (replacer == null)
                 result += html.charAt(i);
+            // Ersetungsregel -> konvertieren
             else
                 result += replacer;
         }
@@ -680,7 +666,9 @@ public class PDFExporter
     private String mapHTMLTagToLaTeXTag(Element elem, boolean begin)
     {
         String nodeName = elem.nodeName();
+        // Ersetzungsregel suchen
         Tupel<String, String> replacer = tagReplaceList.get(nodeName);
+        // Keine ersetzungsregel ? tag ignorieren
         if (replacer == null)
         {
             if (begin)
@@ -689,29 +677,32 @@ public class PDFExporter
             return "";
         }
 
-
+        // Spezielabehandlung für Tabellen
         if (nodeName.equals("table"))
         {
             if (begin)
             {
-
+                // Latex-Tabellen-Kopf generieren
                 int colCnt = 0;
                 String caption = null;
-
+                // Anzahl spalten bestimmen
                 colCnt = elem.getElementsByTag("tbody").get(0).child(0).getElementsByTag("td").size();
-
+                
+                // Existiert ein Titel ? Wenn ja, dann Titel für Tabelle übernehmen
                 if (elem.getElementsByTag("caption").size() != 0)
                 {
                     caption = elem.getElementsByTag("caption").first().text();
                 }
-
+                
+                // Tabellenkonfiguration zusammenbauen
                 String tableConfig = "{|";
                 for (int i = 0; i < colCnt; i++)
                 {
                     tableConfig += "c|";
                 }
                 tableConfig += "}";
-
+                
+                // Je nachdem ob mit oder ohne Titel
                 if (caption == null)
                     return replacer.x + "\\centering" + newLineWithSeparation + "\\begin{tabular}" + newLineWithSeparation + tableConfig
                             + newLineWithSeparation + "\\hline" + newLineWithSeparation;
@@ -723,6 +714,7 @@ public class PDFExporter
             else
                 return replacer.y;
         }
+        // Spezialbehandlung für Tabellen-Zelle
         else if (nodeName.equals("td"))
         {
             if (begin)
@@ -731,11 +723,13 @@ public class PDFExporter
                 if (idx == 0)
                     return replacer.x;
                 else
+                    // & zwischen spalten einfügen
                     return " & " + replacer.x;
             }
             else
                 return replacer.y;
         }
+        // Normale behandlung aller sonstigen Regeln. Einfach Tag anhand Regel ersetzen
         else
         {
             if (begin)
@@ -878,12 +872,14 @@ public class PDFExporter
     {
         if (!texFileCreated || cleaned || peth != null)
             return false;
-
+        // ProcessBuilder erzeugen, der Latex-Prozess startet.
         pb = new ProcessBuilder("pdflatex", "-synctex=1", "-interaction=nonstopmode", workingDir + subFolder + "/"
                 + texFileName);
+        // Arbeitsordner festlegen
         pb.directory(new File(workingDir + subFolder));
+        // Error Stream auf Out umleiten
         pb.redirectErrorStream(true);
-
+        // PDFExportThread handler starten
         peth = new PDFExportThreadHandler(this, pb);
         new Thread(peth).start();
 

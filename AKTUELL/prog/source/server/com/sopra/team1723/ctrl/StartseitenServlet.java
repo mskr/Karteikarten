@@ -544,8 +544,8 @@ public class StartseitenServlet extends ServletController
                 return;
             }
         }
-
-        printAllParameters(req);
+        if(DEBUGMODE)
+            printAllParameters(req);
 
         // Hole die vom client angefragte Aktion
         String action = req.getParameter(ParamDefines.Action);

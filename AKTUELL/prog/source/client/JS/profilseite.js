@@ -9,7 +9,8 @@ var currentProfilID;
 $(document).ready(function() {
     
 	$("#profil_loeschen_bt").click(function() {
-		sindSieSicher($("#profil_loeschen_bt"), "Wollen sie das Profil wirklich löschen?",function(){
+		sindSieSicher($("#profil_loeschen_bt"), "Wollen sie das Profil wirklich löschen? Achtung! Dadurch werden alle von " +
+				"Ihnen erstellten Informaationen unwiderruflich gelöscht (Kommentare, Veranstaltungen, Notizen,...)!",function(){
 		    var params = {};
 		    params[paramId] = currentProfilID;
 			ajaxCall(

@@ -66,11 +66,24 @@ public class Datenbankmanager implements IDatenbankmanager
         connectionPoolSQL.setDriverClassName("com.mysql.jdbc.Driver");
         connectionPoolSQL.setUsername("root");
         connectionPoolSQL.setPassword("");
+        connectionPoolSQL.setValidationQuery("SELECT 1");
+        connectionPoolSQL.setMaxActive(100);
+        connectionPoolSQL.setInitialSize(10);
+        connectionPoolSQL.setMaxWait(10000);
+        connectionPoolSQL.setLogAbandoned(true);
+        connectionPoolSQL.setRemoveAbandoned(true);
+        connectionPoolSQL.setRemoveAbandonedTimeout(60);
         
         connectionPoolNeo4j.setUrl("jdbc:neo4j://localhost:7474/karteikarten");
         connectionPoolNeo4j.setDriverClassName("org.neo4j.jdbc.Driver");
         connectionPoolNeo4j.setUsername("neo4j");
         connectionPoolNeo4j.setPassword("hallo123");
+        connectionPoolNeo4j.setMaxActive(100);
+        connectionPoolNeo4j.setInitialSize(10);
+        connectionPoolNeo4j.setMaxWait(10000);
+        connectionPoolNeo4j.setLogAbandoned(true);
+        connectionPoolNeo4j.setRemoveAbandoned(true);
+        connectionPoolNeo4j.setRemoveAbandonedTimeout(60);
         
     }
 
@@ -2218,6 +2231,9 @@ public class Datenbankmanager implements IDatenbankmanager
                     --anzNachfolger;
                     ++i;
                 }
+                
+                if(anzNachfolger <= 0)
+                    break;
 
                 closeQuietly(ps);
                 closeQuietly(rs);
