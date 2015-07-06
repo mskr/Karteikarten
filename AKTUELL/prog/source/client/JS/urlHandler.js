@@ -96,13 +96,13 @@ function buildUrlQuery(paramObj)
     // Neuen Eintrag in den Browserverlauf pushen
     History.pushState(null, null, locationSearchTmp);
     // Pruefe, ob der String nun auch wirklich in der URL steht
-    var State = History.getState();
-    if(State.url.indexOf(locationSearchTmp) >= 0)
-    {
-        // Wenn ja dann starte die Anzeige der entprechenden Ansicht
-    	var urlQuery = parseUrlQuery(undefined);
-        interpreteUrlQuery(urlQuery);
-    }
+//    var State = History.getState();
+//    if(State.url.indexOf(locationSearchTmp) >= 0)
+//    {
+//        // Wenn ja dann starte die Anzeige der entprechenden Ansicht
+//    	var urlQuery = parseUrlQuery(undefined);
+//        interpreteUrlQuery(urlQuery);
+//    }
 }
 
 /**
