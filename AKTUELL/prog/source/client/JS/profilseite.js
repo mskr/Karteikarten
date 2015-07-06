@@ -357,8 +357,8 @@ function fillOtherProfil(benutzer, isAdmin)
 /**
  * Liest die Daten aus den Feldern aus und uebertraegt Sie zum Server.
  */
-function registerProfilSpeichernEvents() {
-    
+function registerProfilSpeichernEvents() 
+{
     $("#profil_daten_form").submit(function(event) 
     {
         // Felder auslesen
@@ -382,7 +382,7 @@ function registerProfilSpeichernEvents() {
         params[paramNotifyKarteikartenAenderung] = notifyKarteikarten;
         params[paramNotifyKommentare] = notifyKommentare;
         params[paramEmailNew] = email;
-        params[paramTheme] = jsonBenutzer[paramTheme];
+        params[paramTheme] = $("#farbschema_toggle_checkbox").prop("checked") ? "DAY" : "NIGHT";
         if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
         {
             params[paramNutzerstatus] = rolle;

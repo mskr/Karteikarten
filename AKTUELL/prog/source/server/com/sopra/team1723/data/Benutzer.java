@@ -317,7 +317,6 @@ public class Benutzer implements IjsonObject {
 
     public String getTheme()
     {
-        // TODO Auto-generated method stub
         return theme;
     }
 

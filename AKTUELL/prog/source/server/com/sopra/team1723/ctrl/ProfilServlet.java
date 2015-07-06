@@ -62,6 +62,7 @@ public class ProfilServlet extends ServletController
         String notifyVeranstAenderung = request.getParameter(ParamDefines.NotifyVeranstAenderung);
         String notifyKarteikartenAenderung = request.getParameter(ParamDefines.NotifyKarteikartenAenderung);
         String notifyKommentare = request.getParameter(ParamDefines.NotifyKommentare);
+        String theme = request.getParameter(ParamDefines.Theme);
 
         JSONObject jo = null;
         // Alle Parameter angegeben?
@@ -191,6 +192,8 @@ public class ProfilServlet extends ServletController
 
                 benutzer = new Benutzer(id, emailNew, vorname, nachname, nMatrikelNr, studiengang, eNutzerstatus,
                         bNotifyVeranstAenderung, bNotifyKarteikartenAenderung, eNotifyKommentare);
+                
+                benutzer.setTheme(theme);
 
                 dbManager.bearbeiteBenutzerAdmin(benutzer, aktuellerBenutzer);
 
@@ -200,6 +203,9 @@ public class ProfilServlet extends ServletController
             {
                 benutzer = new Benutzer(id, emailNew, vorname, nachname, bNotifyVeranstAenderung,
                         bNotifyKarteikartenAenderung, eNotifyKommentare);
+                
+                benutzer.setTheme(theme);
+                
                 dbManager.bearbeiteBenutzer(benutzer);
             }
         }

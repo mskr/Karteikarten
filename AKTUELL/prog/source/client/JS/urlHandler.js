@@ -129,7 +129,6 @@ function interpreteUrlQuery(paramObj)
     		{
         	    // Lade die Startseite und gehe dort hin, um erneuten Login zu ermoeglichen
                 $.when(fillStartseite()).done(function() {
-                    console.log("1");
                 	display(ansichtStartseite);
         		});
                 return;
@@ -160,7 +159,6 @@ function interpreteUrlQuery(paramObj)
 	        	});
 	        }
 	        $.when(ajax2).done(function() {
-                console.log("2");
 	        	display(ziel);
 			});
         });
@@ -180,7 +178,6 @@ function interpreteUrlQuery(paramObj)
     else 
     {
         $.when(fillStartseite()).done(function() {
-            console.log("3");
         	display(ansichtStartseite);
 		});
     }
@@ -192,6 +189,7 @@ function interpreteUrlQuery(paramObj)
 
 /**
  * Blendet alle nicht benoetigten mainboxen aus und die richtige ein.
+ * @param ansicht als String gemaess den defines, die angezeigt werden soll
  */
 function display(ansicht) 
 {
@@ -215,7 +213,7 @@ function display(ansicht)
     
     if(ansichtIdx != -1)
     {
-    	// Alles auÃŸer das neue Ausblenden
+    	// Alles ausser gegebene ansicht ausblenden
         $(".mainbox").not("#mainbox_"+alleAnsichten[ansichtIdx]).hide();
         
         return $("#mainbox_"+alleAnsichten[ansichtIdx]).show();
