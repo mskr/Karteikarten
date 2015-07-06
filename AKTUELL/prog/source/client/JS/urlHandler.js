@@ -189,9 +189,9 @@ function interpreteUrlQuery(paramObj)
 
 /**
  * Blendet alle nicht benoetigten mainboxen aus und die richtige ein.
- * @param ansicht als String gemaess den defines, die angezeigt werden soll
+ * @param ansicht, die angezeigt werden soll als String (gemaess den defines)
  */
-function display(ansicht) 
+function display(ansicht)
 {
     console.log("[GOTO] "+ansicht);
     
