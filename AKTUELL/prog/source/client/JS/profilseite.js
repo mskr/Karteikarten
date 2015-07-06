@@ -132,7 +132,7 @@ function fillProfilseite()
     
     if(currentProfilID == jsonBenutzer[paramId])
     {
-    	UserName = jsonBenutzer[paramVorname]+" "+jsonBenutzer[paramNachname];
+    	var UserName = jsonBenutzer[paramVorname]+" "+jsonBenutzer[paramNachname];
     	document.title = UserName;
     	fillMyProfil(jsonBenutzer[paramNutzerstatus] == "ADMIN");
     }
@@ -265,7 +265,7 @@ function fillMyProfil(isAdmin)
 function fillOtherProfil(benutzer, isAdmin)
 {
 	//aktualisiere Titel
-	UserName = benutzer[paramVorname]+" "+benutzer[paramNachname];
+	var UserName = benutzer[paramVorname]+" "+benutzer[paramNachname];
 	document.title = UserName;
 
 	$("#profil_avatar_loeschen_bt").hide();
@@ -357,8 +357,8 @@ function fillOtherProfil(benutzer, isAdmin)
 /**
  * Liest die Daten aus den Feldern aus und uebertraegt Sie zum Server.
  */
-function registerProfilSpeichernEvents() {
-    
+function registerProfilSpeichernEvents() 
+{
     $("#profil_daten_form").submit(function(event) 
     {
         // Felder auslesen
@@ -382,6 +382,7 @@ function registerProfilSpeichernEvents() {
         params[paramNotifyKarteikartenAenderung] = notifyKarteikarten;
         params[paramNotifyKommentare] = notifyKommentare;
         params[paramEmailNew] = email;
+        params[paramTheme] = $("#farbschema_toggle_checkbox").prop("checked") ? "DAY" : "NIGHT";
         if(jsonBenutzer[paramNutzerstatus] == "ADMIN")
         {
             params[paramNutzerstatus] = rolle;

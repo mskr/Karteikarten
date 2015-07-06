@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 29. Jun 2015 um 13:11
+-- Erstellungszeit: 06. Jul 2015 um 13:01
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -701,7 +701,7 @@ ALTER TABLE `benachrichtigung_einladung_moderator`
 -- Indexes for table `benachrichtigung_karteikartenaenderung`
 --
 ALTER TABLE `benachrichtigung_karteikartenaenderung`
- ADD PRIMARY KEY (`ID`), ADD KEY `Benachrichtigung` (`Benachrichtigung`), ADD KEY `Benutzer` (`Benutzer`);
+ ADD PRIMARY KEY (`ID`), ADD KEY `Benachrichtigung` (`Benachrichtigung`), ADD KEY `Benutzer` (`Benutzer`), ADD KEY `Karteikarte` (`Karteikarte`);
 
 --
 -- Indexes for table `benachrichtigung_neuer_kommentar`
@@ -894,7 +894,8 @@ ADD CONSTRAINT `benachrichtigung_einladung_moderator_ibfk_4` FOREIGN KEY (`Benac
 --
 ALTER TABLE `benachrichtigung_karteikartenaenderung`
 ADD CONSTRAINT `benachrichtigung_karteikartenaenderung_ibfk_1` FOREIGN KEY (`Benachrichtigung`) REFERENCES `benachrichtigung` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD CONSTRAINT `benachrichtigung_karteikartenaenderung_ibfk_2` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `benachrichtigung_karteikartenaenderung_ibfk_2` FOREIGN KEY (`Benutzer`) REFERENCES `benutzer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `benachrichtigung_karteikartenaenderung_ibfk_3` FOREIGN KEY (`Karteikarte`) REFERENCES `karteikarte` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `benachrichtigung_neuer_kommentar`

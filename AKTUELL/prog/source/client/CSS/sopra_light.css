@@ -291,7 +291,6 @@ textarea.input_std {
 	height: calc(100% - .8em);
 	padding-top: 1%;
 	background: rgba(0,0,0,.5);
-	overflow-y: scroll;
 } .sindSieSicherContainer {
 	display: none;
 	position: absolute;
