@@ -68,11 +68,13 @@ public class FileUploadServlet extends ServletController
             uploadedFile = req.getPart(ParamDefines.UploadFile);
             fileName = getFileName(uploadedFile);
             contentStream = uploadedFile.getInputStream();
-
+            	
+            //absoluten pfad ausgehend vom laufwerk, auf dem das Servlet läuft
             servletContext = getServletContext();
             contextPath = servletContext.getRealPath(File.separator);
             fileExt = FilenameUtils.getExtension(fileName);
-
+            
+            //prüfe auf valide file-extensions
             if (fileExt == null
                     || (!fileExt.equalsIgnoreCase("jpg") && !fileExt.equalsIgnoreCase("jpeg") && !fileExt
                             .equalsIgnoreCase("png")))
@@ -80,24 +82,31 @@ public class FileUploadServlet extends ServletController
                 JSONObject jo = JSONConverter.toJsonError(ParamDefines.jsonErrorInvalidParam);
                 outWriter.print(jo);
             }
+            //UNIQUE FILENAME: unix timestamp erschaffen, wird später gehasht
             String unixTimestamp = Instant.now().getEpochSecond() + "";
 
             String UploadID = null;
+            //timestamp in bytearray umwandeln
             byte[] bytesOfMessage = unixTimestamp.getBytes("UTF-8");
 
+            //message digest klasse (java.security package, unterstützt mehrere md-versionen, hier md5)
             MessageDigest md;
             try
-            {
+            {	
+            	
                 md = MessageDigest.getInstance("MD5");
+                //hash to md5
                 md.update(bytesOfMessage);
                 byte[] digest = md.digest();
+                
+                //convert md5 byte-array zu string
                 StringBuffer sb = new StringBuffer();
                 for (byte b : digest)
                 {
                     sb.append(String.format("%02x", b & 0xff));
                 }
                 UploadID = sb.toString();
-                System.out.println("uploadid:" + UploadID);
+                //System.out.println("uploadid:" + UploadID);
 
             }
             catch (NoSuchAlgorithmException e)
@@ -108,12 +117,17 @@ public class FileUploadServlet extends ServletController
             }
             if (UploadID != null)
             {
+            	//mache aus dem InputStream ein BufferedImage
                 BufferedImage originalImage = ImageIO.read(contentStream);
+                //file soll nun unter der uploadID gefolgt von der Extension abgespeichert werden
                 String dateiName = UploadID + ".png";
                 String relativerPfad = dirKKBild + dateiName;
+                //gesamter pfad ergibt sich aus dem Pfad des Javaprojects und dem pfad innerhalb,
+                //unter dem es abgespeichert werden soll
                 String absolutePath = contextPath + relativerPfad;
                 ImageIO.write(originalImage, "png", new File(absolutePath));
-
+                
+                //wenn nach einer stunde datei noch vorhanden, also nicht verwendet wurde, lösche die datei
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
@@ -123,7 +137,6 @@ public class FileUploadServlet extends ServletController
                     }
                 }, 60 * 60 * 1000);
 
-                System.out.println(UploadID);
                 JSONObject jo = JSONConverter.toJson(UploadID);
                 outWriter.print(jo);
             }
