@@ -1,7 +1,15 @@
 # Karteikarten
 eLearning system based on online content creation with note cards. Made for Sopra 14/15 at Uni Ulm.
 
-## German Description
+## Dependencies
+If you want to run this project you need to get the following software somewhere
++ apache-tomcat-7.0.63
++ mysql-5.6
++ neo4j-community-2.3.0-M01
+
+and place the folders as named above in the project root. Each folder must contain a "bin" folder as a direct subdirectory with the right executables inside. Then you should be able to do `java Launcher`.
+
+## Description (german :D)
 
 ###2 Client-Seitig
 ####2.1 JavaScript
