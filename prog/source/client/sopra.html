@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<!-- https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag -->
+<meta name="viewport" content="initial-scale=1.0, user-scalable=yes">
+<title>Sopra</title>
+<!-- Main CSS -->
+<link rel="stylesheet" href="CSS/sopra.css" type="text/css">
+<!-- Button CSS -->
+<link rel="stylesheet" href="CSS/mybuttonstyle.css" type="text/css">
+<!-- Open Sans Schriftart (see http://www.google.com/fonts/specimen/Open+Sans) -->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<!-- Computer Modern Sans -->
+<link rel="stylesheet" href="fonts/ComputerModern/Sans/cmun-sans.css" type="text/css">
+<!-- Computer Modern Serif -->
+<link rel='stylesheet' href='fonts/ComputerModern/Serif/cmun-serif.css' type='text/css'>
+<!-- GitHub Octicons -->
+<link rel="stylesheet" href="fonts/octicons/octicons.css">
+<!-- Verhindert favIcon Error -->
+<link rel="shortcut icon" href="files/general/icon.png">
+<!-- JQuery --> 
+<script src="JS/lib/jquery-v1.11.1.min.js"></script>
+<!-- JQuery History-State-API -->
+<script src="JS/lib/history/scripts/bundled/html4+html5/jquery.history.js"></script>
+<!-- CKEditor Core -->
+<script src="JS/lib/ckeditor_4.4.7/ckeditor/ckeditor.js"></script>
+<!-- CKEditor Config -->
+<script src="JS/lib/ckeditor_4.4.7/ckeditor/config.js"></script>
+<!-- CKEditor JQuery Adapter -->
+<script src="JS/lib/ckeditor_4.4.7/ckeditor/adapters/jquery.js"></script>
+<!-- Eigene CKEditor Konfigurationen -->
+<script src="JS/ckeditorConfigs.js"></script>
+<!-- MathJax -->
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- Waypoints JS Lib -->
+<script src="JS/lib/jquery.waypoints.min.js"></script>
+<script src="JS/lib/sticky.min.js"></script>
+<!-- ZeroClipboard.js Skript -->
+<script src="JS/lib/zeroclipboard-2.2.0/dist/ZeroClipboard.js"></script>
+<!-- MD5 Hash Skript -->
+<script src="JS/lib/md5.js"></script>
+<!-- Dropzone.js Skript -->
+<script src="JS/lib/dropzone.js"></script>
+<!-- Dropzone Konfiguration -->
+<script src="JS/dropzoneConfig.js"></script>
+<!-- Zentrale Variablen -->
+<script src="JS/defines.js"></script>
+<!-- Ajax Setup Skript -->
+<script src="JS/ajaxSetup.js"></script>
+<!-- Helper Functions -->
+<script src="JS/helperFunctions.js"></script>
+<!-- FileUploader -->
+<script src="JS/fileUploader.js"></script>
+<!-- Error Message Skript -->
+<script src="JS/errorHandler.js"></script>
+<!-- URL Handler -->
+<script src="JS/urlHandler.js"></script>
+<!-- Registrieren Script -->
+<script src="JS/registrieren.js"></script>
+<!-- Login and Logout Script -->
+<script src="JS/loginLogout.js"></script>
+<!-- Startseite Skript -->
+<script src="JS/startseite.js"></script>
+<!-- mypersonalbox Skript -->
+<script src="JS/mypersonalbox.js"></script>
+<!-- Profilseite Skript -->
+<script src="JS/profilseite.js"></script>
+<!-- Hauptseite Skript -->
+<script src="JS/hauptseite.js"></script>
+<!-- Veranstaltung Erstellen Skript -->
+<script src="JS/vnErstellen.js"></script>
+<!-- Veranstaltung Bearbeiten Skript -->
+<script src="JS/vnBearbeiten.js"></script>
+<!-- Veranstaltungseite Skript -->
+<script src="JS/veranstaltungseite.js"></script>
+<!-- Karteikarten Skript -->
+<script src="JS/karteikarten.js"></script>
+<!-- Karteikarten Erstellen Skript -->
+<script src="JS/kkErstellen.js"></script>
+<!-- Karteikarten Bearbeiten Skript -->
+<script src="JS/kkBearbeiten.js"></script>
+<!-- Kommentare -->
+<script src="JS/kommentare.js"></script>
+</head>
+<body>
+
+<!-- Div-Container für messages -->
+<div class="msg err"></div>
+<div class="msg success"></div>
+
+<!-- Sind Sie Sicher Dialog -->
+<div id="dialog_sicher_popup_overlay" class="popup_fenster_overlay">
+	<div id="dialog_sicher" class="sindSieSicherContainer hidden">
+		<div class="sindSieSicher_head">
+			<span class="dialog_sicher_titel"><span class="octicon octicon-question"></span> Sind Sie sicher?</span>
+		</div>
+		<div class="sindSieSicher_body">
+			<span id="dialog_sicher_frage"></span>
+		</div>
+		<div class="sindSieSicher_foot">
+			<button id="dialog_sicher_ja" class="dialog_sicher_ja mybutton red"><span class="octicon octicon-check"></span> Ja, weiter</button>
+			<button id="dialog_sicher_nein" class="dialog_sicher_nein mybutton flat"><span class="octicon octicon-x"></span> Nein</button>
+		</div>
+	</div>
+</div>
+
+<!-- Veranstaltung Erstellen Popup Fenster -->
+<div id="vn_erstellen_popup_overlay" class="popup_fenster_overlay">
+	<div id="vn_erstellen_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+			<span class="octicon octicon-plus"></span>
+			<span class="popup_fenster_ueberschrift"> Veranstaltung erstellen</span>
+		</div>
+		<div id="vn_erstellen_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div class="popup_fenster_body">
+			<input class="input_std popup_input" id="vn_erstellen_titel_input" type="text" placeholder="Titel" required>
+			<select class="input_std popup_input" id="vn_erstellen_auswahl_semester"></select>
+			<div class="autoCompleteWrapper">
+ 				<div class="itemlist" id="vn_erstellen_stg_list"></div>
+				<input class="input_std popup_input" id="vn_erstellen_stg_input" type="text" placeholder="Studiengang hinzufügen" required></input>
+			</div>
+			<input class="input_std popup_input" id="vn_erstellen_pass_input" type="password" placeholder="Passwort" required>
+			<div class="autoCompleteWrapper">
+				<div class="itemlist" id="vn_erstellen_mod_list"></div>
+				<input class="input_std popup_input" id="vn_erstellen_mod_input" type="text" placeholder="Moderator hinzufügen" required></input>
+			</div>
+			<div class="flex_container">
+				<div class="popup_fenster_spalte" id="vn_erstellen_bearbeiten_mode">
+					<span class="form_infotext">Moderatoren können:</span>
+					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_keiner_bearb" type="radio"checked>nur Diskussionen verwalten</label></span>
+					<span><label><input name="vn_erstellenMode_radiogb" id="vn_erstellen_mod_bearb" type="radio">Karteikarten und Diskussionen verwalten</label></span>
+				</div>
+				<div class="popup_fenster_spalte">
+					<span><label><input id="vn_erstellen_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
+					<span><label><input id="vn_erstellen_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
+				</div>
+			</div>
+		</div>
+		<div class="popup_fenster_body">
+			<p class="form_infotext">Verfassen Sie eine für jeden sichtbare Beschreibung der Veranstaltung.</p>
+			<textarea class="input_std popup_input" id="vn_erstellen_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="vn_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="vn_erstellen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="vn_erstellen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="vn_erstellen_ok" class="mybutton green">Erstellen</span>
+		</div>
+	</div>
+</div>
+<!-- Veranstaltung Bearbeiten Popup Fenster -->
+<div id="vn_bearbeiten_popup_overlay" class="popup_fenster_overlay">
+	<div id="vn_bearbeiten_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+			<span class="octicon octicon-pencil"></span>
+			<span class="popup_fenster_ueberschrift"> Veranstaltung bearbeiten</span>
+		</div>
+		<div id="vn_bearbeiten_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div class="popup_fenster_body">
+			<input class="input_std popup_input" id="vn_bearbeiten_titel_input" type="text" placeholder="Titel" required>
+			<select class="input_std popup_input" id="vn_bearbeiten_auswahl_semester"></select>
+			
+			<div class="autoCompleteWrapper">
+				<div class="itemlist" id="vn_bearbeiten_stg_list"></div>
+				<input class="input_std popup_input" id="vn_bearbeiten_stg_input" type="text" placeholder="Studiengang hinzufügen" required></input>
+			</div>
+			
+			<label><input id="vn_bearbeiten_passwort_set" type="checkbox"checked> Passwort ist gesetzt</label>
+			<input class="input_std popup_input" id="vn_bearbeiten_pass_input" type="password" placeholder="Passwort" required>
+			
+			<div class="autoCompleteWrapper">
+				<div class="itemlist" id="vn_bearbeiten_mod_list"></div>
+				<input class="input_std popup_input" id="vn_bearbeiten_mod_input" type="text" placeholder="Moderator hinzufügen" required></input>
+			</div>
+			
+			<div class="flex_container">
+				<div class="popup_fenster_spalte" id="vn_bearbeiten_bearbeiten_mode">
+					<span class="form_infotext">Moderatoren können:</span>
+					<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_bearbeiten_keiner_bearb" value = "Nur ich" type="radio"checked>nur Diskussionen verwalten</label></span>
+					<span><label><input name="vn_bearbeitenMode_radiogb" id="vn_bearbeiten_mod_bearb" value = "Ich und Moderatoren"type="radio">Karteikarten und Diskussionen verwalten</label></span>
+				</div>
+				<div class="popup_fenster_spalte">
+					<span><label><input id="vn_bearbeiten_komm_erlaubt" type="checkbox" checked>Kommentare erlaubt</label></span>
+					<span><label><input id="vn_bearbeiten_bew_erlaubt" type="checkbox" checked>Bewertungen erlaubt</label></span>
+				</div>
+			</div>
+		</div>
+		<div class="popup_fenster_body">
+			<span class="form_infotext">Verfassen Sie eine für jeden sichtbare Beschreibung der Veranstaltung.</span>
+			<textarea class="input_std popup_input" id="vn_bearbeiten_beschr_input" placeholder="Beschreibung" required cols="60"></textarea>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="vn_bearbeiten_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="vn_bearbeiten_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="vn_bearbeiten_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="vn_bearbeiten_ok" class="mybutton green">Speichern</span>
+		</div>
+	</div>
+</div>
+
+<!-- Karteikarte Erstellen Popup Fenster -->
+<div id="kk_erstellen_popup_overlay" class="popup_fenster_overlay">
+	<div id="kk_erstellen_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+	 		<span class="octicon octicon-plus"></span>
+			<span class="popup_fenster_ueberschrift"> Karteikarte erstellen</span>
+		</div>
+		<div id="kk_erstellen_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div id="popup_fenster_body1"class="popup_fenster_body">
+			<input class="input_std popup_input" id="kk_erstellen_titel_input" type="text" placeholder="Titel" required>
+ 			<p>
+				<input id="kk_neuesKapitel" type="checkbox" name="attr">
+				<label for="kk_neuesKapitel">
+					Überschrift erstellen
+				</label>
+ 			</p>
+ 			<div id="kk_erstellen_content">
+ 				<p>Fügen Sie entweder Text hinzu um eine Text-Karteikarte zu erzeugen oder laden 
+ 				Sie ein Bild/Video hoch (Text ist dann optional und wird als Bildunterschrift verwendet.)</p>
+	 			<div id="kk_erstellen_text_area">
+	 				<textarea id="kk_erstellen_TA">
+	 				</textarea>
+	 			</div>
+	 			<div class="drop_file_areas dropzone" id="df_area_kk">
+					<form action="/file-upload" class="dropzone" id="file-dropzone">
+						<div class="fallback">
+							<input name="file" type="file" />
+						</div>
+						<div class="dz-message" data-dz-message>
+							<span>
+								Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.
+							</span>
+						</div>
+				    </form>
+						<div class="clearfix"></div>
+	 			</div>
+ 			</div>
+		</div>
+		<div id="popup_fenster_body2" class="popup_fenster_body">
+			<p class="form_infotext">Ändern sie die Attribute Ihrer Karteikarte.</p>
+			<div id="kkE_attributes" class="flex_container">
+				<div class="popup_fenster_spalte">
+					<span>
+						<input id="kkE_attr_satz" type="checkbox">
+						<label for="kkE_attr_satz">Satz</label>
+					</span>
+					<span>
+						<input id="kkE_attr_lemma" type="checkbox">
+						<label for="kkE_attr_lemma">Lemma</label>
+					</span>
+					<span>
+						<input id="kkE_attr_beweis" type="checkbox">
+						<label for="kkE_attr_beweis">Beweis</label>
+					</span>
+					<span>
+						<input id="kkE_attr_def" type="checkbox">
+						<label for="kkE_attr_def">Definition</label>
+					</span>
+					<span>
+						<input id="kkE_attr_wichtig" type="checkbox">
+						<label for="kkE_attr_wichtig">Wichtig</label>
+					</span>
+				</div>
+				<div class="popup_fenster_spalte">
+					<span>
+						<input id="kkE_attr_grundl" type="checkbox">
+						<label for="kkE_attr_grundl">Grundlagen</label>
+					</span>
+					<span>
+						<input id="kkE_attr_zusatz" type="checkbox">
+						<label for="kkE_attr_zusatz">Zusatzinformation</label>
+					</span>
+					<span>
+						<input id="kkE_attr_exkurs" type="checkbox">
+						<label for="kkE_attr_exkurs">Exkurs</label>
+					</span>
+					<span>
+						<input id="kkE_attr_bsp" type="checkbox">
+						<label for="kkE_attr_bsp">Beispiel</label>
+					</span>
+					<span>
+						<input id="kkE_attr_uebung" type="checkbox">
+						<label for="kkE_attr_uebung">Übung</label>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div id="popup_fenster_body3" class="popup_fenster_body">
+			<div class="form_infotext">
+				Wenn Sie möchten können Sie ihre Karteikarte mit anderen Karteikarten verlinken.
+				<br>
+				Wählen Sie zunächst die Art der Verlinkung und markieren Sie dann beliebig viele Karteikarte, die Ziel Ihrer Verlinkung sind.
+				<br>
+				<span class="octicon octicon-info"></span> 
+				Hinweis: Durch Klicken auf Karteikarten können Sie deren direkt untergeordnete Karteikarten anzeigen bzw. ausblenden.
+			</div>
+			<div class="kk_verweise_wrapper">
+				<input type="radio" id="kk_erstellen_verweise_voraussetzung_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio" checked>
+				<label for="kk_erstellen_verweise_voraussetzung_radio" class="kk_verweise_label">
+					Voraussetzung
+				</label>
+				<input type="radio" id="kk_erstellen_verweise_weiterfuehrend_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio">
+				<label for="kk_erstellen_verweise_weiterfuehrend_radio" class="kk_verweise_label">
+					Weiterführend
+				</label>
+				<input type="radio" id="kk_erstellen_verweise_uebung_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio">
+				<label for="kk_erstellen_verweise_uebung_radio" class="kk_verweise_label">
+					Übung
+				</label>
+				<input type="radio" id="kk_erstellen_verweise_sonstige_radio" class="kk_verweise_radio" name="kk_erstellen_verweise_radio">
+				<label for="kk_erstellen_verweise_sonstige_radio" class="kk_verweise_label">
+					Sonstiges
+				</label>
+				<div id="kk_erstellen_verweise_baum_voraussetzung" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
+				<div id="kk_erstellen_verweise_baum_weiterfuehrend" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
+				<div id="kk_erstellen_verweise_baum_uebung" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
+				<div id="kk_erstellen_verweise_baum_sonstige" class="kk_baum kk_verweise_baum kk_erstellen_verweise_baum"></div>
+			</div>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="kk_erstellen_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="kk_erstellen_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="kk_erstellen_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="kk_erstellen_ok" class="mybutton green">Erstellen</span>
+		</div>
+	</div>
+</div>
+<!-- Karteikarte Bearbeiten Popup Fenster -->
+<div id="kk_bearbeiten_popup_overlay" class="popup_fenster_overlay">
+	<div id="kk_bearbeiten_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+	 		<span class="octicon octicon-pencil"></span>
+			<span class="popup_fenster_ueberschrift"> Karteikarte bearbeiten</span>
+		</div>
+		<div id="kk_bearbeiten_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div id="popup_fenster_body4"class="popup_fenster_body">
+			<input class="input_std popup_input" id="kk_bearbeiten_titel_input" type="text" placeholder="Titel" required>
+ 			<p>
+				<input id="kk_jetztNeuesKapitel_b" type="checkbox" name="attr">
+				<label for="kk_jetztNeuesKapitel_b">
+					<!-- Labeltext und ggf. Warnung, dass Inhalt verloren geht hier durch JS gesetzt -->
+				</label>
+ 			</p>
+ 			<div id="kk_bearbeiten_content">
+ 				<p>Fügen Sie entweder Text hinzu um eine Text-Karteikarte zu erzeugen oder laden 
+ 				Sie ein Bild/Video hoch (Text ist dann optional und wird als Bildunterschrift verwendet.)</p>
+	 			<div id="kk_bearbeiten_text_area">
+	 				<textarea id="kk_bearbeiten_TA">
+	 				</textarea>
+	 			</div>
+	 			<div class="drop_file_areas dropzone" id="df_area_kk_b">
+					<form action="/file-upload" class="dropzone" id="file-dropzone">
+						<div class="fallback">
+							<input name="file" type="file" />
+						</div>
+						<div class="dz-message" data-dz-message>
+							<span>
+								Ziehen Sie eine Datei in das Feld oder klicken Sie hier, um ein Bild oder ein Video hochzuladen.
+							</span>
+						</div>
+				    </form>
+					<div class="clearfix"></div>
+	 			</div>
+ 			</div>
+		</div>
+		<div id="popup_fenster_body5" class="popup_fenster_body">
+			<p class="form_infotext">Ändern sie die Attribute Ihrer Karteikarte.</p>
+			<div id="kkB_attributes" class="flex_container">
+				<div class="popup_fenster_spalte">
+					<span>
+						<input id="kkB_attr_satz" type="checkbox">
+						<label for="kkB_attr_satz">Satz</label>
+					</span>
+					<span>
+						<input id="kkB_attr_lemma" type="checkbox">
+						<label for="kkB_attr_lemma">Lemma</label>
+					</span>
+					<span>
+						<input id="kkB_attr_beweis" type="checkbox">
+						<label for="kkB_attr_beweis">Beweis</label>
+					</span>
+					<span>
+						<input id="kkB_attr_def" type="checkbox">
+						<label for="kkB_attr_def">Definition</label>
+					</span>
+					<span>
+						<input id="kkB_attr_wichtig" type="checkbox">
+						<label for="kkB_attr_wichtig">Wichtig</label>
+					</span>
+				</div>
+				<div class="popup_fenster_spalte">
+					<span>
+						<input id="kkB_attr_grundl" type="checkbox">
+						<label for="kkB_attr_grundl">Grundlagen</label>
+					</span>
+					<span>
+						<input id="kkB_attr_zusatz" type="checkbox">
+						<label for="kkB_attr_zusatz">Zusatzinformation</label>
+					</span>
+					<span>
+						<input id="kkB_attr_exkurs" type="checkbox">
+						<label for="kkB_attr_exkurs">Exkurs</label>
+					</span>
+					<span>
+						<input id="kkB_attr_bsp" type="checkbox">
+						<label for="kkB_attr_bsp">Beispiel</label>
+					</span>
+					<span>
+						<input id="kkB_attr_uebung" type="checkbox">
+						<label for="kkB_attr_uebung">Übung</label>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div id="popup_fenster_body6" class="popup_fenster_body">
+			<div class="form_infotext">
+				Wenn Sie möchten können Sie ihre Karteikarte mit anderen Karteikarten verlinken.
+				<br>
+				Wählen Sie zunächst die Art der Verlinkung und markieren Sie dann beliebig viele Karteikarte, die Ziel Ihrer Verlinkung sind.
+				<br>
+				Hinweis: Durch Klicken auf Karteikarten können Sie deren direkt untergeordnete Karteikarten anzeigen bzw. ausblenden.
+			</div>
+			<div class="kk_verweise_wrapper">
+				<input type="radio" id="kk_bearbeiten_verweise_voraussetzung_radio" class="kk_verweise_radio" name="kk_bearbeiten_verweise_radio" checked>
+				<label for="kk_bearbeiten_verweise_voraussetzung_radio" class="kk_verweise_label">
+					Voraussetzung
+				</label>
+				<input type="radio" id="kk_bearbeiten_verweise_weiterfuehrend_radio" class="kk_verweise_radio" name="kk_bearbeiten_verweise_radio">
+				<label for="kk_bearbeiten_verweise_weiterfuehrend_radio" class="kk_verweise_label">
+					Weiterführend
+				</label>
+				<input type="radio" id="kk_bearbeiten_verweise_uebung_radio" class="kk_verweise_radio" name="kk_bearbeiten_verweise_radio">
+				<label for="kk_bearbeiten_verweise_uebung_radio" class="kk_verweise_label">
+					Übung
+				</label>
+				<input type="radio" id="kk_bearbeiten_verweise_sonstige_radio" class="kk_verweise_radio" name="kk_bearbeiten_verweise_radio">
+				<label for="kk_bearbeiten_verweise_sonstige_radio" class="kk_verweise_label">
+					Sonstiges
+				</label>
+				<div id="kk_bearbeiten_verweise_baum_voraussetzung" class="kk_baum kk_verweise_baum kk_bearbeiten_verweise_baum"></div>
+				<div id="kk_bearbeiten_verweise_baum_weiterfuehrend" class="kk_baum kk_verweise_baum kk_bearbeiten_verweise_baum"></div>
+				<div id="kk_bearbeiten_verweise_baum_uebung" class="kk_baum kk_verweise_baum kk_bearbeiten_verweise_baum"></div>
+				<div id="kk_bearbeiten_verweise_baum_sonstige" class="kk_baum kk_verweise_baum kk_bearbeiten_verweise_baum"></div>
+			</div>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="kk_bearbeiten_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="kk_bearbeiten_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="kk_bearbeiten_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="kk_bearbeiten_ok" class="mybutton green">Änderungen speichern</span>
+		</div>
+	</div>
+</div>
+
+<!-- Elemente fuer kleine Bildschirme -->
+<div class="r-header"></div>
+<input id="r-checkbox" class="r-checkbox" type="checkbox">
+<label class="r-toggle lines-button x" for="r-checkbox" onclick="naviconTransformicon()">
+	<span class="lines"></span>
+</label>
+<label for="suche_global_input" class="r-suche_etwas_label">
+	<span class="mega-octicon"></span>
+</label>
+<input id="r-kk-inhaltsvz-checkbox" class="r-kk-inhaltsvz-checkbox" type="checkbox">
+<label class="r-kk-inhaltsvz-toggle" for="r-kk-inhaltsvz-checkbox">
+	<span class="mega-octicon"></span>
+</label>
+<label class="r-kk-inhaltsvz-toggle-screensize-m" for="r-kk-inhaltsvz-checkbox">
+	<span class="mega-octicon octicon-unfold"></span>
+</label>
+<label class="r-overlay" for="r-checkbox" onclick="naviconTransformicon()"></label>
+
+<!-- Container für die Startseite -->
+<div id="mypersonalbox_startseite" class="mypersonalbox card">
+
+	<div class="card_title">Start</div>
+
+	<form id="login_form">
+		<input id="login_email" class="input_std login_input" type="email" name="email" placeholder="E-Mail" required autofocus> <br>
+		<input id="login_pass" class="input_std login_input login_pass" type="password" name="passwort" placeholder="Passwort" required>
+		<input id="login_submit" class="mybutton dark loginbutton" type="submit" value="Login">
+	</form>
+	
+	<a id="pwreset">Passwort zurücksetzen</a>
+	
+	<form id="registrieren_form">
+		<p>
+		<input id="reg_pass" class="input_std login_input" type="password" name="passwort_wdh" placeholder="Passwort wiederholen" required> <br>
+		<input id="reg_vorname" class="input_std login_input" type="text" name="vorname" placeholder="Vorname" required> <br>
+		<input id="reg_nachname" class="input_std login_input" type="text" name="nachname" placeholder="Nachname" required> <br>
+		<input id="reg_matnr" class="input_std login_input" type="text" name="matrikelnummer" placeholder="Matrikelnummer" required> <br>
+		<select id="reg_studiengang" class="input_std login_input" form="registrieren_form" required></select> <br>
+		<input id="reg_submit" class="mybutton dark flat regbutton" type="submit" value="Registrieren">
+		</p>
+	</form>
+</div>
+
+<div id="mypersonalbox_main" class="mypersonalbox card">
+
+	<!-- <img id="loadingDiv" src="files/general/ajaxLoader.gif" style="width:50px;position: absolute;top: 0.5em;left: 0.5em;" /> -->
+	<div id="loadingDiv"></div>
+
+	<a class="return tiptrigger tipright" data-tooltip="Zurück zur Hauptseite"><span class="mega-octicon octicon-chevron-left"></span></a>
+
+	<!-- Elemente fuer mittelgrosse Bildschirme -->
+	<div class="r-return"></div>
+
+	<input id="r-usercontainer-toggle-radio" type="radio" name="r-mypersonalbox">
+	<label class="r-usercontainer-toggle tiptrigger tipright" for="r-usercontainer-toggle-radio" data-tooltip="Benutzer">
+		<span class="mega-octicon octicon-person"></span>
+	</label>
+	<input id="r-usercontainer-toggle-radio-off" type="radio" name="r-mypersonalbox">
+	<label class="r-usercontainer-toggle-off" for="r-usercontainer-toggle-radio-off"></label>
+	<input id="r-bn-toggle-radio" type="radio" name="r-mypersonalbox">
+	<label class="r-bn-toggle tiptrigger tipright" for="r-bn-toggle-radio" data-tooltip="Benachrichtugungen">
+		<span class="r-bn_anzahl bn_anzahl"></span>
+		<span class="mega-octicon octicon-pulse"></span>
+	</label>
+	<input id="r-bn-toggle-radio-off" type="radio" name="r-mypersonalbox">
+	<label class="r-bn-toggle-off" for="r-bn-toggle-radio-off"></label>
+			
+	<div class="user_container">
+		<img class="user_MyProfilBild" alt="profilBild" src="files/profilBilder/default.png"><br>
+		<a class="username tiptrigger tipabove" data-tooltip="Eigenes Profil ansehen und bearbeiten"></a>
+		<br>
+		<span><span class="octicon octicon-key"></span><span class="rolle"></span></span>
+		<a id="logout"><span class="octicon octicon-sign-out"></span><span class="logout">Logout</span></a>
+	</div>
+	
+	<div class="bn_full">
+		<span class="bn_header" id="bn-header" style="cursor: pointer;">
+			<span class="octicon octicon-pulse"></span> BENACHRICHTIGUNGEN
+			<span id="bn_anzahl" class="bn_anzahl"></span>
+		</span>
+		<div class="bn_container" id="bn_container"> <!-- Wrapping div for JQuery's slideUp Function, that can only deal with divs -->
+			<div class="bn" id="keine_bn">
+				<span class="bn_text">Keine Benachrichtigungen verfügbar.</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="mainbox_startseite" class="mainbox">
+	
+</div>
+
+<div id="mainbox_hauptseite" class="mainbox">
+	<div class="autoCompleteWrapper">
+		<input id="suche_global_input" class="suche_etwas input_std" type="text" autocomplete="off" placeholder="Suche nach Personen und Veranstaltungen..." required>
+	</div>
+	<div class="hauptseite_head">
+		<span id="vn_erstellen_bt" class="mybutton green"><span class="octicon octicon-plus"></span> </span>
+	</div>
+	<div class="vn_tab_container">
+		<input id="vn_tab_meine" type="radio" name="vn_tab_set" class="vn_tab_meine_radio" checked>
+		<label for="vn_tab_meine" class="vn_tab_meine_label"><span class="mega-octicon octicon-home"></span> Meine</label>
+		<input id="vn_tab_alle" type="radio" name="vn_tab_set" class="vn_tab_alle_radio">
+		<label for="vn_tab_alle" class="vn_tab_alle_label"><span class="mega-octicon octicon-list-unordered"></span> Alle</label>
+		<div class="vn_tab_content">
+			<div id="vn_tabcontent_meine" class="vn_tabcontent_meine">
+				<div class="vn_toolbar">
+					Hier finden Sie Veranstaltungen, in die Sie eingeschrieben sind.
+				</div>
+				<!-- Veranstaltungen hier -->
+			</div>
+			<div id="vn_tabcontent_alle" class="vn_tabcontent_alle">
+				<div class="vn_toolbar">
+					Hier finden Sie alle Veranstaltungen im System. Bitte wählen Sie ein Semester und einen Studiengang.<br>
+					<select id="vn_alle_auswahl_semester"></select>
+					<select id="vn_alle_auswahl_studiengang"></select>
+				</div>
+				<!-- Veranstaltungen hier -->
+			</div>
+		</div>
+	</div>
+	<div class="impressum">
+		Uni Ulm <br> 
+		WiSe 14/15, SoSe 15 <br> 
+		Informatik <br> 
+		Softwaregrundprojekt <br> 
+		Team 17: Andreas Rottach, Matthias Englert <br> 
+		Team 23: Julius Friedrich, Lorenz Weiß, Marius Kircher
+	</div>
+</div>
+
+<div id="mainbox_profilseite" class="mainbox">
+	<div class="flex_container">
+		<div class="profil_head">
+			<div class="profil_avatar">
+				<form id="profil_avatar_aendern_form">
+					<img class="profil_avatar_img" alt="profilBild" src="files/profilBilder/default.png">
+					<div class="profil_kurzinfo">
+						<label for="profil_avatar_aendern_file" class="profil_avatar_overlay"><span class="mega-octicon octicon-pencil"></span></label>
+						<input id="profil_avatar_aendern_file" type="file" name="file" style="display:none">
+						<span class="profil_benutzername"></span><br>
+						<span id="profil_avatar_aendern_file_name"></span><br>
+						<input id="profil_avatar_submit" type="submit" value="Avatar hochladen" class="mybutton dark" style="display:none">
+						<span class="profil_avatar_loeschen" id="profil_avatar_loeschen_bt">
+							<a><span class="octicon octicon-trashcan"></span> Profilbild löschen</a>
+						</span>
+					</div>
+				</form>
+			</div>
+			<span class="profil_loeschen" id="profil_loeschen_bt"><span class="mybutton red">Konto löschen</span></span>
+		</div>
+		<div class="profil_daten card flex_elem">
+			<div class="card_title">Profil</div>
+			
+			<form id="profil_daten_form">
+				<div id="profil_email"><label class="profil_label" for="profil_email_input">E-Mail</label><input id="profil_email_input" class="profil_input" type="email" required></div>
+				<div id="profil_vorname"><label class="profil_label" for="profil_vorname_input">Vorname</label><input id="profil_vorname_input" class="profil_input" type="text" required></div>
+				<div id="profil_nachname"><label class="profil_label" for="profil_nachname_input">Nachname</label><input id="profil_nachname_input" class="profil_input" type="text" required></div>
+				<div id="profil_matrikelnummer"><label class="profil_label" for="profil_matnr_input">Matrikelnummer</label><input id="profil_matnr_input" class="profil_input" type="text" required></div>
+				<div id="profil_studiengang">
+					<label class="profil_label" for="profil_studiengang_input">Studiengang</label>
+					<select id="profil_studiengang_input" class="profil_input">
+					</select>
+				</div>
+				
+				<div id="profil_rolle">
+					<label class="profil_label" for="profil_rolle_input">Rolle</label>
+					<select id="profil_rolle_input" class="profil_input">
+						<option>STUDENT</option>
+						<option>DOZENT</option>
+						<option>ADMIN</option>
+					</select>
+				</div>
+				
+				<div id="profil_einstellungen" class="profil_einstellungen">
+					<div class="card_title">Einstellungen</div>
+					<div class="profil_notifyKommentare">
+						<div class="form_infotext">Benachrichtigungen über Kommentare...</div>
+						<div><input id="notifyKommentare_input_teilgenommen" name="profil_notifyKommentareRb" type="radio" value="VERANSTALTUNG_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_teilgenommen">immer.</label></div>
+						<div><input id="notifyKommentare_input_diskussionen" name="profil_notifyKommentareRb" type="radio" value="DISKUSSION_TEILGENOMMEN"><label class="profil_label" for="notifyKommentare_input_diskussionen">nur bei Diskussionen, an denen ich teilgenommen habe.</label></div>
+						<div><input id="notifyKommentare_input_nie" name="profil_notifyKommentareRb" type="radio" value="KEINE"><label class="profil_label" for="notifyKommentare_input_nie">niemals.</label></div>
+					</div>
+					<div class="profil_notifyAenderungen">
+						<div class="form_infotext">Benachrichtigungen über Änderungen in...</div>
+						<div><input id="notifyVeranstAenderung_input" type="checkbox"><label class="profil_label" for="notifyVeranstAenderung_input">Veranstaltungen.</label></div>
+						<div><input id="notifyKarteikartenAenderung_input" type="checkbox"><label class="profil_label" for="notifyKarteikartenAenderung_input">Karteikarten.</label></div>
+					</div>
+				</div>
+				
+				<input id="profil_daten_speichern" class="mybutton dark" type="submit" value="Speichern">
+			</form>
+		</div>
+		<div id="profil_passwort" class="profil_passwort card flex_elem">
+			<form id="profil_passwort_form">
+				<div class="card_title">Passwort</div>
+				<div id="profil_pw_alt_div"><span><label class="profil_label" for="profil_passwort_alt_input">Altes Passwort</label><input id="profil_passwort_alt_input" class="profil_input" type="password" required></span></div>
+				<div><span><label class="profil_label" for="profil_passwort_input">Passwort</label><input id="profil_passwort_input" class="profil_input" type="password" required></span></div>
+				<div><span><label class="profil_label" for="profil_passwort_wdh_input">Passwort wiederholen</label><input id="profil_passwort_wdh_input" class="profil_input" type="password" required></span></div>
+				<input id="profil_passwort_speichern" class="mybutton dark" type="submit" value="Speichern">
+			</form>
+		</div>
+		<div class="profil_farbschema_auswahl card flex_elem">
+			<div class="card_title">Farbschema</div>
+			<input type="checkbox" class="farbschema_toggle_checkbox" id="farbschema_toggle_checkbox">
+			<label for="farbschema_toggle_checkbox" class="farbschema_toggle_label" id="farbschema_toggle_label">NACHT</label>
+		</div>
+	</div>
+</div>
+
+
+<div id="mainbox_veranstaltungsseite" class="mainbox">
+	<div class="vn_header">
+		<input id="vn_attributliste_anzeigen_checkbox" type="checkbox">
+		<span id="vn_title"></span>
+		<label id="vn_attributliste_anzeigen" for="vn_attributliste_anzeigen_checkbox">
+			<span class="octicon octicon-triangle-down"></span>
+		</label>
+		<button id="vn_loeschen" class="mybutton red"><span class="octicon octicon-trashcan"></span></button>
+		<div class="vn_attributliste">
+			<span id="vn_attr_semester"></span><br>
+			<span id="vn_attr_studgang"></span><br>
+			<span id="vn_attr_ersteller"></span><br>
+			<span id="vn_attr_moderatoren"></span><br>
+			<span id="vn_attr_bewertungen_erlaubt"></span><br>
+			<span id="vn_attr_kommentare_erlaubt"></span><br>
+			<span id="vn_attr_modbearb_erlaubt"></span><br>
+		</div>
+		<button id="vn_bearbeiten" class="mybutton dark flat"><span class="octicon octicon-pencil"></span> Bearbeiten</button>
+		<button id="kk_export" class="mybutton dark flat"><span class="octicon octicon-cloud-download"></span> Exportieren</button>
+		<div id="vn_rechte_info"></div>
+	</div>
+
+	<div id="kk_inhaltsverzeichnis" class="kk_baum">
+		<div id="kk_inhaltsverzeichnis_titel"></div>
+		<!-- Inhaltsverzeichnis hier -->
+	</div>
+	<div id="kk_body">
+		<div class = "kk_load kk_load_pre"> <span class="mega-octicon octicon-chevron-up"></span> </div>
+		<div id="kk_all">
+			<!-- Karteikartencontainer -->
+		</div>
+		<div class = "kk_load kk_load_after"> <span class="mega-octicon octicon-chevron-down"></span> </div>
+	</div>
+</div>
+
+<!-- Template Dropzone Uploaded Image -->
+<div id="kk_PreviewTemplate" class="dz-preview center dz-image-preview" style="display:none;">
+		<div class="dz-details">
+			<img data-dz-thumbnail style="width:120px;max-height:120px;"/>
+			<div class="dz-filename">
+				<span data-dz-name></span>
+			</div>
+			<div class="dz-size" data-dz-size></div>
+		</div>
+		<div class="dz-progress">
+			<span class="dz-upload" data-dz-uploadprogress></span>
+		</div>
+		<br><a data-dz-remove>Datei entfernen</a>
+</div>
+
+<!-- Template Karteikarte -->
+<div id="templatekarteikarte" class="kk_wrapper" style="display:none">
+	<div style="display:table-row">
+		<div class="kk_buttonbar">
+			<div class="kk_votes">
+				<a class="kk_voteup"><span class="mega-octicon octicon-triangle-up"></span></a>
+				<div class="kk_votestat">0</div>
+				<a class="kk_votedown"><span class="mega-octicon octicon-triangle-down"></span></a>
+			</div>
+			<div class="kk_optionen">
+				<a class="kk_option permalink tiptrigger tipabove" data-tooltip="Link kopieren">
+					<span class="octicon octicon-link"></span>
+				</a>
+				<a class="kk_option KKbearbeiten tiptrigger tipabove" data-tooltip="Karteikarte bearbeiten">
+					<span class="octicon octicon-pencil"></span>
+				</a>
+				<a class="kk_option KKloeschen tiptrigger tipabove" data-tooltip="Karteikarte löschen">
+					<span class="octicon octicon-trashcan"></span>
+				</a>
+			</div>
+		</div>
+		<div class="kk_inhalt_wrapper">
+			<div class="kk_titel">Karteikarten-Titel</div>
+			<div class="kk_inhalt">
+				<!-- Text, Bild oder Video hier -->
+			</div>
+		</div>
+	</div>
+	<div style="display:table-row">
+		<div class="tabelleLueckenfueller"></div>
+		<div class="kk_info">
+			<div class="kk_info_body_wrapper">
+				<span class="kk_info_attr">
+					<!-- Attribute Chips hier -->
+				</span>
+				<span class="kk_rel_vorraus">
+					<!-- Verweislinks hier -->
+				</span>
+				<br>
+				<span class="kk_rel_zusatz">
+					<!-- Verweislinks hier -->
+				</span><br>
+				<span class="kk_rel_uebung">
+					<!-- Verweislinks hier -->
+				</span><br>
+				<span class="kk_rel_sonstiges">
+					<!-- Verweislinks hier -->
+				</span>
+			</div>
+		</div>
+	</div>
+	<div style = "display:table-row">
+		<div class="tabelleLueckenfueller"></div>
+		<div class="komm_notiz_box card">
+			<input type="radio" id="kk_komm_radio" class="kk_tabs_radio kk_komm_radio" name="kk_tabs">
+			<label class="kk_kommheader kk_tabs_label" for="kk_komm_radio">
+				<span class="kk_kommheader_refresh tiptrigger tipabove" data-tooltip="Kommentare neu laden"><span class="octicon octicon-sync"></span></span>
+				<span class="octicon octicon-comment-discussion"></span> Kommentare
+				<span class="kk_kommzaehler">0</span>
+			</label>
+			<input type="radio" id="kk_notizen_radio" class="kk_tabs_radio kk_notizen_radio" name="kk_tabs">
+			<label class="kk_notizen_head kk_tabs_label" for="kk_notizen_radio">
+				<span class="octicon octicon-light-bulb"></span> Notizen
+				<span class='kk_notiz_gesetzt_wrapper tiptrigger tipabove' data-tooltip='Notiz vorhanden'></span>
+			</label>
+			<div class="kk_kommbox">
+				<div class="kk_kommbody">
+					<div class="kk_kommerstellen">
+						<a class="komm_submit_bt">
+							<span class="octicon octicon-comment"></span>
+							<br>
+							Erstellen
+						</a>
+						<div class="antw" contenteditable="true"></div>
+					</div>
+					<div class="clearfix"></div>
+					<div class="kk_kommList">
+						<!-- Themen-Kommentare hier -->
+					</div>
+				</div>
+			</div>
+			<div class="kk_notizen">
+				<div class="kk_notizen_body_wrapper">
+					<textarea class="kk_notizen_body"></textarea>
+					<div class="kk_notizen_foot">
+						<div class="kk_notizen_speichern">Änderungen speichern</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Template Kommentare -->
+<div class="kk_superkomm" id="templateSuperKomm" data-komm-id="" style="display:none">
+	<div class="kk_kommvotes">
+		<a class="komm_voteup"><span class="octicon octicon-triangle-up"></span></a>
+		<div class="komm_votestat">3</div>
+		<a class="komm_votedown"><span class="octicon octicon-triangle-down"></span></a>
+	</div>
+	<img class="kk_komm_profilBild" style="width: 43px;height: 43px;" alt="profilBild" src=""/>
+	<div class="kk_komm_loeschen">
+		<a><span class="octicon octicon-trashcan"></span></a>
+	</div>
+	<span class="kommInhalt"></span>
+	<div class="kk_komminfo">
+		<a class="kommAuthor">Matthias Englert</a>
+		<span class="kommDatum">28. Jan '15 um 15:29</span>
+	</div>
+	<div class="clearfix"></div>
+	<div class="antwAnzeigen">
+		<span class ="AntwPfeil octicon octicon-triangle-up hidden"></span>
+		Antworten: <span class="subKommCount">0</span>
+	</div>
+	<div>
+		<div class="kk_kommantwort">
+			<a class="komm_submit_bt">
+				<span class="octicon octicon-mail-reply"></span>
+				<br>
+				Antworten
+			</a>
+			<div class="antw" contenteditable="true"></div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="subkommentare" style="display:none">
+			<!-- Antwort-Kommentare hier -->
+		</div>
+	</div>
+</div>
+<!-- Template subkommentar -->
+<div class="kk_subkomm" id="templateSubKomm" data-komm-id="" style="display:none">
+	<img class="kk_komm_profilBild" alt="profilBild" src="" />
+	<div class="kk_komm_loeschen">
+		<a><span class="octicon octicon-trashcan"></span></a>
+	</div>
+	<span class="kommInhalt"></span>
+	<div class="kk_komminfo"><a class="kommAuthor">Jan Willem Liebezeit</a><span class="kommDatum">28. Jan '15 um 16:29</span></div>
+	<div class="clearfix"></div>
+</div>
+
+<!-- LinkCopy Popup Fenster -->
+<div id="link_copy_popup_overlay" class="popup_fenster_overlay">
+	<div id="link_copy_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+<!-- 			<span class="octicon octicon-podium"></span> -->
+			<span class="popup_fenster_ueberschrift">Link kopieren</span>
+		</div>
+		<div id="link_copy_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div class="popup_fenster_body">
+			<div>
+				<h3>Hier ist Ihr Link:</h3><br>
+				<p id="link_copy_data"></p><br>
+				<span id="link_copy_to_cb" class="mybutton green">In Zwischenablage kopieren</span>
+			</div>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="link_copy_ok" class="mybutton green">Schließen</span>
+		</div>
+	</div>
+</div>
+
+<!-- Karteikarten Export Popup -->
+<div id="kk_export_popup_overlay" class="popup_fenster_overlay">
+	<div id="kk_export_popup" class="popup_fenster hidden">
+	 	<div class="popup_fenster_titel">
+			<span class="octicon octicon-cloud-download"></span>
+			<span class="popup_fenster_ueberschrift"> Karteikarten exportieren</span>
+		</div>
+		<div id="kk_export_popup_close" class="popup_fenster_close">
+			<span class="octicon octicon-x"></span>
+		</div>
+		<div class="popup_fenster_body">
+			<h2>Information</h2>
+			<p>Hier können Sie ein Vorlesungsscript als PDF oder Tex file exportieren.<br> 
+			Bitte beachten Sie: Video-Karteikarten werden beim Export nicht konvertiert. 
+			Außerdem ist es möglich, dass die Konvertierungsregel für ein Sonderzeichen nicht gespeichert ist. 
+			Dann wird der Kompilierungsvorgang fehlschlagen. Sie haben jedoch trotzdem die Möglichkeit, 
+			das erzeugte Tex-Dokument herunterzuladen. </p>
+			<br>
+			<h2>Einstellungen</h2>
+			<p>Nehmen Sie hier alle Einstellungen für den Export vor.</p>
+			<fieldset>
+    			<legend>Export-Daten</legend>
+				<input type="checkbox" id="kk_export_opt_kk" disabled checked="checked"><label for="kk_export_opt_kk">Karteikarteninhalt exportieren</label><br>
+				<input type="checkbox" id="kk_export_opt_notizen"><label for="kk_export_opt_notizen">Notizen exportieren (Als Paragraph-Block unter dem eigentlichen Inhalt)</label><br>
+				<input type="checkbox" id="kk_export_opt_attrAnz"><label for="kk_export_opt_attrAnz">Attribute exportieren (Werden als Fußnoten angehängt)</label><br>
+				<input type="checkbox" id="kk_export_opt_Querverweise"><label for="kk_export_opt_Querverweise">Querverweise exportieren (Als Paragraph-Block unter dem eigentlichen Inhalt)</label><br>
+			</fieldset>
+		</div>
+		<div class="popup_fenster_body" style="text-align:center">
+			<span id="kk_start_export" class="mybutton green">PDF erstellen</span>
+			<div class="load_kk_export" style="display:none">
+				
+			</div>
+			<div class="kk_export_files" style="display:none">
+				<p> Hier finden Sie Ihre exportierten Dateien:</p>
+				<p id="kk_export_error" style="display: none;color:red">Die PDF konnte nicht erzeugt werden. Hier erhalten sie ihr Tex-Dokument.</p>
+				<span><a class = "kk_export_pdf_link" target="_blank" href="">
+				<span class="mega-octicon really-more-mega octicon-cloud-download"></span><br>
+				PDF-Datei</a></span><br>
+				<span><a class = "kk_export_tex_link" target="_blank" href=""><span class="mega-octicon really-more-mega octicon-cloud-download"></span><br>
+				TEX-Datei</a></span>
+			</div>
+		</div>
+		<div class="popup_fenster_foot">
+			<span id="kk_export_cancel" class="mybutton dark flat">Abbrechen</span>
+			<span id="kk_export_zurueck" class="mybutton dark"><span class="octicon octicon-chevron-left"></span> Zurück</span>
+			<span id="kk_export_weiter" class="mybutton dark">Weiter <span class="octicon octicon-chevron-right"></span></span>
+			<span id="kk_export_ok" class="mybutton green">Schließen</span>
+		</div>
+	</div>
+</div>
+</body>
+
+</html>

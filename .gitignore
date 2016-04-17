@@ -1,9 +1,0 @@
-*.aux
-*.log
-*.synctex.gz
-*.toc
-~*
-/bin/
-/build/
-/.classpath
-/.project

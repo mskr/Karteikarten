@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: errorHandler.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: errorHandler.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author Andreas, Marius
+ */
+
+/**
+ * Diese Funktion zeigt einen roten oder gruenen Balken
+ * am oberen Bildschirmrand an, der eine Fehler-
+ * oder auch eine Erfolgsmeldung enthaelt.
+ * @param isError true falls es sich um eine Fehlermeldung handelt, false andernfalls
+ * @param text anzuzeigende Meldung
+ */
+function message(isError, text) {
+	var elemClass;
+    if(isError) {
+    	elemClass = ".err";
+    	$(".success").hide();
+    } else {
+    	elemClass = ".success";
+    	$(".err").hide();
+    }
+    $(elemClass).html(text);
+    if( !$(elemClass).is(":visible") ) {
+//        $(elemClass).show().fadeOut(5000);
+        $(elemClass).slideDown("fast", function() {
+            setTimeout(function() {
+                $(elemClass).slideUp("slow");
+            }, 3000);
+        });
+    } else {
+        $(elemClass).stop();
+        $(elemClass).css("opacity","1");
+        $(elemClass).fadeOut(5000);
+    }
+}
+
+// Speichert mehrere Meldungen in einer Warteschlange
+var messageQueue = [];
+// Dauer in Millisekunden, die eine Meldung angezeigt werden soll
+var messageTimer;
+// Speichert, ob aktuell eine Meldung angezeigt wird
+var laeuftGerade = false;
+
+/**
+ * Ruft sich in regelmaessigen Zeitabstaenden selbst auf, um die naechste Meldung anzuzeigen.
+ */
+function bearbeiteMessageQueue()
+{
+	if(showNextMessage())
+	{
+		messageTimer = setTimeout(bearbeiteMessageQueue, 3000);
+		laeuftGerade = true;
+	}
+	else
+	{
+		clearTimeout(messageTimer);
+		laeuftGerade = false;
+	}
+}
+/**
+ * Beginnt die Verarbeitung der Meldungen. Tut nichts, wenn die Verarbeitung schon laeuft.
+ */
+function startMessageQueue()
+{
+	if(laeuftGerade)
+		return;
+	bearbeiteMessageQueue();
+}
+/**
+ * Leert die Queue und verarbeitet keine weiteren Meldungen.
+ */
+function clearMessageQueue()
+{
+	messageQueue = [];
+	clearTimeout(messageTimer);
+	laeuftGerade = false;
+}
+
+/**
+ * Fügt eine neue Nachricht in die Queue ein. Schon vorhandene Nachrichten werden ignoriert.
+ * @param errorTxt
+ * @param type
+ */
+function addMessageToQueue(errorTxt, isError)
+{
+	obj = {}
+	obj["txt"] = errorTxt;
+	obj["type"] = isError;
+	
+	// Existiert diese meldung schon?
+	for (i = 0; i &lt; messageQueue.length; i++ )
+    {
+        if (messageQueue[i]["txt"] == errorTxt)
+        {
+            return;
+        }
+    }
+	
+	messageQueue.push(obj);
+}
+/**
+ * Holt die nächste Nachricht aus der Queue und zeigt sie an.
+ * @returns {Boolean} true falls weitere Meldungen warten
+ */
+function showNextMessage()
+{
+	if(messageQueue.length == 0)
+		return false;
+	
+	obj = messageQueue.shift();
+	
+	if(obj == undefined)
+		return false;
+	
+	// Meldung anzeigen
+	message(obj["type"],obj["txt"]);
+
+	if(messageQueue.lenght == 0)
+		return false;
+	else
+		return true;
+}
+
+/**
+ * Wrapper für message(0,...)
+ * @param errorTxt
+ */
+function showError(errorTxt) {
+	console.log("[ERROR] " + errorTxt);
+	addMessageToQueue(errorTxt,true);
+	startMessageQueue();
+}
+
+/**
+ * Wrapper für message(1,...)
+ * @param intoTxt
+ */
+function showInfo(intoTxt) {
+	addMessageToQueue(intoTxt,false);
+	startMessageQueue();
+}
+
+/**
+ * Uebersetzt Error Codes in fuer Benutzer angemessene Fehlermeldungen und zeigt diese an.
+ * In einigen Faellen sendet der Server eine solche Fehlermeldung zusaetzlich zum Error Code mit.
+ * In diesen Faellen wird diese Fehlermeldung angezeigt. 
+ * Andernfalls wird eine hier als String gespeicherte Fehlermeldung angezeigt. 
+ * Bei 'notloggedin' leitet diese Funktion den Benutzer zur Startseite weiter.
+ * Bei 'notallowed' leitet diese Funktion den Benutzer zur Hauptseite weiter.
+ * @param errorCode Error Code
+ * @param msg Fehlermeldung
+ */
+function handleError(errorCode,msg) {
+	switch (errorCode)
+	{
+		case "systemerror": 
+			if(msg == undefined)
+				showError("Ein interner Serverfehler ist aufgetreten. " +
+						"Versuchen Sie es erneut. " +
+						"Wenn der Fehler weiterhin besteht, wenden Sie sich an den Administrator.");
+			else
+				showError(msg);
+			break;
+		case "invalidparam": 
+			if(msg == undefined)
+				showError("Der Server hat unerwartete Eingaben erhalten, die er nicht verarbeiten kann. " +
+						"Bitte machen Sie andere Eingaben.");
+			else
+				showError(msg);
+			break;
+		case "notloggedin": 
+            if(msg == undefined)
+                showError("Sie sind nicht eingeloggt.");
+            else
+                showError(msg);
+            // Benutzer Objekt loeschen
+			jsonBenutzer = undefined;
+			gotoStartseite();
+			break;
+		case "loginfailed": 
+			if(msg == undefined)
+				showError("Dieser Benutzer wurde in der Datenbank nicht gefunden.");
+			else
+				showError(msg);
+			break;
+		case "registerfailed": 
+			if(msg == undefined)
+				showError("Die angegebenen Daten konnten nicht registriert werden. Bitte geben Sie andere Daten ein.");
+			else
+				showError(msg);
+			break;
+		case "emailalreadyinuse": 
+			if(msg == undefined)
+				showError("Diese E-Mail Adresse ist bereits vergeben.");
+			else
+				showError(msg);
+			break;
+		case "pwresetfailed": 
+			if(msg == undefined)
+				showError("Ihr Passwort konnte nicht zurueckgesetzt werden.");
+			else
+				showError(msg);
+			break;
+		case "sessionexpired": 
+			if(msg == undefined)
+				showError("Sie wurden automatisch ausgeloggt, da sie zu lange inaktiv waren.");
+			else
+				showError(msg);
+			break;
+		case "notallowed":
+			if(msg == undefined)
+				showError("Zugriff verweigert. Sie haben nicht die erforderlichen Rechte.");
+			else
+				showError(msg);
+			
+			gotoHauptseite();
+			break;
+		default: 
+			if(msg == undefined)
+				showError("Unbekannter Fehler. Error Code = "+errorCode);
+			else
+				showError(msg);
+		break;
+	}
+}
+
+/**
+ * Prueft ob eine gegebene Serverantwort fehlerfrei ist.
+ * @param jsonResponse Antwortobjekt (JSON)
+ * @param specialErrorHandlingFkt Spezialbehandlung fuer einen gegebenen Errorcode.
+ * Dieser Callback muss true zurueckgeben, falls der Fehler nicht mehr anderweitig 
+ * bearbeitet werden soll (insb. durch eine Fehlermeldung).
+ * @returns true, falls fehlerfrei
+ */
+function verifyResponse(jsonResponse, specialErrorHandlingFkt) 
+{
+	if(jsonResponse["error"] != "noerror")
+	{
+		var processed = false;
+		
+		if(specialErrorHandlingFkt != undefined)
+			processed = specialErrorHandlingFkt(jsonResponse["error"], jsonResponse);
+		
+		if(!processed)
+			handleError(jsonResponse["error"], jsonResponse[errorMsg]);	
+		
+		return false;
+	}
+	
+	return true;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addBenachrichtigung">addBenachrichtigung</a></li><li><a href="global.html#addItemToList">addItemToList</a></li><li><a href="global.html#addMessageToQueue">addMessageToQueue</a></li><li><a href="global.html#adminServlet">adminServlet</a></li><li><a href="global.html#ajaxCall">ajaxCall</a></li><li><a href="global.html#autoComplete">autoComplete</a></li><li><a href="global.html#bearbeiteMessageQueue">bearbeiteMessageQueue</a></li><li><a href="global.html#buildKarteikarte">buildKarteikarte</a></li><li><a href="global.html#buildUrlQuery">buildUrlQuery</a></li><li><a href="global.html#changeCSS">changeCSS</a></li><li><a href="global.html#checkConnection">checkConnection</a></li><li><a href="global.html#checkIfAllowedVn">checkIfAllowedVn</a></li><li><a href="global.html#clearBenachrichtigungen">clearBenachrichtigungen</a></li><li><a href="global.html#clearMessageQueue">clearMessageQueue</a></li><li><a href="global.html#concatStrArr">concatStrArr</a></li><li><a href="global.html#createAndFillKommentar">createAndFillKommentar</a></li><li><a href="global.html#createAttrStr">createAttrStr</a></li><li><a href="global.html#currentProfilID">currentProfilID</a></li><li><a href="global.html#destroyCKeditors">destroyCKeditors</a></li><li><a href="global.html#display">display</a></li><li><a href="global.html#displayVeranstaltung">displayVeranstaltung</a></li><li><a href="global.html#displayVeranstaltungen">displayVeranstaltungen</a></li><li><a href="global.html#doVoteGUI">doVoteGUI</a></li><li><a href="global.html#doVoteKkGUI">doVoteKkGUI</a></li><li><a href="global.html#erstelleNeuesThemaKk">erstelleNeuesThemaKk</a></li><li><a href="global.html#exportKkVonVn">exportKkVonVn</a></li><li><a href="global.html#fillAntKomm">fillAntKomm</a></li><li><a href="global.html#fillHauptKommentar">fillHauptKommentar</a></li><li><a href="global.html#fillHauptseite">fillHauptseite</a></li><li><a href="global.html#fillKarteiKarte">fillKarteiKarte</a></li><li><a href="global.html#fillMyPersonalBox">fillMyPersonalBox</a></li><li><a href="global.html#fillMyProfil">fillMyProfil</a></li><li><a href="global.html#fillOtherProfil">fillOtherProfil</a></li><li><a href="global.html#fillProfilseite">fillProfilseite</a></li><li><a href="global.html#fillSelectWithOptions">fillSelectWithOptions</a></li><li><a href="global.html#fillStartseite">fillStartseite</a></li><li><a href="global.html#fillSuchergebnisse">fillSuchergebnisse</a></li><li><a href="global.html#fillUserContainer">fillUserContainer</a></li><li><a href="global.html#fillVeranstaltungsliste">fillVeranstaltungsliste</a></li><li><a href="global.html#fillVeranstaltungsSeite">fillVeranstaltungsSeite</a></li><li><a href="global.html#fillVerweise">fillVerweise</a></li><li><a href="global.html#getBenutzer">getBenutzer</a></li><li><a href="global.html#getKarteikarteByID">getKarteikarteByID</a></li><li><a href="global.html#getProfilStudiengaenge">getProfilStudiengaenge</a></li><li><a href="global.html#getUrlParameterByName">getUrlParameterByName</a></li><li><a href="global.html#gotoHauptseite">gotoHauptseite</a></li><li><a href="global.html#gotoProfil">gotoProfil</a></li><li><a href="global.html#gotoStartseite">gotoStartseite</a></li><li><a href="global.html#gotoVeranstaltung">gotoVeranstaltung</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handlePfeiltastenEvents">handlePfeiltastenEvents</a></li><li><a href="global.html#handleReturnLink">handleReturnLink</a></li><li><a href="global.html#hideAntworten">hideAntworten</a></li><li><a href="global.html#Inhaltsverzeichnis">Inhaltsverzeichnis</a></li><li><a href="global.html#initialURL">initialURL</a></li><li><a href="global.html#interpreteUrlQuery">interpreteUrlQuery</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isImage">isImage</a></li><li><a href="global.html#isVideo">isVideo</a></li><li><a href="global.html#kkBearbeiten">kkBearbeiten</a></li><li><a href="global.html#leseVeranstaltungenMeine">leseVeranstaltungenMeine</a></li><li><a href="global.html#leseVeranstaltungenSemesterStudiengang">leseVeranstaltungenSemesterStudiengang</a></li><li><a href="global.html#loadAfterKk">loadAfterKk</a></li><li><a href="global.html#loadPreKk">loadPreKk</a></li><li><a href="global.html#loescheKommentar">loescheKommentar</a></li><li><a href="global.html#message">message</a></li><li><a href="global.html#myRound">myRound</a></li><li><a href="global.html#naviconTransformicon">naviconTransformicon</a></li><li><a href="global.html#newKarteikarte">newKarteikarte</a></li><li><a href="global.html#onResizeHandler">onResizeHandler</a></li><li><a href="global.html#orderKommentareById">orderKommentareById</a></li><li><a href="global.html#parseUrlQuery">parseUrlQuery</a></li><li><a href="global.html#PopupFenster">PopupFenster</a></li><li><a href="global.html#processKK_editClick">processKK_editClick</a></li><li><a href="global.html#processKKbearbeiten">processKKbearbeiten</a></li><li><a href="global.html#registerAvatarAendernEvent">registerAvatarAendernEvent</a></li><li><a href="global.html#registerEinAusschreibenClickEvent">registerEinAusschreibenClickEvent</a></li><li><a href="global.html#registerErstellerClickFunction">registerErstellerClickFunction</a></li><li><a href="global.html#registerProfilSpeichernEvents">registerProfilSpeichernEvents</a></li><li><a href="global.html#registerSuchEvent">registerSuchEvent</a></li><li><a href="global.html#registerVeranstErzeugeHandler">registerVeranstErzeugeHandler</a></li><li><a href="global.html#sendeAntwortKomm">sendeAntwortKomm</a></li><li><a href="global.html#setNotiz">setNotiz</a></li><li><a href="global.html#setupAntwAnz">setupAntwAnz</a></li><li><a href="global.html#showAntworten">showAntworten</a></li><li><a href="global.html#showAntwortKommentare">showAntwortKommentare</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#showHauptKommentare">showHauptKommentare</a></li><li><a href="global.html#showInfo">showInfo</a></li><li><a href="global.html#showNextMessage">showNextMessage</a></li><li><a href="global.html#showPreAfterLoad">showPreAfterLoad</a></li><li><a href="global.html#sindSieSicher">sindSieSicher</a></li><li><a href="global.html#sortDivByClassName">sortDivByClassName</a></li><li><a href="global.html#startMessageQueue">startMessageQueue</a></li><li><a href="global.html#submitEditKarteikarte">submitEditKarteikarte</a></li><li><a href="global.html#suchTimer">suchTimer</a></li><li><a href="global.html#toUrlParamString">toUrlParamString</a></li><li><a href="global.html#updateBenachrichtigungen">updateBenachrichtigungen</a></li><li><a href="global.html#uploadFile">uploadFile</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#veranstaltungsObject">veranstaltungsObject</a></li><li><a href="global.html#verifyResponse">verifyResponse</a></li><li><a href="global.html#voteKkDown">voteKkDown</a></li><li><a href="global.html#voteKkUp">voteKkUp</a></li><li><a href="global.html#voteKommentarDown">voteKommentarDown</a></li><li><a href="global.html#voteKommentarUp">voteKommentarUp</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Jun 22 2015 20:23:51 GMT+0200 (MESZ)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
