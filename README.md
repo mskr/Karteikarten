@@ -11,7 +11,7 @@ and place the folders as named above in the project root. Each folder must conta
 
 ```
 javac Launcher.java
-java Launcher`
+java Launcher
 ```
 
 ## Description (german :D)
