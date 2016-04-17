@@ -1,7 +1,7 @@
 # Karteikarten
-eLearning system based on online content creation with note cards. Made for Sopra 14/15 at Uni Ulm.
 
 ![Screenshot](https://raw.githubusercontent.com/MariusUniUlm/Karteikarten/master/prog/source/client/files/images/119.png "You see the mobile version here. Thanks to CSS the layout degrades gracefully :)")
+eLearning system based on online content creation with note cards. Made for Sopra 14/15 at Uni Ulm.
 
 ## Dependencies
 If you want to run this project you need to get the following software somewhere
