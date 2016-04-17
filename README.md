@@ -3,8 +3,8 @@ eLearning system based on online content creation with note cards. Made for Sopr
 
 ## German Description
 
-2 Client-Seitig
-2.1 JavaScript
+###2 Client-Seitig
+####2.1 JavaScript
 Die eLearning-Plattform ist als SPA aufgebaut. Deshalb enthält
 die Clientseite sehr viel Logik. Der Server dient jetzt nur noch als eine Art
 "verlängerter Arm" der Datenbank. Er antwortet nur auf Daten-Anfragen des
@@ -19,12 +19,12 @@ also nur aus diversen Zugangsprüfungen und der Weiterleitung von Daten.
 Der Client, genauergesagt der JavaScript-Code stellt die Logik der eLearningPlattform
 dar. Er ist für die korrekte Darstellung, sowie für die Interaktion mit
 dem Benutzer verantwortlich.
-2.2 HTML
+####2.2 HTML
 Das HTML-Dokument enthält nur eine Art Grundgerüst der Website mit nicht
 veränderlichen Komponenten und es enthält unsichtbare HTML-Templates, die
 vom JavaScript-Code "geklont" werden um sie wo anders weiterzuverwenden.
-3 Server-Seitig
-3.1 Servlets
+###3 Server-Seitig
+####3.1 Servlets
 Die Servlets des Servers antworten eingehenden Anfragen ausschließlich mit
 JSON-Objekten. Es wird also serverseitig kein HTML-Code erzeugt. JSONObjekte
 sind im Grunde genommen eine Liste von Key-Value-Paaren wobei
@@ -32,7 +32,7 @@ Values entweder Strings oder Arrays (Liste von String-Values) sind. Das Ganze
 Objekt wird dann als reiner String übertragen und im JavaScript wieder als
 Objekt interpretiert. So lässt sich die Client-Server-Kommunikation problemlos
 realisieren.
-3.2 Datenbank
+####3.2 Datenbank
 Der nächste Punkt ist die persistente Datenspeicherung. Hier wird zum einen
 die SQL-Datenbank "MySQL" verwendet. Diese ist kostenlos und somit fiel
 die Wahl nicht schwer. Diese Datenbank verwaltet den Großteil aller Daten im
