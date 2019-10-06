@@ -16,7 +16,7 @@ javac Launcher.java
 java Launcher
 ```
 
-## Description (german :D)
+## Description (german)
 
 ### Client-Seitig
 #### JavaScript
