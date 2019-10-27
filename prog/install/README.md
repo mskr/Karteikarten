@@ -1,3 +1,7 @@
+## Deploy Webapp
+
+Copy contents of tomcat-webapp.zip into webapps folder of you Apache Tomcat version.
+
 ## Setup MySQL initial database
 
 Copy contents of mysql-data.zip into data folder next to bin folder of your MySQL version.
