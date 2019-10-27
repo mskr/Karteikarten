@@ -5,17 +5,20 @@ import java.awt.event.*;
 import java.net.*;
 
 public class Launcher {
+
+	// ======================================================================================================================================
+
 	public static void main(String[] args) {
 		startGUI();
 		/*
 		try {
 			// Datenbank erstellen
-			Process p2 = new ProcessBuilder(""+System.getProperty("user.dir")+"/mysql-5.6/bin/mysql.exe",
+			Process p2 = new ProcessBuilder(""+System.getProperty("user.dir")+"/mysql-8.0.18-winx64/bin/mysql.exe",
 				"-uroot",
 				"-e",
 				"\"CREATE DATABASE sopra\"").start();
 			// Datenbank fuellen
-			ProcessBuilder b = new ProcessBuilder(""+System.getProperty("user.dir")+"/mysql-5.6/bin/mysql.exe",
+			ProcessBuilder b = new ProcessBuilder(""+System.getProperty("user.dir")+"/mysql-8.0.18-winx64/bin/mysql.exe",
 				"-uroot",
 				"-v",
 				"sopra",
@@ -32,13 +35,17 @@ public class Launcher {
 		*/
 	}
 
+	// ======================================================================================================================================
+
 	public static boolean isMysqlRunning = false;
 	public static boolean isNeo4jRunning = false;
 	public static boolean isTomcatRunning = false;
 
+	// ======================================================================================================================================
+
 	public static void startMySQL() {
 		try {
-			ProcessBuilder mysqlPB = new ProcessBuilder(""+System.getProperty("user.dir")+"/mysql-5.6/bin/mysqld.exe");
+			ProcessBuilder mysqlPB = new ProcessBuilder(""+System.getProperty("user.dir")+"/mysql-8.0.18-winx64/bin/mysqld.exe", "--console");
 			/*
 			mysqlPB.redirectInput(new TextAreaOutputStream());
 			mysqlPB.redirectOutput(new TextAreaOutputStream());
@@ -59,7 +66,7 @@ public class Launcher {
 
 	public static void stopMySQL() {
 		try {
-			Process p = new ProcessBuilder(""+System.getProperty("user.dir")+"/mysql-5.6/bin/mysqladmin.exe",
+			Process p = new ProcessBuilder(""+System.getProperty("user.dir")+"/mysql-8.0.18-winx64/bin/mysqladmin.exe",
 				"-u",
 				"root",
 				"shutdown").start();
@@ -71,12 +78,18 @@ public class Launcher {
 		}
 	}
 
+	public static void runSQLScript(String path) {
+		System.out.println("Sorry, installation must currently be done manually as explained in readme.");
+	}
+
+	// ======================================================================================================================================
+
 	public static Process neo4j;
 
 	public static void startNeo4j() {
 		try {
 			//TODO leider oeffnet sich immer ein zusaetzliches Neo4j Konsolenfenster
-			ProcessBuilder neo4jPB = new ProcessBuilder(""+System.getProperty("user.dir")+"/neo4j-community-2.3.0-M01/bin/Neo4j.bat");
+			ProcessBuilder neo4jPB = new ProcessBuilder(""+System.getProperty("user.dir")+"/neo4j-community-3.5.12/bin/neo4j.bat", "console");
 			/*
 			neo4j.redirectInput(new TextAreaOutputStream());
 			neo4j.redirectOutput(new TextAreaOutputStream());
@@ -101,6 +114,8 @@ public class Launcher {
 
 		disableOpenBt();
 	}
+
+	// ======================================================================================================================================
 
 	public static void startTomcat() {
 		try {
@@ -138,12 +153,17 @@ public class Launcher {
 		}
 	}
 
+	// ======================================================================================================================================
+
 	public static JTextArea logArea = new JTextArea();
 	public static JButton openBrowserBt;
 
+	// ======================================================================================================================================
+
 	public static void startGUI() {
 		JFrame frame = new JFrame("Launcher");
-		frame.setLayout(new GridLayout(5,1));
+		frame.setLayout(new GridLayout(6,1));
+
 		JPanel mysqlPanel = new JPanel(new FlowLayout());
 		JLabel mysqlLabel = new JLabel("MySQL");
 		mysqlLabel.setPreferredSize(new Dimension(100,30));
@@ -165,6 +185,21 @@ public class Launcher {
 		mysqlPanel.add(mysqlStop);
 		mysqlPanel.add(mysqlStart);
 		frame.add(mysqlPanel);
+
+		JPanel installPanel = new JPanel(new FlowLayout());
+		JLabel installLabel = new JLabel("Install");
+		installLabel.setPreferredSize(new Dimension(100, 30));
+		installPanel.add(installLabel);
+		JButton installSQL = new JButton("SQL Tables");
+		installSQL.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				runSQLScript(""+System.getProperty("user.dir")+"/prog/install/karteikarten_db_full.sql");
+			}
+		});
+		installPanel.add(installSQL);
+		frame.add(installPanel);
+
 		JPanel neo4jPanel = new JPanel(new FlowLayout());
 		JLabel neo4jLabel = new JLabel("Neo4j");
 		neo4jLabel.setPreferredSize(new Dimension(100,30));
@@ -228,6 +263,8 @@ public class Launcher {
 		frame.setVisible(true);
 	}
 
+	// ======================================================================================================================================
+
 	public static void enableOpenBt() {
 		openBrowserBt.setEnabled(true);
 	}
@@ -235,6 +272,8 @@ public class Launcher {
 	public static void disableOpenBt() {
 		openBrowserBt.setEnabled(false);
 	}
+
+	// ======================================================================================================================================
 
 	static class StreamGobbler extends Thread {
 	    InputStream is;
@@ -258,6 +297,8 @@ public class Launcher {
 	        }
 	    }
 	}
+
+	// ======================================================================================================================================
 
 	//TODO Versuch alle Konsolenausgaben auf die Textarea umzuleiten
 	public class TextAreaOutputStream extends OutputStream {

@@ -1,62 +1,64 @@
 # Karteikarten
 
+An eLearning system based on online content creation with note cards.
+
 ![Screenshot](https://raw.githubusercontent.com/MariusUniUlm/Karteikarten/master/prog/source/client/files/images/119.png "You see the mobile version here. Thanks to CSS the layout degrades gracefully :)")
-eLearning system based on online content creation with note cards. Made for Sopra 14/15 at Uni Ulm.
+
+[More Screenshots](/docu/ui-design)
 
 ## Dependencies
-If you want to run this project you need to get the following software somewhere
-+ apache-tomcat-7.0.63
-+ mysql-5.6
-+ neo4j-community-2.3.0-M01
 
-and place the folders as named above in the project root. Each folder must contain a "bin" folder as a direct subdirectory with the right executables inside. Then you should be able to do
+If you want to run this project you need to get the following software somewhere.
+
+### apache-tomcat-7.0.63
+
+### mysql-8.0.18-winx64
+
+Available from MySQL homepage (also as portable zip file):
+https://dev.mysql.com/downloads/mysql/
+
+I decided to deeplink to mysql-8.0.18-winx64-debug-test.zip, because Oracle redirects to uncanny login pages:
+https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.18-winx64-debug-test.zip
+
+### neo4j-community-3.5.12
+
+https://neo4j.com/download-center/#community
+
+Place the folders as named above in the project root, so that the automatic Launcher tool finds them (change the Launcher source to support other versions). Each folder must contain a "bin" folder as a direct subdirectory with the right executables inside.
+
+## Install and Launch
+
+To setup initial database contents, consider [prog/install](prog/install).
+
+Then you should be able to do
 
 ```
 javac Launcher.java
 java Launcher
 ```
 
-## Description (german)
+## Description
 
-### Client-Seitig
+### Client Side
+
 #### JavaScript
-Die eLearning-Plattform ist als SPA aufgebaut. Deshalb enthält
-die Clientseite sehr viel Logik. Der Server dient jetzt nur noch als eine Art
-"verlängerter Arm" der Datenbank. Er antwortet nur auf Daten-Anfragen des
-Clients und schickt die Daten dann zurück. Dies wird durch clientseitige AJAXCalls
-aus dem JavaScript-Code realisiert. Leider müssen anfallende Sicherheitsund
-Zugangsprüfungen jetzt doppelt anfallen. Zum einen muss der JavaScriptCode
-dafür sorgen, dass der Benutzer keine ungültigen Aktionen tätigt bzw.
-dass er entsprechende Buttons (Erstellen, Löschen) erst gar nicht angezeigt bekommt.
-Zum anderen muss der Server ebenfalls alle Prüfungen durchführen um
-Hackern den Zugang zu verwehren. Im Großen und Ganzen besteht der Server
-also nur aus diversen Zugangsprüfungen und der Weiterleitung von Daten.
-Der Client, genauergesagt der JavaScript-Code stellt die Logik der eLearningPlattform
-dar. Er ist für die korrekte Darstellung, sowie für die Interaktion mit
-dem Benutzer verantwortlich.
+
+The eLearning platform is built as a SPA. Therefore, the client side contains a lot of logic. The server now only serves as a kind of "extended arm" of the database. It only responds to data requests from the client and then sends the data back. This is realized by client-side AJAXCalls from the JavaScript code. Unfortunately, security and access checks must now be incurred twice. On the one hand, the JavaScript code has to ensure that the user does not make any invalid actions or that he does not even see corresponding buttons (create, delete). On the other hand, the server must also perform all checks to deny hackers access. On the whole, therefore, the server consists only of various access checks and the forwarding of data. The client, more specifically the JavaScript code, represents the logic of the eLearning platform. It is responsible for the correct presentation as well as the interaction with the user.
+
 #### HTML
-Das HTML-Dokument enthält nur eine Art Grundgerüst der Website mit nicht
-veränderlichen Komponenten und es enthält unsichtbare HTML-Templates, die
-vom JavaScript-Code "geklont" werden um sie wo anders weiterzuverwenden.
-### Server-Seitig
+
+The HTML document contains only a kind of skeleton of the website with non-changeable components and it contains invisible HTML templates, which are "cloned" by the JavaScript code to reuse them elsewhere.
+
+### Server Side
+
 #### Servlets
-Die Servlets des Servers antworten eingehenden Anfragen ausschließlich mit
-JSON-Objekten. Es wird also serverseitig kein HTML-Code erzeugt. JSONObjekte
-sind im Grunde genommen eine Liste von Key-Value-Paaren wobei
-Values entweder Strings oder Arrays (Liste von String-Values) sind. Das Ganze
-Objekt wird dann als reiner String übertragen und im JavaScript wieder als
-Objekt interpretiert. So lässt sich die Client-Server-Kommunikation problemlos
-realisieren.
+
+The servlets of the server respond to incoming requests only with JSON objects. Thus, no HTML code is generated on the server side. JSON objects are basically a list of key value pairs, where values ​​are either strings or arrays (list of string values). The whole object is then transferred as a pure string and again interpreted as an object in JavaScript. This makes it easy to implement client-server communication.
+
 #### Datenbank
-Der nächste Punkt ist die persistente Datenspeicherung. Hier wird zum einen
-die SQL-Datenbank "MySQL" verwendet. Diese ist kostenlos und somit fiel
-die Wahl nicht schwer. Diese Datenbank verwaltet den Großteil aller Daten im
-System. Ein Datenbank-Manager stellt hierzu eine Schnittstelle bereit, die es
-den Servlets einen einfachen Zugriff auf die Daten erlaubt.
-Der zweite Teil unseres Datenbank-Systems bildet die Graphdatenbank "Neo4J".
-Diese ist besonders gut geeignet für die Darstellung von Beziehungen in Graphen.
-Deshalb wurde sie von uns verwendet, um die Beziehungen zwischen Karteikarten
-zu speichern. Sie bietet einfache Funktionen als eine SQL-Datenbank
-um durch den Graph zu wandern, um Kindknoten zu suchen oder um Breiten
-und Tiefensuche zu betreiben. Dies sollte vor allem bei einer großen Anzahl an
-Karteikarten einen Performance-Vorteil bringen.
+
+The next point is persistent data storage. On the one hand, the SQL database "MySQL" is used here. This is free and so the choice was not difficult. This database manages most of the data in the system. A database manager provides an interface that allows the servlets easy access to the data. The second part of our database system is the graph database "Neo4J". This is particularly well suited for the representation of relationships in graphs. That's why it was used by us to store the relationships between cards. It provides simple functions as a SQL database to move through the graph, to search child nodes, or to search latitudes and depths. This should bring a performance advantage especially with a large number of index cards.
+
+## About
+
+Made for "Sopra 14/15" at Ulm University.
